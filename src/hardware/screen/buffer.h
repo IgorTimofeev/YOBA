@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cstdlib>
-#include "yoba/point.h"
-#include "yoba/size.h"
-#include "yoba/bounds.h"
-#include "yoba/hardware/screen/drivers/driver.h"
+#include "point.h"
+#include "size.h"
+#include "bounds.h"
+#include "hardware/screen/drivers/driver.h"
 
 class Buffer {
 	public:

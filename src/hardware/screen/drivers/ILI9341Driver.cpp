@@ -1,5 +1,5 @@
 #include "ILI9341Driver.h"
-#include "yoba/hardware/screen/buffer.h"
+#include "hardware/screen/buffer.h"
 
 ILI9341Driver::ILI9341Driver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin) : Driver(chipSelectPin, dataCommandPin, resetPin) {
 	// Glitches & tearing can appear on 26m, 40m+ won't work anyway

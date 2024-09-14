@@ -1,10 +1,10 @@
 #include <Arduino.h>
-#include "yoba/hardware/screen/buffer.h"
-#include "yoba/hardware/screen/drivers/ILI9341Driver.h"
-#include "yoba/hardware/screen/eightBitsPaletteBuffer.h"
-#include "yoba/color.h"
-#include "resources/fonts/Unscii16Font.h"
-#include "resources/fonts/Unscii8ThinFont.h"
+#include "hardware/screen/buffer.h"
+#include "hardware/screen/drivers/ILI9341Driver.h"
+#include "hardware/screen/eightBitsPaletteBuffer.h"
+#include "color.h"
+#include "fonts/Unscii16Font.h"
+#include "fonts/Unscii8ThinFont.h"
 
 ILI9341Driver driver = ILI9341Driver(
 	5,

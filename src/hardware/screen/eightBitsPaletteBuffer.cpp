@@ -1,5 +1,5 @@
 #include "eightBitsPaletteBuffer.h"
-#include "yoba/bounds.h"
+#include "bounds.h"
 
 EightBitsPaletteBuffer::EightBitsPaletteBuffer(Driver *driver, const Size& resolution) : PaletteBuffer<uint8_t>(driver, resolution, _palette) {
 

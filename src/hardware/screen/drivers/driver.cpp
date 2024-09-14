@@ -1,6 +1,6 @@
 #include "driver.h"
 #include "Arduino.h"
-#include "yoba/hardware/screen/buffer.h"
+#include "hardware/screen/buffer.h"
 
 Driver::Driver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin) :
 	_chipSelectPin(chipSelectPin),
