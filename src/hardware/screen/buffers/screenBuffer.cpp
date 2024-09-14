@@ -13,10 +13,7 @@ namespace yoba {
 	}
 
 	void ScreenBuffer::begin() {
-		Serial.println("allocate()");
 		allocate();
-
-		Serial.println("_driver begin()");
 
 		_driver->begin(this);
 	}

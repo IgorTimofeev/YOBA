@@ -38,6 +38,8 @@ Application application = Application(
 
 Unscii16Font font = Unscii16Font();
 
+ColorPalette backgroundColor = ColorPalette(0);
+Rectangle backgroundRect = Rectangle(&backgroundColor);
 Text text = Text();
 
 void setup() {
@@ -64,23 +66,22 @@ void setup() {
 	screenBuffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).to16Bit());
 	screenBuffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).to16Bit());
 
+	// Starting application
 	application.begin();
 
-	auto& workspace = application.getWorkspace();
-
-	workspace.addChild(new Rectangle(new ColorPalette(17)));
+	// Adding UI elements
+	application.getWorkspace().addChild(&backgroundRect);
 
 	text.setFont(&font);
-	text.setText(String("Penis"));
 	text.setForeground(new ColorPalette(16));
 	text.setAlignment(Alignment::center);
-	workspace.addChild(&text);
+	application.getWorkspace().addChild(&text);
 }
 
 void loop() {
 	auto startTime = esp_timer_get_time();
 
-	text.setText(String("Hello world, uptime: ") + String(millis() / 1000) + String(" s"));
+	text.setText(String("Hello world, uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
 
 	application.tick();
 
