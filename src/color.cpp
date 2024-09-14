@@ -2,9 +2,6 @@
 #include "Arduino.h"
 
 namespace yoba {
-	const Color16 Color16::black = Color16(0x0000);
-	const Color16 Color16::white = Color16(0xFFFF);
-
 	Color::Color(ColorType type) : _type(type) {
 
 	}
@@ -113,7 +110,7 @@ namespace yoba {
 	}
 
 	uint16_t Color24::to16Bit() const {
-		return (_r >> 3) << 3 | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8);
+		return ((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8);
 	}
 
 	uint8_t Color24::interpolateChannel(uint8_t first, uint8_t second, float position) {
@@ -161,6 +158,9 @@ namespace yoba {
 	Color16::Color16(uint16_t value) : Color(ColorType::Bit16), _value(value) {
 
 	}
+
+	const Color16 Color16::black = Color16(0x0000);
+	const Color16 Color16::white = Color16(0xFFFF);
 
 	uint16_t Color16::getValue() const {
 		return _value;

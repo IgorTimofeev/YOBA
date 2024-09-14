@@ -55,6 +55,7 @@ namespace yoba {
 			return;
 
 		_touchPanel.readTouch();
+
 		_workspace.tick();
 		_workspace.measure(_screenBuffer);
 		_workspace.arrange();

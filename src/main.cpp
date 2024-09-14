@@ -42,6 +42,8 @@ ColorPalette backgroundColor = ColorPalette(0);
 Rectangle backgroundRect = Rectangle(&backgroundColor);
 Text text = Text();
 
+int32_t backgroundPaletteIndex = 0;
+
 void setup() {
 	Serial.begin(115200);
 
@@ -79,18 +81,30 @@ void setup() {
 }
 
 void loop() {
-	auto startTime = esp_timer_get_time();
+	auto startTime = millis();
 
-	text.setText(String("Hello world, uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
+	// Background
+	backgroundColor.setIndex(backgroundPaletteIndex);
+	backgroundRect.setFillColor(&backgroundColor);
+
+	backgroundPaletteIndex += 1;
+
+	if (backgroundPaletteIndex >= 15) {
+		backgroundPaletteIndex = 0;
+	}
+
+	// Text
+	text.setText(String("Index: ") + String(backgroundPaletteIndex) + String(", uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
 
 	application.tick();
 
-	auto deltaTime = esp_timer_get_time() - startTime;
-	auto fps = 60000000 / deltaTime;
-	Serial.printf("FPS: %lld, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
+	auto deltaTime = millis() - startTime;
+	auto fps = 60000 / deltaTime;
+	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....
-	uint32_t desiredDeltaTime = 1000 / 60;
+	uint8_t desiredFPS = 60;
+	uint32_t desiredDeltaTime = 1000 / desiredFPS;
 	if (deltaTime < desiredDeltaTime)
 		delay(desiredDeltaTime - deltaTime);
 

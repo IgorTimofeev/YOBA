@@ -2,7 +2,7 @@
 #include "bounds.h"
 
 namespace yoba {
-	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver, const Size& resolution) : PaletteBuffer<uint8_t>(driver, resolution, _palette) {
+	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver, const Size& resolution) : PaletteBuffer<uint8_t>(driver, resolution, _govnoPalette) {
 
 	}
 
@@ -16,8 +16,10 @@ namespace yoba {
 		size_t bufferIndex = 0;
 
 		for (uint16_t y = 0; y < getSize().getHeight(); y += _driver->getTransactionBufferHeight()) {
-			for (size_t i = 0; i < pixelCount; i++)
-				_driver->getTransactionBuffer()[i] = _palette[_buffer[bufferIndex++]];
+			for (size_t i = 0; i < pixelCount; i++) {
+				_driver->getTransactionBuffer()[i] = _palette[_buffer[bufferIndex]];
+				bufferIndex++;
+			}
 
 			_driver->flushTransactionBuffer(this, y);
 		}

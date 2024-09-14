@@ -4,7 +4,6 @@
 
 namespace yoba {
 	enum class ColorType : uint8_t {
-		Bit8,
 		Bit16,
 		Bit24,
 		Palette

@@ -13,6 +13,8 @@ namespace yoba {
 
 			void setFillColor(const Color* value) {
 				_fillColor = value;
+
+				invalidate();
 			}
 
 		private:

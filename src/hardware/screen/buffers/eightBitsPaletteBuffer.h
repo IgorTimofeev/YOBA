@@ -19,6 +19,6 @@ namespace yoba {
 			void renderFilledRectangleNative(const Bounds& bounds, uint8_t paletteIndex) override;
 
 		private:
-			uint16_t _palette[256] {};
+			uint16_t _govnoPalette[256] {};
 	};
 }

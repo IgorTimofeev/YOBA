@@ -12,8 +12,8 @@ namespace yoba {
 
 			void clearNative(TIndex paletteIndex) override;
 
-			TIndex getPaletteColor(size_t index);
-			void setPaletteColor(size_t index, TIndex value);
+			uint16_t getPaletteColor(size_t index);
+			void setPaletteColor(size_t index, uint16_t value);
 
 		protected:
 			uint16_t* _palette;
@@ -30,12 +30,12 @@ namespace yoba {
 	}
 
 	template<typename TIndex>
-	TIndex PaletteBuffer<TIndex>::getPaletteColor(size_t index) {
+	uint16_t PaletteBuffer<TIndex>::getPaletteColor(size_t index) {
 		return _palette[index];
 	}
 
 	template<typename TIndex>
-	void PaletteBuffer<TIndex>::setPaletteColor(size_t index, TIndex value) {
+	void PaletteBuffer<TIndex>::setPaletteColor(size_t index, uint16_t value) {
 		_palette[index] = value;
 	}
 }
