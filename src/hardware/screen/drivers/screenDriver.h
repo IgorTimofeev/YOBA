@@ -4,13 +4,13 @@
 #include <driver/spi_master.h>
 
 namespace yoba {
-	class Buffer;
+	class ScreenBuffer;
 
-	class Driver {
+	class ScreenDriver {
 		public:
-			explicit Driver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin);
+			explicit ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin);
 
-			void begin(Buffer *display);
+			void begin(ScreenBuffer* buffer);
 
 			virtual void writeInitializationCommands();
 
@@ -45,7 +45,7 @@ namespace yoba {
 			* sent faster (compared to calling spi_device_transmit several times), and at
 			* the mean while the lines for next transactions can get calculated.
 			*/
-			void flushTransactionBuffer(Buffer *display, int y);
+			void flushTransactionBuffer(ScreenBuffer *display, int y);
 
 			uint16_t *getTransactionBuffer() const;
 			size_t getTransactionBufferLength() const;
@@ -82,9 +82,9 @@ namespace yoba {
 	};
 
 	struct DriverSPIPreCallbackUserData {
-		DriverSPIPreCallbackUserData(Driver *driver, bool dataCommandPinState);
+		DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dataCommandPinState);
 
-		Driver* driver;
+		ScreenDriver* driver;
 		bool dataCommandPinState;
 	};
 }

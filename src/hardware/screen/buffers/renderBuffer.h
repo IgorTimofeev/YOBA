@@ -1,13 +1,13 @@
 #pragma once
 
-#include "buffer.h"
-#include "../../font.h"
+#include "screenBuffer.h"
+#include "fonts/font.h"
 
 namespace yoba {
 	template<typename TColor>
-	class RenderBuffer : public Buffer {
+	class RenderBuffer : public ScreenBuffer {
 		public:
-			RenderBuffer(Driver *driver, const Size &resolution);
+			RenderBuffer(ScreenDriver *driver, const Size &resolution);
 
 			void clear(TColor color);
 			void renderPixel(const Point &point, TColor color);
@@ -34,7 +34,7 @@ namespace yoba {
 	};
 
 	template<typename TColor>
-	RenderBuffer<TColor>::RenderBuffer(Driver *driver, const Size &resolution) : Buffer(driver, resolution) {
+	RenderBuffer<TColor>::RenderBuffer(ScreenDriver *driver, const Size &resolution) : ScreenBuffer(driver, resolution) {
 
 	}
 

@@ -4,19 +4,19 @@
 #include "point.h"
 #include "size.h"
 #include "bounds.h"
-#include "hardware/screen/drivers/driver.h"
+#include "hardware/screen/drivers/screenDriver.h"
 
 namespace yoba {
-	class Buffer {
+	class ScreenBuffer {
 		public:
-			Buffer(
-				Driver* driver,
+			ScreenBuffer(
+				ScreenDriver* driver,
 				const Size& resolution
 			);
 
 			void begin();
 
-			Driver* getDriver() const;
+			ScreenDriver* getDriver() const;
 
 			const Size &getSize() const;
 
@@ -33,7 +33,7 @@ namespace yoba {
 			size_t getIndex(const Point& point) const;
 
 		protected:
-			Driver* _driver;
+			ScreenDriver* _driver;
 
 			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;

@@ -1,9 +1,9 @@
-#include "buffer.h"
-#include "buffer.h"
+#include "screenBuffer.h"
+#include "screenBuffer.h"
 
 namespace yoba {
-	Buffer::Buffer(
-		Driver* driver,
+	ScreenBuffer::ScreenBuffer(
+		ScreenDriver* driver,
 		const Size& resolution
 	) :
 		_driver(driver),
@@ -12,7 +12,7 @@ namespace yoba {
 		resetViewport();
 	}
 
-	void Buffer::begin() {
+	void ScreenBuffer::begin() {
 		Serial.println("allocate()");
 		allocate();
 
@@ -21,34 +21,34 @@ namespace yoba {
 		_driver->begin(this);
 	}
 
-	Driver* Buffer::getDriver() const {
+	ScreenDriver* ScreenBuffer::getDriver() const {
 		return _driver;
 	}
 
-	const Size& Buffer::getSize() const {
+	const Size& ScreenBuffer::getSize() const {
 		return _size;
 	}
 
-	Bounds &Buffer::getViewport() {
+	Bounds &ScreenBuffer::getViewport() {
 		return _viewport;
 	}
 
-	void Buffer::setViewport(const Bounds& bounds) {
+	void ScreenBuffer::setViewport(const Bounds& bounds) {
 		_viewport = bounds;
 	}
 
-	void Buffer::resetViewport() {
+	void ScreenBuffer::resetViewport() {
 		_viewport.setX(0);
 		_viewport.setY(0);
 		_viewport.setWidth(_size.getWidth());
 		_viewport.setHeight(_size.getHeight());
 	}
 
-	size_t Buffer::getIndex(uint16_t x, uint16_t y) const {
+	size_t ScreenBuffer::getIndex(uint16_t x, uint16_t y) const {
 		return y * getSize().getWidth() + x;
 	}
 
-	size_t Buffer::getIndex(const Point &point) const {
+	size_t ScreenBuffer::getIndex(const Point &point) const {
 		return getIndex(point.getX(), point.getY());
 	}
 }

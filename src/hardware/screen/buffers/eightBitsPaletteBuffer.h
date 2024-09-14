@@ -1,12 +1,12 @@
 #pragma once
 
 #include "paletteBuffer.h"
-#include "buffer.h"
+#include "screenBuffer.h"
 
 namespace yoba {
 	class EightBitsPaletteBuffer : public PaletteBuffer<uint8_t> {
 		public:
-			EightBitsPaletteBuffer(Driver *driver, const Size &resolution);
+			EightBitsPaletteBuffer(ScreenDriver *driver, const Size &resolution);
 
 			void allocate() override;
 			void flush() override;

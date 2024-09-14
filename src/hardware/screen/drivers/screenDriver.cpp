@@ -1,9 +1,9 @@
-#include "driver.h"
+#include "screenDriver.h"
 #include "Arduino.h"
-#include "hardware/screen/buffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
-	Driver::Driver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin) :
+	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin) :
 		_chipSelectPin(chipSelectPin),
 		_dataCommandPin(dataCommandPin),
 		_resetPin(resetPin)
@@ -11,58 +11,58 @@ namespace yoba {
 
 	}
 
-	uint8_t Driver::getChipSelectPin() const {
+	uint8_t ScreenDriver::getChipSelectPin() const {
 		return _chipSelectPin;
 	}
 
-	void Driver::setChipSelectPin(uint8_t chipSelectPin) {
+	void ScreenDriver::setChipSelectPin(uint8_t chipSelectPin) {
 		_chipSelectPin = chipSelectPin;
 	}
 
-	uint8_t Driver::getDataCommandPin() const {
+	uint8_t ScreenDriver::getDataCommandPin() const {
 		return _dataCommandPin;
 	}
 
-	void Driver::setDataCommandPin(uint8_t dataCommandPin) {
+	void ScreenDriver::setDataCommandPin(uint8_t dataCommandPin) {
 		_dataCommandPin = dataCommandPin;
 	}
 
-	int8_t Driver::getResetPin() const {
+	int8_t ScreenDriver::getResetPin() const {
 		return _resetPin;
 	}
 
-	void Driver::setResetPin(int8_t resetPin) {
+	void ScreenDriver::setResetPin(int8_t resetPin) {
 		_resetPin = resetPin;
 	}
 
-	int32_t Driver::getSPIFrequency() const {
+	int32_t ScreenDriver::getSPIFrequency() const {
 		return _SPIFrequency;
 	}
 
-	void Driver::setSPIFrequency(int32_t spiFrequency) {
+	void ScreenDriver::setSPIFrequency(int32_t spiFrequency) {
 		_SPIFrequency = spiFrequency;
 	}
 
-	uint8_t Driver::getTransactionBufferHeight() const {
+	uint8_t ScreenDriver::getTransactionBufferHeight() const {
 		return _transactionBufferHeight;
 	}
 
-	void Driver::setTransactionBufferHeight(uint8_t transactionBufferHeight) {
+	void ScreenDriver::setTransactionBufferHeight(uint8_t transactionBufferHeight) {
 		_transactionBufferHeight = transactionBufferHeight;
 	}
 
-	void Driver::writeInitializationCommands() {
+	void ScreenDriver::writeInitializationCommands() {
 
 	}
 
-	void Driver::begin(Buffer* display) {
+	void ScreenDriver::begin(ScreenBuffer* buffer) {
 		spi_bus_config_t busConfig = {
 			.mosi_io_num = MOSI,
 			.miso_io_num = MISO,
 			.sclk_io_num = SCK,
 			.quadwp_io_num = -1,
 			.quadhd_io_num = -1,
-			.max_transfer_sz = getTransactionBufferHeight() * display->getSize().getWidth() * 2 + 8
+			.max_transfer_sz = getTransactionBufferHeight() * buffer->getSize().getWidth() * 2 + 8
 		};
 
 		spi_device_interface_config_t deviceConfig = {
@@ -109,12 +109,12 @@ namespace yoba {
 		writeInitializationCommands();
 
 		//Allocate memory for the transaction buffer
-		_transactionBufferLength = display->getSize().getWidth() * getTransactionBufferHeight() * 2;
+		_transactionBufferLength = buffer->getSize().getWidth() * getTransactionBufferHeight() * 2;
 		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
 	}
 
-	void Driver::sendCommand(uint8_t command) {
+	void ScreenDriver::sendCommand(uint8_t command) {
 		spi_transaction_t transaction;
 		memset(&transaction, 0, sizeof(transaction));       //Zero out the transaction
 		transaction.length = 8;                   //Command is 8 bits
@@ -126,7 +126,7 @@ namespace yoba {
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
-	void Driver::sendData(const uint8_t *data, int length) {
+	void ScreenDriver::sendData(const uint8_t *data, int length) {
 		if (length == 0)
 			return;    //no need to send anything
 
@@ -140,13 +140,13 @@ namespace yoba {
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
-	void Driver::SPIPreCallback(spi_transaction_t *transaction) {
+	void ScreenDriver::SPIPreCallback(spi_transaction_t *transaction) {
 		auto userData = (DriverSPIPreCallbackUserData*) transaction->user;
 		gpio_set_level((gpio_num_t) 16, userData->dataCommandPinState);
 		delete userData;
 	}
 
-	void Driver::flushTransactionBuffer(Buffer* display, int y) {
+	void ScreenDriver::flushTransactionBuffer(ScreenBuffer* display, int y) {
 		//Transaction descriptors. Declared static, so they're not allocated on the stack; we need this memory even when this
 		//function is finished because the SPI driver needs access to it even while we're already calculating the next line.
 		static spi_transaction_t transactions[6];
@@ -214,18 +214,18 @@ namespace yoba {
 		}
 	}
 
-	uint16_t *Driver::getTransactionBuffer() const {
+	uint16_t *ScreenDriver::getTransactionBuffer() const {
 		return _transactionBuffer;
 	}
 
-	size_t Driver::getTransactionBufferLength() const {
+	size_t ScreenDriver::getTransactionBufferLength() const {
 		return _transactionBufferLength;
 	}
 
-	void Driver::sendCommandAndData(uint8_t command, const uint8_t *data, int length) {
+	void ScreenDriver::sendCommandAndData(uint8_t command, const uint8_t *data, int length) {
 		sendCommand(command);
 		sendData(data, length);
 	}
 
-	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(Driver *driver, bool dataCommandPinState) : driver(driver), dataCommandPinState(dataCommandPinState) {}
+	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dataCommandPinState) : driver(driver), dataCommandPinState(dataCommandPinState) {}
 }
