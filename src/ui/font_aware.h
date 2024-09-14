@@ -6,15 +6,15 @@
 namespace yoba {
 	class FontAware : public virtual Element {
 		public:
-			Font* getFont() const {
+			const Font* getFont() const {
 				return _font;
 			}
 
-			void setFont(Font* value) {
+			void setFont(const Font* value) {
 				_font = value;
 			}
 
 		private:
-			Font* _font = nullptr;
+			const Font* _font = nullptr;
 	};
 }

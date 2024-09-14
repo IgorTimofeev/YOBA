@@ -14,7 +14,8 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				screenBuffer->renderFilledRectangle(getBounds(), getFillColor());
+				if (getFillColor())
+					screenBuffer->renderFilledRectangle(getBounds(), getFillColor());
 			}
 
 		private:

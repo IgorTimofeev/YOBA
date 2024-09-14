@@ -125,6 +125,8 @@ namespace yoba {
 				}
 					// Pinch down
 				else {
+
+
 					_isPinched = true;
 
 					_touchPoints[0].setDown(true);

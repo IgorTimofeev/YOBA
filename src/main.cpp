@@ -78,27 +78,31 @@ void setup() {
 	text.setForeground(new ColorPalette(16));
 	text.setAlignment(Alignment::center);
 	application.getWorkspace().addChild(&text);
+
+	application.getWorkspace().addEventHandler([](Event& event) {
+		if (!(event.getType() == EventType::touchDown || event.getType() == EventType::touchUp))
+			return;
+
+		backgroundPaletteIndex += 1;
+
+		if (backgroundPaletteIndex >= 15) {
+			backgroundPaletteIndex = 0;
+		}
+
+		backgroundColor.setIndex(backgroundPaletteIndex);
+		backgroundRect.setFillColor(&backgroundColor);
+	});
 }
 
 void loop() {
 	auto startTime = millis();
-
-	// Background
-	backgroundColor.setIndex(backgroundPaletteIndex);
-	backgroundRect.setFillColor(&backgroundColor);
-
-	backgroundPaletteIndex += 1;
-
-	if (backgroundPaletteIndex >= 15) {
-		backgroundPaletteIndex = 0;
-	}
 
 	// Text
 	text.setText(String("Index: ") + String(backgroundPaletteIndex) + String(", uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
 
 	application.tick();
 
-	auto deltaTime = millis() - startTime;
+	auto deltaTime = max(millis() - startTime, 1UL);
 	auto fps = 60000 / deltaTime;
 	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 

@@ -285,7 +285,7 @@ namespace yoba {
 	// ------------------------------------------------------------------------
 
 	bool FT6336UDriver::isPoint1Down() {
-		return read_touch2_event() == 2;
+		return read_touch1_event() == 2;
 	}
 
 	bool FT6336UDriver::isPoint2Down() {

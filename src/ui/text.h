@@ -12,15 +12,23 @@ namespace yoba {
 		public:
 			Text() = default;
 
-			explicit Text(const String& value) {
+			Text(const Font* font, const Color* foreground, const String& value) {
+				setFont(font);
+				setForeground(foreground);
 				setText(value);
 			}
 
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
-				return screenBuffer->getTextSize(getFont(), getText());
+				return
+					getFont()
+					? screenBuffer->getTextSize(getFont(), getText())
+					: Size();
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
+				if (!getFont() || !getForeground())
+					return;
+
 				screenBuffer->renderText(
 					getBounds().getPosition(),
 					getFont(),
