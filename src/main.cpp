@@ -9,6 +9,7 @@
 #include "fonts/Unscii8ThinFont.h"
 #include "application.h"
 #include "ui/rectangle.h"
+#include "ui/text.h"
 
 using namespace yoba;
 
@@ -37,6 +38,8 @@ Application application = Application(
 
 Unscii16Font font = Unscii16Font();
 
+Text text = Text();
+
 void setup() {
 	Serial.begin(115200);
 
@@ -52,27 +55,38 @@ void setup() {
 	uint8_t govno = 0;
 
 	for (int i = 0; i < 16; i++) {
-		screenBuffer.setPaletteColor(i, Color24(govno, govno, govno).toUint16());
+		screenBuffer.setPaletteColor(i, Color24(govno, govno, govno).to16Bit());
 		govno += 0x11;
 	}
 
 	// RGB
-	screenBuffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).toUint16());
-	screenBuffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).toUint16());
-	screenBuffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).toUint16());
+	screenBuffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).to16Bit());
+	screenBuffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).to16Bit());
+	screenBuffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).to16Bit());
 
 	application.begin();
 
-	application.getWorkspace().addChild(new Rectangle(16))
+	auto& workspace = application.getWorkspace();
+
+	workspace.addChild(new Rectangle(new ColorPalette(17)));
+
+	text.setFont(&font);
+	text.setText(String("Penis"));
+	text.setForeground(new ColorPalette(16));
+	text.setAlignment(Alignment::center);
+	workspace.addChild(&text);
 }
 
 void loop() {
 	auto startTime = esp_timer_get_time();
 
+	text.setText(String("Hello world, uptime: ") + String(millis() / 1000) + String(" s"));
+
 	application.tick();
 
 	auto deltaTime = esp_timer_get_time() - startTime;
-	Serial.printf("FPS: %lld, free heap: %d kb, max alloc heap: %d kb\n", 60000000 / deltaTime, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
+	auto fps = 60000000 / deltaTime;
+	Serial.printf("FPS: %lld, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....
 	uint32_t desiredDeltaTime = 1000 / 60;

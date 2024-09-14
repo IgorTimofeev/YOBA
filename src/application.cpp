@@ -13,10 +13,14 @@ namespace yoba {
 		_workspace.setSize(screenBuffer->getSize());
 
 		// Touch
+		Serial.println("_touchPanel.addOnTouchDown");
+
 		_touchPanel.addOnTouchDown([this](const Point& point) {
 			auto event = TouchDownEvent(point);
 			_workspace.handleEvent(event);
 		});
+
+		Serial.println("_touchPanel.addOnTouchDown finished");
 
 		_touchPanel.addOnTouchDrag([this](const Point& point) {
 			auto event = TouchDragEvent(point);
@@ -46,21 +50,35 @@ namespace yoba {
 	}
 
 	void Application::begin() {
+		Serial.println("_screenBuffer->begin()");
 		_screenBuffer->begin();
+
+		Serial.println("_touchPanel->begin()");
 		_touchPanel.begin();
+
+		Serial.println("Application::begin() finished");
 	}
 
 	void Application::tick() {
 		if (millis() <= _tickDeadline)
 			return;
 
+		Serial.println("_touchPanel.readTouch()");
 		_touchPanel.readTouch();
 
+		Serial.println("_workspace.tick()");
 		_workspace.tick();
 
+		Serial.println("_workspace.measure()");
 		_workspace.measure(_screenBuffer);
+
+		Serial.println("_workspace.arrange()");
 		_workspace.arrange();
+
+		Serial.println("_workspace.render()");
 		_workspace.render(_screenBuffer);
+
+		Serial.println("_workspace.render() finished");
 
 		_tickDeadline = millis() + _tickInterval;
 	}

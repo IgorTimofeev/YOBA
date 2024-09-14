@@ -23,7 +23,7 @@ namespace yoba {
 		}
 	}
 
-	uint8_t EightBitsPaletteBuffer::getNativeColor(Color* color) {
+	uint8_t EightBitsPaletteBuffer::getNativeColor(const Color* color) {
 		switch (color->getType()) {
 			case ColorType::Palette:
 				return _palette[((ColorPalette*) color)->getIndex()];

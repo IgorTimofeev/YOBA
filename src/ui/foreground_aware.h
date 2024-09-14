@@ -12,6 +12,8 @@ namespace yoba {
 
 			void setForeground(const Color* value) {
 				_foreground = value;
+
+				invalidate();
 			}
 
 		private:

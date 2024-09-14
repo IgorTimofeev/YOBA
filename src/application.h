@@ -29,7 +29,7 @@ namespace yoba {
 			}
 
 		private:
-			Workspace _workspace;
+			Workspace _workspace = Workspace();
 
 			uint32_t _tickInterval = 1000 / 30;
 			uint32_t _tickDeadline = 0;

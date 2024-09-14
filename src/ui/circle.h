@@ -11,7 +11,7 @@ namespace yoba {
 			void onRender(ScreenBuffer* screenBuffer) override {
 				auto bounds = getBounds();
 
-				display.renderCircle(
+				screenBuffer->renderCircle(
 					Point(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2),
 					min(bounds.getWidth(), bounds.getHeight()) / 2,
 					getFillColor()

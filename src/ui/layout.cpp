@@ -1,4 +1,5 @@
 #include "layout.h"
+#include "../event.h"
 
 namespace yoba {
 	void Layout::tick() {

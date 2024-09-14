@@ -16,20 +16,10 @@ namespace yoba {
 	}
 
 	void FT6336UDriver::begin() {
-		// Interrupt
-		pinMode(_intPin, INPUT_PULLUP);
-		attachInterrupt(digitalPinToInterrupt(_intPin), onTouchInterrupted, CHANGE);
+		TouchDriver::begin();
 
-		// Initialize I2C
-		Wire.begin(_sdaPin, _sclPin);
-		// Int Pin Configuration
-		pinMode(_intPin, INPUT);
-		// Reset Pin Configuration
-		pinMode(_rstPin, OUTPUT);
-		digitalWrite(_rstPin, LOW);
-		delay(10);
-		digitalWrite(_rstPin, HIGH);
-//    delay(500);
+		// Do we need some delay? Hmmm
+		//    delay(500);
 	}
 
 	uint8_t FT6336UDriver::read_device_mode() {

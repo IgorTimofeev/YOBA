@@ -12,8 +12,8 @@ namespace yoba {
 	class SevenSegment : public BackgroundAware, public ForegroundAware {
 		public:
 			SevenSegment() {
-				setBackground(&HighColor::black);
-				setForeground(&HighColor::white);
+				setBackground(&Color16::black);
+				setForeground(&Color16::white);
 			}
 
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) override {
@@ -31,12 +31,12 @@ namespace yoba {
 
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
 					if (value > 0) {
-						drawDigit(display, bounds.getPosition(), value % 10);
+						drawDigit(screenBuffer, bounds.getPosition(), value % 10);
 
 						value /= 10;
 					}
 					else {
-						drawDigit(display, bounds.getPosition(), 0);
+						drawDigit(screenBuffer, bounds.getPosition(), 0);
 					}
 
 					bounds.setX(bounds.getX() - getDigitWidth() - getSpacing());
@@ -124,13 +124,13 @@ namespace yoba {
 				uint8_t t = getSegmentThickness();
 				uint8_t l = getSegmentLength();
 
-				display.renderRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getForeground() : getBackground());
-				display.renderRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getForeground() : getBackground());
-				display.renderRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getForeground() : getBackground());
-				display.renderRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getForeground() : getBackground());
-				display.renderRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getForeground() : getBackground());
-				display.renderRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getForeground() : getBackground());
-				display.renderRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getForeground() : getBackground());
+				screenBuffer->renderRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getForeground() : getBackground());
 			}
 
 			void drawDigit(ScreenBuffer* screenBuffer, const Point& position, uint8_t digit) {

@@ -35,7 +35,7 @@ namespace yoba {
 								continue;
 
 							childSize = child->measure(
-								display,
+								screenBuffer,
 								Size(
 									Size::calculated,
 									availableSize.getHeight()
@@ -61,7 +61,7 @@ namespace yoba {
 								continue;
 
 							childSize = child->measure(
-								display,
+								screenBuffer,
 								Size(
 									availableSize.getWidth(),
 									Size::calculated

@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #include "drivers/touchDriver.h"
 #include "../../action.h"
@@ -41,9 +41,6 @@ namespace yoba {
 		protected:
 			TouchDriver* _driver;
 
-			static volatile bool _touchInterrupted;
-			static void onTouchInterrupted();
-
 			// -------------------------------- Touch --------------------------------
 
 			bool _isTouched = false;
@@ -68,7 +65,7 @@ namespace yoba {
 			Action<const Point&, const Point&> _onPinchDrag;
 			Action<const Point&, const Point&> _onPinchUp;
 
-			Point rotateTouchPoint(Point& point);
+			Point rotateTouchPoint(Point point);
 			Point readTouchPoint1();
 			Point readTouchPoint2();
 			void callOnTouchDown();

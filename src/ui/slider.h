@@ -7,6 +7,7 @@
 #include "action.h"
 #include "background_aware.h"
 #include "foreground_aware.h"
+#include "../event.h"
 
 namespace yoba {
 	class Slider : public BackgroundAware, public ForegroundAware {
@@ -30,7 +31,7 @@ namespace yoba {
 				}
 
 				auto bounds = getBounds();
-				auto part = Number::clampFloat((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth());
+				auto part = constrain((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0, 1);
 
 				setValue(part);
 
@@ -41,13 +42,12 @@ namespace yoba {
 				auto bounds = getBounds();
 				auto part = (uint16_t) round(_value * (float) bounds.getWidth());
 
-				display.renderRectangle(
+				screenBuffer->renderFilledRectangle(
 					bounds,
-					_cornerRadius,
 					getBackground()
 				);
 
-				display.renderRectangle(
+				screenBuffer->renderFilledRectangle(
 					Bounds(
 						bounds.getPosition(),
 						Size(
@@ -55,20 +55,12 @@ namespace yoba {
 							bounds.getHeight()
 						)
 					),
-					_cornerRadius,
 					getForeground()
 				);
 			}
 
 			// -------------------------------- Getters & setters --------------------------------
 
-			uint16_t getCornerRadius() const {
-				return _cornerRadius;
-			}
-
-			void setCornerRadius(uint16_t value) {
-				_cornerRadius = value;
-			}
 
 			float getValue() const {
 				return _value;
@@ -89,7 +81,6 @@ namespace yoba {
 
 		private:
 			float _value = 1;
-			uint16_t _cornerRadius = 0;
 
 			Action<> _onValueChanged {};
 

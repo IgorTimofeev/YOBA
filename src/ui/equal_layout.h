@@ -2,6 +2,7 @@
 
 #include "stack_layout.h"
 #include "set"
+#include "../size.h"
 
 namespace yoba {
 	class EqualLayout : public StackLayout {
@@ -37,9 +38,9 @@ namespace yoba {
 					case horizontal:
 						for (auto child : *this) {
 							childSize = child->measure(
-								display,
+								screenBuffer,
 								Size(
-									Size::infinity,
+									Size::calculated,
 									availableSize.getHeight()
 								)
 							);
@@ -74,10 +75,10 @@ namespace yoba {
 
 						for (auto child : *this) {
 							childSize = child->measure(
-								display,
+								screenBuffer,
 								Size(
 									availableSize.getWidth(),
-									getChildAutoSize(child) ? Size::infinity : equalSize
+									getChildAutoSize(child) ? Size::calculated : equalSize
 								)
 							);
 

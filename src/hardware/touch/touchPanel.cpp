@@ -1,18 +1,11 @@
 #include "touchPanel.h"
 
 namespace yoba {
-	volatile bool TouchPanel::_touchInterrupted = false;
-
 	TouchPanel::TouchPanel(TouchDriver* driver) : _driver(driver) {
 
 	}
 
-	void TouchPanel::onTouchInterrupted() {
-		_touchInterrupted = true;
-	}
-
-
-	Point TouchPanel::rotateTouchPoint(Point& point) {
+	Point TouchPanel::rotateTouchPoint(Point point) {
 		// TODO add rotation support
 //		switch (_tft.getRotation()) {
 //			// 270
@@ -28,11 +21,11 @@ namespace yoba {
 	}
 
 	Point TouchPanel::readTouchPoint1() {
-		return rotateTouchPoint(_touchDriver.readPoint1());
+		return rotateTouchPoint(_driver->readPoint1());
 	}
 
 	Point TouchPanel::readTouchPoint2() {
-		return rotateTouchPoint(_touchDriver.readPoint12());
+		return rotateTouchPoint(_driver->readPoint2());
 	}
 
 	void TouchPanel::onTouchDown(const Point& point) {
@@ -105,13 +98,13 @@ namespace yoba {
 	}
 
 	void TouchPanel::readTouch() {
-		if (!_touchInterrupted)
+		if (!_driver->getInterruptFlag())
 			return;
 
-		_touchInterrupted = false;
+		_driver->clearInterruptFlag();
 
-		auto isDown1 = _touchDriver.isPoint1Down();
-		auto isDown2 = _touchDriver.isPoint2Down();
+		auto isDown1 = _driver->isPoint1Down();
+		auto isDown2 = _driver->isPoint2Down();
 
 		if (isDown1) {
 			if (isDown2) {
@@ -123,7 +116,7 @@ namespace yoba {
 					if (
 						point1 != _touchPoints[0].getPosition()
 						|| point2 != _touchPoints[1].getPosition()
-						) {
+					) {
 						_touchPoints[0].setPosition(point1);
 						_touchPoints[1].setPosition(point2);
 

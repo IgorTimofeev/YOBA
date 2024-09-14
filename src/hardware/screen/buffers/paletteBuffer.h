@@ -2,11 +2,11 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "renderBuffer.h"
+#include "nativeBuffer.h"
 
 namespace yoba {
 	template<typename TIndex>
-	class PaletteBuffer : public RenderBuffer<TIndex> {
+	class PaletteBuffer : public NativeBuffer<TIndex> {
 		public:
 			PaletteBuffer(ScreenDriver *driver, const Size &resolution, uint16_t *palette);
 
@@ -20,7 +20,7 @@ namespace yoba {
 	};
 
 	template<typename TIndex>
-	PaletteBuffer<TIndex>::PaletteBuffer(ScreenDriver *driver, const Size &resolution, uint16_t *palette) : RenderBuffer<TIndex>(driver, resolution), _palette(palette) {
+	PaletteBuffer<TIndex>::PaletteBuffer(ScreenDriver *driver, const Size &resolution, uint16_t *palette) : NativeBuffer<TIndex>(driver, resolution), _palette(palette) {
 
 	}
 

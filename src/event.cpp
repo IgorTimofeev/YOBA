@@ -34,7 +34,7 @@ namespace yoba {
 			ScreenEvent::matches(element)
 			&& (
 				element->isCaptured()
-				|| element->getBounds().intersectsWith(_position)
+				|| element->getBounds().intersects(_position)
 			);
 	}
 
@@ -97,8 +97,8 @@ namespace yoba {
 			&& (
 				element->isCaptured()
 				||
-				element->getBounds().intersectsWith(_position1)
-				&& element->getBounds().intersectsWith(_position2)
+				element->getBounds().intersects(_position1)
+				&& element->getBounds().intersects(_position2)
 			);
 	}
 

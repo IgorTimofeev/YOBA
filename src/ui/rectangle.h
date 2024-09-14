@@ -14,20 +14,10 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				display.renderRectangle(getBounds(), getCornerRadius(), getFillColor());
-			}
-
-			// -------------------------------- Getters & setters --------------------------------
-
-			uint8_t getCornerRadius() const {
-				return _cornerRadius;
-			}
-
-			void setCornerRadius(uint8_t value) {
-				_cornerRadius = value;
+				screenBuffer->renderFilledRectangle(getBounds(), getFillColor());
 			}
 
 		private:
-			uint8_t _cornerRadius = 0;
+
 	};
 }

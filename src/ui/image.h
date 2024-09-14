@@ -12,7 +12,7 @@ namespace yoba {
 				if (!getSource() || !getSource()->getPixels())
 					return;
 
-				display.renderImage(
+				screenBuffer->renderImage(
 					Bounds(
 						getBounds().getPosition(),
 						getSource()->getSize()

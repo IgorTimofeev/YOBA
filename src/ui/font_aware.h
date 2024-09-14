@@ -1,19 +1,20 @@
 #pragma once
 
 #include "element.h"
+#include "fonts/font.h"
 
 namespace yoba {
 	class FontAware : public virtual Element {
 		public:
-			const uint8_t* getFont() const {
+			Font* getFont() const {
 				return _font;
 			}
 
-			void setFont(const uint8_t* value) {
+			void setFont(Font* value) {
 				_font = value;
 			}
 
 		private:
-			const uint8_t* _font = nullptr;
+			Font* _font = nullptr;
 	};
 }

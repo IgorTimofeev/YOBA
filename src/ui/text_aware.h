@@ -1,6 +1,7 @@
 #pragma once
 
 #include "element.h"
+#include "fonts/font.h"
 
 namespace yoba {
 	class TextAware : public virtual Element {
@@ -11,9 +12,11 @@ namespace yoba {
 
 			void setText(const String &value) {
 				_text = value;
+
+				invalidate();
 			}
 
 		private:
-			String _text = "Hello";
+			String _text;
 	};
 }
