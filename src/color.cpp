@@ -5,7 +5,16 @@ namespace yoba {
 	const Color16 Color16::black = Color16(0x0000);
 	const Color16 Color16::white = Color16(0xFFFF);
 
+	Color::Color(ColorType type) : _type(type) {
+
+	}
+
+	ColorType Color::getType() const {
+		return _type;
+	}
+
 	Color24::Color24(uint8_t r, uint8_t g, uint8_t b) :
+		Color(ColorType::Bit24),
 		_r(r),
 		_g(g),
 		_b(b)
@@ -13,13 +22,27 @@ namespace yoba {
 
 	}
 
-	Color24::Color24(const Color24 &source) {
-		_r = source._r;
-		_g = source._g;
-		_b = source._b;
+	Color24::Color24() : Color24(0, 0, 0) {
+
 	}
 
-	Color24::Color24(const ColorHSB &hsb) {
+	Color24::Color24(uint32_t value) : Color24(
+		value >> 16 & 0xFF,
+		value >> 8 & 0xFF,
+		value & 0xFF
+	) {
+
+	}
+
+	Color24::Color24(const Color24 &source) : Color24(
+		source._r,
+		source._g,
+		source._b
+	)  {
+
+	}
+
+	Color24::Color24(const ColorHSB &hsb) : Color(ColorType::Bit24) {
 		auto hueSector = hsb._h * 6.0f;
 		auto hueSectorIntegerPart = (uint8_t) hueSector;
 		auto hueSectorFractionalPart = hueSector - (float) hueSectorIntegerPart;
@@ -69,18 +92,6 @@ namespace yoba {
 		}
 	}
 
-	Color24::Color24() {
-		_r = 0;
-		_g = 0;
-		_b = 0;
-	}
-
-	Color24::Color24(uint32_t value) {
-		_r = value >> 16 & 0xFF;
-		_g = value >> 8 & 0xFF;
-		_b = value & 0xFF;
-	}
-
 	void Color24::add(const Color24 &color) {
 		add(color._r, color._g, color._b);
 	}
@@ -101,7 +112,7 @@ namespace yoba {
 		return _r << 16 | _g << 8 | _b;
 	}
 
-	uint16_t Color24::toUint16() const {
+	uint16_t Color24::to16Bit() const {
 		return (_r >> 3) << 3 | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8);
 	}
 
@@ -147,21 +158,29 @@ namespace yoba {
 
 	// ------------------------------------------------------------------------------------
 
-	Color16::Color16(uint16_t value) : _value(value) {
+	Color16::Color16(uint16_t value) : Color(ColorType::Bit16), _value(value) {
 
 	}
 
-	uint16_t Color16::toUint16() const {
+	uint16_t Color16::getValue() const {
 		return _value;
+	}
+
+	void Color16::setValue(uint16_t value) {
+		_value = value;
 	}
 
 	// ------------------------------------------------------------------------------------
 
-	ColorPalette::ColorPalette(uint8_t index) : _index(index) {
+	ColorPalette::ColorPalette(uint8_t index) : Color(ColorType::Palette), _index(index) {
 
 	}
 
-	uint16_t ColorPalette::toUint16() const {
+	uint8_t ColorPalette::getIndex() const {
 		return _index;
+	}
+
+	void ColorPalette::setIndex(uint8_t index) {
+		_index = index;
 	}
 }

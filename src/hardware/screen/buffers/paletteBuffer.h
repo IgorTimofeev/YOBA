@@ -10,8 +10,10 @@ namespace yoba {
 		public:
 			PaletteBuffer(ScreenDriver *driver, const Size &resolution, uint16_t *palette);
 
-			void setPaletteColor(TIndex index, uint16_t paletteIndex);
 			void clearNative(TIndex paletteIndex) override;
+
+			TIndex getPaletteColor(size_t index);
+			void setPaletteColor(size_t index, TIndex value);
 
 		protected:
 			uint16_t* _palette;
@@ -23,12 +25,17 @@ namespace yoba {
 	}
 
 	template<typename TIndex>
-	void PaletteBuffer<TIndex>::setPaletteColor(TIndex index, uint16_t paletteIndex) {
-		_palette[index] = paletteIndex;
+	void PaletteBuffer<TIndex>::clearNative(TIndex paletteIndex) {
+		memset((uint16_t*) this->_buffer, (int) paletteIndex, this->_bufferLength);
 	}
 
 	template<typename TIndex>
-	void PaletteBuffer<TIndex>::clearNative(TIndex paletteIndex) {
-		memset((uint16_t*) this->_buffer, (int) paletteIndex, this->_bufferLength);
+	TIndex PaletteBuffer<TIndex>::getPaletteColor(size_t index) {
+		return _palette[index];
+	}
+
+	template<typename TIndex>
+	void PaletteBuffer<TIndex>::setPaletteColor(size_t index, TIndex value) {
+		_palette[index] = value;
 	}
 }

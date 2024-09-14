@@ -3,18 +3,31 @@
 #include <cstdint>
 
 namespace yoba {
+	enum class ColorType : uint8_t {
+		Bit8,
+		Bit16,
+		Bit24,
+		Palette
+	};
+
 	class Color {
 		public:
-			virtual uint16_t toUint16() const = 0;
+			explicit Color(ColorType type);
+
+			ColorType getType() const;
+
+		private:
+			ColorType _type;
 	};
 
 	class ColorHSB {
 		public:
+			ColorHSB(float h, float s, float b);
+
 			float _h = 0;
 			float _s = 0;
 			float _b = 0;
 
-			ColorHSB(float h, float s, float b);
 	};
 
 	class Color16 : public Color {
@@ -24,7 +37,8 @@ namespace yoba {
 
 			explicit Color16(uint16_t value);
 
-			uint16_t toUint16() const override;
+			uint16_t getValue() const;
+			void setValue(uint16_t value);
 
 		private:
 			uint16_t _value;
@@ -39,7 +53,7 @@ namespace yoba {
 
 			Color24(Color24 const &source);
 
-			Color24(ColorHSB const &source);
+			explicit Color24(const ColorHSB &source);
 
 			Color24();
 
@@ -52,8 +66,7 @@ namespace yoba {
 			void add(const Color24& color);
 
 			uint32_t to24Bit() const;
-
-			uint16_t toUint16() const override;
+			uint16_t to16Bit() const;
 
 			static uint8_t interpolateChannel(uint8_t first, uint8_t second, float position);
 
@@ -78,7 +91,8 @@ namespace yoba {
 		public:
 			explicit ColorPalette(uint8_t index);
 
-			uint16_t toUint16() const override;
+			uint8_t getIndex() const;
+			void setIndex(uint8_t index);
 
 		private:
 			uint8_t _index;

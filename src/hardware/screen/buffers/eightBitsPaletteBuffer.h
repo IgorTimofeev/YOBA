@@ -12,6 +12,7 @@ namespace yoba {
 			void flush() override;
 
 		protected:
+			uint8_t getNativeColor(Color* color) override;
 			void renderPixelNative(const Point &point, uint8_t paletteIndex) override;
 			void renderHorizontalLineNative(const Point &point, uint16_t width, uint8_t paletteIndex) override;
 			void renderVerticalLineNative(const Point &point, uint16_t height, uint8_t paletteIndex) override;

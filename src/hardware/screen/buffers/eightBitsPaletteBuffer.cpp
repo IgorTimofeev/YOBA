@@ -23,6 +23,17 @@ namespace yoba {
 		}
 	}
 
+	uint8_t EightBitsPaletteBuffer::getNativeColor(Color* color) {
+		switch (color->getType()) {
+			case ColorType::Palette:
+				return _palette[((ColorPalette*) color)->getIndex()];
+
+				// TODO: implement other types
+			default:
+				return 0;
+		}
+	}
+
 	void EightBitsPaletteBuffer::renderPixelNative(const Point &point, uint8_t paletteIndex) {
 		_buffer[getIndex(point)] = paletteIndex;
 	}

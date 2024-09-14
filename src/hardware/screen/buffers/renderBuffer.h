@@ -2,6 +2,7 @@
 
 #include "screenBuffer.h"
 #include "fonts/font.h"
+#include "../../../color.h"
 
 namespace yoba {
 	template<typename TColor>
@@ -9,23 +10,24 @@ namespace yoba {
 		public:
 			RenderBuffer(ScreenDriver *driver, const Size &resolution);
 
-			void clear(TColor color);
-			void renderPixel(const Point &point, TColor color);
-			void renderHorizontalLine(const Point &point, uint16_t length, TColor color);
-			void renderVerticalLine(const Point &point, uint16_t length, TColor color);
-			void renderFilledRectangle(const Bounds& bounds, TColor color);
+			void clear(Color* color);
+			void renderPixel(const Point &point, Color* color);
+			void renderHorizontalLine(const Point &point, uint16_t length, Color* color);
+			void renderVerticalLine(const Point &point, uint16_t length, Color* color);
+			void renderFilledRectangle(const Bounds& bounds, Color* color);
 
 			// Thanks, AdaFruit!
-			void renderLine(const Point& from, const Point& to, TColor color);
+			void renderLine(const Point& from, const Point& to, Color* color);
 			// Thanks, AdaFruit!
-			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, TColor color);
+			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, Color* color);
 			// Thanks, AdaFruit!
-			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, TColor color);
+			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, Color* color);
 
-			void renderText(const Point& point, Font* font, TColor color, const char* text);
+			void renderText(const Point& point, Font* font, Color* color, const char* text);
 			Size getTextSize(Font* font, const char* text);
 
 		protected:
+			virtual TColor getNativeColor(Color* color) = 0;
 			virtual void clearNative(TColor color) = 0;
 			virtual void renderPixelNative(const Point &point, TColor color) = 0;
 			virtual void renderVerticalLineNative(const Point &point, uint16_t width, TColor color) = 0;
@@ -39,18 +41,18 @@ namespace yoba {
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::clear(TColor color) {
-		clearNative(color);
+	void RenderBuffer<TColor>::clear(Color* color) {
+		clearNative(getNativeColor(color));
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderPixel(const Point &point, TColor color) {
+	void RenderBuffer<TColor>::renderPixel(const Point &point, Color* color) {
 		if (getViewport().intersects(point))
-			renderPixelNative(point, color);
+			renderPixelNative(point, getNativeColor(color));
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderHorizontalLine(const Point &point, uint16_t length, TColor color) {
+	void RenderBuffer<TColor>::renderHorizontalLine(const Point &point, uint16_t length, Color* color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -66,11 +68,11 @@ namespace yoba {
 		uint16_t x2 = min(point.getX() + length - 1, viewport.getX2());
 		length = x2 - x1 + 1;
 
-		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
+		renderHorizontalLineNative(Point(x1, point.getY()), length, getNativeColor(color));
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderVerticalLine(const Point &point, uint16_t length, TColor color) {
+	void RenderBuffer<TColor>::renderVerticalLine(const Point &point, uint16_t length, Color* color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -86,11 +88,11 @@ namespace yoba {
 		uint16_t y2 = min(point.getY() + length - 1, viewport.getY2());
 		length = y2 - y1 + 1;
 
-		renderVerticalLineNative(Point(point.getX(), y1), length, color);
+		renderVerticalLineNative(Point(point.getX(), y1), length, getNativeColor(color));
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderLine(const Point &from, const Point &to, TColor color) {
+	void RenderBuffer<TColor>::renderLine(const Point &from, const Point &to, Color* color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {
 			renderVerticalLine(from, to.getY() - from.getY() + 1, color);
@@ -186,7 +188,7 @@ namespace yoba {
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderTriangle(const Point &point1, const Point &point2, const Point &point3, TColor color) {
+	void RenderBuffer<TColor>::renderTriangle(const Point &point1, const Point &point2, const Point &point3, Color* color) {
 		// Simple as fuck
 		renderLine(point1, point2, color);
 		renderLine(point2, point3, color);
@@ -194,7 +196,7 @@ namespace yoba {
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderFilledTriangle(const Point &point1, const Point &point2, const Point &point3, TColor color) {
+	void RenderBuffer<TColor>::renderFilledTriangle(const Point &point1, const Point &point2, const Point &point3, Color* color) {
 		int32_t
 			x1 = point1.getX(),
 			y1 = point1.getY(),
@@ -302,7 +304,7 @@ namespace yoba {
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderFilledRectangle(const Bounds &bounds, TColor color) {
+	void RenderBuffer<TColor>::renderFilledRectangle(const Bounds &bounds, Color* color) {
 		const auto& viewport = getViewport();
 
 		if (viewport.intersects(bounds))
@@ -345,7 +347,7 @@ namespace yoba {
 	}
 
 	template<typename TColor>
-	void RenderBuffer<TColor>::renderText(const Point &point, Font* font, TColor color, const char* text) {
+	void RenderBuffer<TColor>::renderText(const Point &point, Font* font, Color* color, const char* text) {
 		const char* charPtr;
 		size_t charIndex = 0;
 		const Glyph* glyph;
