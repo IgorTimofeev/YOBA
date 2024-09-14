@@ -6,37 +6,39 @@
 #include "bounds.h"
 #include "hardware/screen/drivers/driver.h"
 
-class Buffer {
-	public:
-		Buffer(
-			Driver* driver,
-			const Size& resolution
-		);
+namespace yoba {
+	class Buffer {
+		public:
+			Buffer(
+				Driver* driver,
+				const Size& resolution
+			);
 
-		void begin();
+			void begin();
 
-		Driver* getDriver() const;
+			Driver* getDriver() const;
 
-		const Size &getSize() const;
+			const Size &getSize() const;
 
-		Bounds& getViewport();
+			Bounds& getViewport();
 
-		void setViewport(const Bounds& bounds);
+			void setViewport(const Bounds& bounds);
 
-		void resetViewport();
+			void resetViewport();
 
-		virtual void allocate() = 0;
-		virtual void flush() = 0;
+			virtual void allocate() = 0;
+			virtual void flush() = 0;
 
-		size_t getIndex(uint16_t x, uint16_t y) const;
-		size_t getIndex(const Point& point) const;
+			size_t getIndex(uint16_t x, uint16_t y) const;
+			size_t getIndex(const Point& point) const;
 
-	protected:
-		Driver* _driver;
+		protected:
+			Driver* _driver;
 
-		uint8_t* _buffer = nullptr;
-		size_t _bufferLength = 0;
+			uint8_t* _buffer = nullptr;
+			size_t _bufferLength = 0;
 
-		const Size _size;
-		Bounds _viewport = Bounds();
-};
+			const Size _size;
+			Bounds _viewport = Bounds();
+	};
+}

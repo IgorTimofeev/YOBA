@@ -6,6 +6,8 @@
 #include "fonts/Unscii16Font.h"
 #include "fonts/Unscii8ThinFont.h"
 
+using namespace yoba;
+
 ILI9341Driver driver = ILI9341Driver(
 	5,
 	16,
