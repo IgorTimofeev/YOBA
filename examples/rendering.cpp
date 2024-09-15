@@ -5,6 +5,7 @@
 #include "color.h"
 #include "fonts/Unscii16Font.h"
 #include "fonts/Unscii8ThinFont.h"
+#include "number.h"
 
 using namespace yoba;
 
@@ -37,14 +38,14 @@ void setup() {
 	uint8_t govno = 0;
 
 	for (int i = 0; i < 16; i++) {
-		buffer.setPaletteColor(i, Color24(govno, govno, govno).toUint16());
+		buffer.setPaletteColor(i, Color24(govno, govno, govno).to16Bit());
 		govno += 0x11;
 	}
 
 	// RGB
-	buffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).toUint16());
-	buffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).toUint16());
-	buffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).toUint16());
+	buffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).to16Bit());
+	buffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).to16Bit());
+	buffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).to16Bit());
 
 	Serial.println("Beginning display");
 	buffer.begin();
@@ -84,7 +85,7 @@ void render() {
 	// Viewport visualization
 	buffer.renderFilledRectangle(
 		buffer.getViewport(),
-		constrain(paletteIndex + paletteIndexInc, 0, 15)
+		clamp(paletteIndex + paletteIndexInc, 0, 15)
 	);
 
 	// Dots

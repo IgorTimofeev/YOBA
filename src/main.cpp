@@ -59,14 +59,14 @@ void setup() {
 	uint8_t govno = 0;
 
 	for (int i = 0; i < 16; i++) {
-		screenBuffer.setPaletteColor(i, Color24(govno, govno, govno).to16Bit());
+		screenBuffer.setPaletteColor(i, Color24(govno, govno, govno).toUint16());
 		govno += 0x11;
 	}
 
 	// RGB
-	screenBuffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).to16Bit());
-	screenBuffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).to16Bit());
-	screenBuffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).to16Bit());
+	screenBuffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).toUint16());
+	screenBuffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).toUint16());
+	screenBuffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).toUint16());
 
 	// Starting application
 	application.begin();

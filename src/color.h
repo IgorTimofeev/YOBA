@@ -64,8 +64,8 @@ namespace yoba {
 
 			void add(const Color24& color);
 
-			uint32_t to24Bit() const;
-			uint16_t to16Bit() const;
+			uint32_t toUint32() const;
+			uint16_t toUint16() const;
 
 			static uint8_t interpolateChannel(uint8_t first, uint8_t second, float position);
 

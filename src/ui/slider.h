@@ -8,6 +8,7 @@
 #include "background_aware.h"
 #include "foreground_aware.h"
 #include "../event.h"
+#include "../number.h"
 
 namespace yoba {
 	class Slider : public BackgroundAware, public ForegroundAware {
@@ -31,7 +32,7 @@ namespace yoba {
 				}
 
 				auto bounds = getBounds();
-				auto part = constrain((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0, 1);
+				auto part = clamp((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
 
 				setValue(part);
 
@@ -40,7 +41,7 @@ namespace yoba {
 
 			void onRender(ScreenBuffer* screenBuffer) override {
 				auto bounds = getBounds();
-				auto part = (uint16_t) round(_value * (float) bounds.getWidth());
+				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());
 
 				screenBuffer->renderFilledRectangle(
 					bounds,
@@ -85,7 +86,7 @@ namespace yoba {
 			Action<> _onValueChanged {};
 
 			void clampValue() {
-				_value = Number::clampFloat(_value, 0, 1);
+				_value = clamp(_value, 0.0f, 1.0f);
 			}
 	};
 }

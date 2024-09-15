@@ -1,5 +1,6 @@
 #include "color.h"
 #include "Arduino.h"
+#include "number.h"
 
 namespace yoba {
 	Color::Color(ColorType type) : _type(type) {
@@ -94,22 +95,22 @@ namespace yoba {
 	}
 
 	void Color24::add(uint8_t r, uint8_t g, uint8_t b) {
-		_r = (uint8_t) constrain(_r + r, 0, 255);
-		_g = (uint8_t) constrain(_g + g, 0, 255);
-		_b = (uint8_t) constrain(_b + b, 0, 255);
+		_r = (uint8_t) clamp(_r + r, 0, 255);
+		_g = (uint8_t) clamp(_g + g, 0, 255);
+		_b = (uint8_t) clamp(_b + b, 0, 255);
 	}
 
 	void Color24::multiply(float factor) {
-		_r = (uint8_t) constrain((float) _r * factor, 0.0f, 255.0f);
-		_g = (uint8_t) constrain((float) _g * factor, 0.0f, 255.0f);
-		_b = (uint8_t) constrain((float) _b * factor, 0.0f, 255.0f);
+		_r = (uint8_t) clamp((float) _r * factor, 0.0f, 255.0f);
+		_g = (uint8_t) clamp((float) _g * factor, 0.0f, 255.0f);
+		_b = (uint8_t) clamp((float) _b * factor, 0.0f, 255.0f);
 	}
 
-	uint32_t Color24::to24Bit() const {
+	uint32_t Color24::toUint32() const {
 		return _r << 16 | _g << 8 | _b;
 	}
 
-	uint16_t Color24::to16Bit() const {
+	uint16_t Color24::toUint16() const {
 		return ((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8);
 	}
 
