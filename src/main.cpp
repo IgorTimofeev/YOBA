@@ -7,10 +7,10 @@
 #include "color.h"
 #include "fonts/Unscii16Font.h"
 #include "fonts/Unscii8ThinFont.h"
-#include "application.h"
 #include "ui/rectangle.h"
 #include "ui/text.h"
 #include "ui/debug/TouchCanvas.h"
+#include "ui/application.h"
 
 using namespace yoba;
 
@@ -78,16 +78,16 @@ void setup() {
 	application.begin();
 
 	// Adding UI elements
-	application.getRoot().addChild(&backgroundRect);
+	application.addChild(&backgroundRect);
 
 	text.setAlignment(Alignment::Center);
-	application.getRoot().addChild(&text);
+	application.addChild(&text);
 
 	touchCanvas.setFont(&font);
 	touchCanvas.setForeground(&textColor);
-	application.getRoot().addChild(&touchCanvas);
+	application.addChild(&touchCanvas);
 
-	application.getRoot().addEventHandler([](Event& event) {
+	application.addEventHandler([](Event& event) {
 		if (event.getType() != EventType::TouchDown)
 			return;
 

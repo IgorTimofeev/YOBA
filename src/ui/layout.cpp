@@ -3,7 +3,7 @@
 
 namespace yoba {
 	void Layout::tick() {
-		for (const auto& child : *this) {
+		for (const auto& child : _children) {
 			child->setParent(this);
 			child->setRoot(getRoot());
 
@@ -12,7 +12,7 @@ namespace yoba {
 	}
 
 	void Layout::onRender(ScreenBuffer* screenBuffer) {
-		for (const auto& child : *this) {
+		for (const auto& child : _children) {
 			child->render(screenBuffer);
 		}
 	}
@@ -24,14 +24,6 @@ namespace yoba {
 			if (event.isHandled())
 				return;
 		}
-	}
-
-	std::vector<Element *>::iterator Layout::begin() {
-		return _children.begin();
-	}
-
-	std::vector<Element *>::iterator Layout::end() {
-		return _children.end();
 	}
 
 	size_t Layout::getChildrenCount() {
@@ -102,7 +94,7 @@ namespace yoba {
 
 		Size childSize;
 
-		for (auto child : *this) {
+		for (auto child : _children) {
 			if (!child->isVisible())
 				continue;
 
@@ -119,7 +111,7 @@ namespace yoba {
 	}
 
 	void Layout::onArrange(const Bounds &bounds) {
-		for (auto child : *this) {
+		for (auto child : _children) {
 			if (child->isVisible()) {
 				child->arrange(bounds);
 			}

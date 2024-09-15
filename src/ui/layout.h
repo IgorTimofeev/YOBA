@@ -13,10 +13,6 @@ namespace yoba {
 
 			void onEvent(Event& event) override;
 
-			std::vector<Element*>::iterator begin();
-
-			std::vector<Element*>::iterator end();
-
 			size_t getChildrenCount();
 
 			int32_t getIndexOfChild(Element* element);
@@ -38,11 +34,10 @@ namespace yoba {
 			virtual void operator-=(Element* child);
 
 		protected:
+			std::vector<Element*> _children {};
+
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
-
-		private:
-			std::vector<Element*> _children {};
 	};
 }

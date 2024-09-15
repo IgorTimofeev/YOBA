@@ -2,14 +2,21 @@
 
 #include "layout.h"
 #include "event.h"
+#include "hardware/screen/buffers/screenBuffer.h"
+#include "hardware/touch/drivers/touchDriver.h"
 
 namespace yoba {
 	class Screen;
 	class Animation;
 
-	class RootLayout : public Layout {
+	class Application : public Layout {
 		public:
-			RootLayout();
+			Application(
+				ScreenBuffer* screenBuffer,
+				TouchDriver* touchDriver
+			);
+
+			virtual void begin();
 
 			void measure(ScreenBuffer* screenBuffer);
 			void arrange();
@@ -28,12 +35,15 @@ namespace yoba {
 			void setCapturedElement(Element *capturedElement);
 
 		private:
+			ScreenBuffer* _screenBuffer;
+			TouchDriver* _touchDriver;
+
 			bool _isRendered = false;
 			bool _isMeasured = false;
 			bool _isArranged = false;
 			Element* _capturedElement = nullptr;
 			std::vector<Animation*> _animations {};
 
-			void animate();
+			void animationsTick();
 	};
 }

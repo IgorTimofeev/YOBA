@@ -1,5 +1,5 @@
 #include "element.h"
-#include "rootLayout.h"
+#include "application.h"
 #include "animation.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 
@@ -272,11 +272,11 @@ namespace yoba {
 		return _parent;
 	}
 
-	void Element::setRoot(RootLayout *value) {
+	void Element::setRoot(Application *value) {
 		_root = value;
 	}
 
-	RootLayout *Element::getRoot() {
+	Application *Element::getRoot() {
 		return _root;
 	}
 

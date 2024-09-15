@@ -23,7 +23,7 @@ namespace yoba {
 	};
 
 	class Event;
-	class RootLayout;
+	class Application;
 	class Animation;
 
 	class Element {
@@ -50,8 +50,8 @@ namespace yoba {
 
 			// -------------------------------- Getters & setters --------------------------------
 
-			RootLayout* getRoot();
-			void setRoot(RootLayout* value);
+			Application* getRoot();
+			void setRoot(Application* value);
 
 			Element* getParent();
 			void setParent(Element* value);
@@ -102,7 +102,7 @@ namespace yoba {
 			Alignment _horizontalAlignment = Alignment::Stretch;
 			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;
-			RootLayout* _root = nullptr;
+			Application* _root = nullptr;
 			Element* _parent = nullptr;
 
 			Bounds _bounds;
