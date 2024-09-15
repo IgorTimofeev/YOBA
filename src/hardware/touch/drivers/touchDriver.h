@@ -26,14 +26,14 @@ namespace yoba {
 				digitalWrite(_rstPin, HIGH);
 			}
 
-			virtual bool isPoint1Down() = 0;
-			virtual bool isPoint2Down() = 0;
+			virtual bool readPoint1Down() = 0;
+			virtual bool readPoint2Down() = 0;
 
 			virtual Point readPoint1() = 0;
 			virtual Point readPoint2() = 0;
 
-			static volatile bool getInterruptFlag();
-			static void clearInterruptFlag();
+			volatile bool getInterruptFlag();
+			void clearInterruptFlag();
 
 		protected:
 			uint8_t _sdaPin;

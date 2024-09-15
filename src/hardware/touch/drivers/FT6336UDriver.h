@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
 #include <Arduino.h>
 #include "touchDriver.h"
 
@@ -158,9 +157,9 @@ namespace yoba {
 			// Scan Function
 			FT6336U_TouchPointType scan();
 
-			bool isPoint1Down() override;
+			bool readPoint1Down() override;
 
-			bool isPoint2Down() override;
+			bool readPoint2Down() override;
 
 			Point readPoint1() override;
 
@@ -172,5 +171,4 @@ namespace yoba {
 
 			FT6336U_TouchPointType touchPoint;
 	};
-	#endif
 }

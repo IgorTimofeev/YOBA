@@ -11,7 +11,7 @@ namespace yoba {
 				this->push_back(f);
 			}
 
-			void call(const T&... args) {
+			void call(T... args) {
 				for (const auto& f: *this) {
 					f(args...);
 				}

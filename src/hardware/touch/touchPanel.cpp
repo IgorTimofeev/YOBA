@@ -28,48 +28,21 @@ namespace yoba {
 		return rotateTouchPoint(_driver->readPoint2());
 	}
 
-	void TouchPanel::onTouchDown(const Point& point) {
-
-	}
-
-	void TouchPanel::onTouchDrag(const Point& point) {
-
-	}
-
-	void TouchPanel::onTouchUp(const Point& point) {
-
-	}
-
-	void TouchPanel::onPinchDown(const Point& point1, const Point& point2) {
-
-	}
-
-	void TouchPanel::onPinchDrag(const Point& point1, const Point& point2) {
-
-	}
-
-	void TouchPanel::onPinchUp(const Point& point1, const Point& point2) {
-
-	}
-
 	void TouchPanel::callOnTouchDown() {
 		auto& point = _touchPoints[0].getPosition();
 
-		onTouchDown(point);
 		_onTouchDown.call(point);
 	}
 
 	void TouchPanel::callOnTouchDrag() {
 		auto& point = _touchPoints[0].getPosition();
 
-		onTouchDrag(point);
 		_onTouchDrag.call(point);
 	}
 
 	void TouchPanel::callOnTouchUp() {
 		auto& point = _touchPoints[0].getPosition();
 
-		onTouchUp(point);
 		_onTouchUp.call(point);
 	}
 
@@ -77,7 +50,6 @@ namespace yoba {
 		auto& point1 = _touchPoints[0].getPosition();
 		auto& point2 = _touchPoints[1].getPosition();
 
-		onPinchDown(point1, point2);
 		_onPinchDown.call(point1, point2);
 	}
 
@@ -85,7 +57,6 @@ namespace yoba {
 		auto& point1 = _touchPoints[0].getPosition();
 		auto& point2 = _touchPoints[1].getPosition();
 
-		onPinchDrag(point1, point2);
 		_onPinchDrag.call(point1, point2);
 	}
 
@@ -93,18 +64,17 @@ namespace yoba {
 		auto& point1 = _touchPoints[0].getPosition();
 		auto& point2 = _touchPoints[1].getPosition();
 
-		onPinchUp(point1, point2);
 		_onPinchUp.call(point1, point2);
 	}
 
-	void TouchPanel::readTouch() {
+	void TouchPanel::tick() {
 		if (!_driver->getInterruptFlag())
 			return;
 
 		_driver->clearInterruptFlag();
 
-		auto isDown1 = _driver->isPoint1Down();
-		auto isDown2 = _driver->isPoint2Down();
+		auto isDown1 = _driver->readPoint1Down();
+		auto isDown2 = _driver->readPoint2Down();
 
 		if (isDown1) {
 			if (isDown2) {
@@ -123,10 +93,8 @@ namespace yoba {
 						callOnPinchDrag();
 					}
 				}
-					// Pinch down
+				// Pinch down
 				else {
-
-
 					_isPinched = true;
 
 					_touchPoints[0].setDown(true);
@@ -148,7 +116,7 @@ namespace yoba {
 
 					callOnPinchUp();
 				}
-					// Touch drag
+				// Touch drag
 				else if (_isTouched) {
 					auto point1 = readTouchPoint1();
 
@@ -158,7 +126,7 @@ namespace yoba {
 						callOnTouchDrag();
 					}
 				}
-					// Touch down
+				// Touch down
 				else {
 					_isTouched = true;
 

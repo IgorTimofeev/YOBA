@@ -54,8 +54,7 @@ namespace yoba {
 		if (millis() <= _tickDeadline)
 			return;
 
-		_touchPanel.readTouch();
-
+		_touchPanel.tick();
 		_workspace.tick();
 		_workspace.measure(_screenBuffer);
 		_workspace.arrange();

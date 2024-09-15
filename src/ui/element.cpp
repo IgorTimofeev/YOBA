@@ -90,7 +90,7 @@ namespace yoba {
 		int32_t &newSize
 	) {
 		switch (alignment) {
-			case start:
+			case Alignment::Start:
 				if (size == Size::calculated) {
 					newSize = desiredSize;
 				}
@@ -107,7 +107,7 @@ namespace yoba {
 
 				break;
 
-			case center:
+			case Alignment::Center:
 				if (size == Size::calculated) {
 					newSize = desiredSize;
 				}
@@ -124,7 +124,7 @@ namespace yoba {
 
 				break;
 
-			case end:
+			case Alignment::End:
 				if (size == Size::calculated) {
 					newSize = desiredSize;
 				}
@@ -141,7 +141,7 @@ namespace yoba {
 
 				break;
 
-			case stretch:
+			case Alignment::Stretch:
 				if (size == Size::calculated) {
 					newSize = limit;
 				}

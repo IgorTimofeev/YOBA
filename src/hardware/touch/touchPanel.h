@@ -36,7 +36,7 @@ namespace yoba {
 				_onPinchUp.add(callback);
 			}
 
-			void readTouch();
+			void tick();
 
 		protected:
 			TouchDriver* _driver;
@@ -50,13 +50,6 @@ namespace yoba {
 				TouchPoint(),
 				TouchPoint()
 			};
-
-			virtual void onTouchDown(const Point& point);
-			virtual void onTouchDrag(const Point& point);
-			virtual void onTouchUp(const Point& point);
-			virtual void onPinchDown(const Point& point1, const Point& point2);
-			virtual void onPinchDrag(const Point& point1, const Point& point2);
-			virtual void onPinchUp(const Point& point1, const Point& point2);
 
 			Action<const Point&> _onTouchDown;
 			Action<const Point&> _onTouchDrag;
