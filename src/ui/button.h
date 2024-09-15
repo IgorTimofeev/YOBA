@@ -21,7 +21,7 @@ namespace yoba {
 				auto& bounds = getBounds();
 
 				auto& text = getText();
-				auto textSize = screenBuffer->getTextSize(getFont(), text);
+				auto textSize = getFont()->getSize(text);
 
 				screenBuffer->renderFilledRectangle(bounds, getBackground());
 
@@ -37,10 +37,8 @@ namespace yoba {
 			}
 
 			void onEvent(Event &event) override {
-				if (event.getType() != EventType::touchDown && event.getType() != EventType::touchDrag)
-					return;
-
-				_onClick.call(event);
+				if (event.getType() == EventType::TouchDown)
+					_onClick.call(event);
 			}
 
 		private:

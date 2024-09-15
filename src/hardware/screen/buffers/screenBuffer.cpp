@@ -248,44 +248,6 @@ namespace yoba {
 		}
 	}
 
-	Size ScreenBuffer::getTextSize(const Font *font, const char *text) {
-		const char* charPtr;
-		size_t charIndex = 0;
-		const Glyph* glyph;
-
-		uint16_t width = 0;
-
-		while (true) {
-			charPtr = text + charIndex;
-
-			// End of text
-			if (*charPtr == '\0')
-				break;
-
-			// Trying to find glyph matched to char
-			glyph = font->getGlyph(*charPtr);
-
-			if (glyph) {
-				width += glyph->getWidth();
-			}
-				// For non-existing glyphs we can just simulate whitespace
-			else {
-				width += 10;
-			}
-
-			charIndex++;
-		}
-
-		return {
-			width,
-			font->getHeight()
-		};
-	}
-
-	Size ScreenBuffer::getTextSize(const Font *font, const String &text) {
-		return getTextSize(font, text.c_str());
-	}
-
 	void ScreenBuffer::renderText(const Point &point, const Font* font, const Color* color, const char* text) {
 		const char* charPtr;
 		size_t charIndex = 0;

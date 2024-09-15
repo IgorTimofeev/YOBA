@@ -52,10 +52,6 @@ namespace yoba {
 				return _toCodepoint;
 			}
 
-			uint8_t getHeight() const {
-				return _height;
-			}
-
 			const Glyph* getGlyphs() const {
 				return _glyphs;
 			}
@@ -69,6 +65,56 @@ namespace yoba {
 					codepoint < _fromCodepoint || codepoint > _toCodepoint
 					? nullptr :
 					&_glyphs[codepoint - _fromCodepoint];
+			}
+
+			uint16_t getWidth(const char *text) const {
+				const char* charPtr;
+				size_t charIndex = 0;
+				const Glyph* glyph;
+
+				uint16_t width = 0;
+
+				while (true) {
+					charPtr = text + charIndex;
+
+					// End of text
+					if (*charPtr == '\0')
+						break;
+
+					// Trying to find glyph matched to char
+					glyph = getGlyph(*charPtr);
+
+					if (glyph) {
+						width += glyph->getWidth();
+					}
+						// For non-existing glyphs we can just simulate whitespace
+					else {
+						width += 10;
+					}
+
+					charIndex++;
+				}
+
+				return width;
+			}
+
+			uint16_t getWidth(const String& text) const {
+				return getWidth(text.c_str());
+			}
+
+			uint8_t getHeight() const {
+				return _height;
+			}
+
+			Size getSize(const char *text) const {
+				return {
+					getWidth(text),
+					getHeight()
+				};
+			}
+
+			Size getSize(const String& text) const {
+				return getSize(text.c_str());
 			}
 
 		private:

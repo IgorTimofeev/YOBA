@@ -43,7 +43,7 @@ ColorPalette backgroundColor = ColorPalette(0);
 Rectangle backgroundRect = Rectangle(&backgroundColor);
 
 ColorPalette textColor = ColorPalette(18);
-Text text = Text(&font, &textColor);
+Text text = Text(&textColor);
 
 int32_t backgroundPaletteIndex = 0;
 
@@ -76,13 +76,15 @@ void setup() {
 	// Starting application
 	application.begin();
 
+	// Default values
+	application.setDefaultFont(&font);
+
 	// Adding UI elements
 	application.addChild(&backgroundRect);
 
 	text.setAlignment(Alignment::Center);
 	application.addChild(&text);
 
-	touchCanvas.setFont(&font);
 	touchCanvas.setForeground(&textColor);
 	application.addChild(&touchCanvas);
 

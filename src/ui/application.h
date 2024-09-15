@@ -34,6 +34,9 @@ namespace yoba {
 			Element *getCapturedElement() const;
 			void setCapturedElement(Element *capturedElement);
 
+			const Font *getDefaultFont() const;
+			void setDefaultFont(const Font* defaultFont);
+
 		private:
 			ScreenBuffer* _screenBuffer;
 			TouchDriver* _touchDriver;
@@ -43,6 +46,7 @@ namespace yoba {
 			bool _isArranged = false;
 			Element* _capturedElement = nullptr;
 			std::vector<Animation*> _animations {};
+			const Font* _defaultFont = nullptr;
 
 			void animationsTick();
 	};

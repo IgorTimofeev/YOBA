@@ -26,12 +26,17 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getForeground() || !getFont())
+				if (!getForeground())
+					return;
+
+				const auto font = getFontOrDefault();
+
+				if (!font)
 					return;
 
 				for (const auto& point : _points) {
 					screenBuffer->renderFilledRectangle(Bounds(point, Size(10, 10)), getForeground());
-					screenBuffer->renderText(Point(point.getX(), point.getY() + 15), getFont(), getForeground(), String(point.getX()) + String(", ") + String(point.getY()));
+					screenBuffer->renderText(Point(point.getX(), point.getY() + 15), font, getForeground(), String(point.getX()) + String(", ") + String(point.getY()));
 				}
 			}
 

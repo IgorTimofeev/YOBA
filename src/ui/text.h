@@ -17,24 +17,39 @@ namespace yoba {
 				setForeground(foreground);
 			}
 
-			Text(const Font* font, const Color* foreground, const String& value) : Text(font, foreground) {
-				setText(value);
+			explicit Text(const Color* foreground) {
+				setForeground(foreground);
+			}
+
+			Text(const Color* foreground, const String& text) : Text(foreground) {
+				setText(text);
+			}
+
+			Text(const Font* font, const Color* foreground, const String& text) : Text(font, foreground) {
+				setText(text);
 			}
 
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+				const auto font = getFontOrDefault();
+
 				return
-					getFont()
-					? screenBuffer->getTextSize(getFont(), getText())
+					font
+					? font->getSize(getText())
 					: Size();
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getFont() || !getForeground())
+				if (!getForeground())
+					return;
+
+				const auto font = getFontOrDefault();
+
+				if (!font)
 					return;
 
 				screenBuffer->renderText(
 					getBounds().getPosition(),
-					getFont(),
+					font,
 					getForeground(),
 					getText()
 				);

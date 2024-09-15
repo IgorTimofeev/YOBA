@@ -114,4 +114,12 @@ namespace yoba {
 			Element::handleEvent(event);
 		}
 	}
+
+	const Font *Application::getDefaultFont() const {
+		return _defaultFont;
+	}
+
+	void Application::setDefaultFont(const Font *defaultFont) {
+		_defaultFont = defaultFont;
+	}
 }

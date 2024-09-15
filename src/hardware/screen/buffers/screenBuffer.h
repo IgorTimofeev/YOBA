@@ -34,9 +34,6 @@ namespace yoba {
 			virtual void renderFilledRectangle(const Bounds& bounds, const Color* color) = 0;
 
 			// ------------------------ Non-native rendering methods ------------------------
-			Size getTextSize(const Font* font, const char* text);
-			Size getTextSize(const Font* font, const String& text);
-			
 			void renderText(const Point& point, const Font* font, const Color* color, const char* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const String& text);
 
