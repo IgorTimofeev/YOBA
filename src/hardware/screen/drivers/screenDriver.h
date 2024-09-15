@@ -3,11 +3,13 @@
 #include <cstdint>
 #include <driver/spi_master.h>
 #include "../../../size.h"
+#include "point.h"
 
 namespace yoba {
 	enum class ScreenOrientation : uint8_t {
-		Landscape0,
-		Portrait90,
+		Portrait0,
+		Landscape90,
+		Portrait180,
 		Landscape270,
 	};
 
@@ -22,6 +24,8 @@ namespace yoba {
 			);
 
 			void begin();
+
+			virtual void setOrientation(ScreenOrientation orientation) = 0;
 
 			virtual void writeInitializationCommands();
 
@@ -44,6 +48,7 @@ namespace yoba {
 			void sendData(const uint8_t *data, int length);
 
 			void sendCommandAndData(uint8_t command, const uint8_t *data, int length);
+			void sendCommandAndData(uint8_t command, const uint8_t data);
 
 			// This function is called (in irq context!) just before a transmission starts. It will
 			// set the D/C line to the value indicated in the user field.
@@ -72,6 +77,7 @@ namespace yoba {
 
 			const Size &getSize() const;
 			ScreenOrientation getRotation() const;
+			virtual void rotatePoint(Point& point);
 
 		protected:
 			uint8_t _chipSelectPin;

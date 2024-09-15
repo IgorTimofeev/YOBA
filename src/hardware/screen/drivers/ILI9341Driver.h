@@ -16,6 +16,20 @@ namespace yoba {
 
 			void writeInitializationCommands() override;
 
+			void setOrientation(ScreenOrientation orientation) override;
+
 		private:
+			enum class Command : uint8_t {
+				/* MY, MX, MV, ML, BGR, MH, X, X */
+				MADCTL = 0x36,
+				MADCTL_MY = 0x80,
+				MADCTL_MX = 0x40,
+				MADCTL_MV = 0x20,
+				MADCTL_ML = 0x10,
+				MADCTL_BGR = 0x08,
+				MADCTL_MH = 0x04,
+			};
+
+			void sendMemoryAccessControl();
 	};
 }

@@ -3,7 +3,7 @@
 #include "element.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "bounds.h"
-#include "image_source.h"
+#include "imageSource.h"
 
 namespace yoba {
 	class Image : public Element {

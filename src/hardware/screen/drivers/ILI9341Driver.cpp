@@ -6,7 +6,8 @@ namespace yoba {
 		uint8_t dataCommandPin,
 		int8_t resetPin,
 		ScreenOrientation orientation
-	) : ScreenDriver(
+	) :
+	ScreenDriver(
 		chipSelectPin,
 		dataCommandPin,
 		resetPin,
@@ -89,9 +90,8 @@ namespace yoba {
 		b[0] = 0xBE;
 		sendCommandAndData(0xC7, b, 1);
 
-		/* Memory access control, MX=0, MY=0, MV=1, ML=0, BGR=1, MH=0, X, X */
-		b[0] = 0 << 7 | 0 << 6 | 1 << 5 | 0 << 4 | 1 << 3 | 0 << 2 | 0 << 1 | 0;
-		sendCommandAndData(0x36, b, 1);
+		/* Memory access control */
+		sendMemoryAccessControl();
 
 		/* Inversion */
 		b[0] = 0x01;
@@ -188,5 +188,37 @@ namespace yoba {
 		b[0] = 0x00;
 		sendCommandAndData(0x29, b, 1);
 		vTaskDelay(100 / portTICK_PERIOD_MS);
+	}
+
+	void ILI9341Driver::sendMemoryAccessControl() {
+		auto data = (uint8_t) Command::MADCTL_BGR;
+
+		switch (_orientation) {
+			case ScreenOrientation::Portrait0:
+				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY;
+				break;
+
+			case ScreenOrientation::Landscape90:
+				data |= (uint8_t) Command::MADCTL_MV;
+				break;
+
+			case ScreenOrientation::Portrait180:
+				data |= (uint8_t) Command::MADCTL_MV | (uint8_t) Command::MADCTL_MX;
+				break;
+
+			case ScreenOrientation::Landscape270:
+				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
+				break;
+
+			default:
+				break;
+		}
+
+		sendCommandAndData((uint8_t) Command::MADCTL, data | (uint8_t) Command::MADCTL_BGR);
+	}
+
+	void ILI9341Driver::setOrientation(ScreenOrientation orientation) {
+		_orientation = orientation;
+		sendMemoryAccessControl();
 	}
 }

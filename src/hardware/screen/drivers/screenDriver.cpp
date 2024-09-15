@@ -1,5 +1,6 @@
 #include "screenDriver.h"
 #include "Arduino.h"
+#include "point.h"
 
 namespace yoba {
 	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, const Size& size, ScreenOrientation orientation) :
@@ -19,7 +20,38 @@ namespace yoba {
 	ScreenOrientation ScreenDriver::getRotation() const {
 		return _orientation;
 	}
-	
+
+	void ScreenDriver::rotatePoint(Point& point) {
+//		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
+
+		switch (getRotation()) {
+			case ScreenOrientation::Portrait0:
+				break;
+
+			case ScreenOrientation::Landscape90: {
+				int32_t tmp = _size.getHeight() - point.getX();
+				point.setX(point.getY());
+				point.setY(tmp);
+
+				break;
+			}
+
+			case ScreenOrientation::Portrait180:
+				point.setX(_size.getWidth() - point.getX());
+				point.setY(_size.getHeight() - point.getY());
+
+				break;
+
+			case ScreenOrientation::Landscape270: {
+				int32_t tmp = _size.getWidth() - point.getY();
+				point.setX(tmp);
+				point.setY(point.getX());
+
+				break;
+			}
+		}
+	}
+
 	int32_t ScreenDriver::getSPIFrequency() const {
 		return _SPIFrequency;
 	}
@@ -210,6 +242,14 @@ namespace yoba {
 	void ScreenDriver::sendCommandAndData(uint8_t command, const uint8_t *data, int length) {
 		sendCommand(command);
 		sendData(data, length);
+	}
+
+	void ScreenDriver::sendCommandAndData(uint8_t command, const uint8_t data) {
+		uint8_t buffer[] {
+			data
+		};
+
+		sendCommandAndData(command, buffer, 1);
 	}
 
 	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dataCommandPinState) : driver(driver), dataCommandPinState(dataCommandPinState) {}

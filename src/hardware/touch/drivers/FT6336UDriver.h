@@ -159,7 +159,6 @@ namespace yoba {
 			bool _wasTouched = false;
 			bool _wasPinched = false;
 
-			static void rotatePoint(ScreenBuffer* screenBuffer, Point& point);
 			Point readRotatedPoint1(ScreenBuffer* screenBuffer);
 			Point readRotatedPoint2(ScreenBuffer* screenBuffer);
 	};
