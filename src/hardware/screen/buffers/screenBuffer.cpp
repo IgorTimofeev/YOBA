@@ -285,9 +285,9 @@ namespace yoba {
 
 				x += glyph->getWidth();
 			}
-				// For non-existing glyphs we can just simulate whitespace
+			// For non-existing glyphs we can just simulate whitespace
 			else {
-				x += 10;
+				x += Font::missingGlyphWidth;
 			}
 
 			charIndex++;
