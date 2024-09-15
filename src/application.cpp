@@ -11,38 +11,6 @@ namespace yoba {
 		_touchPanel(TouchPanel(touchDriver))
 	{
 		_workspace.setSize(screenBuffer->getSize());
-
-		// Touch
-		_touchPanel.addOnTouchDown([this](const Point& point) {
-			auto event = TouchDownEvent(point);
-			_workspace.handleEvent(event);
-		});
-
-		_touchPanel.addOnTouchDrag([this](const Point& point) {
-			auto event = TouchDragEvent(point);
-			_workspace.handleEvent(event);
-		});
-
-		_touchPanel.addOnTouchUp([this](const Point& point) {
-			auto event = TouchUpEvent(point);
-			_workspace.handleEvent(event);
-		});
-
-		// Pinch
-		_touchPanel.addOnPinchDown([this](const Point& point1, const Point& point2) {
-			auto event = PinchDownEvent(point1, point2);
-			_workspace.handleEvent(event);
-		});
-
-		_touchPanel.addOnPinchDrag([this](const Point& point1, const Point& point2) {
-			auto event = PinchDragEvent(point1, point2);
-			_workspace.handleEvent(event);
-		});
-
-		_touchPanel.addOnPinchUp([this](const Point& point1, const Point& point2) {
-			auto event = PinchUpEvent(point1, point2);
-			_workspace.handleEvent(event);
-		});
 	}
 
 	void Application::begin() {
@@ -54,7 +22,10 @@ namespace yoba {
 		if (millis() <= _tickDeadline)
 			return;
 
-		_touchPanel.tick();
+		_touchPanel.tick([&](Event& event) {
+			_workspace.handleEvent(event);
+		});
+
 		_workspace.tick();
 		_workspace.measure(_screenBuffer);
 		_workspace.arrange();

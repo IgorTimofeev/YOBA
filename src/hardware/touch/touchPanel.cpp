@@ -28,46 +28,7 @@ namespace yoba {
 		return rotateTouchPoint(_driver->readPoint2());
 	}
 
-	void TouchPanel::callOnTouchDown() {
-		auto& point = _touchPoints[0].getPosition();
-
-		_onTouchDown.call(point);
-	}
-
-	void TouchPanel::callOnTouchDrag() {
-		auto& point = _touchPoints[0].getPosition();
-
-		_onTouchDrag.call(point);
-	}
-
-	void TouchPanel::callOnTouchUp() {
-		auto& point = _touchPoints[0].getPosition();
-
-		_onTouchUp.call(point);
-	}
-
-	void TouchPanel::callOnPinchDown() {
-		auto& point1 = _touchPoints[0].getPosition();
-		auto& point2 = _touchPoints[1].getPosition();
-
-		_onPinchDown.call(point1, point2);
-	}
-
-	void TouchPanel::callOnPinchDrag() {
-		auto& point1 = _touchPoints[0].getPosition();
-		auto& point2 = _touchPoints[1].getPosition();
-
-		_onPinchDrag.call(point1, point2);
-	}
-
-	void TouchPanel::callOnPinchUp() {
-		auto& point1 = _touchPoints[0].getPosition();
-		auto& point2 = _touchPoints[1].getPosition();
-
-		_onPinchUp.call(point1, point2);
-	}
-
-	void TouchPanel::tick() {
+	void TouchPanel::tick(const std::function<void(Event&)>& callback) {
 		if (!_driver->getInterruptFlag())
 			return;
 
@@ -90,7 +51,12 @@ namespace yoba {
 						_touchPoints[0].setPosition(point1);
 						_touchPoints[1].setPosition(point2);
 
-						callOnPinchDrag();
+						auto event = PinchDragEvent(
+							_touchPoints[0].getPosition(),
+							_touchPoints[1].getPosition()
+						);
+
+						callback(event);
 					}
 				}
 				// Pinch down
@@ -103,7 +69,12 @@ namespace yoba {
 					_touchPoints[1].setDown(true);
 					_touchPoints[1].setPosition(readTouchPoint2());
 
-					callOnPinchDown();
+					auto event = PinchDownEvent(
+						_touchPoints[0].getPosition(),
+						_touchPoints[1].getPosition()
+					);
+
+					callback(event);
 				}
 			}
 			else {
@@ -114,7 +85,12 @@ namespace yoba {
 					_touchPoints[1].setDown(false);
 					_touchPoints[1].setPosition(readTouchPoint2());
 
-					callOnPinchUp();
+					auto event = PinchUpEvent(
+						_touchPoints[0].getPosition(),
+						_touchPoints[1].getPosition()
+					);
+
+					callback(event);
 				}
 				// Touch drag
 				else if (_isTouched) {
@@ -123,7 +99,11 @@ namespace yoba {
 					if (point1 != _touchPoints[0].getPosition()) {
 						_touchPoints[0].setPosition(point1);
 
-						callOnTouchDrag();
+						auto event = TouchDragEvent(
+							_touchPoints[0].getPosition()
+						);
+
+						callback(event);
 					}
 				}
 				// Touch down
@@ -133,7 +113,11 @@ namespace yoba {
 					_touchPoints[0].setDown(true);
 					_touchPoints[0].setPosition(readTouchPoint1());
 
-					callOnTouchDown();
+					auto event = TouchDownEvent(
+						_touchPoints[0].getPosition()
+					);
+
+					callback(event);
 				}
 			}
 		}
@@ -145,7 +129,12 @@ namespace yoba {
 				_touchPoints[1].setDown(false);
 				_touchPoints[1].setPosition(readTouchPoint2());
 
-				callOnPinchUp();
+				auto event = PinchUpEvent(
+					_touchPoints[0].getPosition(),
+					_touchPoints[1].getPosition()
+				);
+
+				callback(event);
 			}
 
 			// Touch up
@@ -155,7 +144,11 @@ namespace yoba {
 				_touchPoints[0].setDown(false);
 				_touchPoints[0].setPosition(readTouchPoint1());
 
-				callOnTouchUp();
+				auto event = TouchUpEvent(
+					_touchPoints[0].getPosition()
+				);
+
+				callback(event);
 			}
 		}
 	}

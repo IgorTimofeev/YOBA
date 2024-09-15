@@ -3,6 +3,7 @@
 #include <Wire.h>
 #include "cstdlib"
 #include "../touchPoint.h"
+#include "FunctionalInterrupt.h"
 
 namespace yoba {
 	class TouchDriver {
@@ -11,20 +12,7 @@ namespace yoba {
 
 			}
 
-			virtual void begin() {
-				// Interrupt
-				pinMode(_intPin, INPUT_PULLUP);
-				attachInterrupt(digitalPinToInterrupt(_intPin), onTouchInterrupted, CHANGE);
-
-				// I2C
-				Wire.begin(_sdaPin, _sclPin);
-
-				// Reset Pin Configuration
-				pinMode(_rstPin, OUTPUT);
-				digitalWrite(_rstPin, LOW);
-				delay(10);
-				digitalWrite(_rstPin, HIGH);
-			}
+			virtual void begin();
 
 			virtual bool readPoint1Down() = 0;
 			virtual bool readPoint2Down() = 0;
@@ -32,7 +20,7 @@ namespace yoba {
 			virtual Point readPoint1() = 0;
 			virtual Point readPoint2() = 0;
 
-			volatile bool getInterruptFlag();
+			volatile bool getInterruptFlag() const;
 			void clearInterruptFlag();
 
 		protected:
@@ -42,7 +30,7 @@ namespace yoba {
 			uint8_t _intPin;
 
 		private:
-			static volatile bool _interruptFlag;
-			static void onTouchInterrupted();
+			volatile bool _interrupted = false;
+			static void onInterrupt(TouchDriver* driver);
 	};
 }
