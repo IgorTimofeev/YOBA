@@ -6,6 +6,8 @@
 namespace yoba {
 	class Point {
 		public:
+			Point(const Point& point) = default;
+
 			Point() : _x(0), _y(0) {
 
 			}
@@ -13,8 +15,6 @@ namespace yoba {
 			Point(int32_t x, int32_t y) : _x(x), _y(y) {
 
 			}
-
-			Point(const Point& point) = default;
 
 			int32_t getX() const {
 				return _x;

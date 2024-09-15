@@ -4,7 +4,7 @@
 #include "size.h"
 
 namespace yoba {
-	struct ImageSource {
+	class ImageSource {
 		public:
 			explicit ImageSource(const Size &size) : _size(size) {
 

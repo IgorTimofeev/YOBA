@@ -1,12 +1,11 @@
 #pragma once
 
-#include "shape.h"
 #include "stackLayout.h"
 #include "color.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
-#include "backgroundAware.h"
-#include "foregroundAware.h"
+#include "ui/traits/backgroundAware.h"
+#include "ui/traits/foregroundAware.h"
 
 namespace yoba {
 	class SevenSegment : public BackgroundAware, public ForegroundAware {

@@ -5,8 +5,8 @@
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
 #include "action.h"
-#include "backgroundAware.h"
-#include "foregroundAware.h"
+#include "ui/traits/backgroundAware.h"
+#include "ui/traits/foregroundAware.h"
 #include "../event.h"
 #include "../number.h"
 
@@ -19,19 +19,19 @@ namespace yoba {
 			}
 
 			void onEvent(Event &event) override {
-				if (event.getType() != EventType::touchDown && event.getType() != EventType::touchDrag && event.getType() != EventType::touchUp)
+				if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
 					return;
 
-				auto touchEvent = (TouchEvent&) event;
+				auto& touchEvent = (TouchEvent&) event;
 
-				if (event.getType() == EventType::touchDown) {
+				if (event.getType() == EventType::TouchDown) {
 					setCaptured(true);
 				}
-				else if (event.getType() == EventType::touchUp) {
+				else if (event.getType() == EventType::TouchUp) {
 					setCaptured(false);
 				}
 
-				auto bounds = getBounds();
+				auto& bounds = getBounds();
 				auto part = clamp((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
 
 				setValue(part);
@@ -40,7 +40,7 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				auto bounds = getBounds();
+				auto& bounds = getBounds();
 				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());
 
 				screenBuffer->renderFilledRectangle(

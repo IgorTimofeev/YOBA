@@ -7,7 +7,7 @@
 #include "color.h"
 #include "fonts/Unscii16Font.h"
 #include "fonts/Unscii8ThinFont.h"
-#include "ui/rectangle.h"
+#include "ui/shapes/rectangle.h"
 #include "ui/text.h"
 #include "ui/debug/TouchCanvas.h"
 #include "ui/application.h"
@@ -21,9 +21,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	ScreenOrientation::Landscape0
 );
 
-EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(
-	&screenDriver
-);
+EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(&screenDriver);
 
 FT6336UDriver touchDriver = FT6336UDriver(
 	SDA,
@@ -99,7 +97,7 @@ void setup() {
 		}
 
 		backgroundColor.setIndex(backgroundPaletteIndex);
-		backgroundRect.setFillColor(&backgroundColor);
+		backgroundRect.setBackground(&backgroundColor);
 	});
 }
 

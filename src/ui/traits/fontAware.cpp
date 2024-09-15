@@ -1,5 +1,5 @@
 #include "fontAware.h"
-#include "application.h"
+#include "ui/application.h"
 
 namespace yoba {
 	const Font *FontAware::getFont() const {
