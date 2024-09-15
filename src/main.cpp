@@ -21,7 +21,8 @@ ILI9341Driver screenDriver = ILI9341Driver(
 
 EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(
 	&screenDriver,
-	Size(320, 240)
+	Size(320, 240),
+	ScreenRotation::Landscape0
 );
 
 FT6336UDriver touchDriver = FT6336UDriver(
@@ -80,8 +81,10 @@ void setup() {
 	application.getWorkspace().addChild(&text);
 
 	application.getWorkspace().addEventHandler([](Event& event) {
-		if (!(event.getType() == EventType::TouchDown || event.getType() == EventType::TouchUp))
+		if (event.getType() != EventType::TouchDown)
 			return;
+
+		auto touchEvent = (TouchEvent*) &event;
 
 		backgroundPaletteIndex += 1;
 
@@ -104,7 +107,7 @@ void loop() {
 
 	auto deltaTime = max(millis() - startTime, 1UL);
 	auto fps = 60000 / deltaTime;
-	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
+//	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....
 	uint8_t desiredFPS = 60;

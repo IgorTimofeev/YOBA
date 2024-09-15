@@ -18,6 +18,7 @@ namespace yoba {
 	class Event {
 		public:
 			explicit Event(EventType type);
+			virtual ~Event() = default;
 
 			EventType getType() const;
 

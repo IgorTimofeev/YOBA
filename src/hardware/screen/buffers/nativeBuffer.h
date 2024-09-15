@@ -8,7 +8,7 @@ namespace yoba {
 	template<typename TColor>
 	class NativeBuffer : public ScreenBuffer {
 		public:
-			NativeBuffer(ScreenDriver *driver, const Size &resolution);
+			NativeBuffer(ScreenDriver *driver, const Size& size, ScreenRotation rotation);
 
 			void clear(const Color* color) override;
 			void renderPixel(const Point &point, const Color* color) override;
@@ -26,7 +26,7 @@ namespace yoba {
 	};
 
 	template<typename TColor>
-	NativeBuffer<TColor>::NativeBuffer(ScreenDriver *driver, const Size &resolution) : ScreenBuffer(driver, resolution) {
+	NativeBuffer<TColor>::NativeBuffer(ScreenDriver *driver, const Size &size, ScreenRotation rotation) : ScreenBuffer(driver, size, rotation) {
 
 	}
 

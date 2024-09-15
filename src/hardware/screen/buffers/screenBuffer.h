@@ -9,11 +9,18 @@
 #include "color.h"
 
 namespace yoba {
+	enum class ScreenRotation : uint8_t {
+		Landscape0,
+		Portrait90,
+		Landscape270,
+	};
+
 	class ScreenBuffer {
 		public:
 			ScreenBuffer(
 				ScreenDriver* driver,
-				const Size& resolution
+				const Size& size,
+				ScreenRotation rotation
 			);
 
 			void begin();
@@ -24,6 +31,7 @@ namespace yoba {
 			ScreenDriver* getDriver() const;
 
 			const Size &getSize() const;
+			ScreenRotation getRotation() const;
 
 			Bounds& getViewport();
 			void setViewport(const Bounds& bounds);
@@ -31,7 +39,7 @@ namespace yoba {
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
 			size_t getIndex(const Point& point) const;
-			
+
 			virtual void clear(const Color* color) = 0;
 			virtual void renderPixel(const Point &point, const Color* color) = 0;
 			virtual void renderHorizontalLine(const Point &point, uint16_t length, const Color* color) = 0;
@@ -57,6 +65,7 @@ namespace yoba {
 			size_t _bufferLength = 0;
 
 			const Size _size;
+			ScreenRotation _rotation;
 			Bounds _viewport = Bounds();
 	};
 }

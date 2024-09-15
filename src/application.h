@@ -3,7 +3,6 @@
 #include <cstdint>
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "hardware/touch/drivers/touchDriver.h"
-#include "hardware/touch/touchPanel.h"
 #include "ui/workspace.h"
 
 namespace yoba {
@@ -31,6 +30,6 @@ namespace yoba {
 			uint32_t _tickDeadline = 0;
 
 			ScreenBuffer* _screenBuffer;
-			TouchPanel _touchPanel;
+			TouchDriver* _touchDriver;
 	};
 }

@@ -6,7 +6,7 @@
 namespace yoba {
 	class EightBitsPaletteBuffer : public PaletteBuffer<uint8_t> {
 		public:
-			EightBitsPaletteBuffer(ScreenDriver *driver, const Size &resolution);
+			EightBitsPaletteBuffer(ScreenDriver *driver, const Size &resolution, ScreenRotation rotation);
 
 			void allocate() override;
 			void flush() override;

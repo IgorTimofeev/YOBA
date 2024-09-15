@@ -8,21 +8,21 @@ namespace yoba {
 		TouchDriver* touchDriver
 	) :
 		_screenBuffer(screenBuffer),
-		_touchPanel(TouchPanel(touchDriver))
+		_touchDriver(touchDriver)
 	{
 		_workspace.setSize(screenBuffer->getSize());
 	}
 
 	void Application::begin() {
 		_screenBuffer->begin();
-		_touchPanel.begin();
+		_touchDriver->begin();
 	}
 
 	void Application::tick() {
 		if (millis() <= _tickDeadline)
 			return;
 
-		_touchPanel.tick([&](Event& event) {
+		_touchDriver->tick(_screenBuffer, [&](Event& event) {
 			_workspace.handleEvent(event);
 		});
 

@@ -2,7 +2,7 @@
 #include "bounds.h"
 
 namespace yoba {
-	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver, const Size& resolution) : PaletteBuffer<uint8_t>(driver, resolution, _govnoPalette) {
+	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver, const Size& resolution, ScreenRotation rotation) : PaletteBuffer<uint8_t>(driver, resolution, rotation, _govnoPalette) {
 
 	}
 
