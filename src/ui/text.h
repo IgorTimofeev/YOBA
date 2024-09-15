@@ -3,18 +3,21 @@
 #include "element.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "size.h"
-#include "text_aware.h"
-#include "foreground_aware.h"
-#include "font_aware.h"
+#include "textAware.h"
+#include "foregroundAware.h"
+#include "fontAware.h"
 
 namespace yoba {
 	class Text : public TextAware, public FontAware, public ForegroundAware {
 		public:
 			Text() = default;
 
-			Text(const Font* font, const Color* foreground, const String& value) {
+			Text(const Font* font, const Color* foreground) {
 				setFont(font);
 				setForeground(foreground);
+			}
+
+			Text(const Font* font, const Color* foreground, const String& value) : Text(font, foreground) {
 				setText(value);
 			}
 

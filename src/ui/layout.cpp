@@ -5,7 +5,7 @@ namespace yoba {
 	void Layout::tick() {
 		for (const auto& child : *this) {
 			child->setParent(this);
-			child->setWorkspace(getWorkspace());
+			child->setRoot(getRoot());
 
 			child->tick();
 		}
@@ -78,7 +78,7 @@ namespace yoba {
 
 	void Layout::addChild(Element *child) {
 		child->setParent(this);
-		child->setWorkspace(getWorkspace());
+		child->setRoot(getRoot());
 
 		_children.push_back(child);
 

@@ -7,9 +7,9 @@ namespace yoba {
 	class Screen;
 	class Animation;
 
-	class Workspace : public Layout {
+	class RootLayout : public Layout {
 		public:
-			Workspace();
+			RootLayout();
 
 			void measure(ScreenBuffer* screenBuffer);
 			void arrange();

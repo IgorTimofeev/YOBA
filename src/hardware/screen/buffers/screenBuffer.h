@@ -9,7 +9,7 @@
 #include "color.h"
 
 namespace yoba {
-	enum class ScreenRotation : uint8_t {
+	enum class ScreenOrientation : uint8_t {
 		Landscape0,
 		Portrait90,
 		Landscape270,
@@ -20,7 +20,7 @@ namespace yoba {
 			ScreenBuffer(
 				ScreenDriver* driver,
 				const Size& size,
-				ScreenRotation rotation
+				ScreenOrientation orientation
 			);
 
 			void begin();
@@ -31,7 +31,7 @@ namespace yoba {
 			ScreenDriver* getDriver() const;
 
 			const Size &getSize() const;
-			ScreenRotation getRotation() const;
+			ScreenOrientation getRotation() const;
 
 			Bounds& getViewport();
 			void setViewport(const Bounds& bounds);
@@ -65,7 +65,7 @@ namespace yoba {
 			size_t _bufferLength = 0;
 
 			const Size _size;
-			ScreenRotation _rotation;
+			ScreenOrientation _orientation;
 			Bounds _viewport = Bounds();
 	};
 }

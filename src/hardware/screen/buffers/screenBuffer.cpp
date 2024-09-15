@@ -5,7 +5,7 @@ namespace yoba {
 	ScreenBuffer::ScreenBuffer(
 		ScreenDriver* driver,
 		const Size& size,
-		ScreenRotation rotation
+		ScreenOrientation orientation
 	) :
 		_driver(driver),
 		_size(size)
@@ -27,8 +27,8 @@ namespace yoba {
 		return _size;
 	}
 
-	ScreenRotation ScreenBuffer::getRotation() const {
-		return _rotation;
+	ScreenOrientation ScreenBuffer::getRotation() const {
+		return _orientation;
 	}
 
 	Bounds &ScreenBuffer::getViewport() {

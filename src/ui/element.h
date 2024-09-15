@@ -23,7 +23,7 @@ namespace yoba {
 	};
 
 	class Event;
-	class Workspace;
+	class RootLayout;
 	class Animation;
 
 	class Element {
@@ -44,16 +44,14 @@ namespace yoba {
 			virtual void invalidateLayout();
 			virtual void invalidate();
 
-			virtual void addEventHandler(const std::function<void(Event&)>& handler);
-
 			virtual void startAnimation(Animation* animation);
 
-			int32_t tag = 0;
+			void addEventHandler(const std::function<void(Event&)>& handler);
 
 			// -------------------------------- Getters & setters --------------------------------
 
-			Workspace* getWorkspace();
-			void setWorkspace(Workspace* value);
+			RootLayout* getRoot();
+			void setRoot(RootLayout* value);
 
 			Element* getParent();
 			void setParent(Element* value);
@@ -104,7 +102,7 @@ namespace yoba {
 			Alignment _horizontalAlignment = Alignment::Stretch;
 			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;
-			Workspace* _workspace = nullptr;
+			RootLayout* _root = nullptr;
 			Element* _parent = nullptr;
 
 			Bounds _bounds;

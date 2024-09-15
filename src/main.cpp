@@ -10,6 +10,7 @@
 #include "application.h"
 #include "ui/rectangle.h"
 #include "ui/text.h"
+#include "ui/debug/TouchCanvas.h"
 
 using namespace yoba;
 
@@ -22,7 +23,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(
 	&screenDriver,
 	Size(320, 240),
-	ScreenRotation::Landscape0
+	ScreenOrientation::Landscape0
 );
 
 FT6336UDriver touchDriver = FT6336UDriver(
@@ -41,9 +42,14 @@ Unscii16Font font = Unscii16Font();
 
 ColorPalette backgroundColor = ColorPalette(0);
 Rectangle backgroundRect = Rectangle(&backgroundColor);
-Text text = Text();
+
+ColorPalette textColor = ColorPalette(18);
+Text text = Text(&font, &textColor);
+
 
 int32_t backgroundPaletteIndex = 0;
+
+TouchCanvas touchCanvas;
 
 void setup() {
 	Serial.begin(115200);
@@ -73,18 +79,18 @@ void setup() {
 	application.begin();
 
 	// Adding UI elements
-	application.getWorkspace().addChild(&backgroundRect);
+	application.getRoot().addChild(&backgroundRect);
 
-	text.setFont(&font);
-	text.setForeground(new ColorPalette(16));
 	text.setAlignment(Alignment::Center);
-	application.getWorkspace().addChild(&text);
+	application.getRoot().addChild(&text);
 
-	application.getWorkspace().addEventHandler([](Event& event) {
+	touchCanvas.setFont(&font);
+	touchCanvas.setForeground(&textColor);
+	application.getRoot().addChild(&touchCanvas);
+
+	application.getRoot().addEventHandler([](Event& event) {
 		if (event.getType() != EventType::TouchDown)
 			return;
-
-		auto touchEvent = (TouchEvent*) &event;
 
 		backgroundPaletteIndex += 1;
 

@@ -3,10 +3,10 @@
 #include "element.h"
 #include "color.h"
 #include "hardware/screen/buffers/screenBuffer.h"
-#include "background_aware.h"
-#include "foreground_aware.h"
-#include "text_aware.h"
-#include "font_aware.h"
+#include "backgroundAware.h"
+#include "foregroundAware.h"
+#include "textAware.h"
+#include "fontAware.h"
 #include "../event.h"
 
 namespace yoba {

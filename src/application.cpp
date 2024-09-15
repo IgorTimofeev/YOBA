@@ -10,7 +10,7 @@ namespace yoba {
 		_screenBuffer(screenBuffer),
 		_touchDriver(touchDriver)
 	{
-		_workspace.setSize(screenBuffer->getSize());
+		_root.setSize(screenBuffer->getSize());
 	}
 
 	void Application::begin() {
@@ -23,13 +23,13 @@ namespace yoba {
 			return;
 
 		_touchDriver->tick(_screenBuffer, [&](Event& event) {
-			_workspace.handleEvent(event);
+			_root.handleEvent(event);
 		});
 
-		_workspace.tick();
-		_workspace.measure(_screenBuffer);
-		_workspace.arrange();
-		_workspace.render(_screenBuffer);
+		_root.tick();
+		_root.measure(_screenBuffer);
+		_root.arrange();
+		_root.render(_screenBuffer);
 
 		_tickDeadline = millis() + _tickInterval;
 	}

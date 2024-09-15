@@ -5,8 +5,8 @@
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
 #include "action.h"
-#include "background_aware.h"
-#include "foreground_aware.h"
+#include "backgroundAware.h"
+#include "foregroundAware.h"
 #include "../event.h"
 #include "../number.h"
 

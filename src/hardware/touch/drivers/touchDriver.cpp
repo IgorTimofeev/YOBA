@@ -30,16 +30,16 @@ namespace yoba {
 
 		switch (screenBuffer->getRotation()) {
 			// 270
-			case ScreenRotation::Landscape0:
+			case ScreenOrientation::Landscape0:
 				return {
 					point.getY(),
 					screenBuffer->getSize().getHeight() - point.getX()
 				};
 
-			case ScreenRotation::Portrait90:
+			case ScreenOrientation::Portrait90:
 				return point;
 
-			case ScreenRotation::Landscape270:
+			case ScreenOrientation::Landscape270:
 				return {
 					screenBuffer->getSize().getWidth() - point.getY(),
 					point.getX()

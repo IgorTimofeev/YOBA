@@ -1,14 +1,14 @@
-#include "workspace.h"
+#include "rootLayout.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "element.h"
 #include "animation.h"
 
 namespace yoba {
-	Workspace::Workspace() {
-		setWorkspace(this);
+	RootLayout::RootLayout() {
+		setRoot(this);
 	}
 
-	void Workspace::onRender(ScreenBuffer* screenBuffer) {
+	void RootLayout::onRender(ScreenBuffer* screenBuffer) {
 		if (_isRendered)
 			return;
 
@@ -18,7 +18,7 @@ namespace yoba {
 		_isRendered = true;
 	}
 
-	void Workspace::arrange() {
+	void RootLayout::arrange() {
 		if (_isArranged)
 			return;
 
@@ -27,7 +27,7 @@ namespace yoba {
 		_isArranged = true;
 	}
 
-	void Workspace::measure(ScreenBuffer* screenBuffer) {
+	void RootLayout::measure(ScreenBuffer* screenBuffer) {
 		if (_isMeasured)
 			return;
 
@@ -36,27 +36,27 @@ namespace yoba {
 		_isMeasured = true;
 	}
 
-	void Workspace::invalidateLayout() {
+	void RootLayout::invalidateLayout() {
 		_isMeasured = false;
 		_isArranged = false;
 	}
 
-	void Workspace::invalidateRender() {
+	void RootLayout::invalidateRender() {
 		_isRendered = false;
 	}
 
-	void Workspace::invalidate() {
+	void RootLayout::invalidate() {
 		invalidateLayout();
 		invalidateRender();
 	}
 
-	void Workspace::startAnimation(Animation* animation) {
+	void RootLayout::startAnimation(Animation* animation) {
 		_animations.push_back(animation);
 
 		animation->start();
 	}
 
-	void Workspace::animate() {
+	void RootLayout::animate() {
 		if (_animations.empty())
 			return;
 
@@ -72,21 +72,21 @@ namespace yoba {
 		}
 	}
 
-	void Workspace::tick() {
+	void RootLayout::tick() {
 		animate();
 
 		Layout::tick();
 	}
 
-	Element *Workspace::getCapturedElement() const {
+	Element *RootLayout::getCapturedElement() const {
 		return _capturedElement;
 	}
 
-	void Workspace::setCapturedElement(Element *capturedElement) {
+	void RootLayout::setCapturedElement(Element *capturedElement) {
 		_capturedElement = capturedElement;
 	}
 
-	void Workspace::handleEvent(Event &event) {
+	void RootLayout::handleEvent(Event &event) {
 		if (getCapturedElement()) {
 			getCapturedElement()->handleEvent(event);
 		}

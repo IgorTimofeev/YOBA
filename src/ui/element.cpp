@@ -1,5 +1,5 @@
 #include "element.h"
-#include "workspace.h"
+#include "rootLayout.h"
 #include "animation.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 
@@ -251,17 +251,17 @@ namespace yoba {
 	}
 
 	bool Element::isCaptured() {
-		return getWorkspace() && getWorkspace()->getCapturedElement() == this;
+		return getRoot() && getRoot()->getCapturedElement() == this;
 	}
 
 	void Element::setCaptured(const bool& value) {
-		if (getWorkspace())
-			getWorkspace()->setCapturedElement(value ? this : nullptr);
+		if (getRoot())
+			getRoot()->setCapturedElement(value ? this : nullptr);
 	}
 
 	void Element::startAnimation(Animation* animation) {
-		if (_workspace)
-			_workspace->startAnimation(animation);
+		if (_root)
+			_root->startAnimation(animation);
 	}
 
 	void Element::setParent(Element *value) {
@@ -272,12 +272,12 @@ namespace yoba {
 		return _parent;
 	}
 
-	void Element::setWorkspace(Workspace *value) {
-		_workspace = value;
+	void Element::setRoot(RootLayout *value) {
+		_root = value;
 	}
 
-	Workspace *Element::getWorkspace() {
-		return _workspace;
+	RootLayout *Element::getRoot() {
+		return _root;
 	}
 
 	const Bounds &Element::getBounds() {
@@ -340,18 +340,18 @@ namespace yoba {
 	}
 
 	void Element::invalidateRender() {
-		if (_workspace)
-			_workspace->invalidateRender();
+		if (_root)
+			_root->invalidateRender();
 	}
 
 	void Element::invalidateLayout() {
-		if (_workspace)
-			_workspace->invalidateLayout();
+		if (_root)
+			_root->invalidateLayout();
 	}
 
 	void Element::invalidate() {
-		if (_workspace)
-			_workspace->invalidate();
+		if (_root)
+			_root->invalidate();
 	}
 
 	void Element::tick() {
