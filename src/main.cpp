@@ -46,7 +46,6 @@ Rectangle backgroundRect = Rectangle(&backgroundColor);
 ColorPalette textColor = ColorPalette(18);
 Text text = Text(&font, &textColor);
 
-
 int32_t backgroundPaletteIndex = 0;
 
 TouchCanvas touchCanvas;

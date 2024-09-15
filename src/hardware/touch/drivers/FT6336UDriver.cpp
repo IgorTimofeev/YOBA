@@ -7,19 +7,39 @@
 /**************************************************************************/
 
 #include "FT6336UDriver.h"
-
 #include <Wire.h>
 
 namespace yoba {
-	FT6336UDriver::FT6336UDriver(uint8_t sdaPin, uint8_t sclPin, uint8_t rstPin, uint8_t intPin) : TouchDriver(sdaPin, sclPin, rstPin, intPin) {
+	FT6336UDriver::FT6336UDriver(uint8_t sdaPin, uint8_t sclPin, uint8_t rstPin, uint8_t intPin) : _sdaPin(sdaPin), _sclPin(sclPin), _rstPin(rstPin), _intPin(intPin) {
 
 	}
 
 	void FT6336UDriver::begin() {
-		TouchDriver::begin();
+		// Interrupt
+		pinMode(_intPin, INPUT_PULLUP);
+
+		attachInterrupt(
+			digitalPinToInterrupt(_intPin),
+			std::bind(&onInterrupt, this),
+			CHANGE
+		);
+
+		// I2C
+		Wire.begin(_sdaPin, _sclPin);
+
+		// Toggle reset pin
+		pinMode(_rstPin, OUTPUT);
+		digitalWrite(_rstPin, LOW);
+		delay(10);
+		digitalWrite(_rstPin, HIGH);
 
 		// Do we need some delay? Hmmm
 		//    delay(500);
+
+	}
+
+	void FT6336UDriver::onInterrupt(FT6336UDriver* driver) {
+		driver->_interrupted = true;
 	}
 
 	uint8_t FT6336UDriver::read_device_mode() {
@@ -44,17 +64,19 @@ namespace yoba {
 
 // Touch 1 functions
 	uint16_t FT6336UDriver::read_touch1_x() {
-		uint8_t read_buf[2];
-		read_buf[0] = readByte(FT6336U_ADDR_TOUCH1_X);
-		read_buf[1] = readByte(FT6336U_ADDR_TOUCH1_X + 1);
-		return ((read_buf[0] & 0x0f) << 8) | read_buf[1];
+		uint8_t buffer[2];
+		buffer[0] = readByte(FT6336U_ADDR_TOUCH1_X);
+		buffer[1] = readByte(FT6336U_ADDR_TOUCH1_X + 1);
+
+		return ((buffer[0] & 0x0f) << 8) | buffer[1];
 	}
 
 	uint16_t FT6336UDriver::read_touch1_y() {
-		uint8_t read_buf[2];
-		read_buf[0] = readByte(FT6336U_ADDR_TOUCH1_Y);
-		read_buf[1] = readByte(FT6336U_ADDR_TOUCH1_Y + 1);
-		return ((read_buf[0] & 0x0f) << 8) | read_buf[1];
+		uint8_t buffer[2];
+		buffer[0] = readByte(FT6336U_ADDR_TOUCH1_Y);
+		buffer[1] = readByte(FT6336U_ADDR_TOUCH1_Y + 1);
+
+		return ((buffer[0] & 0x0f) << 8) | buffer[1];
 	}
 
 	uint8_t FT6336UDriver::read_touch1_event() {
@@ -75,17 +97,19 @@ namespace yoba {
 
 // Touch 2 functions
 	uint16_t FT6336UDriver::read_touch2_x() {
-		uint8_t read_buf[2];
-		read_buf[0] = readByte(FT6336U_ADDR_TOUCH2_X);
-		read_buf[1] = readByte(FT6336U_ADDR_TOUCH2_X + 1);
-		return ((read_buf[0] & 0x0f) << 8) | read_buf[1];
+		uint8_t buffer[2];
+		buffer[0] = readByte(FT6336U_ADDR_TOUCH2_X);
+		buffer[1] = readByte(FT6336U_ADDR_TOUCH2_X + 1);
+
+		return ((buffer[0] & 0x0f) << 8) | buffer[1];
 	}
 
 	uint16_t FT6336UDriver::read_touch2_y() {
-		uint8_t read_buf[2];
-		read_buf[0] = readByte(FT6336U_ADDR_TOUCH2_Y);
-		read_buf[1] = readByte(FT6336U_ADDR_TOUCH2_Y + 1);
-		return ((read_buf[0] & 0x0f) << 8) | read_buf[1];
+		uint8_t buffer[2];
+		buffer[0] = readByte(FT6336U_ADDR_TOUCH2_Y);
+		buffer[1] = readByte(FT6336U_ADDR_TOUCH2_Y + 1);
+
+		return ((buffer[0] & 0x0f) << 8) | buffer[1];
 	}
 
 	uint8_t FT6336UDriver::read_touch2_event() {
@@ -182,13 +206,13 @@ namespace yoba {
 		writeByte(FT6336U_ADDR_DISTANCE_ZOOM, val);
 	}
 
-
 // System Information
 	uint16_t FT6336UDriver::read_library_version() {
-		uint8_t read_buf[2];
-		read_buf[0] = readByte(FT6336U_ADDR_LIBRARY_VERSION_H);
-		read_buf[1] = readByte(FT6336U_ADDR_LIBRARY_VERSION_L);
-		return ((read_buf[0] & 0x0f) << 8) | read_buf[1];
+		uint8_t buffer[2];
+		buffer[0] = readByte(FT6336U_ADDR_LIBRARY_VERSION_H);
+		buffer[1] = readByte(FT6336U_ADDR_LIBRARY_VERSION_L);
+
+		return ((buffer[0] & 0x0f) << 8) | buffer[1];
 	}
 
 	uint8_t FT6336UDriver::read_chip_id() {
@@ -223,56 +247,23 @@ namespace yoba {
 		return readByte(FT6336U_ADDR_STATE);
 	}
 
-
-//coordinate diagram（FPC downwards）
-////y ////////////////////264x176
-	//
-	//
-	//x
-	//
-	//
-	FT6336U_TouchPointType FT6336UDriver::scan() {
-		touchPoint.touch_count = read_td_status();
-
-		if (touchPoint.touch_count == 0) {
-			touchPoint.tp[0].status = release;
-			touchPoint.tp[1].status = release;
-		} else if (touchPoint.touch_count == 1) {
-			uint8_t id1 = read_touch1_id(); // id1 = 0 or 1
-			touchPoint.tp[id1].status = (touchPoint.tp[id1].status == release) ? touch : stream;
-			touchPoint.tp[id1].x = read_touch1_x();
-			touchPoint.tp[id1].y = read_touch1_y();
-			touchPoint.tp[~id1 & 0x01].status = release;
-		} else {
-			uint8_t id1 = read_touch1_id(); // id1 = 0 or 1
-			touchPoint.tp[id1].status = (touchPoint.tp[id1].status == release) ? touch : stream;
-			touchPoint.tp[id1].x = read_touch1_x();
-			touchPoint.tp[id1].y = read_touch1_y();
-			uint8_t id2 = read_touch2_id(); // id2 = 0 or 1(~id1 & 0x01)
-			touchPoint.tp[id2].status = (touchPoint.tp[id2].status == release) ? touch : stream;
-			touchPoint.tp[id2].x = read_touch2_x();
-			touchPoint.tp[id2].y = read_touch2_y();
-		}
-
-		return touchPoint;
-
-	}
-
 	uint8_t FT6336UDriver::readByte(uint8_t addr) {
-		uint8_t rdData = 0;
-		uint8_t rdDataCount;
+		uint8_t result = 0;
+		uint8_t readLength;
+
 		do {
 			Wire.beginTransmission(I2C_ADDR_FT6336U);
 			Wire.write(addr);
 			Wire.endTransmission(false); // Restart
 //        delay(10);
-			rdDataCount = Wire.requestFrom(I2C_ADDR_FT6336U, 1);
-		} while (rdDataCount == 0);
-		while (Wire.available()) {
-			rdData = Wire.read();
-		}
-		return rdData;
+			readLength = Wire.requestFrom(I2C_ADDR_FT6336U, 1);
+		} while (readLength == 0);
 
+		while (Wire.available()) {
+			result = Wire.read();
+		}
+
+		return result;
 	}
 
 	void FT6336UDriver::writeByte(uint8_t addr, uint8_t data) {
@@ -284,25 +275,175 @@ namespace yoba {
 
 	// ------------------------------------------------------------------------
 
-	bool FT6336UDriver::readPoint1Down() {
-		return read_touch1_event() == 2;
+	void FT6336UDriver::rotatePoint(ScreenBuffer* screenBuffer, Point& point) {
+//		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
+
+		switch (screenBuffer->getRotation()) {
+			// 270
+			case ScreenOrientation::Landscape0: {
+				int32_t tmp = screenBuffer->getSize().getHeight() - point.getX();
+				point.setX(point.getY());
+				point.setY(tmp);
+
+				break;
+			}
+			case ScreenOrientation::Portrait90:
+				break;
+
+			case ScreenOrientation::Landscape270: {
+				int32_t tmp = screenBuffer->getSize().getWidth() - point.getY();
+				point.setX(tmp);
+				point.setY(point.getX());
+
+				break;
+			}
+		}
 	}
 
-	bool FT6336UDriver::readPoint2Down() {
-		return read_touch2_event() == 2;
-	}
-
-	Point FT6336UDriver::readPoint1() {
-		return {
+	Point FT6336UDriver::readRotatedPoint1(ScreenBuffer* screenBuffer) {
+		auto point = Point(
 			read_touch1_x(),
 			read_touch1_y()
-		};
+		);
+
+		rotatePoint(screenBuffer, point);
+
+		return point;
 	}
 
-	Point FT6336UDriver::readPoint2() {
-		return {
+	Point FT6336UDriver::readRotatedPoint2(ScreenBuffer* screenBuffer) {
+		auto point = Point(
 			read_touch2_x(),
 			read_touch2_y()
-		};
+		);
+
+		rotatePoint(screenBuffer, point);
+
+		return point;
+	}
+
+	void FT6336UDriver::tick(ScreenBuffer* screenBuffer, const std::function<void(Event&)>& callback) {
+		if (!_interrupted)
+			return;
+
+		_interrupted = false;
+
+		auto isDown1 = read_touch1_event() == 2;
+		auto isDown2 = read_touch2_event() == 2;
+
+		if (isDown1) {
+			if (isDown2) {
+				// Pinch drag
+				if (_wasPinched) {
+					auto point1 = readRotatedPoint1(screenBuffer);
+					auto point2 = readRotatedPoint2(screenBuffer);
+
+					if (
+						point1 != _touchPoints[0].getPosition()
+						|| point2 != _touchPoints[1].getPosition()
+					) {
+						_touchPoints[0].setPosition(point1);
+						_touchPoints[1].setPosition(point2);
+
+						auto event = PinchDragEvent(
+							_touchPoints[0].getPosition(),
+							_touchPoints[1].getPosition()
+						);
+
+						callback(event);
+					}
+				}
+					// Pinch down
+				else {
+					_wasPinched = true;
+
+					_touchPoints[0].setDown(true);
+					_touchPoints[0].setPosition(readRotatedPoint1(screenBuffer));
+
+					_touchPoints[1].setDown(true);
+					_touchPoints[1].setPosition(readRotatedPoint2(screenBuffer));
+
+					auto event = PinchDownEvent(
+						_touchPoints[0].getPosition(),
+						_touchPoints[1].getPosition()
+					);
+
+					callback(event);
+				}
+			}
+			else {
+				// Pinch up
+				if (_wasPinched) {
+					_wasPinched = false;
+
+					_touchPoints[1].setDown(false);
+					_touchPoints[1].setPosition(readRotatedPoint2(screenBuffer));
+
+					auto event = PinchUpEvent(
+						_touchPoints[0].getPosition(),
+						_touchPoints[1].getPosition()
+					);
+
+					callback(event);
+				}
+				// Touch drag
+				else if (_wasTouched) {
+					auto point1 = readRotatedPoint1(screenBuffer);
+
+					if (point1 != _touchPoints[0].getPosition()) {
+						_touchPoints[0].setPosition(point1);
+
+						auto event = TouchDragEvent(
+							_touchPoints[0].getPosition()
+						);
+
+						callback(event);
+					}
+				}
+					// Touch down
+				else {
+					_wasTouched = true;
+
+					_touchPoints[0].setDown(true);
+					_touchPoints[0].setPosition(readRotatedPoint1(screenBuffer));
+
+					auto event = TouchDownEvent(
+						_touchPoints[0].getPosition()
+					);
+
+					callback(event);
+				}
+			}
+		}
+		else {
+			// Pinch up
+			if (_wasPinched) {
+				_wasPinched = false;
+
+				_touchPoints[1].setDown(false);
+				_touchPoints[1].setPosition(readRotatedPoint2(screenBuffer));
+
+				auto event = PinchUpEvent(
+					_touchPoints[0].getPosition(),
+					_touchPoints[1].getPosition()
+				);
+
+				callback(event);
+			}
+
+			// Touch up
+			if (_wasTouched) {
+				_wasTouched = false;
+
+				_touchPoints[0].setDown(false);
+				_touchPoints[0].setPosition(readRotatedPoint1(screenBuffer));
+
+				auto event = TouchUpEvent(
+					_touchPoints[0].getPosition()
+				);
+
+				callback(event);
+			}
+		}
 	}
 }

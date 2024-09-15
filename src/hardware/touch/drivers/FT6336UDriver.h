@@ -74,22 +74,6 @@ namespace yoba {
 	#define FT6336U_ADDR_RELEASE_CODE_ID    0xAF
 	#define FT6336U_ADDR_STATE              0xBC
 
-	// Function Specific Type
-	typedef enum {
-		touch = 0,
-		stream,
-		release,
-	} TouchStatusEnum;
-	typedef struct {
-		TouchStatusEnum status;
-		uint16_t x;
-		uint16_t y;
-	} TouchPointType;
-	typedef struct {
-		uint8_t touch_count;
-		TouchPointType tp[2];
-	} FT6336U_TouchPointType;
-
 
 	/**************************************************************************/
 	/*!
@@ -101,6 +85,7 @@ namespace yoba {
 			FT6336UDriver(uint8_t sdaPin, uint8_t sclPin, uint8_t rstPin, uint8_t intPin);
 
 			void begin() override;
+			void tick(ScreenBuffer *screenBuffer, const std::function<void(Event &)> &callback) override;
 
 			uint8_t read_device_mode();
 			void write_device_mode(DEVICE_MODE_Enum);
@@ -154,21 +139,28 @@ namespace yoba {
 			uint8_t read_release_code_id();
 			uint8_t read_state();
 
-			// Scan Function
-			FT6336U_TouchPointType scan();
+		private:
+			uint8_t _sdaPin;
+			uint8_t _sclPin;
+			uint8_t _rstPin;
+			uint8_t _intPin;
 
-			bool readPoint1Down() override;
+			static uint8_t readByte(uint8_t addr);
+			static void writeByte(uint8_t addr, uint8_t data);
 
-			bool readPoint2Down() override;
+			volatile bool _interrupted = false;
+			static void onInterrupt(FT6336UDriver* driver);
 
-			Point readPoint1() override;
+			TouchPoint _touchPoints[2] {
+				TouchPoint(),
+				TouchPoint()
+			};
 
-			Point readPoint2() override;
+			bool _wasTouched = false;
+			bool _wasPinched = false;
 
-		protected:
-			uint8_t readByte(uint8_t addr);
-			void writeByte(uint8_t addr, uint8_t data);
-
-			FT6336U_TouchPointType touchPoint;
+			static void rotatePoint(ScreenBuffer* screenBuffer, Point& point);
+			Point readRotatedPoint1(ScreenBuffer* screenBuffer);
+			Point readRotatedPoint2(ScreenBuffer* screenBuffer);
 	};
 }
