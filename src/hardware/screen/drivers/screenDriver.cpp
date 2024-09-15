@@ -1,40 +1,25 @@
 #include "screenDriver.h"
 #include "Arduino.h"
-#include "hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
-	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin) :
+	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, const Size& size, ScreenOrientation orientation) :
 		_chipSelectPin(chipSelectPin),
 		_dataCommandPin(dataCommandPin),
-		_resetPin(resetPin)
+		_resetPin(resetPin),
+		_size(size),
+		_orientation(orientation)
 	{
 
 	}
 
-	uint8_t ScreenDriver::getChipSelectPin() const {
-		return _chipSelectPin;
+	const Size& ScreenDriver::getSize() const {
+		return _size;
 	}
 
-	void ScreenDriver::setChipSelectPin(uint8_t chipSelectPin) {
-		_chipSelectPin = chipSelectPin;
+	ScreenOrientation ScreenDriver::getRotation() const {
+		return _orientation;
 	}
-
-	uint8_t ScreenDriver::getDataCommandPin() const {
-		return _dataCommandPin;
-	}
-
-	void ScreenDriver::setDataCommandPin(uint8_t dataCommandPin) {
-		_dataCommandPin = dataCommandPin;
-	}
-
-	int8_t ScreenDriver::getResetPin() const {
-		return _resetPin;
-	}
-
-	void ScreenDriver::setResetPin(int8_t resetPin) {
-		_resetPin = resetPin;
-	}
-
+	
 	int32_t ScreenDriver::getSPIFrequency() const {
 		return _SPIFrequency;
 	}
@@ -55,20 +40,20 @@ namespace yoba {
 
 	}
 
-	void ScreenDriver::begin(ScreenBuffer* buffer) {
+	void ScreenDriver::begin() {
 		spi_bus_config_t busConfig = {
 			.mosi_io_num = MOSI,
 			.miso_io_num = MISO,
 			.sclk_io_num = SCK,
 			.quadwp_io_num = -1,
 			.quadhd_io_num = -1,
-			.max_transfer_sz = getTransactionBufferHeight() * buffer->getSize().getWidth() * 2 + 8
+			.max_transfer_sz = getTransactionBufferHeight() * _size.getWidth() * 2 + 8
 		};
 
 		spi_device_interface_config_t deviceConfig = {
 			.mode = 0,                              //SPI mode 0
 			.clock_speed_hz = getSPIFrequency(),     //Clock out at required MHz
-			.spics_io_num = getChipSelectPin(),             //CS pin
+			.spics_io_num = _chipSelectPin,             //CS pin
 			.queue_size = 7,                        //We want to be able to queue 7 transactions at a time
 			.pre_cb = SPIPreCallback, //Specify pre-transfer callback to handle D/C line
 		};
@@ -84,10 +69,10 @@ namespace yoba {
 		ESP_ERROR_CHECK(result);
 
 		//Initialize non-SPI GPIOs
-		uint64_t gpioConfigPinMask = 1ULL << getDataCommandPin();
+		uint64_t gpioConfigPinMask = 1ULL << _dataCommandPin;
 
-		if (getResetPin() >= 0)
-			gpioConfigPinMask |= 1ULL << getResetPin();
+		if (_resetPin >= 0)
+			gpioConfigPinMask |= 1ULL << _resetPin;
 
 		gpio_config_t gpioConfig {
 			.pin_bit_mask = gpioConfigPinMask,
@@ -98,18 +83,18 @@ namespace yoba {
 		gpio_config(&gpioConfig);
 
 		// Toggle reset pin if it was defined
-		if (getResetPin() >= 0) {
-			gpio_set_level((gpio_num_t) getResetPin(), 0);
+		if (_resetPin >= 0) {
+			gpio_set_level((gpio_num_t) _resetPin, 0);
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 
-			gpio_set_level((gpio_num_t) getResetPin(), 1);
+			gpio_set_level((gpio_num_t) _resetPin, 1);
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
 
 		writeInitializationCommands();
 
 		//Allocate memory for the transaction buffer
-		_transactionBufferLength = buffer->getSize().getWidth() * getTransactionBufferHeight() * 2;
+		_transactionBufferLength = _size.getWidth() * getTransactionBufferHeight() * 2;
 		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
 	}
@@ -146,7 +131,7 @@ namespace yoba {
 		delete userData;
 	}
 
-	void ScreenDriver::flushTransactionBuffer(ScreenBuffer* display, int y) {
+	void ScreenDriver::flushTransactionBuffer(int y) {
 		//Transaction descriptors. Declared static, so they're not allocated on the stack; we need this memory even when this
 		//function is finished because the SPI driver needs access to it even while we're already calculating the next line.
 		static spi_transaction_t transactions[6];
@@ -174,8 +159,8 @@ namespace yoba {
 
 		transactions[1].tx_data[0] = 0;            //Start Col High
 		transactions[1].tx_data[1] = 0;            //Start Col Low
-		transactions[1].tx_data[2] = (display->getSize().getWidth() - 1) >> 8;   //End Col High
-		transactions[1].tx_data[3] = (display->getSize().getWidth() - 1) & 0xff; //End Col Low
+		transactions[1].tx_data[2] = (_size.getWidth() - 1) >> 8;   //End Col High
+		transactions[1].tx_data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
 
 		transactions[2].tx_data[0] = 0x2B;         //Page address set
 
@@ -187,7 +172,7 @@ namespace yoba {
 		transactions[4].tx_data[0] = 0x2C;         //memory write
 
 		transactions[5].tx_buffer = _transactionBuffer;      //finally send the line data
-		transactions[5].length = display->getSize().getWidth() * getTransactionBufferHeight() * 2 * 8;  //Data length, in bits
+		transactions[5].length = _size.getWidth() * getTransactionBufferHeight() * 2 * 8;  //Data length, in bits
 		transactions[5].flags = 0; //undo SPI_TRANS_USE_TXDATA flag
 
 		// Enqueue all transactions

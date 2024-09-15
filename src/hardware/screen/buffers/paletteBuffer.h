@@ -8,7 +8,7 @@ namespace yoba {
 	template<typename TIndex>
 	class PaletteBuffer : public NativeBuffer<TIndex> {
 		public:
-			PaletteBuffer(ScreenDriver *driver, const Size &size, ScreenOrientation orientation, uint16_t *palette);
+			PaletteBuffer(ScreenDriver *driver, uint16_t *palette);
 
 			void clearNative(TIndex paletteIndex) override;
 
@@ -20,7 +20,7 @@ namespace yoba {
 	};
 
 	template<typename TIndex>
-	PaletteBuffer<TIndex>::PaletteBuffer(ScreenDriver *driver, const Size &size, ScreenOrientation orientation, uint16_t *palette) : NativeBuffer<TIndex>(driver, size, orientation), _palette(palette) {
+	PaletteBuffer<TIndex>::PaletteBuffer(ScreenDriver *driver, uint16_t *palette) : NativeBuffer<TIndex>(driver), _palette(palette) {
 
 	}
 

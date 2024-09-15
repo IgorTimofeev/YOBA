@@ -2,26 +2,26 @@
 #include "bounds.h"
 
 namespace yoba {
-	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver, const Size& size, ScreenOrientation orientation) : PaletteBuffer<uint8_t>(driver, size, orientation, _govnoPalette) {
+	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver) : PaletteBuffer<uint8_t>(driver, _govnoPalette) {
 
 	}
 
 	void EightBitsPaletteBuffer::allocate() {
-		_bufferLength = getSize().getWidth() * getSize().getHeight();
+		_bufferLength = getDriver()->getSize().getWidth() * getDriver()->getSize().getHeight();
 		_buffer = new uint8_t[_bufferLength];
 	}
 
 	void EightBitsPaletteBuffer::flush() {
-		const size_t pixelCount = getSize().getWidth() * _driver->getTransactionBufferHeight();
+		const size_t pixelCount = getDriver()->getSize().getWidth() * _driver->getTransactionBufferHeight();
 		size_t bufferIndex = 0;
 
-		for (uint16_t y = 0; y < getSize().getHeight(); y += _driver->getTransactionBufferHeight()) {
+		for (uint16_t y = 0; y < getDriver()->getSize().getHeight(); y += _driver->getTransactionBufferHeight()) {
 			for (size_t i = 0; i < pixelCount; i++) {
 				_driver->getTransactionBuffer()[i] = _palette[_buffer[bufferIndex]];
 				bufferIndex++;
 			}
 
-			_driver->flushTransactionBuffer(this, y);
+			_driver->flushTransactionBuffer(y);
 		}
 	}
 
@@ -46,7 +46,7 @@ namespace yoba {
 
 	void EightBitsPaletteBuffer::renderVerticalLineNative(const Point &point, uint16_t height, uint8_t paletteIndex) {
 		uint8_t* bufferPtr = _buffer + getIndex(point);
-		uint16_t scanlineLength = getSize().getWidth();
+		uint16_t scanlineLength = getDriver()->getSize().getWidth();
 
 		for (size_t i = 0; i < height; i++) {
 			memset(bufferPtr, paletteIndex, 1);
@@ -56,7 +56,7 @@ namespace yoba {
 
 	void EightBitsPaletteBuffer::renderFilledRectangleNative(const Bounds& bounds, uint8_t paletteIndex) {
 		uint8_t* bufferPtr = _buffer + getIndex(bounds.getTopLeft());
-		uint16_t scanlineLength = getSize().getWidth();
+		uint16_t scanlineLength = getDriver()->getSize().getWidth();
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
 			memset(bufferPtr, paletteIndex, bounds.getWidth());

@@ -17,13 +17,12 @@ using namespace yoba;
 ILI9341Driver screenDriver = ILI9341Driver(
 	5,
 	16,
-	17
+	17,
+	ScreenOrientation::Landscape0
 );
 
 EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(
-	&screenDriver,
-	Size(320, 240),
-	ScreenOrientation::Landscape0
+	&screenDriver
 );
 
 FT6336UDriver touchDriver = FT6336UDriver(

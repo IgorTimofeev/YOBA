@@ -1,8 +1,19 @@
 #include "ILI9341Driver.h"
-#include "hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
-	ILI9341Driver::ILI9341Driver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin) : ScreenDriver(chipSelectPin, dataCommandPin, resetPin) {
+	ILI9341Driver::ILI9341Driver(
+		uint8_t chipSelectPin,
+		uint8_t dataCommandPin,
+		int8_t resetPin,
+		ScreenOrientation orientation
+	) : ScreenDriver(
+		chipSelectPin,
+		dataCommandPin,
+		resetPin,
+
+		Size(320, 240),
+		orientation
+	) {
 		// Glitches & tearing can appear on 26m, 40m+ won't work anyway
 		setSPIFrequency(SPI_MASTER_FREQ_26M);
 

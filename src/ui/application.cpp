@@ -12,7 +12,7 @@ namespace yoba {
 		_touchDriver(touchDriver)
 	{
 		setRoot(this);
-		setSize(screenBuffer->getSize());
+		setSize(_screenBuffer->getDriver()->getSize());
 	}
 
 	void Application::begin() {

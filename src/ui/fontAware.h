@@ -12,6 +12,8 @@ namespace yoba {
 
 			void setFont(const Font* value) {
 				_font = value;
+
+				invalidate();
 			}
 
 		private:

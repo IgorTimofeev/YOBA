@@ -2,33 +2,18 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	ScreenBuffer::ScreenBuffer(
-		ScreenDriver* driver,
-		const Size& size,
-		ScreenOrientation orientation
-	) :
-		_driver(driver),
-		_size(size)
-	{
+	ScreenBuffer::ScreenBuffer(ScreenDriver* driver) : _driver(driver) {
 		resetViewport();
 	}
 
 	void ScreenBuffer::begin() {
 		allocate();
 
-		_driver->begin(this);
+		_driver->begin();
 	}
 
 	ScreenDriver* ScreenBuffer::getDriver() const {
 		return _driver;
-	}
-
-	const Size& ScreenBuffer::getSize() const {
-		return _size;
-	}
-
-	ScreenOrientation ScreenBuffer::getRotation() const {
-		return _orientation;
 	}
 
 	Bounds &ScreenBuffer::getViewport() {
@@ -42,12 +27,12 @@ namespace yoba {
 	void ScreenBuffer::resetViewport() {
 		_viewport.setX(0);
 		_viewport.setY(0);
-		_viewport.setWidth(_size.getWidth());
-		_viewport.setHeight(_size.getHeight());
+		_viewport.setWidth(_driver->getSize().getWidth());
+		_viewport.setHeight(_driver->getSize().getHeight());
 	}
 
 	size_t ScreenBuffer::getIndex(uint16_t x, uint16_t y) const {
-		return y * getSize().getWidth() + x;
+		return y * _driver->getSize().getWidth() + x;
 	}
 
 	size_t ScreenBuffer::getIndex(const Point &point) const {

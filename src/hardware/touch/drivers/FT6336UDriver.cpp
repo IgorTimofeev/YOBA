@@ -278,10 +278,10 @@ namespace yoba {
 	void FT6336UDriver::rotatePoint(ScreenBuffer* screenBuffer, Point& point) {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
-		switch (screenBuffer->getRotation()) {
+		switch (screenBuffer->getDriver()->getRotation()) {
 			// 270
 			case ScreenOrientation::Landscape0: {
-				int32_t tmp = screenBuffer->getSize().getHeight() - point.getX();
+				int32_t tmp = screenBuffer->getDriver()->getSize().getHeight() - point.getX();
 				point.setX(point.getY());
 				point.setY(tmp);
 
@@ -291,7 +291,7 @@ namespace yoba {
 				break;
 
 			case ScreenOrientation::Landscape270: {
-				int32_t tmp = screenBuffer->getSize().getWidth() - point.getY();
+				int32_t tmp = screenBuffer->getDriver()->getSize().getWidth() - point.getY();
 				point.setX(tmp);
 				point.setY(point.getX());
 

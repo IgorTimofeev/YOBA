@@ -4,24 +4,14 @@
 #include "point.h"
 #include "size.h"
 #include "bounds.h"
-#include "hardware/screen/drivers/screenDriver.h"
 #include "fonts/font.h"
 #include "color.h"
+#include "hardware/screen/drivers/screenDriver.h"
 
 namespace yoba {
-	enum class ScreenOrientation : uint8_t {
-		Landscape0,
-		Portrait90,
-		Landscape270,
-	};
-
 	class ScreenBuffer {
 		public:
-			ScreenBuffer(
-				ScreenDriver* driver,
-				const Size& size,
-				ScreenOrientation orientation
-			);
+			explicit ScreenBuffer(ScreenDriver* driver);
 
 			void begin();
 
@@ -29,9 +19,6 @@ namespace yoba {
 			virtual void flush() = 0;
 
 			ScreenDriver* getDriver() const;
-
-			const Size &getSize() const;
-			ScreenOrientation getRotation() const;
 
 			Bounds& getViewport();
 			void setViewport(const Bounds& bounds);
@@ -64,8 +51,6 @@ namespace yoba {
 			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;
 
-			const Size _size;
-			ScreenOrientation _orientation;
 			Bounds _viewport = Bounds();
 	};
 }

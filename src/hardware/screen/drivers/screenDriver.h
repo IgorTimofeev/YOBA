@@ -2,15 +2,26 @@
 
 #include <cstdint>
 #include <driver/spi_master.h>
+#include "../../../size.h"
 
 namespace yoba {
-	class ScreenBuffer;
+	enum class ScreenOrientation : uint8_t {
+		Landscape0,
+		Portrait90,
+		Landscape270,
+	};
 
 	class ScreenDriver {
 		public:
-			explicit ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin);
+			explicit ScreenDriver(
+				uint8_t chipSelectPin,
+				uint8_t dataCommandPin,
+				int8_t resetPin,
+				const Size& size,
+				ScreenOrientation orientation
+			);
 
-			void begin(ScreenBuffer* buffer);
+			void begin();
 
 			virtual void writeInitializationCommands();
 
@@ -45,19 +56,10 @@ namespace yoba {
 			* sent faster (compared to calling spi_device_transmit several times), and at
 			* the mean while the lines for next transactions can get calculated.
 			*/
-			void flushTransactionBuffer(ScreenBuffer *display, int y);
+			void flushTransactionBuffer(int y);
 
 			uint16_t *getTransactionBuffer() const;
 			size_t getTransactionBufferLength() const;
-
-			uint8_t getChipSelectPin() const;
-			void setChipSelectPin(uint8_t chipSelectPin);
-
-			uint8_t getDataCommandPin() const;
-			void setDataCommandPin(uint8_t dataCommandPin);
-
-			int8_t getResetPin() const;
-			void setResetPin(int8_t resetPin);
 
 			int32_t getSPIFrequency() const;
 			void setSPIFrequency(int32_t spiFrequency);
@@ -68,17 +70,24 @@ namespace yoba {
 			// but less overhead for setting up / finishing transfers. Make sure screen height is dividable by this.
 			void setTransactionBufferHeight(uint8_t transactionBufferHeight);
 
-		protected:
-			spi_device_handle_t _spi;
-			uint16_t* _transactionBuffer = nullptr;
-			size_t _transactionBufferLength = 0;
+			const Size &getSize() const;
+			ScreenOrientation getRotation() const;
 
+		protected:
 			uint8_t _chipSelectPin;
 			uint8_t _dataCommandPin;
 			int8_t _resetPin;
 
+			const Size _size;
+			ScreenOrientation _orientation;
+
+			spi_device_handle_t _spi;
+			uint16_t* _transactionBuffer = nullptr;
+			size_t _transactionBufferLength = 0;
+
 			int32_t _SPIFrequency = SPI_MASTER_FREQ_20M;
 			uint8_t _transactionBufferHeight = 20;
+
 	};
 
 	struct DriverSPIPreCallbackUserData {
