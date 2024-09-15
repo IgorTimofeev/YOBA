@@ -3,14 +3,14 @@
 #include "point.h"
 
 namespace yoba {
-	enum EventType {
-		touchDown,
-		touchDrag,
-		touchUp,
+	enum class EventType : uint8_t {
+		TouchDown,
+		TouchDrag,
+		TouchUp,
 
-		pinchDown,
-		pinchDrag,
-		pinchUp,
+		PinchDown,
+		PinchDrag,
+		PinchUp,
 	};
 
 	class Element;
@@ -24,7 +24,6 @@ namespace yoba {
 			virtual bool matches(Element* element) = 0;
 
 			bool isHandled() const;
-
 			void setHandled(bool handled);
 
 		private:

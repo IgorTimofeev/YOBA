@@ -47,21 +47,21 @@ namespace yoba {
 	}
 
 	TouchDownEvent::TouchDownEvent(const Point &position) : TouchEvent(
-		EventType::touchDown,
+		EventType::TouchDown,
 		position
 	) {
 
 	}
 
 	TouchDragEvent::TouchDragEvent(const Point &position) : TouchEvent(
-		EventType::touchDrag,
+		EventType::TouchDrag,
 		position
 	) {
 
 	}
 
 	TouchUpEvent::TouchUpEvent(const Point &position) : TouchEvent(
-		EventType::touchUp,
+		EventType::TouchUp,
 		position
 	) {
 
@@ -103,7 +103,7 @@ namespace yoba {
 	}
 
 	PinchDownEvent::PinchDownEvent(const Point &position1, const Point &position2) : PinchEvent(
-		EventType::pinchDown,
+		EventType::PinchDown,
 		position1,
 		position2
 	) {
@@ -111,7 +111,7 @@ namespace yoba {
 	}
 
 	PinchDragEvent::PinchDragEvent(const Point &position1, const Point &position2) : PinchEvent(
-		EventType::pinchDrag,
+		EventType::PinchDrag,
 		position1,
 		position2
 	) {
@@ -119,7 +119,7 @@ namespace yoba {
 	}
 
 	PinchUpEvent::PinchUpEvent(const Point &position1, const Point &position2) : PinchEvent(
-		EventType::pinchUp,
+		EventType::PinchUp,
 		position1,
 		position2
 	) {

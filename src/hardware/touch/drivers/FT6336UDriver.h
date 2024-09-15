@@ -6,8 +6,7 @@
 */
 /**************************************************************************/
 
-#ifndef _FT6336U_H
-#define _FT6336U_H
+#pragma once
 
 #include <stdint.h>
 #include <stdbool.h>

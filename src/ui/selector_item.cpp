@@ -4,7 +4,7 @@
 
 namespace yoba {
 	void SelectorItem::onEvent(Event &event) {
-		if ((event.getType() != EventType::touchDown && event.getType() != EventType::touchDrag))
+		if ((event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag))
 			return;
 
 		if (getSelector())

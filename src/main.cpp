@@ -76,11 +76,11 @@ void setup() {
 
 	text.setFont(&font);
 	text.setForeground(new ColorPalette(16));
-	text.setAlignment(Alignment::center);
+	text.setAlignment(Alignment::Center);
 	application.getWorkspace().addChild(&text);
 
 	application.getWorkspace().addEventHandler([](Event& event) {
-		if (!(event.getType() == EventType::touchDown || event.getType() == EventType::touchUp))
+		if (!(event.getType() == EventType::TouchDown || event.getType() == EventType::TouchUp))
 			return;
 
 		backgroundPaletteIndex += 1;

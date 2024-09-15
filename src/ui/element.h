@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef YOBA_ELEMENT_H
-#define YOBA_ELEMENT_H
-#endif
-
 #include <cstdint>
 #include <limits>
 
@@ -14,19 +10,18 @@
 #include "hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
-	enum Alignment: uint8_t {
-		start,
-		center,
-		end,
-		stretch,
+	enum class Alignment: uint8_t {
+		Start,
+		Center,
+		End,
+		Stretch
 	};
 
-	enum Orientation: uint8_t {
-		horizontal,
-		vertical,
+	enum class Orientation: uint8_t {
+		Horizontal,
+		Vertical
 	};
 
-	class Screen;
 	class Event;
 	class Workspace;
 	class Animation;
@@ -106,8 +101,8 @@ namespace yoba {
 			bool _clipToBounds = false;
 
 			Size _size = Size(Size::calculated, Size::calculated);
-			Alignment _horizontalAlignment = Alignment::stretch;
-			Alignment _verticalAlignment = Alignment::stretch;
+			Alignment _horizontalAlignment = Alignment::Stretch;
+			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;
 			Workspace* _workspace = nullptr;
 			Element* _parent = nullptr;

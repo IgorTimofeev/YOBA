@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef YOBA_APPLICATION_H
-#define YOBA_APPLICATION_H
-#endif
-
 #include <cstdint>
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "hardware/touch/drivers/touchDriver.h"

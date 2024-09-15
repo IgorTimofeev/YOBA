@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef YOBA_WORKSPACE_H
-#define YOBA_WORKSPACE_H
-#endif
-
 #include "layout.h"
 #include "event.h"
 

@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef YOBA_LAYOUT_H
-#define YOBA_LAYOUT_H
-#endif
-
 #include "element.h"
 #include "bounds.h"
 #include "vector"
