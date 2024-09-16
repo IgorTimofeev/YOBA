@@ -9,8 +9,9 @@
 #include "fonts/Unscii8ThinFont.h"
 #include "ui/shapes/rectangle.h"
 #include "ui/text.h"
-#include "ui/debug/TouchCanvas.h"
 #include "ui/application.h"
+#include "ui/debug/touchCanvas.h"
+#include "ui/debug/paletteView.h"
 
 using namespace yoba;
 
@@ -18,7 +19,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	5,
 	16,
 	17,
-	ScreenOrientation::Landscape270
+	ScreenOrientation::Landscape90
 );
 
 EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(&screenDriver);
@@ -37,13 +38,10 @@ Application application = Application(
 
 Unscii16Font font = Unscii16Font();
 
-ColorPalette backgroundColor = ColorPalette(0);
-Rectangle backgroundRect = Rectangle(&backgroundColor);
+PaletteView paletteView = PaletteView();
 
 ColorPalette textColor = ColorPalette(18);
 Text text = Text(&textColor);
-
-int32_t backgroundPaletteIndex = 0;
 
 TouchCanvas touchCanvas;
 
@@ -58,18 +56,8 @@ void setup() {
 	// Display
 	Serial.println("Updating palette");
 
-	// Grayscale
-	uint8_t govno = 0;
-
-	for (int i = 0; i < 16; i++) {
-		screenBuffer.setPaletteColor(i, Color24(govno, govno, govno).toUint16());
-		govno += 0x11;
-	}
-
-	// RGB
-	screenBuffer.setPaletteColor(16, Color24(0xFF, 0x00, 0x00).toUint16());
-	screenBuffer.setPaletteColor(17, Color24(0x00, 0xFF, 0x00).toUint16());
-	screenBuffer.setPaletteColor(18, Color24(0x00, 0x00, 0xFF).toUint16());
+	// ОПЕНКОМПЫ ЕПТЫ БЛЭЭ
+	screenBuffer.fillWithOpenComputersColors();
 
 	// Starting application
 	application.begin();
@@ -78,34 +66,20 @@ void setup() {
 	application.setDefaultFont(&font);
 
 	// Adding UI elements
-	application.addChild(&backgroundRect);
+	application.addChild(&paletteView);
 
 	text.setAlignment(Alignment::Center);
 	application.addChild(&text);
 
 	touchCanvas.setForeground(&textColor);
 	application.addChild(&touchCanvas);
-
-	application.addEventHandler([](Event& event) {
-		if (event.getType() != EventType::TouchDown)
-			return;
-
-		backgroundPaletteIndex += 1;
-
-		if (backgroundPaletteIndex >= 15) {
-			backgroundPaletteIndex = 0;
-		}
-
-		backgroundColor.setIndex(backgroundPaletteIndex);
-		backgroundRect.setBackground(&backgroundColor);
-	});
 }
 
 void loop() {
 	auto startTime = millis();
 
 	// Text
-	text.setText(String("Index: ") + String(backgroundPaletteIndex) + String(", uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
+	text.setText(String("Uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
 
 	application.tick();
 
@@ -114,7 +88,7 @@ void loop() {
 //	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....
-	uint8_t desiredFPS = 60;
+	uint8_t desiredFPS = 120;
 	uint32_t desiredDeltaTime = 1000 / desiredFPS;
 	if (deltaTime < desiredDeltaTime)
 		delay(desiredDeltaTime - deltaTime);

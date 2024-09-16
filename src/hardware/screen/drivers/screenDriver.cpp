@@ -103,7 +103,7 @@ namespace yoba {
 		ESP_ERROR_CHECK(result);
 
 		//Attach the LCD to the SPI bus
-		result = spi_bus_add_device(SPIHost, &deviceConfig, &_spi);
+		result = spi_bus_add_device(SPIHost, &deviceConfig, &_SPI);
 		ESP_ERROR_CHECK(result);
 
 		//Initialize non-SPI GPIOs
@@ -140,7 +140,7 @@ namespace yoba {
 		transaction.user = new DriverSPIPreCallbackUserData(this, false);              //D/C needs to be set to 0
 	//	transaction.flags = SPI_TRANS_CS_KEEP_ACTIVE;   //Keep CS active after data transfer
 
-		auto result = spi_device_polling_transmit(_spi, &transaction); //Transmit!
+		auto result = spi_device_polling_transmit(_SPI, &transaction); //Transmit!
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
@@ -154,7 +154,7 @@ namespace yoba {
 		transaction.tx_buffer = data;             //Data
 		transaction.user = new DriverSPIPreCallbackUserData(this, true); //D/C needs to be set to 1
 
-		auto result = spi_device_polling_transmit(_spi, &transaction); //Transmit!
+		auto result = spi_device_polling_transmit(_SPI, &transaction); //Transmit!
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
@@ -212,7 +212,7 @@ namespace yoba {
 		esp_err_t result;
 
 		for (uint8_t i = 0; i < 6; i++) {
-			result = spi_device_queue_trans(_spi, &transactions[i], portMAX_DELAY);
+			result = spi_device_queue_trans(_SPI, &transactions[i], portMAX_DELAY);
 			assert(result == ESP_OK);
 		}
 
@@ -225,7 +225,7 @@ namespace yoba {
 
 		//Wait for all 6 transactions to be done and get back the results.
 		for (uint8_t i = 0; i < 6; i++) {
-			result = spi_device_get_trans_result(_spi, &transaction, portMAX_DELAY);
+			result = spi_device_get_trans_result(_SPI, &transaction, portMAX_DELAY);
 			assert(result == ESP_OK);
 
 			//We could inspect rtrans now if we received any info back. The LCD is treated as write-only, though.

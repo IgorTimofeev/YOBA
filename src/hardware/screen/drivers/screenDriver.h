@@ -101,7 +101,7 @@ namespace yoba {
 			size_t _transactionBufferLength = 0;
 			uint16_t* _transactionBuffer = nullptr;
 
-			spi_device_handle_t _spi;
+			spi_device_handle_t _SPI;
 			int32_t _SPIFrequency = SPI_MASTER_FREQ_20M;
 
 			void updateDataFromOrientation();

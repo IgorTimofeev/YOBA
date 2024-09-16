@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "cstdlib"
 
 namespace yoba {
 	enum class ColorType : uint8_t {
