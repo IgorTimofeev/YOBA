@@ -8,9 +8,9 @@ namespace yoba {
 	class ILI9341Driver : public ScreenDriver {
 		public:
 			explicit ILI9341Driver(
-				uint8_t chipSelectPin,
-				uint8_t dataCommandPin,
-				int8_t resetPin,
+				uint8_t csPin,
+				uint8_t dcPin,
+				int8_t rstPin,
 				ScreenOrientation orientation
 			);
 

@@ -5,7 +5,7 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	template<typename TIndex, typename TColor, size_t TPaletteSize>
+	template<typename TIndex, typename TColor, size_t PaletteLength>
 	class PaletteBuffer : public ScreenBuffer {
 		public:
 			explicit PaletteBuffer(ScreenDriver *driver);
@@ -18,16 +18,16 @@ namespace yoba {
 			void setPaletteColor(TIndex index, TColor value);
 
 		protected:
-			TColor _palette[TPaletteSize];
+			TColor _palette[PaletteLength];
 	};
 
-	template<typename TIndex, typename TColor, size_t TPaletteSize>
-	PaletteBuffer<TIndex, TColor, TPaletteSize>::PaletteBuffer(ScreenDriver *driver) : ScreenBuffer(driver) {
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	PaletteBuffer<TIndex, TColor, PaletteLength>::PaletteBuffer(ScreenDriver *driver) : ScreenBuffer(driver) {
 
 	}
 
-	template<typename TIndex, typename TColor, size_t TPaletteSize>
-	TIndex PaletteBuffer<TIndex, TColor, TPaletteSize>::getPaletteIndexOf(const Color *color) {
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	TIndex PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteIndexOf(const Color *color) {
 		switch (color->getType()) {
 			case ColorType::Palette:
 				return ((PaletteColor*) color)->getIndex();
@@ -37,18 +37,18 @@ namespace yoba {
 		}
 	}
 
-	template<typename TIndex, typename TColor, size_t TPaletteSize>
-	void PaletteBuffer<TIndex, TColor, TPaletteSize>::clearNative(const Color* color) {
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	void PaletteBuffer<TIndex, TColor, PaletteLength>::clearNative(const Color* color) {
 		memset((TColor*) this->_buffer, (int) getPaletteIndexOf(color), this->_bufferLength);
 	}
 
-	template<typename TIndex, typename TColor, size_t TPaletteSize>
-	TColor PaletteBuffer<TIndex, TColor, TPaletteSize>::getPaletteColor(TIndex index) {
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	TColor PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteColor(TIndex index) {
 		return _palette[index];
 	}
 
-	template<typename TIndex, typename TColor, size_t TPaletteSize>
-	void PaletteBuffer<TIndex, TColor, TPaletteSize>::setPaletteColor(TIndex index, TColor value) {
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColor(TIndex index, TColor value) {
 		_palette[index] = value;
 	}
 }

@@ -3,10 +3,10 @@
 #include "point.h"
 
 namespace yoba {
-	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, const Size& defaultSize, ScreenOrientation orientation) :
-		_chipSelectPin(chipSelectPin),
-		_dataCommandPin(dataCommandPin),
-		_resetPin(resetPin),
+	ScreenDriver::ScreenDriver(uint8_t csPin, uint8_t dcPin, int8_t rstPin, const Size& defaultSize, ScreenOrientation orientation) :
+		_csPin(csPin),
+		_dcPin(dcPin),
+		_rstPin(rstPin),
 
 		_defaultSize(defaultSize),
 		_size(defaultSize),
@@ -65,11 +65,11 @@ namespace yoba {
 	}
 
 	int32_t ScreenDriver::getSPIFrequency() const {
-		return _SPIFrequency;
+		return _spiFrequency;
 	}
 
 	void ScreenDriver::setSPIFrequency(int32_t spiFrequency) {
-		_SPIFrequency = spiFrequency;
+		_spiFrequency = spiFrequency;
 	}
 
 	void ScreenDriver::writeInitializationCommands() {
@@ -91,7 +91,7 @@ namespace yoba {
 		spi_device_interface_config_t deviceConfig = {
 			.mode = 0,                              //SPI mode 0
 			.clock_speed_hz = getSPIFrequency(),     //Clock out at required MHz
-			.spics_io_num = _chipSelectPin,             //CS pin
+			.spics_io_num = _csPin,             //CS pin
 			.queue_size = 7,                        //We want to be able to queue 7 transactions at a time
 			.pre_cb = SPIPreCallback, //Specify pre-transfer callback to handle D/C line
 		};
@@ -103,14 +103,14 @@ namespace yoba {
 		ESP_ERROR_CHECK(result);
 
 		//Attach the LCD to the SPI bus
-		result = spi_bus_add_device(SPIHost, &deviceConfig, &_SPI);
+		result = spi_bus_add_device(SPIHost, &deviceConfig, &_spi);
 		ESP_ERROR_CHECK(result);
 
 		//Initialize non-SPI GPIOs
-		uint64_t gpioConfigPinMask = 1ULL << _dataCommandPin;
+		uint64_t gpioConfigPinMask = 1ULL << _dcPin;
 
-		if (_resetPin >= 0)
-			gpioConfigPinMask |= 1ULL << _resetPin;
+		if (_rstPin >= 0)
+			gpioConfigPinMask |= 1ULL << _rstPin;
 
 		gpio_config_t gpioConfig {
 			.pin_bit_mask = gpioConfigPinMask,
@@ -121,11 +121,11 @@ namespace yoba {
 		gpio_config(&gpioConfig);
 
 		// Toggle reset pin if it was defined
-		if (_resetPin >= 0) {
-			gpio_set_level((gpio_num_t) _resetPin, 0);
+		if (_rstPin >= 0) {
+			gpio_set_level((gpio_num_t) _rstPin, 0);
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 
-			gpio_set_level((gpio_num_t) _resetPin, 1);
+			gpio_set_level((gpio_num_t) _rstPin, 1);
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
 
@@ -140,7 +140,7 @@ namespace yoba {
 		transaction.user = new DriverSPIPreCallbackUserData(this, false);              //D/C needs to be set to 0
 	//	transaction.flags = SPI_TRANS_CS_KEEP_ACTIVE;   //Keep CS active after data transfer
 
-		auto result = spi_device_polling_transmit(_SPI, &transaction); //Transmit!
+		auto result = spi_device_polling_transmit(_spi, &transaction); //Transmit!
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
@@ -154,13 +154,13 @@ namespace yoba {
 		transaction.tx_buffer = data;             //Data
 		transaction.user = new DriverSPIPreCallbackUserData(this, true); //D/C needs to be set to 1
 
-		auto result = spi_device_polling_transmit(_SPI, &transaction); //Transmit!
+		auto result = spi_device_polling_transmit(_spi, &transaction); //Transmit!
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
 	void ScreenDriver::SPIPreCallback(spi_transaction_t *transaction) {
 		auto userData = (DriverSPIPreCallbackUserData*) transaction->user;
-		gpio_set_level((gpio_num_t) 16, userData->dataCommandPinState);
+		gpio_set_level((gpio_num_t) 16, userData->dcPinState);
 		delete userData;
 	}
 
@@ -212,7 +212,7 @@ namespace yoba {
 		esp_err_t result;
 
 		for (uint8_t i = 0; i < 6; i++) {
-			result = spi_device_queue_trans(_SPI, &transactions[i], portMAX_DELAY);
+			result = spi_device_queue_trans(_spi, &transactions[i], portMAX_DELAY);
 			assert(result == ESP_OK);
 		}
 
@@ -225,7 +225,7 @@ namespace yoba {
 
 		//Wait for all 6 transactions to be done and get back the results.
 		for (uint8_t i = 0; i < 6; i++) {
-			result = spi_device_get_trans_result(_SPI, &transaction, portMAX_DELAY);
+			result = spi_device_get_trans_result(_spi, &transaction, portMAX_DELAY);
 			assert(result == ESP_OK);
 
 			//We could inspect rtrans now if we received any info back. The LCD is treated as write-only, though.
@@ -253,7 +253,7 @@ namespace yoba {
 		sendCommandAndData(command, buffer, 1);
 	}
 
-	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dataCommandPinState) : driver(driver), dataCommandPinState(dataCommandPinState) {}
+	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dcPinState) : driver(driver), dcPinState(dcPinState) {}
 
 	void ScreenDriver::updateDataFromOrientation() {
 		// Updating size

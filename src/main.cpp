@@ -1,8 +1,7 @@
 #include <Arduino.h>
 
-#include "hardware/screen/buffers/screenBuffer.h"
 #include "hardware/screen/drivers/ILI9341Driver.h"
-#include "hardware/screen/buffers/bits16Colors256PaletteBuffer.h"
+#include "hardware/screen/buffers/colors256PaletteBuffer.h"
 #include "hardware/touch/drivers/FT6336UDriver.h"
 #include "color.h"
 #include "fonts/Unscii16Font.h"
@@ -22,7 +21,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	ScreenOrientation::Landscape90
 );
 
-Bits16Colors256PaletteBuffer screenBuffer = Bits16Colors256PaletteBuffer(&screenDriver);
+Colors256PaletteBuffer screenBuffer = Colors256PaletteBuffer(&screenDriver);
 
 FT6336UDriver touchDriver = FT6336UDriver(
 	SDA,
@@ -37,12 +36,10 @@ Application application = Application(
 );
 
 Unscii16Font font = Unscii16Font();
-
-PaletteView paletteView = PaletteView();
-
 PaletteColor textColor = PaletteColor(255);
-Text text = Text(&textColor);
 
+PaletteView paletteView;
+Text text = Text(&textColor);
 TouchCanvas touchCanvas;
 
 void setup() {

@@ -16,9 +16,9 @@ namespace yoba {
 	class ScreenDriver {
 		public:
 			explicit ScreenDriver(
-				uint8_t chipSelectPin,
-				uint8_t dataCommandPin,
-				int8_t resetPin,
+				uint8_t csPin,
+				uint8_t dcPin,
+				int8_t rstPin,
 				const Size& defaultSize,
 				ScreenOrientation orientation
 			);
@@ -89,9 +89,9 @@ namespace yoba {
 			void setSPIFrequency(int32_t spiFrequency);
 
 		protected:
-			uint8_t _chipSelectPin;
-			uint8_t _dataCommandPin;
-			int8_t _resetPin;
+			uint8_t _csPin;
+			uint8_t _dcPin;
+			int8_t _rstPin;
 
 			const Size _defaultSize;
 			Size _size;
@@ -101,16 +101,16 @@ namespace yoba {
 			size_t _transactionBufferLength = 0;
 			uint16_t* _transactionBuffer = nullptr;
 
-			spi_device_handle_t _SPI;
-			int32_t _SPIFrequency = SPI_MASTER_FREQ_20M;
+			spi_device_handle_t _spi = spi_device_handle_t();
+			int32_t _spiFrequency = SPI_MASTER_FREQ_20M;
 
 			void updateDataFromOrientation();
 	};
 
 	struct DriverSPIPreCallbackUserData {
-		DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dataCommandPinState);
+		DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dcPinState);
 
 		ScreenDriver* driver;
-		bool dataCommandPinState;
+		bool dcPinState;
 	};
 }

@@ -35,7 +35,6 @@ namespace yoba {
 
 		// Do we need some delay? Hmmm
 		//    delay(500);
-
 	}
 
 	void FT6336UDriver::onInterrupt(FT6336UDriver* driver) {

@@ -3,15 +3,15 @@
 
 namespace yoba {
 	ILI9341Driver::ILI9341Driver(
-		uint8_t chipSelectPin,
-		uint8_t dataCommandPin,
-		int8_t resetPin,
+		uint8_t csPin,
+		uint8_t dcPin,
+		int8_t rstPin,
 		ScreenOrientation orientation
 	) :
 	ScreenDriver(
-		chipSelectPin,
-		dataCommandPin,
-		resetPin,
+		csPin,
+		dcPin,
+		rstPin,
 		Size(240, 320),
 		orientation
 	) {

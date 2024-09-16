@@ -4,9 +4,9 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	class Bits16Colors256PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
+	class Colors256PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
 		public:
-			explicit Bits16Colors256PaletteBuffer(ScreenDriver *driver);
+			explicit Colors256PaletteBuffer(ScreenDriver *driver);
 
 			void allocate() override;
 			void flush() override;
