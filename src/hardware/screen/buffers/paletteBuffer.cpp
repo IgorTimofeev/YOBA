@@ -14,9 +14,7 @@ namespace yoba {
 			case ColorType::Bit24: {
 				auto color24 = (Color24*) color;
 
-
-
-				return 0;
+				return ColorPalette::getClosestIndex(_palette, 256, *color24);
 			}
 
 			default:

@@ -17,6 +17,6 @@ namespace yoba {
 			}
 
 		private:
-			const Color* _foreground = &Color16::white;
+			const Color* _foreground = nullptr;
 	};
 }

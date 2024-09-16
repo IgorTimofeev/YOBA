@@ -31,9 +31,6 @@ namespace yoba {
 
 	class Color16 : public Color {
 		public:
-			static const Color16 black;
-			static const Color16 white;
-
 			explicit Color16(uint16_t value);
 
 			uint16_t getValue() const;
@@ -67,6 +64,22 @@ namespace yoba {
 			uint32_t toUint32() const;
 			uint16_t toUint16() const;
 
+			static Color24 fromUint16(uint16_t color) {
+				return {
+					(uint8_t) ((((color >> 11) & 0x1F) * 255 + 15) / 31),
+					(uint8_t) ((((color >> 5) & 0x3F) * 255 + 31) / 63),
+					(uint8_t) ((((color) & 0x1F) * 255 + 15) / 31)
+				};
+			}
+
+			static float govnoDelta(const Color24& color1, const Color24& color2) {
+				float dr = (float) color1._r - (float) color2._r;
+				float dg = (float) color1._g - (float) color2._g;
+				float db = (float) color1._b - (float) color2._b;
+
+				return (0.2126f * dr * dr + 0.7152f * dg * dg + 0.0722f * db * db);
+			}
+
 			static uint8_t interpolateChannel(uint8_t first, uint8_t second, float position);
 
 			void interpolateTo(Color24& second, float position);
@@ -92,6 +105,26 @@ namespace yoba {
 
 			uint8_t getIndex() const;
 			void setIndex(uint8_t index);
+
+			static uint8_t getClosestIndex(const uint16_t* palette, size_t _paletteLength, const Color24& color) {
+				Color24 palette24;
+				uint8_t closestIndex = 0;
+				float delta;
+				float closestDelta = 999999;
+
+				for (size_t i = 0; i < _paletteLength; i++) {
+					palette24 = Color24::fromUint16(palette[i]);
+
+					delta = Color24::govnoDelta(palette24, color);
+
+					if (delta < closestDelta) {
+						closestDelta = delta;
+						closestIndex = i;
+					}
+				}
+
+				return closestIndex;
+			}
 
 		private:
 			uint8_t _index;

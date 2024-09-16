@@ -17,6 +17,6 @@ namespace yoba {
 			}
 
 		private:
-			const Color* _background = &Color16::black;
+			const Color* _background = nullptr;
 	};
 }

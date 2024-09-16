@@ -40,7 +40,7 @@ Unscii16Font font = Unscii16Font();
 
 PaletteView paletteView = PaletteView();
 
-ColorPalette textColor = ColorPalette(18);
+Color24 textColor = Color24(0xFF, 0xFF, 0xFF);
 Text text = Text(&textColor);
 
 TouchCanvas touchCanvas;
@@ -84,8 +84,8 @@ void loop() {
 	application.tick();
 
 	auto deltaTime = max(millis() - startTime, 1UL);
-//	auto fps = 60000 / deltaTime;
-//	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
+	auto fps = 60000 / deltaTime;
+	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....
 	uint8_t desiredFPS = 120;

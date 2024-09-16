@@ -160,9 +160,6 @@ namespace yoba {
 
 	}
 
-	const Color16 Color16::black = Color16(0x0000);
-	const Color16 Color16::white = Color16(0xFFFF);
-
 	uint16_t Color16::getValue() const {
 		return _value;
 	}
