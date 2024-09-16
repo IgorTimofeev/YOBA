@@ -39,6 +39,62 @@ namespace yoba {
 		return getIndex(point.getX(), point.getY());
 	}
 
+	// -------------------------------- Rendering --------------------------------
+
+	void ScreenBuffer::clear(const Color *color) {
+		clearNative(color);
+	}
+
+	void ScreenBuffer::renderPixel(const Point &point, const Color *color) {
+		if (getViewport().intersects(point))
+			renderPixelNative(point, color);
+	}
+
+	void ScreenBuffer::renderHorizontalLine(const Point &point, uint16_t length, const Color *color) {
+		const auto& viewport = getViewport();
+
+		if (
+			point.getX() > viewport.getX2()
+			|| point.getX() + length < viewport.getX()
+
+			|| point.getY() < viewport.getY()
+			|| point.getY() > viewport.getY2()
+			)
+			return;
+
+		uint16_t x1 = max(point.getX(), viewport.getX());
+		uint16_t x2 = min(point.getX() + length - 1, viewport.getX2());
+		length = x2 - x1 + 1;
+
+		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
+	}
+
+	void ScreenBuffer::renderVerticalLine(const Point &point, uint16_t length, const Color *color) {
+		const auto& viewport = getViewport();
+
+		if (
+			point.getX() < viewport.getX()
+			|| point.getX() > viewport.getX2()
+
+			|| point.getY() > viewport.getY2()
+			|| point.getY() + length < viewport.getY()
+			)
+			return;
+
+		uint16_t y1 = max(point.getY(), viewport.getY());
+		uint16_t y2 = min(point.getY() + length - 1, viewport.getY2());
+		length = y2 - y1 + 1;
+
+		renderVerticalLineNative(Point(point.getX(), y1), length, color);
+	}
+
+	void ScreenBuffer::renderFilledRectangle(const Bounds &bounds, const Color *color) {
+		const auto& viewport = getViewport();
+
+		if (viewport.intersects(bounds))
+			renderFilledRectangleNative(viewport.getIntersection(bounds), color);
+	}
+
 	void ScreenBuffer::renderLine(const Point &from, const Point &to, const Color* color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {

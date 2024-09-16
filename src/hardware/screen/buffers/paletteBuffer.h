@@ -5,18 +5,50 @@
 #include "screenBuffer.h"
 
 namespace yoba {
+	template<typename TIndex, typename TColor, size_t TPaletteSize>
 	class PaletteBuffer : public ScreenBuffer {
 		public:
-			PaletteBuffer(ScreenDriver *driver, uint16_t *palette);
+			explicit PaletteBuffer(ScreenDriver *driver);
 
-			virtual uint8_t getPaletteIndex(const Color* color);
+			virtual TIndex getPaletteIndexOf(const Color* color);
 
-			void clearUnchecked(const Color* color) override;
+			void clearNative(const Color* color) override;
 
-			uint16_t getPaletteColor(uint8_t index);
-			void setPaletteColor(uint8_t index, uint16_t value);
+			TColor getPaletteColor(TIndex index);
+			void setPaletteColor(TIndex index, TColor value);
 
 		protected:
-			uint16_t* _palette;
+			TColor _palette[TPaletteSize];
 	};
+
+	template<typename TIndex, typename TColor, size_t TPaletteSize>
+	PaletteBuffer<TIndex, TColor, TPaletteSize>::PaletteBuffer(ScreenDriver *driver) : ScreenBuffer(driver) {
+
+	}
+
+	template<typename TIndex, typename TColor, size_t TPaletteSize>
+	TIndex PaletteBuffer<TIndex, TColor, TPaletteSize>::getPaletteIndexOf(const Color *color) {
+		switch (color->getType()) {
+			case ColorType::Palette:
+				return ((PaletteColor*) color)->getIndex();
+
+			default:
+				return 0;
+		}
+	}
+
+	template<typename TIndex, typename TColor, size_t TPaletteSize>
+	void PaletteBuffer<TIndex, TColor, TPaletteSize>::clearNative(const Color* color) {
+		memset((TColor*) this->_buffer, (int) getPaletteIndexOf(color), this->_bufferLength);
+	}
+
+	template<typename TIndex, typename TColor, size_t TPaletteSize>
+	TColor PaletteBuffer<TIndex, TColor, TPaletteSize>::getPaletteColor(TIndex index) {
+		return _palette[index];
+	}
+
+	template<typename TIndex, typename TColor, size_t TPaletteSize>
+	void PaletteBuffer<TIndex, TColor, TPaletteSize>::setPaletteColor(TIndex index, TColor value) {
+		_palette[index] = value;
+	}
 }

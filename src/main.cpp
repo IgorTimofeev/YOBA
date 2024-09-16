@@ -2,7 +2,7 @@
 
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "hardware/screen/drivers/ILI9341Driver.h"
-#include "hardware/screen/buffers/eightBitsPaletteBuffer.h"
+#include "hardware/screen/buffers/bits16Colors256PaletteBuffer.h"
 #include "hardware/touch/drivers/FT6336UDriver.h"
 #include "color.h"
 #include "fonts/Unscii16Font.h"
@@ -22,7 +22,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	ScreenOrientation::Landscape90
 );
 
-EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(&screenDriver);
+Bits16Colors256PaletteBuffer screenBuffer = Bits16Colors256PaletteBuffer(&screenDriver);
 
 FT6336UDriver touchDriver = FT6336UDriver(
 	SDA,
@@ -40,7 +40,7 @@ Unscii16Font font = Unscii16Font();
 
 PaletteView paletteView = PaletteView();
 
-Color24 textColor = Color24(0xFF, 0xFF, 0xFF);
+PaletteColor textColor = PaletteColor(255);
 Text text = Text(&textColor);
 
 TouchCanvas touchCanvas;
@@ -57,7 +57,7 @@ void setup() {
 	Serial.println("Updating palette");
 
 	// ОПЕНКОМПЫ ЕПТЫ БЛЭЭ
-	screenBuffer.fillWithOpenComputersColors();
+	screenBuffer.setOpenComputersPaletteColors();
 
 	// Starting application
 	application.begin();
@@ -84,14 +84,14 @@ void loop() {
 	application.tick();
 
 	auto deltaTime = max(millis() - startTime, 1UL);
-	auto fps = 60000 / deltaTime;
-	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....
-	uint8_t desiredFPS = 120;
+	uint8_t desiredFPS = 60;
 	uint32_t desiredDeltaTime = 1000 / desiredFPS;
 	if (deltaTime < desiredDeltaTime)
 		delay(desiredDeltaTime - deltaTime);
+
+//	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", 60000 / deltaTime, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 //	delay(1000);
 }

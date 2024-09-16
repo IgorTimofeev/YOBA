@@ -9,12 +9,12 @@ namespace yoba {
 
 		protected:
 			void onRender(ScreenBuffer* screenBuffer) override {
-				auto buffer8 = (EightBitsPaletteBuffer*) screenBuffer;
+				auto buffer8 = (Bits16Colors256PaletteBuffer*) screenBuffer;
 
 				uint8_t w = 8;
 				uint8_t h = 8;
 
-				ColorPalette color = ColorPalette(0);
+				PaletteColor color = PaletteColor(0);
 
 				buffer8->clear(&color);
 

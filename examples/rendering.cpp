@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "hardware/screen/drivers/ILI9341Driver.h"
-#include "hardware/screen/buffers/eightBitsPaletteBuffer.h"
+#include "hardware/screen/buffers/bits16Colors256PaletteBuffer.h"
 #include "color.h"
 #include "fonts/Unscii16Font.h"
 #include "fonts/Unscii8ThinFont.h"

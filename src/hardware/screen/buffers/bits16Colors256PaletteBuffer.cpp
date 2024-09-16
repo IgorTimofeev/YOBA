@@ -1,17 +1,17 @@
-#include "eightBitsPaletteBuffer.h"
+#include "bits16Colors256PaletteBuffer.h"
 #include "bounds.h"
 
 namespace yoba {
-	EightBitsPaletteBuffer::EightBitsPaletteBuffer(ScreenDriver *driver) : PaletteBuffer(driver, _govnoPalette) {
+	Bits16Colors256PaletteBuffer::Bits16Colors256PaletteBuffer(ScreenDriver *driver) : PaletteBuffer(driver) {
 
 	}
 
-	void EightBitsPaletteBuffer::allocate() {
+	void Bits16Colors256PaletteBuffer::allocate() {
 		_bufferLength = getDriver()->getSize().getWidth() * getDriver()->getSize().getHeight();
 		_buffer = new uint8_t[_bufferLength];
 	}
 
-	void EightBitsPaletteBuffer::flush() {
+	void Bits16Colors256PaletteBuffer::flush() {
 		const size_t pixelCount = getDriver()->getSize().getWidth() * _driver->getTransactionBufferHeight();
 		size_t bufferIndex = 0;
 
@@ -25,18 +25,18 @@ namespace yoba {
 		}
 	}
 
-	void EightBitsPaletteBuffer::renderPixelUnchecked(const Point &point, const Color* color) {
-		_buffer[getIndex(point)] = getPaletteIndex(color);
+	void Bits16Colors256PaletteBuffer::renderPixelNative(const Point &point, const Color* color) {
+		_buffer[getIndex(point)] = getPaletteIndexOf(color);
 	}
 
-	void EightBitsPaletteBuffer::renderHorizontalLineUnchecked(const Point &point, uint16_t width, const Color* color) {
-		memset(_buffer + getIndex(point), getPaletteIndex(color), width);
+	void Bits16Colors256PaletteBuffer::renderHorizontalLineNative(const Point &point, uint16_t width, const Color* color) {
+		memset(_buffer + getIndex(point), getPaletteIndexOf(color), width);
 	}
 
-	void EightBitsPaletteBuffer::renderVerticalLineUnchecked(const Point &point, uint16_t height, const Color* color) {
+	void Bits16Colors256PaletteBuffer::renderVerticalLineNative(const Point &point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(point);
 		uint16_t scanlineLength = getDriver()->getSize().getWidth();
-		auto paletteIndex = getPaletteIndex(color);
+		auto paletteIndex = getPaletteIndexOf(color);
 
 		for (size_t i = 0; i < height; i++) {
 			memset(bufferPtr, paletteIndex, 1);
@@ -44,10 +44,10 @@ namespace yoba {
 		}
 	}
 
-	void EightBitsPaletteBuffer::renderFilledRectangleUnchecked(const Bounds& bounds, const Color* color) {
+	void Bits16Colors256PaletteBuffer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(bounds.getTopLeft());
 		uint16_t scanlineLength = getDriver()->getSize().getWidth();
-		auto paletteIndex = getPaletteIndex(color);
+		auto paletteIndex = getPaletteIndexOf(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
 			memset(bufferPtr, paletteIndex, bounds.getWidth());
@@ -55,7 +55,7 @@ namespace yoba {
 		}
 	}
 
-	void EightBitsPaletteBuffer::fillWithOpenComputersColors() {
+	void Bits16Colors256PaletteBuffer::setOpenComputersPaletteColors() {
 		const uint8_t reds = 6;
 		const uint8_t greens = 8;
 		const uint8_t blues = 5;
@@ -69,13 +69,13 @@ namespace yoba {
 			const auto g = (uint8_t) round((float) idxG * 255.0f / ((float) greens - 1.0f));
 			const auto b = (uint8_t) round((float) idxB * 255.0f / ((float) blues - 1.0f));
 
-			_palette[index] = Color24(r, g, b).toUint16();
+			_palette[index] = Rgb888Color(r, g, b).toUint16();
 		}
 
 		for (uint8_t index = 0; index < 16; index++) {
 			const auto shade = (uint8_t) round(255.0f * (float) (index + 1) / 16.0f);
 
-			_palette[240 + index] = Color24(shade, shade, shade).toUint16();
+			_palette[240 + index] = Rgb888Color(shade, shade, shade).toUint16();
 		}
 	}
 }
