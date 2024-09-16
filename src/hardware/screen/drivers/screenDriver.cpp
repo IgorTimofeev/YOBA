@@ -3,10 +3,13 @@
 #include "point.h"
 
 namespace yoba {
-	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, ScreenOrientation orientation) :
+	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, const Size& defaultSize, ScreenOrientation orientation) :
 		_chipSelectPin(chipSelectPin),
 		_dataCommandPin(dataCommandPin),
 		_resetPin(resetPin),
+
+		_defaultSize(defaultSize),
+		_size(defaultSize),
 		_orientation(orientation)
 	{
 
@@ -38,9 +41,9 @@ namespace yoba {
 				break;
 
 			case ScreenOrientation::Landscape90: {
-				int32_t tmp = _size.getHeight() - point.getX();
+				int32_t x = point.getX();
 				point.setX(point.getY());
-				point.setY(tmp);
+				point.setY(_size.getHeight() - x);
 
 				break;
 			}
@@ -52,9 +55,9 @@ namespace yoba {
 				break;
 
 			case ScreenOrientation::Landscape270: {
-				int32_t tmp = _size.getWidth() - point.getY();
-				point.setX(tmp);
-				point.setY(point.getX());
+				int32_t x = point.getX();
+				point.setX(_size.getWidth() - point.getY());
+				point.setY(x);
 
 				break;
 			}
@@ -127,12 +130,6 @@ namespace yoba {
 		}
 
 		writeInitializationCommands();
-
-		// Allocating transaction buffer
-		delete _transactionBuffer;
-		_transactionBufferLength = _size.getWidth() * _transactionBufferHeight * 2;
-		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
-		assert(_transactionBuffer != nullptr);
 	}
 
 	void ScreenDriver::sendCommand(uint8_t command) {
@@ -257,4 +254,38 @@ namespace yoba {
 	}
 
 	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dataCommandPinState) : driver(driver), dataCommandPinState(dataCommandPinState) {}
+
+	void ScreenDriver::updateDataFromOrientation() {
+		// Updating size
+		switch (_orientation) {
+			case ScreenOrientation::Portrait0:
+				_size.setWidth(_defaultSize.getWidth());
+				_size.setHeight(_defaultSize.getHeight());
+				break;
+
+			case ScreenOrientation::Landscape90:
+				_size.setWidth(_defaultSize.getHeight());
+				_size.setHeight(_defaultSize.getWidth());
+				break;
+
+			case ScreenOrientation::Portrait180:
+				_size.setWidth(_defaultSize.getWidth());
+				_size.setHeight(_defaultSize.getHeight());
+				break;
+
+			case ScreenOrientation::Landscape270:
+				_size.setWidth(_defaultSize.getHeight());
+				_size.setHeight(_defaultSize.getWidth());
+				break;
+		}
+
+		// Updating transaction buffer height
+		_transactionBufferHeight = getTransactionBufferHeightForOrientation();
+
+		// Allocating transaction buffer
+		delete _transactionBuffer;
+		_transactionBufferLength = _size.getWidth() * _transactionBufferHeight * 2;
+		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
+		assert(_transactionBuffer != nullptr);
+	}
 }

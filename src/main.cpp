@@ -18,7 +18,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	5,
 	16,
 	17,
-	ScreenOrientation::Landscape90
+	ScreenOrientation::Landscape270
 );
 
 EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(&screenDriver);

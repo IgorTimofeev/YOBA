@@ -12,14 +12,11 @@ namespace yoba {
 		chipSelectPin,
 		dataCommandPin,
 		resetPin,
+		Size(240, 320),
 		orientation
 	) {
 		// Glitches & tearing can appear on 26m, 40m+ won't work anyway
 		setSPIFrequency(SPI_MASTER_FREQ_26M);
-	}
-
-	Size ILI9341Driver::getDefaultSize() {
-		return { 240, 320 };
 	}
 
 	void ILI9341Driver::setOrientation(ScreenOrientation orientation) {
@@ -204,7 +201,7 @@ namespace yoba {
 
 		switch (_orientation) {
 			case ScreenOrientation::Portrait0:
-				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY;
+				data |= (uint8_t) Command::MADCTL_MX;
 				break;
 
 			case ScreenOrientation::Landscape90:
@@ -212,7 +209,7 @@ namespace yoba {
 				break;
 
 			case ScreenOrientation::Portrait180:
-				data |= (uint8_t) Command::MADCTL_MV | (uint8_t) Command::MADCTL_MX;
+				data |= (uint8_t) Command::MADCTL_MY;
 				break;
 
 			case ScreenOrientation::Landscape270:

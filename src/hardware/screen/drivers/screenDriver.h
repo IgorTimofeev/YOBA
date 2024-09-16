@@ -19,12 +19,12 @@ namespace yoba {
 				uint8_t chipSelectPin,
 				uint8_t dataCommandPin,
 				int8_t resetPin,
+				const Size& defaultSize,
 				ScreenOrientation orientation
 			);
 
 			void begin();
 
-			virtual Size getDefaultSize() = 0;
 			const Size &getSize() const;
 
 			ScreenOrientation getOrientation() const;
@@ -93,7 +93,8 @@ namespace yoba {
 			uint8_t _dataCommandPin;
 			int8_t _resetPin;
 
-			Size _size = Size();
+			const Size _defaultSize;
+			Size _size;
 			ScreenOrientation _orientation;
 
 			uint8_t _transactionBufferHeight = 20;
@@ -103,35 +104,7 @@ namespace yoba {
 			spi_device_handle_t _spi;
 			int32_t _SPIFrequency = SPI_MASTER_FREQ_20M;
 
-			void updateDataFromOrientation() {
-				// Updating size
-				auto defaultSize = getDefaultSize();
-
-				switch (_orientation) {
-					case ScreenOrientation::Portrait0:
-						_size.setWidth(defaultSize.getWidth());
-						_size.setHeight(defaultSize.getHeight());
-						break;
-
-					case ScreenOrientation::Landscape90:
-						_size.setWidth(defaultSize.getHeight());
-						_size.setHeight(defaultSize.getWidth());
-						break;
-
-					case ScreenOrientation::Portrait180:
-						_size.setWidth(defaultSize.getWidth());
-						_size.setHeight(defaultSize.getHeight());
-						break;
-
-					case ScreenOrientation::Landscape270:
-						_size.setWidth(defaultSize.getHeight());
-						_size.setHeight(defaultSize.getWidth());
-						break;
-				}
-
-				// Updating transaction buffer height
-				_transactionBufferHeight = getTransactionBufferHeightForOrientation();
-			}
+			void updateDataFromOrientation();
 	};
 
 	struct DriverSPIPreCallbackUserData {
