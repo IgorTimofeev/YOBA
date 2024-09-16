@@ -14,9 +14,10 @@ namespace yoba {
 				ScreenOrientation orientation
 			);
 
-			void writeInitializationCommands() override;
-
+			Size getDefaultSize() override;
+			uint8_t getTransactionBufferHeightForOrientation() override;
 			void setOrientation(ScreenOrientation orientation) override;
+			void writeInitializationCommands() override;
 
 		private:
 			enum class Command : uint8_t {

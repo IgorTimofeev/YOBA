@@ -12,7 +12,6 @@ namespace yoba {
 		_touchDriver(touchDriver)
 	{
 		setRoot(this);
-		setSize(_screenBuffer->getDriver()->getSize());
 	}
 
 	void Application::begin() {
@@ -85,6 +84,8 @@ namespace yoba {
 	}
 
 	void Application::tick() {
+		setSize(_screenBuffer->getDriver()->getSize());
+
 		_touchDriver->tick(_screenBuffer, [&](Event& event) {
 			handleEvent(event);
 		});

@@ -3,11 +3,10 @@
 #include "point.h"
 
 namespace yoba {
-	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, const Size& size, ScreenOrientation orientation) :
+	ScreenDriver::ScreenDriver(uint8_t chipSelectPin, uint8_t dataCommandPin, int8_t resetPin, ScreenOrientation orientation) :
 		_chipSelectPin(chipSelectPin),
 		_dataCommandPin(dataCommandPin),
 		_resetPin(resetPin),
-		_size(size),
 		_orientation(orientation)
 	{
 
@@ -17,14 +16,24 @@ namespace yoba {
 		return _size;
 	}
 
-	ScreenOrientation ScreenDriver::getRotation() const {
+	ScreenOrientation ScreenDriver::getOrientation() const {
 		return _orientation;
+	}
+
+	void ScreenDriver::setOrientation(ScreenOrientation orientation) {
+		_orientation = orientation;
+
+		updateDataFromOrientation();
+	}
+
+	uint8_t ScreenDriver::getTransactionBufferHeight() const {
+		return _transactionBufferHeight;
 	}
 
 	void ScreenDriver::rotatePoint(Point& point) {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
-		switch (getRotation()) {
+		switch (getOrientation()) {
 			case ScreenOrientation::Portrait0:
 				break;
 
@@ -60,26 +69,20 @@ namespace yoba {
 		_SPIFrequency = spiFrequency;
 	}
 
-	uint8_t ScreenDriver::getTransactionBufferHeight() const {
-		return _transactionBufferHeight;
-	}
-
-	void ScreenDriver::setTransactionBufferHeight(uint8_t transactionBufferHeight) {
-		_transactionBufferHeight = transactionBufferHeight;
-	}
-
 	void ScreenDriver::writeInitializationCommands() {
 
 	}
 
 	void ScreenDriver::begin() {
+		updateDataFromOrientation();
+
 		spi_bus_config_t busConfig = {
 			.mosi_io_num = MOSI,
 			.miso_io_num = MISO,
 			.sclk_io_num = SCK,
 			.quadwp_io_num = -1,
 			.quadhd_io_num = -1,
-			.max_transfer_sz = getTransactionBufferHeight() * _size.getWidth() * 2 + 8
+			.max_transfer_sz = _transactionBufferHeight * _size.getWidth() * 2 + 8
 		};
 
 		spi_device_interface_config_t deviceConfig = {
@@ -125,8 +128,9 @@ namespace yoba {
 
 		writeInitializationCommands();
 
-		//Allocate memory for the transaction buffer
-		_transactionBufferLength = _size.getWidth() * getTransactionBufferHeight() * 2;
+		// Allocating transaction buffer
+		delete _transactionBuffer;
+		_transactionBufferLength = _size.getWidth() * _transactionBufferHeight * 2;
 		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
 	}
@@ -198,13 +202,13 @@ namespace yoba {
 
 		transactions[3].tx_data[0] = y >> 8;    //Start page high
 		transactions[3].tx_data[1] = y & 0xff;  //start page low
-		transactions[3].tx_data[2] = (y + getTransactionBufferHeight() - 1) >> 8; //end page high
-		transactions[3].tx_data[3] = (y + getTransactionBufferHeight() - 1) & 0xff; //end page low
+		transactions[3].tx_data[2] = (y + _transactionBufferHeight - 1) >> 8; //end page high
+		transactions[3].tx_data[3] = (y + _transactionBufferHeight - 1) & 0xff; //end page low
 
 		transactions[4].tx_data[0] = 0x2C;         //memory write
 
 		transactions[5].tx_buffer = _transactionBuffer;      //finally send the line data
-		transactions[5].length = _size.getWidth() * getTransactionBufferHeight() * 2 * 8;  //Data length, in bits
+		transactions[5].length = _size.getWidth() * _transactionBufferHeight * 2 * 8;  //Data length, in bits
 		transactions[5].flags = 0; //undo SPI_TRANS_USE_TXDATA flag
 
 		// Enqueue all transactions
@@ -244,7 +248,7 @@ namespace yoba {
 		sendData(data, length);
 	}
 
-	void ScreenDriver::sendCommandAndData(uint8_t command, const uint8_t data) {
+	void ScreenDriver::sendCommandAndData(uint8_t command, uint8_t data) {
 		uint8_t buffer[] {
 			data
 		};

@@ -7,9 +7,9 @@ namespace yoba {
 	}
 
 	void ScreenBuffer::begin() {
-		allocate();
-
 		_driver->begin();
+
+		allocate();
 	}
 
 	ScreenDriver* ScreenBuffer::getDriver() const {

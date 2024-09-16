@@ -18,7 +18,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	5,
 	16,
 	17,
-	ScreenOrientation::Portrait0
+	ScreenOrientation::Landscape90
 );
 
 EightBitsPaletteBuffer screenBuffer = EightBitsPaletteBuffer(&screenDriver);
@@ -110,7 +110,7 @@ void loop() {
 	application.tick();
 
 	auto deltaTime = max(millis() - startTime, 1UL);
-	auto fps = 60000 / deltaTime;
+//	auto fps = 60000 / deltaTime;
 //	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", fps, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 	// svit slip....

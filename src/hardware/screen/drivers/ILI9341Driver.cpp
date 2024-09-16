@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "ILI9341Driver.h"
 
 namespace yoba {
@@ -11,19 +12,27 @@ namespace yoba {
 		chipSelectPin,
 		dataCommandPin,
 		resetPin,
-
-		Size(320, 240),
 		orientation
 	) {
 		// Glitches & tearing can appear on 26m, 40m+ won't work anyway
 		setSPIFrequency(SPI_MASTER_FREQ_26M);
+	}
 
-		// This will allocate 320 * 40 = 25600 pixels * 2 bytes per each = 25 KiB of heap,
-		// allowing screen buffer to be flushed in 240 / 40 = 6 equal parts,
-		// which more than enough to achieve ~800 FPS on simple scenes on 240 MHz ESP32.
-		// Increasing this to 48/60/80/120 can afford you 10-100 extra FPS, but will
-		// eat RAM like a bulimic bitch
-		setTransactionBufferHeight(40);
+	Size ILI9341Driver::getDefaultSize() {
+		return { 240, 320 };
+	}
+
+	void ILI9341Driver::setOrientation(ScreenOrientation orientation) {
+		ScreenDriver::setOrientation(orientation);
+
+		sendMemoryAccessControl();
+	}
+
+	uint8_t ILI9341Driver::getTransactionBufferHeightForOrientation() {
+		return
+			getOrientation() == ScreenOrientation::Portrait0 || getOrientation() == ScreenOrientation::Portrait180
+			? 64 // 5 transactions
+			: 40; // 6 transactions
 	}
 
 	void ILI9341Driver::writeInitializationCommands() {
@@ -214,11 +223,6 @@ namespace yoba {
 				break;
 		}
 
-		sendCommandAndData((uint8_t) Command::MADCTL, data | (uint8_t) Command::MADCTL_BGR);
-	}
-
-	void ILI9341Driver::setOrientation(ScreenOrientation orientation) {
-		_orientation = orientation;
-		sendMemoryAccessControl();
+		sendCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 }
