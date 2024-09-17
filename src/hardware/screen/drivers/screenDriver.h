@@ -71,7 +71,7 @@ namespace yoba {
 
 			// This function is called (in irq context!) just before a transmission starts. It will
 			// set the D/C line to the value indicated in the user field.
-			static void SPIPreCallback(spi_transaction_t* transaction);
+			static void SpiPreTransferCallback(spi_transaction_t* transaction);
 
 			int32_t getSPIFrequency() const;
 			void setSPIFrequency(int32_t spiFrequency);
