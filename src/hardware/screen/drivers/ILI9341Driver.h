@@ -14,9 +14,12 @@ namespace yoba {
 				ScreenOrientation orientation
 			);
 
-			uint8_t getTransactionBufferHeightForOrientation() override;
 			void setOrientation(ScreenOrientation orientation) override;
+
+		protected:
 			void writeInitializationCommands() override;
+
+			uint8_t getTransactionWindowHeightForOrientation() override;
 
 		private:
 			enum class Command : uint8_t {
@@ -30,6 +33,6 @@ namespace yoba {
 				MADCTL_MH = 0x04,
 			};
 
-			void sendMemoryAccessControl();
+			void writeMemoryAccessControl();
 	};
 }

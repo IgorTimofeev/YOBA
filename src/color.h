@@ -5,8 +5,9 @@
 namespace yoba {
 	enum class ColorType : uint8_t {
 		Palette,
-		HSB,
-		RGB888
+		Hsb,
+		Rgb565,
+		Rgb888
 	};
 
 	class Rgb888Color;
@@ -27,9 +28,34 @@ namespace yoba {
 
 			Rgb888Color toRgb888() const;
 
+			float getH() const;
+			void setH(float h);
+
+			float getS() const;
+			void setS(float s);
+
+			float getB() const;
+			void setB(float b);
+
+		private:
 			float _h = 0;
 			float _s = 0;
 			float _b = 0;
+	};
+
+	class Rgb565Color : public Color {
+		public:
+			explicit Rgb565Color(uint16_t value);
+
+			Rgb565Color();
+
+			uint16_t getValue() const;
+			void setValue(uint16_t value);
+
+			Rgb888Color toRgb888() const;
+
+		private:
+			uint16_t _value;
 	};
 
 	class Rgb888Color : public Color {
@@ -39,7 +65,6 @@ namespace yoba {
 			Rgb888Color(uint8_t r, uint8_t g, uint8_t b);
 			Rgb888Color(const Rgb888Color &source);
 			explicit Rgb888Color(uint32_t rgb888);
-			explicit Rgb888Color(uint16_t rgb565);
 
 			uint8_t getR() const;
 			void setR(uint8_t r);
@@ -51,7 +76,7 @@ namespace yoba {
 			void setB(uint8_t b);
 
 			uint32_t toUint32() const;
-			uint16_t toUint16() const;
+			Rgb565Color toRgb565() const;
 
 			void interpolateTo(Rgb888Color& second, float position);
 

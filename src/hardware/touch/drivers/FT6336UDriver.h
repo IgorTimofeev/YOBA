@@ -82,7 +82,7 @@ namespace yoba {
 	/**************************************************************************/
 	class FT6336UDriver : public TouchDriver {
 		public:
-			FT6336UDriver(uint8_t sdaPin, uint8_t sclPin, uint8_t rstPin, uint8_t intPin);
+			FT6336UDriver(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
 
 			void begin() override;
 			void tick(ScreenBuffer *screenBuffer, const std::function<void(Event &)> &callback) override;

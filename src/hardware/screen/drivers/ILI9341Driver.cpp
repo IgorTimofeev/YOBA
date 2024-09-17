@@ -22,10 +22,10 @@ namespace yoba {
 	void ILI9341Driver::setOrientation(ScreenOrientation orientation) {
 		ScreenDriver::setOrientation(orientation);
 
-		sendMemoryAccessControl();
+		writeMemoryAccessControl();
 	}
 
-	uint8_t ILI9341Driver::getTransactionBufferHeightForOrientation() {
+	uint8_t ILI9341Driver::getTransactionWindowHeightForOrientation() {
 		return
 			getOrientation() == ScreenOrientation::Portrait0 || getOrientation() == ScreenOrientation::Portrait180
 			? 64 // 5 transactions
@@ -97,7 +97,7 @@ namespace yoba {
 		sendCommandAndData(0xC7, b, 1);
 
 		/* Memory access control */
-		sendMemoryAccessControl();
+		writeMemoryAccessControl();
 
 		/* Inversion */
 		b[0] = 0x01;
@@ -196,7 +196,7 @@ namespace yoba {
 		vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
 
-	void ILI9341Driver::sendMemoryAccessControl() {
+	void ILI9341Driver::writeMemoryAccessControl() {
 		auto data = (uint8_t) Command::MADCTL_BGR;
 
 		switch (_orientation) {

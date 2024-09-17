@@ -3,16 +3,20 @@
 #include "number.h"
 
 namespace yoba {
-	Color::Color(ColorType type) : _type(type) {
-
-	}
-
 	ColorType Color::getType() const {
 		return _type;
 	}
 
+	// -------------------------------- Color --------------------------------
+
+	Color::Color(ColorType type) : _type(type) {
+
+	}
+
+	// -------------------------------- Rgb888Color --------------------------------
+
 	Rgb888Color::Rgb888Color(uint8_t r, uint8_t g, uint8_t b) :
-		Color(ColorType::RGB888),
+		Color(ColorType::Rgb888),
 		_r(r),
 		_g(g),
 		_b(b)
@@ -41,20 +45,12 @@ namespace yoba {
 
 	}
 
-	Rgb888Color::Rgb888Color(uint16_t rgb565) : Rgb888Color(
-		(uint8_t) ((((rgb565 >> 11) & 0x1F) * 255 + 15) / 31),
-		(uint8_t) ((((rgb565 >> 5) & 0x3F) * 255 + 31) / 63),
-		(uint8_t) ((((rgb565) & 0x1F) * 255 + 15) / 31)
-	) {
-
-	}
-
 	uint32_t Rgb888Color::toUint32() const {
 		return _r << 16 | _g << 8 | _b;
 	}
 
-	uint16_t Rgb888Color::toUint16() const {
-		return ((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8);
+	Rgb565Color Rgb888Color::toRgb565() const {
+		return Rgb565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
 	}
 
 	void Rgb888Color::interpolateTo(Rgb888Color &second, float position) {
@@ -87,10 +83,34 @@ namespace yoba {
 		_b = b;
 	}
 
-	// ------------------------------------------------------------------------------------
+	// -------------------------------- HsbColor --------------------------------
 
-	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorType::HSB), _h(h), _s(s), _b(b) {
+	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorType::Hsb), _h(h), _s(s), _b(b) {
 
+	}
+
+	float HsbColor::getH() const {
+		return _h;
+	}
+
+	void HsbColor::setH(float h) {
+		_h = h;
+	}
+
+	float HsbColor::getS() const {
+		return _s;
+	}
+
+	void HsbColor::setS(float s) {
+		_s = s;
+	}
+
+	float HsbColor::getB() const {
+		return _b;
+	}
+
+	void HsbColor::setB(float b) {
+		_b = b;
 	}
 
 	Rgb888Color HsbColor::toRgb888() const {
@@ -147,7 +167,33 @@ namespace yoba {
 		return result;
 	}
 
-	// ------------------------------------------------------------------------------------
+	// -------------------------------- Rgb565Color --------------------------------
+
+	Rgb565Color::Rgb565Color(uint16_t value) : Color(ColorType::Rgb565), _value(value) {
+
+	}
+
+	Rgb565Color::Rgb565Color() : Rgb565Color(0) {
+
+	}
+
+	uint16_t Rgb565Color::getValue() const {
+		return _value;
+	}
+
+	void Rgb565Color::setValue(uint16_t value) {
+		_value = value;
+	}
+
+	Rgb888Color Rgb565Color::toRgb888() const {
+		return {
+			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
+			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),
+			(uint8_t) ((((_value) & 0x1F) * 255 + 15) / 31)
+		};
+	}
+
+	// -------------------------------- PaletteColor --------------------------------
 
 	PaletteColor::PaletteColor(uint8_t index) : Color(ColorType::Palette), _index(index) {
 

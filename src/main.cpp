@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "hardware/screen/drivers/ILI9341Driver.h"
-#include "hardware/screen/buffers/colors256PaletteBuffer.h"
+#include "hardware/screen/buffers/bits8PaletteBuffer.h"
 #include "hardware/touch/drivers/FT6336UDriver.h"
 #include "color.h"
 #include "fonts/Unscii16Font.h"
@@ -21,11 +21,11 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	ScreenOrientation::Landscape90
 );
 
-Colors256PaletteBuffer screenBuffer = Colors256PaletteBuffer(&screenDriver);
+Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(
+	&screenDriver
+);
 
 FT6336UDriver touchDriver = FT6336UDriver(
-	SDA,
-	SCL,
 	32,
 	26
 );
@@ -55,11 +55,10 @@ void setup() {
 
 	// ОПЕНКОМПЫ ЕПТЫ БЛЭЭ
 	screenBuffer.setOpenComputersPaletteColors();
+	screenBuffer.setPaletteColor(0, Rgb888Color(0, 0, 0));
 
 	// Starting application
 	application.begin();
-
-	// Default values
 	application.setDefaultFont(&font);
 
 	// Adding UI elements
@@ -82,13 +81,13 @@ void loop() {
 
 	auto deltaTime = max(millis() - startTime, 1UL);
 
+	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", 60000 / deltaTime, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
+
 	// svit slip....
 	uint8_t desiredFPS = 60;
 	uint32_t desiredDeltaTime = 1000 / desiredFPS;
 	if (deltaTime < desiredDeltaTime)
 		delay(desiredDeltaTime - deltaTime);
-
-//	Serial.printf("FPS: %lu, free heap: %d kb, max alloc heap: %d kb\n", 60000 / deltaTime, ESP.getFreeHeap() / 1024, ESP.getMaxAllocHeap() / 1024);
 
 //	delay(1000);
 }

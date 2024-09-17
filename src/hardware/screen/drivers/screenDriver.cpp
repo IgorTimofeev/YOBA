@@ -29,11 +29,11 @@ namespace yoba {
 		updateDataFromOrientation();
 	}
 
-	uint8_t ScreenDriver::getTransactionBufferHeight() const {
-		return _transactionBufferHeight;
+	uint8_t ScreenDriver::getTransactionWindowHeight() const {
+		return _transactionWindowHeight;
 	}
 
-	void ScreenDriver::rotatePoint(Point& point) {
+	void ScreenDriver::rotatePointForOrientation(Point& point) {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
 		switch (getOrientation()) {
@@ -85,7 +85,7 @@ namespace yoba {
 			.sclk_io_num = SCK,
 			.quadwp_io_num = -1,
 			.quadhd_io_num = -1,
-			.max_transfer_sz = _transactionBufferHeight * _size.getWidth() * 2 + 8
+			.max_transfer_sz = _transactionWindowHeight * _size.getWidth() * 2 + 8
 		};
 
 		spi_device_interface_config_t deviceConfig = {
@@ -132,7 +132,7 @@ namespace yoba {
 		writeInitializationCommands();
 	}
 
-	void ScreenDriver::sendCommand(uint8_t command) {
+	void ScreenDriver::writeCommand(uint8_t command) {
 		spi_transaction_t transaction;
 		memset(&transaction, 0, sizeof(transaction));       //Zero out the transaction
 		transaction.length = 8;                   //Command is 8 bits
@@ -144,7 +144,7 @@ namespace yoba {
 		assert(result == ESP_OK);          //Should have had no issues.
 	}
 
-	void ScreenDriver::sendData(const uint8_t *data, int length) {
+	void ScreenDriver::writeData(const uint8_t *data, int length) {
 		if (length == 0)
 			return;    //no need to send anything
 
@@ -199,36 +199,21 @@ namespace yoba {
 
 		transactions[3].tx_data[0] = y >> 8;    //Start page high
 		transactions[3].tx_data[1] = y & 0xff;  //start page low
-		transactions[3].tx_data[2] = (y + _transactionBufferHeight - 1) >> 8; //end page high
-		transactions[3].tx_data[3] = (y + _transactionBufferHeight - 1) & 0xff; //end page low
+		transactions[3].tx_data[2] = (y + _transactionWindowHeight - 1) >> 8; //end page high
+		transactions[3].tx_data[3] = (y + _transactionWindowHeight - 1) & 0xff; //end page low
 
 		transactions[4].tx_data[0] = 0x2C;         //memory write
 
 		transactions[5].tx_buffer = _transactionBuffer;      //finally send the line data
-		transactions[5].length = _size.getWidth() * _transactionBufferHeight * 2 * 8;  //Data length, in bits
+		transactions[5].length = _size.getWidth() * _transactionWindowHeight * 2 * 8;  //Data length, in bits
 		transactions[5].flags = 0; //undo SPI_TRANS_USE_TXDATA flag
 
 		// Enqueue all transactions
 		esp_err_t result;
 
-		for (uint8_t i = 0; i < 6; i++) {
-			result = spi_device_queue_trans(_spi, &transactions[i], portMAX_DELAY);
+		for (auto& transaction : transactions) {
+			result = spi_device_polling_transmit(_spi, &transaction);
 			assert(result == ESP_OK);
-		}
-
-		//When we are here, the SPI driver is busy (in the background) getting the transactions sent. That happens
-		//mostly using DMA, so the CPU doesn't have much to do here. We're not going to wait for the transaction to
-		//finish because we may as well spend the time calculating the next line. When that is done, we can call
-		//send_line_finish, which will wait for the transfers to be done and check their status.
-
-		spi_transaction_t* transaction;
-
-		//Wait for all 6 transactions to be done and get back the results.
-		for (uint8_t i = 0; i < 6; i++) {
-			result = spi_device_get_trans_result(_spi, &transaction, portMAX_DELAY);
-			assert(result == ESP_OK);
-
-			//We could inspect rtrans now if we received any info back. The LCD is treated as write-only, though.
 		}
 	}
 
@@ -241,8 +226,8 @@ namespace yoba {
 	}
 
 	void ScreenDriver::sendCommandAndData(uint8_t command, const uint8_t *data, int length) {
-		sendCommand(command);
-		sendData(data, length);
+		writeCommand(command);
+		writeData(data, length);
 	}
 
 	void ScreenDriver::sendCommandAndData(uint8_t command, uint8_t data) {
@@ -280,11 +265,11 @@ namespace yoba {
 		}
 
 		// Updating transaction buffer height
-		_transactionBufferHeight = getTransactionBufferHeightForOrientation();
+		_transactionWindowHeight = getTransactionWindowHeightForOrientation();
 
 		// Allocating transaction buffer
 		delete _transactionBuffer;
-		_transactionBufferLength = _size.getWidth() * _transactionBufferHeight * 2;
+		_transactionBufferLength = _size.getWidth() * _transactionWindowHeight * 2;
 		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
 	}

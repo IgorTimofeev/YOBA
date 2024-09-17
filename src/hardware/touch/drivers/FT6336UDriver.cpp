@@ -10,7 +10,7 @@
 #include <Wire.h>
 
 namespace yoba {
-	FT6336UDriver::FT6336UDriver(uint8_t sdaPin, uint8_t sclPin, uint8_t rstPin, uint8_t intPin) : _sdaPin(sdaPin), _sclPin(sclPin), _rstPin(rstPin), _intPin(intPin) {
+	FT6336UDriver::FT6336UDriver(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin, uint8_t sclPin) : _sdaPin(sdaPin), _sclPin(sclPin), _rstPin(rstPin), _intPin(intPin) {
 
 	}
 
@@ -280,7 +280,7 @@ namespace yoba {
 			read_touch1_y()
 		);
 
-		screenBuffer->getDriver()->rotatePoint(point);
+		screenBuffer->getDriver()->rotatePointForOrientation(point);
 
 		return point;
 	}
@@ -291,7 +291,7 @@ namespace yoba {
 			read_touch2_y()
 		);
 
-		screenBuffer->getDriver()->rotatePoint(point);
+		screenBuffer->getDriver()->rotatePointForOrientation(point);
 
 		return point;
 	}
