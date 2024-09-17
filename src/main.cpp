@@ -21,22 +21,14 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	ScreenOrientation::Landscape90
 );
 
-Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(
-	&screenDriver
-);
+Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(&screenDriver);
 
-FT6336UDriver touchDriver = FT6336UDriver(
-	32,
-	26
-);
+FT6336UDriver touchDriver = FT6336UDriver(32, 26);
 
-Application application = Application(
-	&screenBuffer,
-	&touchDriver
-);
+Application application = Application(&screenBuffer, &touchDriver);
 
 Unscii16Font font = Unscii16Font();
-PaletteColor textColor = PaletteColor(255);
+Bits8PaletteColor textColor = Bits8PaletteColor(255);
 
 PaletteView paletteView;
 Text text = Text(&textColor);

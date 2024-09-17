@@ -193,17 +193,9 @@ namespace yoba {
 		};
 	}
 
-	// -------------------------------- PaletteColor --------------------------------
+	// -------------------------------- Bits8PaletteColor --------------------------------
 
-	PaletteColor::PaletteColor(uint8_t index) : Color(ColorType::Palette), _index(index) {
+	Bits8PaletteColor::Bits8PaletteColor(uint8_t index) : PaletteColor(index) {
 
-	}
-
-	uint8_t PaletteColor::getIndex() const {
-		return _index;
-	}
-
-	void PaletteColor::setIndex(uint8_t index) {
-		_index = index;
 	}
 }

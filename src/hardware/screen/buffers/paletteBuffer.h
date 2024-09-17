@@ -32,7 +32,7 @@ namespace yoba {
 	TIndex PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteIndexOf(const Color *color) {
 		switch (color->getType()) {
 			case ColorType::Palette:
-				return ((PaletteColor*) color)->getIndex();
+				return ((PaletteColor<TIndex>*) color)->getIndex();
 
 			default:
 				return 0;

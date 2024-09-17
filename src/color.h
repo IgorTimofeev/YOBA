@@ -22,6 +22,8 @@ namespace yoba {
 			ColorType _type;
 	};
 
+	// -------------------------------- HsbColor --------------------------------
+
 	class HsbColor : Color {
 		public:
 			HsbColor(float h, float s, float b);
@@ -43,6 +45,8 @@ namespace yoba {
 			float _b = 0;
 	};
 
+	// -------------------------------- Rgb565Color --------------------------------
+
 	class Rgb565Color : public Color {
 		public:
 			explicit Rgb565Color(uint16_t value);
@@ -57,6 +61,8 @@ namespace yoba {
 		private:
 			uint16_t _value;
 	};
+
+	// -------------------------------- Rgb888Color --------------------------------
 
 	class Rgb888Color : public Color {
 		public:
@@ -86,14 +92,39 @@ namespace yoba {
 			uint8_t _b = 0;
 	};
 
+	// -------------------------------- PaletteColor --------------------------------
+
+	template<typename TIndex>
 	class PaletteColor : public Color {
 		public:
-			explicit PaletteColor(uint8_t index);
+			explicit PaletteColor(TIndex index);
 
-			uint8_t getIndex() const;
-			void setIndex(uint8_t index);
+			TIndex getIndex() const;
+			void setIndex(TIndex index);
 
 		private:
-			uint8_t _index;
+			TIndex _index;
+	};
+
+	template<typename TIndex>
+	PaletteColor<TIndex>::PaletteColor(TIndex index) : Color(ColorType::Palette), _index(index) {
+
+	}
+
+	template<typename TIndex>
+	TIndex PaletteColor<TIndex>::getIndex() const {
+		return _index;
+	}
+
+	template<typename TIndex>
+	void PaletteColor<TIndex>::setIndex(TIndex index) {
+		_index = index;
+	}
+
+	// -------------------------------- Bits8PaletteColor --------------------------------
+
+	class Bits8PaletteColor : public PaletteColor<uint8_t> {
+		public:
+			explicit Bits8PaletteColor(uint8_t index);
 	};
 }
