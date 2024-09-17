@@ -48,6 +48,8 @@ namespace yoba {
 		protected:
 			virtual void writeInitializationCommands();
 
+			void pollingTransmit(spi_transaction_t &transaction);
+
 			void writeData(uint8_t data, bool dcPinState = true);
 			void writeData(const uint8_t *data, int length, bool dcPinState = true);
 
@@ -93,7 +95,6 @@ namespace yoba {
 			virtual uint8_t getTransactionWindowHeightForOrientation() = 0;
 
 			void updateDataFromOrientation();
-
 	};
 
 	struct DriverSPIPreCallbackUserData {

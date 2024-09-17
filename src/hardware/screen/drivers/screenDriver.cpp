@@ -132,6 +132,10 @@ namespace yoba {
 		writeInitializationCommands();
 	}
 
+	void ScreenDriver::pollingTransmit(spi_transaction_t& transaction) {
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+	}
+
 	void ScreenDriver::writeData(uint8_t data, bool dcPinState) {
 		spi_transaction_t transaction;
 		memset(&transaction, 0, sizeof(transaction));       //Zero out the transaction
@@ -144,7 +148,7 @@ namespace yoba {
 		auto userData = DriverSPIPreCallbackUserData(this, dcPinState);
 		transaction.user = &userData;
 
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 	}
 
 	void ScreenDriver::writeData(const uint8_t *data, int length, bool dcPinState) {
@@ -157,7 +161,7 @@ namespace yoba {
 		auto userData = DriverSPIPreCallbackUserData(this, dcPinState);
 		transaction.user = &userData;
 
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 	}
 
 	void ScreenDriver::writeCommand(uint8_t data) {
@@ -190,8 +194,9 @@ namespace yoba {
 		transaction.tx_data[0] = 0x2A;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
 		transaction.user = &falseUserData;
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 
+		// Column start / end
 		memset(&transaction, 0, sizeof(spi_transaction_t));
 		transaction.length = 8 * 4;
 		transaction.tx_data[0] = 0; //Start Col High
@@ -200,7 +205,7 @@ namespace yoba {
 		transaction.tx_data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
 		transaction.flags = SPI_TRANS_USE_TXDATA;
 		transaction.user = &trueUserData;
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 
 		//Page address set
 		memset(&transaction, 0, sizeof(spi_transaction_t));
@@ -208,8 +213,9 @@ namespace yoba {
 		transaction.tx_data[0] = 0x2B;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
 		transaction.user = &falseUserData;
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 
+		// Page start / end
 		memset(&transaction, 0, sizeof(spi_transaction_t));
 		transaction.length = 8 * 4;
 		transaction.tx_data[0] = y >> 8; //Start page high
@@ -218,7 +224,7 @@ namespace yoba {
 		transaction.tx_data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
 		transaction.flags = SPI_TRANS_USE_TXDATA;
 		transaction.user = &trueUserData;
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 
 		// Memory write
 		memset(&transaction, 0, sizeof(spi_transaction_t));
@@ -226,15 +232,15 @@ namespace yoba {
 		transaction.tx_data[0] = 0x2C;
 		transaction.user = &falseUserData;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 
-		// Sending transaction buffer
+		// Cyka, pixels!
 		memset(&transaction, 0, sizeof(spi_transaction_t));
 		transaction.tx_buffer = _transactionBuffer;
 		transaction.length = _size.getWidth() * _transactionWindowHeight * 2 * 8;  // Data length, in bits
 		transaction.flags = 0; // Undo SPI_TRANS_USE_TXDATA flag
 		transaction.user = &trueUserData;
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+		pollingTransmit(transaction);
 	}
 
 	uint16_t *ScreenDriver::getTransactionBuffer() const {
