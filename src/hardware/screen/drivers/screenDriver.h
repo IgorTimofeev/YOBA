@@ -43,31 +43,18 @@ namespace yoba {
 			* sent faster (compared to calling spi_device_transmit several times), and at
 			* the mean while the lines for next transactions can get calculated.
 			*/
-			void flushTransactionBuffer(int y);
+			void flushTransactionBuffer(int value0);
 
 		protected:
 			virtual void writeInitializationCommands();
 
-			/* Send a command to the LCD. Uses spi_device_polling_transmit, which waits
-			* until the transfer is complete.
-			*
-			* Since command transactions are usually small, they are handled in polling
-			* mode for higher speed. The overhead of interrupt transactions is more than
-			* just waiting for the transaction to complete.
-			*/
-			void writeCommand(uint8_t command);
+			void writeData(uint8_t data, bool dcPinState = true);
+			void writeData(const uint8_t *data, int length, bool dcPinState = true);
 
-			/* Send data to the LCD. Uses spi_device_polling_transmit, which waits until the
-			* transfer is complete.
-			*
-			* Since data transactions are usually small, they are handled in polling
-			* mode for higher speed. The overhead of interrupt transactions is more than
-			* just waiting for the transaction to complete.
-			*/
-			void writeData(const uint8_t *data, int length);
+			void writeCommand(uint8_t data);
 
-			void sendCommandAndData(uint8_t command, const uint8_t *data, int length);
-			void sendCommandAndData(uint8_t command, uint8_t data);
+			void writeCommandAndData(uint8_t command, const uint8_t *data, int length);
+			void writeCommandAndData(uint8_t command, uint8_t data);
 
 			// This function is called (in irq context!) just before a transmission starts. It will
 			// set the D/C line to the value indicated in the user field.

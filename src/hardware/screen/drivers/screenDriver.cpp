@@ -132,34 +132,46 @@ namespace yoba {
 		writeInitializationCommands();
 	}
 
-	void ScreenDriver::writeCommand(uint8_t command) {
+	void ScreenDriver::writeData(uint8_t data, bool dcPinState) {
 		spi_transaction_t transaction;
 		memset(&transaction, 0, sizeof(transaction));       //Zero out the transaction
 		transaction.length = 8;                   //Command is 8 bits
-		transaction.tx_buffer = &command;             //The data is the cmd itself
-	//	transaction.flags = SPI_TRANS_CS_KEEP_ACTIVE;   //Keep CS active after data transfer
+		transaction.tx_data[0] = data;             //The data is the cmd itself
+		transaction.flags = SPI_TRANS_USE_TXDATA;
+		//	transaction.flags = SPI_TRANS_CS_KEEP_ACTIVE;   //Keep CS active after data transfer
 
 		// D/C needs to be set to 0
-		auto userData = DriverSPIPreCallbackUserData(this, false);
+		auto userData = DriverSPIPreCallbackUserData(this, dcPinState);
 		transaction.user = &userData;
 
 		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 	}
 
-	void ScreenDriver::writeData(const uint8_t *data, int length) {
-		if (length == 0)
-			return;    //no need to send anything
-
+	void ScreenDriver::writeData(const uint8_t *data, int length, bool dcPinState) {
 		spi_transaction_t transaction;
 		memset(&transaction, 0, sizeof(transaction)); //Zero out the transaction
 		transaction.length = length * 8; // Length is in bytes, transaction length is in bits.
 		transaction.tx_buffer = data; //Data
 
 		// D/C needs to be set to 1
-		auto userData = DriverSPIPreCallbackUserData(this, true);
+		auto userData = DriverSPIPreCallbackUserData(this, dcPinState);
 		transaction.user = &userData;
 
 		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+	}
+
+	void ScreenDriver::writeCommand(uint8_t data) {
+		writeData(data, false);
+	}
+
+	void ScreenDriver::writeCommandAndData(uint8_t command, const uint8_t *data, int length) {
+		writeCommand(command);
+		writeData(data, length, true);
+	}
+
+	void ScreenDriver::writeCommandAndData(uint8_t command, uint8_t data) {
+		writeCommand(command);
+		writeData(data, true);
 	}
 
 	void ScreenDriver::SpiPreTransferCallback(spi_transaction_t *transaction) {
@@ -168,56 +180,61 @@ namespace yoba {
 	}
 
 	void ScreenDriver::flushTransactionBuffer(int y) {
-		//Transaction descriptors. Declared static, so they're not allocated on the stack; we need this memory even when this
-		//function is finished because the SPI driver needs access to it even while we're already calculating the next line.
-		static spi_transaction_t transactions[6];
+		static spi_transaction_t transaction;
+		auto falseUserData = DriverSPIPreCallbackUserData(this, false);
+		auto trueUserData = DriverSPIPreCallbackUserData(this, true);
 
-		// In theory, it's better to initialize trans and data only once and hang on to the initialized
-		// variables. We allocate them on the stack, so we need to re-init them each call.
-		static auto falseUserData = DriverSPIPreCallbackUserData(this, false);
-		static auto trueUserData = DriverSPIPreCallbackUserData(this, true);
+		// Column Address Set
+		memset(&transaction, 0, sizeof(spi_transaction_t));
+		transaction.length = 8;
+		transaction.tx_data[0] = 0x2A;
+		transaction.flags = SPI_TRANS_USE_TXDATA;
+		transaction.user = &falseUserData;
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 
-		for (uint8_t i = 0; i < 6; i++) {
-			memset(&transactions[i], 0, sizeof(spi_transaction_t));
+		memset(&transaction, 0, sizeof(spi_transaction_t));
+		transaction.length = 8 * 4;
+		transaction.tx_data[0] = 0; //Start Col High
+		transaction.tx_data[1] = 0; //Start Col Low
+		transaction.tx_data[2] = (_size.getWidth() - 1) >> 8; //End Col High
+		transaction.tx_data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
+		transaction.flags = SPI_TRANS_USE_TXDATA;
+		transaction.user = &trueUserData;
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 
-			if ((i & 1) == 0) {
-				//Even transfers are commands
-				transactions[i].length = 8;
-				transactions[i].user = &falseUserData;
-			}
-			else {
-				// Odd transfers are data
-				transactions[i].length = 8 * 4;
-				transactions[i].user = &trueUserData;
-			}
+		//Page address set
+		memset(&transaction, 0, sizeof(spi_transaction_t));
+		transaction.length = 8;
+		transaction.tx_data[0] = 0x2B;
+		transaction.flags = SPI_TRANS_USE_TXDATA;
+		transaction.user = &falseUserData;
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 
-			transactions[i].flags = SPI_TRANS_USE_TXDATA;
-		}
+		memset(&transaction, 0, sizeof(spi_transaction_t));
+		transaction.length = 8 * 4;
+		transaction.tx_data[0] = y >> 8; //Start page high
+		transaction.tx_data[1] = y & 0xff; // Start page low
+		transaction.tx_data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
+		transaction.tx_data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
+		transaction.flags = SPI_TRANS_USE_TXDATA;
+		transaction.user = &trueUserData;
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 
-		transactions[0].tx_data[0] = 0x2A; //Column Address Set
+		// Memory write
+		memset(&transaction, 0, sizeof(spi_transaction_t));
+		transaction.length = 8;
+		transaction.tx_data[0] = 0x2C;
+		transaction.user = &falseUserData;
+		transaction.flags = SPI_TRANS_USE_TXDATA;
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 
-		transactions[1].tx_data[0] = 0; //Start Col High
-		transactions[1].tx_data[1] = 0; //Start Col Low
-		transactions[1].tx_data[2] = (_size.getWidth() - 1) >> 8; //End Col High
-		transactions[1].tx_data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
-
-		transactions[2].tx_data[0] = 0x2B; //Page address set
-
-		transactions[3].tx_data[0] = y >> 8; //Start page high
-		transactions[3].tx_data[1] = y & 0xff; // Start page low
-		transactions[3].tx_data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
-		transactions[3].tx_data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
-
-		transactions[4].tx_data[0] = 0x2C; // Memory write
-
-		transactions[5].tx_buffer = _transactionBuffer; // Finally send the line data
-		transactions[5].length = _size.getWidth() * _transactionWindowHeight * 2 * 8;  // Data length, in bits
-		transactions[5].flags = 0; // Undo SPI_TRANS_USE_TXDATA flag
-
-		// Enqueue all transactions
-		for (auto& transaction : transactions) {
-			assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
-		}
+		// Sending transaction buffer
+		memset(&transaction, 0, sizeof(spi_transaction_t));
+		transaction.tx_buffer = _transactionBuffer;
+		transaction.length = _size.getWidth() * _transactionWindowHeight * 2 * 8;  // Data length, in bits
+		transaction.flags = 0; // Undo SPI_TRANS_USE_TXDATA flag
+		transaction.user = &trueUserData;
+		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
 	}
 
 	uint16_t *ScreenDriver::getTransactionBuffer() const {
@@ -226,19 +243,6 @@ namespace yoba {
 
 	size_t ScreenDriver::getTransactionBufferLength() const {
 		return _transactionBufferLength;
-	}
-
-	void ScreenDriver::sendCommandAndData(uint8_t command, const uint8_t *data, int length) {
-		writeCommand(command);
-		writeData(data, length);
-	}
-
-	void ScreenDriver::sendCommandAndData(uint8_t command, uint8_t data) {
-		uint8_t buffer[] {
-			data
-		};
-
-		sendCommandAndData(command, buffer, 1);
 	}
 
 	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dcPinState) : driver(driver), dcPinState(dcPinState) {}

@@ -39,7 +39,7 @@ namespace yoba {
 		b[0] = 0x00;
 		b[1] = 0x83;
 		b[2] = 0x30;
-		sendCommandAndData(0xCF, b, 3);
+		writeCommandAndData(0xCF, b, 3);
 
 		/* Power on sequence control,
 		* cp1 keeps 1 frame, 1st frame enable
@@ -50,7 +50,7 @@ namespace yoba {
 		b[1] = 0x03;
 		b[2] = 0x12;
 		b[3] = 0x81;
-		sendCommandAndData(0xED, b, 4);
+		writeCommandAndData(0xED, b, 4);
 
 		/* Driver timing control A,
 		* non-overlap=default +1
@@ -60,7 +60,7 @@ namespace yoba {
 		b[0] = 0x85;
 		b[1] = 0x01;
 		b[2] = 0x79;
-		sendCommandAndData(0xE8, b, 3);
+		writeCommandAndData(0xE8, b, 3);
 
 		/* Power control A, Vcore=1.6V, DDVDH=5.6V */
 		b[0] = 0x39;
@@ -68,57 +68,49 @@ namespace yoba {
 		b[2] = 0x00;
 		b[3] = 0x34;
 		b[4] = 0x02;
-		sendCommandAndData(0xCB, b, 5);
+		writeCommandAndData(0xCB, b, 5);
 
 		/* Pump ratio control, DDVDH=2xVCl */
-		b[0] = 0x20;
-		sendCommandAndData(0xF7, b, 1);
+		writeCommandAndData(0xF7, 0x20);
 
 		/* Driver timing control, all=0 unit */
 		b[0] = 0x00;
 		b[1] = 0x00;
-		sendCommandAndData(0xEA, b, 2);
+		writeCommandAndData(0xEA, b, 2);
 
 		/* Power control 1, GVDD=4.75V */
-		b[0] = 0x26;
-		sendCommandAndData(0xC0, b, 1);
+		writeCommandAndData(0xC0, 0x26);
 
 		/* Power control 2, DDVDH=VCl*2, VGH=VCl*7, VGL=-VCl*3 */
-		b[0] = 0x11;
-		sendCommandAndData(0xC1, b, 1);
+		writeCommandAndData(0xC1, 0x11);
 
 		/* VCOM control 1, VCOMH=4.025V, VCOML=-0.950V */
 		b[0] = 0x35;
 		b[1] = 0x3E;
-		sendCommandAndData(0xC5, b, 2);
+		writeCommandAndData(0xC5, b, 2);
 
 		/* VCOM control 2, VCOMH=VMH-2, VCOML=VML-2 */
-		b[0] = 0xBE;
-		sendCommandAndData(0xC7, b, 1);
+		writeCommandAndData(0xC7, 0xBE);
 
 		/* Memory access control */
 		writeMemoryAccessControl();
 
 		/* Inversion */
-		b[0] = 0x01;
-		sendCommandAndData(0x21, b, 1);
+		writeCommandAndData(0x21, 0x01);
 
 		/* Pixel format, 16bits/pixel for RGB/MCU interface */
-		b[0] = 0x55;
-		sendCommandAndData(0x3A, b, 1);
+		writeCommandAndData(0x3A, 0x55);
 
 		/* Frame rate control, f=fosc, 70Hz fps */
 		b[0] = 0x00;
 		b[1] = 0x1B;
-		sendCommandAndData(0xB1, b, 2);
+		writeCommandAndData(0xB1, b, 2);
 
 		/* Enable 3G, disabled */
-		b[0] = 0x08;
-		sendCommandAndData(0xF2, b, 1);
+		writeCommandAndData(0xF2, 0x08);
 
 		/* Gamma set, curve 1 */
-		b[0] = 0x01;
-		sendCommandAndData(0x26, b, 1);
+		writeCommandAndData(0x26, 0x01);
 
 		/* Positive gamma correction */
 		b[0] = 0x1F;
@@ -136,7 +128,7 @@ namespace yoba {
 		b[12] = 0x07;
 		b[13] = 0x05;
 		b[15] = 0x00;
-		sendCommandAndData(0xE0, b, 15);
+		writeCommandAndData(0xE0, b, 15);
 
 		/* Negative gamma correction */
 		b[0] = 0x00;
@@ -154,45 +146,42 @@ namespace yoba {
 		b[12] = 0x38;
 		b[13] = 0x3A;
 		b[15] = 0x1F;
-		sendCommandAndData(0xE1, b, 15);
+		writeCommandAndData(0xE1, b, 15);
 
 		/* Column address set, SC=0, EC=0xEF */
 		b[0] = 0x00;
 		b[1] = 0x00;
 		b[2] = 0x00;
 		b[3] = 0xEF;
-		sendCommandAndData(0x2A, b, 4);
+		writeCommandAndData(0x2A, b, 4);
 
 		/* Page address set, SP=0, EP=0x013F */
 		b[0] = 0x00;
 		b[1] = 0x00;
 		b[2] = 0x01;
 		b[3] = 0x3f;
-		sendCommandAndData(0x2B, b, 4);
+		writeCommandAndData(0x2B, b, 4);
 
 		/* Memory write */
-		b[0] = 0x00;
-		sendCommandAndData(0x2C, b, 0);
+		writeCommand(0x2C);
 
 		/* Entry mode set, Low vol detect disabled, normal display */
 		b[0] = 0x07;
-		sendCommandAndData(0xB7, b, 1);
+		writeCommandAndData(0xB7, b, 1);
 
 		/* Display function control */
 		b[0] = 0x0A;
 		b[1] = 0x82;
 		b[2] = 0x27;
 		b[3] = 0x00;
-		sendCommandAndData(0xB6, b, 4);
+		writeCommandAndData(0xB6, b, 4);
 
 		/* Sleep out */
-		b[0] = 0x00;
-		sendCommandAndData(0x11, b, 1);
+		writeCommandAndData(0x11, 0x00);
 		vTaskDelay(100 / portTICK_PERIOD_MS);
 
 		/* Display on */
-		b[0] = 0x00;
-		sendCommandAndData(0x29, b, 1);
+		writeCommandAndData(0x29, 0x00);
 		vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
 
@@ -220,6 +209,6 @@ namespace yoba {
 				break;
 		}
 
-		sendCommandAndData((uint8_t) Command::MADCTL, data);
+		writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 }
