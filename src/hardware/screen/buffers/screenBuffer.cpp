@@ -315,7 +315,7 @@ namespace yoba {
 		)
 			return;
 
-		const char* charPtr;
+		char ch;
 		size_t charIndex = 0;
 		const Glyph* glyph;
 
@@ -327,14 +327,14 @@ namespace yoba {
 		uint8_t bitmapByte;
 
 		while (true) {
-			charPtr = text + charIndex;
+			ch = *(text + charIndex);
 
 			// End of text
-			if (*charPtr == '\0')
+			if (ch == '\0')
 				break;
 
 			// Trying to find glyph matched to char
-			glyph = font->getGlyph(*charPtr);
+			glyph = font->getGlyph(ch);
 
 			if (glyph) {
 				x2 = x + glyph->getWidth();
