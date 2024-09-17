@@ -4,13 +4,13 @@
 #include "hardware/screen/buffers/bits8PaletteBuffer.h"
 #include "hardware/touch/drivers/FT6336UDriver.h"
 #include "color.h"
-#include "fonts/Unscii16Font.h"
-#include "fonts/Unscii8ThinFont.h"
 #include "ui/shapes/rectangle.h"
 #include "ui/text.h"
 #include "ui/application.h"
 #include "ui/debug/touchCanvas.h"
 #include "ui/debug/paletteView.h"
+#include "fonts/Unscii16Font.h"
+#include "fonts/Unscii8ThinFont.h"
 
 using namespace yoba;
 

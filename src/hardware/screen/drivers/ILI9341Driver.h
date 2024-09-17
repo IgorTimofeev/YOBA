@@ -14,11 +14,9 @@ namespace yoba {
 				ScreenOrientation orientation
 			);
 
-			void setOrientation(ScreenOrientation orientation) override;
-
 		protected:
-			void writeInitializationCommands() override;
-
+			void writeBeginCommands() override;
+			void writeOrientationChangeCommands() override;
 			uint8_t getTransactionWindowHeightForOrientation() override;
 
 		private:

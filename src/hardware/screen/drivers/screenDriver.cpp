@@ -27,6 +27,7 @@ namespace yoba {
 		_orientation = orientation;
 
 		updateDataFromOrientation();
+		writeOrientationChangeCommands();
 	}
 
 	uint8_t ScreenDriver::getTransactionWindowHeight() const {
@@ -72,10 +73,6 @@ namespace yoba {
 		_spiFrequency = spiFrequency;
 	}
 
-	void ScreenDriver::writeInitializationCommands() {
-
-	}
-
 	void ScreenDriver::begin() {
 		updateDataFromOrientation();
 
@@ -93,7 +90,7 @@ namespace yoba {
 			.clock_speed_hz = getSPIFrequency(),     //Clock out at required MHz
 			.spics_io_num = _csPin,             //CS pin
 			.queue_size = 7,                        //We want to be able to queue 7 transactions at a time
-			.pre_cb = SpiPreTransferCallback, //Specify pre-transfer callback to handle D/C line
+			.pre_cb = spiPreTransferCallback, //Specify pre-transfer callback to handle D/C line
 		};
 
 		//Initialize the SPI bus
@@ -129,7 +126,7 @@ namespace yoba {
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
 
-		writeInitializationCommands();
+		writeBeginCommands();
 	}
 
 	void ScreenDriver::pollingTransmit(spi_transaction_t& transaction) {
@@ -178,13 +175,14 @@ namespace yoba {
 		writeData(data, true);
 	}
 
-	void ScreenDriver::SpiPreTransferCallback(spi_transaction_t *transaction) {
+	void ScreenDriver::spiPreTransferCallback(spi_transaction_t *transaction) {
 		auto userData = (DriverSPIPreCallbackUserData*) transaction->user;
 		gpio_set_level((gpio_num_t) userData->driver->_dcPin, userData->dcPinState);
 	}
 
 	void ScreenDriver::flushTransactionBuffer(int y) {
 		static spi_transaction_t transaction;
+
 		auto falseUserData = DriverSPIPreCallbackUserData(this, false);
 		auto trueUserData = DriverSPIPreCallbackUserData(this, true);
 

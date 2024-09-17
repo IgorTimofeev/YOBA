@@ -28,8 +28,8 @@ namespace yoba {
 			const Size &getSize() const;
 
 			ScreenOrientation getOrientation() const;
-			virtual void setOrientation(ScreenOrientation orientation);
-			virtual void rotatePointForOrientation(Point& point);
+			void setOrientation(ScreenOrientation orientation);
+			void rotatePointForOrientation(Point& point);
 
 			uint8_t getTransactionWindowHeight() const;
 
@@ -46,7 +46,22 @@ namespace yoba {
 			void flushTransactionBuffer(int value0);
 
 		protected:
-			virtual void writeInitializationCommands();
+			virtual void writeBeginCommands() = 0;
+			virtual void writeOrientationChangeCommands() = 0;
+
+			// Driver sends pixel data to screen using tiny sliding window, moving it from
+			// top to bottom until complete. This method defines how big window should be.
+			// Larger value means more memory use, but less overhead for data transfer.
+			//
+			// [Fucking important] Make sure screen height is dividable by this.
+			//
+			// Example: let transactionWindowHeight be 40 px for 320 x 240 px screen.
+			// This will allocate 320 * 40 = 25600 pixels * 2 bytes per each = 25 KiB of heap,
+			// allowing screen buffer to be flushed in 240 / 40 = 6 equal parts,
+			// which more than enough to achieve ~800 FPS on simple scenes on 240 MHz ESP32.
+			// Increasing buffer height to 48/60/80/120 px can afford you 10-200 extra FPS,
+			// but will eat RAM like a bulimic bitch
+			virtual uint8_t getTransactionWindowHeightForOrientation() = 0;
 
 			void pollingTransmit(spi_transaction_t &transaction);
 
@@ -60,7 +75,7 @@ namespace yoba {
 
 			// This function is called (in irq context!) just before a transmission starts. It will
 			// set the D/C line to the value indicated in the user field.
-			static void SpiPreTransferCallback(spi_transaction_t* transaction);
+			static void spiPreTransferCallback(spi_transaction_t* transaction);
 
 			int32_t getSPIFrequency() const;
 			void setSPIFrequency(int32_t spiFrequency);
@@ -80,20 +95,8 @@ namespace yoba {
 			spi_device_handle_t _spi = spi_device_handle_t();
 			int32_t _spiFrequency = SPI_MASTER_FREQ_20M;
 
-			// Driver sends pixel data to screen using tiny sliding window, moving it from
-			// top to bottom until complete. This method defines how big window should be.
-			// Larger value means more memory use, but less overhead for data transfer.
-			//
-			// [Fucking important] Make sure screen height is dividable by this.
-			//
-			// Example: let transactionWindowHeight be 40 px for 320 x 240 px screen.
-			// This will allocate 320 * 40 = 25600 pixels * 2 bytes per each = 25 KiB of heap,
-			// allowing screen buffer to be flushed in 240 / 40 = 6 equal parts,
-			// which more than enough to achieve ~800 FPS on simple scenes on 240 MHz ESP32.
-			// Increasing buffer height to 48/60/80/120 px can afford you 10-200 extra FPS,
-			// but will eat RAM like a bulimic bitch
-			virtual uint8_t getTransactionWindowHeightForOrientation() = 0;
 
+		private:
 			void updateDataFromOrientation();
 	};
 

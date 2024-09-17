@@ -19,9 +19,7 @@ namespace yoba {
 		setSPIFrequency(SPI_MASTER_FREQ_26M);
 	}
 
-	void ILI9341Driver::setOrientation(ScreenOrientation orientation) {
-		ScreenDriver::setOrientation(orientation);
-
+	void ILI9341Driver::writeOrientationChangeCommands() {
 		writeMemoryAccessControl();
 	}
 
@@ -32,7 +30,7 @@ namespace yoba {
 			: 40; // 6 transactions
 	}
 
-	void ILI9341Driver::writeInitializationCommands() {
+	void ILI9341Driver::writeBeginCommands() {
 		uint8_t b[16];
 
 		/* Power control B, power control = 0, DC_ENA = 1 */
