@@ -7,17 +7,13 @@
 #include "action.h"
 #include "ui/traits/backgroundAware.h"
 #include "ui/traits/foregroundAware.h"
+#include "ui/traits/cornerRadiusAware.h"
 #include "../event.h"
 #include "../number.h"
 
 namespace yoba {
-	class Slider : public BackgroundAware, public ForegroundAware {
+	class Slider : public BackgroundAware, public ForegroundAware, public CornerRadiusAware {
 		public:
-			Slider() {
-				setBackground(&Color16::black);
-				setForeground(&Color16::white);
-			}
-
 			void onEvent(Event &event) override {
 				if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
 					return;
@@ -45,6 +41,7 @@ namespace yoba {
 
 				screenBuffer->renderFilledRectangle(
 					bounds,
+					getCornerRadius(),
 					getBackground()
 				);
 
@@ -56,6 +53,7 @@ namespace yoba {
 							bounds.getHeight()
 						)
 					),
+					getCornerRadius(),
 					getForeground()
 				);
 			}

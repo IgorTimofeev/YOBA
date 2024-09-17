@@ -95,6 +95,47 @@ namespace yoba {
 			renderFilledRectangleNative(viewport.getIntersection(bounds), color);
 	}
 
+	void ScreenBuffer::renderFilledRectangle(const Bounds &bounds, uint16_t radius, const Color *color) {
+		if (radius > 0) {
+			// Rect in middle
+			renderFilledRectangle(
+				Bounds(
+					bounds.getX(),
+					bounds.getY() + radius,
+					bounds.getWidth(),
+					bounds.getHeight() - radius - radius
+				),
+				color
+			);
+
+			// 4 corners
+			renderRoundedCorners(
+				Point(
+					bounds.getX() + radius,
+					bounds.getY() + bounds.getHeight() - radius - 1
+				),
+				radius,
+				1,
+				bounds.getWidth() - radius - radius - 1,
+				color
+			);
+
+			renderRoundedCorners(
+				Point(
+					bounds.getX() + radius,
+					bounds.getY() + radius
+				),
+				radius,
+				2,
+				bounds.getWidth() - radius - radius - 1,
+				color
+			);
+		}
+		else {
+			renderFilledRectangle(bounds, color);
+		}
+	}
+
 	void ScreenBuffer::renderLine(const Point &from, const Point &to, const Color* color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {
@@ -304,7 +345,7 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderText(const Point &point, const Font* font, const Color* color, const char* text) {
+	void ScreenBuffer::renderString(const Point &point, const Font* font, const Color* color, const char* text) {
 		const auto viewportX2 = getViewport().getX2();
 
 		// Skipping rendering if text is obviously not in viewport
@@ -371,7 +412,60 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderText(const Point &point, const Font *font, const Color *color, const String &text) {
-		renderText(point, font, color, text.c_str());
+	void ScreenBuffer::renderString(const Point &point, const Font *font, const Color *color, const String &text) {
+		renderString(point, font, color, text.c_str());
+	}
+
+	void ScreenBuffer::renderFilledCircle(const Point &center, uint16_t radius, const Color *color) {
+		int32_t x = 0;
+		int32_t dx = 1;
+		int32_t dy = radius + radius;
+		int32_t p = -(radius >> 1);
+
+		renderHorizontalLine(Point(center.getX() - radius, center.getY()), dy + 1, color);
+
+		while(x < radius){
+			if (p>= 0) {
+				renderHorizontalLine(Point(center.getX() - x, center.getY() + radius), dx, color);
+				renderHorizontalLine(Point(center.getX() - x, center.getY() - radius), dx, color);
+
+				dy -= 2;
+				p -= dy;
+				radius--;
+			}
+
+			dx += 2;
+			p += dx;
+			x++;
+
+			renderHorizontalLine(Point(center.getX() - radius, center.getY() + x), dy + 1, color);
+			renderHorizontalLine(Point(center.getX() - radius, center.getY() - x), dy + 1, color);
+		}
+	}
+
+	void ScreenBuffer::renderRoundedCorners(const Point& center, int32_t radius, uint8_t corners, int32_t delta, const Color *color) {
+		int32_t f     = 1 - radius;
+		int32_t ddF_x = 1;
+		int32_t ddF_y = -radius - radius;
+		int32_t y     = 0;
+
+		delta++;
+
+		while (y < radius) {
+			if (f >= 0) {
+				if (corners & 0x1) renderHorizontalLine(Point(center.getX() - y, center.getY() + radius), y + y + delta, color);
+				if (corners & 0x2) renderHorizontalLine(Point(center.getX() - y, center.getY() - radius), y + y + delta, color);
+				radius--;
+				ddF_y += 2;
+				f     += ddF_y;
+			}
+
+			y++;
+			ddF_x += 2;
+			f     += ddF_x;
+
+			if (corners & 0x1) renderHorizontalLine(Point(center.getX() - radius, center.getY() + y), radius + radius + delta, color);
+			if (corners & 0x2) renderHorizontalLine(Point(center.getX() - radius, center.getY() - y), radius + radius + delta, color);
+		}
 	}
 }

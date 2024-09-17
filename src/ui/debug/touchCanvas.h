@@ -35,8 +35,8 @@ namespace yoba {
 					return;
 
 				for (const auto& point : _points) {
-					screenBuffer->renderFilledRectangle(Bounds(point, Size(10, 10)), getForeground());
-					screenBuffer->renderText(Point(point.getX(), point.getY() + 15), font, getForeground(), String(point.getX()) + String(", ") + String(point.getY()));
+					screenBuffer->renderFilledCircle(point, 5, getForeground());
+					screenBuffer->renderString(Point(point.getX(), point.getY() + 10), font, getForeground(), String(point.getX()) + String(", ") + String(point.getY()));
 				}
 			}
 

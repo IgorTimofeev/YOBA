@@ -8,7 +8,7 @@
 #include "ui/text.h"
 #include "ui/application.h"
 #include "ui/debug/touchCanvas.h"
-#include "ui/debug/paletteView.h"
+#include "ui/debug/testView.h"
 #include "fonts/Unscii16Font.h"
 #include "fonts/Unscii8ThinFont.h"
 
@@ -30,7 +30,7 @@ Application application = Application(&screenBuffer, &touchDriver);
 Unscii16Font font = Unscii16Font();
 Bits8PaletteColor textColor = Bits8PaletteColor(255);
 
-PaletteView paletteView;
+TestView paletteView;
 Text text = Text(&textColor);
 TouchCanvas touchCanvas;
 

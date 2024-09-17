@@ -47,7 +47,7 @@ namespace yoba {
 				if (!font)
 					return;
 
-				screenBuffer->renderText(
+				screenBuffer->renderString(
 					getBounds().getPosition(),
 					font,
 					getForeground(),

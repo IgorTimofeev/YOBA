@@ -4,19 +4,22 @@
 #include "../element.h"
 
 namespace yoba {
-	class PaletteView : public Element {
+	class TestView : public Element {
 		public:
 
 		protected:
 			void onRender(ScreenBuffer* screenBuffer) override {
 				auto buffer8 = (Bits8PaletteBuffer*) screenBuffer;
+				const auto& bounds = getBounds();
 
 				uint8_t w = 8;
 				uint8_t h = 8;
 
-				PaletteColor<uint8_t> color = PaletteColor<uint8_t>(0);
+				Bits8PaletteColor black = Bits8PaletteColor(0);
+				Bits8PaletteColor white = Bits8PaletteColor(255);
 
-				buffer8->clear(&color);
+				// Palette
+				buffer8->clear(&black);
 
 				for (int y = 0; y < buffer8->getDriver()->getSize().getHeight(); y += h) {
 					for (int x = 0; x < buffer8->getDriver()->getSize().getWidth(); x += w) {
@@ -27,15 +30,16 @@ namespace yoba {
 								w,
 								h
 							),
-							&color
+							&black
 						);
-//
-//						if (color.getIndex() == 255)
-//							return;
 
-						color.setIndex(color.getIndex() + 1);
+						black.setIndex(black.getIndex() + 1);
 					}
 				}
+
+				// Test
+				buffer8->renderFilledCircle(Point(32, 32), 16, &white);
+				buffer8->renderFilledRectangle(Bounds(32, 52, 80, 30), 8, &white);
 			}
 	};
 }

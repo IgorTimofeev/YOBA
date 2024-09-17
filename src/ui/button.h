@@ -7,10 +7,11 @@
 #include "ui/traits/foregroundAware.h"
 #include "ui/traits/textAware.h"
 #include "ui/traits/fontAware.h"
+#include "ui/traits/cornerRadiusAware.h"
 #include "../event.h"
 
 namespace yoba {
-	class Button : public TextAware, public FontAware, public BackgroundAware, public ForegroundAware {
+	class Button : public TextAware, public FontAware, public BackgroundAware, public ForegroundAware, public CornerRadiusAware {
 		public:
 			void addOnClick(const std::function<void(Event&)>& value) {
 				_onClick.add(value);
@@ -23,7 +24,7 @@ namespace yoba {
 				auto& text = getText();
 				auto textSize = getFont()->getSize(text);
 
-				screenBuffer->renderFilledRectangle(bounds, getBackground());
+				screenBuffer->renderFilledRectangle(bounds, getCornerRadius(), getBackground());
 
 				screenBuffer->renderText(
 					Point(

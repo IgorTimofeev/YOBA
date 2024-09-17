@@ -85,6 +85,13 @@ namespace yoba {
 				return _y + _height / 2;
 			}
 
+			Point getCenter() const {
+				return {
+					getXCenter(),
+					getYCenter()
+				};
+			}
+
 			Point getTopLeft() const {
 				return {
 					getX(),
