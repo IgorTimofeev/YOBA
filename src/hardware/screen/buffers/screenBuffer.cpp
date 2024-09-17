@@ -305,11 +305,23 @@ namespace yoba {
 	}
 
 	void ScreenBuffer::renderText(const Point &point, const Font* font, const Color* color, const char* text) {
+		const auto viewportX2 = getViewport().getX2();
+
+		// Skipping rendering if text is obviously not in viewport
+		if (
+			point.getX() > viewportX2
+			|| point.getY() > getViewport().getY2()
+			|| point.getY() + font->getHeight() < getViewport().getY()
+		)
+			return;
+
 		const char* charPtr;
 		size_t charIndex = 0;
 		const Glyph* glyph;
 
-		int32_t x = point.getX();
+		int32_t
+			x = point.getX(),
+			x2;
 
 		uint32_t bitmapBitIndex;
 		uint8_t bitmapByte;
@@ -325,21 +337,30 @@ namespace yoba {
 			glyph = font->getGlyph(*charPtr);
 
 			if (glyph) {
-				bitmapBitIndex = glyph->getBitmapBitIndex();
+				x2 = x + glyph->getWidth();
 
-				for (int j = 0; j < font->getHeight(); j++) {
-					for (int i = 0; i < glyph->getWidth(); i++) {
-						bitmapByte = font->getBitmap()[bitmapBitIndex / 8];
+				// Rendering current glyph only if it's in viewport
+				if (x2 > getViewport().getX()) {
+					bitmapBitIndex = glyph->getBitmapBitIndex();
 
-						// We have pixel!
-						if ((bitmapByte >> bitmapBitIndex % 8) & 0b1)
-							renderPixel(Point(x + i, point.getY() + j), color);
+					for (uint8_t j = 0; j < font->getHeight(); j++) {
+						for (uint8_t i = 0; i < glyph->getWidth(); i++) {
+							bitmapByte = font->getBitmap()[bitmapBitIndex / 8];
 
-						bitmapBitIndex++;
+							// We have pixel!
+							if ((bitmapByte >> bitmapBitIndex % 8) & 1)
+								renderPixel(Point(x + i, point.getY() + j), color);
+
+							bitmapBitIndex++;
+						}
 					}
 				}
 
-				x += glyph->getWidth();
+				x = x2;
+
+				// Stopping rendering if next glyphs will not be in viewport
+				if (x > viewportX2)
+					break;
 			}
 			// For non-existing glyphs we can just simulate whitespace
 			else {
