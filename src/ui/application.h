@@ -1,12 +1,11 @@
 #pragma once
 
 #include "layout.h"
-#include "event.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "hardware/touch/drivers/touchDriver.h"
+#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../hardware/touch/drivers/touchDriver.h"
+#include "../fonts/font.h"
 
 namespace yoba {
-	class Screen;
 	class Animation;
 
 	class Application : public Layout {

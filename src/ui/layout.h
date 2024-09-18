@@ -1,8 +1,10 @@
 #pragma once
 
 #include "element.h"
-#include "bounds.h"
 #include "vector"
+#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../bounds.h"
+#include "../size.h"
 
 namespace yoba {
 	class Layout : public Element {
