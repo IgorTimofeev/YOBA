@@ -92,11 +92,13 @@ namespace yoba {
 			size_t _transactionBufferLength = 0;
 			uint16_t* _transactionBuffer = nullptr;
 
-			spi_device_handle_t _spi = spi_device_handle_t();
 			int32_t _spiFrequency = SPI_MASTER_FREQ_20M;
 
-
 		private:
+			void setChipSelect(uint8_t value) const {
+				digitalWrite(_csPin, value);
+			}
+
 			void updateDataFromOrientation();
 	};
 

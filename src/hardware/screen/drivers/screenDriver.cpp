@@ -1,3 +1,4 @@
+#include <SPI.h>
 #include "screenDriver.h"
 #include "Arduino.h"
 #include "point.h"
@@ -74,6 +75,14 @@ namespace yoba {
 	}
 
 	void ScreenDriver::begin() {
+		// Resetting CS pin just in case
+		pinMode(_csPin, OUTPUT);
+		setChipSelect(HIGH);
+
+		SPI.begin();
+		SPI.setFrequency(_spiFrequency);
+		SPI.set
+
 		updateDataFromOrientation();
 
 		spi_bus_config_t busConfig = {
