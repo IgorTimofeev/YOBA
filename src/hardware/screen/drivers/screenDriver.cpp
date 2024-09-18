@@ -4,11 +4,12 @@
 #include "point.h"
 
 namespace yoba {
-	ScreenDriver::ScreenDriver(uint8_t csPin, uint8_t dcPin, int8_t rstPin, const Size& defaultSize, ScreenOrientation orientation) :
+	ScreenDriver::ScreenDriver(uint8_t csPin, uint8_t dcPin, int8_t rstPin, uint32_t spiFrequency, const Size& defaultSize, ScreenOrientation orientation) :
 		_csPin(csPin),
 		_dcPin(dcPin),
 		_rstPin(rstPin),
 
+		_spiSettings(SPISettings(spiFrequency, SPI_MSBFIRST, SPI_MODE0)),
 		_defaultSize(defaultSize),
 		_size(defaultSize),
 		_orientation(orientation)
@@ -66,21 +67,12 @@ namespace yoba {
 		}
 	}
 
-	int32_t ScreenDriver::getSPIFrequency() const {
-		return _spiFrequency;
-	}
-
-	void ScreenDriver::setSPIFrequency(int32_t spiFrequency) {
-		_spiFrequency = spiFrequency;
-	}
-
 	void ScreenDriver::begin() {
 		// Resetting CS pin just in case
 		pinMode(_csPin, OUTPUT);
 		setChipSelect(true);
 
 		SPI.begin();
-		SPI.setFrequency(_spiFrequency);
 
 		updateDataFromOrientation();
 

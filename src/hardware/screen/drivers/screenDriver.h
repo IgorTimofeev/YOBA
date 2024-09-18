@@ -20,6 +20,7 @@ namespace yoba {
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
+				uint32_t spiFrequency,
 				const Size& defaultSize,
 				ScreenOrientation orientation
 			);
@@ -72,9 +73,6 @@ namespace yoba {
 			void writeCommandAndData(uint8_t command, const uint8_t *data, int length);
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
-			int32_t getSPIFrequency() const;
-			void setSPIFrequency(int32_t spiFrequency);
-
 			uint8_t _csPin;
 			uint8_t _dcPin;
 			int8_t _rstPin;
@@ -87,8 +85,7 @@ namespace yoba {
 			size_t _transactionBufferLength = 0;
 			uint16_t* _transactionBuffer = nullptr;
 
-			int32_t _spiFrequency = SPI_MASTER_FREQ_20M;
-			const SPISettings _spiSettings = SPISettings(26000000, SPI_MSBFIRST, SPI_MODE0);
+			const SPISettings _spiSettings;
 
 		private:
 			void setChipSelect(uint8_t value) const;

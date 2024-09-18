@@ -12,11 +12,14 @@ namespace yoba {
 		csPin,
 		dcPin,
 		rstPin,
+
+		// Somehow 40 MHz works nice on Arduino SPI, buf ESP-IDF handles only 26 MHz
+		// Hmm...
+		40000000,
 		Size(240, 320),
 		orientation
 	) {
-		// Glitches & tearing can appear on 26m, 40m+ won't work anyway
-		setSPIFrequency(SPI_MASTER_FREQ_26M);
+
 	}
 
 	void ILI9341Driver::writeOrientationChangeCommands() {
