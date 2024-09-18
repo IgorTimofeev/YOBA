@@ -4,6 +4,7 @@
 #include <driver/spi_master.h>
 #include "../../../size.h"
 #include "point.h"
+#include "SPI.h"
 
 namespace yoba {
 	enum class ScreenOrientation : uint8_t {
@@ -63,10 +64,8 @@ namespace yoba {
 			// but will eat RAM like a bulimic bitch
 			virtual uint8_t getTransactionWindowHeightForOrientation() = 0;
 
-			void pollingTransmit(spi_transaction_t &transaction);
-
-			void writeData(uint8_t data, bool dcPinState = true);
-			void writeData(const uint8_t *data, int length, bool dcPinState = true);
+			void writeData(uint8_t data);
+			void writeData(const uint8_t *data, int length);
 
 			void writeCommand(uint8_t data);
 
@@ -88,10 +87,14 @@ namespace yoba {
 			size_t _transactionBufferLength = 0;
 			uint16_t* _transactionBuffer = nullptr;
 
-			spi_device_handle_t _spi = spi_device_handle_t();
 			int32_t _spiFrequency = SPI_MASTER_FREQ_20M;
+			const SPISettings _spiSettings = SPISettings(26000000, SPI_MSBFIRST, SPI_MODE0);
 
 		private:
+			void setChipSelect(uint8_t value) const;
+
+			void setDataCommand(uint8_t value) const;
+
 			void updateDataFromOrientation();
 	};
 }

@@ -75,156 +75,87 @@ namespace yoba {
 	}
 
 	void ScreenDriver::begin() {
+		// Resetting CS pin just in case
+		pinMode(_csPin, OUTPUT);
+		setChipSelect(true);
+
+		SPI.begin();
+		SPI.setFrequency(_spiFrequency);
+
 		updateDataFromOrientation();
 
-		spi_bus_config_t busConfig = {
-			.mosi_io_num = MOSI,
-			.miso_io_num = MISO,
-			.sclk_io_num = SCK,
-			.quadwp_io_num = -1,
-			.quadhd_io_num = -1,
-			.max_transfer_sz = _transactionWindowHeight * _size.getWidth() * 2 + 8
-		};
-
-		spi_device_interface_config_t deviceConfig = {
-			.mode = 0,                              //SPI mode 0
-			.clock_speed_hz = getSPIFrequency(),     //Clock out at required MHz
-			.spics_io_num = _csPin,             //CS pin
-			.queue_size = 7,                        //We want to be able to queue 7 transactions at a time
-//			.pre_cb = spiPreTransferCallback, //Specify pre-transfer callback to handle D/C line
-		};
-
-		//Initialize the SPI bus
-		auto SPIHost = SPI2_HOST;
-
-		esp_err_t result = spi_bus_initialize(SPIHost, &busConfig, SPI_DMA_CH_AUTO);
-		ESP_ERROR_CHECK(result);
-
-		//Attach the LCD to the SPI bus
-		result = spi_bus_add_device(SPIHost, &deviceConfig, &_spi);
-		ESP_ERROR_CHECK(result);
-
 		//Initialize non-SPI GPIOs
-		uint64_t gpioConfigPinMask = 1ULL << _dcPin;
-
-		if (_rstPin >= 0)
-			gpioConfigPinMask |= 1ULL << _rstPin;
-
-		gpio_config_t gpioConfig {
-			.pin_bit_mask = gpioConfigPinMask,
-			.mode = GPIO_MODE_OUTPUT,
-			.pull_up_en = GPIO_PULLUP_ENABLE
-		};
-
-		gpio_config(&gpioConfig);
+		pinMode(_dcPin, OUTPUT);
 
 		// Toggle reset pin if it was defined
 		if (_rstPin >= 0) {
-			gpio_set_level((gpio_num_t) _rstPin, 0);
+			pinMode(_rstPin, OUTPUT);
+
+			digitalWrite(_rstPin, 0);
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 
-			gpio_set_level((gpio_num_t) _rstPin, 1);
+			digitalWrite(_rstPin, 1);
 			vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
 
 		writeBeginCommands();
 	}
 
-	void ScreenDriver::pollingTransmit(spi_transaction_t& transaction) {
-		assert(spi_device_polling_transmit(_spi, &transaction) == ESP_OK);
+	inline void ScreenDriver::writeData(uint8_t data) {
+		setChipSelect(false);
+
+		SPI.beginTransaction(_spiSettings);
+		SPI.transfer(data);
+		SPI.endTransaction();
+
+		setChipSelect(true);
 	}
 
-	void ScreenDriver::writeData(uint8_t data, bool dcPinState) {
-		spi_transaction_t transaction;
-		memset(&transaction, 0, sizeof(transaction));       //Zero out the transaction
-		transaction.length = 8;                   //Command is 8 bits
-		transaction.tx_data[0] = data;             //The data is the cmd itself
-		transaction.flags = SPI_TRANS_USE_TXDATA;
+	inline void ScreenDriver::writeData(const uint8_t* data, int length) {
+		setChipSelect(false);
 
-		gpio_set_level((gpio_num_t) _dcPin, dcPinState);
-		pollingTransmit(transaction);
-	}
+		SPI.beginTransaction(_spiSettings);
+		SPI.transferBytes(data, nullptr, length);
+		SPI.endTransaction();
 
-	void ScreenDriver::writeData(const uint8_t *data, int length, bool dcPinState) {
-		spi_transaction_t transaction;
-		memset(&transaction, 0, sizeof(transaction)); //Zero out the transaction
-		transaction.length = length * 8; // Length is in bytes, transaction length is in bits.
-		transaction.tx_buffer = data; //Data
-
-		gpio_set_level((gpio_num_t) _dcPin, dcPinState);
-		pollingTransmit(transaction);
+		setChipSelect(true);
 	}
 
 	void ScreenDriver::writeCommand(uint8_t data) {
-		writeData(data, false);
-	}
-
-	void ScreenDriver::writeCommandAndData(uint8_t command, const uint8_t *data, int length) {
-		writeCommand(command);
-		writeData(data, length, true);
+		setDataCommand(false);
+		writeData(data);
+		setDataCommand(true);
 	}
 
 	void ScreenDriver::writeCommandAndData(uint8_t command, uint8_t data) {
 		writeCommand(command);
-		writeData(data, true);
+		writeData(data);
+	}
+
+	void ScreenDriver::writeCommandAndData(uint8_t command, const uint8_t *data, int length) {
+		writeCommand(command);
+		writeData(data, length);
 	}
 
 	void ScreenDriver::flushTransactionBuffer(int y) {
-		static spi_transaction_t transaction;
+		uint8_t data[4];
 
 		// Column Address Set
-		memset(&transaction, 0, sizeof(spi_transaction_t));
-		transaction.length = 8;
-		transaction.tx_data[0] = 0x2A;
-		transaction.flags = SPI_TRANS_USE_TXDATA;
-		gpio_set_level((gpio_num_t) _dcPin, false);
-		pollingTransmit(transaction);
-
-		// Column start / end
-		memset(&transaction, 0, sizeof(spi_transaction_t));
-		transaction.length = 8 * 4;
-		transaction.tx_data[0] = 0; //Start Col High
-		transaction.tx_data[1] = 0; //Start Col Low
-		transaction.tx_data[2] = (_size.getWidth() - 1) >> 8; //End Col High
-		transaction.tx_data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
-		transaction.flags = SPI_TRANS_USE_TXDATA;
-		gpio_set_level((gpio_num_t) _dcPin, true);
-		pollingTransmit(transaction);
+		data[0] = 0; //Start Col High
+		data[1] = 0; //Start Col Low
+		data[2] = (_size.getWidth() - 1) >> 8; //End Col High
+		data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
+		writeCommandAndData(0x2A, data, 4);
 
 		//Page address set
-		memset(&transaction, 0, sizeof(spi_transaction_t));
-		transaction.length = 8;
-		transaction.tx_data[0] = 0x2B;
-		transaction.flags = SPI_TRANS_USE_TXDATA;
-		gpio_set_level((gpio_num_t) _dcPin, false);
-		pollingTransmit(transaction);
-
-		// Page start / end
-		memset(&transaction, 0, sizeof(spi_transaction_t));
-		transaction.length = 8 * 4;
-		transaction.tx_data[0] = y >> 8; //Start page high
-		transaction.tx_data[1] = y & 0xff; // Start page low
-		transaction.tx_data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
-		transaction.tx_data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
-		transaction.flags = SPI_TRANS_USE_TXDATA;
-		gpio_set_level((gpio_num_t) _dcPin, true);
-		pollingTransmit(transaction);
+		data[0] = y >> 8; //Start page high
+		data[1] = y & 0xff; // Start page low
+		data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
+		data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
+		writeCommandAndData(0x2B, data, 4);
 
 		// Memory write
-		memset(&transaction, 0, sizeof(spi_transaction_t));
-		transaction.length = 8;
-		transaction.tx_data[0] = 0x2C;
-		transaction.flags = SPI_TRANS_USE_TXDATA;
-		gpio_set_level((gpio_num_t) _dcPin, false);
-		pollingTransmit(transaction);
-
-		// Cyka, pixels!
-		memset(&transaction, 0, sizeof(spi_transaction_t));
-		transaction.tx_buffer = _transactionBuffer;
-		transaction.length = _size.getWidth() * _transactionWindowHeight * 2 * 8;  // Data length, in bits
-		transaction.flags = 0; // Undo SPI_TRANS_USE_TXDATA flag
-		gpio_set_level((gpio_num_t) _dcPin, true);
-		pollingTransmit(transaction);
+		writeCommandAndData(0x2C, (uint8_t*) _transactionBuffer, _size.getWidth() * _transactionWindowHeight * 2);
 	}
 
 	uint16_t *ScreenDriver::getTransactionBuffer() const {
@@ -267,5 +198,13 @@ namespace yoba {
 		_transactionBufferLength = _size.getWidth() * _transactionWindowHeight * 2;
 		_transactionBuffer = (uint16_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
+	}
+
+	void ScreenDriver::setChipSelect(uint8_t value) const {
+		digitalWrite(_csPin, value);
+	}
+
+	void ScreenDriver::setDataCommand(uint8_t value) const {
+		digitalWrite(_dcPin, value);
 	}
 }
