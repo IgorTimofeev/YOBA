@@ -36,6 +36,9 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
+				if (!getBackground() || !getForeground())
+					return;
+
 				auto& bounds = getBounds();
 				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());
 
