@@ -1,20 +1,15 @@
 #pragma once
 
 #include "stackLayout.h"
-#include "color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "../color.h"
+#include "../hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
-#include "ui/traits/backgroundAware.h"
-#include "ui/traits/foregroundAware.h"
+#include "traits/backgroundAware.h"
+#include "traits/foregroundAware.h"
 
 namespace yoba {
 	class SevenSegment : public BackgroundAware, public ForegroundAware {
 		public:
-			SevenSegment() {
-				setBackground(&Color16::black);
-				setForeground(&Color16::white);
-			}
-
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) override {
 				return {
 					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
@@ -123,20 +118,20 @@ namespace yoba {
 				uint8_t t = getSegmentThickness();
 				uint8_t l = getSegmentLength();
 
-				screenBuffer->renderRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getForeground() : getBackground());
-				screenBuffer->renderRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getForeground() : getBackground());
-				screenBuffer->renderRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getForeground() : getBackground());
-				screenBuffer->renderRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getForeground() : getBackground());
-				screenBuffer->renderRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getForeground() : getBackground());
-				screenBuffer->renderRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getForeground() : getBackground());
-				screenBuffer->renderRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getForeground() : getBackground());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getForeground() : getBackground());
 			}
 
 			void drawDigit(ScreenBuffer* screenBuffer, const Point& position, uint8_t digit) {
 				switch (digit) {
 					case 0:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							true,
@@ -151,7 +146,7 @@ namespace yoba {
 
 					case 1:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							false,
 							true,
@@ -166,7 +161,7 @@ namespace yoba {
 
 					case 2:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							true,
@@ -181,7 +176,7 @@ namespace yoba {
 
 					case 3:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							true,
@@ -196,7 +191,7 @@ namespace yoba {
 
 					case 4:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							false,
 							true,
@@ -211,7 +206,7 @@ namespace yoba {
 
 					case 5:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							false,
@@ -226,7 +221,7 @@ namespace yoba {
 
 					case 6:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							false,
@@ -241,7 +236,7 @@ namespace yoba {
 
 					case 7:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							true,
@@ -256,7 +251,7 @@ namespace yoba {
 
 					case 8:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							true,
@@ -271,7 +266,7 @@ namespace yoba {
 
 					default:
 						drawSegments(
-							display,
+							screenBuffer,
 							position,
 							true,
 							true,

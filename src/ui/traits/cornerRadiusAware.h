@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ui/element.h"
+#include "../element.h"
 
 namespace yoba {
 	class CornerRadiusAware : public virtual Element {

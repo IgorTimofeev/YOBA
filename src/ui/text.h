@@ -1,11 +1,11 @@
 #pragma once
 
 #include "element.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "size.h"
-#include "ui/traits/textAware.h"
-#include "ui/traits/foregroundAware.h"
-#include "ui/traits/fontAware.h"
+#include "traits/textAware.h"
+#include "traits/foregroundAware.h"
+#include "traits/fontAware.h"
+#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../size.h"
 
 namespace yoba {
 	class Text : public TextAware, public FontAware, public ForegroundAware {

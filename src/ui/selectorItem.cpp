@@ -1,6 +1,5 @@
 #include "selectorItem.h"
 #include "selector.h"
-#include "../event.h"
 
 namespace yoba {
 	void SelectorItem::onEvent(Event &event) {

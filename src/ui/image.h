@@ -1,9 +1,9 @@
 #pragma once
 
 #include "element.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "bounds.h"
-#include "imageSource.h"
+#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../bounds.h"
+#include "../imageSource.h"
 
 namespace yoba {
 	class Image : public Element {

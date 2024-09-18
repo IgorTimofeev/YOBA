@@ -1,4 +1,6 @@
-﻿namespace yoba {
+﻿#pragma once
+
+namespace yoba {
 	class Unscii8ThinFont : public Font {
 		public:
 			Unscii8ThinFont() : Font(

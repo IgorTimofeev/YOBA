@@ -1,13 +1,13 @@
 #pragma once
 
 #include "element.h"
-#include "color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "ui/traits/backgroundAware.h"
-#include "ui/traits/foregroundAware.h"
-#include "ui/traits/textAware.h"
-#include "ui/traits/fontAware.h"
-#include "ui/traits/cornerRadiusAware.h"
+#include "../color.h"
+#include "../hardware/screen/buffers/screenBuffer.h"
+#include "traits/backgroundAware.h"
+#include "traits/foregroundAware.h"
+#include "traits/textAware.h"
+#include "traits/fontAware.h"
+#include "traits/cornerRadiusAware.h"
 #include "../event.h"
 
 namespace yoba {
@@ -26,7 +26,7 @@ namespace yoba {
 
 				screenBuffer->renderFilledRectangle(bounds, getCornerRadius(), getBackground());
 
-				screenBuffer->renderText(
+				screenBuffer->renderString(
 					Point(
 						bounds.getX() + bounds.getWidth() / 2 - textSize.getWidth() / 2,
 						bounds.getY() + bounds.getHeight() / 2 - textSize.getHeight() / 2

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ui/element.h"
-#include "fonts/font.h"
+#include "../element.h"
 
 namespace yoba {
 	class TextAware : public virtual Element {

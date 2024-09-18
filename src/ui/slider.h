@@ -1,13 +1,13 @@
 #pragma once
 
 #include "element.h"
-#include "color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "../color.h"
+#include "../hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
-#include "action.h"
-#include "ui/traits/backgroundAware.h"
-#include "ui/traits/foregroundAware.h"
-#include "ui/traits/cornerRadiusAware.h"
+#include "../action.h"
+#include "traits/cornerRadiusAware.h"
+#include "traits/backgroundAware.h"
+#include "traits/foregroundAware.h"
 #include "../event.h"
 #include "../number.h"
 

@@ -84,7 +84,7 @@ namespace yoba {
 			uint32_t toUint32() const;
 			Rgb565Color toRgb565() const;
 
-			void interpolateTo(Rgb888Color& second, float position);
+			void interpolateTo(const Rgb888Color& second, float position);
 
 		private:
 			uint8_t _r = 0;
@@ -123,8 +123,8 @@ namespace yoba {
 
 	// -------------------------------- Bits8PaletteColor --------------------------------
 
-	class Bits8PaletteColor : public PaletteColor<uint8_t> {
+	class Bit8PaletteColor : public PaletteColor<uint8_t> {
 		public:
-			explicit Bits8PaletteColor(uint8_t index);
+			explicit Bit8PaletteColor(uint8_t index);
 	};
 }

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "ui/element.h"
-#include "ui/traits/backgroundAware.h"
+#include "../../color.h"
+#include "../../hardware/screen/buffers/screenBuffer.h"
+#include "../element.h"
+#include "../traits/backgroundAware.h"
 
 namespace yoba {
 	class Rectangle : public virtual Element, public BackgroundAware {

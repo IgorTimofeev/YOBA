@@ -35,8 +35,8 @@ namespace yoba {
 				uint16_t equalSize;
 
 				switch (getOrientation()) {
-					case horizontal:
-						for (auto child : *this) {
+					case Orientation::Horizontal:
+						for (auto child : _children) {
 							childSize = child->measure(
 								screenBuffer,
 								Size(
@@ -56,7 +56,7 @@ namespace yoba {
 
 						break;
 
-					case vertical:
+					case Orientation::Vertical:
 						availableWithoutSpacing = availableSize.getHeight() - spacingSubstraction;
 
 						equalSize =
@@ -64,7 +64,7 @@ namespace yoba {
 							? 0
 							: availableWithoutSpacing / getChildrenCount();
 
-						for (auto child : *this) {
+						for (auto child : _children) {
 							if (getChildAutoSize(child)) {
 
 							}
@@ -73,7 +73,7 @@ namespace yoba {
 							}
 						}
 
-						for (auto child : *this) {
+						for (auto child : _children) {
 							childSize = child->measure(
 								screenBuffer,
 								Size(
@@ -101,10 +101,10 @@ namespace yoba {
 				int32_t position;
 
 				switch (getOrientation()) {
-					case horizontal:
+					case Orientation::Horizontal:
 						position = bounds.getX();
 
-						for (auto child : *this) {
+						for (auto child : _children) {
 							child->arrange(Bounds(
 								position,
 								bounds.getY(),
@@ -117,10 +117,10 @@ namespace yoba {
 
 						break;
 
-					case vertical:
+					case Orientation::Vertical:
 						position = bounds.getY();
 
-						for (auto child : *this) {
+						for (auto child : _children) {
 							child->arrange(Bounds(
 								bounds.getX(),
 								position,
@@ -138,6 +138,6 @@ namespace yoba {
 		private:
 			std::set<Element*> _childrenAutoSizes {};
 			int32_t _spacing = 10;
-			Orientation _orientation = Orientation::vertical;
+			Orientation _orientation = Orientation::Vertical;
 	};
 }

@@ -53,7 +53,7 @@ namespace yoba {
 		return Rgb565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
 	}
 
-	void Rgb888Color::interpolateTo(Rgb888Color &second, float position) {
+	void Rgb888Color::interpolateTo(const Rgb888Color &second, float position) {
 		_r = interpolate(_r, second._r, position);
 		_g = interpolate(_g, second._g, position);
 		_b = interpolate(_b, second._b, position);
@@ -195,7 +195,7 @@ namespace yoba {
 
 	// -------------------------------- Bits8PaletteColor --------------------------------
 
-	Bits8PaletteColor::Bits8PaletteColor(uint8_t index) : PaletteColor(index) {
+	Bit8PaletteColor::Bit8PaletteColor(uint8_t index) : PaletteColor(index) {
 
 	}
 }

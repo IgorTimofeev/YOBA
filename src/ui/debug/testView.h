@@ -15,8 +15,8 @@ namespace yoba {
 				uint8_t w = 8;
 				uint8_t h = 8;
 
-				Bits8PaletteColor black = Bits8PaletteColor(0);
-				Bits8PaletteColor white = Bits8PaletteColor(255);
+				Bit8PaletteColor black = Bit8PaletteColor(0);
+				Bit8PaletteColor white = Bit8PaletteColor(255);
 
 				// Palette
 				buffer8->clear(&black);

@@ -2,8 +2,8 @@
 
 #include "../../event.h"
 #include "../element.h"
-#include "ui/traits/fontAware.h"
-#include "ui/traits/foregroundAware.h"
+#include "../traits/fontAware.h"
+#include "../traits/foregroundAware.h"
 
 namespace yoba {
 	class TouchCanvas : public virtual Element, public ForegroundAware, public FontAware {

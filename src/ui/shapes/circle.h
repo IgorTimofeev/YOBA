@@ -1,9 +1,9 @@
 #pragma once
 
-#include "color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "ui/element.h"
-#include "ui/traits/backgroundAware.h"
+#include "../../color.h"
+#include "../../hardware/screen/buffers/screenBuffer.h"
+#include "../element.h"
+#include "../traits/backgroundAware.h"
 
 namespace yoba {
 	class Circle : public virtual Element, public BackgroundAware {
@@ -20,7 +20,7 @@ namespace yoba {
 
 				const auto& bounds = getBounds();
 
-				screenBuffer->renderCircle(
+				screenBuffer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2),
 					min(bounds.getWidth(), bounds.getHeight()) / 2,
 					getBackground()

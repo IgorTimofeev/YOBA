@@ -7,7 +7,7 @@
 namespace yoba {
 	class GradientStop {
 		public:
-			GradientStop(float position, TrueColor* color) :
+			GradientStop(float position, const Rgb888Color& color) :
 				_position(position),
 				_color(color)
 			{
@@ -22,24 +22,24 @@ namespace yoba {
 				_position = value;
 			}
 
-			TrueColor* getColor() {
+			const Rgb888Color& getColor() const {
 				return _color;
 			}
 
-			void setColor(TrueColor* value) {
+			void setColor(const Rgb888Color& value) {
 				_color = value;
 			}
 
 		private:
 			float _position;
-			TrueColor* _color;
+			Rgb888Color _color;
 	};
 
 	class LinearGradient {
 		public:
-			TrueColor* getTrueColor(float position) {
+			Rgb888Color getRgb888Color(float position) {
 				if (_stops.size() < 2)
-					return &TrueColor::black;
+					return {0, 0, 0};
 
 				// |------|----|--|---|
 				//               *
@@ -105,18 +105,18 @@ namespace yoba {
 			}
 
 			void addRainbowStops() {
-				_stops.emplace_back(0, TrueColor(0xFF, 0x00, 0xFF));
-				_stops.emplace_back(0.2, TrueColor(0x00, 0x00, 0xff));
-				_stops.emplace_back(0.4, TrueColor(0x00, 0xff, 0xff));
-				_stops.emplace_back(0.6, TrueColor(0x00, 0xFF, 0x00));
-				_stops.emplace_back(0.8, TrueColor(0xFF, 0xFF, 0x00));
-				_stops.emplace_back(1, TrueColor(0xFF, 0x00, 0x00));
+				_stops.emplace_back(0, Rgb888Color(0xFF, 0x00, 0xFF));
+				_stops.emplace_back(0.2, Rgb888Color(0x00, 0x00, 0xff));
+				_stops.emplace_back(0.4, Rgb888Color(0x00, 0xff, 0xff));
+				_stops.emplace_back(0.6, Rgb888Color(0x00, 0xFF, 0x00));
+				_stops.emplace_back(0.8, Rgb888Color(0xFF, 0xFF, 0x00));
+				_stops.emplace_back(1, Rgb888Color(0xFF, 0x00, 0x00));
 			}
 
 			void addRGBStops() {
-				_stops.emplace_back(0, TrueColor(0xFF, 0x00, 0x00));
-				_stops.emplace_back(0.5, TrueColor(0x00, 0xff, 0x00));
-				_stops.emplace_back(1, TrueColor(0x00, 0x00, 0xFF));
+				_stops.emplace_back(0, Rgb888Color(0xFF, 0x00, 0x00));
+				_stops.emplace_back(0.5, Rgb888Color(0x00, 0xff, 0x00));
+				_stops.emplace_back(1, Rgb888Color(0x00, 0x00, 0xFF));
 			}
 
 		private:

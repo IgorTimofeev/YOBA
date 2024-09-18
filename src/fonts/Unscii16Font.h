@@ -1,4 +1,6 @@
-﻿namespace yoba {
+﻿#pragma once
+
+namespace yoba {
 	class Unscii16Font : public Font {
 		public:
 			Unscii16Font() : Font(
