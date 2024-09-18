@@ -75,14 +75,6 @@ namespace yoba {
 	}
 
 	void ScreenDriver::begin() {
-		// Resetting CS pin just in case
-		pinMode(_csPin, OUTPUT);
-		setChipSelect(HIGH);
-
-		SPI.begin();
-		SPI.setFrequency(_spiFrequency);
-		SPI.set
-
 		updateDataFromOrientation();
 
 		spi_bus_config_t busConfig = {
@@ -99,7 +91,7 @@ namespace yoba {
 			.clock_speed_hz = getSPIFrequency(),     //Clock out at required MHz
 			.spics_io_num = _csPin,             //CS pin
 			.queue_size = 7,                        //We want to be able to queue 7 transactions at a time
-			.pre_cb = spiPreTransferCallback, //Specify pre-transfer callback to handle D/C line
+//			.pre_cb = spiPreTransferCallback, //Specify pre-transfer callback to handle D/C line
 		};
 
 		//Initialize the SPI bus
@@ -148,12 +140,8 @@ namespace yoba {
 		transaction.length = 8;                   //Command is 8 bits
 		transaction.tx_data[0] = data;             //The data is the cmd itself
 		transaction.flags = SPI_TRANS_USE_TXDATA;
-		//	transaction.flags = SPI_TRANS_CS_KEEP_ACTIVE;   //Keep CS active after data transfer
 
-		// D/C needs to be set to 0
-		auto userData = DriverSPIPreCallbackUserData(this, dcPinState);
-		transaction.user = &userData;
-
+		gpio_set_level((gpio_num_t) _dcPin, dcPinState);
 		pollingTransmit(transaction);
 	}
 
@@ -163,10 +151,7 @@ namespace yoba {
 		transaction.length = length * 8; // Length is in bytes, transaction length is in bits.
 		transaction.tx_buffer = data; //Data
 
-		// D/C needs to be set to 1
-		auto userData = DriverSPIPreCallbackUserData(this, dcPinState);
-		transaction.user = &userData;
-
+		gpio_set_level((gpio_num_t) _dcPin, dcPinState);
 		pollingTransmit(transaction);
 	}
 
@@ -184,23 +169,15 @@ namespace yoba {
 		writeData(data, true);
 	}
 
-	void ScreenDriver::spiPreTransferCallback(spi_transaction_t *transaction) {
-		auto userData = (DriverSPIPreCallbackUserData*) transaction->user;
-		gpio_set_level((gpio_num_t) userData->driver->_dcPin, userData->dcPinState);
-	}
-
 	void ScreenDriver::flushTransactionBuffer(int y) {
 		static spi_transaction_t transaction;
-
-		auto falseUserData = DriverSPIPreCallbackUserData(this, false);
-		auto trueUserData = DriverSPIPreCallbackUserData(this, true);
 
 		// Column Address Set
 		memset(&transaction, 0, sizeof(spi_transaction_t));
 		transaction.length = 8;
 		transaction.tx_data[0] = 0x2A;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
-		transaction.user = &falseUserData;
+		gpio_set_level((gpio_num_t) _dcPin, false);
 		pollingTransmit(transaction);
 
 		// Column start / end
@@ -211,7 +188,7 @@ namespace yoba {
 		transaction.tx_data[2] = (_size.getWidth() - 1) >> 8; //End Col High
 		transaction.tx_data[3] = (_size.getWidth() - 1) & 0xff; //End Col Low
 		transaction.flags = SPI_TRANS_USE_TXDATA;
-		transaction.user = &trueUserData;
+		gpio_set_level((gpio_num_t) _dcPin, true);
 		pollingTransmit(transaction);
 
 		//Page address set
@@ -219,7 +196,7 @@ namespace yoba {
 		transaction.length = 8;
 		transaction.tx_data[0] = 0x2B;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
-		transaction.user = &falseUserData;
+		gpio_set_level((gpio_num_t) _dcPin, false);
 		pollingTransmit(transaction);
 
 		// Page start / end
@@ -230,15 +207,15 @@ namespace yoba {
 		transaction.tx_data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
 		transaction.tx_data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
 		transaction.flags = SPI_TRANS_USE_TXDATA;
-		transaction.user = &trueUserData;
+		gpio_set_level((gpio_num_t) _dcPin, true);
 		pollingTransmit(transaction);
 
 		// Memory write
 		memset(&transaction, 0, sizeof(spi_transaction_t));
 		transaction.length = 8;
 		transaction.tx_data[0] = 0x2C;
-		transaction.user = &falseUserData;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
+		gpio_set_level((gpio_num_t) _dcPin, false);
 		pollingTransmit(transaction);
 
 		// Cyka, pixels!
@@ -246,7 +223,7 @@ namespace yoba {
 		transaction.tx_buffer = _transactionBuffer;
 		transaction.length = _size.getWidth() * _transactionWindowHeight * 2 * 8;  // Data length, in bits
 		transaction.flags = 0; // Undo SPI_TRANS_USE_TXDATA flag
-		transaction.user = &trueUserData;
+		gpio_set_level((gpio_num_t) _dcPin, true);
 		pollingTransmit(transaction);
 	}
 
@@ -257,8 +234,6 @@ namespace yoba {
 	size_t ScreenDriver::getTransactionBufferLength() const {
 		return _transactionBufferLength;
 	}
-
-	DriverSPIPreCallbackUserData::DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dcPinState) : driver(driver), dcPinState(dcPinState) {}
 
 	void ScreenDriver::updateDataFromOrientation() {
 		// Updating size

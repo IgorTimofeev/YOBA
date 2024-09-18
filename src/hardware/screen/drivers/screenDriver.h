@@ -73,10 +73,6 @@ namespace yoba {
 			void writeCommandAndData(uint8_t command, const uint8_t *data, int length);
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
-			// This function is called (in irq context!) just before a transmission starts. It will
-			// set the D/C line to the value indicated in the user field.
-			static void spiPreTransferCallback(spi_transaction_t* transaction);
-
 			int32_t getSPIFrequency() const;
 			void setSPIFrequency(int32_t spiFrequency);
 
@@ -92,20 +88,10 @@ namespace yoba {
 			size_t _transactionBufferLength = 0;
 			uint16_t* _transactionBuffer = nullptr;
 
+			spi_device_handle_t _spi = spi_device_handle_t();
 			int32_t _spiFrequency = SPI_MASTER_FREQ_20M;
 
 		private:
-			void setChipSelect(uint8_t value) const {
-				digitalWrite(_csPin, value);
-			}
-
 			void updateDataFromOrientation();
-	};
-
-	struct DriverSPIPreCallbackUserData {
-		DriverSPIPreCallbackUserData(ScreenDriver *driver, bool dcPinState);
-
-		ScreenDriver* driver;
-		bool dcPinState;
 	};
 }
