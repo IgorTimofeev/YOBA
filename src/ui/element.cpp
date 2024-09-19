@@ -255,7 +255,7 @@ namespace yoba {
 		return getRoot() && getRoot()->getCapturedElement() == this;
 	}
 
-	void Element::setCaptured(const bool& value) {
+	void Element::setCaptured(bool value) {
 		if (getRoot())
 			getRoot()->setCapturedElement(value ? this : nullptr);
 	}
@@ -383,5 +383,17 @@ namespace yoba {
 
 	void Element::setClipToBounds(bool value) {
 		_clipToBounds = value;
+	}
+
+	void Element::setWidth(uint16_t value) {
+		_size.setWidth(value);
+
+		invalidate();
+	}
+
+	void Element::setHeight(uint16_t value) {
+		_size.setHeight(value);
+
+		invalidate();
 	}
 }

@@ -52,6 +52,7 @@ namespace yoba {
 			void onEvent(Event &event) override {
 				switch (event.getType()) {
 					case EventType::TouchDown:
+						setCaptured(true);
 						setPressed(!isToggle() || !isPressed());
 
 						_onClick.call((TouchEvent&) event);
@@ -59,6 +60,8 @@ namespace yoba {
 						break;
 
 					case EventType::TouchUp:
+						setCaptured(false);
+
 						if (!isToggle())
 							setPressed(false);
 

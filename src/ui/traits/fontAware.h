@@ -11,7 +11,7 @@ namespace yoba {
 
 			const Font* getFontOrDefault();
 
-		private:
+		protected:
 			const Font* _font = nullptr;
 	};
 }

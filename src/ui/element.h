@@ -62,7 +62,7 @@ namespace yoba {
 			bool isEnabled() const;
 			void setEnabled(bool value);
 
-			void setCaptured(const bool &value);
+			void setCaptured(bool value);
 			bool isCaptured();
 
 			Alignment getHorizontalAlignment() const;
@@ -82,6 +82,9 @@ namespace yoba {
 
 			const Size& getSize();
 			void setSize(const Size& value);
+
+			void setWidth(uint16_t value);
+			void setHeight(uint16_t value);
 
 			const Size& getDesiredSize();
 

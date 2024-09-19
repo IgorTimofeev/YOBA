@@ -12,10 +12,6 @@ namespace yoba {
 		event.setHandled(true);
 	}
 
-	void SelectorItem::setSelected(const bool &value) {
-
-	}
-
 	Selector *SelectorItem::getSelector() const {
 		return _selector;
 	}

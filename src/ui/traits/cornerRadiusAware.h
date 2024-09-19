@@ -15,7 +15,7 @@ namespace yoba {
 				invalidate();
 			}
 
-		private:
+		protected:
 			uint16_t _cornerRadius = 0;
 	};
 }

@@ -15,7 +15,7 @@ namespace yoba {
 				invalidate();
 			}
 
-		private:
+		protected:
 			const wchar_t* _text = nullptr;
 	};
 }

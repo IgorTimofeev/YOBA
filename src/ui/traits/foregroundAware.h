@@ -16,7 +16,7 @@ namespace yoba {
 				invalidate();
 			}
 
-		private:
+		protected:
 			const Color* _foreground = nullptr;
 	};
 }

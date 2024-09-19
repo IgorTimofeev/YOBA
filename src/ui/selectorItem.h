@@ -9,7 +9,13 @@ namespace yoba {
 
 	class SelectorItem : public Layout {
 		public:
-			virtual void setSelected(const bool& value);
+			bool isSelected() const {
+				return _isSelected;
+			}
+
+			virtual void setSelected(bool value) {
+				_isSelected = value;
+			}
 
 			Selector *getSelector() const;
 
@@ -20,5 +26,6 @@ namespace yoba {
 
 		private:
 			Selector* _selector = nullptr;
+			bool _isSelected = false;
 	};
 }
