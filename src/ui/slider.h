@@ -6,16 +6,16 @@
 #include "cmath"
 #include "../action.h"
 #include "traits/cornerRadiusAware.h"
-#include "traits/backgroundAware.h"
-#include "traits/foregroundAware.h"
+#include "traits/backgroundColorAware.h"
+#include "traits/foregroundColorAware.h"
 #include "../event.h"
 #include "../number.h"
 
 namespace yoba {
-	class Slider : public BackgroundAware, public ForegroundAware, public CornerRadiusAware {
+	class Slider : public BackgroundColorAware, public ForegroundColorAware, public CornerRadiusAware {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getBackground() || !getForeground())
+				if (!getBackgroundColor() || !getForegroundColor())
 					return;
 
 				auto& bounds = getBounds();
@@ -24,7 +24,7 @@ namespace yoba {
 				screenBuffer->renderFilledRectangle(
 					bounds,
 					getCornerRadius(),
-					getBackground()
+					getBackgroundColor()
 				);
 
 				screenBuffer->renderFilledRectangle(
@@ -36,7 +36,7 @@ namespace yoba {
 						)
 					),
 					getCornerRadius(),
-					getForeground()
+					getForegroundColor()
 				);
 			}
 

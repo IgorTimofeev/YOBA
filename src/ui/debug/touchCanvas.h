@@ -3,10 +3,10 @@
 #include "../../event.h"
 #include "../element.h"
 #include "../traits/fontAware.h"
-#include "../traits/foregroundAware.h"
+#include "../traits/foregroundColorAware.h"
 
 namespace yoba {
-	class TouchCanvas : public virtual Element, public ForegroundAware, public FontAware {
+	class TouchCanvas : public virtual Element, public ForegroundColorAware, public FontAware {
 		public:
 
 		protected:
@@ -26,7 +26,7 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getForeground())
+				if (!getForegroundColor())
 					return;
 
 				const auto font = getFontOrDefault();
@@ -37,10 +37,10 @@ namespace yoba {
 				wchar_t buffer[16];
 
 				for (const auto& point : _points) {
-					screenBuffer->renderFilledCircle(point, 5, getForeground());
+					screenBuffer->renderFilledCircle(point, 5, getForegroundColor());
 
 					swprintf(buffer, 16, L"%d x %x", point.getX(), point.getY());
-					screenBuffer->renderText(Point(point.getX(), point.getY() + 10), font, getForeground(), buffer);
+					screenBuffer->renderText(Point(point.getX(), point.getY() + 10), font, getForegroundColor(), buffer);
 				}
 			}
 

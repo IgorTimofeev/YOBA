@@ -5,13 +5,13 @@
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
 #include "../action.h"
-#include "traits/backgroundAware.h"
-#include "traits/foregroundAware.h"
+#include "traits/backgroundColorAware.h"
+#include "traits/foregroundColorAware.h"
 #include "../event.h"
 #include "../number.h"
 
 namespace yoba {
-	class RotaryKnob : public BackgroundAware {
+	class RotaryKnob : public BackgroundColorAware {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
 				const auto& bounds = getBounds();
@@ -19,11 +19,11 @@ namespace yoba {
 				const auto center = bounds.getCenter();
 
 				// Background circle
-				if (getBackground()) {
+				if (getBackgroundColor()) {
 					screenBuffer->renderFilledCircle(
 						center,
 						radius,
-						getBackground()
+						getBackgroundColor()
 					);
 				}
 

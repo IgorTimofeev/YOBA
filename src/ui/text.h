@@ -2,23 +2,23 @@
 
 #include "element.h"
 #include "traits/textAware.h"
-#include "traits/foregroundAware.h"
+#include "traits/foregroundColorAware.h"
 #include "traits/fontAware.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "../size.h"
 
 namespace yoba {
-	class Text : public TextAware, public FontAware, public ForegroundAware {
+	class Text : public TextAware, public FontAware, public ForegroundColorAware {
 		public:
 			Text() = default;
 
 			Text(const Font* font, const Color* foreground) {
 				setFont(font);
-				setForeground(foreground);
+				setForegroundColor(foreground);
 			}
 
 			explicit Text(const Color* foreground) {
-				setForeground(foreground);
+				setForegroundColor(foreground);
 			}
 
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
@@ -31,7 +31,7 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getForeground() || !getText())
+				if (!getForegroundColor() || !getText())
 					return;
 
 				const auto font = getFontOrDefault();
@@ -42,7 +42,7 @@ namespace yoba {
 				screenBuffer->renderText(
 					getBounds().getPosition(),
 					font,
-					getForeground(),
+					getForegroundColor(),
 					getText()
 				);
 			}

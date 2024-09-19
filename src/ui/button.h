@@ -3,27 +3,27 @@
 #include "element.h"
 #include "../color.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
-#include "traits/backgroundAware.h"
-#include "traits/foregroundAware.h"
+#include "traits/backgroundColorAware.h"
+#include "traits/foregroundColorAware.h"
 #include "traits/textAware.h"
 #include "traits/fontAware.h"
 #include "traits/cornerRadiusAware.h"
 #include "../event.h"
 
 namespace yoba {
-	class Button : public TextAware, public FontAware, public BackgroundAware, public ForegroundAware, public CornerRadiusAware {
+	class Button : public TextAware, public FontAware, public BackgroundColorAware, public ForegroundColorAware, public CornerRadiusAware {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
 				const auto& bounds = getBounds();
 
 				// Background
-				if (getBackground()) {
+				if (getBackgroundColor()) {
 					screenBuffer->renderFilledRectangle(
 						bounds,
 						getCornerRadius(),
 						isPressed() && getPressedBackground()
 							? getPressedBackground()
-							: getBackground()
+							: getBackgroundColor()
 					);
 				}
 
@@ -42,7 +42,7 @@ namespace yoba {
 							font,
 							isPressed() && getPressedForeground()
 								? getPressedForeground()
-								: getForeground(),
+								: getForegroundColor(),
 							getText()
 						);
 					}

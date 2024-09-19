@@ -58,7 +58,7 @@ void setup() {
 	text.setAlignment(Alignment::Center);
 	application.addChild(&text);
 
-	touchCanvas.setForeground(&textColor);
+	touchCanvas.setForegroundColor(&textColor);
 	application.addChild(&touchCanvas);
 }
 
