@@ -1,12 +1,12 @@
 #pragma once
 
 #include <cstdlib>
-#include "point.h"
-#include "size.h"
-#include "bounds.h"
-#include "fonts/font.h"
-#include "color.h"
-#include "hardware/screen/drivers/screenDriver.h"
+#include "../../../point.h"
+#include "../../../size.h"
+#include "../../../bounds.h"
+#include "../../../color.h"
+#include "../../../resources/fonts/font.h"
+#include "../drivers/screenDriver.h"
 
 namespace yoba {
 	class ScreenBuffer {
@@ -75,6 +75,6 @@ namespace yoba {
 			virtual void renderFilledRectangleNative(const Bounds &bounds, const Color *color) = 0;
 
 		private:
-			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corners, int32_t delta, const Color *color);
+			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color);
 	};
 }

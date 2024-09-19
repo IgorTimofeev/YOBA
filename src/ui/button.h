@@ -19,10 +19,17 @@ namespace yoba {
 
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
+				if (!getForeground() || !getText())
+					return;
+
+				const auto font = getFontOrDefault();
+
+				if (!font)
+					return;
+
 				auto& bounds = getBounds();
 
-				auto text = getText();
-				auto textSize = getFont()->getSize(text);
+				auto textSize = getFont()->getSize(getText());
 
 				screenBuffer->renderFilledRectangle(bounds, getCornerRadius(), getBackground());
 
@@ -31,9 +38,9 @@ namespace yoba {
 						bounds.getX() + bounds.getWidth() / 2 - textSize.getWidth() / 2,
 						bounds.getY() + bounds.getHeight() / 2 - textSize.getHeight() / 2
 					),
-					getFont(),
+					font,
 					getForeground(),
-					text
+					getText()
 				);
 			}
 

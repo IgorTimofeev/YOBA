@@ -31,7 +31,7 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getForeground())
+				if (!getForeground() || !getText())
 					return;
 
 				const auto font = getFontOrDefault();

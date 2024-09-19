@@ -108,26 +108,27 @@ namespace yoba {
 				color
 			);
 
-			// 4 corners
-			renderRoundedCorners(
-				Point(
-					bounds.getX() + radius,
-					bounds.getY() + bounds.getHeight() - radius - 1
-				),
-				radius,
-				1,
-				bounds.getWidth() - radius - radius - 1,
-				color
-			);
-
-			renderRoundedCorners(
+			// 2 upper corners
+			renderFilledRoundedCorners(
 				Point(
 					bounds.getX() + radius,
 					bounds.getY() + radius
 				),
 				radius,
-				2,
-				bounds.getWidth() - radius - radius - 1,
+				true,
+				bounds.getWidth() - radius - radius,
+				color
+			);
+
+			// And 2 lower
+			renderFilledRoundedCorners(
+				Point(
+					bounds.getX() + radius,
+					bounds.getY() + bounds.getHeight() - radius - 1
+				),
+				radius,
+				false,
+				bounds.getWidth() - radius - radius,
 				color
 			);
 		}
@@ -441,29 +442,34 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderRoundedCorners(const Point& center, int32_t radius, uint8_t corners, int32_t delta, const Color *color) {
-		int32_t f     = 1 - radius;
+	void ScreenBuffer::renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color) {
+		int32_t f = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -radius - radius;
-		int32_t y     = 0;
-
-		delta++;
+		int32_t y = 0;
+		int32_t lineLength;
 
 		while (y < radius) {
 			if (f >= 0) {
-				if (corners & 0x1) renderHorizontalLine(Point(center.getX() - y, center.getY() + radius), y + y + delta, color);
-				if (corners & 0x2) renderHorizontalLine(Point(center.getX() - y, center.getY() - radius), y + y + delta, color);
+				lineLength = y + y + delta;
+
+				if (lineLength > 0) {
+					renderHorizontalLine(Point(center.getX() - y, upper ? center.getY() - radius : center.getY() + radius), lineLength, color);
+				}
+
 				radius--;
 				ddF_y += 2;
-				f     += ddF_y;
+				f += ddF_y;
 			}
 
 			y++;
 			ddF_x += 2;
-			f     += ddF_x;
+			f += ddF_x;
+			lineLength = radius + radius + delta;
 
-			if (corners & 0x1) renderHorizontalLine(Point(center.getX() - radius, center.getY() + y), radius + radius + delta, color);
-			if (corners & 0x2) renderHorizontalLine(Point(center.getX() - radius, center.getY() - y), radius + radius + delta, color);
+			if (lineLength > 0) {
+				renderHorizontalLine(Point(center.getX() - radius, upper ? center.getY() - y : center.getY() + y), lineLength, color);
+			}
 		}
 	}
 }

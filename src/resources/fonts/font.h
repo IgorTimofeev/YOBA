@@ -2,7 +2,7 @@
 
 #include "Arduino.h"
 #include "cstdlib"
-#include "../size.h"
+#include "size.h"
 #include "glyph.h"
 
 namespace yoba {

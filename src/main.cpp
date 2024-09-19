@@ -9,7 +9,7 @@
 #include "ui/application.h"
 #include "ui/debug/touchCanvas.h"
 #include "ui/debug/testView.h"
-#include "fonts/PIXY10Font.h"
+#include "resources/fonts/PIXY10Font.h"
 
 using namespace yoba;
 
