@@ -21,7 +21,7 @@ namespace yoba {
 			void onRender(ScreenBuffer* screenBuffer) override {
 				auto& bounds = getBounds();
 
-				auto& text = getText();
+				auto text = getText();
 				auto textSize = getFont()->getSize(text);
 
 				screenBuffer->renderFilledRectangle(bounds, getCornerRadius(), getBackground());
