@@ -14,27 +14,6 @@
 namespace yoba {
 	class Slider : public BackgroundAware, public ForegroundAware, public CornerRadiusAware {
 		public:
-			void onEvent(Event &event) override {
-				if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
-					return;
-
-				auto& touchEvent = (TouchEvent&) event;
-
-				if (event.getType() == EventType::TouchDown) {
-					setCaptured(true);
-				}
-				else if (event.getType() == EventType::TouchUp) {
-					setCaptured(false);
-				}
-
-				auto& bounds = getBounds();
-				auto part = clamp((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
-
-				setValue(part);
-
-				event.setHandled(true);
-			}
-
 			void onRender(ScreenBuffer* screenBuffer) override {
 				if (!getBackground() || !getForeground())
 					return;
@@ -61,9 +40,26 @@ namespace yoba {
 				);
 			}
 
-			// -------------------------------- Getters & setters --------------------------------
+			void onEvent(Event &event) override {
+				if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
+					return;
 
+				auto& touchEvent = (TouchEvent&) event;
 
+				if (event.getType() == EventType::TouchDown) {
+					setCaptured(true);
+				}
+				else if (event.getType() == EventType::TouchUp) {
+					setCaptured(false);
+				}
+
+				auto& bounds = getBounds();
+				auto part = clamp((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
+
+				setValue(part);
+
+				event.setHandled(true);
+			}
 			float getValue() const {
 				return _value;
 			}

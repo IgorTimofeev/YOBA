@@ -4,9 +4,10 @@
 #include "../../hardware/screen/buffers/screenBuffer.h"
 #include "../element.h"
 #include "../traits/backgroundAware.h"
+#include "ui/traits/cornerRadiusAware.h"
 
 namespace yoba {
-	class Rectangle : public virtual Element, public BackgroundAware {
+	class Rectangle : public BackgroundAware, public CornerRadiusAware {
 		public:
 			Rectangle() = default;
 
@@ -16,7 +17,7 @@ namespace yoba {
 
 			void onRender(ScreenBuffer* screenBuffer) override {
 				if (getBackground())
-					screenBuffer->renderFilledRectangle(getBounds(), getBackground());
+					screenBuffer->renderFilledRectangle(getBounds(), getCornerRadius(), getBackground());
 			}
 	};
 }

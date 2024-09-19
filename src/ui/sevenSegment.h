@@ -115,8 +115,8 @@ namespace yoba {
 				bool s5,
 				bool s6
 			) const {
-				uint8_t t = getSegmentThickness();
-				uint8_t l = getSegmentLength();
+				const uint8_t t = getSegmentThickness();
+				const uint8_t l = getSegmentLength();
 
 				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getForeground() : getBackground());
 				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getForeground() : getBackground());

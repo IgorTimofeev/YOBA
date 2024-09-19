@@ -140,13 +140,21 @@ namespace yoba {
 	void ScreenBuffer::renderLine(const Point &from, const Point &to, const Color* color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {
-			renderVerticalLine(from, to.getY() - from.getY() + 1, color);
+			renderVerticalLine(
+				Point(from.getX(), min(from.getY(), to.getY())),
+				abs(to.getY() - from.getY()) + 1,
+				color
+			);
 		}
-			// Horizontal line
+		// Horizontal line
 		else if (from.getY() == to.getY()) {
-			renderHorizontalLine(from, to.getX() - from.getX() + 1, color);
+			renderHorizontalLine(
+				Point(min(from.getX(), to.getX()), from.getY()),
+				abs(to.getX() - from.getX()) + 1,
+				color
+			);
 		}
-			// Meh...
+		// Meh...
 		else {
 			int32_t
 				x1 = from.getX(),
