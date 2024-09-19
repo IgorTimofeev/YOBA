@@ -40,7 +40,7 @@ namespace yoba {
 							childSize = child->measure(
 								screenBuffer,
 								Size(
-									Size::calculated,
+									Size::Calculated,
 									availableSize.getHeight()
 								)
 							);
@@ -78,7 +78,7 @@ namespace yoba {
 								screenBuffer,
 								Size(
 									availableSize.getWidth(),
-									getChildAutoSize(child) ? Size::calculated : equalSize
+									getChildAutoSize(child) ? Size::Calculated : equalSize
 								)
 							);
 

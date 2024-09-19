@@ -98,7 +98,7 @@ namespace yoba {
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 
-			Size _size = Size(Size::calculated, Size::calculated);
+			Size _size = Size(Size::Calculated, Size::Calculated);
 			Alignment _horizontalAlignment = Alignment::Stretch;
 			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;

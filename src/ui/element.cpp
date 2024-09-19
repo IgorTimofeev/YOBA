@@ -27,7 +27,7 @@ namespace yoba {
 
 	void Element::calculateMeasureShit(const Alignment &alignment, const uint16_t &size,
 									   const uint16_t &desiredSize, const int32_t &marginStart, const int32_t &marginEnd, int32_t &newSize) {
-		if (size == Size::calculated) {
+		if (size == Size::Calculated) {
 			newSize = desiredSize;
 		}
 		else {
@@ -92,7 +92,7 @@ namespace yoba {
 	) {
 		switch (alignment) {
 			case Alignment::Start:
-				if (size == Size::calculated) {
+				if (size == Size::Calculated) {
 					newSize = desiredSize;
 				}
 				else {
@@ -109,7 +109,7 @@ namespace yoba {
 				break;
 
 			case Alignment::Center:
-				if (size == Size::calculated) {
+				if (size == Size::Calculated) {
 					newSize = desiredSize;
 				}
 				else {
@@ -126,7 +126,7 @@ namespace yoba {
 				break;
 
 			case Alignment::End:
-				if (size == Size::calculated) {
+				if (size == Size::Calculated) {
 					newSize = desiredSize;
 				}
 				else {
@@ -143,7 +143,7 @@ namespace yoba {
 				break;
 
 			case Alignment::Stretch:
-				if (size == Size::calculated) {
+				if (size == Size::Calculated) {
 					newSize = limit;
 				}
 				else {

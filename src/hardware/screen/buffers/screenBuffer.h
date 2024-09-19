@@ -45,7 +45,7 @@ namespace yoba {
 
 			void renderFilledRectangle(const Bounds &bounds, uint16_t radius, const Color* color);
 
-			void renderString(const Point &point, const Font *font, const Color *color, const wchar_t* text);
+			void renderText(const Point &point, const Font *font, const Color *color, const wchar_t* text);
 
 			// Thanks, AdaFruit!
 			void renderLine(const Point &from, const Point &to, const Color *color);

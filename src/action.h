@@ -16,5 +16,10 @@ namespace yoba {
 					f(args...);
 				}
 			}
+
+			Action& operator+=(const Action& right) {
+				add(right);
+				return *this;
+			}
 	};
 }

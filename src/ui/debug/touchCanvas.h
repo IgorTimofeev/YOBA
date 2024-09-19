@@ -40,7 +40,7 @@ namespace yoba {
 					screenBuffer->renderFilledCircle(point, 5, getForeground());
 
 					swprintf(buffer, 16, L"%d x %x", point.getX(), point.getY());
-					screenBuffer->renderString(Point(point.getX(), point.getY() + 10), font, getForeground(), buffer);
+					screenBuffer->renderText(Point(point.getX(), point.getY() + 10), font, getForeground(), buffer);
 				}
 			}
 

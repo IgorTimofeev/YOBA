@@ -8,7 +8,7 @@
 namespace yoba {
 	class Size {
 		public:
-			static const uint16_t calculated = 0xFFFF;
+			static const uint16_t Calculated = 0xFFFF;
 
 			Size() :
 				_width(0),

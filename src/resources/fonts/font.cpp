@@ -35,21 +35,21 @@ namespace yoba {
 	}
 
 	uint16_t Font::getWidth(const wchar_t *text) const {
-		const wchar_t * charPtr;
+		wchar_t ch;
 		size_t charIndex = 0;
 		const Glyph* glyph;
 
 		uint16_t width = 0;
 
 		while (true) {
-			charPtr = text + charIndex;
+			ch = text[charIndex];
 
 			// End of text
-			if (*charPtr == '\0')
+			if (ch == '\0')
 				break;
 
 			// Trying to find glyph matched to char
-			glyph = getGlyph(*charPtr);
+			glyph = getGlyph(ch);
 
 			// If glyph was found in bitmap
 			if (glyph) {

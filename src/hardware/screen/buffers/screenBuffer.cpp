@@ -346,7 +346,7 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderString(const Point &point, const Font* font, const Color* color, const wchar_t* text) {
+	void ScreenBuffer::renderText(const Point &point, const Font* font, const Color* color, const wchar_t* text) {
 		const auto viewportX2 = getViewport().getX2();
 
 		// Skipping rendering if text is obviously not in viewport
