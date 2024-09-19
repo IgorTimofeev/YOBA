@@ -21,14 +21,6 @@ namespace yoba {
 				setForeground(foreground);
 			}
 
-			Text(const Color* foreground, const String& text) : Text(foreground) {
-				setText(text);
-			}
-
-			Text(const Font* font, const Color* foreground, const String& text) : Text(font, foreground) {
-				setText(text);
-			}
-
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				const auto font = getFontOrDefault();
 

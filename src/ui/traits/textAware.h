@@ -5,17 +5,17 @@
 namespace yoba {
 	class TextAware : public virtual Element {
 		public:
-			const String &getText() const {
+			const wchar_t* getText() const {
 				return _text;
 			}
 
-			void setText(const String &value) {
+			void setText(const wchar_t* value) {
 				_text = value;
 
 				invalidate();
 			}
 
 		private:
-			String _text;
+			const wchar_t* _text = nullptr;
 	};
 }

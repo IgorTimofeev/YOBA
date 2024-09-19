@@ -345,7 +345,7 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderString(const Point &point, const Font* font, const Color* color, const char* text) {
+	void ScreenBuffer::renderString(const Point &point, const Font* font, const Color* color, const wchar_t* text) {
 		const auto viewportX2 = getViewport().getX2();
 
 		// Skipping rendering if text is obviously not in viewport
@@ -356,7 +356,7 @@ namespace yoba {
 		)
 			return;
 
-		char ch;
+		wchar_t ch;
 		size_t charIndex = 0;
 		const Glyph* glyph;
 
@@ -368,7 +368,7 @@ namespace yoba {
 		uint8_t bitmapByte;
 
 		while (true) {
-			ch = *(text + charIndex);
+			ch = text[charIndex];
 
 			// End of text
 			if (ch == '\0')
@@ -377,7 +377,9 @@ namespace yoba {
 			// Trying to find glyph matched to char
 			glyph = font->getGlyph(ch);
 
-			if (glyph) {
+			// If glyph was found in bitmap & can be rendered as "human-readable"
+			// For example,U+007F "DEL" symbol often has zero width in some fonts
+			if (glyph && glyph->getWidth() > 0) {
 				x2 = x + glyph->getWidth();
 
 				// Rendering current glyph only if it's in viewport
@@ -410,10 +412,6 @@ namespace yoba {
 
 			charIndex++;
 		}
-	}
-
-	void ScreenBuffer::renderString(const Point &point, const Font *font, const Color *color, const String &text) {
-		renderString(point, font, color, text.c_str());
 	}
 
 	void ScreenBuffer::renderFilledCircle(const Point &center, uint16_t radius, const Color *color) {

@@ -22,12 +22,10 @@ namespace yoba {
 			uint16_t getToCodepoint() const;
 			const Glyph* getGlyphs() const;
 			const uint8_t* getBitmap() const;
-			const Glyph* getGlyph(uint32_t codepoint) const;
-			uint16_t getWidth(const char *text) const;
-			uint16_t getWidth(const String& text) const;
+			const Glyph* getGlyph(uint16_t codepoint) const;
+			uint16_t getWidth(const wchar_t *text) const;
 			uint8_t getHeight() const;
-			Size getSize(const char *text) const;
-			Size getSize(const String& text) const;
+			Size getSize(const wchar_t *text) const;
 
 		private:
 

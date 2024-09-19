@@ -27,15 +27,15 @@ namespace yoba {
 		return _bitmap;
 	}
 
-	const Glyph *Font::getGlyph(uint32_t codepoint) const {
+	const Glyph *Font::getGlyph(uint16_t codepoint) const {
 		return
 			codepoint < _fromCodepoint || codepoint > _toCodepoint
 			? nullptr :
 			&_glyphs[codepoint - _fromCodepoint];
 	}
 
-	uint16_t Font::getWidth(const char *text) const {
-		const char* charPtr;
+	uint16_t Font::getWidth(const wchar_t *text) const {
+		const wchar_t * charPtr;
 		size_t charIndex = 0;
 		const Glyph* glyph;
 
@@ -51,10 +51,11 @@ namespace yoba {
 			// Trying to find glyph matched to char
 			glyph = getGlyph(*charPtr);
 
+			// If glyph was found in bitmap
 			if (glyph) {
 				width += glyph->getWidth();
 			}
-				// For non-existing glyphs we can just simulate whitespace
+			// For non-existing glyphs we can just simulate whitespace
 			else {
 				width += missingGlyphWidth;
 			}
@@ -65,22 +66,14 @@ namespace yoba {
 		return width;
 	}
 
-	uint16_t Font::getWidth(const String &text) const {
-		return getWidth(text.c_str());
-	}
-
 	uint8_t Font::getHeight() const {
 		return _height;
 	}
 
-	Size Font::getSize(const char *text) const {
+	Size Font::getSize(const wchar_t *text) const {
 		return {
 			getWidth(text),
 			getHeight()
 		};
-	}
-
-	Size Font::getSize(const String &text) const {
-		return getSize(text.c_str());
 	}
 }

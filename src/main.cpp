@@ -9,8 +9,7 @@
 #include "ui/application.h"
 #include "ui/debug/touchCanvas.h"
 #include "ui/debug/testView.h"
-#include "fonts/Unscii16Font.h"
-#include "fonts/Unscii8ThinFont.h"
+#include "fonts/PIXY10Font.h"
 
 using namespace yoba;
 
@@ -27,7 +26,7 @@ FT6336UDriver touchDriver = FT6336UDriver(32, 26);
 
 Application application = Application(&screenBuffer, &touchDriver);
 
-Unscii16Font font = Unscii16Font();
+PIXY10Font font = PIXY10Font();
 Bit8PaletteColor textColor = Bit8PaletteColor(255);
 
 TestView paletteView;
@@ -67,7 +66,9 @@ void loop() {
 	auto startTime = millis();
 
 	// Text
-	text.setText(String("Uptime: ") + String((float) millis() / 1000.0f) + String(" s"));
+	wchar_t penis[255];
+	swprintf(penis, 255, L"Аптайм ванючьий: %f s", (float) millis() / 1000.0f);
+	text.setText(penis);
 
 	application.tick();
 
