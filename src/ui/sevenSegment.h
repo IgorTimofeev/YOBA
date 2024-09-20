@@ -10,6 +10,8 @@
 namespace yoba {
 	class SevenSegment : public BackgroundColorAware, public ForegroundColorAware {
 		public:
+			static const uint32_t dashes = 0xFFFFFFFF;
+
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) override {
 				return {
 					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
@@ -24,7 +26,10 @@ namespace yoba {
 				auto value = getValue();
 
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
-					if (value > 0) {
+					if (value == dashes) {
+						drawDashes(screenBuffer, bounds.getPosition());
+					}
+					else if (value > 0) {
 						drawDigit(screenBuffer, bounds.getPosition(), value % 10);
 
 						value /= 10;
@@ -279,6 +284,20 @@ namespace yoba {
 
 						break;
 				}
+			}
+
+			void drawDashes(ScreenBuffer* screenBuffer, const Point& position) {
+				drawSegments(
+					screenBuffer,
+					position,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					true
+				);
 			}
 	};
 }
