@@ -2,19 +2,19 @@
 #include "ui/element.h"
 
 namespace yoba {
-	Event::Event(EventType type) : _type(type) {
+	InputEvent::InputEvent(InputEventType type) : _type(type) {
 
 	}
 
-	EventType Event::getType() const {
+	InputEventType InputEvent::getType() const {
 		return _type;
 	}
 
-	bool Event::isHandled() const {
+	bool InputEvent::isHandled() const {
 		return _handled;
 	}
 
-	void Event::setHandled(bool handled) {
+	void InputEvent::setHandled(bool handled) {
 		_handled = handled;
 	}
 
@@ -22,7 +22,7 @@ namespace yoba {
 		return element->isVisible() && element->isEnabled();
 	}
 
-	TouchEvent::TouchEvent(const EventType &type, const Point &position) :
+	TouchEvent::TouchEvent(const InputEventType &type, const Point &position) :
 		ScreenEvent(type),
 		_position(position)
 	{
@@ -47,27 +47,27 @@ namespace yoba {
 	}
 
 	TouchDownEvent::TouchDownEvent(const Point &position) : TouchEvent(
-		EventType::TouchDown,
+		InputEventType::TouchDown,
 		position
 	) {
 
 	}
 
 	TouchDragEvent::TouchDragEvent(const Point &position) : TouchEvent(
-		EventType::TouchDrag,
+		InputEventType::TouchDrag,
 		position
 	) {
 
 	}
 
 	TouchUpEvent::TouchUpEvent(const Point &position) : TouchEvent(
-		EventType::TouchUp,
+		InputEventType::TouchUp,
 		position
 	) {
 
 	}
 
-	PinchEvent::PinchEvent(const EventType &type, const Point &position1, const Point &position2) :
+	PinchEvent::PinchEvent(const InputEventType &type, const Point &position1, const Point &position2) :
 		ScreenEvent(type),
 		_position1(position1),
 		_position2(position2)
@@ -103,7 +103,7 @@ namespace yoba {
 	}
 
 	PinchDownEvent::PinchDownEvent(const Point &position1, const Point &position2) : PinchEvent(
-		EventType::PinchDown,
+		InputEventType::PinchDown,
 		position1,
 		position2
 	) {
@@ -111,7 +111,7 @@ namespace yoba {
 	}
 
 	PinchDragEvent::PinchDragEvent(const Point &position1, const Point &position2) : PinchEvent(
-		EventType::PinchDrag,
+		InputEventType::PinchDrag,
 		position1,
 		position2
 	) {
@@ -119,14 +119,14 @@ namespace yoba {
 	}
 
 	PinchUpEvent::PinchUpEvent(const Point &position1, const Point &position2) : PinchEvent(
-		EventType::PinchUp,
+		InputEventType::PinchUp,
 		position1,
 		position2
 	) {
 
 	}
 
-	ScreenEvent::ScreenEvent(EventType type) : Event(type) {
+	ScreenEvent::ScreenEvent(InputEventType type) : InputEvent(type) {
 
 	}
 }

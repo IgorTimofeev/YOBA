@@ -13,6 +13,6 @@ namespace yoba {
 		public:
 			virtual void begin() = 0;
 
-			virtual void tick(ScreenBuffer* screenBuffer, const std::function<void(Event&)>& callback) = 0;
+			virtual void tick(ScreenBuffer* screenBuffer, const std::function<void(InputEvent&)>& callback) = 0;
 	};
 }

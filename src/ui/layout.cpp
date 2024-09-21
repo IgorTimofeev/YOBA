@@ -17,7 +17,7 @@ namespace yoba {
 		}
 	}
 
-	void Layout::onEvent(Event &event) {
+	void Layout::onEvent(InputEvent &event) {
 		for (int32_t i = (int32_t) getChildrenCount() - 1; i >= 0; i--) {
 			getChildAt(i)->handleEvent(event);
 

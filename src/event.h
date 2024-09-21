@@ -3,7 +3,15 @@
 #include "point.h"
 
 namespace yoba {
-	enum class EventType : uint8_t {
+
+	class Element;
+
+	class Event {
+		public:
+
+	};
+
+	enum class InputEventType : uint8_t {
 		TouchDown,
 		TouchDrag,
 		TouchUp,
@@ -13,14 +21,11 @@ namespace yoba {
 		PinchUp,
 	};
 
-	class Element;
-
-	class Event {
+	class InputEvent : public Event {
 		public:
-			explicit Event(EventType type);
-			virtual ~Event() = default;
+			explicit InputEvent(InputEventType type);
 
-			EventType getType() const;
+			InputEventType getType() const;
 
 			virtual bool matches(Element* element) = 0;
 
@@ -29,19 +34,19 @@ namespace yoba {
 
 		private:
 			bool _handled = false;
-			EventType _type;
+			InputEventType _type;
 	};
 
-	class ScreenEvent : public Event {
+	class ScreenEvent : public InputEvent {
 		public:
-			explicit ScreenEvent(EventType type);
+			explicit ScreenEvent(InputEventType type);
 
 			bool matches(Element *element) override;
 	};
 
 	class TouchEvent : public ScreenEvent {
 		public:
-			explicit TouchEvent(const EventType& type, const Point& position);
+			explicit TouchEvent(const InputEventType& type, const Point& position);
 
 			const Point &getPosition() const;
 
@@ -70,7 +75,7 @@ namespace yoba {
 
 	class PinchEvent : public ScreenEvent {
 		public:
-			explicit PinchEvent(const EventType& type, const Point& position1, const Point& position2);
+			explicit PinchEvent(const InputEventType& type, const Point& position1, const Point& position2);
 
 			bool matches(Element* element) override;
 
@@ -99,5 +104,20 @@ namespace yoba {
 	class PinchUpEvent : public PinchEvent {
 		public:
 			explicit PinchUpEvent(const Point& position1, const Point& position2);
+	};
+
+	template<typename TElement>
+	class ElementEvent : public Event {
+		public:
+			explicit ElementEvent(TElement* target) : _target(target) {
+
+			}
+
+			TElement* getTarget() const {
+				return _target;
+			}
+
+		private:
+			TElement* _target;
 	};
 }

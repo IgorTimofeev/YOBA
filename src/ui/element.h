@@ -22,7 +22,7 @@ namespace yoba {
 		Vertical
 	};
 
-	class Event;
+	class InputEvent;
 	class Application;
 	class Animation;
 
@@ -38,7 +38,7 @@ namespace yoba {
 
 			virtual void tick();
 			virtual void render(ScreenBuffer* screenBuffer);
-			virtual void handleEvent(Event& event);
+			virtual void handleEvent(InputEvent& event);
 
 			virtual void invalidateRender();
 			virtual void invalidateLayout();
@@ -46,7 +46,7 @@ namespace yoba {
 
 			virtual void startAnimation(Animation* animation);
 
-			void addEventHandler(const std::function<void(Event&)>& handler);
+			void addEventHandler(const std::function<void(InputEvent&)>& handler);
 
 			// -------------------------------- Getters & setters --------------------------------
 
@@ -94,7 +94,7 @@ namespace yoba {
 			virtual Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(ScreenBuffer* screenBuffer);
-			virtual void onEvent(Event& event);
+			virtual void onEvent(InputEvent& event);
 
 		private:
 			bool _isVisible = true;
@@ -111,7 +111,7 @@ namespace yoba {
 			Bounds _bounds;
 			Size _measuredSize = Size();
 
-			Action<Event&> _eventHandlers {};
+			Action<InputEvent&> _eventHandlers {};
 
 			void setMeasuredSize(const Size& value);
 

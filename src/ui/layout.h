@@ -13,7 +13,7 @@ namespace yoba {
 
 			void onRender(ScreenBuffer* screenBuffer) override;
 
-			void onEvent(Event& event) override;
+			void onEvent(InputEvent& event) override;
 
 			size_t getChildrenCount();
 

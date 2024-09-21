@@ -204,7 +204,7 @@ namespace yoba {
 		onArrange(newBounds);
 	}
 
-	void Element::handleEvent(Event &event) {
+	void Element::handleEvent(InputEvent &event) {
 		if (!event.matches(this))
 			return;
 
@@ -213,11 +213,11 @@ namespace yoba {
 		_eventHandlers.call(event);
 	}
 
-	void Element::onEvent(Event &event) {
+	void Element::onEvent(InputEvent &event) {
 		event.setHandled(true);
 	}
 
-	void Element::addEventHandler(const std::function<void(Event &)> &handler) {
+	void Element::addEventHandler(const std::function<void(InputEvent &)> &handler) {
 		_eventHandlers.add(handler);
 	}
 

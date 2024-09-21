@@ -86,7 +86,7 @@ namespace yoba {
 	void Application::tick() {
 		setSize(_screenBuffer->getDriver()->getResolution());
 
-		_touchDriver->tick(_screenBuffer, [&](Event& event) {
+		_touchDriver->tick(_screenBuffer, [&](InputEvent& event) {
 			handleEvent(event);
 		});
 
@@ -107,7 +107,7 @@ namespace yoba {
 		_capturedElement = capturedElement;
 	}
 
-	void Application::handleEvent(Event &event) {
+	void Application::handleEvent(InputEvent &event) {
 		if (getCapturedElement()) {
 			getCapturedElement()->handleEvent(event);
 		}

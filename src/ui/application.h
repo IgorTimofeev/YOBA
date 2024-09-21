@@ -34,7 +34,7 @@ namespace yoba {
 			void invalidate() override;
 
 			void tick() override;
-			void handleEvent(Event &event) override;
+			void handleEvent(InputEvent &event) override;
 
 			void startAnimation(Animation* animation) override;
 

@@ -288,7 +288,7 @@ namespace yoba {
 		));
 	}
 
-	void FT6336UDriver::tick(ScreenBuffer* screenBuffer, const std::function<void(Event&)>& callback) {
+	void FT6336UDriver::tick(ScreenBuffer* screenBuffer, const std::function<void(InputEvent&)>& callback) {
 		if (!_interrupted)
 			return;
 

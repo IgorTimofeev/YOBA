@@ -2,8 +2,8 @@
 #include "selector.h"
 
 namespace yoba {
-	void SelectorItem::onEvent(Event &event) {
-		if ((event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag))
+	void SelectorItem::onEvent(InputEvent &event) {
+		if ((event.getType() != InputEventType::TouchDown && event.getType() != InputEventType::TouchDrag))
 			return;
 
 		if (getSelector())

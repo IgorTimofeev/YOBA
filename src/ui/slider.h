@@ -40,16 +40,16 @@ namespace yoba {
 				);
 			}
 
-			void onEvent(Event &event) override {
-				if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
+			void onEvent(InputEvent &event) override {
+				if (event.getType() != InputEventType::TouchDown && event.getType() != InputEventType::TouchDrag && event.getType() != InputEventType::TouchUp)
 					return;
 
 				auto& touchEvent = (TouchEvent&) event;
 
-				if (event.getType() == EventType::TouchDown) {
+				if (event.getType() == InputEventType::TouchDown) {
 					setCaptured(true);
 				}
-				else if (event.getType() == EventType::TouchUp) {
+				else if (event.getType() == InputEventType::TouchUp) {
 					setCaptured(false);
 				}
 
