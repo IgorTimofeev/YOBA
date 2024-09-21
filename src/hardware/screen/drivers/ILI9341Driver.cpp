@@ -3,27 +3,50 @@
 
 namespace yoba {
 	ILI9341Driver::ILI9341Driver(
+		ScreenOrientation orientation,
+
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
-		ScreenOrientation orientation
+		uint32_t SPIFrequency
 	) :
-	ScreenDriver(
+	SPIScreenDriver(
+		Size(240, 320),
+		orientation,
+
 		csPin,
 		dcPin,
 		rstPin,
-
-		// Somehow 40 MHz works nice on Arduino SPI, buf ESP-IDF handles only 26 MHz
-		// Hmm...
-		40000000,
-		Size(240, 320),
-		orientation
+		SPIFrequency
 	) {
 
 	}
 
 	void ILI9341Driver::writeOrientationChangeCommands() {
-		writeMemoryAccessControl();
+		auto data = (uint8_t) Command::MADCTL_BGR;
+
+		switch (_orientation) {
+			case ScreenOrientation::Portrait0:
+				data |= (uint8_t) Command::MADCTL_MX;
+				break;
+
+			case ScreenOrientation::Landscape90:
+				data |= (uint8_t) Command::MADCTL_MV;
+				break;
+
+			case ScreenOrientation::Portrait180:
+				data |= (uint8_t) Command::MADCTL_MY;
+				break;
+
+			case ScreenOrientation::Landscape270:
+				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
+				break;
+
+			default:
+				break;
+		}
+
+		writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 
 	uint8_t ILI9341Driver::getTransactionWindowHeightForOrientation() {
@@ -94,7 +117,7 @@ namespace yoba {
 		writeCommandAndData(0xC7, 0xBE);
 
 		/* Memory access control */
-		writeMemoryAccessControl();
+		writeOrientationChangeCommands();
 
 		/* Inversion */
 		writeCommandAndData(0x21, 0x01);
@@ -184,32 +207,5 @@ namespace yoba {
 		/* Display on */
 		writeCommandAndData(0x29, 0x00);
 		vTaskDelay(100 / portTICK_PERIOD_MS);
-	}
-
-	void ILI9341Driver::writeMemoryAccessControl() {
-		auto data = (uint8_t) Command::MADCTL_BGR;
-
-		switch (_orientation) {
-			case ScreenOrientation::Portrait0:
-				data |= (uint8_t) Command::MADCTL_MX;
-				break;
-
-			case ScreenOrientation::Landscape90:
-				data |= (uint8_t) Command::MADCTL_MV;
-				break;
-
-			case ScreenOrientation::Portrait180:
-				data |= (uint8_t) Command::MADCTL_MY;
-				break;
-
-			case ScreenOrientation::Landscape270:
-				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
-				break;
-
-			default:
-				break;
-		}
-
-		writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 }

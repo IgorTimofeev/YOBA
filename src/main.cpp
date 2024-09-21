@@ -14,10 +14,10 @@
 using namespace yoba;
 
 ILI9341Driver screenDriver = ILI9341Driver(
+	ScreenOrientation::Landscape90,
 	5,
 	16,
-	17,
-	ScreenOrientation::Landscape90
+	17
 );
 
 Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(&screenDriver);

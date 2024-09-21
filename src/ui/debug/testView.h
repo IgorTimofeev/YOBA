@@ -21,8 +21,8 @@ namespace yoba {
 				// Palette
 				buffer8->clear(&black);
 
-				for (int y = 0; y < buffer8->getDriver()->getSize().getHeight(); y += h) {
-					for (int x = 0; x < buffer8->getDriver()->getSize().getWidth(); x += w) {
+				for (int y = 0; y < buffer8->getDriver()->getResolution().getHeight(); y += h) {
+					for (int x = 0; x < buffer8->getDriver()->getResolution().getWidth(); x += w) {
 						buffer8->renderFilledRectangle(
 							Bounds(
 								x,

@@ -7,22 +7,14 @@ namespace yoba {
 	}
 
 	void Bits8PaletteBuffer::allocate() {
-		_bufferLength = getDriver()->getSize().getWidth() * getDriver()->getSize().getHeight();
+		_bufferLength = getDriver()->getResolution().getWidth() * getDriver()->getResolution().getHeight();
 		_buffer = new uint8_t[_bufferLength];
 	}
 
 	void Bits8PaletteBuffer::flush() {
-		const size_t pixelCount = getDriver()->getSize().getWidth() * _driver->getTransactionWindowHeight();
-		size_t bufferIndex = 0;
-
-		for (uint16_t y = 0; y < getDriver()->getSize().getHeight(); y += _driver->getTransactionWindowHeight()) {
-			for (size_t i = 0; i < pixelCount; i++) {
-				_driver->getTransactionBuffer()[i] = _palette[_buffer[bufferIndex]];
-				bufferIndex++;
-			}
-
-			_driver->flushTransactionBuffer(y);
-		}
+		_driver->flush([&](size_t& screenBufferIndex) {
+			return  _palette[_buffer[screenBufferIndex]];
+		});
 	}
 
 	void Bits8PaletteBuffer::renderPixelNative(const Point &point, const Color* color) {
@@ -35,7 +27,7 @@ namespace yoba {
 
 	void Bits8PaletteBuffer::renderVerticalLineNative(const Point &point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(point);
-		uint16_t scanlineLength = getDriver()->getSize().getWidth();
+		uint16_t scanlineLength = getDriver()->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);
 
 		for (size_t i = 0; i < height; i++) {
@@ -46,7 +38,7 @@ namespace yoba {
 
 	void Bits8PaletteBuffer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(bounds.getTopLeft());
-		uint16_t scanlineLength = getDriver()->getSize().getWidth();
+		uint16_t scanlineLength = getDriver()->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {

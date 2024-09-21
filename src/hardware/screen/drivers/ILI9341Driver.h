@@ -1,17 +1,22 @@
 #pragma once
 
 #include <cstdint>
-#include "screenDriver.h"
+#include "SPIScreenDriver.h"
 #include "../../../size.h"
 
 namespace yoba {
-	class ILI9341Driver : public ScreenDriver {
+	class ILI9341Driver : public SPIScreenDriver {
 		public:
-			explicit ILI9341Driver(
+			ILI9341Driver(
+				ScreenOrientation orientation,
+
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
-				ScreenOrientation orientation
+
+				// Somehow 40 MHz works nice on Arduino SPI, buf ESP-IDF handles only 26 MHz
+				// Hmm...
+				uint32_t SPIFrequency = 40000000
 			);
 
 		protected:
@@ -30,7 +35,5 @@ namespace yoba {
 				MADCTL_BGR = 0x08,
 				MADCTL_MH = 0x04,
 			};
-
-			void writeMemoryAccessControl();
 	};
 }

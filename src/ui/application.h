@@ -17,6 +17,14 @@ namespace yoba {
 
 			virtual void begin();
 
+			ScreenOrientation getOrientation() const {
+				return _screenBuffer->getDriver()->getOrientation();
+			}
+
+			void setOrientation(ScreenOrientation value) const {
+				return _screenBuffer->getDriver()->setOrientation(value);
+			}
+
 			void measure(ScreenBuffer* screenBuffer);
 			void arrange();
 

@@ -78,8 +78,8 @@ void render() {
 	buffer.setViewport(Bounds(
 		viewportPadding,
 		viewportPadding,
-		buffer.getSize().getWidth() - viewportPadding * 2,
-		buffer.getSize().getHeight() - viewportPadding * 2
+		buffer.getResolution().getWidth() - viewportPadding * 2,
+		buffer.getResolution().getHeight() - viewportPadding * 2
 	));
 
 	// Viewport visualization
@@ -109,10 +109,10 @@ void render() {
 	pivot.setX(pivot.getX() + pivotInc);
 //	pivot.setY(pivot.getY() + pivotInc);
 
-	if (pivot.getX() > buffer.getSize().getWidth())
+	if (pivot.getX() > buffer.getResolution().getWidth())
 		pivot.setX(0);
 
-	if (pivot.getY() > buffer.getSize().getHeight())
+	if (pivot.getY() > buffer.getResolution().getHeight())
 		pivot.setY(0);
 
 	// Line
