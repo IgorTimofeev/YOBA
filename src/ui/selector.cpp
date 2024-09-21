@@ -21,7 +21,7 @@ namespace yoba {
 			return;
 
 		item->setSelector(this);
-		_itemsLayout->addChild(item);
+		*_itemsLayout += item;
 	}
 
 	int32_t Selector::getSelectedIndex() const {

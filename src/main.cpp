@@ -53,13 +53,13 @@ void setup() {
 	application.setDefaultFont(&font);
 
 	// Adding UI elements
-	application.addChild(&paletteView);
+	application += &paletteView;
 
 	text.setAlignment(Alignment::Center);
-	application.addChild(&text);
+	application += &text;
 
 	touchCanvas.setForegroundColor(&textColor);
-	application.addChild(&touchCanvas);
+	application += &touchCanvas;
 }
 
 void loop() {

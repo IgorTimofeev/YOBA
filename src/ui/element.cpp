@@ -25,6 +25,18 @@ namespace yoba {
 		invalidate();
 	}
 
+	Size Element::getDesiredSize(ScreenBuffer* screenBuffer, const Size &availableSize) {
+		return { 0, 0 };
+	}
+
+	void Element::setMeasuredSize(const Size &value) {
+		_measuredSize = value;
+	}
+
+	void Element::setBounds(const Bounds &value) {
+		_bounds = value;
+	}
+
 	void Element::calculateMeasureShit(
 		const Alignment &alignment,
 		const uint16_t &size,
@@ -144,6 +156,10 @@ namespace yoba {
 		}
 	}
 
+	void Element::onArrange(const Bounds &bounds) {
+
+	}
+
 	void Element::arrange(const Bounds &bounds) {
 		auto& margin = getMargin();
 		auto& measuredSize = getMeasuredSize();
@@ -179,16 +195,6 @@ namespace yoba {
 			newPosition,
 			newSize
 		);
-//
-//		if (tag == 1) {
-//			Serial.print(desiredSize.getHeight());
-//			Serial.print(" x ");
-//			Serial.print(bounds.getHeight());
-//			Serial.print(" x ");
-//			Serial.print(newPosition);
-//			Serial.print(" x ");
-//			Serial.println(newSize);
-//		}
 
 		newBounds.setY(newPosition);
 		newBounds.setHeight(newSize);
@@ -196,26 +202,6 @@ namespace yoba {
 		setBounds(newBounds);
 
 		onArrange(newBounds);
-	}
-
-	void Element::setMeasuredSize(const Size &value) {
-		_measuredSize = value;
-	}
-
-	void Element::setBounds(const Bounds &value) {
-		_bounds = value;
-	}
-
-	void Element::onArrange(const Bounds &bounds) {
-
-	}
-
-	Size Element::getDesiredSize(ScreenBuffer* screenBuffer, const Size &availableSize) {
-//		return {
-//			getSize().getWidth() == Size::Calculated ? availableSize.getWidth() : getSize().getWidth(),
-//			getSize().getHeight() == Size::Calculated ? availableSize.getHeight() : getSize().getHeight()
-//		};
-		return { 0, 0 };
 	}
 
 	void Element::handleEvent(Event &event) {

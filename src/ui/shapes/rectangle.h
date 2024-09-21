@@ -7,7 +7,7 @@
 #include "ui/traits/cornerRadiusAware.h"
 
 namespace yoba {
-	class Rectangle : public virtual Element, public BackgroundColorAware, public CornerRadiusAware {
+	class Rectangle : public BackgroundColorAware, public CornerRadiusAware {
 		public:
 			Rectangle() = default;
 
