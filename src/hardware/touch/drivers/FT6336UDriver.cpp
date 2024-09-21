@@ -275,25 +275,17 @@ namespace yoba {
 	// ------------------------------------------------------------------------
 
 	Point FT6336UDriver::readRotatedPoint1(ScreenBuffer* screenBuffer) {
-		auto point = Point(
+		return screenBuffer->getDriver()->orientPoint(Point(
 			read_touch1_x(),
 			read_touch1_y()
-		);
-
-		screenBuffer->getDriver()->rotatePointForOrientation(point);
-
-		return point;
+		));
 	}
 
 	Point FT6336UDriver::readRotatedPoint2(ScreenBuffer* screenBuffer) {
-		auto point = Point(
+		return screenBuffer->getDriver()->orientPoint(Point(
 			read_touch2_x(),
 			read_touch2_y()
-		);
-
-		screenBuffer->getDriver()->rotatePointForOrientation(point);
-
-		return point;
+		));
 	}
 
 	void FT6336UDriver::tick(ScreenBuffer* screenBuffer, const std::function<void(Event&)>& callback) {

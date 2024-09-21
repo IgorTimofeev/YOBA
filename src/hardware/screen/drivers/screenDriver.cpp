@@ -33,37 +33,41 @@ namespace yoba {
 		onOrientationChanged();
 	}
 
-	void ScreenDriver::rotatePointForOrientation(Point& point) {
+	Point ScreenDriver::orientPoint(const Point& point) {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
 		switch (getOrientation()) {
 			case ScreenOrientation::Portrait0:
-				break;
+				return {
+					point.getX(),
+					point.getY()
+				};
 
 			case ScreenOrientation::Landscape90: {
-				int32_t x = point.getX();
-				point.setX(point.getY());
-				point.setY(_resolution.getHeight() - x);
+				int32_t tmp = point.getX();
 
-				break;
+				return {
+					point.getY(),
+					_resolution.getHeight() - tmp
+				};
 			}
 
 			case ScreenOrientation::Portrait180:
-				point.setX(_resolution.getWidth() - point.getX());
-				point.setY(_resolution.getHeight() - point.getY());
-
-				break;
+				return {
+					_resolution.getWidth() - point.getX(),
+					_resolution.getHeight() - point.getY()
+				};
 
 			case ScreenOrientation::Landscape270: {
-				int32_t x = point.getX();
-				point.setX(_resolution.getWidth() - point.getY());
-				point.setY(x);
+				int32_t tmp = point.getX();
 
-				break;
+				return {
+					_resolution.getWidth() - point.getY(),
+					tmp
+				};
 			}
 		}
 	}
-
 
 	void ScreenDriver::updateDataFromOrientation() {
 		// Updating size

@@ -3,17 +3,11 @@
 #include <cstdint>
 #include <driver/spi_master.h>
 #include "../../../size.h"
+#include "../../../screenOrientation.h"
 #include "point.h"
 #include "SPI.h"
 
 namespace yoba {
-	enum class ScreenOrientation : uint8_t {
-		Portrait0,
-		Landscape90,
-		Portrait180,
-		Landscape270,
-	};
-
 	class ScreenDriver {
 		public:
 			ScreenDriver(
@@ -27,7 +21,7 @@ namespace yoba {
 
 			ScreenOrientation getOrientation() const;
 			void setOrientation(ScreenOrientation orientation);
-			void rotatePointForOrientation(Point& point);
+			Point orientPoint(const Point& point);
 
 			virtual void flush(const std::function<uint16_t(size_t pixelIndex)>& flusher) = 0;
 
