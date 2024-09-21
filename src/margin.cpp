@@ -3,56 +3,56 @@
 namespace yoba {
 	Margin Margin::zero = Margin(0);
 
-	Margin::Margin(int32_t left, int32_t top, int32_t right, int32_t bottom) : left(left), top(top), right(right), bottom(bottom) {
+	Margin::Margin(int32_t left, int32_t top, int32_t right, int32_t bottom) : _left(left), _top(top), _right(right), _bottom(bottom) {
 
 	}
 
-	Margin::Margin(int32_t horizontal, int32_t vertical) : left(horizontal), top(vertical), right(horizontal), bottom(vertical) {
+	Margin::Margin(int32_t horizontal, int32_t vertical) : _left(horizontal), _top(vertical), _right(horizontal), _bottom(vertical) {
 
 	}
 
-	Margin::Margin(int32_t uniformValue) : left(uniformValue), top(uniformValue), right(uniformValue), bottom(uniformValue) {
+	Margin::Margin(int32_t uniformValue) : _left(uniformValue), _top(uniformValue), _right(uniformValue), _bottom(uniformValue) {
 
 	}
 
 	void Margin::setBottom(int32_t value) {
-		bottom = value;
+		_bottom = value;
 	}
 
 	int32_t Margin::getBottom() const {
-		return bottom;
+		return _bottom;
 	}
 
 	void Margin::setRight(int32_t value) {
-		right = value;
+		_right = value;
 	}
 
 	int32_t Margin::getRight() const {
-		return right;
+		return _right;
 	}
 
 	void Margin::setTop(int32_t value) {
-		top = value;
+		_top = value;
 	}
 
 	int32_t Margin::getTop() const {
-		return top;
+		return _top;
 	}
 
 	void Margin::setLeft(int32_t value) {
-		left = value;
+		_left = value;
 	}
 
 	int32_t Margin::getLeft() const {
-		return left;
+		return _left;
 	}
 
 	int32_t Margin::getHorizontal() const {
-		return left + right;
+		return _left + _right;
 	}
 
 	int32_t Margin::getVertical() const {
-		return top + bottom;
+		return _top + _bottom;
 	}
 
 	Margin Margin::interpolate(const Margin &to, const double &position) const {

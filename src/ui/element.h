@@ -32,7 +32,7 @@ namespace yoba {
 
 			virtual ~Element() = default;
 
-			Size measure(ScreenBuffer* screenBuffer, const Size& availableSize);
+			void measure(ScreenBuffer* screenBuffer, const Size& availableSize);
 
 			void arrange(const Bounds& bounds);
 
@@ -86,12 +86,12 @@ namespace yoba {
 			void setWidth(uint16_t value);
 			void setHeight(uint16_t value);
 
-			const Size& getDesiredSize();
+			const Size& getMeasuredSize();
 
 			const Bounds& getBounds();
 
 		protected:
-			virtual Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize);
+			virtual Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(ScreenBuffer* screenBuffer);
 			virtual void onEvent(Event& event);
@@ -109,11 +109,11 @@ namespace yoba {
 			Element* _parent = nullptr;
 
 			Bounds _bounds;
-			Size _desiredSize = Size();
+			Size _measuredSize = Size();
 
 			Action<Event&> _eventHandlers {};
 
-			void setDesiredSize(const Size& value);
+			void setMeasuredSize(const Size& value);
 
 			void setBounds(const Bounds& value);
 
@@ -130,7 +130,7 @@ namespace yoba {
 				const Alignment& alignment,
 				const int32_t& position,
 				const uint16_t& size,
-				const uint16_t& desiredSize,
+				const uint16_t& measuredSize,
 				const int32_t& marginStart,
 				const int32_t& marginEnd,
 				const uint16_t& limit,

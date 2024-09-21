@@ -38,9 +38,9 @@ namespace yoba {
 			Margin interpolate(const Margin& to, const double& position) const;
 
 		private:
-			int32_t left = 0;
-			int32_t top = 0;
-			int32_t right = 0;
-			int32_t bottom = 0;
+			int32_t _left = 0;
+			int32_t _top = 0;
+			int32_t _right = 0;
+			int32_t _bottom = 0;
 	};
 }

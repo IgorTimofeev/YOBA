@@ -22,11 +22,10 @@ namespace yoba {
 			}
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
-				size_t visibleChildrenCount = 0;
-				Size childSize;
+				bool haveVisibleChildren = false;
 
 				switch (getOrientation()) {
 					case Orientation::Horizontal:
@@ -34,7 +33,7 @@ namespace yoba {
 							if (!child->isVisible())
 								continue;
 
-							childSize = child->measure(
+							child->measure(
 								screenBuffer,
 								Size(
 									Size::Calculated,
@@ -42,15 +41,15 @@ namespace yoba {
 								)
 							);
 
-							result.setWidth(result.getWidth() + childSize.getWidth() + getSpacing());
+							result.setWidth(result.getWidth() + child->getMeasuredSize().getWidth() + getSpacing());
 
-							if (childSize.getHeight() > result.getHeight())
-								result.setHeight(childSize.getHeight());
+							if (child->getMeasuredSize().getHeight() > result.getHeight())
+								result.setHeight(child->getMeasuredSize().getHeight());
 
-							visibleChildrenCount++;
+							haveVisibleChildren = true;
 						}
 
-						if (visibleChildrenCount > 0)
+						if (haveVisibleChildren)
 							result.setWidth(result.getWidth() - getSpacing());
 
 						break;
@@ -60,7 +59,7 @@ namespace yoba {
 							if (!child->isVisible())
 								continue;
 
-							childSize = child->measure(
+							child->measure(
 								screenBuffer,
 								Size(
 									availableSize.getWidth(),
@@ -68,15 +67,15 @@ namespace yoba {
 								)
 							);
 
-							if (childSize.getWidth() > result.getWidth())
-								result.setWidth(childSize.getWidth());
+							if (child->getMeasuredSize().getWidth() > result.getWidth())
+								result.setWidth(child->getMeasuredSize().getWidth());
 
-							result.setHeight(result.getHeight() + childSize.getHeight() + getSpacing());
+							result.setHeight(result.getHeight() + child->getMeasuredSize().getHeight() + getSpacing());
 
-							visibleChildrenCount++;
+							haveVisibleChildren = true;
 						}
 
-						if (visibleChildrenCount > 0)
+						if (haveVisibleChildren > 0)
 							result.setHeight(result.getHeight() - getSpacing());
 
 						break;
@@ -96,11 +95,11 @@ namespace yoba {
 							child->arrange(Bounds(
 								position,
 								bounds.getY(),
-								child->getDesiredSize().getWidth(),
+								child->getMeasuredSize().getWidth(),
 								bounds.getHeight()
 							));
 
-							position += child->getDesiredSize().getWidth() + getSpacing();
+							position += child->getMeasuredSize().getWidth() + getSpacing();
 						}
 
 						break;
@@ -113,10 +112,10 @@ namespace yoba {
 								bounds.getX(),
 								position,
 								bounds.getWidth(),
-								child->getDesiredSize().getHeight()
+								child->getMeasuredSize().getHeight()
 							));
 
-							position += child->getDesiredSize().getHeight() + getSpacing();
+							position += child->getMeasuredSize().getHeight() + getSpacing();
 						}
 
 						break;

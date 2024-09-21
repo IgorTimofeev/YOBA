@@ -89,22 +89,20 @@ namespace yoba {
 		removeChild(child);
 	}
 
-	Size Layout::onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) {
+	Size Layout::getDesiredSize(ScreenBuffer* screenBuffer, const Size &availableSize) {
 		auto result = Size();
-
-		Size childSize;
 
 		for (auto child : _children) {
 			if (!child->isVisible())
 				continue;
 
-			childSize = child->measure(screenBuffer, availableSize);
+			child->measure(screenBuffer, availableSize);
 
-			if (childSize.getWidth() > result.getWidth())
-				result.setWidth(childSize.getWidth());
+			if (child->getMeasuredSize().getWidth() > result.getWidth())
+				result.setWidth(child->getMeasuredSize().getWidth());
 
-			if (childSize.getHeight() > result.getHeight())
-				result.setHeight(childSize.getHeight());
+			if (child->getMeasuredSize().getHeight() > result.getHeight())
+				result.setHeight(child->getMeasuredSize().getHeight());
 		}
 
 		return result;

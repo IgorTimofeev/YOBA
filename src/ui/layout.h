@@ -38,7 +38,7 @@ namespace yoba {
 		protected:
 			std::vector<Element*> _children {};
 
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};
