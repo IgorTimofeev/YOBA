@@ -23,7 +23,7 @@ namespace yoba {
 			void setOrientation(ScreenOrientation orientation);
 			Point orientPoint(const Point& point);
 
-			virtual void flush(const std::function<uint16_t(size_t pixelIndex)>& flusher) = 0;
+			virtual void writePixelData(const std::function<uint16_t(size_t pixelIndex)>& colorGetter) = 0;
 
 		protected:
 			const Size _defaultResolution;

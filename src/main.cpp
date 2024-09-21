@@ -14,7 +14,7 @@
 using namespace yoba;
 
 ILI9341Driver screenDriver = ILI9341Driver(
-	ScreenOrientation::Landscape90,
+	ScreenOrientation::Landscape270,
 	5,
 	16,
 	17

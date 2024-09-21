@@ -12,8 +12,8 @@ namespace yoba {
 	}
 
 	void Bits8PaletteBuffer::flush() {
-		_driver->flush([&](size_t screenBufferIndex) {
-			return _palette[_buffer[screenBufferIndex]];
+		_driver->writePixelData([&](size_t pixelIndex) {
+			return _palette[_buffer[pixelIndex]];
 		});
 	}
 

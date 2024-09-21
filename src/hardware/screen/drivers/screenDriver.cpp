@@ -47,8 +47,8 @@ namespace yoba {
 				int32_t tmp = point.getX();
 
 				return {
-					point.getY(),
-					_resolution.getHeight() - tmp
+					_resolution.getWidth() - point.getY(),
+					tmp
 				};
 			}
 
@@ -58,12 +58,12 @@ namespace yoba {
 					_resolution.getHeight() - point.getY()
 				};
 
-			case ScreenOrientation::Landscape270: {
+			default: {
 				int32_t tmp = point.getX();
 
 				return {
-					_resolution.getWidth() - point.getY(),
-					tmp
+					point.getY(),
+					_resolution.getHeight() - tmp
 				};
 			}
 		}

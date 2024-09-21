@@ -91,7 +91,7 @@ namespace yoba {
 		writeData(data, length);
 	}
 
-	void SPIScreenDriver::flushTransactionBuffer(int y) {
+	void SPIScreenDriver::flushTransactionBuffer(uint16_t y) {
 		uint8_t data[4];
 
 		// Column Address Set
@@ -147,13 +147,13 @@ namespace yoba {
 		digitalWrite(_dcPin, value);
 	}
 
-	void SPIScreenDriver::flush(const std::function<uint16_t(size_t pixelIndex)>& flusher) {
+	void SPIScreenDriver::writePixelData(const std::function<uint16_t(size_t pixelIndex)>& colorGetter) {
 		const size_t pixelCount = _resolution.getWidth() * _transactionWindowHeight;
 		size_t pixelIndex = 0;
 
 		for (uint16_t y = 0; y < _resolution.getHeight(); y += _transactionWindowHeight) {
 			for (size_t transactionBufferIndex = 0; transactionBufferIndex < pixelCount; transactionBufferIndex++) {
-				_transactionBuffer[transactionBufferIndex] = flusher(pixelIndex);
+				_transactionBuffer[transactionBufferIndex] = colorGetter(pixelIndex);
 				pixelIndex++;
 			}
 

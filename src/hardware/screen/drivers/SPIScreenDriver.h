@@ -31,9 +31,9 @@ namespace yoba {
 			* sent faster (compared to calling spi_device_transmit several times), and at
 			* the mean while the lines for next transactions can get calculated.
 			*/
-			void flushTransactionBuffer(int value0);
+			void flushTransactionBuffer(uint16_t y);
 
-			void flush(const std::function<uint16_t(size_t pixelIndex)>& flusher) override;
+			void writePixelData(const std::function<uint16_t(size_t pixelIndex)>& colorGetter) override;
 
 		protected:
 			uint8_t _csPin;

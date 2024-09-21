@@ -31,7 +31,7 @@ namespace yoba {
 				break;
 
 			case ScreenOrientation::Landscape90:
-				data |= (uint8_t) Command::MADCTL_MV;
+				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
 				break;
 
 			case ScreenOrientation::Portrait180:
@@ -39,7 +39,7 @@ namespace yoba {
 				break;
 
 			case ScreenOrientation::Landscape270:
-				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
+				data |= (uint8_t) Command::MADCTL_MV;
 				break;
 
 			default:
