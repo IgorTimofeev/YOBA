@@ -11,107 +11,27 @@
 #include "../event.h"
 
 namespace yoba {
+	class ClickEvent;
+
 	class Button : public TextAware, public FontAware, public BackgroundColorAware, public ForegroundColorAware, public CornerRadiusAware {
 		public:
-			void onRender(ScreenBuffer* screenBuffer) override {
-				const auto& bounds = getBounds();
+			void onRender(ScreenBuffer* screenBuffer) override;
 
-				// Background
-				if (getBackgroundColor()) {
-					screenBuffer->renderFilledRectangle(
-						bounds,
-						getCornerRadius(),
-						isPressed() && getPressedBackground()
-							? getPressedBackground()
-							: getBackgroundColor()
-					);
-				}
+			void onEvent(InputEvent &event) override;
 
-				// Text
-				if (getText()) {
-					const auto font = getFontOrDefault();
+			bool isPressed() const;
+			void setPressed(bool pressed);
 
-					if (font) {
-						auto textSize = font->getSize(getText());
+			bool isToggle() const;
+			void setToggle(bool toggle);
 
-						screenBuffer->renderText(
-							Point(
-								bounds.getXCenter() - textSize.getWidth() / 2,
-								bounds.getYCenter() - textSize.getHeight() / 2
-							),
-							font,
-							isPressed() && getPressedForeground()
-								? getPressedForeground()
-								: getForegroundColor(),
-							getText()
-						);
-					}
-				}
-			}
+			const Color *getPressedBackground() const;
+			void setPressedBackground(const Color *pressedBackground);
 
-			void onEvent(InputEvent &event) override {
-				switch (event.getType()) {
-					case InputEventType::TouchDown:
-						setCaptured(true);
-						setPressed(!isToggle() || !isPressed());
-
-						_onClick.call((TouchEvent&) event);
-
-						break;
-
-					case InputEventType::TouchUp:
-						setCaptured(false);
-
-						if (!isToggle())
-							setPressed(false);
-
-						break;
-
-					default:
-						break;
-				}
-			}
-
-			void addOnClick(const std::function<void(TouchEvent&)>& value) {
-				_onClick.add(value);
-			}
-
-			bool isPressed() const {
-				return _pressed;
-			}
-
-			void setPressed(bool pressed) {
-				_pressed = pressed;
-
-				invalidate();
-			}
-
-			bool isToggle() const {
-				return _toggle;
-			}
-
-			void setToggle(bool toggle) {
-				_toggle = toggle;
-			}
-
-			const Color *getPressedBackground() const {
-				return _pressedBackground;
-			}
-
-			void setPressedBackground(const Color *pressedBackground) {
-				_pressedBackground = pressedBackground;
-			}
-
-			const Color *getPressedForeground() const {
-				return _pressedForeground;
-			}
-
-			void setPressedForeground(const Color *pressedForeground) {
-				_pressedForeground = pressedForeground;
-			}
+			const Color *getPressedForeground() const;
+			void setPressedForeground(const Color *pressedForeground);
 
 		private:
-			Action<TouchEvent&> _onClick {};
 			bool _pressed = false;
 			bool _toggle = false;
 

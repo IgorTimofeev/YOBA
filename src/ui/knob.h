@@ -41,7 +41,7 @@ namespace yoba {
 			const Color* _centerColor = nullptr;
 	};
 
-	class KnobRotateEvent : public ElementEvent<Knob> {
+	class KnobRotateEvent : public TargetEvent<Knob*> {
 		public:
 			KnobRotateEvent(Knob* target, float oldAngle, float newAngle);
 

@@ -2,27 +2,39 @@
 #include "ui/element.h"
 
 namespace yoba {
-	InputEvent::InputEvent(InputEventType type) : _type(type) {
+	// -------------------------------- Event --------------------------------
+
+	Event::Event(EventType type) : _type(type) {
 
 	}
 
-	InputEventType InputEvent::getType() const {
+	EventType Event::getType() const {
 		return _type;
 	}
 
-	bool InputEvent::isHandled() const {
+	bool Event::isHandled() const {
 		return _handled;
 	}
 
-	void InputEvent::setHandled(bool handled) {
+	void Event::setHandled(bool handled) {
 		_handled = handled;
+	}
+
+	bool Event::matches(Element *element) {
+		return true;
+	}
+
+	// -------------------------------- Input --------------------------------
+
+	InputEvent::InputEvent(EventType type) : Event(type) {
+
 	}
 
 	bool ScreenEvent::matches(Element *element) {
 		return element->isVisible() && element->isEnabled();
 	}
 
-	TouchEvent::TouchEvent(const InputEventType &type, const Point &position) :
+	TouchEvent::TouchEvent(const EventType &type, const Point &position) :
 		ScreenEvent(type),
 		_position(position)
 	{
@@ -47,27 +59,27 @@ namespace yoba {
 	}
 
 	TouchDownEvent::TouchDownEvent(const Point &position) : TouchEvent(
-		InputEventType::TouchDown,
+		EventType::TouchDown,
 		position
 	) {
 
 	}
 
 	TouchDragEvent::TouchDragEvent(const Point &position) : TouchEvent(
-		InputEventType::TouchDrag,
+		EventType::TouchDrag,
 		position
 	) {
 
 	}
 
 	TouchUpEvent::TouchUpEvent(const Point &position) : TouchEvent(
-		InputEventType::TouchUp,
+		EventType::TouchUp,
 		position
 	) {
 
 	}
 
-	PinchEvent::PinchEvent(const InputEventType &type, const Point &position1, const Point &position2) :
+	PinchEvent::PinchEvent(const EventType &type, const Point &position1, const Point &position2) :
 		ScreenEvent(type),
 		_position1(position1),
 		_position2(position2)
@@ -103,7 +115,7 @@ namespace yoba {
 	}
 
 	PinchDownEvent::PinchDownEvent(const Point &position1, const Point &position2) : PinchEvent(
-		InputEventType::PinchDown,
+		EventType::PinchDown,
 		position1,
 		position2
 	) {
@@ -111,7 +123,7 @@ namespace yoba {
 	}
 
 	PinchDragEvent::PinchDragEvent(const Point &position1, const Point &position2) : PinchEvent(
-		InputEventType::PinchDrag,
+		EventType::PinchDrag,
 		position1,
 		position2
 	) {
@@ -119,14 +131,14 @@ namespace yoba {
 	}
 
 	PinchUpEvent::PinchUpEvent(const Point &position1, const Point &position2) : PinchEvent(
-		InputEventType::PinchUp,
+		EventType::PinchUp,
 		position1,
 		position2
 	) {
 
 	}
 
-	ScreenEvent::ScreenEvent(InputEventType type) : InputEvent(type) {
+	ScreenEvent::ScreenEvent(EventType type) : InputEvent(type) {
 
 	}
 }

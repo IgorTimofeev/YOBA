@@ -38,18 +38,18 @@ namespace yoba {
 	}
 
 	void Knob::onEvent(InputEvent &event) {
-		if (event.getType() != InputEventType::TouchDown && event.getType() != InputEventType::TouchDrag && event.getType() != InputEventType::TouchUp)
+		if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
 			return;
 
 		auto& touchEvent = (TouchEvent&) event;
 
-		if (event.getType() == InputEventType::TouchDown) {
+		if (event.getType() == EventType::TouchDown) {
 			setCaptured(true);
 		}
-		else if (event.getType() == InputEventType::TouchUp) {
+		else if (event.getType() == EventType::TouchUp) {
 			setCaptured(false);
 		}
-		else if (event.getType() == InputEventType::TouchDrag) {
+		else if (event.getType() == EventType::TouchDrag) {
 			const auto oldAngle = _angle;
 			_angle = touchEvent.getPosition().getRotation(getBounds().getCenter()) - (float) radians(90);
 
@@ -96,7 +96,7 @@ namespace yoba {
 		return _onRotate;
 	}
 
-	KnobRotateEvent::KnobRotateEvent(Knob* target, float oldAngle, float newAngle) : ElementEvent(target), _oldAngle(oldAngle), _newAngle(newAngle) {}
+	KnobRotateEvent::KnobRotateEvent(Knob* target, float oldAngle, float newAngle) : TargetEvent(target), _oldAngle(oldAngle), _newAngle(newAngle) {}
 
 	float KnobRotateEvent::getOldAngle() const {
 		return _oldAngle;

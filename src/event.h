@@ -3,15 +3,11 @@
 #include "point.h"
 
 namespace yoba {
+	// -------------------------------- Event --------------------------------
 
 	class Element;
 
-	class Event {
-		public:
-
-	};
-
-	enum class InputEventType : uint8_t {
+	enum class EventType : uint8_t {
 		TouchDown,
 		TouchDrag,
 		TouchUp,
@@ -19,40 +15,48 @@ namespace yoba {
 		PinchDown,
 		PinchDrag,
 		PinchUp,
+
+		Element
 	};
 
-	class InputEvent : public Event {
+	class Event {
 		public:
-			explicit InputEvent(InputEventType type);
+			explicit Event(EventType type);
 
-			InputEventType getType() const;
+			virtual bool matches(Element* element);
 
-			virtual bool matches(Element* element) = 0;
+			EventType getType() const;
 
 			bool isHandled() const;
 			void setHandled(bool handled);
 
 		private:
 			bool _handled = false;
-			InputEventType _type;
+			EventType _type;
+	};
+
+	// -------------------------------- InputEvent --------------------------------
+
+	class InputEvent : public Event {
+		public:
+			explicit InputEvent(EventType type);
 	};
 
 	class ScreenEvent : public InputEvent {
 		public:
-			explicit ScreenEvent(InputEventType type);
+			explicit ScreenEvent(EventType type);
 
 			bool matches(Element *element) override;
 	};
 
 	class TouchEvent : public ScreenEvent {
 		public:
-			explicit TouchEvent(const InputEventType& type, const Point& position);
-
-			const Point &getPosition() const;
-
-			void setPosition(const Point &position);
+			explicit TouchEvent(const EventType& type, const Point& position);
 
 			bool matches(Element* element) override;
+
+			const Point &getPosition() const;
+			void setPosition(const Point &position);
 
 		private:
 			Point _position;
@@ -75,16 +79,14 @@ namespace yoba {
 
 	class PinchEvent : public ScreenEvent {
 		public:
-			explicit PinchEvent(const InputEventType& type, const Point& position1, const Point& position2);
+			explicit PinchEvent(const EventType& type, const Point& position1, const Point& position2);
 
 			bool matches(Element* element) override;
 
 			const Point &getPosition1() const;
-
 			void setPosition1(const Point &position1);
 
 			const Point &getPosition2() const;
-
 			void setPosition2(const Point &position2);
 
 		private:
@@ -106,18 +108,25 @@ namespace yoba {
 			explicit PinchUpEvent(const Point& position1, const Point& position2);
 	};
 
-	template<typename TElement>
-	class ElementEvent : public Event {
+	// -------------------------------- ElementEvent --------------------------------
+
+	template<typename TTarget>
+	class TargetEvent : public Event {
 		public:
-			explicit ElementEvent(TElement* target) : _target(target) {
-
-			}
-
-			TElement* getTarget() const {
-				return _target;
-			}
+			explicit TargetEvent(TTarget target);
+			TTarget getTarget() const;
 
 		private:
-			TElement* _target;
+			TTarget _target;
 	};
+
+	template<typename TElement>
+	TElement TargetEvent<TElement>::getTarget() const {
+		return _target;
+	}
+
+	template<typename TElement>
+	TargetEvent<TElement>::TargetEvent(TElement target) : Event(EventType::Element), _target(target) {
+
+	}
 }

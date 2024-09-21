@@ -12,11 +12,11 @@ namespace yoba {
 		protected:
 			void onEvent(InputEvent &event) override {
 				switch (event.getType()) {
-					case InputEventType::TouchDown:
+					case EventType::TouchDown:
 						_points.push_back(((TouchDownEvent&) event).getPosition());
 						break;
 
-					case InputEventType::PinchDown:
+					case EventType::PinchDown:
 						_points.clear();
 						break;
 
