@@ -21,5 +21,7 @@ namespace yoba {
 			void renderHorizontalLineNative(const Point &point, uint16_t width, const Color* color) override;
 			void renderVerticalLineNative(const Point &point, uint16_t height, const Color* color) override;
 			void renderFilledRectangleNative(const Bounds& bounds, const Color* color) override;
+			void renderImageNative(const Point& point, const Image* image) override;
+
 	};
 }

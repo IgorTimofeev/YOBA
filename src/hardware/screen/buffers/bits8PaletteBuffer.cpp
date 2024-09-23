@@ -47,6 +47,24 @@ namespace yoba {
 		}
 	}
 
+	void Bits8PaletteBuffer::renderImageNative(const Point& point, const Image* image) {
+		size_t
+			bufferIndex = getIndex(point),
+			scanlineLength = getDriver()->getResolution().getWidth() - image->getSize().getWidth(),
+			imageIndex = 0;
+
+		for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
+			for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+				_buffer[bufferIndex] = image->getBitmap()[imageIndex];
+
+				bufferIndex++;
+				imageIndex++;
+			}
+
+			bufferIndex += scanlineLength;
+		}
+	}
+
 	void Bits8PaletteBuffer::setOpenComputersPaletteColors() {
 		const uint8_t reds = 6;
 		const uint8_t greens = 8;

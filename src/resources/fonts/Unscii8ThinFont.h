@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "../../font.h"
+
 namespace yoba {
 	class Unscii8ThinFont : public Font {
 		public:

@@ -5,7 +5,8 @@
 #include "../../../size.h"
 #include "../../../bounds.h"
 #include "../../../color.h"
-#include "../../../resources/fonts/font.h"
+#include "../../../font.h"
+#include "../../../image.h"
 #include "../drivers/screenDriver.h"
 
 namespace yoba {
@@ -47,6 +48,11 @@ namespace yoba {
 
 			void renderText(const Point &point, const Font *font, const Color *color, const wchar_t* text);
 
+			void renderImage(const Point& point, const Image* image) {
+				if (getViewport().intersects(Bounds(point, image->getSize())))
+					renderImageNative(point, image);
+			}
+
 			// Thanks, AdaFruit!
 			void renderLine(const Point &from, const Point &to, const Color *color);
 
@@ -73,6 +79,8 @@ namespace yoba {
 			virtual void renderVerticalLineNative(const Point &point, uint16_t length, const Color *color) = 0;
 
 			virtual void renderFilledRectangleNative(const Bounds &bounds, const Color *color) = 0;
+
+			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
 		private:
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color);

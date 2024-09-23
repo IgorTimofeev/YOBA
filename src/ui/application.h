@@ -3,7 +3,7 @@
 #include "layout.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "../hardware/touch/drivers/touchDriver.h"
-#include "../resources/fonts/font.h"
+#include "../font.h"
 
 namespace yoba {
 	class Animation;
