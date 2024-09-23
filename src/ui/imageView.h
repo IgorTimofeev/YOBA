@@ -30,6 +30,7 @@ namespace yoba {
 
 			void setImage(const Image* value) {
 				_image = value;
+				setSize(value->getSize());
 
 				invalidateRender();
 			}
