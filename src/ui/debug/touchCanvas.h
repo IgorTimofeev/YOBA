@@ -34,13 +34,13 @@ namespace yoba {
 				if (!font)
 					return;
 
-				wchar_t buffer[16];
+				wchar_t text[16];
 
 				for (const auto& point : _points) {
 					screenBuffer->renderFilledCircle(point, 5, getForegroundColor());
 
-					swprintf(buffer, 16, L"%d x %x", point.getX(), point.getY());
-					screenBuffer->renderText(Point(point.getX(), point.getY() + 10), font, getForegroundColor(), buffer);
+					swprintf(text, 16, L"%d x %x", point.getX(), point.getY());
+					screenBuffer->renderText(Point(point.getX(), point.getY() + 10), font, getForegroundColor(), text);
 				}
 			}
 
