@@ -16,8 +16,10 @@ namespace yoba {
 
 			TColor getPaletteColor(TIndex index);
 			void setPaletteColor(TIndex index, TColor value);
-
 			void setPaletteColor(TIndex index, const Rgb888Color& color);
+			void setPaletteColor(TIndex index, uint32_t color);
+
+			void setPaletteColors(std::initializer_list<uint32_t> colors);
 
 		protected:
 			TColor _palette[PaletteLength];
@@ -57,5 +59,20 @@ namespace yoba {
 	template<typename TIndex, typename TColor, size_t PaletteLength>
 	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColor(TIndex index, const Rgb888Color &color) {
 		setPaletteColor(index, color.toRgb565().getValue());
+	}
+
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColor(TIndex index, uint32_t color) {
+		setPaletteColor(index, Rgb888Color(color));
+	}
+
+	template<typename TIndex, typename TColor, size_t PaletteLength>
+	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColors(std::initializer_list<uint32_t> colors) {
+		TIndex index = 0;
+
+		for (auto color : colors) {
+			setPaletteColor(index, color);
+			index++;
+		}
 	}
 }

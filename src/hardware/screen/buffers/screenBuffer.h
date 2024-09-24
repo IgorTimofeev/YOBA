@@ -29,38 +29,38 @@ namespace yoba {
 			void resetViewport();
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
-
 			size_t getIndex(const Point &point) const;
 
 			// -------------------------------- Native rendering --------------------------------
 
 			void clear(const Color *color);
-
 			void renderPixel(const Point &point, const Color *color);
-
 			void renderHorizontalLine(const Point &point, uint16_t length, const Color *color);
-
 			void renderVerticalLine(const Point &point, uint16_t length, const Color *color);
-
 			void renderFilledRectangle(const Bounds &bounds, const Color *color);
-
 			void renderFilledRectangle(const Bounds &bounds, uint16_t radius, const Color* color);
-
 			void renderImage(const Point& point, const Image* image);
 
 			// -------------------------------- Non-native rendering --------------------------------
 
 			// Thanks, AdaFruit!
 			void renderLine(const Point &from, const Point &to, const Color *color);
-
 			void renderTriangle(const Point &point1, const Point &point2, const Point &point3, const Color *color);
-
 			void renderFilledTriangle(const Point &point1, const Point &point2, const Point &point3, const Color *color);
-
 			void renderFilledCircle(const Point &center, uint16_t radius, const Color *color);
 
+			/**
+			* @brief Renders single line of text
+			* @param point Position of upper-left corner of the first character in text
+			* @param font Font with which the text will be rendered
+			* @param color Color with which the text will be rendered
+			* @param text Template-based pointer to first character in text
+			*/
 			template<typename TChar>
 			void renderText(const Point &point, const Font *font, const Color *color, const TChar* text);
+			void renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text);
+			void renderText(const Point& point, const Font* font, const Color* color, const char* text);
+			void renderText(const Point& point, const Font* font, const Color* color, const String& text);
 
 		protected:
 			ScreenDriver *_driver;
@@ -95,7 +95,7 @@ namespace yoba {
 			point.getX() > viewportX2
 			|| point.getY() > getViewport().getY2()
 			|| point.getY() + font->getHeight() < getViewport().getY()
-			)
+		)
 			return;
 
 		TChar ch;
@@ -147,7 +147,7 @@ namespace yoba {
 				if (x > viewportX2)
 					break;
 			}
-				// For non-existing glyphs we can just simulate whitespace
+			// For non-existing glyphs we can just simulate whitespace
 			else {
 				x += Font::missingGlyphWidth;
 			}

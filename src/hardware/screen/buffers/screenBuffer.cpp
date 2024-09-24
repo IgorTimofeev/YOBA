@@ -418,4 +418,16 @@ namespace yoba {
 			}
 		}
 	}
+
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text) {
+		renderText<wchar_t>(point, font, color, text);
+	}
+
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const char* text) {
+		renderText<char>(point, font, color, text);
+	}
+
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const String& text) {
+		renderText(point, font, color, text.c_str());
+	}
 }
