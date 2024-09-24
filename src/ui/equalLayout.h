@@ -21,7 +21,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
 				uint16_t spacingSubstraction =

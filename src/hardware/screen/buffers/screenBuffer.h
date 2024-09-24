@@ -23,9 +23,7 @@ namespace yoba {
 			virtual void flush() = 0;
 
 			Bounds &getViewport();
-
 			void setViewport(const Bounds &bounds);
-
 			void resetViewport();
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
@@ -63,9 +61,9 @@ namespace yoba {
 			void renderText(const Point& point, const Font* font, const Color* color, const String& text);
 
 		protected:
-			ScreenDriver *_driver;
+			ScreenDriver* _driver;
 
-			uint8_t *_buffer = nullptr;
+			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;
 
 			Bounds _viewport = Bounds();

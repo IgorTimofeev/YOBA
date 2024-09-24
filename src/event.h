@@ -46,7 +46,7 @@ namespace yoba {
 		public:
 			explicit ScreenEvent(EventType type);
 
-			bool matches(Element *element) override;
+			bool matches(Element* element) override;
 	};
 
 	class TouchEvent : public ScreenEvent {

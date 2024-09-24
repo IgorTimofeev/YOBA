@@ -13,5 +13,7 @@ namespace yoba {
 
 		protected:
 			const Font* _font = nullptr;
+
+			static const Font* _defaultFont;
 	};
 }

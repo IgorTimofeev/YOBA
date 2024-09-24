@@ -9,25 +9,25 @@
 namespace yoba {
 	class Layout : public Element {
 		public:
-			void tick() override;
-
 			void onRender(ScreenBuffer* screenBuffer) override;
 
 			void onEvent(InputEvent& event) override;
+
+			void setRoot(Application* value) override;
 
 			size_t getChildrenCount();
 
 			int32_t getIndexOfChild(Element* element);
 
-			void removeChildAt(int index);
+			virtual void removeChildAt(int index);
 
-			void removeChild(Element* child);
+			virtual void removeChild(Element* child);
 
 			void removeChildren();
 
 			Element* getChildAt(size_t index);
 
-			void addChild(Element* child);
+			virtual void addChild(Element* child);
 
 			virtual Element* operator[](size_t index);
 
@@ -38,7 +38,7 @@ namespace yoba {
 		protected:
 			std::vector<Element*> _children {};
 
-			Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};

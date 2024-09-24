@@ -17,25 +17,15 @@ namespace yoba {
 
 			virtual void begin();
 
-			ScreenOrientation getOrientation() const {
-				return _screenBuffer->getDriver()->getOrientation();
-			}
-
-			void setOrientation(ScreenOrientation value) const {
-				return _screenBuffer->getDriver()->setOrientation(value);
-			}
-
-			void measure(ScreenBuffer* screenBuffer);
-			void arrange();
+			ScreenOrientation getOrientation() const;
+			void setOrientation(ScreenOrientation value) const;
 
 			void onRender(ScreenBuffer* screenBuffer) override;
 			void invalidateLayout() override;
 			void invalidateRender() override;
 			void invalidate() override;
 
-			void tick() override;
 			void handleEvent(InputEvent &event) override;
-
 			void startAnimation(Animation* animation) override;
 
 			Element *getCapturedElement() const;
@@ -43,6 +33,8 @@ namespace yoba {
 
 			const Font *getDefaultFont() const;
 			void setDefaultFont(const Font* defaultFont);
+
+			virtual void tick();
 
 		private:
 			ScreenBuffer* _screenBuffer;

@@ -29,24 +29,6 @@ namespace yoba {
 		_isRendered = true;
 	}
 
-	void Application::arrange() {
-		if (_isArranged)
-			return;
-
-		Layout::arrange(Bounds(getSize()));
-
-		_isArranged = true;
-	}
-
-	void Application::measure(ScreenBuffer* screenBuffer) {
-		if (_isMeasured)
-			return;
-
-		Layout::measure(screenBuffer, getSize());
-
-		_isMeasured = true;
-	}
-
 	void Application::invalidateLayout() {
 		_isMeasured = false;
 		_isArranged = false;
@@ -84,18 +66,31 @@ namespace yoba {
 	}
 
 	void Application::tick() {
-		setSize(_screenBuffer->getDriver()->getResolution());
-
+		// Handling input events first
 		_touchDriver->tick(_screenBuffer, [&](InputEvent& event) {
 			handleEvent(event);
 		});
 
+		// Playing animations
 		animationsTick();
 
-		Layout::tick();
+		// Computing sizes
+		setSize(_screenBuffer->getDriver()->getResolution());
 
-		measure(_screenBuffer);
-		arrange();
+		if (!_isMeasured) {
+			measure(_screenBuffer, getSize());
+
+			_isMeasured = true;
+		}
+
+		// Computing positions
+		if (!_isArranged) {
+			arrange(Bounds(getSize()));
+
+			_isArranged = true;
+		}
+
+		// Rendering
 		render(_screenBuffer);
 	}
 
@@ -122,5 +117,13 @@ namespace yoba {
 
 	void Application::setDefaultFont(const Font *defaultFont) {
 		_defaultFont = defaultFont;
+	}
+
+	ScreenOrientation Application::getOrientation() const {
+		return _screenBuffer->getDriver()->getOrientation();
+	}
+
+	void Application::setOrientation(ScreenOrientation value) const {
+		return _screenBuffer->getDriver()->setOrientation(value);
 	}
 }

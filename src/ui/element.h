@@ -33,10 +33,8 @@ namespace yoba {
 			virtual ~Element() = default;
 
 			void measure(ScreenBuffer* screenBuffer, const Size& availableSize);
-
 			void arrange(const Bounds& bounds);
 
-			virtual void tick();
 			virtual void render(ScreenBuffer* screenBuffer);
 			virtual void handleEvent(InputEvent& event);
 
@@ -51,7 +49,7 @@ namespace yoba {
 			// -------------------------------- Getters & setters --------------------------------
 
 			Application* getRoot();
-			void setRoot(Application* value);
+			virtual void setRoot(Application* value);
 
 			Element* getParent();
 			void setParent(Element* value);
@@ -91,7 +89,7 @@ namespace yoba {
 			const Bounds& getBounds();
 
 		protected:
-			virtual Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
+			virtual Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(ScreenBuffer* screenBuffer);
 			virtual void onEvent(InputEvent& event);

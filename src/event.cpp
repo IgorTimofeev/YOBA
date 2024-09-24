@@ -20,7 +20,7 @@ namespace yoba {
 		_handled = handled;
 	}
 
-	bool Event::matches(Element *element) {
+	bool Event::matches(Element* element) {
 		return true;
 	}
 
@@ -30,7 +30,7 @@ namespace yoba {
 
 	}
 
-	bool ScreenEvent::matches(Element *element) {
+	bool ScreenEvent::matches(Element* element) {
 		return element->isVisible() && element->isEnabled();
 	}
 
@@ -41,7 +41,7 @@ namespace yoba {
 
 	}
 
-	bool TouchEvent::matches(Element *element) {
+	bool TouchEvent::matches(Element* element) {
 		return
 			ScreenEvent::matches(element)
 			&& (
@@ -103,7 +103,7 @@ namespace yoba {
 		_position2 = position2;
 	}
 
-	bool PinchEvent::matches(Element *element) {
+	bool PinchEvent::matches(Element* element) {
 		return
 			ScreenEvent::matches(element)
 			&& (

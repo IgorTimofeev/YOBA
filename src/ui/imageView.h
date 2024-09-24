@@ -36,7 +36,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size getDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				return
 					getImage()
 					? getImage()->getSize()

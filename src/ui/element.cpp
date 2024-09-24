@@ -25,7 +25,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	Size Element::getDesiredSize(ScreenBuffer* screenBuffer, const Size &availableSize) {
+	Size Element::onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) {
 		return { 0, 0 };
 	}
 
@@ -59,7 +59,7 @@ namespace yoba {
 	}
 
 	void Element::measure(ScreenBuffer* screenBuffer, const Size &availableSize) {
-		auto result = getDesiredSize(screenBuffer, availableSize);
+		auto desiredSize = onMeasure(screenBuffer, availableSize);
 
 		auto& size = getSize();
 		auto& margin = getMargin();
@@ -70,27 +70,27 @@ namespace yoba {
 		calculateMeasureShit(
 			getHorizontalAlignment(),
 			size.getWidth(),
-			result.getWidth(),
+			desiredSize.getWidth(),
 			margin.getLeft(),
 			margin.getRight(),
 			newSize
 		);
 
-		result.setWidth(newSize);
+		desiredSize.setWidth(newSize);
 
 		// Height
 		calculateMeasureShit(
 			getVerticalAlignment(),
 			size.getHeight(),
-			result.getHeight(),
+			desiredSize.getHeight(),
 			margin.getTop(),
 			margin.getBottom(),
 			newSize
 		);
 
-		result.setHeight(newSize);
+		desiredSize.setHeight(newSize);
 
-		setMeasuredSize(result);
+		setMeasuredSize(desiredSize);
 	}
 
 	void Element::calculateArrangeShit(
@@ -222,12 +222,12 @@ namespace yoba {
 	}
 
 	bool Element::isCaptured() {
-		return getRoot() && getRoot()->getCapturedElement() == this;
+		return _root && _root->getCapturedElement() == this;
 	}
 
 	void Element::setCaptured(bool value) {
-		if (getRoot())
-			getRoot()->setCapturedElement(value ? this : nullptr);
+		if (_root)
+			_root->setCapturedElement(value ? this : nullptr);
 	}
 
 	void Element::startAnimation(Animation* animation) {
@@ -323,10 +323,6 @@ namespace yoba {
 	void Element::invalidate() {
 		if (_root)
 			_root->invalidate();
-	}
-
-	void Element::tick() {
-
 	}
 
 	void Element::render(ScreenBuffer* screenBuffer) {

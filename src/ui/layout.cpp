@@ -2,15 +2,6 @@
 #include "../event.h"
 
 namespace yoba {
-	void Layout::tick() {
-		for (const auto& child : _children) {
-			child->setParent(this);
-			child->setRoot(getRoot());
-
-			child->tick();
-		}
-	}
-
 	void Layout::onRender(ScreenBuffer* screenBuffer) {
 		for (const auto& child : _children) {
 			child->render(screenBuffer);
@@ -26,11 +17,19 @@ namespace yoba {
 		}
 	}
 
+	void Layout::setRoot(Application* value) {
+		Element::setRoot(value);
+
+		for (const auto& child : _children) {
+			child->setRoot(value);
+		}
+	}
+
 	size_t Layout::getChildrenCount() {
 		return _children.size();
 	}
 
-	int32_t Layout::getIndexOfChild(Element *element) {
+	int32_t Layout::getIndexOfChild(Element* element) {
 		auto iterator = find(_children.begin(), _children.end(), element);
 
 		if (iterator == _children.end()) {
@@ -89,7 +88,7 @@ namespace yoba {
 		removeChild(child);
 	}
 
-	Size Layout::getDesiredSize(ScreenBuffer* screenBuffer, const Size &availableSize) {
+	Size Layout::onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) {
 		auto result = Size();
 
 		for (auto child : _children) {
