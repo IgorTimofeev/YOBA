@@ -5,7 +5,7 @@ namespace yoba {
 	SelectorItem *Selector::getItemAt(size_t index) {
 		return
 			_itemsLayout
-			? (SelectorItem*) _itemsLayout->getChildAt(index)
+			? (SelectorItem*) (*_itemsLayout)[index]
 			: nullptr;
 	}
 
@@ -35,7 +35,7 @@ namespace yoba {
 		_selectedIndex = value;
 
 		for (size_t i = 0; i < _itemsLayout->getChildrenCount(); i++) {
-			((SelectorItem*) _itemsLayout->getChildAt(i))->setSelected(i == value);
+			((SelectorItem*) (*_itemsLayout)[i])->setSelected(i == value);
 		}
 
 		onSelectionChanged();

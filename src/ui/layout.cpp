@@ -9,11 +9,18 @@ namespace yoba {
 	}
 
 	void Layout::onEvent(InputEvent &event) {
-		for (int32_t i = (int32_t) getChildrenCount() - 1; i >= 0; i--) {
-			getChildAt(i)->handleEvent(event);
+		if (getChildrenCount() == 0)
+			return;
 
-			if (event.isHandled())
+		size_t i = getChildrenCount() - 1;
+
+		while (true) {
+			this[i].handleEvent(event);
+
+			if (event.isHandled() || i == 0)
 				return;
+
+			i--;
 		}
 	}
 
@@ -63,7 +70,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	Element *Layout::getChildAt(size_t index) {
+	Element* Layout::getChildAt(size_t index) {
 		return _children[index];
 	}
 
@@ -76,7 +83,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	Element *Layout::operator[](size_t index) {
+	Element* Layout::operator[](size_t index) {
 		return getChildAt(index);
 	}
 
