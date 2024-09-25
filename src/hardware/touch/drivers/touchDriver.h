@@ -11,7 +11,7 @@
 namespace yoba {
 	class TouchDriver {
 		public:
-			virtual void begin() = 0;
+			virtual void setup() = 0;
 
 			virtual void tick(ScreenBuffer* screenBuffer, const std::function<void(InputEvent&)>& callback) = 0;
 	};

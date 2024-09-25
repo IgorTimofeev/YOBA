@@ -5,21 +5,23 @@
 
 namespace yoba {
 	template <typename ...T>
-	class Action : std::vector<std::function<void(T...)>> {
+	class Action {
 		public:
-			void add(const std::function<void(T...)>& f) {
-				this->push_back(f);
+			void add(const std::function<void(T...)>& callback) {
+				_callbacks.push_back(callback);
 			}
 
 			void call(T... args) {
-				for (const auto& f: *this) {
-					f(args...);
+				for (const auto& callback: _callbacks) {
+					callback(args...);
 				}
 			}
 
-			Action& operator+=(const Action& right) {
-				add(right);
-				return *this;
+			void operator+=(const std::function<void(T...)>& callback) {
+				add(callback);
 			}
+
+		private:
+			std::vector<std::function<void(T...)>> _callbacks {};
 	};
 }

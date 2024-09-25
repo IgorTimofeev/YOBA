@@ -27,9 +27,9 @@ namespace yoba {
 
 			bool isStarted() const;
 
-			void addOnCompleted(const std::function<void()>& value);
-
 			void setInterpolator(const std::function<void(const double &)> &interpolator);
+
+			const Action<>& getOnCompleted() const;
 
 		private:
 			std::function<void(const double&)> _interpolator;

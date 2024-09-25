@@ -44,9 +44,7 @@ namespace yoba {
 
 			virtual void startAnimation(Animation* animation);
 
-			void addEventHandler(const std::function<void(InputEvent&)>& handler);
-
-			// -------------------------------- Getters & setters --------------------------------
+			const Action<InputEvent&>& getEventHandlers() const;
 
 			Application* getRoot();
 			virtual void setRoot(Application* value);

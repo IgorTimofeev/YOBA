@@ -24,8 +24,8 @@ namespace yoba {
 
 	}
 
-	void SPIScreenDriver::begin() {
-		ScreenDriver::begin();
+	void SPIScreenDriver::setup() {
+		ScreenDriver::setup();
 
 		// Resetting CS pin just in case
 		pinMode(_csPin, OUTPUT);

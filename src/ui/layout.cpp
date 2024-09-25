@@ -15,7 +15,7 @@ namespace yoba {
 		size_t i = getChildrenCount() - 1;
 
 		while (true) {
-			this[i].handleEvent(event);
+			(*this)[i]->handleEvent(event);
 
 			if (event.isHandled() || i == 0)
 				return;

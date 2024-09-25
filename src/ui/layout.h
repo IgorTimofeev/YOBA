@@ -5,6 +5,7 @@
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "../bounds.h"
 #include "../size.h"
+#include <iterator>
 
 namespace yoba {
 	class Layout : public Element {
@@ -29,6 +30,14 @@ namespace yoba {
 
 			virtual void addChild(Element* child);
 
+			std::vector<Element*>::iterator begin() {
+				return _children.begin();
+			}
+
+			std::vector<Element*>::iterator end() {
+				return _children.end();
+			}
+
 			virtual Element* operator[](size_t index);
 
 			virtual void operator+=(Element* child);
@@ -36,10 +45,11 @@ namespace yoba {
 			virtual void operator-=(Element* child);
 
 		protected:
-			std::vector<Element*> _children {};
-
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
+
+		private:
+			std::vector<Element*> _children {};
 	};
 }

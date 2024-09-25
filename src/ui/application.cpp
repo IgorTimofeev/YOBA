@@ -11,22 +11,14 @@ namespace yoba {
 		_screenBuffer(screenBuffer),
 		_touchDriver(touchDriver)
 	{
-		setRoot(this);
+
 	}
 
-	void Application::begin() {
-		_screenBuffer->begin();
-		_touchDriver->begin();
-	}
+	void Application::setup() {
+		Layout::setRoot(this);
 
-	void Application::onRender(ScreenBuffer* screenBuffer) {
-		if (_isRendered)
-			return;
-
-		Layout::onRender(screenBuffer);
-		screenBuffer->flush();
-
-		_isRendered = true;
+		_screenBuffer->setup();
+		_touchDriver->setup();
 	}
 
 	void Application::invalidateLayout() {
@@ -66,6 +58,8 @@ namespace yoba {
 	}
 
 	void Application::tick() {
+		setSize(_screenBuffer->getDriver()->getResolution());
+
 		// Handling input events first
 		_touchDriver->tick(_screenBuffer, [&](InputEvent& event) {
 			handleEvent(event);
@@ -75,8 +69,6 @@ namespace yoba {
 		animationsTick();
 
 		// Computing sizes
-		setSize(_screenBuffer->getDriver()->getResolution());
-
 		if (!_isMeasured) {
 			measure(_screenBuffer, getSize());
 
@@ -91,7 +83,13 @@ namespace yoba {
 		}
 
 		// Rendering
-		render(_screenBuffer);
+		if (!_isRendered) {
+			render(_screenBuffer);
+
+			_screenBuffer->flush();
+
+			_isRendered = true;
+		}
 	}
 
 	Element *Application::getCapturedElement() const {

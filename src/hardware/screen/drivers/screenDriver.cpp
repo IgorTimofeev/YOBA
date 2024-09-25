@@ -15,7 +15,7 @@ namespace yoba {
 
 	}
 
-	void ScreenDriver::begin() {
+	void ScreenDriver::setup() {
 		updateDataFromOrientation();
 	}
 

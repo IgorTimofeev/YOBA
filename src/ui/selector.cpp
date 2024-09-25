@@ -28,19 +28,19 @@ namespace yoba {
 		return _selectedIndex;
 	}
 
-	void Selector::setSelectedIndex(int32_t value) {
-		if (value == _selectedIndex || !_itemsLayout)
+	void Selector::setSelectedIndex(int32_t index) {
+		if (index == _selectedIndex || !_itemsLayout)
 			return;
 
-		_selectedIndex = value;
+		_selectedIndex = index;
 
 		for (size_t i = 0; i < _itemsLayout->getChildrenCount(); i++) {
-			((SelectorItem*) (*_itemsLayout)[i])->setSelected(i == value);
+			((SelectorItem*) (*_itemsLayout)[i])->setSelected(i == index);
 		}
 
 		onSelectionChanged();
 
-		_selectionChanged.call();
+		_onSelectionChanged.call();
 	}
 
 	void Selector::onSelectionChanged() {
@@ -53,5 +53,9 @@ namespace yoba {
 
 	void Selector::setItemsLayout(Layout *layout) {
 		_itemsLayout = layout;
+	}
+
+	const Action<>& Selector::getOnSelectionChanged() const {
+		return _onSelectionChanged;
 	}
 }

@@ -15,12 +15,11 @@ namespace yoba {
 				TouchDriver* touchDriver
 			);
 
-			virtual void begin();
+			virtual void setup();
 
 			ScreenOrientation getOrientation() const;
 			void setOrientation(ScreenOrientation value) const;
 
-			void onRender(ScreenBuffer* screenBuffer) override;
 			void invalidateLayout() override;
 			void invalidateRender() override;
 			void invalidate() override;

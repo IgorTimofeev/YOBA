@@ -6,8 +6,8 @@ namespace yoba {
 		resetViewport();
 	}
 
-	void ScreenBuffer::begin() {
-		_driver->begin();
+	void ScreenBuffer::setup() {
+		_driver->setup();
 
 		allocate();
 	}

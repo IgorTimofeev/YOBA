@@ -15,7 +15,7 @@ namespace yoba {
 				ScreenOrientation orientation
 			);
 
-			virtual void begin();
+			virtual void setup();
 
 			const Size &getResolution() const;
 

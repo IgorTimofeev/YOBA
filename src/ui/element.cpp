@@ -217,10 +217,6 @@ namespace yoba {
 		event.setHandled(true);
 	}
 
-	void Element::addEventHandler(const std::function<void(InputEvent &)> &handler) {
-		_eventHandlers.add(handler);
-	}
-
 	bool Element::isCaptured() {
 		return _root && _root->getCapturedElement() == this;
 	}
@@ -361,5 +357,9 @@ namespace yoba {
 		_size.setHeight(value);
 
 		invalidate();
+	}
+
+	const Action<InputEvent&>& Element::getEventHandlers() const {
+		return _eventHandlers;
 	}
 }

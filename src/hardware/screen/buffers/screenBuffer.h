@@ -14,7 +14,7 @@ namespace yoba {
 		public:
 			explicit ScreenBuffer(ScreenDriver *driver);
 
-			void begin();
+			void setup();
 
 			ScreenDriver *getDriver() const;
 

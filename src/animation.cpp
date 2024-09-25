@@ -42,10 +42,6 @@ namespace yoba {
 		return _start > 0;
 	}
 
-	void Animation::addOnCompleted(const std::function<void()> &value) {
-		_onCompleted.add(value);
-	}
-
 	uint32_t Animation::getDuration() const {
 		return _duration;
 	}
@@ -56,6 +52,10 @@ namespace yoba {
 
 	void Animation::setInterpolator(const std::function<void(const double &)> &interpolator) {
 		_interpolator = interpolator;
+	}
+
+	const Action<>& Animation::getOnCompleted() const {
+		return _onCompleted;
 	}
 
 	// -------------------------------- Margin --------------------------------

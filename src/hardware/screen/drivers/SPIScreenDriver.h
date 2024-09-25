@@ -17,7 +17,7 @@ namespace yoba {
 				uint32_t SPIFrequency
 			);
 
-			void begin() override;
+			void setup() override;
 
 			uint8_t getTransactionWindowHeight() const;
 

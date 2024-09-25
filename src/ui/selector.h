@@ -18,13 +18,11 @@ namespace yoba {
 
 			int32_t getSelectedIndex() const;
 
-			void setSelectedIndex(int32_t value);
-
-			void addOnSelectionChanged(const std::function<void()>& value) {
-				_selectionChanged.add(value);
-			}
+			void setSelectedIndex(int32_t index);
 
 			void setItemsLayout(Layout* layout);
+
+			const Action<>& getOnSelectionChanged() const;
 
 		protected:
 			virtual void onSelectionChanged();
@@ -32,6 +30,6 @@ namespace yoba {
 		private:
 			Layout* _itemsLayout = nullptr;
 			int32_t _selectedIndex = -1;
-			Action<> _selectionChanged = Action<>();
+			Action<> _onSelectionChanged = Action<>();
 	};
 }

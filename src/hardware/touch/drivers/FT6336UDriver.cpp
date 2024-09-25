@@ -14,7 +14,7 @@ namespace yoba {
 
 	}
 
-	void FT6336UDriver::begin() {
+	void FT6336UDriver::setup() {
 		// Interrupt
 		pinMode(_intPin, INPUT_PULLUP);
 

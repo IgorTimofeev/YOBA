@@ -49,7 +49,7 @@ void setup() {
 	screenBuffer.setPaletteColor(0, Rgb888Color(0, 0, 0));
 
 	// Starting application
-	application.begin();
+	application.setup();
 	application.setDefaultFont(&font);
 
 	// Adding UI elements

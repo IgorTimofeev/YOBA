@@ -34,7 +34,7 @@ namespace yoba {
 
 				switch (getOrientation()) {
 					case Orientation::Horizontal:
-						for (auto child : _children) {
+						for (auto child : *this) {
 							child->measure(
 								screenBuffer,
 								Size(
@@ -62,7 +62,7 @@ namespace yoba {
 							? 0
 							: availableWithoutSpacing / getChildrenCount();
 
-						for (auto child : _children) {
+						for (auto child : *this) {
 							if (getChildAutoSize(child)) {
 
 							}
@@ -71,7 +71,7 @@ namespace yoba {
 							}
 						}
 
-						for (auto child : _children) {
+						for (auto child : *this) {
 							child->measure(
 								screenBuffer,
 								Size(
@@ -102,7 +102,7 @@ namespace yoba {
 					case Orientation::Horizontal:
 						position = bounds.getX();
 
-						for (auto child : _children) {
+						for (auto child : *this) {
 							child->arrange(Bounds(
 								position,
 								bounds.getY(),
@@ -118,7 +118,7 @@ namespace yoba {
 					case Orientation::Vertical:
 						position = bounds.getY();
 
-						for (auto child : _children) {
+						for (auto child : *this) {
 							child->arrange(Bounds(
 								bounds.getX(),
 								position,

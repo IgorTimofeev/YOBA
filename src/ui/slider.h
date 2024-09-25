@@ -73,8 +73,8 @@ namespace yoba {
 				_onValueChanged.call();
 			}
 
-			virtual void addOnValueChanged(const std::function<void()>& handler) {
-				_onValueChanged.add(handler);
+			const Action<>& getOnValueChanged() const {
+				return _onValueChanged;
 			}
 
 		private:
