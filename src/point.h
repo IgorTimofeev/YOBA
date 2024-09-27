@@ -107,7 +107,7 @@ namespace yoba {
 	Vector2<T> Vector2<T>::rotate(float angleSin, float angleCos) const {
 		return {
 			(T) ((float) _x * angleCos - (float) _y * angleSin),
-			(T) ((float) _x * angleSin - (float) _y * angleCos)
+			(T) ((float) _x * angleSin + (float) _y * angleCos)
 		};
 	}
 
