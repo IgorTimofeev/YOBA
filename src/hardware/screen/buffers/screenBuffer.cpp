@@ -88,14 +88,14 @@ namespace yoba {
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
 	}
 
-	void ScreenBuffer::renderFilledRectangle(const Bounds &bounds, const Color *color) {
+	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, const Color *color) {
 		const auto& viewport = getViewport();
 
 		if (viewport.intersects(bounds))
 			renderFilledRectangleNative(viewport.getIntersection(bounds), color);
 	}
 
-	void ScreenBuffer::renderFilledRectangle(const Bounds &bounds, uint16_t radius, const Color *color) {
+	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, uint16_t radius, const Color *color) {
 		if (radius > 0) {
 			// Rect in middle
 			renderFilledRectangle(

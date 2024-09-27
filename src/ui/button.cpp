@@ -1,7 +1,7 @@
 #include "button.h"
 
 namespace yoba {
-	void Button::onRender(ScreenBuffer *screenBuffer) {
+	void Button::onRender(ScreenBuffer* screenBuffer) {
 		const auto& bounds = getBounds();
 
 		// Background

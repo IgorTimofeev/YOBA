@@ -114,7 +114,7 @@ namespace yoba {
 		return result;
 	}
 
-	void Layout::onArrange(const Bounds &bounds) {
+	void Layout::onArrange(const Bounds& bounds) {
 		for (auto child : _children) {
 			if (child->isVisible()) {
 				child->arrange(bounds);

@@ -23,7 +23,7 @@ namespace yoba {
 			virtual void flush() = 0;
 
 			Bounds &getViewport();
-			void setViewport(const Bounds &bounds);
+			void setViewport(const Bounds& bounds);
 			void resetViewport();
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
@@ -35,8 +35,8 @@ namespace yoba {
 			void renderPixel(const Point &point, const Color *color);
 			void renderHorizontalLine(const Point &point, uint16_t length, const Color *color);
 			void renderVerticalLine(const Point &point, uint16_t length, const Color *color);
-			void renderFilledRectangle(const Bounds &bounds, const Color *color);
-			void renderFilledRectangle(const Bounds &bounds, uint16_t radius, const Color* color);
+			void renderFilledRectangle(const Bounds& bounds, const Color *color);
+			void renderFilledRectangle(const Bounds& bounds, uint16_t radius, const Color* color);
 			void renderImage(const Point& point, const Image* image);
 
 			// -------------------------------- Non-native rendering --------------------------------
@@ -76,7 +76,7 @@ namespace yoba {
 
 			virtual void renderVerticalLineNative(const Point &point, uint16_t length, const Color *color) = 0;
 
-			virtual void renderFilledRectangleNative(const Bounds &bounds, const Color *color) = 0;
+			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color *color) = 0;
 
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 

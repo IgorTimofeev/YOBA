@@ -85,7 +85,7 @@ namespace yoba {
 			FT6336UDriver(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
 
 			void setup() override;
-			void tick(ScreenBuffer *screenBuffer, const std::function<void(InputEvent &)> &callback) override;
+			void tick(ScreenBuffer* screenBuffer, const std::function<void(InputEvent &)> &callback) override;
 
 			uint8_t read_device_mode();
 			void write_device_mode(DEVICE_MODE_Enum);

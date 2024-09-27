@@ -1,7 +1,7 @@
 #include "knob.h"
 
 namespace yoba {
-	void Knob::onRender(ScreenBuffer *screenBuffer) {
+	void Knob::onRender(ScreenBuffer* screenBuffer) {
 		const auto& bounds = getBounds();
 		const uint16_t radius = max(bounds.getWidth(), bounds.getHeight()) / 2;
 		const auto center = bounds.getCenter();
@@ -26,12 +26,13 @@ namespace yoba {
 
 		// Line
 		if (getLineColor()) {
-			const auto lineEnd = center + Point(radius, 0).rotate(_angle - (float) radians(90));
-			const auto lineStart = center + (lineEnd - center) * 0.8f;
+			auto centerF = (Vector2F) center;
+			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - (float) radians(90));
+			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 
 			screenBuffer->renderLine(
-				lineStart,
-				lineEnd,
+				(Point) lineStart,
+				(Point) lineEnd,
 				getLineColor()
 			);
 		}

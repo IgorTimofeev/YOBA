@@ -156,11 +156,11 @@ namespace yoba {
 		}
 	}
 
-	void Element::onArrange(const Bounds &bounds) {
+	void Element::onArrange(const Bounds& bounds) {
 
 	}
 
-	void Element::arrange(const Bounds &bounds) {
+	void Element::arrange(const Bounds& bounds) {
 		auto& margin = getMargin();
 		auto& measuredSize = getMeasuredSize();
 		auto& size = getSize();
