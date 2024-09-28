@@ -27,15 +27,15 @@ namespace yoba {
 
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
 					if (value == dashes) {
-						drawDashes(screenBuffer, bounds.getPosition());
+						drawDashes(screenBuffer, bounds.getTopLeft());
 					}
 					else if (value > 0) {
-						drawDigit(screenBuffer, bounds.getPosition(), value % 10);
+						drawDigit(screenBuffer, bounds.getTopLeft(), value % 10);
 
 						value /= 10;
 					}
 					else {
-						drawDigit(screenBuffer, bounds.getPosition(), 0);
+						drawDigit(screenBuffer, bounds.getTopLeft(), 0);
 					}
 
 					bounds.setX(bounds.getX() - getDigitWidth() - getSpacing());

@@ -29,7 +29,7 @@ namespace yoba {
 
 				screenBuffer->renderFilledRectangle(
 					Bounds(
-						bounds.getPosition(),
+						bounds.getTopLeft(),
 						Size(
 							part,
 							bounds.getHeight()

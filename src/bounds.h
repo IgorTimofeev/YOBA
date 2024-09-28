@@ -61,10 +61,6 @@ namespace yoba {
 				_height = value;
 			}
 
-			Point getPosition() const {
-				return {getX(), getY()};
-			}
-
 			Point getSize() const {
 				return {getWidth(), getHeight()};
 			}

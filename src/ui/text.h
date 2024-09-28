@@ -40,7 +40,7 @@ namespace yoba {
 					return;
 
 				screenBuffer->renderText(
-					getBounds().getPosition(),
+					getBounds().getTopLeft(),
 					font,
 					getForegroundColor(),
 					getText()

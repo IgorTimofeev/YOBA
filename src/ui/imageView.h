@@ -19,7 +19,7 @@ namespace yoba {
 					return;
 
 				screenBuffer->renderImage(
-					getBounds().getPosition(),
+					getBounds().getTopLeft(),
 					getImage()
 				);
 			}
