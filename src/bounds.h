@@ -95,9 +95,23 @@ namespace yoba {
 				};
 			}
 
+			Point getTopRight() const {
+				return {
+					getX2(),
+					getY()
+				};
+			}
+
 			Point getBottomRight() const {
 				return {
 					getX2(),
+					getY2()
+				};
+			}
+
+			Point getBottomLeft() const {
+				return {
+					getX(),
 					getY2()
 				};
 			}
@@ -117,6 +131,10 @@ namespace yoba {
 					|| getY() > bounds.getY2()
 					|| getY2() < bounds.getY()
 				);
+			}
+
+			bool isNonZero() const {
+				return getWidth() > 0 && getHeight() > 0;
 			}
 
 			Bounds getIntersection(const Bounds& bounds) const {

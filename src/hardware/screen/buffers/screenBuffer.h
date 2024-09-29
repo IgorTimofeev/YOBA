@@ -41,6 +41,7 @@ namespace yoba {
 
 			// -------------------------------- Non-native rendering --------------------------------
 
+			void renderRectangle(const Bounds& bounds, const Color* color);
 			// Thanks, AdaFruit!
 			void renderLine(const Point &from, const Point &to, const Color *color);
 			void renderTriangle(const Point &point1, const Point &point2, const Point &point3, const Color *color);

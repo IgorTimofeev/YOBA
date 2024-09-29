@@ -54,7 +54,8 @@ namespace yoba {
 		const auto& viewport = getViewport();
 
 		if (
-			point.getX() > viewport.getX2()
+			length == 0
+			|| point.getX() > viewport.getX2()
 			|| point.getX() + length < viewport.getX()
 
 			|| point.getY() < viewport.getY()
@@ -73,7 +74,8 @@ namespace yoba {
 		const auto& viewport = getViewport();
 
 		if (
-			point.getX() < viewport.getX()
+			length == 0
+			|| point.getX() < viewport.getX()
 			|| point.getX() > viewport.getX2()
 
 			|| point.getY() > viewport.getY2()
@@ -91,7 +93,7 @@ namespace yoba {
 	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, const Color *color) {
 		const auto& viewport = getViewport();
 
-		if (viewport.intersects(bounds))
+		if (bounds.isNonZero() && viewport.intersects(bounds))
 			renderFilledRectangleNative(viewport.getIntersection(bounds), color);
 	}
 
@@ -143,6 +145,41 @@ namespace yoba {
 	}
 
 	// -------------------------------- Non-native rendering --------------------------------
+
+	void ScreenBuffer::renderRectangle(const Bounds& bounds, const Color* color) {
+		if (!bounds.isNonZero())
+			return;
+
+		renderVerticalLine(
+			bounds.getTopLeft(),
+			bounds.getHeight(),
+			color
+		);
+
+		renderVerticalLine(
+			bounds.getTopRight(),
+			bounds.getHeight(),
+			color
+		);
+
+		renderHorizontalLine(
+			Point(
+				bounds.getX() + 1,
+				bounds.getY()
+			),
+			bounds.getWidth() - 2,
+			color
+		);
+
+		renderHorizontalLine(
+			Point(
+				bounds.getX() + 1,
+				bounds.getY2()
+			),
+			bounds.getWidth() - 2,
+			color
+		);
+	}
 
 	void ScreenBuffer::renderLine(const Point &from, const Point &to, const Color* color) {
 		// Vertical line
@@ -362,6 +399,9 @@ namespace yoba {
 	}
 
 	void ScreenBuffer::renderFilledCircle(const Point &center, uint16_t radius, const Color *color) {
+		if (radius == 0)
+			return;
+
 		int32_t x = 0;
 		int32_t dx = 1;
 		int32_t dy = radius + radius;
