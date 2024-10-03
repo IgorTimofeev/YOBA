@@ -6,8 +6,8 @@
 namespace yoba {
 	class TouchPoint {
 		public:
-			const Point &getPosition() const;
-			void setPosition(const Point &position);
+			const Point& getPosition() const;
+			void setPosition(const Point& position);
 
 			bool isDown() const;
 			void setDown(bool isDown);

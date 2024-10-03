@@ -21,7 +21,7 @@ namespace yoba {
 
 			}
 
-			Bounds(const Point &position, const Size &size) : Bounds(position.getX(), position.getY(), size.getWidth(), size.getHeight()) {
+			Bounds(const Point& position, const Size &size) : Bounds(position.getX(), position.getY(), size.getWidth(), size.getHeight()) {
 
 			}
 

@@ -55,8 +55,8 @@ namespace yoba {
 
 			bool matches(Element* element) override;
 
-			const Point &getPosition() const;
-			void setPosition(const Point &position);
+			const Point& getPosition() const;
+			void setPosition(const Point& position);
 
 		private:
 			Point _position;
@@ -83,11 +83,11 @@ namespace yoba {
 
 			bool matches(Element* element) override;
 
-			const Point &getPosition1() const;
-			void setPosition1(const Point &position1);
+			const Point& getPosition1() const;
+			void setPosition1(const Point& position1);
 
-			const Point &getPosition2() const;
-			void setPosition2(const Point &position2);
+			const Point& getPosition2() const;
+			void setPosition2(const Point& position2);
 
 		private:
 			Point _position1, _position2;

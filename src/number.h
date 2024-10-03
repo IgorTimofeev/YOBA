@@ -25,4 +25,22 @@ namespace yoba {
 	T interpolate(T first, T second, float position) {
 		return (T) ((float) first + (float) (second - first) * position);
 	}
+
+	template<typename T>
+	int getDigitCount(T number) {
+		if (number < 0)
+			number = -number;
+
+		return
+			(number < 10 ? 1 :
+			(number < 100 ? 2 :
+			(number < 1000 ? 3 :
+			(number < 10000 ? 4 :
+			(number < 100000 ? 5 :
+			(number < 1000000 ? 6 :
+			(number < 10000000 ? 7 :
+			(number < 100000000 ? 8 :
+			(number < 1000000000 ? 9 :
+			10)))))))));
+	}
 }

@@ -17,15 +17,15 @@ namespace yoba {
 		});
 	}
 
-	void Bits8PaletteBuffer::renderPixelNative(const Point &point, const Color* color) {
+	void Bits8PaletteBuffer::renderPixelNative(const Point& point, const Color* color) {
 		_buffer[getIndex(point)] = getPaletteIndexOf(color);
 	}
 
-	void Bits8PaletteBuffer::renderHorizontalLineNative(const Point &point, uint16_t width, const Color* color) {
+	void Bits8PaletteBuffer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
 		memset(_buffer + getIndex(point), getPaletteIndexOf(color), width);
 	}
 
-	void Bits8PaletteBuffer::renderVerticalLineNative(const Point &point, uint16_t height, const Color* color) {
+	void Bits8PaletteBuffer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(point);
 		uint16_t scanlineLength = getDriver()->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);

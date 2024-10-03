@@ -22,19 +22,19 @@ namespace yoba {
 
 			virtual void flush() = 0;
 
-			Bounds &getViewport();
+			const Bounds& getViewport();
 			void setViewport(const Bounds& bounds);
 			void resetViewport();
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
-			size_t getIndex(const Point &point) const;
+			size_t getIndex(const Point& point) const;
 
 			// -------------------------------- Native rendering --------------------------------
 
 			void clear(const Color *color);
-			void renderPixel(const Point &point, const Color *color);
-			void renderHorizontalLine(const Point &point, uint16_t length, const Color *color);
-			void renderVerticalLine(const Point &point, uint16_t length, const Color *color);
+			void renderPixel(const Point& point, const Color *color);
+			void renderHorizontalLine(const Point& point, uint16_t length, const Color *color);
+			void renderVerticalLine(const Point& point, uint16_t length, const Color *color);
 			void renderFilledRectangle(const Bounds& bounds, const Color *color);
 			void renderFilledRectangle(const Bounds& bounds, uint16_t radius, const Color* color);
 			void renderImage(const Point& point, const Image* image);
@@ -43,10 +43,10 @@ namespace yoba {
 
 			void renderRectangle(const Bounds& bounds, const Color* color);
 			// Thanks, AdaFruit!
-			void renderLine(const Point &from, const Point &to, const Color *color);
-			void renderTriangle(const Point &point1, const Point &point2, const Point &point3, const Color *color);
-			void renderFilledTriangle(const Point &point1, const Point &point2, const Point &point3, const Color *color);
-			void renderFilledCircle(const Point &center, uint16_t radius, const Color *color);
+			void renderLine(const Point& from, const Point& to, const Color *color);
+			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color *color);
+			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color *color);
+			void renderFilledCircle(const Point& center, uint16_t radius, const Color *color);
 
 			/**
 			* @brief Renders single line of text
@@ -56,10 +56,15 @@ namespace yoba {
 			* @param text Template-based pointer to first character in text
 			*/
 			template<typename TChar>
-			void renderText(const Point &point, const Font *font, const Color *color, const TChar* text);
+			void renderText(const Point& point, const Font *font, const Color *color, const TChar* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const char* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const String& text);
+
+			template<typename TChar>
+			void renderChar(const Point& point, const Font* font, const Color* color, TChar ch);
+			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch);
+			void renderChar(const Point& point, const Font* font, const Color* color, char ch);
 
 		protected:
 			ScreenDriver* _driver;
@@ -71,11 +76,11 @@ namespace yoba {
 
 			virtual void clearNative(const Color *color) = 0;
 
-			virtual void renderPixelNative(const Point &point, const Color *color) = 0;
+			virtual void renderPixelNative(const Point& point, const Color *color) = 0;
 
-			virtual void renderHorizontalLineNative(const Point &point, uint16_t length, const Color *color) = 0;
+			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color *color) = 0;
 
-			virtual void renderVerticalLineNative(const Point &point, uint16_t length, const Color *color) = 0;
+			virtual void renderVerticalLineNative(const Point& point, uint16_t length, const Color *color) = 0;
 
 			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color *color) = 0;
 
@@ -83,17 +88,19 @@ namespace yoba {
 
 		private:
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color);
+			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph);
 	};
 
 	template<typename TChar>
 	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const TChar* text) {
-		const auto viewportX2 = getViewport().getX2();
+		const auto& viewport = getViewport();
+		const auto viewportX2 = viewport.getX2();
 
 		// Skipping rendering if text is obviously not in viewport
 		if (
 			point.getX() > viewportX2
-			|| point.getY() > getViewport().getY2()
-			|| point.getY() + font->getHeight() < getViewport().getY()
+			|| point.getY() > viewport.getY2()
+			|| point.getY() + font->getHeight() < viewport.getY()
 		)
 			return;
 
@@ -104,9 +111,6 @@ namespace yoba {
 		int32_t
 			x = point.getX(),
 			x2;
-
-		uint32_t bitmapBitIndex;
-		uint8_t bitmapByte;
 
 		while (true) {
 			ch = text[charIndex];
@@ -124,20 +128,16 @@ namespace yoba {
 				x2 = x + glyph->getWidth();
 
 				// Rendering current glyph only if it's in viewport
-				if (x2 > getViewport().getX()) {
-					bitmapBitIndex = glyph->getBitmapBitIndex();
-
-					for (uint8_t j = 0; j < font->getHeight(); j++) {
-						for (uint8_t i = 0; i < glyph->getWidth(); i++) {
-							bitmapByte = font->getBitmap()[bitmapBitIndex / 8];
-
-							// We have pixel!
-							if ((bitmapByte >> bitmapBitIndex % 8) & 1)
-								renderPixel(Point(x + i, point.getY() + j), color);
-
-							bitmapBitIndex++;
-						}
-					}
+				if (x2 > viewport.getX()) {
+					renderGlyph(
+						Point(
+							x,
+							point.getY()
+						),
+						font,
+						color,
+						glyph
+					);
 				}
 
 				x = x2;
@@ -153,5 +153,30 @@ namespace yoba {
 
 			charIndex++;
 		}
+	}
+
+	template<typename TChar>
+	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, TChar ch) {
+		const auto& viewport = getViewport();
+		const auto viewportX2 = viewport.getX2();
+
+		if (
+			point.getX() > viewportX2
+			|| point.getY() > viewport.getY2()
+			|| point.getY() + font->getHeight() < viewport.getY()
+		)
+			return;
+
+		const auto glyph = font->getGlyph(ch);
+
+		if (!glyph || point.getX() + glyph->getWidth() < viewport.getX())
+			return;
+
+		renderGlyph(
+			point,
+			font,
+			color,
+			glyph
+		);
 	}
 }

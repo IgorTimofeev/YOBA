@@ -16,7 +16,7 @@ namespace yoba {
 		return _driver;
 	}
 
-	Bounds &ScreenBuffer::getViewport() {
+	const Bounds& ScreenBuffer::getViewport() {
 		return _viewport;
 	}
 
@@ -35,7 +35,7 @@ namespace yoba {
 		return y * _driver->getResolution().getWidth() + x;
 	}
 
-	size_t ScreenBuffer::getIndex(const Point &point) const {
+	size_t ScreenBuffer::getIndex(const Point& point) const {
 		return getIndex(point.getX(), point.getY());
 	}
 
@@ -45,12 +45,12 @@ namespace yoba {
 		clearNative(color);
 	}
 
-	void ScreenBuffer::renderPixel(const Point &point, const Color *color) {
+	void ScreenBuffer::renderPixel(const Point& point, const Color *color) {
 		if (getViewport().intersects(point))
 			renderPixelNative(point, color);
 	}
 
-	void ScreenBuffer::renderHorizontalLine(const Point &point, uint16_t length, const Color *color) {
+	void ScreenBuffer::renderHorizontalLine(const Point& point, uint16_t length, const Color *color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -70,7 +70,7 @@ namespace yoba {
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
 	}
 
-	void ScreenBuffer::renderVerticalLine(const Point &point, uint16_t length, const Color *color) {
+	void ScreenBuffer::renderVerticalLine(const Point& point, uint16_t length, const Color *color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -181,7 +181,7 @@ namespace yoba {
 		);
 	}
 
-	void ScreenBuffer::renderLine(const Point &from, const Point &to, const Color* color) {
+	void ScreenBuffer::renderLine(const Point& from, const Point& to, const Color* color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {
 			renderVerticalLine(
@@ -284,14 +284,14 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderTriangle(const Point &point1, const Point &point2, const Point &point3, const Color* color) {
+	void ScreenBuffer::renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
 		// Simple as fuck
 		renderLine(point1, point2, color);
 		renderLine(point2, point3, color);
 		renderLine(point3, point1, color);
 	}
 
-	void ScreenBuffer::renderFilledTriangle(const Point &point1, const Point &point2, const Point &point3, const Color* color) {
+	void ScreenBuffer::renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
 		int32_t
 			x1 = point1.getX(),
 			y1 = point1.getY(),
@@ -398,7 +398,7 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderFilledCircle(const Point &center, uint16_t radius, const Color *color) {
+	void ScreenBuffer::renderFilledCircle(const Point& center, uint16_t radius, const Color *color) {
 		if (radius == 0)
 			return;
 
@@ -459,6 +459,23 @@ namespace yoba {
 		}
 	}
 
+	void ScreenBuffer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph) {
+		auto bitmapBitIndex = glyph->getBitmapBitIndex();
+		uint8_t bitmapByte;
+
+		for (uint8_t j = 0; j < font->getHeight(); j++) {
+			for (uint8_t i = 0; i < glyph->getWidth(); i++) {
+				bitmapByte = font->getBitmap()[bitmapBitIndex / 8];
+
+				// We have pixel!
+				if ((bitmapByte >> bitmapBitIndex % 8) & 1)
+					renderPixel(Point(point.getX() + i, point.getY() + j), color);
+
+				bitmapBitIndex++;
+			}
+		}
+	}
+
 	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text) {
 		renderText<wchar_t>(point, font, color, text);
 	}
@@ -469,5 +486,13 @@ namespace yoba {
 
 	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const String& text) {
 		renderText(point, font, color, text.c_str());
+	}
+
+	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch) {
+		renderChar<wchar_t>(point, font, color, ch);
+	}
+
+	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, char ch) {
+		renderChar<char>(point, font, color, ch);
 	}
 }

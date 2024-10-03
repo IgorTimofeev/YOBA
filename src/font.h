@@ -27,10 +27,13 @@ namespace yoba {
 			const Glyph* getGlyph(TChar codepoint) const;
 
 			template<typename TChar>
-			uint16_t getWidth(const TChar *text) const;
+			uint8_t getCharWidth(TChar codepoint) const;
+
+			template<typename TChar>
+			uint16_t getWidth(const TChar* text) const;
 
 			uint8_t getHeight() const;
-			Size getSize(const wchar_t *text) const;
+			Size getSize(const wchar_t* text) const;
 
 		private:
 			const uint32_t _fromCodepoint;
@@ -41,18 +44,24 @@ namespace yoba {
 	};
 
 	template<typename TChar>
-	const Glyph *Font::getGlyph(TChar codepoint) const {
+	const Glyph* Font::getGlyph(TChar codepoint) const {
 		return
 			codepoint < _fromCodepoint || codepoint > _toCodepoint
-			? nullptr :
-			&_glyphs[codepoint - _fromCodepoint];
+			? nullptr
+			: &_glyphs[codepoint - _fromCodepoint];
 	}
 
 	template<typename TChar>
-	uint16_t Font::getWidth(const TChar *text) const {
+	uint8_t Font::getCharWidth(TChar codepoint) const {
+		const auto glyph = getGlyph(codepoint);
+
+		return glyph ? glyph->getWidth() : missingGlyphWidth;
+	}
+
+	template<typename TChar>
+	uint16_t Font::getWidth(const TChar* text) const {
 		wchar_t ch;
 		size_t charIndex = 0;
-		const Glyph* glyph;
 
 		uint16_t width = 0;
 
@@ -63,17 +72,7 @@ namespace yoba {
 			if (ch == '\0')
 				break;
 
-			// Trying to find glyph matched to char
-			glyph = getGlyph(ch);
-
-			// If glyph was found in bitmap
-			if (glyph) {
-				width += glyph->getWidth();
-			}
-				// For non-existing glyphs we can just simulate whitespace
-			else {
-				width += missingGlyphWidth;
-			}
+			width += getCharWidth(ch);
 
 			charIndex++;
 		}

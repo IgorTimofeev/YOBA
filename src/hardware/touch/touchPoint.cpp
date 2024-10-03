@@ -1,11 +1,11 @@
 #include "touchPoint.h"
 
 namespace yoba {
-	const Point &TouchPoint::getPosition() const {
+	const Point& TouchPoint::getPosition() const {
 		return _position;
 	}
 
-	void TouchPoint::setPosition(const Point &position) {
+	void TouchPoint::setPosition(const Point& position) {
 		_position = position;
 	}
 
