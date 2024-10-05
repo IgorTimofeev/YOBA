@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <cstdint>
 #include "../../../point.h"
 #include "../../../size.h"
 #include "../../../bounds.h"
@@ -46,6 +47,7 @@ namespace yoba {
 			void renderLine(const Point& from, const Point& to, const Color *color);
 			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color *color);
 			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color *color);
+			void renderCircle(const Point& center, uint16_t radius, const Color* color);
 			void renderFilledCircle(const Point& center, uint16_t radius, const Color *color);
 
 			/**

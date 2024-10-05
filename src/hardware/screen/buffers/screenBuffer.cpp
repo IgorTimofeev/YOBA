@@ -398,6 +398,67 @@ namespace yoba {
 		}
 	}
 
+	void ScreenBuffer::renderCircle(const Point& center, uint16_t radius, const Color *color) {
+		if (radius == 0)
+			return;
+
+		int32_t
+			f = 1 - radius,
+			ddF_y = -2 * radius,
+			ddF_x = 1,
+			xs = -1,
+			xe = 0,
+			len;
+
+		bool first = true;
+
+		do {
+			while (f < 0) {
+				++xe;
+				f += (ddF_x += 2);
+			}
+
+			f += (ddF_y += 2);
+
+			if (xe-xs > 1) {
+				if (first) {
+					len = 2 * (xe - xs) - 1;
+					renderHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
+					renderHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
+					renderVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
+					renderVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
+					first = false;
+				}
+				else {
+					len = xe - xs++;
+					renderHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
+					renderHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
+					renderHorizontalLine(Point(center.getX() + xs, center.getY() - radius), len, color);
+					renderHorizontalLine(Point(center.getX() + xs, center.getY() + radius), len, color);
+
+					renderVerticalLine(Point(center.getX() + radius, center.getY() + xs), len, color);
+					renderVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
+					renderVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
+					renderVerticalLine(Point(center.getX() - radius, center.getY() + xs), len, color);
+				}
+			}
+			else {
+				++xs;
+				renderPixel(Point(center.getX() - xe, center.getY() + radius), color);
+				renderPixel(Point(center.getX() - xe, center.getY() - radius), color);
+				renderPixel(Point(center.getX() + xs, center.getY() - radius), color);
+				renderPixel(Point(center.getX() + xs, center.getY() + radius), color);
+
+				renderPixel(Point(center.getX() + radius, center.getY() + xs), color);
+				renderPixel(Point(center.getX() + radius, center.getY() - xe), color);
+				renderPixel(Point(center.getX() - radius, center.getY() - xe), color);
+				renderPixel(Point(center.getX() - radius, center.getY() + xs), color);
+			}
+
+			xs = xe;
+		} while (xe < --radius);
+	}
+
 	void ScreenBuffer::renderFilledCircle(const Point& center, uint16_t radius, const Color *color) {
 		if (radius == 0)
 			return;
