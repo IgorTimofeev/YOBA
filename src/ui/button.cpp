@@ -38,27 +38,19 @@ namespace yoba {
 	}
 
 	void Button::onEvent(InputEvent &event) {
-		switch (event.getType()) {
-			case EventType::TouchDown: {
-				setCaptured(true);
-				setPressed(!isToggle() || !isPressed());
+		if (typeid(event) == typeid(TouchDownEvent)) {
+			setCaptured(true);
+			setPressed(!isToggle() || !isPressed());
 
-				event.setHandled(true);
+			event.setHandled(true);
+		}
+		else if (typeid(event) == typeid(TouchUpEvent)) {
+			setCaptured(false);
 
-				break;
-			}
-			case EventType::TouchUp: {
-				setCaptured(false);
+			if (!isToggle())
+				setPressed(false);
 
-				if (!isToggle())
-					setPressed(false);
-
-				event.setHandled(true);
-
-				break;
-			}
-			default:
-				break;
+			event.setHandled(true);
 		}
 	}
 

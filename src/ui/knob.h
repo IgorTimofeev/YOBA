@@ -39,6 +39,11 @@ namespace yoba {
 			float _angleStep = radians(10);
 			const Color* _lineColor = nullptr;
 			const Color* _centerColor = nullptr;
+
+			template<typename Base, typename T>
+			inline bool instanceof(const T*) {
+				return std::is_base_of<Base, T>::value;
+			}
 	};
 
 	class KnobRotateEvent : public TargetEvent<Knob*> {

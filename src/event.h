@@ -7,51 +7,32 @@ namespace yoba {
 
 	class Element;
 
-	enum class EventType : uint8_t {
-		TouchDown,
-		TouchDrag,
-		TouchUp,
-
-		PinchDown,
-		PinchDrag,
-		PinchUp,
-
-		Element
-	};
-
 	class Event {
 		public:
-			explicit Event(EventType type);
-
 			virtual bool matches(Element* element);
-
-			EventType getType() const;
 
 			bool isHandled() const;
 			void setHandled(bool handled);
 
 		private:
 			bool _handled = false;
-			EventType _type;
 	};
 
 	// -------------------------------- InputEvent --------------------------------
 
 	class InputEvent : public Event {
 		public:
-			explicit InputEvent(EventType type);
+
 	};
 
 	class ScreenEvent : public InputEvent {
 		public:
-			explicit ScreenEvent(EventType type);
-
 			bool matches(Element* element) override;
 	};
 
 	class TouchEvent : public ScreenEvent {
 		public:
-			explicit TouchEvent(const EventType& type, const Point& position);
+			explicit TouchEvent(const Point& position);
 
 			bool matches(Element* element) override;
 
@@ -79,7 +60,7 @@ namespace yoba {
 
 	class PinchEvent : public ScreenEvent {
 		public:
-			explicit PinchEvent(const EventType& type, const Point& position1, const Point& position2);
+			explicit PinchEvent(const Point& position1, const Point& position2);
 
 			bool matches(Element* element) override;
 
@@ -126,7 +107,7 @@ namespace yoba {
 	}
 
 	template<typename TElement>
-	TargetEvent<TElement>::TargetEvent(TElement target) : Event(EventType::Element), _target(target) {
+	TargetEvent<TElement>::TargetEvent(TElement target) : _target(target) {
 
 	}
 }

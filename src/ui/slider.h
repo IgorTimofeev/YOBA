@@ -41,20 +41,22 @@ namespace yoba {
 			}
 
 			void onEvent(InputEvent &event) override {
-				if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
+				const auto isTouchDown = typeid(event) == typeid(TouchDownEvent);
+				const auto isTouchUp = typeid(event) == typeid(TouchUpEvent);
+				const auto isTouchDrag = typeid(event) == typeid(TouchDragEvent);
+
+				if (!(isTouchDown || isTouchUp || isTouchDrag))
 					return;
 
-				auto& touchEvent = (TouchEvent&) event;
-
-				if (event.getType() == EventType::TouchDown) {
+				if (isTouchDown) {
 					setCaptured(true);
 				}
-				else if (event.getType() == EventType::TouchUp) {
+				else if (isTouchUp) {
 					setCaptured(false);
 				}
 
-				auto& bounds = getBounds();
-				auto part = clamp((float) (touchEvent.getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
+				const auto& bounds = getBounds();
+				const auto part = clamp((float) (((TouchEvent&) event).getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
 
 				setValue(part);
 

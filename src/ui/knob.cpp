@@ -39,20 +39,22 @@ namespace yoba {
 	}
 
 	void Knob::onEvent(InputEvent &event) {
-		if (event.getType() != EventType::TouchDown && event.getType() != EventType::TouchDrag && event.getType() != EventType::TouchUp)
+		const auto isTouchDown = typeid(event) == typeid(TouchDownEvent);
+		const auto isTouchUp = typeid(event) == typeid(TouchUpEvent);
+		const auto isTouchDrag = typeid(event) == typeid(TouchDragEvent);
+
+		if (!(isTouchDown || isTouchUp || isTouchDrag))
 			return;
 
-		auto& touchEvent = (TouchEvent&) event;
-
-		if (event.getType() == EventType::TouchDown) {
+		if (isTouchDown) {
 			setCaptured(true);
 		}
-		else if (event.getType() == EventType::TouchUp) {
+		else if (isTouchUp) {
 			setCaptured(false);
 		}
-		else if (event.getType() == EventType::TouchDrag) {
+		else {
 			const auto oldAngle = _angle;
-			_angle = touchEvent.getPosition().getRotation(getBounds().getCenter()) - (float) radians(90);
+			_angle = ((TouchDragEvent&) event).getPosition().getRotation(getBounds().getCenter()) - (float) radians(90);
 
 			auto knobRotateEvent = KnobRotateEvent(this, oldAngle, _angle);
 			_onRotate.call(knobRotateEvent);

@@ -4,14 +4,6 @@
 namespace yoba {
 	// -------------------------------- Event --------------------------------
 
-	Event::Event(EventType type) : _type(type) {
-
-	}
-
-	EventType Event::getType() const {
-		return _type;
-	}
-
 	bool Event::isHandled() const {
 		return _handled;
 	}
@@ -26,16 +18,11 @@ namespace yoba {
 
 	// -------------------------------- Input --------------------------------
 
-	InputEvent::InputEvent(EventType type) : Event(type) {
-
-	}
-
 	bool ScreenEvent::matches(Element* element) {
 		return element->isVisible() && element->isEnabled();
 	}
 
-	TouchEvent::TouchEvent(const EventType &type, const Point& position) :
-		ScreenEvent(type),
+	TouchEvent::TouchEvent(const Point& position) :
 		_position(position)
 	{
 
@@ -59,28 +46,24 @@ namespace yoba {
 	}
 
 	TouchDownEvent::TouchDownEvent(const Point& position) : TouchEvent(
-		EventType::TouchDown,
 		position
 	) {
 
 	}
 
 	TouchDragEvent::TouchDragEvent(const Point& position) : TouchEvent(
-		EventType::TouchDrag,
 		position
 	) {
 
 	}
 
 	TouchUpEvent::TouchUpEvent(const Point& position) : TouchEvent(
-		EventType::TouchUp,
 		position
 	) {
 
 	}
 
-	PinchEvent::PinchEvent(const EventType &type, const Point& position1, const Point& position2) :
-		ScreenEvent(type),
+	PinchEvent::PinchEvent(const Point& position1, const Point& position2) :
 		_position1(position1),
 		_position2(position2)
 	{
@@ -115,7 +98,6 @@ namespace yoba {
 	}
 
 	PinchDownEvent::PinchDownEvent(const Point& position1, const Point& position2) : PinchEvent(
-		EventType::PinchDown,
 		position1,
 		position2
 	) {
@@ -123,7 +105,6 @@ namespace yoba {
 	}
 
 	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) : PinchEvent(
-		EventType::PinchDrag,
 		position1,
 		position2
 	) {
@@ -131,14 +112,9 @@ namespace yoba {
 	}
 
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
-		EventType::PinchUp,
 		position1,
 		position2
 	) {
-
-	}
-
-	ScreenEvent::ScreenEvent(EventType type) : InputEvent(type) {
 
 	}
 }
