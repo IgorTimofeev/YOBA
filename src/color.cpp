@@ -13,6 +13,23 @@ namespace yoba {
 
 	}
 
+	uint8_t Color::getBitsPerType(ColorType colorType) {
+		switch (colorType) {
+			case ColorType::Rgb565: return 16;
+			case ColorType::Rgb888: return 24;
+			default: return 8;
+		}
+	}
+
+	uint8_t Color::getBytesForPixelsPerType(size_t pixelsCount, ColorType colorType) {
+		switch (colorType) {
+			case ColorType::Monochrome: return pixelsCount >= 8 ? pixelsCount / 8 : 1;
+			case ColorType::Rgb565: return pixelsCount * 2;
+			case ColorType::Rgb888: return pixelsCount * 3;
+			default: return pixelsCount;
+		}
+	}
+
 	// -------------------------------- Rgb888Color --------------------------------
 
 	Rgb888Color::Rgb888Color(uint8_t r, uint8_t g, uint8_t b) :
@@ -51,6 +68,10 @@ namespace yoba {
 
 	Rgb565Color Rgb888Color::toRgb565() const {
 		return Rgb565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
+	}
+
+	MonochromeColor Rgb888Color::toMonochrome() const {
+		return _r > 0 || _g > 0 || _b > 0 ? MonochromeColor(true) : MonochromeColor(false);
 	}
 
 	void Rgb888Color::interpolateTo(const Rgb888Color &second, float position) {
@@ -167,6 +188,19 @@ namespace yoba {
 		return result;
 	}
 
+	// -------------------------------- MonochromeColor --------------------------------
+
+	MonochromeColor::MonochromeColor(bool value) : ValueColor<bool>(ColorType::Monochrome, value) {
+
+	}
+
+	Rgb888Color MonochromeColor::toRgb888() const {
+		return
+			_value > 0
+			? Rgb888Color(0xFf, 0xFF, 0xFF)
+			: Rgb888Color(0x00, 0x00, 0x00);
+	}
+
 	// -------------------------------- Rgb565Color --------------------------------
 
 	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorType::Rgb565, value) {
@@ -174,20 +208,6 @@ namespace yoba {
 	}
 
 	Rgb888Color Rgb565Color::toRgb888() const {
-		return {
-			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
-			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),
-			(uint8_t) ((((_value) & 0x1F) * 255 + 15) / 31)
-		};
-	}
-
-	// -------------------------------- Rgb666Color --------------------------------
-
-	Rgb666Color::Rgb666Color(uint32_t value) : ValueColor<uint32_t>(ColorType::Rgb666, value) {
-
-	}
-
-	Rgb888Color Rgb666Color::toRgb888() const {
 		return {
 			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
 			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),

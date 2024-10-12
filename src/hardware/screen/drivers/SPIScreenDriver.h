@@ -5,10 +5,10 @@
 #include "screenDriver.h"
 
 namespace yoba {
-	template<typename TColor>
-	class SPIScreenDriver : public WritableScreenDriver<TColor> {
+	class SPIScreenDriver : public TypedScreenDriver<ColorType> {
 		public:
 			SPIScreenDriver(
+				ColorType colorType,
 				const Size& resolution,
 				ScreenOrientation orientation,
 
@@ -22,7 +22,7 @@ namespace yoba {
 
 			uint8_t getTransactionWindowHeight() const;
 
-			TColor* getTransactionBuffer() const;
+			uint8_t* getTransactionBuffer() const;
 			size_t getTransactionBufferLength() const;
 
 			/* To send a set of lines we have to send a command, 2 data bytes, another command, 2 more data bytes and another command
@@ -34,7 +34,7 @@ namespace yoba {
 			*/
 			void flushTransactionBuffer(uint16_t y);
 
-			void writePixels(const std::function<TColor(size_t pixelIndex)>& colorGetter) override;
+			void writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) override;
 
 		protected:
 			uint8_t _csPin;
@@ -43,7 +43,7 @@ namespace yoba {
 
 			uint8_t _transactionWindowHeight = 20;
 			size_t _transactionBufferLength = 0;
-			TColor* _transactionBuffer = nullptr;
+			uint8_t* _transactionBuffer = nullptr;
 			const SPISettings _spiSettings;
 
 			void onOrientationChanged() override;
@@ -81,8 +81,8 @@ namespace yoba {
 			void setDataCommand(uint8_t value) const;
 	};
 
-	template<typename TColor>
-	SPIScreenDriver<TColor>::SPIScreenDriver(
+	template<ColorType ColorType>
+	SPIScreenDriver<ColorType>::SPIScreenDriver(
 		const Size& resolution,
 		ScreenOrientation orientation,
 
@@ -91,7 +91,7 @@ namespace yoba {
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
-		WritableScreenDriver<TColor>(
+		TypedScreenDriver<ColorType>(
 			resolution,
 			orientation
 		),
@@ -103,9 +103,9 @@ namespace yoba {
 
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::setup() {
-		WritableScreenDriver<TColor>::setup();
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::setup() {
+		TypedScreenDriver<ColorType>::setup();
 
 		// Resetting CS pin just in case
 		pinMode(_csPin, OUTPUT);
@@ -131,13 +131,13 @@ namespace yoba {
 		writeBeginCommands();
 	}
 
-	template<typename TColor>
-	uint8_t SPIScreenDriver<TColor>::getTransactionWindowHeight() const {
+	template<ColorType ColorType>
+	uint8_t SPIScreenDriver<ColorType>::getTransactionWindowHeight() const {
 		return _transactionWindowHeight;
 	}
 
-	template<typename TColor>
-	inline void SPIScreenDriver<TColor>::writeData(uint8_t data) {
+	template<ColorType ColorType>
+	inline void SPIScreenDriver<ColorType>::writeData(uint8_t data) {
 		setChipSelect(false);
 
 		SPI.beginTransaction(_spiSettings);
@@ -147,8 +147,8 @@ namespace yoba {
 		setChipSelect(true);
 	}
 
-	template<typename TColor>
-	inline void SPIScreenDriver<TColor>::writeData(const uint8_t* data, int length) {
+	template<ColorType ColorType>
+	inline void SPIScreenDriver<ColorType>::writeData(const uint8_t* data, int length) {
 		setChipSelect(false);
 
 		SPI.beginTransaction(_spiSettings);
@@ -158,27 +158,27 @@ namespace yoba {
 		setChipSelect(true);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::writeCommand(uint8_t data) {
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::writeCommand(uint8_t data) {
 		setDataCommand(false);
 		writeData(data);
 		setDataCommand(true);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::writeCommandAndData(uint8_t command, uint8_t data) {
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::writeCommandAndData(uint8_t command, uint8_t data) {
 		writeCommand(command);
 		writeData(data);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::writeCommandAndData(uint8_t command, const uint8_t *data, int length) {
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::writeCommandAndData(uint8_t command, const uint8_t *data, int length) {
 		writeCommand(command);
 		writeData(data, length);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::flushTransactionBuffer(uint16_t y) {
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::flushTransactionBuffer(uint16_t y) {
 		uint8_t data[4];
 
 		// Column Address Set
@@ -196,62 +196,66 @@ namespace yoba {
 		writeCommandAndData(0x2B, data, 4);
 
 		// Memory write
-		writeCommandAndData(0x2C, (uint8_t*) _transactionBuffer, this->_resolution.getWidth() * _transactionWindowHeight * sizeof(TColor));
+		writeCommandAndData(0x2C, (uint8_t*) _transactionBuffer, _transactionBufferLength);
 	}
 
-	template<typename TColor>
-	TColor* SPIScreenDriver<TColor>::getTransactionBuffer() const {
+	template<ColorType ColorType>
+	uint8_t* SPIScreenDriver<ColorType>::getTransactionBuffer() const {
 		return _transactionBuffer;
 	}
 
-	template<typename TColor>
-	size_t SPIScreenDriver<TColor>::getTransactionBufferLength() const {
+	template<ColorType ColorType>
+	size_t SPIScreenDriver<ColorType>::getTransactionBufferLength() const {
 		return _transactionBufferLength;
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::updateDataFromOrientation() {
-		WritableScreenDriver<TColor>::updateDataFromOrientation();
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::updateDataFromOrientation() {
+		TypedScreenDriver<ColorType>::updateDataFromOrientation();
 
 		// Updating transaction buffer height
 		_transactionWindowHeight = getTransactionWindowHeightForOrientation();
 
 		// Allocating transaction buffer
 		delete _transactionBuffer;
-		_transactionBufferLength = this->_resolution.getWidth() * _transactionWindowHeight * sizeof(TColor);
-		_transactionBuffer = (TColor*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
+		_transactionBufferLength = Color::getBytesForPixelsPerType(this->_resolution.getWidth() * _transactionWindowHeight, ColorType);
+		_transactionBuffer = (uint8_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::onOrientationChanged() {
-		WritableScreenDriver<TColor>::onOrientationChanged();
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::onOrientationChanged() {
+		TypedScreenDriver<ColorType>::onOrientationChanged();
 
 		writeOrientationChangeCommands();
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::setChipSelect(uint8_t value) const {
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::setChipSelect(uint8_t value) const {
 		digitalWrite(_csPin, value);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::setDataCommand(uint8_t value) const {
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::setDataCommand(uint8_t value) const {
 		digitalWrite(_dcPin, value);
 	}
 
-	template<typename TColor>
-	void SPIScreenDriver<TColor>::writePixels(const std::function<TColor(size_t pixelIndex)>& colorGetter) {
-		const size_t pixelCount = this->_resolution.getWidth() * _transactionWindowHeight;
-		size_t pixelIndex = 0;
+	template<ColorType ColorType>
+	void SPIScreenDriver<ColorType>::writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) {
+		switch (ColorType) {
+			case ColorType::Rgb565:
+				const size_t pixelCount = this->_resolution.getWidth() * _transactionWindowHeight;
+				size_t pixelIndex = 0;
 
-		for (uint16_t y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
-			for (size_t transactionBufferIndex = 0; transactionBufferIndex < pixelCount; transactionBufferIndex++) {
-				_transactionBuffer[transactionBufferIndex] = colorGetter(pixelIndex);
-				pixelIndex++;
-			}
+				for (uint16_t y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
+					for (size_t transactionBufferIndex = 0; transactionBufferIndex < pixelCount; transactionBufferIndex++) {
+						_transactionBuffer[transactionBufferIndex] = pixelGetter(pixelIndex);
+						pixelIndex++;
+					}
 
-			flushTransactionBuffer(y);
+					flushTransactionBuffer(y);
+				}
+				break;
 		}
 	}
 }

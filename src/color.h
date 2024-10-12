@@ -3,18 +3,11 @@
 #include "cstdlib"
 
 namespace yoba {
-	enum class ColorDepth : uint8_t {
-		Bit1,
-		Bit8,
-		Bit16,
-		Bit32
-	};
-
 	enum class ColorType : uint8_t {
 		Palette,
 		Hsb,
+		Monochrome,
 		Rgb565,
-		Rgb666,
 		Rgb888
 	};
 
@@ -25,6 +18,10 @@ namespace yoba {
 			explicit Color(ColorType type);
 
 			ColorType getType() const;
+
+			static uint8_t getBitsPerType(ColorType colorType);
+
+			static uint8_t getBytesForPixelsPerType(size_t pixelsCount, ColorType colorType);
 
 		private:
 			ColorType _type;
@@ -86,18 +83,18 @@ namespace yoba {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	class Rgb565Color : public ValueColor<uint16_t> {
+	class MonochromeColor : public ValueColor<bool> {
 		public:
-			explicit Rgb565Color(uint16_t value);
+			explicit MonochromeColor(bool value);
 
 			Rgb888Color toRgb888() const override;
 	};
 
-	// -------------------------------- Rgb666Color --------------------------------
+	// -------------------------------- Rgb565Color --------------------------------
 
-	class Rgb666Color : public ValueColor<uint32_t> {
+	class Rgb565Color : public ValueColor<uint16_t> {
 		public:
-			explicit Rgb666Color(uint32_t value);
+			explicit Rgb565Color(uint16_t value);
 
 			Rgb888Color toRgb888() const override;
 	};
@@ -123,6 +120,7 @@ namespace yoba {
 
 			uint32_t toUint32() const;
 			Rgb565Color toRgb565() const;
+			MonochromeColor toMonochrome() const;
 
 			void interpolateTo(const Rgb888Color& second, float position);
 

@@ -181,4 +181,23 @@ namespace yoba {
 			glyph
 		);
 	}
+
+	template<ColorType ColorType>
+	class TypedScreenBuffer : public ScreenBuffer {
+		public:
+			explicit TypedScreenBuffer(ScreenDriver* driver);
+
+			void allocate() override;
+	};
+
+	template<ColorType ColorType>
+	TypedScreenBuffer<ColorType>::TypedScreenBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
+
+	}
+
+	template<ColorType ColorType>
+	void TypedScreenBuffer<ColorType>::allocate() {
+		_bufferLength = Color::getBytesForPixelsPerType(_driver->getResolution().getWidth() * _driver->getResolution().getHeight(), ColorType);
+		_buffer = new uint8_t[_bufferLength];
+	}
 }

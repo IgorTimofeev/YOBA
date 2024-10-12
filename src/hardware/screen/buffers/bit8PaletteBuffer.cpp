@@ -2,30 +2,25 @@
 #include "bounds.h"
 
 namespace yoba {
-	Bit8PaletteBuffer::Bit8PaletteBuffer(WritableScreenDriver<uint16_t>* driver) : PaletteBuffer(driver) {
+	Bit8Rgb565PaletteBuffer::Bit8Rgb565PaletteBuffer(TypedScreenDriver<ColorType::Rgb565>* driver) : PaletteBuffer(driver) {
 
 	}
 
-	void Bit8PaletteBuffer::allocate() {
-		_bufferLength = _driver->getResolution().getWidth() * _driver->getResolution().getHeight();
-		_buffer = new uint8_t[_bufferLength];
-	}
-
-	void Bit8PaletteBuffer::flush() {
-		((WritableScreenDriver<uint16_t>*) _driver)->writePixels([&](size_t pixelIndex) {
+	void Bit8Rgb565PaletteBuffer::flush() {
+		((TypedScreenDriver<ColorType::Rgb565>*) _driver)->writePixels([&](size_t pixelIndex) {
 			return _palette[_buffer[pixelIndex]];
 		});
 	}
 
-	void Bit8PaletteBuffer::renderPixelNative(const Point& point, const Color* color) {
+	void Bit8Rgb565PaletteBuffer::renderPixelNative(const Point& point, const Color* color) {
 		_buffer[getIndex(point)] = getPaletteIndexOf(color);
 	}
 
-	void Bit8PaletteBuffer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
+	void Bit8Rgb565PaletteBuffer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
 		memset(_buffer + getIndex(point), getPaletteIndexOf(color), width);
 	}
 
-	void Bit8PaletteBuffer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
+	void Bit8Rgb565PaletteBuffer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(point);
 		uint16_t scanlineLength = _driver->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);
@@ -36,7 +31,7 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBuffer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void Bit8Rgb565PaletteBuffer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(bounds.getTopLeft());
 		uint16_t scanlineLength = _driver->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);
@@ -47,7 +42,7 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBuffer::renderImageNative(const Point& point, const Image* image) {
+	void Bit8Rgb565PaletteBuffer::renderImageNative(const Point& point, const Image* image) {
 		size_t
 			bufferIndex = getIndex(point),
 			scanlineLength = _driver->getResolution().getWidth() - image->getSize().getWidth(),
@@ -65,7 +60,7 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBuffer::setOpenComputersPaletteColors() {
+	void Bit8Rgb565PaletteBuffer::setOpenComputersPaletteColors() {
 		const uint8_t reds = 6;
 		const uint8_t greens = 8;
 		const uint8_t blues = 5;

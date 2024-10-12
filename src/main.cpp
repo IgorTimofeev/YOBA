@@ -13,14 +13,14 @@
 
 using namespace yoba;
 
-ILI9341Driver screenDriver = ILI9341Driver(
+Rgb565ILI9341Driver screenDriver = Rgb565ILI9341Driver(
 	ScreenOrientation::Landscape270,
 	5,
 	16,
 	17
 );
 
-Bit8PaletteBuffer screenBuffer = Bit8PaletteBuffer(&screenDriver);
+Bit8Rgb565PaletteBuffer screenBuffer = Bit8Rgb565PaletteBuffer(&screenDriver);
 
 FT6336UTouchPanel touchPanel = FT6336UTouchPanel(26, 32);
 

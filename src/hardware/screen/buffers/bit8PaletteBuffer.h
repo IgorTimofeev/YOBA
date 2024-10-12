@@ -4,11 +4,10 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	class Bit8PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
+	class Bit8Rgb565PaletteBuffer : public PaletteBuffer<ColorType::Rgb565, uint8_t, uint16_t, 256>{
 		public:
-			explicit Bit8PaletteBuffer(WritableScreenDriver<uint16_t>* driver);
+			explicit Bit8Rgb565PaletteBuffer(TypedScreenDriver<ColorType::Rgb565>* driver);
 
-			void allocate() override;
 			void flush() override;
 
 			// Original generation algo can be found here:
