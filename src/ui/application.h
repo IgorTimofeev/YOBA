@@ -32,7 +32,7 @@ namespace yoba {
 			const Font *getDefaultFont() const;
 			void setDefaultFont(const Font* defaultFont);
 
-			Action<>& getOnTick();
+			Callback<>& getOnTick();
 
 			ScreenBuffer* getScreenBuffer() const;
 			void setScreenBuffer(ScreenBuffer* screenBuffer);
@@ -49,7 +49,7 @@ namespace yoba {
 			bool _isArranged = false;
 			Element* _capturedElement = nullptr;
 			std::vector<Animation*> _animations {};
-			Action<> _onTick {};
+			Callback<> _onTick {};
 			const Font* _defaultFont = nullptr;
 
 			void animationsTick();

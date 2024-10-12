@@ -22,7 +22,7 @@ namespace yoba {
 
 			void setItemsLayout(Layout* layout);
 
-			const Action<>& getOnSelectionChanged() const;
+			const Callback<>& getOnSelectionChanged() const;
 
 		protected:
 			virtual void onSelectionChanged();
@@ -30,6 +30,6 @@ namespace yoba {
 		private:
 			Layout* _itemsLayout = nullptr;
 			int32_t _selectedIndex = -1;
-			Action<> _onSelectionChanged {};
+			Callback<> _onSelectionChanged {};
 	};
 }

@@ -95,7 +95,7 @@ namespace yoba {
 		_centerColor = centerColor;
 	}
 
-	Action<KnobRotateEvent&> &Knob::getOnRotate() {
+	Callback<KnobRotateEvent&> &Knob::getOnRotate() {
 		return _onRotate;
 	}
 

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <limits>
 
-#include "../action.h"
+#include "../callback.h"
 #include "../margin.h"
 #include "../bounds.h"
 #include "../size.h"
@@ -44,7 +44,7 @@ namespace yoba {
 
 			virtual void startAnimation(Animation* animation);
 
-			const Action<InputEvent&>& getEventHandlers() const;
+			const Callback<InputEvent&>& getEventHandlers() const;
 
 			Application* getRoot();
 			virtual void setRoot(Application* value);
@@ -107,7 +107,7 @@ namespace yoba {
 			Bounds _bounds;
 			Size _measuredSize = Size();
 
-			Action<InputEvent&> _eventHandlers {};
+			Callback<InputEvent&> _eventHandlers {};
 
 			void setMeasuredSize(const Size& value);
 

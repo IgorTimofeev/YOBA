@@ -55,7 +55,7 @@ namespace yoba {
 		_itemsLayout = layout;
 	}
 
-	const Action<>& Selector::getOnSelectionChanged() const {
+	const Callback<>& Selector::getOnSelectionChanged() const {
 		return _onSelectionChanged;
 	}
 }

@@ -54,7 +54,7 @@ namespace yoba {
 		_interpolator = interpolator;
 	}
 
-	const Action<>& Animation::getOnCompleted() const {
+	const Callback<>& Animation::getOnCompleted() const {
 		return _onCompleted;
 	}
 

@@ -4,7 +4,7 @@
 #include "../color.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
-#include "../action.h"
+#include "../callback.h"
 #include "traits/cornerRadiusAware.h"
 #include "traits/backgroundColorAware.h"
 #include "traits/foregroundColorAware.h"
@@ -75,14 +75,14 @@ namespace yoba {
 				_onValueChanged.call();
 			}
 
-			const Action<>& getOnValueChanged() const {
+			const Callback<>& getOnValueChanged() const {
 				return _onValueChanged;
 			}
 
 		private:
 			float _value = 1;
 
-			Action<> _onValueChanged {};
+			Callback<> _onValueChanged {};
 
 			void clampValue() {
 				_value = clamp(_value, 0.0f, 1.0f);

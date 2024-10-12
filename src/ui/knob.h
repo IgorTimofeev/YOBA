@@ -4,7 +4,7 @@
 #include "../color.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
-#include "../action.h"
+#include "../callback.h"
 #include "traits/backgroundColorAware.h"
 #include "traits/foregroundColorAware.h"
 #include "../event.h"
@@ -31,10 +31,10 @@ namespace yoba {
 			const Color *getCenterColor() const;
 			void setCenterColor(const Color *centerColor);
 
-			Action<KnobRotateEvent&>& getOnRotate();
+			Callback<KnobRotateEvent&>& getOnRotate();
 
 		private:
-			Action<KnobRotateEvent&> _onRotate {};
+			Callback<KnobRotateEvent&> _onRotate {};
 			float _angle = 0;
 			float _angleStep = radians(10);
 			const Color* _lineColor = nullptr;

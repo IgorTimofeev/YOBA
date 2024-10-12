@@ -4,7 +4,7 @@
 #include "functional"
 #include "margin.h"
 #include "size.h"
-#include "action.h"
+#include "callback.h"
 
 namespace yoba {
 	class Element;
@@ -29,11 +29,11 @@ namespace yoba {
 
 			void setInterpolator(const std::function<void(const double &)> &interpolator);
 
-			const Action<>& getOnCompleted() const;
+			const Callback<>& getOnCompleted() const;
 
 		private:
 			std::function<void(const double&)> _interpolator;
-			Action<> _onCompleted;
+			Callback<> _onCompleted;
 			uint32_t _start = 0;
 			uint32_t _duration = 0;
 	};

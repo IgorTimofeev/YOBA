@@ -118,7 +118,7 @@ namespace yoba {
 		return _screenBuffer->getDriver()->setOrientation(value);
 	}
 
-	Action<>& Application::getOnTick() {
+	Callback<>& Application::getOnTick() {
 		return _onTick;
 	}
 

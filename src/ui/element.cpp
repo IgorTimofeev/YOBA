@@ -359,7 +359,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	const Action<InputEvent&>& Element::getEventHandlers() const {
+	const Callback<InputEvent&>& Element::getEventHandlers() const {
 		return _eventHandlers;
 	}
 }
