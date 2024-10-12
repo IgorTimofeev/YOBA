@@ -5,7 +5,8 @@
 #include "screenDriver.h"
 
 namespace yoba {
-	class SPIScreenDriver : public ScreenDriver {
+	template<typename TColor>
+	class SPIScreenDriver : public WritableScreenDriver<TColor> {
 		public:
 			SPIScreenDriver(
 				const Size& resolution,
@@ -21,7 +22,7 @@ namespace yoba {
 
 			uint8_t getTransactionWindowHeight() const;
 
-			uint16_t *getTransactionBuffer() const;
+			TColor* getTransactionBuffer() const;
 			size_t getTransactionBufferLength() const;
 
 			/* To send a set of lines we have to send a command, 2 data bytes, another command, 2 more data bytes and another command
@@ -33,7 +34,7 @@ namespace yoba {
 			*/
 			void flushTransactionBuffer(uint16_t y);
 
-			void writePixelData(const std::function<uint16_t(size_t pixelIndex)>& colorGetter) override;
+			void writePixels(const std::function<TColor(size_t pixelIndex)>& colorGetter) override;
 
 		protected:
 			uint8_t _csPin;
@@ -42,7 +43,7 @@ namespace yoba {
 
 			uint8_t _transactionWindowHeight = 20;
 			size_t _transactionBufferLength = 0;
-			uint16_t* _transactionBuffer = nullptr;
+			TColor* _transactionBuffer = nullptr;
 			const SPISettings _spiSettings;
 
 			void onOrientationChanged() override;
@@ -79,4 +80,178 @@ namespace yoba {
 
 			void setDataCommand(uint8_t value) const;
 	};
+
+	template<typename TColor>
+	SPIScreenDriver<TColor>::SPIScreenDriver(
+		const Size& resolution,
+		ScreenOrientation orientation,
+
+		uint8_t csPin,
+		uint8_t dcPin,
+		int8_t rstPin,
+		uint32_t SPIFrequency
+	) :
+		WritableScreenDriver<TColor>(
+			resolution,
+			orientation
+		),
+		_csPin(csPin),
+		_dcPin(dcPin),
+		_rstPin(rstPin),
+		_spiSettings(SPISettings(SPIFrequency, SPI_MSBFIRST, SPI_MODE0))
+	{
+
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::setup() {
+		WritableScreenDriver<TColor>::setup();
+
+		// Resetting CS pin just in case
+		pinMode(_csPin, OUTPUT);
+		setChipSelect(true);
+
+		//Initialize non-SPI GPIOs
+		pinMode(_dcPin, OUTPUT);
+
+		// Toggle reset pin if it was defined
+		if (_rstPin >= 0) {
+			pinMode(_rstPin, OUTPUT);
+
+			digitalWrite(_rstPin, 0);
+			vTaskDelay(100 / portTICK_PERIOD_MS);
+
+			digitalWrite(_rstPin, 1);
+			vTaskDelay(100 / portTICK_PERIOD_MS);
+		}
+
+		// SPI
+		SPI.begin();
+
+		writeBeginCommands();
+	}
+
+	template<typename TColor>
+	uint8_t SPIScreenDriver<TColor>::getTransactionWindowHeight() const {
+		return _transactionWindowHeight;
+	}
+
+	template<typename TColor>
+	inline void SPIScreenDriver<TColor>::writeData(uint8_t data) {
+		setChipSelect(false);
+
+		SPI.beginTransaction(_spiSettings);
+		SPI.transfer(data);
+		SPI.endTransaction();
+
+		setChipSelect(true);
+	}
+
+	template<typename TColor>
+	inline void SPIScreenDriver<TColor>::writeData(const uint8_t* data, int length) {
+		setChipSelect(false);
+
+		SPI.beginTransaction(_spiSettings);
+		SPI.transferBytes(data, nullptr, length);
+		SPI.endTransaction();
+
+		setChipSelect(true);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::writeCommand(uint8_t data) {
+		setDataCommand(false);
+		writeData(data);
+		setDataCommand(true);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::writeCommandAndData(uint8_t command, uint8_t data) {
+		writeCommand(command);
+		writeData(data);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::writeCommandAndData(uint8_t command, const uint8_t *data, int length) {
+		writeCommand(command);
+		writeData(data, length);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::flushTransactionBuffer(uint16_t y) {
+		uint8_t data[4];
+
+		// Column Address Set
+		data[0] = 0; //Start Col High
+		data[1] = 0; //Start Col Low
+		data[2] = (this->_resolution.getWidth() - 1) >> 8; //End Col High
+		data[3] = (this->_resolution.getWidth() - 1) & 0xff; //End Col Low
+		writeCommandAndData(0x2A, data, 4);
+
+		//Page address set
+		data[0] = y >> 8; //Start page high
+		data[1] = y & 0xff; // Start page low
+		data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
+		data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
+		writeCommandAndData(0x2B, data, 4);
+
+		// Memory write
+		writeCommandAndData(0x2C, (uint8_t*) _transactionBuffer, this->_resolution.getWidth() * _transactionWindowHeight * sizeof(TColor));
+	}
+
+	template<typename TColor>
+	TColor* SPIScreenDriver<TColor>::getTransactionBuffer() const {
+		return _transactionBuffer;
+	}
+
+	template<typename TColor>
+	size_t SPIScreenDriver<TColor>::getTransactionBufferLength() const {
+		return _transactionBufferLength;
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::updateDataFromOrientation() {
+		WritableScreenDriver<TColor>::updateDataFromOrientation();
+
+		// Updating transaction buffer height
+		_transactionWindowHeight = getTransactionWindowHeightForOrientation();
+
+		// Allocating transaction buffer
+		delete _transactionBuffer;
+		_transactionBufferLength = this->_resolution.getWidth() * _transactionWindowHeight * sizeof(TColor);
+		_transactionBuffer = (TColor*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
+		assert(_transactionBuffer != nullptr);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::onOrientationChanged() {
+		WritableScreenDriver<TColor>::onOrientationChanged();
+
+		writeOrientationChangeCommands();
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::setChipSelect(uint8_t value) const {
+		digitalWrite(_csPin, value);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::setDataCommand(uint8_t value) const {
+		digitalWrite(_dcPin, value);
+	}
+
+	template<typename TColor>
+	void SPIScreenDriver<TColor>::writePixels(const std::function<TColor(size_t pixelIndex)>& colorGetter) {
+		const size_t pixelCount = this->_resolution.getWidth() * _transactionWindowHeight;
+		size_t pixelIndex = 0;
+
+		for (uint16_t y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
+			for (size_t transactionBufferIndex = 0; transactionBufferIndex < pixelCount; transactionBufferIndex++) {
+				_transactionBuffer[transactionBufferIndex] = colorGetter(pixelIndex);
+				pixelIndex++;
+			}
+
+			flushTransactionBuffer(y);
+		}
+	}
 }

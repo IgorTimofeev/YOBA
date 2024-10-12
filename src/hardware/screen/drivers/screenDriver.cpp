@@ -1,6 +1,4 @@
-#include <SPI.h>
 #include "screenDriver.h"
-#include "Arduino.h"
 #include "point.h"
 
 namespace yoba {

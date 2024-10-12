@@ -8,7 +8,7 @@ namespace yoba {
 	template<typename TIndex, typename TColor, size_t PaletteLength>
 	class PaletteBuffer : public ScreenBuffer {
 		public:
-			explicit PaletteBuffer(ScreenDriver *driver);
+			explicit PaletteBuffer(WritableScreenDriver<TColor> *driver);
 
 			virtual TIndex getPaletteIndexOf(const Color* color);
 
@@ -17,7 +17,6 @@ namespace yoba {
 			TColor getPaletteColor(TIndex index);
 			void setPaletteColor(TIndex index, TColor value);
 			void setPaletteColor(TIndex index, const Rgb888Color& color);
-
 			void setPaletteColors(std::initializer_list<uint32_t> colors);
 
 		protected:
@@ -25,7 +24,7 @@ namespace yoba {
 	};
 
 	template<typename TIndex, typename TColor, size_t PaletteLength>
-	PaletteBuffer<TIndex, TColor, PaletteLength>::PaletteBuffer(ScreenDriver *driver) : ScreenBuffer(driver) {
+	PaletteBuffer<TIndex, TColor, PaletteLength>::PaletteBuffer(WritableScreenDriver<TColor> *driver) : ScreenBuffer(driver) {
 
 	}
 

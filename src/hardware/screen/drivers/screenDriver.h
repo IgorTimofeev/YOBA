@@ -17,13 +17,12 @@ namespace yoba {
 
 			virtual void setup();
 
-			const Size &getResolution() const;
+			const Size& getResolution() const;
 
 			ScreenOrientation getOrientation() const;
 			void setOrientation(ScreenOrientation orientation);
-			Point orientPoint(const Point& point);
 
-			virtual void writePixelData(const std::function<uint16_t(size_t pixelIndex)>& colorGetter) = 0;
+			Point orientPoint(const Point& point);
 
 		protected:
 			const Size _defaultResolution;
@@ -32,5 +31,15 @@ namespace yoba {
 
 			virtual void updateDataFromOrientation();
 			virtual void onOrientationChanged();
+	};
+
+	template<typename TColor>
+	class WritableScreenDriver : public ScreenDriver {
+		public:
+			WritableScreenDriver(const Size& resolution, ScreenOrientation orientation) : ScreenDriver(resolution, orientation) {
+
+			}
+
+			virtual void writePixels(const std::function<TColor(size_t pixelIndex)>& colorGetter) = 0;
 	};
 }

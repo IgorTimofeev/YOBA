@@ -13,7 +13,7 @@
 namespace yoba {
 	class ScreenBuffer {
 		public:
-			explicit ScreenBuffer(ScreenDriver *driver);
+			explicit ScreenBuffer(ScreenDriver* driver);
 
 			void setup();
 

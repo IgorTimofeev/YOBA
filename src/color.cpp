@@ -169,23 +169,25 @@ namespace yoba {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	Rgb565Color::Rgb565Color(uint16_t value) : Color(ColorType::Rgb565), _value(value) {
+	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorType::Rgb565, value) {
 
-	}
-
-	Rgb565Color::Rgb565Color() : Rgb565Color(0) {
-
-	}
-
-	uint16_t Rgb565Color::getValue() const {
-		return _value;
-	}
-
-	void Rgb565Color::setValue(uint16_t value) {
-		_value = value;
 	}
 
 	Rgb888Color Rgb565Color::toRgb888() const {
+		return {
+			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
+			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),
+			(uint8_t) ((((_value) & 0x1F) * 255 + 15) / 31)
+		};
+	}
+
+	// -------------------------------- Rgb666Color --------------------------------
+
+	Rgb666Color::Rgb666Color(uint32_t value) : ValueColor<uint32_t>(ColorType::Rgb666, value) {
+
+	}
+
+	Rgb888Color Rgb666Color::toRgb888() const {
 		return {
 			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
 			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),

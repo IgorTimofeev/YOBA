@@ -6,7 +6,7 @@
 namespace yoba {
 	class Bit8PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
 		public:
-			explicit Bit8PaletteBuffer(ScreenDriver *driver);
+			explicit Bit8PaletteBuffer(WritableScreenDriver<uint16_t>* driver);
 
 			void allocate() override;
 			void flush() override;

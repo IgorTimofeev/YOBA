@@ -3,10 +3,18 @@
 #include "cstdlib"
 
 namespace yoba {
+	enum class ColorDepth : uint8_t {
+		Bit1,
+		Bit8,
+		Bit16,
+		Bit32
+	};
+
 	enum class ColorType : uint8_t {
 		Palette,
 		Hsb,
 		Rgb565,
+		Rgb666,
 		Rgb888
 	};
 
@@ -45,21 +53,53 @@ namespace yoba {
 			float _b = 0;
 	};
 
+	// -------------------------------- ValueColor --------------------------------
+
+	template<typename TValue>
+	class ValueColor : public Color {
+		public:
+			ValueColor(ColorType type, TValue value);
+
+			TValue getValue() const;
+			void setValue(TValue value);
+
+			virtual Rgb888Color toRgb888() const = 0;
+
+		protected:
+			TValue _value;
+	};
+
+	template<typename TValue>
+	ValueColor<TValue>::ValueColor(ColorType type, TValue value) : Color(type), _value(value) {
+
+	}
+
+	template<typename TValue>
+	TValue ValueColor<TValue>::getValue() const {
+		return _value;
+	}
+
+	template<typename TValue>
+	void ValueColor<TValue>::setValue(TValue value) {
+		_value = value;
+	}
+
 	// -------------------------------- Rgb565Color --------------------------------
 
-	class Rgb565Color : public Color {
+	class Rgb565Color : public ValueColor<uint16_t> {
 		public:
 			explicit Rgb565Color(uint16_t value);
 
-			Rgb565Color();
+			Rgb888Color toRgb888() const override;
+	};
 
-			uint16_t getValue() const;
-			void setValue(uint16_t value);
+	// -------------------------------- Rgb666Color --------------------------------
 
-			Rgb888Color toRgb888() const;
+	class Rgb666Color : public ValueColor<uint32_t> {
+		public:
+			explicit Rgb666Color(uint32_t value);
 
-		private:
-			uint16_t _value;
+			Rgb888Color toRgb888() const override;
 	};
 
 	// -------------------------------- Rgb888Color --------------------------------

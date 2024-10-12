@@ -2,17 +2,17 @@
 #include "bounds.h"
 
 namespace yoba {
-	Bit8PaletteBuffer::Bit8PaletteBuffer(ScreenDriver* driver) : PaletteBuffer(driver) {
+	Bit8PaletteBuffer::Bit8PaletteBuffer(WritableScreenDriver<uint16_t>* driver) : PaletteBuffer(driver) {
 
 	}
 
 	void Bit8PaletteBuffer::allocate() {
-		_bufferLength = getDriver()->getResolution().getWidth() * getDriver()->getResolution().getHeight();
+		_bufferLength = _driver->getResolution().getWidth() * _driver->getResolution().getHeight();
 		_buffer = new uint8_t[_bufferLength];
 	}
 
 	void Bit8PaletteBuffer::flush() {
-		_driver->writePixelData([&](size_t pixelIndex) {
+		((WritableScreenDriver<uint16_t>*) _driver)->writePixels([&](size_t pixelIndex) {
 			return _palette[_buffer[pixelIndex]];
 		});
 	}
@@ -27,7 +27,7 @@ namespace yoba {
 
 	void Bit8PaletteBuffer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(point);
-		uint16_t scanlineLength = getDriver()->getResolution().getWidth();
+		uint16_t scanlineLength = _driver->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);
 
 		for (size_t i = 0; i < height; i++) {
@@ -38,7 +38,7 @@ namespace yoba {
 
 	void Bit8PaletteBuffer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = _buffer + getIndex(bounds.getTopLeft());
-		uint16_t scanlineLength = getDriver()->getResolution().getWidth();
+		uint16_t scanlineLength = _driver->getResolution().getWidth();
 		auto paletteIndex = getPaletteIndexOf(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
@@ -50,7 +50,7 @@ namespace yoba {
 	void Bit8PaletteBuffer::renderImageNative(const Point& point, const Image* image) {
 		size_t
 			bufferIndex = getIndex(point),
-			scanlineLength = getDriver()->getResolution().getWidth() - image->getSize().getWidth(),
+			scanlineLength = _driver->getResolution().getWidth() - image->getSize().getWidth(),
 			imageIndex = 0;
 
 		for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
