@@ -3,11 +3,11 @@
 
 namespace yoba {
 	ScreenDriver::ScreenDriver(
-		ColorType colorType,
+		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation
 	) :
-		_colorType(colorType),
+		_colorModel(colorModel),
 		_defaultResolution(resolution),
 		_resolution(resolution),
 		_orientation(orientation)
@@ -19,8 +19,8 @@ namespace yoba {
 		updateDataFromOrientation();
 	}
 
-	ColorType ScreenDriver::getColorType() const {
-		return _colorType;
+	ColorModel ScreenDriver::getColorType() const {
+		return _colorModel;
 	}
 
 	const Size& ScreenDriver::getResolution() const {

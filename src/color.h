@@ -3,7 +3,7 @@
 #include "cstdlib"
 
 namespace yoba {
-	enum class ColorType : uint8_t {
+	enum class ColorModel : uint8_t {
 		Palette,
 		Hsb,
 		Monochrome,
@@ -15,16 +15,16 @@ namespace yoba {
 
 	class Color {
 		public:
-			explicit Color(ColorType type);
+			explicit Color(ColorModel model);
 
-			ColorType getType() const;
+			ColorModel getModel() const;
 
-			static uint8_t getBitsPerType(ColorType colorType);
+			static uint8_t getBitsPerType(ColorModel colorModel);
 
-			static uint8_t getBytesForPixelsPerType(size_t pixelsCount, ColorType colorType);
+			static size_t getBytesForPixelsPerType(size_t pixelsCount, ColorModel colorModel);
 
 		private:
-			ColorType _type;
+			ColorModel _type;
 	};
 
 	// -------------------------------- HsbColor --------------------------------
@@ -55,7 +55,7 @@ namespace yoba {
 	template<typename TValue>
 	class ValueColor : public Color {
 		public:
-			ValueColor(ColorType type, TValue value);
+			ValueColor(ColorModel model, TValue value);
 
 			TValue getValue() const;
 			void setValue(TValue value);
@@ -67,7 +67,7 @@ namespace yoba {
 	};
 
 	template<typename TValue>
-	ValueColor<TValue>::ValueColor(ColorType type, TValue value) : Color(type), _value(value) {
+	ValueColor<TValue>::ValueColor(ColorModel model, TValue value) : Color(model), _value(value) {
 
 	}
 
@@ -145,7 +145,7 @@ namespace yoba {
 	};
 
 	template<typename TIndex>
-	PaletteColor<TIndex>::PaletteColor(TIndex index) : Color(ColorType::Palette), _index(index) {
+	PaletteColor<TIndex>::PaletteColor(TIndex index) : Color(ColorModel::Palette), _index(index) {
 
 	}
 

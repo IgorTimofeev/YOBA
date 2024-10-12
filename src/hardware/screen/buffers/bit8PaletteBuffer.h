@@ -4,9 +4,9 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	class Bit8Rgb565PaletteBuffer : public PaletteBuffer<ColorType::Rgb565, uint8_t, uint16_t, 256>{
+	class Bit8PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
 		public:
-			explicit Bit8Rgb565PaletteBuffer(TypedScreenDriver<ColorType::Rgb565>* driver);
+			explicit Bit8PaletteBuffer(ScreenDriver* driver);
 
 			void flush() override;
 
@@ -15,6 +15,10 @@ namespace yoba {
 			void setOpenComputersPaletteColors();
 
 		protected:
+			size_t getRequiredBufferLength() override {
+				return _driver->getResolution().getWidth() * _driver->getResolution().getHeight();
+			}
+
 			inline void renderPixelNative(const Point& point, const Color* color) override;
 			inline void renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) override;
 			inline void renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) override;

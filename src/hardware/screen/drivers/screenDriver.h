@@ -12,14 +12,14 @@ namespace yoba {
 	class ScreenDriver {
 		public:
 			ScreenDriver(
-				ColorType colorType,
+				ColorModel colorModel,
 				const Size& resolution,
 				ScreenOrientation orientation
 			);
 
 			virtual void setup();
 
-			ColorType getColorType() const;
+			ColorModel getColorType() const;
 
 			const Size& getResolution() const;
 
@@ -28,16 +28,15 @@ namespace yoba {
 
 			Point orientPoint(const Point& point);
 
+			virtual void writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) = 0;
+
 		protected:
-			ColorType _colorType;
+			ColorModel _colorModel;
 			const Size _defaultResolution;
 			Size _resolution;
 			ScreenOrientation _orientation = ScreenOrientation::Landscape270;
-//			ColorDepth _colorDepth = ColorDepth::Bit16;
 
 			virtual void updateDataFromOrientation();
 			virtual void onOrientationChanged();
-
-			virtual void writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) = 0;
 	};
 }

@@ -3,29 +3,29 @@
 #include "number.h"
 
 namespace yoba {
-	ColorType Color::getType() const {
+	ColorModel Color::getModel() const {
 		return _type;
 	}
 
 	// -------------------------------- Color --------------------------------
 
-	Color::Color(ColorType type) : _type(type) {
+	Color::Color(ColorModel model) : _type(model) {
 
 	}
 
-	uint8_t Color::getBitsPerType(ColorType colorType) {
-		switch (colorType) {
-			case ColorType::Rgb565: return 16;
-			case ColorType::Rgb888: return 24;
+	uint8_t Color::getBitsPerType(ColorModel colorModel) {
+		switch (colorModel) {
+			case ColorModel::Rgb565: return 16;
+			case ColorModel::Rgb888: return 24;
 			default: return 8;
 		}
 	}
 
-	uint8_t Color::getBytesForPixelsPerType(size_t pixelsCount, ColorType colorType) {
-		switch (colorType) {
-			case ColorType::Monochrome: return pixelsCount >= 8 ? pixelsCount / 8 : 1;
-			case ColorType::Rgb565: return pixelsCount * 2;
-			case ColorType::Rgb888: return pixelsCount * 3;
+	size_t Color::getBytesForPixelsPerType(size_t pixelsCount, ColorModel colorModel) {
+		switch (colorModel) {
+			case ColorModel::Monochrome: return pixelsCount >= 8 ? pixelsCount / 8 : 1;
+			case ColorModel::Rgb565: return pixelsCount * 2;
+			case ColorModel::Rgb888: return pixelsCount * 3;
 			default: return pixelsCount;
 		}
 	}
@@ -33,7 +33,7 @@ namespace yoba {
 	// -------------------------------- Rgb888Color --------------------------------
 
 	Rgb888Color::Rgb888Color(uint8_t r, uint8_t g, uint8_t b) :
-		Color(ColorType::Rgb888),
+		Color(ColorModel::Rgb888),
 		_r(r),
 		_g(g),
 		_b(b)
@@ -106,7 +106,7 @@ namespace yoba {
 
 	// -------------------------------- HsbColor --------------------------------
 
-	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorType::Hsb), _h(h), _s(s), _b(b) {
+	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorModel::Hsb), _h(h), _s(s), _b(b) {
 
 	}
 
@@ -190,7 +190,7 @@ namespace yoba {
 
 	// -------------------------------- MonochromeColor --------------------------------
 
-	MonochromeColor::MonochromeColor(bool value) : ValueColor<bool>(ColorType::Monochrome, value) {
+	MonochromeColor::MonochromeColor(bool value) : ValueColor<bool>(ColorModel::Monochrome, value) {
 
 	}
 
@@ -203,7 +203,7 @@ namespace yoba {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorType::Rgb565, value) {
+	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorModel::Rgb565, value) {
 
 	}
 

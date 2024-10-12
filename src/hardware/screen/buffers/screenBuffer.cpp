@@ -16,6 +16,11 @@ namespace yoba {
 		return _driver;
 	}
 
+	void ScreenBuffer::allocate() {
+		_bufferLength = getRequiredBufferLength();
+		_buffer = new uint8_t[_bufferLength];
+	}
+
 	const Bounds& ScreenBuffer::getViewport() {
 		return _viewport;
 	}

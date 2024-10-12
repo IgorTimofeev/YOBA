@@ -17,9 +17,9 @@ namespace yoba {
 
 			void setup();
 
-			ScreenDriver *getDriver() const;
+			ScreenDriver* getDriver() const;
 
-			virtual void allocate() = 0;
+			void allocate();
 
 			virtual void flush() = 0;
 
@@ -75,6 +75,8 @@ namespace yoba {
 			size_t _bufferLength = 0;
 
 			Bounds _viewport = Bounds();
+
+			virtual size_t getRequiredBufferLength() = 0;
 
 			virtual void clearNative(const Color *color) = 0;
 
@@ -180,24 +182,5 @@ namespace yoba {
 			color,
 			glyph
 		);
-	}
-
-	template<ColorType ColorType>
-	class TypedScreenBuffer : public ScreenBuffer {
-		public:
-			explicit TypedScreenBuffer(ScreenDriver* driver);
-
-			void allocate() override;
-	};
-
-	template<ColorType ColorType>
-	TypedScreenBuffer<ColorType>::TypedScreenBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
-
-	}
-
-	template<ColorType ColorType>
-	void TypedScreenBuffer<ColorType>::allocate() {
-		_bufferLength = Color::getBytesForPixelsPerType(_driver->getResolution().getWidth() * _driver->getResolution().getHeight(), ColorType);
-		_buffer = new uint8_t[_bufferLength];
 	}
 }

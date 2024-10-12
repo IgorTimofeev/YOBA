@@ -9,18 +9,18 @@
 #include "ui/application.h"
 #include "ui/debug/touchCanvas.h"
 #include "ui/debug/testView.h"
-#include "resources/fonts/PIXY10Font.h"
 
 using namespace yoba;
 
-Rgb565ILI9341Driver screenDriver = Rgb565ILI9341Driver(
+ILI9341Driver screenDriver = ILI9341Driver(
+	ColorModel::Rgb565,
 	ScreenOrientation::Landscape270,
 	5,
 	16,
 	17
 );
 
-Bit8Rgb565PaletteBuffer screenBuffer = Bit8Rgb565PaletteBuffer(&screenDriver);
+Bit8PaletteBuffer screenBuffer = Bit8PaletteBuffer(&screenDriver);
 
 FT6336UTouchPanel touchPanel = FT6336UTouchPanel(26, 32);
 
