@@ -12,6 +12,10 @@ namespace yoba {
 		});
 	}
 
+	size_t Bit8PaletteBuffer::getRequiredBufferLength() {
+		return _driver->getResolution().getWidth() * _driver->getResolution().getHeight();
+	}
+
 	void Bit8PaletteBuffer::renderPixelNative(const Point& point, const Color* color) {
 		_buffer[getIndex(point)] = getPaletteIndexOf(color);
 	}
@@ -74,13 +78,14 @@ namespace yoba {
 			const auto g = (uint8_t) round((float) idxG * 255.0f / ((float) greens - 1.0f));
 			const auto b = (uint8_t) round((float) idxB * 255.0f / ((float) blues - 1.0f));
 
-			_palette[index] = Rgb888Color(r, g, b).toRgb565().getValue();
+
+			setPaletteColor(index, Rgb888Color(r, g, b));
 		}
 
 		for (uint8_t index = 0; index < 16; index++) {
 			const auto shade = (uint8_t) round(255.0f * (float) (index + 1) / 16.0f);
 
-			_palette[240 + index] = Rgb888Color(shade, shade, shade).toRgb565().getValue();
+			setPaletteColor(240 + index, Rgb888Color(shade, shade, shade));
 		}
 	}
 }

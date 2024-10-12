@@ -7,6 +7,7 @@ namespace yoba {
 		Palette,
 		Hsb,
 		Monochrome,
+		Rgb666,
 		Rgb565,
 		Rgb888
 	};
@@ -99,6 +100,15 @@ namespace yoba {
 			Rgb888Color toRgb888() const override;
 	};
 
+	// -------------------------------- Rgb666Color --------------------------------
+
+	class Rgb666Color : public ValueColor<uint32_t> {
+		public:
+			explicit Rgb666Color(uint32_t value);
+
+			Rgb888Color toRgb888() const override;
+	};
+
 	// -------------------------------- Rgb888Color --------------------------------
 
 	class Rgb888Color : public Color {
@@ -120,6 +130,7 @@ namespace yoba {
 
 			uint32_t toUint32() const;
 			Rgb565Color toRgb565() const;
+			Rgb666Color toRgb666() const;
 			MonochromeColor toMonochrome() const;
 
 			void interpolateTo(const Rgb888Color& second, float position);

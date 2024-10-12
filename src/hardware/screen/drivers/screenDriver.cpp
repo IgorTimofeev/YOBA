@@ -19,7 +19,7 @@ namespace yoba {
 		updateDataFromOrientation();
 	}
 
-	ColorModel ScreenDriver::getColorType() const {
+	ColorModel ScreenDriver::getColorModel() const {
 		return _colorModel;
 	}
 

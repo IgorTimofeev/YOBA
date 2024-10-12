@@ -23,10 +23,18 @@ namespace yoba {
 
 	size_t Color::getBytesForPixelsPerType(size_t pixelsCount, ColorModel colorModel) {
 		switch (colorModel) {
-			case ColorModel::Monochrome: return pixelsCount >= 8 ? pixelsCount / 8 : 1;
-			case ColorModel::Rgb565: return pixelsCount * 2;
-			case ColorModel::Rgb888: return pixelsCount * 3;
-			default: return pixelsCount;
+			case ColorModel::Monochrome:
+				return pixelsCount >= 8 ? pixelsCount / 8 : 1;
+
+			case ColorModel::Rgb565:
+				return pixelsCount * 2;
+
+			case ColorModel::Rgb666:
+			case ColorModel::Rgb888:
+				return pixelsCount * 3;
+
+			default:
+				return pixelsCount;
 		}
 	}
 
@@ -70,8 +78,12 @@ namespace yoba {
 		return Rgb565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
 	}
 
+	Rgb666Color Rgb888Color::toRgb666() const {
+		return Rgb666Color(((_r >> 2) << 16) | ((_g >> 2) << 8) | (_b >> 2));
+	}
+
 	MonochromeColor Rgb888Color::toMonochrome() const {
-		return _r > 0 || _g > 0 || _b > 0 ? MonochromeColor(true) : MonochromeColor(false);
+		return MonochromeColor(_r > 0 || _g > 0 || _b > 0);
 	}
 
 	void Rgb888Color::interpolateTo(const Rgb888Color &second, float position) {
@@ -211,7 +223,21 @@ namespace yoba {
 		return {
 			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
 			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),
-			(uint8_t) ((((_value) & 0x1F) * 255 + 15) / 31)
+			(uint8_t) (((_value & 0x1F) * 255 + 15) / 31)
+		};
+	}
+
+	// -------------------------------- Rgb666Color --------------------------------
+
+	Rgb666Color::Rgb666Color(uint32_t value) : ValueColor<uint32_t>(ColorModel::Rgb666, value) {
+
+	}
+
+	Rgb888Color Rgb666Color::toRgb888() const {
+		return {
+			(uint8_t) (((_value >> 12) & 0b111111) * 255 / 0b111111),
+			(uint8_t) (((_value >> 6) & 0b111111) * 255 / 0b111111),
+			(uint8_t) ((_value & 0b111111) * 255 / 0b111111)
 		};
 	}
 }

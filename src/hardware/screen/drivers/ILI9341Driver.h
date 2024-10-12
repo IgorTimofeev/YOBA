@@ -23,10 +23,14 @@ namespace yoba {
 		protected:
 			void writeBeginCommands() override;
 			void writeOrientationChangeCommands() override;
+			void writeColorModeChangeCommands() override;
+
 			uint8_t getTransactionWindowHeightForOrientation() override;
 
 		private:
 			enum class Command : uint8_t {
+				COLMOD = 0x3A,
+
 				/* MY, MX, MV, ML, BGR, MH, X, X */
 				MADCTL = 0x36,
 				MADCTL_MY = 0x80,

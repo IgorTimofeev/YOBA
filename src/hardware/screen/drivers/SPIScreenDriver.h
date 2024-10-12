@@ -66,6 +66,7 @@ namespace yoba {
 
 			virtual void writeBeginCommands() = 0;
 			virtual void writeOrientationChangeCommands() = 0;
+			virtual void writeColorModeChangeCommands() = 0;
 
 			void writeData(uint8_t data);
 			void writeData(const uint8_t *data, size_t length);

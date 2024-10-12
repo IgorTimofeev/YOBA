@@ -19,7 +19,7 @@ namespace yoba {
 
 			virtual void setup();
 
-			ColorModel getColorType() const;
+			ColorModel getColorModel() const;
 
 			const Size& getResolution() const;
 

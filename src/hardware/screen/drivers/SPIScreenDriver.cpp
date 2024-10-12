@@ -166,6 +166,21 @@ namespace yoba {
 				break;
 			}
 
+			case ColorModel::Rgb666: {
+				const size_t pixelCount = this->_resolution.getWidth() * _transactionWindowHeight;
+				size_t pixelIndex = 0;
+
+				for (uint16_t y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
+					for (size_t transactionBufferIndex = 0; transactionBufferIndex < pixelCount; transactionBufferIndex++) {
+						((uint32_t*) _transactionBuffer)[transactionBufferIndex] = pixelGetter(pixelIndex);
+						pixelIndex++;
+					}
+
+					flushTransactionBuffer(y);
+				}
+				break;
+			}
+
 			default:
 				break;
 		}

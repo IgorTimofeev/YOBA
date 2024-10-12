@@ -56,7 +56,23 @@ namespace yoba {
 
 	template<typename TIndex, typename TColor, size_t PaletteLength>
 	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColor(TIndex index, const Rgb888Color &color) {
-		setPaletteColor(index, color.toRgb565().getValue());
+		TColor tColor;
+
+		switch (_driver->getColorModel()) {
+			case ColorModel::Rgb565:
+				tColor = color.toRgb565().getValue();
+				break;
+
+			case ColorModel::Rgb666:
+				tColor = color.toRgb666().getValue();
+				break;
+
+			default:
+				tColor = 0;
+				break;
+		}
+
+		setPaletteColor(index, tColor);
 	}
 
 	template<typename TIndex, typename TColor, size_t PaletteLength>

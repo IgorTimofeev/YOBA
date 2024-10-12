@@ -15,10 +15,7 @@ namespace yoba {
 			void setOpenComputersPaletteColors();
 
 		protected:
-			size_t getRequiredBufferLength() override {
-				return _driver->getResolution().getWidth() * _driver->getResolution().getHeight();
-			}
-
+			size_t getRequiredBufferLength() override;
 			inline void renderPixelNative(const Point& point, const Color* color) override;
 			inline void renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) override;
 			inline void renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) override;

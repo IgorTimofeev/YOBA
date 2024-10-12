@@ -59,6 +59,27 @@ namespace yoba {
 			: 40; // 6 transactions
 	}
 
+	void ILI9341Driver::writeColorModeChangeCommands() {
+		/*
+		* Pixel format for RGB/MCU interface
+		* 101 - 16 bits per pixel
+		* 110 - 18 bits per pixel
+		*/
+		uint8_t value;
+
+		switch (_colorModel) {
+			case ColorModel::Rgb666:
+				value = 0b01100110;
+				break;
+
+			default:
+				value = 0b01010101;
+				break;
+		}
+
+		this->writeCommandAndData((uint8_t) Command::COLMOD, value);
+	}
+
 	void ILI9341Driver::writeBeginCommands() {
 		uint8_t b[16];
 
@@ -125,12 +146,8 @@ namespace yoba {
 		/* Inversion */
 		this->writeCommandAndData(0x21, 0x01);
 
-		/*
-		* Pixel format for RGB/MCU interface
-		* 101 - 16 bits per pixel
-		* 110 - 18 bits per pixel
-		*/
-		this->writeCommandAndData(0x3A, 0b01010101);
+		// Pixel format
+		writeColorModeChangeCommands();
 
 		/* Frame rate control, f=fosc, 70Hz fps */
 		b[0] = 0x00;
