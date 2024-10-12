@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hardware/input/InputDevice.h"
+#include "hardware/input/inputDevice.h"
 
 namespace yoba {
 	class TouchPanel : public InputDevice {

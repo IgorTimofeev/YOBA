@@ -4,6 +4,8 @@
 #include "animation.h"
 
 namespace yoba {
+	const Unscii16Font Application::defaultFont = Unscii16Font();
+
 	Application::Application(
 		ScreenBuffer* screenBuffer
 	) :
@@ -102,12 +104,12 @@ namespace yoba {
 		}
 	}
 
-	const Font *Application::getDefaultFont() const {
-		return _defaultFont;
+	const Font* Application::getFont() const {
+		return _font;
 	}
 
-	void Application::setDefaultFont(const Font *defaultFont) {
-		_defaultFont = defaultFont;
+	void Application::setFont(const Font* font) {
+		_font = font;
 	}
 
 	ScreenOrientation Application::getOrientation() const {

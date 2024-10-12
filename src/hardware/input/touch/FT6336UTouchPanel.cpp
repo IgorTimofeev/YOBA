@@ -14,7 +14,12 @@
 #include "FunctionalInterrupt.h"
 
 namespace yoba {
-	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin, uint8_t sclPin) : _sdaPin(sdaPin), _sclPin(sclPin), _rstPin(rstPin), _intPin(intPin) {
+	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
+		_intPin(intPin),
+		_rstPin(rstPin),
+		_sdaPin(sdaPin),
+		_sclPin(sclPin)
+	{
 
 	}
 
@@ -32,10 +37,12 @@ namespace yoba {
 		Wire.begin(_sdaPin, _sclPin);
 
 		// Toggle reset pin
-		pinMode(_rstPin, OUTPUT);
-		digitalWrite(_rstPin, LOW);
-		delay(10);
-		digitalWrite(_rstPin, HIGH);
+		if (_rstPin >= 0) {
+			pinMode(_rstPin, OUTPUT);
+			digitalWrite(_rstPin, LOW);
+			delay(10);
+			digitalWrite(_rstPin, HIGH);
+		}
 
 		// Do we need some delay? Hmmm
 		//    delay(500);

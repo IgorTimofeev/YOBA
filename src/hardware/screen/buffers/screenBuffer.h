@@ -58,7 +58,7 @@ namespace yoba {
 			* @param text Template-based pointer to first character in text
 			*/
 			template<typename TChar>
-			void renderText(const Point& point, const Font *font, const Color *color, const TChar* text);
+			void renderText(const Point& point, const Font* font, const Color *color, const TChar* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const char* text);
 			void renderText(const Point& point, const Font* font, const Color* color, const String& text);

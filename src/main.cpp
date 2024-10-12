@@ -22,11 +22,10 @@ ILI9341Driver screenDriver = ILI9341Driver(
 
 Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(&screenDriver);
 
-FT6336UTouchPanel touchPanel = FT6336UTouchPanel(32, 26);
+FT6336UTouchPanel touchPanel = FT6336UTouchPanel(26, 32);
 
 Application application = Application(&screenBuffer);
 
-PIXY10Font font = PIXY10Font();
 Bit8PaletteColor textColor = Bit8PaletteColor(255);
 
 TestView paletteView;
@@ -53,7 +52,6 @@ void setup() {
 	application.addInputDevice(&touchPanel);
 
 	application.setup();
-	application.setDefaultFont(&font);
 
 	// Adding UI elements
 	application += &paletteView;

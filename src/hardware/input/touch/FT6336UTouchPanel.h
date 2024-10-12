@@ -85,7 +85,7 @@ namespace yoba {
 	/**************************************************************************/
 	class FT6336UTouchPanel : public TouchPanel {
 		public:
-			FT6336UTouchPanel(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
+			explicit FT6336UTouchPanel(uint8_t intPin, int8_t rstPin = -1, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
 
 			void setup() override;
 			void tick(Application* application) override;

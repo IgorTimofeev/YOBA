@@ -2,14 +2,19 @@
 
 #include "layout.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
-#include "../hardware/input/InputDevice.h"
+#include "../hardware/input/inputDevice.h"
 #include "../font.h"
+#include "../resources/fonts/unscii16Font.h"
 
 namespace yoba {
 	class Animation;
 
 	class Application : public Layout {
 		public:
+			// Sexy old school font that will be used as fallback value when rendering
+			// child elements that contain text, but doesn't have any specific font
+			static const Unscii16Font defaultFont;
+
 			explicit Application(
 				ScreenBuffer* screenBuffer
 			);
@@ -29,8 +34,8 @@ namespace yoba {
 			Element *getCapturedElement() const;
 			void setCapturedElement(Element *capturedElement);
 
-			const Font *getDefaultFont() const;
-			void setDefaultFont(const Font* defaultFont);
+			const Font* getFont() const;
+			void setFont(const Font* font);
 
 			Callback<>& getOnTick();
 
@@ -48,9 +53,11 @@ namespace yoba {
 			bool _isMeasured = false;
 			bool _isArranged = false;
 			Element* _capturedElement = nullptr;
+
 			std::vector<Animation*> _animations {};
 			Callback<> _onTick {};
-			const Font* _defaultFont = nullptr;
+
+			const Font* _font = &defaultFont;
 
 			void animationsTick();
 	};
