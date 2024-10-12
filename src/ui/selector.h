@@ -30,6 +30,6 @@ namespace yoba {
 		private:
 			Layout* _itemsLayout = nullptr;
 			int32_t _selectedIndex = -1;
-			Action<> _onSelectionChanged = Action<>();
+			Action<> _onSelectionChanged {};
 	};
 }

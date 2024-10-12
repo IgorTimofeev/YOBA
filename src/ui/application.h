@@ -2,7 +2,7 @@
 
 #include "layout.h"
 #include "../hardware/screen/buffers/screenBuffer.h"
-#include "../hardware/touch/drivers/touchDriver.h"
+#include "../hardware/input/InputDevice.h"
 #include "../font.h"
 
 namespace yoba {
@@ -10,9 +10,8 @@ namespace yoba {
 
 	class Application : public Layout {
 		public:
-			Application(
-				ScreenBuffer* screenBuffer,
-				TouchDriver* touchDriver
+			explicit Application(
+				ScreenBuffer* screenBuffer
 			);
 
 			virtual void setup();
@@ -33,17 +32,24 @@ namespace yoba {
 			const Font *getDefaultFont() const;
 			void setDefaultFont(const Font* defaultFont);
 
+			const Action<>& getTickHandlers();
+
+			ScreenBuffer* getScreenBuffer() const;
+			void setScreenBuffer(ScreenBuffer* screenBuffer);
+
+			void addInputDevice(InputDevice* inputDevice);
+
 			virtual void tick();
 
 		private:
 			ScreenBuffer* _screenBuffer;
-			TouchDriver* _touchDriver;
 
 			bool _isRendered = false;
 			bool _isMeasured = false;
 			bool _isArranged = false;
 			Element* _capturedElement = nullptr;
 			std::vector<Animation*> _animations {};
+			Action<> _tickHandlers {};
 			const Font* _defaultFont = nullptr;
 
 			void animationsTick();

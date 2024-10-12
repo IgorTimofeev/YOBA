@@ -10,7 +10,10 @@
 
 #include <cstdint>
 #include <Arduino.h>
-#include "touchDriver.h"
+#include "touchPanel.h"
+#include "point.h"
+#include "touchPoint.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
 	#define I2C_ADDR_FT6336U 0x38
@@ -80,12 +83,12 @@ namespace yoba {
 		@brief  FT6336U I2C CTP controller driver
 	*/
 	/**************************************************************************/
-	class FT6336UDriver : public TouchDriver {
+	class FT6336UTouchPanel : public TouchPanel {
 		public:
-			FT6336UDriver(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
+			FT6336UTouchPanel(uint8_t rstPin, uint8_t intPin, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
 
 			void setup() override;
-			void tick(ScreenBuffer* screenBuffer, const std::function<void(InputEvent &)> &callback) override;
+			void tick(Application* application) override;
 
 			uint8_t read_device_mode();
 			void write_device_mode(DEVICE_MODE_Enum);
@@ -149,7 +152,7 @@ namespace yoba {
 			static void writeByte(uint8_t addr, uint8_t data);
 
 			volatile bool _interrupted = false;
-			static void onInterrupt(FT6336UDriver* driver);
+			static void onInterrupt(FT6336UTouchPanel* driver);
 
 			TouchPoint _touchPoints[2] {
 				TouchPoint(),
@@ -159,7 +162,7 @@ namespace yoba {
 			bool _wasTouched = false;
 			bool _wasPinched = false;
 
-			Point readRotatedPoint1(ScreenBuffer* screenBuffer);
-			Point readRotatedPoint2(ScreenBuffer* screenBuffer);
+			Point readOrientedPoint1(ScreenBuffer* screenBuffer);
+			Point readOrientedPoint2(ScreenBuffer* screenBuffer);
 	};
 }

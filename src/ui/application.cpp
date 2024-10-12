@@ -5,20 +5,15 @@
 
 namespace yoba {
 	Application::Application(
-		ScreenBuffer* screenBuffer,
-		TouchDriver* touchDriver
+		ScreenBuffer* screenBuffer
 	) :
-		_screenBuffer(screenBuffer),
-		_touchDriver(touchDriver)
+		_screenBuffer(screenBuffer)
 	{
-
+		Layout::setRoot(this);
 	}
 
 	void Application::setup() {
-		Layout::setRoot(this);
-
 		_screenBuffer->setup();
-		_touchDriver->setup();
 	}
 
 	void Application::invalidateLayout() {
@@ -60,10 +55,8 @@ namespace yoba {
 	void Application::tick() {
 		setSize(_screenBuffer->getDriver()->getResolution());
 
-		// Handling input events first
-		_touchDriver->tick(_screenBuffer, [&](InputEvent& event) {
-			handleEvent(event);
-		});
+		// Handling tick handlers first
+		_tickHandlers.call();
 
 		// Playing animations
 		animationsTick();
@@ -123,5 +116,23 @@ namespace yoba {
 
 	void Application::setOrientation(ScreenOrientation value) const {
 		return _screenBuffer->getDriver()->setOrientation(value);
+	}
+
+	const Action<>& Application::getTickHandlers() {
+		return _tickHandlers;
+	}
+
+	ScreenBuffer* Application::getScreenBuffer() const {
+		return _screenBuffer;
+	}
+
+	void Application::setScreenBuffer(ScreenBuffer* screenBuffer) {
+		_screenBuffer = screenBuffer;
+	}
+
+	void Application::addInputDevice(InputDevice* inputDevice) {
+		_tickHandlers += [this, inputDevice]() {
+			inputDevice->tick(this);
+		};
 	}
 }

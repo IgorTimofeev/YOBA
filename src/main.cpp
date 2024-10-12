@@ -2,7 +2,7 @@
 
 #include "hardware/screen/drivers/ILI9341Driver.h"
 #include "hardware/screen/buffers/bits8PaletteBuffer.h"
-#include "hardware/touch/drivers/FT6336UDriver.h"
+#include "hardware/input/touch/FT6336UTouchPanel.h"
 #include "color.h"
 #include "ui/shapes/rectangle.h"
 #include "ui/text.h"
@@ -22,9 +22,9 @@ ILI9341Driver screenDriver = ILI9341Driver(
 
 Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(&screenDriver);
 
-FT6336UDriver touchDriver = FT6336UDriver(32, 26);
+FT6336UTouchPanel touchPanel = FT6336UTouchPanel(32, 26);
 
-Application application = Application(&screenBuffer, &touchDriver);
+Application application = Application(&screenBuffer);
 
 PIXY10Font font = PIXY10Font();
 Bit8PaletteColor textColor = Bit8PaletteColor(255);
@@ -49,6 +49,9 @@ void setup() {
 	screenBuffer.setPaletteColor(0, Rgb888Color(0, 0, 0));
 
 	// Starting application
+	touchPanel.setup();
+	application.addInputDevice(&touchPanel);
+
 	application.setup();
 	application.setDefaultFont(&font);
 
