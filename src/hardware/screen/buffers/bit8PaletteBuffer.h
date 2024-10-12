@@ -4,10 +4,9 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	// I wanted 8bits...................................
-	class Bits8PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
+	class Bit8PaletteBuffer : public PaletteBuffer<uint8_t, uint16_t, 256>{
 		public:
-			explicit Bits8PaletteBuffer(ScreenDriver *driver);
+			explicit Bit8PaletteBuffer(ScreenDriver *driver);
 
 			void allocate() override;
 			void flush() override;

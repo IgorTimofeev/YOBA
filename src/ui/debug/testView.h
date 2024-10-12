@@ -9,7 +9,7 @@ namespace yoba {
 
 		protected:
 			void onRender(ScreenBuffer* screenBuffer) override {
-				auto buffer8 = (Bits8PaletteBuffer*) screenBuffer;
+				auto buffer8 = (Bit8PaletteBuffer*) screenBuffer;
 				const auto& bounds = getBounds();
 
 				uint8_t w = 8;

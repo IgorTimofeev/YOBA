@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "hardware/screen/drivers/ILI9341Driver.h"
-#include "hardware/screen/buffers/bits8PaletteBuffer.h"
+#include "hardware/screen/buffers/bit8PaletteBuffer.h"
 #include "hardware/input/touch/FT6336UTouchPanel.h"
 #include "color.h"
 #include "ui/shapes/rectangle.h"
@@ -20,7 +20,7 @@ ILI9341Driver screenDriver = ILI9341Driver(
 	17
 );
 
-Bits8PaletteBuffer screenBuffer = Bits8PaletteBuffer(&screenDriver);
+Bit8PaletteBuffer screenBuffer = Bit8PaletteBuffer(&screenDriver);
 
 FT6336UTouchPanel touchPanel = FT6336UTouchPanel(26, 32);
 

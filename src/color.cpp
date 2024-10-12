@@ -192,10 +192,4 @@ namespace yoba {
 			(uint8_t) ((((_value) & 0x1F) * 255 + 15) / 31)
 		};
 	}
-
-	// -------------------------------- Bits8PaletteColor --------------------------------
-
-	Bit8PaletteColor::Bit8PaletteColor(uint8_t index) : PaletteColor(index) {
-
-	}
 }

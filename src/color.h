@@ -121,10 +121,7 @@ namespace yoba {
 		_index = index;
 	}
 
-	// -------------------------------- Bits8PaletteColor --------------------------------
+	// -------------------------------- Bit8PaletteColor --------------------------------
 
-	class Bit8PaletteColor : public PaletteColor<uint8_t> {
-		public:
-			explicit Bit8PaletteColor(uint8_t index);
-	};
+	using Bit8PaletteColor = PaletteColor<uint8_t>;
 }
