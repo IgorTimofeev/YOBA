@@ -56,7 +56,7 @@ namespace yoba {
 		setSize(_screenBuffer->getDriver()->getResolution());
 
 		// Handling tick handlers first
-		_tickHandlers.call();
+		_onTick.call();
 
 		// Playing animations
 		animationsTick();
@@ -118,8 +118,8 @@ namespace yoba {
 		return _screenBuffer->getDriver()->setOrientation(value);
 	}
 
-	const Action<>& Application::getTickHandlers() {
-		return _tickHandlers;
+	Action<>& Application::getOnTick() {
+		return _onTick;
 	}
 
 	ScreenBuffer* Application::getScreenBuffer() const {
@@ -131,7 +131,7 @@ namespace yoba {
 	}
 
 	void Application::addInputDevice(InputDevice* inputDevice) {
-		_tickHandlers += [this, inputDevice]() {
+		_onTick += [this, inputDevice]() {
 			inputDevice->tick(this);
 		};
 	}
