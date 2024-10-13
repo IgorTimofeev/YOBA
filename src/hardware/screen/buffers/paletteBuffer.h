@@ -10,10 +10,7 @@ namespace yoba {
 		public:
 			explicit PaletteBuffer(ScreenDriver* driver);
 
-			virtual TIndex getPaletteIndexOf(const Color* color);
-
-			void clearNative(const Color* color) override;
-
+			virtual TIndex getPaletteIndex(const Color* color);
 			TColor getPaletteColor(TIndex index);
 			void setPaletteColor(TIndex index, TColor value);
 			void setPaletteColor(TIndex index, const Rgb888Color& color);
@@ -29,7 +26,7 @@ namespace yoba {
 	}
 
 	template<typename TIndex, typename TColor, size_t PaletteLength>
-	TIndex PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteIndexOf(const Color *color) {
+	TIndex PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteIndex(const Color *color) {
 		switch (color->getModel()) {
 			case ColorModel::Palette:
 				return ((PaletteColor<TIndex>*) color)->getIndex();
@@ -37,11 +34,6 @@ namespace yoba {
 			default:
 				return 0;
 		}
-	}
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	void PaletteBuffer<TIndex, TColor, PaletteLength>::clearNative(const Color* color) {
-		memset((TColor*) this->_buffer, (int) getPaletteIndexOf(color), this->_bufferLength);
 	}
 
 	template<typename TIndex, typename TColor, size_t PaletteLength>

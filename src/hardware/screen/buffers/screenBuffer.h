@@ -19,7 +19,7 @@ namespace yoba {
 
 			ScreenDriver* getDriver() const;
 
-			void allocate();
+			virtual void allocate();
 
 			virtual void flush() = 0;
 
