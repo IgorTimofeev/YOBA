@@ -9,8 +9,6 @@ namespace yoba {
 		public:
 			explicit Bit8PaletteBuffer(ScreenDriver* driver);
 
-			void flush() override;
-
 			// Original generation algo can be found here:
 			// https://github.com/MightyPirates/OpenComputers/blob/49ae4fe850e25e8eb98e62b2ac0abefaf8893102/src/main/scala/li/cil/oc/util/PackedColor.scala#L124-L141
 			void setOpenComputersPaletteColors();
@@ -28,13 +26,6 @@ namespace yoba {
 	template<typename TColor, size_t PaletteLength>
 	Bit8PaletteBuffer<TColor, PaletteLength>::Bit8PaletteBuffer(ScreenDriver* driver) : PaletteBuffer<uint8_t, TColor, PaletteLength>(driver) {
 
-	}
-
-	template<typename TColor, size_t PaletteLength>
-	void Bit8PaletteBuffer<TColor, PaletteLength>::flush() {
-		this->_driver->writePixels([&](size_t pixelIndex) {
-			return this->_palette[this->_buffer[pixelIndex]];
-		});
 	}
 
 	template<typename TColor, size_t PaletteLength>
@@ -125,9 +116,47 @@ namespace yoba {
 //		}
 	}
 
-	template<size_t PaletteLength>
-	using Rgb565Bit8PaletteBuffer = Bit8PaletteBuffer<uint16_t, PaletteLength>;
+	// -------------------------------- Rgb565 --------------------------------
 
 	template<size_t PaletteLength>
-	using Rgb666Bit8PaletteBuffer = Bit8PaletteBuffer<uint32_t, PaletteLength>;
+	class Rgb565Bit8PaletteBuffer : public Bit8PaletteBuffer<uint16_t, PaletteLength> {
+		public:
+			explicit Rgb565Bit8PaletteBuffer(ScreenDriver* driver);
+
+			void flush() override;
+	};
+
+	template<size_t PaletteLength>
+	Rgb565Bit8PaletteBuffer<PaletteLength>::Rgb565Bit8PaletteBuffer(ScreenDriver* driver) : Bit8PaletteBuffer<uint16_t, PaletteLength>(driver) {
+
+	}
+
+	template<size_t PaletteLength>
+	void Rgb565Bit8PaletteBuffer<PaletteLength>::flush() {
+		this->_driver->writePixels([&](size_t pixelIndex) {
+			return this->_palette[this->_buffer[pixelIndex]];
+		});
+	}
+
+	// -------------------------------- Rgb666 --------------------------------
+
+	template<size_t PaletteLength>
+	class Rgb666Bit8PaletteBuffer : public Bit8PaletteBuffer<uint32_t, PaletteLength> {
+		public:
+			explicit Rgb666Bit8PaletteBuffer(ScreenDriver* driver);
+
+			void flush() override;
+	};
+
+	template<size_t PaletteLength>
+	Rgb666Bit8PaletteBuffer<PaletteLength>::Rgb666Bit8PaletteBuffer(ScreenDriver* driver) : Bit8PaletteBuffer<uint32_t, PaletteLength>(driver) {
+
+	}
+
+	template<size_t PaletteLength>
+	void Rgb666Bit8PaletteBuffer<PaletteLength>::flush() {
+		this->_driver->writePixels([&](size_t pixelIndex) {
+			return this->_palette[this->_buffer[pixelIndex]];
+		});
+	}
 }

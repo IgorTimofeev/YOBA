@@ -79,7 +79,7 @@ namespace yoba {
 	}
 
 	Rgb666Color Rgb888Color::toRgb666() const {
-		return Rgb666Color(((_r >> 2) << 16) | ((_g >> 2) << 8) | (_b >> 2));
+		return Rgb666Color((_r << 16) | (_g << 8) | _b);
 	}
 
 	MonochromeColor Rgb888Color::toMonochrome() const {
