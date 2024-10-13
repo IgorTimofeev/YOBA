@@ -5,75 +5,21 @@
 #include "screenBuffer.h"
 
 namespace yoba {
-	template<typename TIndex, typename TColor, size_t PaletteLength>
 	class PaletteBuffer : public ScreenBuffer {
 		public:
-			explicit PaletteBuffer(ScreenDriver* driver);
+			PaletteBuffer(ScreenDriver* driver, uint16_t paletteLength);
 
-			virtual TIndex getPaletteIndex(const Color* color);
-			TColor getPaletteColor(TIndex index);
-			void setPaletteColor(TIndex index, TColor value);
-			void setPaletteColor(TIndex index, const Rgb888Color& color);
+			void allocate() override;
+
+			uint32_t getPaletteColor(uint16_t index);
+			void setPaletteColor(uint16_t index, uint32_t value);
+			void setPaletteColor(uint16_t index, const Rgb888Color& color);
 			void setPaletteColors(std::initializer_list<uint32_t> colors);
 
+			virtual uint16_t getPaletteIndex(const Color* color);
+
 		protected:
-			TColor _palette[PaletteLength];
+			uint16_t _paletteLength;
+			uint8_t* _palette = nullptr;
 	};
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	PaletteBuffer<TIndex, TColor, PaletteLength>::PaletteBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
-
-	}
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	TIndex PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteIndex(const Color *color) {
-		switch (color->getModel()) {
-			case ColorModel::Palette:
-				return ((PaletteColor<TIndex>*) color)->getIndex();
-
-			default:
-				return 0;
-		}
-	}
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	TColor PaletteBuffer<TIndex, TColor, PaletteLength>::getPaletteColor(TIndex index) {
-		return _palette[index];
-	}
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColor(TIndex index, TColor value) {
-		_palette[index] = value;
-	}
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColor(TIndex index, const Rgb888Color &color) {
-		TColor tColor;
-
-		switch (_driver->getColorModel()) {
-			case ColorModel::Rgb565:
-				tColor = color.toRgb565().getValue();
-				break;
-
-			case ColorModel::Rgb666:
-				tColor = color.toRgb666().getValue();
-				break;
-
-			default:
-				tColor = 0;
-				break;
-		}
-
-		setPaletteColor(index, tColor);
-	}
-
-	template<typename TIndex, typename TColor, size_t PaletteLength>
-	void PaletteBuffer<TIndex, TColor, PaletteLength>::setPaletteColors(std::initializer_list<uint32_t> colors) {
-		TIndex index = 0;
-
-		for (auto color : colors) {
-			setPaletteColor(index, Rgb888Color(color));
-			index++;
-		}
-	}
 }

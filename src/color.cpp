@@ -13,15 +13,21 @@ namespace yoba {
 
 	}
 
-	uint8_t Color::getBitsPerType(ColorModel colorModel) {
+	uint8_t Color::getBytesPerType(ColorModel colorModel) {
 		switch (colorModel) {
-			case ColorModel::Rgb565: return 16;
-			case ColorModel::Rgb888: return 24;
-			default: return 8;
+			case ColorModel::Rgb565:
+				return 2;
+
+			case ColorModel::Rgb666:
+			case ColorModel::Rgb888:
+				return 3;
+
+			default:
+				return 1;
 		}
 	}
 
-	size_t Color::getBytesForPixelsPerType(size_t pixelsCount, ColorModel colorModel) {
+	size_t Color::getBytesPerType(size_t pixelsCount, ColorModel colorModel) {
 		switch (colorModel) {
 			case ColorModel::Monochrome:
 				return pixelsCount >= 8 ? pixelsCount / 8 : 1;
@@ -239,5 +245,19 @@ namespace yoba {
 			(uint8_t) (((_value >> 6) & 0b111111) * 255 / 0b111111),
 			(uint8_t) ((_value & 0b111111) * 255 / 0b111111)
 		};
+	}
+
+	// -------------------------------- PaletteColor --------------------------------
+
+	PaletteColor::PaletteColor(uint16_t index) : Color(ColorModel::Palette), _index(index) {
+
+	}
+
+	uint16_t PaletteColor::getIndex() const {
+		return _index;
+	}
+
+	void PaletteColor::setIndex(uint16_t index) {
+		_index = index;
 	}
 }

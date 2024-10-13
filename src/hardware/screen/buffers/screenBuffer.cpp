@@ -19,6 +19,7 @@ namespace yoba {
 	void ScreenBuffer::allocate() {
 		_bufferLength = getRequiredBufferLength();
 		_buffer = new uint8_t[_bufferLength];
+		assert(_buffer != nullptr);
 	}
 
 	const Bounds& ScreenBuffer::getViewport() {

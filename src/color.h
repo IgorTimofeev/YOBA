@@ -20,9 +20,8 @@ namespace yoba {
 
 			ColorModel getModel() const;
 
-			static uint8_t getBitsPerType(ColorModel colorModel);
-
-			static size_t getBytesForPixelsPerType(size_t pixelsCount, ColorModel colorModel);
+			static uint8_t getBytesPerType(ColorModel colorModel);
+			static size_t getBytesPerType(size_t pixelsCount, ColorModel colorModel);
 
 		private:
 			ColorModel _type;
@@ -143,34 +142,14 @@ namespace yoba {
 
 	// -------------------------------- PaletteColor --------------------------------
 
-	template<typename TIndex>
 	class PaletteColor : public Color {
 		public:
-			explicit PaletteColor(TIndex index);
+			explicit PaletteColor(uint16_t index);
 
-			TIndex getIndex() const;
-			void setIndex(TIndex index);
+			uint16_t getIndex() const;
+			void setIndex(uint16_t index);
 
 		private:
-			TIndex _index;
+			uint16_t _index;
 	};
-
-	template<typename TIndex>
-	PaletteColor<TIndex>::PaletteColor(TIndex index) : Color(ColorModel::Palette), _index(index) {
-
-	}
-
-	template<typename TIndex>
-	TIndex PaletteColor<TIndex>::getIndex() const {
-		return _index;
-	}
-
-	template<typename TIndex>
-	void PaletteColor<TIndex>::setIndex(TIndex index) {
-		_index = index;
-	}
-
-	// -------------------------------- Bit8PaletteColor --------------------------------
-
-	using Bit8PaletteColor = PaletteColor<uint8_t>;
 }

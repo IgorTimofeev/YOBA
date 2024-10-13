@@ -130,7 +130,7 @@ namespace yoba {
 
 		// Allocating transaction buffer
 		delete _transactionBuffer;
-		_transactionBufferLength = Color::getBytesForPixelsPerType(this->_resolution.getWidth() * _transactionWindowHeight, _colorModel);
+		_transactionBufferLength = Color::getBytesPerType(this->_resolution.getWidth() * _transactionWindowHeight, _colorModel);
 		_transactionBuffer = (uint8_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
 	}
