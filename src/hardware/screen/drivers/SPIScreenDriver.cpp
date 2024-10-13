@@ -149,50 +149,21 @@ namespace yoba {
 		digitalWrite(_dcPin, value);
 	}
 
-	void SPIScreenDriver::writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) {
-		size_t transactionBufferIndex;
+	void SPIScreenDriver::writePixels(const std::function<void(uint8_t*& destination, size_t pixelIndex)>& pixelSetter) {
 		size_t pixelIndex = 0;
 		uint16_t y;
+		uint8_t* transactionBufferPtr;
+		uint8_t* transactionBufferEnd = _transactionBuffer + _transactionBufferLength;
 
-		switch (_colorModel) {
-			case ColorModel::Rgb565: {
-				const size_t iterateTo = _transactionBufferLength / 2;
+		for (y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
+			transactionBufferPtr = _transactionBuffer;
 
-				for (y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
-					for (transactionBufferIndex = 0; transactionBufferIndex < iterateTo; transactionBufferIndex++) {
-						((uint16_t*) _transactionBuffer)[transactionBufferIndex] = pixelGetter(pixelIndex);
-						pixelIndex++;
-					}
-
-					flushTransactionBuffer(y);
-				}
-
-				break;
+			while (transactionBufferPtr < transactionBufferEnd) {
+				pixelSetter(transactionBufferPtr, pixelIndex);
+				pixelIndex++;
 			}
 
-			case ColorModel::Rgb666: {
-				uint32_t pixel;
-
-				for (y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
-					transactionBufferIndex = 0;
-
-					while (transactionBufferIndex < _transactionBufferLength) {
-						pixel = pixelGetter(pixelIndex);
-						pixelIndex++;
-
-						_transactionBuffer[transactionBufferIndex++] = pixel << 8 >> 24;
-						_transactionBuffer[transactionBufferIndex++] = pixel << 16 >> 24;
-						_transactionBuffer[transactionBufferIndex++] = pixel << 24 >> 24;
-					}
-
-					flushTransactionBuffer(y);
-				}
-
-				break;
-			}
-
-			default:
-				break;
+			flushTransactionBuffer(y);
 		}
 	}
 }

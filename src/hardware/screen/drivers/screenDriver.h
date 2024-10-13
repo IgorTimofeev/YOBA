@@ -28,7 +28,7 @@ namespace yoba {
 
 			Point orientPoint(const Point& point);
 
-			virtual void writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) = 0;
+			virtual void writePixels(const std::function<void(uint8_t*& destination, size_t pixelIndex)>& pixelSetter) = 0;
 
 		protected:
 			ColorModel _colorModel;

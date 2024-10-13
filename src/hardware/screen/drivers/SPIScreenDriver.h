@@ -34,7 +34,7 @@ namespace yoba {
 			*/
 			void flushTransactionBuffer(uint16_t y);
 
-			void writePixels(const std::function<uint32_t(size_t pixelIndex)>& pixelGetter) override;
+			void writePixels(const std::function<void(uint8_t*& destination, size_t pixelIndex)>& pixelSetter) override;
 
 		protected:
 			uint8_t _csPin;

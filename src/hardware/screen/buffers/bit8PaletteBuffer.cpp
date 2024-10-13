@@ -13,15 +13,24 @@ namespace yoba {
 	void Bit8PaletteBuffer::flush() {
 		switch (_driver->getColorModel()) {
 			case ColorModel::Rgb565:
-				_driver->writePixels([&](size_t pixelIndex) {
-					return ((uint16_t*) _palette)[_buffer[pixelIndex]];
+				_driver->writePixels([&](uint8_t*& destination, size_t pixelIndex) {
+					((uint16_t*) destination)[0] = ((uint16_t*) _palette)[_buffer[pixelIndex]];
+					destination += 2;
 				});
 
 				break;
 
 			case ColorModel::Rgb666:
-				_driver->writePixels([&](size_t pixelIndex) {
-					return ((uint32_t*) _palette)[_buffer[pixelIndex]];
+				uint8_t* palettePtr;
+
+				_driver->writePixels([&](uint8_t*& destination, size_t pixelIndex) {
+					palettePtr = (uint8_t *) ((uint32_t*) _palette)[_buffer[pixelIndex]];
+
+					destination[0] = palettePtr[0];
+					destination[1] = palettePtr[1];
+					destination[2] = palettePtr[2];
+
+					destination += 3;
 				});
 
 				break;
