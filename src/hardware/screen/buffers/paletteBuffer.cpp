@@ -18,7 +18,7 @@ namespace yoba {
 				return ((uint16_t*) _palette)[index];
 
 			case ColorModel::Rgb666:
-				return ((uint32_t*) _palette)[index];
+				return ((uint32_t*) (_palette + index * 3))[0];
 
 			default:
 				return 0;
@@ -31,10 +31,15 @@ namespace yoba {
 				((uint16_t*) _palette)[index] = value;
 				break;
 
-			case ColorModel::Rgb666:
-				((uint32_t*) _palette)[index] = value;
-				break;
+			case ColorModel::Rgb666: {
+				const auto palettePtr = _palette + index * 3;
+				const auto valuePtr = (uint8_t*) &value;
+				palettePtr[0] = valuePtr[2];
+				palettePtr[1] = valuePtr[1];
+				palettePtr[2] = valuePtr[0];
 
+				break;
+			}
 			default:
 				_palette[index] = 0;
 				break;

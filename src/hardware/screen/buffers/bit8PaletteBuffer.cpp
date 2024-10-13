@@ -21,10 +21,10 @@ namespace yoba {
 				break;
 
 			case ColorModel::Rgb666:
-				uint8_t* palettePtr;
+				const uint8_t* palettePtr;
 
 				_driver->writePixels([&](uint8_t*& destination, size_t pixelIndex) {
-					palettePtr = (uint8_t *) ((uint32_t*) _palette)[_buffer[pixelIndex]];
+					palettePtr = _palette + _buffer[pixelIndex] * 3;
 
 					destination[0] = palettePtr[0];
 					destination[1] = palettePtr[1];
