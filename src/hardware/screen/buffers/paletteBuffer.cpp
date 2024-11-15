@@ -27,9 +27,10 @@ namespace yoba {
 
 	void PaletteBuffer::setPaletteColor(uint16_t index, uint32_t value) {
 		switch (_driver->getColorModel()) {
-			case ColorModel::Rgb565:
-				((uint16_t*) _palette)[index] = value;
+			case ColorModel::Rgb565: {
+				((uint16_t*) _palette)[index] = (uint16_t) value;
 				break;
+			}
 
 			case ColorModel::Rgb666: {
 				const auto palettePtr = _palette + index * 3;
@@ -40,6 +41,7 @@ namespace yoba {
 
 				break;
 			}
+
 			default:
 				_palette[index] = 0;
 				break;
