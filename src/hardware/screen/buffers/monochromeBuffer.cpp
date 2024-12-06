@@ -1,4 +1,5 @@
 #include "monochromeBuffer.h"
+#include "../drivers/fullBufferScreenDriver.h"
 
 namespace yoba {
 	MonochromeBuffer::MonochromeBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
@@ -10,46 +11,36 @@ namespace yoba {
 	}
 
 	void MonochromeBuffer::flush() {
-		switch (_driver->getColorModel()) {
-			case ColorModel::Monochrome:
-				_driver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
-					destination[0] = _buffer[pixelIndex / 8];
-					destination++;
-					pixelIndex += 8;
-				});
+		switch (_driver->getBufferType()) {
+			case ScreenDriverBufferType::Full: {
+//				printBufferContentsAsBinary();
+
+				(dynamic_cast<FullBufferScreenDriver*>(_driver))->writePixels(_buffer);
 
 				break;
-
+			}
 			default:
 				break;
 		}
 	}
 
 	void MonochromeBuffer::clearNative(const Color* color) {
-		const auto monochromeColor = (MonochromeColor*) color;
-
-		uint8_t byteValue =
-			(monochromeColor->getValue() << 7) |
-			(monochromeColor->getValue() << 6) |
-			(monochromeColor->getValue() << 5) |
-			(monochromeColor->getValue() << 4) |
-			(monochromeColor->getValue() << 3) |
-			(monochromeColor->getValue() << 2) |
-			(monochromeColor->getValue() << 1) |
-			monochromeColor->getValue();
-
-		memset(_buffer, byteValue, _bufferLength);
+		memset(_buffer, ((MonochromeColor*) color)->getValue() ? 0xFF : 0x00, _bufferLength);
 	}
 
 	void MonochromeBuffer::renderPixelNative(const Point& point, const Color* color) {
-		const auto monochromeColor = (MonochromeColor*) color;
-		const auto bufferIndex = getIndex(point);
-		const uint8_t bitIndex = bufferIndex % 8;
+//		const auto pixelIndex = getIndex(point);
+//		const auto bufferIndex = pixelIndex / 8;
+//		const auto bitIndex = pixelIndex % 8;
+//
+//		_buffer[bufferIndex] = ((_buffer[bufferIndex] & ~(1 << bitIndex)) | (((MonochromeColor*) color)->getValue() << bitIndex));
 
-		auto value = _buffer[bufferIndex];
-		auto newValue = ((value & ~(1 << bitIndex)) | (monochromeColor->getValue() << bitIndex));
-
-		_buffer[bufferIndex] = newValue;
+		if (((MonochromeColor*) color)->getValue()) {
+			_buffer[point.getX() + (point.getY() / 8) * _driver->getResolution().getWidth()] |=  (1 << (point.getY() & 7));
+		}
+		else {
+			_buffer[point.getX() + (point.getY() / 8) * _driver->getResolution().getWidth()] &= ~(1 << (point.getY() & 7));
+		}
 	}
 
 	void MonochromeBuffer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
@@ -74,5 +65,23 @@ namespace yoba {
 
 	void MonochromeBuffer::renderImageNative(const Point& point, const Image* image) {
 
+	}
+
+	void MonochromeBuffer::printBufferContentsAsBinary() {
+		Serial.printf("Monochrome screen buffer %d x %d:\n", _driver->getResolution().getWidth(), _driver->getResolution().getHeight());
+
+		size_t bufferPtr = 0;
+
+		for (int j = 0; j < _driver->getResolution().getHeight(); j++) {
+			for (int i = 0; i < _driver->getResolution().getWidth(); i += 8) {
+				for (int k = 0; k < 8; k++) {
+					Serial.print((((_buffer[bufferPtr] >> (7 - k)) & 0b1) == 1) ? "#" : ".");
+				}
+
+				bufferPtr++;
+			}
+
+			Serial.println();
+		}
 	}
 }

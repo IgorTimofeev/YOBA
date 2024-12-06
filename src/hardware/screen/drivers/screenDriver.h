@@ -9,9 +9,15 @@
 #include "SPI.h"
 
 namespace yoba {
+	enum class ScreenDriverBufferType : uint8_t {
+		Transactional,
+		Full
+	};
+
 	class ScreenDriver {
 		public:
 			ScreenDriver(
+				ScreenDriverBufferType bufferType,
 				ColorModel colorModel,
 				const Size& resolution,
 				ScreenOrientation orientation
@@ -26,11 +32,12 @@ namespace yoba {
 			ScreenOrientation getOrientation() const;
 			void setOrientation(ScreenOrientation orientation);
 
+			ScreenDriverBufferType getBufferType() const;
+
 			Point orientPoint(const Point& point);
 
-			virtual void writePixels(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter) = 0;
-
 		protected:
+			ScreenDriverBufferType _bufferType;
 			ColorModel _colorModel;
 			const Size _defaultResolution;
 			Size _resolution;

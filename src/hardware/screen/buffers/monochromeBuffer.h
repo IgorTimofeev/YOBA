@@ -11,7 +11,7 @@ namespace yoba {
 
 			void flush() override;
 
-
+			void printBufferContentsAsBinary();
 
 		protected:
 			size_t getRequiredBufferLength() override;

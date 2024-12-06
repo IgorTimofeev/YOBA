@@ -3,10 +3,12 @@
 
 namespace yoba {
 	ScreenDriver::ScreenDriver(
+		ScreenDriverBufferType bufferType,
 		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation
 	) :
+		_bufferType(bufferType),
 		_colorModel(colorModel),
 		_defaultResolution(resolution),
 		_resolution(resolution),
@@ -17,6 +19,10 @@ namespace yoba {
 
 	void ScreenDriver::setup() {
 		updateDataFromOrientation();
+	}
+
+	ScreenDriverBufferType ScreenDriver::getBufferType() const {
+		return _bufferType;
 	}
 
 	ColorModel ScreenDriver::getColorModel() const {

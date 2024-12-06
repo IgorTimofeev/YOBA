@@ -1,5 +1,6 @@
 #include "bit8PaletteBuffer.h"
 #include "bounds.h"
+#include "../drivers/transactionalSPIScreenDriver.h"
 
 namespace yoba {
 	Bit8PaletteBuffer::Bit8PaletteBuffer(ScreenDriver* driver, uint16_t paletteLength) : PaletteBuffer(driver, paletteLength) {
@@ -11,32 +12,42 @@ namespace yoba {
 	}
 
 	void Bit8PaletteBuffer::flush() {
-		switch (_driver->getColorModel()) {
-			case ColorModel::Rgb565:
-				_driver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
-					((uint16_t*) destination)[0] = ((uint16_t*) _palette)[_buffer[pixelIndex]];
-					destination += 2;
-					pixelIndex++;
-				});
+		switch (_driver->getBufferType()) {
+			case ScreenDriverBufferType::Transactional: {
+				const auto transactionalDriver = (TransactionalSPIScreenDriver*) _driver;
+
+				switch (_driver->getColorModel()) {
+					case ColorModel::Rgb565:
+						transactionalDriver->writeTransactionBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+							((uint16_t*) destination)[0] = ((uint16_t*) _palette)[_buffer[pixelIndex]];
+							destination += 2;
+							pixelIndex++;
+						});
+
+						break;
+
+					case ColorModel::Rgb666:
+						const uint8_t* palettePtr;
+
+						transactionalDriver->writeTransactionBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+							palettePtr = _palette + _buffer[pixelIndex] * 3;
+
+							destination[0] = palettePtr[0];
+							destination[1] = palettePtr[1];
+							destination[2] = palettePtr[2];
+
+							destination += 3;
+							pixelIndex++;
+						});
+
+						break;
+
+					default:
+						break;
+				}
 
 				break;
-
-			case ColorModel::Rgb666:
-				const uint8_t* palettePtr;
-
-				_driver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
-					palettePtr = _palette + _buffer[pixelIndex] * 3;
-
-					destination[0] = palettePtr[0];
-					destination[1] = palettePtr[1];
-					destination[2] = palettePtr[2];
-
-					destination += 3;
-					pixelIndex++;
-				});
-
-				break;
-
+			}
 			default:
 				break;
 		}

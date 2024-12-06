@@ -4,6 +4,7 @@
 
 namespace yoba {
 	SPIScreenDriver::SPIScreenDriver(
+		ScreenDriverBufferType bufferType,
 		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation,
@@ -14,6 +15,7 @@ namespace yoba {
 		uint32_t SPIFrequency
 	) :
 		ScreenDriver(
+			bufferType,
 			colorModel,
 			resolution,
 			orientation
@@ -53,10 +55,6 @@ namespace yoba {
 		writeBeginCommands();
 	}
 
-	uint8_t SPIScreenDriver::getTransactionWindowHeight() const {
-		return _transactionWindowHeight;
-	}
-
 	void SPIScreenDriver::writeData(uint8_t data) {
 		setChipSelect(false);
 
@@ -93,48 +91,6 @@ namespace yoba {
 		writeData(data, length);
 	}
 
-	void SPIScreenDriver::flushTransactionBuffer(uint16_t y) {
-		uint8_t data[4];
-
-		// Column Address Set
-		data[0] = 0; //Start Col High
-		data[1] = 0; //Start Col Low
-		data[2] = (this->_resolution.getWidth() - 1) >> 8; //End Col High
-		data[3] = (this->_resolution.getWidth() - 1) & 0xff; //End Col Low
-		writeCommandAndData(0x2A, data, 4);
-
-		//Page address set
-		data[0] = y >> 8; //Start page high
-		data[1] = y & 0xff; // Start page low
-		data[2] = (y + _transactionWindowHeight - 1) >> 8; // End page high
-		data[3] = (y + _transactionWindowHeight - 1) & 0xff; // End page low
-		writeCommandAndData(0x2B, data, 4);
-
-		// Memory write
-		writeCommandAndData(0x2C, _transactionBuffer, _transactionBufferLength);
-	}
-
-	uint8_t* SPIScreenDriver::getTransactionBuffer() const {
-		return _transactionBuffer;
-	}
-
-	size_t SPIScreenDriver::getTransactionBufferLength() const {
-		return _transactionBufferLength;
-	}
-
-	void SPIScreenDriver::updateDataFromOrientation() {
-		ScreenDriver::updateDataFromOrientation();
-
-		// Updating transaction buffer height
-		_transactionWindowHeight = getTransactionWindowHeightForOrientation();
-
-		// Allocating transaction buffer
-		delete _transactionBuffer;
-		_transactionBufferLength = Color::getBytesPerType(this->_resolution.getWidth() * _transactionWindowHeight, _colorModel);
-		_transactionBuffer = (uint8_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
-		assert(_transactionBuffer != nullptr);
-	}
-
 	void SPIScreenDriver::onOrientationChanged() {
 		ScreenDriver::onOrientationChanged();
 
@@ -147,24 +103,5 @@ namespace yoba {
 
 	void SPIScreenDriver::setDataCommand(uint8_t value) const {
 		digitalWrite(_dcPin, value);
-	}
-
-	void SPIScreenDriver::writePixels(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter) {
-		size_t pixelIndex = 0;
-		uint16_t y;
-		uint8_t* transactionBufferPtr;
-		uint8_t* transactionBufferEnd = _transactionBuffer + _transactionBufferLength;
-
-		for (y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
-			transactionBufferPtr = _transactionBuffer;
-
-			while (transactionBufferPtr < transactionBufferEnd) {
-				pixelSetter(transactionBufferPtr, pixelIndex);
-			}
-
-//			printTransactionBufferContentsAsBinary();
-
-			flushTransactionBuffer(y);
-		}
 	}
 }

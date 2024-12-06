@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include "SPIScreenDriver.h"
+#include "transactionalSPIScreenDriver.h"
 #include "../../../size.h"
 
 namespace yoba {
-	class ILI9341Driver : public SPIScreenDriver {
+	class ILI9341Driver : public TransactionalSPIScreenDriver {
 		public:
 			ILI9341Driver(
 				ColorModel colorModel,

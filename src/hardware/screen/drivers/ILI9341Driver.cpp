@@ -11,7 +11,7 @@ namespace yoba {
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
-		SPIScreenDriver(
+		TransactionalSPIScreenDriver(
 			colorModel,
 			Size(240, 320),
 			orientation,
