@@ -13,9 +13,10 @@ namespace yoba {
 	void Bit8PaletteBuffer::flush() {
 		switch (_driver->getColorModel()) {
 			case ColorModel::Rgb565:
-				_driver->writePixels([&](uint8_t*& destination, size_t pixelIndex) {
+				_driver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
 					((uint16_t*) destination)[0] = ((uint16_t*) _palette)[_buffer[pixelIndex]];
 					destination += 2;
+					pixelIndex++;
 				});
 
 				break;
@@ -23,7 +24,7 @@ namespace yoba {
 			case ColorModel::Rgb666:
 				const uint8_t* palettePtr;
 
-				_driver->writePixels([&](uint8_t*& destination, size_t pixelIndex) {
+				_driver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
 					palettePtr = _palette + _buffer[pixelIndex] * 3;
 
 					destination[0] = palettePtr[0];
@@ -31,6 +32,7 @@ namespace yoba {
 					destination[2] = palettePtr[2];
 
 					destination += 3;
+					pixelIndex++;
 				});
 
 				break;

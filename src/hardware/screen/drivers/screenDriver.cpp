@@ -41,13 +41,13 @@ namespace yoba {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
 		switch (getOrientation()) {
-			case ScreenOrientation::Portrait0:
+			case ScreenOrientation::Clockwise0:
 				return {
 					point.getX(),
 					point.getY()
 				};
 
-			case ScreenOrientation::Landscape90: {
+			case ScreenOrientation::Clockwise90: {
 				int32_t tmp = point.getX();
 
 				return {
@@ -56,7 +56,7 @@ namespace yoba {
 				};
 			}
 
-			case ScreenOrientation::Portrait180:
+			case ScreenOrientation::Clockwise180:
 				return {
 					_resolution.getWidth() - point.getX(),
 					_resolution.getHeight() - point.getY()
@@ -76,22 +76,22 @@ namespace yoba {
 	void ScreenDriver::updateDataFromOrientation() {
 		// Updating size
 		switch (_orientation) {
-			case ScreenOrientation::Portrait0:
+			case ScreenOrientation::Clockwise0:
 				_resolution.setWidth(_defaultResolution.getWidth());
 				_resolution.setHeight(_defaultResolution.getHeight());
 				break;
 
-			case ScreenOrientation::Landscape90:
+			case ScreenOrientation::Clockwise90:
 				_resolution.setWidth(_defaultResolution.getHeight());
 				_resolution.setHeight(_defaultResolution.getWidth());
 				break;
 
-			case ScreenOrientation::Portrait180:
+			case ScreenOrientation::Clockwise180:
 				_resolution.setWidth(_defaultResolution.getWidth());
 				_resolution.setHeight(_defaultResolution.getHeight());
 				break;
 
-			case ScreenOrientation::Landscape270:
+			case ScreenOrientation::Clockwise270:
 				_resolution.setWidth(_defaultResolution.getHeight());
 				_resolution.setHeight(_defaultResolution.getWidth());
 				break;

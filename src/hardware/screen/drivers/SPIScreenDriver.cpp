@@ -57,7 +57,7 @@ namespace yoba {
 		return _transactionWindowHeight;
 	}
 
-	inline void SPIScreenDriver::writeData(uint8_t data) {
+	void SPIScreenDriver::writeData(uint8_t data) {
 		setChipSelect(false);
 
 		SPI.beginTransaction(_spiSettings);
@@ -67,7 +67,7 @@ namespace yoba {
 		setChipSelect(true);
 	}
 
-	inline void SPIScreenDriver::writeData(const uint8_t* data, size_t length) {
+	void SPIScreenDriver::writeData(const uint8_t* data, size_t length) {
 		setChipSelect(false);
 
 		SPI.beginTransaction(_spiSettings);
@@ -149,7 +149,7 @@ namespace yoba {
 		digitalWrite(_dcPin, value);
 	}
 
-	void SPIScreenDriver::writePixels(const std::function<void(uint8_t*& destination, size_t pixelIndex)>& pixelSetter) {
+	void SPIScreenDriver::writePixels(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter) {
 		size_t pixelIndex = 0;
 		uint16_t y;
 		uint8_t* transactionBufferPtr;
@@ -160,8 +160,9 @@ namespace yoba {
 
 			while (transactionBufferPtr < transactionBufferEnd) {
 				pixelSetter(transactionBufferPtr, pixelIndex);
-				pixelIndex++;
 			}
+
+//			printTransactionBufferContentsAsBinary();
 
 			flushTransactionBuffer(y);
 		}

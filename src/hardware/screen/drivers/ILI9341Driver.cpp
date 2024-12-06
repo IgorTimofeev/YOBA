@@ -29,19 +29,19 @@ namespace yoba {
 		auto data = (uint8_t) Command::MADCTL_BGR;
 
 		switch (this->_orientation) {
-			case ScreenOrientation::Portrait0:
+			case ScreenOrientation::Clockwise0:
 				data |= (uint8_t) Command::MADCTL_MX;
 				break;
 
-			case ScreenOrientation::Landscape90:
+			case ScreenOrientation::Clockwise90:
 				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
 				break;
 
-			case ScreenOrientation::Portrait180:
+			case ScreenOrientation::Clockwise180:
 				data |= (uint8_t) Command::MADCTL_MY;
 				break;
 
-			case ScreenOrientation::Landscape270:
+			case ScreenOrientation::Clockwise270:
 				data |= (uint8_t) Command::MADCTL_MV;
 				break;
 
@@ -54,7 +54,7 @@ namespace yoba {
 
 	uint8_t ILI9341Driver::getTransactionWindowHeightForOrientation() {
 		return
-			this->_orientation == ScreenOrientation::Portrait0 || this->_orientation == ScreenOrientation::Portrait180
+			this->_orientation == ScreenOrientation::Clockwise0 || this->_orientation == ScreenOrientation::Clockwise180
 			? 64 // 5 transactions
 			: 40; // 6 transactions
 	}

@@ -32,9 +32,9 @@ namespace yoba {
 			* sent faster (compared to calling spi_device_transmit several times), and at
 			* the mean while the lines for next transactions can get calculated.
 			*/
-			void flushTransactionBuffer(uint16_t y);
+			virtual void flushTransactionBuffer(uint16_t y);
 
-			void writePixels(const std::function<void(uint8_t*& destination, size_t pixelIndex)>& pixelSetter) override;
+			void writePixels(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter) override;
 
 		protected:
 			uint8_t _csPin;
@@ -68,6 +68,9 @@ namespace yoba {
 			virtual void writeOrientationChangeCommands() = 0;
 			virtual void writeColorModeChangeCommands() = 0;
 
+			void setChipSelect(uint8_t value) const;
+			void setDataCommand(uint8_t value) const;
+
 			void writeData(uint8_t data);
 			void writeData(const uint8_t *data, size_t length);
 
@@ -76,9 +79,24 @@ namespace yoba {
 			void writeCommandAndData(uint8_t command, const uint8_t *data, size_t length);
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
-		private:
-			void setChipSelect(uint8_t value) const;
+			void printTransactionBufferContentsAsBinary() {
+				Serial.printf("Transaction buffer %d x %d:\n", _resolution.getWidth(), _transactionWindowHeight);
 
-			void setDataCommand(uint8_t value) const;
+				size_t bufferPtr = 0;
+
+				for (int j = 0; j < _transactionWindowHeight; j++) {
+					for (int i = 0; i < _resolution.getWidth(); i += 8) {
+						for (int k = 0; k < 8; k++) {
+							Serial.print((((_transactionBuffer[bufferPtr] >> (7 - k)) & 0b1) == 1) ? "#" : ".");
+						}
+
+						bufferPtr++;
+					}
+
+					Serial.println();
+				}
+
+				Serial.println("End of transaction buffer");
+			}
 	};
 }

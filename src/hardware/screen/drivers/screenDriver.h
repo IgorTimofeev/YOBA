@@ -28,13 +28,13 @@ namespace yoba {
 
 			Point orientPoint(const Point& point);
 
-			virtual void writePixels(const std::function<void(uint8_t*& destination, size_t pixelIndex)>& pixelSetter) = 0;
+			virtual void writePixels(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter) = 0;
 
 		protected:
 			ColorModel _colorModel;
 			const Size _defaultResolution;
 			Size _resolution;
-			ScreenOrientation _orientation = ScreenOrientation::Landscape270;
+			ScreenOrientation _orientation = ScreenOrientation::Clockwise270;
 
 			virtual void updateDataFromOrientation();
 			virtual void onOrientationChanged();

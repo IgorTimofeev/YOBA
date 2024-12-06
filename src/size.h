@@ -42,6 +42,10 @@ namespace yoba {
 				_height = value;
 			}
 
+			uint16_t getSquare() const {
+				return _width * _height;
+			}
+
 			Size interpolate(const Size &to, const double &position) const {
 				return {
 					(uint16_t) (getWidth() + position * (to.getWidth() - getWidth())),
