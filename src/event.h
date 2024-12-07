@@ -128,6 +128,9 @@ namespace yoba {
 	};
 
 	template<typename TElement>
+	uint16_t TargetEvent<TElement>::typeID = 0;
+
+	template<typename TElement>
 	TargetEvent<TElement>::TargetEvent(TElement target) : _target(target) {
 		registerTypeID(typeID);
 	}
