@@ -3,12 +3,14 @@
 
 namespace yoba {
 	ScreenDriver::ScreenDriver(
-		ScreenDriverBufferType bufferType,
+		ScreenDriverPixelWritingType pixelWritingType,
+		ScreenDriverPixelAlignment pixelAlignment,
 		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation
 	) :
-		_bufferType(bufferType),
+		_pixelWritingType(pixelWritingType),
+		_pixelAlignment(pixelAlignment),
 		_colorModel(colorModel),
 		_defaultResolution(resolution),
 		_resolution(resolution),
@@ -21,8 +23,12 @@ namespace yoba {
 		updateDataFromOrientation();
 	}
 
-	ScreenDriverBufferType ScreenDriver::getBufferType() const {
-		return _bufferType;
+	ScreenDriverPixelWritingType ScreenDriver::getPixelWritingType() const {
+		return _pixelWritingType;
+	}
+
+	ScreenDriverPixelAlignment ScreenDriver::getPixelAlignment() const {
+		return _pixelAlignment;
 	}
 
 	ColorModel ScreenDriver::getColorModel() const {

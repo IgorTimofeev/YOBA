@@ -9,7 +9,8 @@ namespace yoba {
 		uint32_t SPIFrequency
 	) :
 		SPIScreenDriver(
-			ScreenDriverBufferType::Full,
+			ScreenDriverPixelWritingType::Full,
+			ScreenDriverPixelAlignment::PaginatedVertical,
 			ColorModel::Monochrome,
 			Size(128, 64),
 			ScreenOrientation::Clockwise0,
@@ -61,7 +62,9 @@ namespace yoba {
 		writeCommand((uint8_t) Command::SetVComDetect);
 		writeCommand(0x20); // 0.77xVcc
 		writeCommand((uint8_t) Command::DisplayAllOnResume);
-		writeCommand((uint8_t) Command::NormalDisplay);
+
+		setInverted(false);
+
 		writeCommand((uint8_t) Command::DisplayOn);
 	}
 
@@ -78,6 +81,12 @@ namespace yoba {
 
 	void SH1106Driver::setContrast(uint8_t value) {
 		writeCommand((uint8_t) Command::SetContrast);
-		writeCommand(0xCF);
+		writeCommand(value);
+	}
+
+	void SH1106Driver::setInverted(bool value) {
+		InvertibleScreenDriver::setInverted(value);
+
+		writeCommand((uint8_t) (value ? Command::InvertDisplay : Command::NormalDisplay));
 	}
 }

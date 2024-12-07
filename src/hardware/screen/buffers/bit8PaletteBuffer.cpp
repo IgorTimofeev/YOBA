@@ -12,13 +12,13 @@ namespace yoba {
 	}
 
 	void Bit8PaletteBuffer::flush() {
-		switch (_driver->getBufferType()) {
-			case ScreenDriverBufferType::Transactional: {
+		switch (_driver->getPixelWritingType()) {
+			case ScreenDriverPixelWritingType::Transactional: {
 				const auto transactionalDriver = (TransactionalSPIScreenDriver*) _driver;
 
 				switch (_driver->getColorModel()) {
 					case ColorModel::Rgb565:
-						transactionalDriver->writeTransactionBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+						transactionalDriver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
 							((uint16_t*) destination)[0] = ((uint16_t*) _palette)[_buffer[pixelIndex]];
 							destination += 2;
 							pixelIndex++;
@@ -29,7 +29,7 @@ namespace yoba {
 					case ColorModel::Rgb666:
 						const uint8_t* palettePtr;
 
-						transactionalDriver->writeTransactionBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+						transactionalDriver->writePixels([&](uint8_t*& destination, size_t& pixelIndex) {
 							palettePtr = _palette + _buffer[pixelIndex] * 3;
 
 							destination[0] = palettePtr[0];

@@ -2,6 +2,7 @@
 
 namespace yoba {
 	TransactionalSPIScreenDriver::TransactionalSPIScreenDriver(
+		ScreenDriverPixelAlignment pixelAlignment,
 		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation,
@@ -9,7 +10,7 @@ namespace yoba {
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t spiFrequency
-	) : SPIScreenDriver(ScreenDriverBufferType::Transactional, colorModel, resolution, orientation, csPin, dcPin, rstPin, spiFrequency) {
+	) : SPIScreenDriver(ScreenDriverPixelWritingType::Transactional, pixelAlignment, colorModel, resolution, orientation, csPin, dcPin, rstPin, spiFrequency) {
 
 	}
 
@@ -38,6 +39,23 @@ namespace yoba {
 		writeCommandAndData(0x2C, _transactionBuffer, _transactionBufferLength);
 	}
 
+	void TransactionalSPIScreenDriver::writePixels(const std::function<void(uint8_t*&, size_t&)>& pixelSetter) {
+		size_t pixelIndex = 0;
+		uint16_t y;
+		uint8_t* transactionBufferPtr;
+		uint8_t* transactionBufferEnd = _transactionBuffer + _transactionBufferLength;
+
+		for (y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
+			transactionBufferPtr = _transactionBuffer;
+
+			while (transactionBufferPtr < transactionBufferEnd) {
+				pixelSetter(transactionBufferPtr, pixelIndex);
+			}
+
+			writeTransactionBuffer(y);
+		}
+	}
+
 	uint8_t* TransactionalSPIScreenDriver::getTransactionBuffer() const {
 		return _transactionBuffer;
 	}
@@ -57,22 +75,5 @@ namespace yoba {
 		_transactionBufferLength = Color::getBytesPerType(this->_resolution.getWidth() * _transactionWindowHeight, _colorModel);
 		_transactionBuffer = (uint8_t*) heap_caps_malloc(_transactionBufferLength, MALLOC_CAP_DMA);
 		assert(_transactionBuffer != nullptr);
-	}
-
-	void TransactionalSPIScreenDriver::writeTransactionBuffer(const std::function<void(uint8_t*&, size_t&)>& pixelSetter) {
-		size_t pixelIndex = 0;
-		uint16_t y;
-		uint8_t* transactionBufferPtr;
-		uint8_t* transactionBufferEnd = _transactionBuffer + _transactionBufferLength;
-
-		for (y = 0; y < this->_resolution.getHeight(); y += _transactionWindowHeight) {
-			transactionBufferPtr = _transactionBuffer;
-
-			while (transactionBufferPtr < transactionBufferEnd) {
-				pixelSetter(transactionBufferPtr, pixelIndex);
-			}
-
-			writeTransactionBuffer(y);
-		}
 	}
 }

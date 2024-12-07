@@ -12,6 +12,7 @@ namespace yoba {
 		uint32_t SPIFrequency
 	) :
 		TransactionalSPIScreenDriver(
+			ScreenDriverPixelAlignment::Flat,
 			colorModel,
 			Size(240, 320),
 			orientation,

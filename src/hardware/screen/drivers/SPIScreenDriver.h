@@ -8,7 +8,8 @@ namespace yoba {
 	class SPIScreenDriver : public ScreenDriver {
 		public:
 			SPIScreenDriver(
-				ScreenDriverBufferType bufferType,
+				ScreenDriverPixelWritingType pixelWritingType,
+				ScreenDriverPixelAlignment pixelAlignment,
 				ColorModel colorModel,
 				const Size& resolution,
 				ScreenOrientation orientation,

@@ -4,10 +4,11 @@
 #include "SPIScreenDriver.h"
 #include "fullBufferScreenDriver.h"
 #include "contrastScreenDriver.h"
+#include "invertibleScreenDriver.h"
 #include "../../../size.h"
 
 namespace yoba {
-	class SH1106Driver : public SPIScreenDriver, public FullBufferScreenDriver, public ContrastScreenDriver {
+	class SH1106Driver : public SPIScreenDriver, public FullBufferScreenDriver, public ContrastScreenDriver, public InvertibleScreenDriver {
 		public:
 			SH1106Driver(
 				uint8_t csPin,
@@ -19,6 +20,7 @@ namespace yoba {
 
 			void writePixels(uint8_t* buffer) override;
 			void setContrast(uint8_t value) override;
+			void setInverted(bool value) override;
 
 		protected:
 			void writeSetupCommands() override;

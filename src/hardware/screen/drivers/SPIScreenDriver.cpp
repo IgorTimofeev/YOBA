@@ -4,7 +4,8 @@
 
 namespace yoba {
 	SPIScreenDriver::SPIScreenDriver(
-		ScreenDriverBufferType bufferType,
+		ScreenDriverPixelWritingType pixelWritingType,
+		ScreenDriverPixelAlignment pixelAlignment,
 		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation,
@@ -15,7 +16,8 @@ namespace yoba {
 		uint32_t SPIFrequency
 	) :
 		ScreenDriver(
-			bufferType,
+			pixelWritingType,
+			pixelAlignment,
 			colorModel,
 			resolution,
 			orientation

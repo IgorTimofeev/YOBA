@@ -6,6 +6,7 @@ namespace yoba {
 	class TransactionalSPIScreenDriver : public SPIScreenDriver {
 		public:
 			TransactionalSPIScreenDriver(
+				ScreenDriverPixelAlignment pixelAlignment,
 				ColorModel colorModel,
 				const Size& resolution,
 				ScreenOrientation orientation,
@@ -38,16 +39,9 @@ namespace yoba {
 			// but will eat RAM like a bulimic bitch
 			virtual uint8_t getTransactionWindowHeightForOrientation() = 0;
 
-			/* To send a set of lines we have to send a command, 2 data bytes, another command, 2 more data bytes and another command
-			* before sending the line data itself; a total of 6 transactions. (We can't put all of this in just one transaction
-			* because the D/C line needs to be toggled in the middle.)
-			* This routine queues these commands up as interrupt transactions so they get
-			* sent faster (compared to calling spi_device_transmit several times), and at
-			* the mean while the lines for next transactions can get calculated.
-			*/
 			virtual void writeTransactionBuffer(uint16_t y);
 
-			virtual void writeTransactionBuffer(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter);
+			void writePixels(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter);
 
 		protected:
 			uint8_t _transactionWindowHeight = 20;

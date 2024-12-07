@@ -11,8 +11,8 @@ namespace yoba {
 	}
 
 	void MonochromeBuffer::flush() {
-		switch (_driver->getBufferType()) {
-			case ScreenDriverBufferType::Full: {
+		switch (_driver->getPixelWritingType()) {
+			case ScreenDriverPixelWritingType::Full: {
 //				printBufferContentsAsBinary();
 
 				(dynamic_cast<FullBufferScreenDriver*>(_driver))->writePixels(_buffer);
@@ -29,17 +29,25 @@ namespace yoba {
 	}
 
 	void MonochromeBuffer::renderPixelNative(const Point& point, const Color* color) {
-//		const auto pixelIndex = getIndex(point);
-//		const auto bufferIndex = pixelIndex / 8;
-//		const auto bitIndex = pixelIndex % 8;
-//
-//		_buffer[bufferIndex] = ((_buffer[bufferIndex] & ~(1 << bitIndex)) | (((MonochromeColor*) color)->getValue() << bitIndex));
+		switch (_driver->getPixelAlignment()) {
+			case ScreenDriverPixelAlignment::PaginatedVertical: {
+				if (((MonochromeColor*) color)->getValue()) {
+					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |= (1 << (point.getY() & 7));
+				}
+				else {
+					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] &= ~(1 << (point.getY() & 7));
+				}
 
-		if (((MonochromeColor*) color)->getValue()) {
-			_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |=  (1 << (point.getY() & 7));
-		}
-		else {
-			_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] &= ~(1 << (point.getY() & 7));
+				break;
+			}
+			default:
+				// const auto pixelIndex = getIndex(point);
+				// const auto bufferIndex = pixelIndex / 8;
+				// const auto bitIndex = pixelIndex % 8;
+				//
+				// _buffer[bufferIndex] = ((_buffer[bufferIndex] & ~(1 << bitIndex)) | (((MonochromeColor*) color)->getValue() << bitIndex));
+
+				break;
 		}
 	}
 
