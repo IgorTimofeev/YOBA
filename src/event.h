@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "point.h"
 
 namespace yoba {
@@ -13,22 +14,32 @@ namespace yoba {
 
 			bool isHandled() const;
 			void setHandled(bool handled);
+			uint16_t getTypeID() const;
+
+		protected:
+			void registerTypeID(uint16_t& staticTypeID);
 
 		private:
+			static uint16_t _nextTypeID;
+
+			uint16_t _typeID = 0;
 			bool _handled = false;
 	};
 
 	// -------------------------------- InputEvent --------------------------------
 
 	class InputEvent : public Event {
-		public:
 
 	};
+
+	// -------------------------------- Screen --------------------------------
 
 	class ScreenEvent : public InputEvent {
 		public:
 			bool matches(Element* element) override;
 	};
+
+	// -------------------------------- Touch --------------------------------
 
 	class TouchEvent : public ScreenEvent {
 		public:
@@ -46,16 +57,22 @@ namespace yoba {
 	class TouchDownEvent : public TouchEvent {
 		public:
 			explicit TouchDownEvent(const Point& position);
+
+			static uint16_t typeID;
 	};
 
 	class TouchDragEvent : public TouchEvent {
 		public:
 			explicit TouchDragEvent(const Point& position);
+
+			static uint16_t typeID;
 	};
 
 	class TouchUpEvent : public TouchEvent {
 		public:
 			explicit TouchUpEvent(const Point& position);
+
+			static uint16_t typeID;
 	};
 
 	class PinchEvent : public ScreenEvent {
@@ -77,16 +94,22 @@ namespace yoba {
 	class PinchDownEvent : public PinchEvent {
 		public:
 			explicit PinchDownEvent(const Point& position1, const Point& position2);
+
+			static uint16_t typeID;
 	};
 
 	class PinchDragEvent : public PinchEvent {
 		public:
 			explicit PinchDragEvent(const Point& position1, const Point& position2);
+
+			static uint16_t typeID;
 	};
 
 	class PinchUpEvent : public PinchEvent {
 		public:
 			explicit PinchUpEvent(const Point& position1, const Point& position2);
+
+			static uint16_t typeID;
 	};
 
 	// -------------------------------- ElementEvent --------------------------------
@@ -95,6 +118,9 @@ namespace yoba {
 	class TargetEvent : public Event {
 		public:
 			explicit TargetEvent(TTarget target);
+
+			static uint16_t typeID;
+
 			TTarget getTarget() const;
 
 		private:
@@ -102,12 +128,12 @@ namespace yoba {
 	};
 
 	template<typename TElement>
-	TElement TargetEvent<TElement>::getTarget() const {
-		return _target;
+	TargetEvent<TElement>::TargetEvent(TElement target) : _target(target) {
+		registerTypeID(typeID);
 	}
 
 	template<typename TElement>
-	TargetEvent<TElement>::TargetEvent(TElement target) : _target(target) {
-
+	TElement TargetEvent<TElement>::getTarget() const {
+		return _target;
 	}
 }

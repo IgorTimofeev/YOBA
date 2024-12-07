@@ -11,10 +11,10 @@ namespace yoba {
 
 		protected:
 			void onEvent(InputEvent &event) override {
-				if (typeid(event) == typeid(TouchDownEvent)) {
+				if (event.getTypeID() == TouchDownEvent::typeID) {
 					_points.push_back(((TouchDownEvent&) event).getPosition());
 				}
-				else if (typeid(event) == typeid(PinchDownEvent)) {
+				else if (event.getTypeID() == PinchDownEvent::typeID) {
 					_points.clear();
 				}
 			}

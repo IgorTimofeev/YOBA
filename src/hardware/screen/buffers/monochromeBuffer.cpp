@@ -15,6 +15,12 @@ namespace yoba {
 			case ScreenDriverPixelWritingType::Full: {
 //				printBufferContentsAsBinary();
 
+//				auto dyn = dynamic_cast<FullBufferScreenDriver*>(_driver);
+//				auto rei = reinterpret_cast<FullBufferScreenDriver*>(_driver);
+//				auto cst = (FullBufferScreenDriver*) _driver;
+//
+//				Serial.printf("Pizda: %p, %p, %p\n", dyn, rei, cst);
+
 				(dynamic_cast<FullBufferScreenDriver*>(_driver))->writePixels(_buffer);
 
 				break;

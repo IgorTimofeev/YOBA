@@ -4,6 +4,16 @@
 namespace yoba {
 	// -------------------------------- Event --------------------------------
 
+	uint16_t Event::_nextTypeID = 0;
+
+	void Event::registerTypeID(uint16_t& staticTypeID) {
+		if (staticTypeID == 0) {
+			staticTypeID = _nextTypeID++;
+		}
+
+		_typeID = staticTypeID;
+	}
+
 	bool Event::isHandled() const {
 		return _handled;
 	}
@@ -16,11 +26,17 @@ namespace yoba {
 		return true;
 	}
 
-	// -------------------------------- Input --------------------------------
+	uint16_t Event::getTypeID() const {
+		return _typeID;
+	}
+
+	// -------------------------------- Screen --------------------------------
 
 	bool ScreenEvent::matches(Element* element) {
 		return element->isVisible() && element->isEnabled();
 	}
+
+	// -------------------------------- Touch --------------------------------
 
 	TouchEvent::TouchEvent(const Point& position) :
 		_position(position)
@@ -48,19 +64,19 @@ namespace yoba {
 	TouchDownEvent::TouchDownEvent(const Point& position) : TouchEvent(
 		position
 	) {
-
+		registerTypeID(typeID);
 	}
 
 	TouchDragEvent::TouchDragEvent(const Point& position) : TouchEvent(
 		position
 	) {
-
+		registerTypeID(typeID);
 	}
 
 	TouchUpEvent::TouchUpEvent(const Point& position) : TouchEvent(
 		position
 	) {
-
+		registerTypeID(typeID);
 	}
 
 	PinchEvent::PinchEvent(const Point& position1, const Point& position2) :
@@ -101,20 +117,20 @@ namespace yoba {
 		position1,
 		position2
 	) {
-
+		registerTypeID(typeID);
 	}
 
 	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) : PinchEvent(
 		position1,
 		position2
 	) {
-
+		registerTypeID(typeID);
 	}
 
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
 		position1,
 		position2
 	) {
-
+		registerTypeID(typeID);
 	}
 }

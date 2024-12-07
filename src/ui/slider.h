@@ -41,9 +41,9 @@ namespace yoba {
 			}
 
 			void onEvent(InputEvent &event) override {
-				const auto isTouchDown = typeid(event) == typeid(TouchDownEvent);
-				const auto isTouchUp = typeid(event) == typeid(TouchUpEvent);
-				const auto isTouchDrag = typeid(event) == typeid(TouchDragEvent);
+				const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
+				const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
+				const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
 
 				if (!(isTouchDown || isTouchUp || isTouchDrag))
 					return;
