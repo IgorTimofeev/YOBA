@@ -55,7 +55,7 @@ namespace yoba {
 	}
 
 	void Application::tick() {
-		setSize(_screenBuffer->getDriver()->getResolution());
+		setSize(_screenBuffer->getSize());
 
 		// Handling tick handlers first
 		_onTick.call();

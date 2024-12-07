@@ -80,7 +80,7 @@ namespace yoba {
 		this->writeCommandAndData((uint8_t) Command::COLMOD, value);
 	}
 
-	void ILI9341Driver::writeBeginCommands() {
+	void ILI9341Driver::writeSetupCommands() {
 		uint8_t b[16];
 
 		/* Power control B, power control = 0, DC_ENA = 1 */

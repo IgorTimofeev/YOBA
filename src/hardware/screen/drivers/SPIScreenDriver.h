@@ -30,10 +30,6 @@ namespace yoba {
 
 			void onOrientationChanged() override;
 
-			virtual void writeBeginCommands() = 0;
-			virtual void writeOrientationChangeCommands() = 0;
-			virtual void writeColorModeChangeCommands() = 0;
-
 			void setChipSelect(uint8_t value) const;
 			void setDataCommand(uint8_t value) const;
 
@@ -44,5 +40,9 @@ namespace yoba {
 
 			void writeCommandAndData(uint8_t command, const uint8_t *data, size_t length);
 			void writeCommandAndData(uint8_t command, uint8_t data);
+
+			virtual void writeSetupCommands() = 0;
+			virtual void writeOrientationChangeCommands() = 0;
+			virtual void writeColorModeChangeCommands() = 0;
 	};
 }

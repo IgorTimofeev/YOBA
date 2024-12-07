@@ -21,7 +21,7 @@ namespace yoba {
 			);
 
 		protected:
-			void writeBeginCommands() override;
+			void writeSetupCommands() override;
 			void writeOrientationChangeCommands() override;
 			void writeColorModeChangeCommands() override;
 

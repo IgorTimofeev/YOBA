@@ -22,6 +22,10 @@ namespace yoba {
 		assert(_buffer != nullptr);
 	}
 
+	const Size& ScreenBuffer::getSize() const {
+		return _driver->getResolution();
+	}
+
 	const Bounds& ScreenBuffer::getViewport() {
 		return _viewport;
 	}
@@ -33,12 +37,12 @@ namespace yoba {
 	void ScreenBuffer::resetViewport() {
 		_viewport.setX(0);
 		_viewport.setY(0);
-		_viewport.setWidth(_driver->getResolution().getWidth());
-		_viewport.setHeight(_driver->getResolution().getHeight());
+		_viewport.setWidth(getSize().getWidth());
+		_viewport.setHeight(getSize().getHeight());
 	}
 
 	size_t ScreenBuffer::getIndex(uint16_t x, uint16_t y) const {
-		return y * _driver->getResolution().getWidth() + x;
+		return y * getSize().getWidth() + x;
 	}
 
 	size_t ScreenBuffer::getIndex(const Point& point) const {

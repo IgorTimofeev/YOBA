@@ -23,6 +23,8 @@ namespace yoba {
 
 			virtual void flush() = 0;
 
+			const Size& getSize() const;
+
 			const Bounds& getViewport();
 			void setViewport(const Bounds& bounds);
 			void resetViewport();

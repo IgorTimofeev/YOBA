@@ -7,7 +7,7 @@ namespace yoba {
 	}
 
 	size_t MonochromeBuffer::getRequiredBufferLength() {
-		return _driver->getResolution().getSquare() / 8;
+		return getSize().getSquare() / 8;
 	}
 
 	void MonochromeBuffer::flush() {
@@ -36,10 +36,10 @@ namespace yoba {
 //		_buffer[bufferIndex] = ((_buffer[bufferIndex] & ~(1 << bitIndex)) | (((MonochromeColor*) color)->getValue() << bitIndex));
 
 		if (((MonochromeColor*) color)->getValue()) {
-			_buffer[point.getX() + (point.getY() / 8) * _driver->getResolution().getWidth()] |=  (1 << (point.getY() & 7));
+			_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |=  (1 << (point.getY() & 7));
 		}
 		else {
-			_buffer[point.getX() + (point.getY() / 8) * _driver->getResolution().getWidth()] &= ~(1 << (point.getY() & 7));
+			_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] &= ~(1 << (point.getY() & 7));
 		}
 	}
 
@@ -68,12 +68,12 @@ namespace yoba {
 	}
 
 	void MonochromeBuffer::printBufferContentsAsBinary() {
-		Serial.printf("Monochrome screen buffer %d x %d:\n", _driver->getResolution().getWidth(), _driver->getResolution().getHeight());
+		Serial.printf("Monochrome screen buffer %d x %d:\n", getSize().getWidth(), getSize().getHeight());
 
 		size_t bufferPtr = 0;
 
-		for (int j = 0; j < _driver->getResolution().getHeight(); j++) {
-			for (int i = 0; i < _driver->getResolution().getWidth(); i += 8) {
+		for (int j = 0; j < getSize().getHeight(); j++) {
+			for (int i = 0; i < getSize().getWidth(); i += 8) {
 				for (int k = 0; k < 8; k++) {
 					Serial.print((((_buffer[bufferPtr] >> (7 - k)) & 0b1) == 1) ? "#" : ".");
 				}

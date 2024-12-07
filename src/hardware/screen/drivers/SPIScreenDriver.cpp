@@ -43,16 +43,16 @@ namespace yoba {
 			pinMode(_rstPin, OUTPUT);
 
 			digitalWrite(_rstPin, 0);
-			vTaskDelay(100 / portTICK_PERIOD_MS);
+			delay(100);
 
 			digitalWrite(_rstPin, 1);
-			vTaskDelay(100 / portTICK_PERIOD_MS);
+			delay(100);
 		}
 
 		// SPI
 		SPI.begin();
 
-		writeBeginCommands();
+		writeSetupCommands();
 	}
 
 	void SPIScreenDriver::writeData(uint8_t data) {
