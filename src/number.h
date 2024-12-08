@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cstdlib"
+#include <limits>
 
 namespace yoba {
 	template<typename T>
@@ -42,5 +43,31 @@ namespace yoba {
 			(number < 100000000 ? 8 :
 			(number < 1000000000 ? 9 :
 			10)))))))));
+	}
+
+	template<typename TValue, typename TAddend>
+	TValue addSaturating(TValue value, TAddend addend) {
+		if (addend >= 0) {
+			const auto limit = std::numeric_limits<TValue>::max();
+
+			if ((limit - value) > addend) {
+				value += addend;
+			}
+			else {
+				value = limit;
+			}
+		}
+		else {
+			const auto limit = std::numeric_limits<TValue>::min();
+
+			if ((value - limit) > -addend) {
+				value += addend;
+			}
+			else {
+				value = limit;
+			}
+		}
+
+		return value;
 	}
 }
