@@ -67,17 +67,23 @@ namespace yoba {
 		registerTypeID(typeID);
 	}
 
+	uint16_t TouchDownEvent::typeID = 0;
+
 	TouchDragEvent::TouchDragEvent(const Point& position) : TouchEvent(
 		position
 	) {
 		registerTypeID(typeID);
 	}
 
+	uint16_t TouchDragEvent::typeID = 0;
+
 	TouchUpEvent::TouchUpEvent(const Point& position) : TouchEvent(
 		position
 	) {
 		registerTypeID(typeID);
 	}
+
+	uint16_t TouchUpEvent::typeID = 0;
 
 	PinchEvent::PinchEvent(const Point& position1, const Point& position2) :
 		_position1(position1),
@@ -120,6 +126,8 @@ namespace yoba {
 		registerTypeID(typeID);
 	}
 
+	uint16_t PinchDownEvent::typeID = 0;
+
 	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) : PinchEvent(
 		position1,
 		position2
@@ -127,10 +135,14 @@ namespace yoba {
 		registerTypeID(typeID);
 	}
 
+	uint16_t PinchDragEvent::typeID = 0;
+
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
 		position1,
 		position2
 	) {
 		registerTypeID(typeID);
 	}
+
+	uint16_t PinchUpEvent::typeID = 0;
 }
