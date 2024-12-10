@@ -13,7 +13,7 @@
 #include "touchPanel.h"
 #include "point.h"
 #include "touchPoint.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "hardware/screen/buffers/generic/screenBuffer.h"
 
 namespace yoba {
 	#define I2C_ADDR_FT6336U 0x38

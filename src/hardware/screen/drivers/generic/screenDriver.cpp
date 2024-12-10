@@ -3,13 +3,13 @@
 
 namespace yoba {
 	ScreenDriver::ScreenDriver(
-		ScreenDriverPixelWritingType pixelWritingType,
-		ScreenDriverPixelAlignment pixelAlignment,
+		ScreenPixelWritingMethod pixelWritingMethod,
+		ScreenPixelAlignment pixelAlignment,
 		ColorModel colorModel,
 		const Size& resolution,
 		ScreenOrientation orientation
 	) :
-		_pixelWritingType(pixelWritingType),
+		_pixelWritingMethod(pixelWritingMethod),
 		_pixelAlignment(pixelAlignment),
 		_colorModel(colorModel),
 		_defaultResolution(resolution),
@@ -20,14 +20,14 @@ namespace yoba {
 	}
 
 	void ScreenDriver::setup() {
-		updateDataFromOrientation();
+		updateFromOrientation();
 	}
 
-	ScreenDriverPixelWritingType ScreenDriver::getPixelWritingType() const {
-		return _pixelWritingType;
+	ScreenPixelWritingMethod ScreenDriver::getPixelWritingMethod() const {
+		return _pixelWritingMethod;
 	}
 
-	ScreenDriverPixelAlignment ScreenDriver::getPixelAlignment() const {
+	ScreenPixelAlignment ScreenDriver::getPixelAlignment() const {
 		return _pixelAlignment;
 	}
 
@@ -60,11 +60,9 @@ namespace yoba {
 				};
 
 			case ScreenOrientation::Clockwise90: {
-				int32_t tmp = point.getX();
-
 				return {
 					_resolution.getWidth() - point.getY(),
-					tmp
+					point.getX()
 				};
 			}
 
@@ -75,34 +73,22 @@ namespace yoba {
 				};
 
 			default: {
-				int32_t tmp = point.getX();
-
 				return {
 					point.getY(),
-					_resolution.getHeight() - tmp
+					_resolution.getHeight() - point.getX()
 				};
 			}
 		}
 	}
 
-	void ScreenDriver::updateDataFromOrientation() {
-		// Updating size
+	void ScreenDriver::updateFromOrientation() {
 		switch (_orientation) {
 			case ScreenOrientation::Clockwise0:
-				_resolution.setWidth(_defaultResolution.getWidth());
-				_resolution.setHeight(_defaultResolution.getHeight());
+			case ScreenOrientation::Clockwise180:
+				_resolution = _defaultResolution;
 				break;
 
 			case ScreenOrientation::Clockwise90:
-				_resolution.setWidth(_defaultResolution.getHeight());
-				_resolution.setHeight(_defaultResolution.getWidth());
-				break;
-
-			case ScreenOrientation::Clockwise180:
-				_resolution.setWidth(_defaultResolution.getWidth());
-				_resolution.setHeight(_defaultResolution.getHeight());
-				break;
-
 			case ScreenOrientation::Clockwise270:
 				_resolution.setWidth(_defaultResolution.getHeight());
 				_resolution.setHeight(_defaultResolution.getWidth());
@@ -111,6 +97,6 @@ namespace yoba {
 	}
 
 	void ScreenDriver::onOrientationChanged() {
-		updateDataFromOrientation();
+		updateFromOrientation();
 	}
 }

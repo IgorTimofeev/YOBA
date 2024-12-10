@@ -1,5 +1,4 @@
 #include "application.h"
-#include "hardware/screen/buffers/screenBuffer.h"
 #include "element.h"
 #include "animation.h"
 

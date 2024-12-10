@@ -2,28 +2,34 @@
 
 #include <cstdint>
 #include <driver/spi_master.h>
-#include "../../../size.h"
-#include "../../../color.h"
-#include "../../../point.h"
-#include "../../../screenOrientation.h"
+#include "size.h"
+#include "color.h"
+#include "point.h"
 #include "SPI.h"
 
 namespace yoba {
-	enum class ScreenDriverPixelWritingType : uint8_t {
-		Transactional,
-		Full
+	enum class ScreenOrientation : uint8_t {
+		Clockwise0,
+		Clockwise90,
+		Clockwise180,
+		Clockwise270
 	};
 
-	enum class ScreenDriverPixelAlignment : uint8_t {
-		Flat,
-		PaginatedVertical
+	enum class ScreenPixelAlignment : uint8_t {
+		Horizontal,
+		Vertical
+	};
+
+	enum class ScreenPixelWritingMethod : uint8_t {
+		Direct,
+		Buffered
 	};
 
 	class ScreenDriver {
 		public:
 			ScreenDriver(
-				ScreenDriverPixelWritingType pixelWritingType,
-				ScreenDriverPixelAlignment pixelAlignment,
+				ScreenPixelWritingMethod pixelWritingMethod,
+				ScreenPixelAlignment pixelAlignment,
 				ColorModel colorModel,
 				const Size& resolution,
 				ScreenOrientation orientation
@@ -31,8 +37,8 @@ namespace yoba {
 
 			virtual void setup();
 
-			ScreenDriverPixelWritingType getPixelWritingType() const;
-			ScreenDriverPixelAlignment getPixelAlignment() const;
+			ScreenPixelWritingMethod getPixelWritingMethod() const;
+			ScreenPixelAlignment getPixelAlignment() const;
 			ColorModel getColorModel() const;
 			const Size& getResolution() const;
 
@@ -42,14 +48,14 @@ namespace yoba {
 			Point orientPoint(const Point& point);
 
 		protected:
-			ScreenDriverPixelWritingType _pixelWritingType;
-			ScreenDriverPixelAlignment _pixelAlignment;
+			ScreenPixelWritingMethod _pixelWritingMethod;
+			ScreenPixelAlignment _pixelAlignment;
 			ColorModel _colorModel;
 			const Size _defaultResolution;
 			Size _resolution;
 			ScreenOrientation _orientation = ScreenOrientation::Clockwise270;
 
-			virtual void updateDataFromOrientation();
+			virtual void updateFromOrientation();
 			virtual void onOrientationChanged();
 	};
 }

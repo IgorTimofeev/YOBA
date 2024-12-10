@@ -5,15 +5,9 @@
 #include "screenDriver.h"
 
 namespace yoba {
-	class SPIScreenDriver : public ScreenDriver {
+	class SPIScreenDriver : public virtual ScreenDriver {
 		public:
 			SPIScreenDriver(
-				ScreenDriverPixelWritingType pixelWritingType,
-				ScreenDriverPixelAlignment pixelAlignment,
-				ColorModel colorModel,
-				const Size& resolution,
-				ScreenOrientation orientation,
-
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,

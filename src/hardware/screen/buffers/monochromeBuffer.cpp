@@ -1,5 +1,5 @@
 #include "monochromeBuffer.h"
-#include "../drivers/fullBufferScreenDriver.h"
+#include "../drivers/generic/directScreenDriver.h"
 
 namespace yoba {
 	MonochromeBuffer::MonochromeBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
@@ -11,17 +11,11 @@ namespace yoba {
 	}
 
 	void MonochromeBuffer::flush() {
-		switch (_driver->getPixelWritingType()) {
-			case ScreenDriverPixelWritingType::Full: {
+		switch (_driver->getPixelWritingMethod()) {
+			case ScreenPixelWritingMethod::Direct: {
 //				printBufferContentsAsBinary();
 
-//				auto dyn = dynamic_cast<FullBufferScreenDriver*>(_driver);
-//				auto rei = reinterpret_cast<FullBufferScreenDriver*>(_driver);
-//				auto cst = (FullBufferScreenDriver*) _driver;
-//
-//				Serial.printf("Pizda: %p, %p, %p\n", dyn, rei, cst);
-
-				(dynamic_cast<FullBufferScreenDriver*>(_driver))->writePixels(_buffer);
+				(dynamic_cast<DirectScreenDriver*>(_driver))->writePixels(_buffer);
 
 				break;
 			}
@@ -36,7 +30,7 @@ namespace yoba {
 
 	void MonochromeBuffer::renderPixelNative(const Point& point, const Color* color) {
 		switch (_driver->getPixelAlignment()) {
-			case ScreenDriverPixelAlignment::PaginatedVertical: {
+			case ScreenPixelAlignment::Vertical: {
 				if (((MonochromeColor*) color)->getValue()) {
 					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}

@@ -2,6 +2,7 @@
 
 #include "cstdlib"
 #include <limits>
+#include <cmath>
 
 namespace yoba {
 	template<typename T>

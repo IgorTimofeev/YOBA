@@ -2,7 +2,6 @@
 #include "application.h"
 #include "../animation.h"
 #include "../event.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
 	bool Element::isVisible() const {

@@ -2,7 +2,7 @@
 
 #include "element.h"
 #include "../color.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../hardware/screen/buffers/generic/screenBuffer.h"
 #include "traits/backgroundColorAware.h"
 #include "traits/foregroundColorAware.h"
 #include "traits/textAware.h"

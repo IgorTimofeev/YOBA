@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../../color.h"
-#include "../../hardware/screen/buffers/screenBuffer.h"
+#include "../../hardware/screen/buffers/generic/screenBuffer.h"
 #include "../element.h"
 #include "../traits/backgroundColorAware.h"
-#include "ui/traits/cornerRadiusAware.h"
+#include "../traits/cornerRadiusAware.h"
 
 namespace yoba {
 	class Rectangle : public BackgroundColorAware, public CornerRadiusAware {

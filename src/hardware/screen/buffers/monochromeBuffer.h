@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "screenBuffer.h"
+#include "generic/screenBuffer.h"
 
 namespace yoba {
 	class MonochromeBuffer : public ScreenBuffer {

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <cstdint>
-#include "SPIScreenDriver.h"
-#include "fullBufferScreenDriver.h"
-#include "contrastScreenDriver.h"
-#include "invertibleScreenDriver.h"
+#include "generic/SPIScreenDriver.h"
+#include "generic/directScreenDriver.h"
+#include "generic/contrastScreenDriver.h"
+#include "generic/invertibleScreenDriver.h"
 #include "../../../size.h"
 
 namespace yoba {
-	class SH1106Driver : public SPIScreenDriver, public FullBufferScreenDriver, public ContrastScreenDriver, public InvertibleScreenDriver {
+	class SH1106Driver : public SPIScreenDriver, public DirectScreenDriver, public ContrastScreenDriver, public InvertibleScreenDriver {
 		public:
 			SH1106Driver(
 				uint8_t csPin,

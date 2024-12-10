@@ -4,7 +4,7 @@
 #include "traits/textAware.h"
 #include "traits/foregroundColorAware.h"
 #include "traits/fontAware.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../hardware/screen/buffers/generic/screenBuffer.h"
 #include "../size.h"
 
 namespace yoba {

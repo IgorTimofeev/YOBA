@@ -2,7 +2,7 @@
 
 #include "element.h"
 #include "vector"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../hardware/screen/buffers/generic/screenBuffer.h"
 #include "../bounds.h"
 #include "../size.h"
 #include <iterator>

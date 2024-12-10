@@ -8,18 +8,21 @@ namespace yoba {
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
-		SPIScreenDriver(
-			ScreenDriverPixelWritingType::Full,
-			ScreenDriverPixelAlignment::PaginatedVertical,
+		ScreenDriver(
+			ScreenPixelWritingMethod::Direct,
+			ScreenPixelAlignment::Vertical,
 			ColorModel::Monochrome,
 			Size(128, 64),
-			ScreenOrientation::Clockwise0,
-
+			ScreenOrientation::Clockwise0
+		),
+		SPIScreenDriver(
 			csPin,
 			dcPin,
 			rstPin,
 			SPIFrequency
-		)
+		),
+		DirectScreenDriver(),
+		ContrastScreenDriver()
 	{
 
 	}
@@ -70,12 +73,12 @@ namespace yoba {
 
 	void SH1106Driver::writePixels(uint8_t* buffer) {
 		for (uint8_t page = 0; page < pageCount; page++) {
-			writeCommand((uint8_t) Command::SetPageAddress + page);
+			writeCommand((uint8_t) Command::SetPageAddress | page);
 			writeCommand((uint8_t) Command::SetColumnAddressLow);
 			writeCommand((uint8_t) Command::SetColumnAddressHigh);
 
 			// Page
-			writeData(buffer + (page << 7), getResolution().getWidth());
+			writeData(buffer + page * getResolution().getWidth(), getResolution().getWidth());
 		}
 	}
 

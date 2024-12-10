@@ -2,7 +2,6 @@
 
 #include "Arduino.h"
 #include <cstdint>
-#include "screenOrientation.h"
 
 namespace yoba {
 	template<typename T>

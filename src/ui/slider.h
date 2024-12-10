@@ -2,7 +2,7 @@
 
 #include "element.h"
 #include "../color.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "../hardware/screen/buffers/generic/screenBuffer.h"
 #include "cmath"
 #include "../callback.h"
 #include "traits/cornerRadiusAware.h"

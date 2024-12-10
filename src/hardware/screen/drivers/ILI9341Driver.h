@@ -1,11 +1,12 @@
 #pragma once
 
 #include <cstdint>
-#include "transactionalSPIScreenDriver.h"
+#include "generic/bufferedScreenDriver.h"
 #include "../../../size.h"
+#include "generic/SPIScreenDriver.h"
 
 namespace yoba {
-	class ILI9341Driver : public TransactionalSPIScreenDriver {
+	class ILI9341Driver : public virtual SPIScreenDriver, public virtual BufferedScreenDriver {
 		public:
 			ILI9341Driver(
 				ColorModel colorModel,
@@ -25,7 +26,10 @@ namespace yoba {
 			void writeOrientationChangeCommands() override;
 			void writeColorModeChangeCommands() override;
 
-			uint8_t getTransactionWindowHeightForOrientation() override;
+			uint8_t getPixelBufferHeightForOrientation() override;
+
+		public:
+			void writePixelBuffer(uint16_t y) override;
 
 		private:
 			enum class Command : uint8_t {

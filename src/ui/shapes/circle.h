@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../color.h"
-#include "../../hardware/screen/buffers/screenBuffer.h"
+#include "../hardware/screen/buffers/generic/screenBuffer.h"
 #include "../element.h"
 #include "../traits/backgroundColorAware.h"
 

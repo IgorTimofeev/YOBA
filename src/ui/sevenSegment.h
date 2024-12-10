@@ -2,7 +2,7 @@
 
 #include "stackLayout.h"
 #include "../color.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "hardware/screen/buffers/generic/screenBuffer.h"
 #include "cmath"
 #include "traits/backgroundColorAware.h"
 #include "traits/foregroundColorAware.h"

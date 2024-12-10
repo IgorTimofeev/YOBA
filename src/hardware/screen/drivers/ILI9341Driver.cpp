@@ -1,4 +1,3 @@
-#include <cstdint>
 #include "ILI9341Driver.h"
 
 namespace yoba {
@@ -11,17 +10,20 @@ namespace yoba {
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
-		TransactionalSPIScreenDriver(
-			ScreenDriverPixelAlignment::Flat,
+		ScreenDriver(
+			ScreenPixelWritingMethod::Buffered,
+			ScreenPixelAlignment::Horizontal,
 			colorModel,
 			Size(240, 320),
-			orientation,
-
+			orientation
+		),
+		SPIScreenDriver(
 			csPin,
 			dcPin,
 			rstPin,
 			SPIFrequency
-		)
+		),
+		BufferedScreenDriver()
 	{
 
 	}
@@ -29,7 +31,7 @@ namespace yoba {
 	void ILI9341Driver::writeOrientationChangeCommands() {
 		auto data = (uint8_t) Command::MADCTL_BGR;
 
-		switch (this->_orientation) {
+		switch (getOrientation()) {
 			case ScreenOrientation::Clockwise0:
 				data |= (uint8_t) Command::MADCTL_MX;
 				break;
@@ -53,7 +55,7 @@ namespace yoba {
 		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 
-	uint8_t ILI9341Driver::getTransactionWindowHeightForOrientation() {
+	uint8_t ILI9341Driver::getPixelBufferHeightForOrientation() {
 		return
 			this->_orientation == ScreenOrientation::Clockwise0 || this->_orientation == ScreenOrientation::Clockwise180
 			? 64 // 5 transactions
@@ -232,5 +234,26 @@ namespace yoba {
 		/* Display on */
 		this->writeCommandAndData(0x29, 0x00);
 		vTaskDelay(100 / portTICK_PERIOD_MS);
+	}
+
+	void ILI9341Driver::writePixelBuffer(uint16_t y) {
+		uint8_t data[4];
+
+		// Column Address Set
+		data[0] = 0; //Start Col High
+		data[1] = 0; //Start Col Low
+		data[2] = (this->getResolution().getWidth() - 1) >> 8; //End Col High
+		data[3] = (this->_resolution.getWidth() - 1) & 0xff; //End Col Low
+		writeCommandAndData(0x2A, data, 4);
+
+		//Page address set
+		data[0] = y >> 8; //Start page high
+		data[1] = y & 0xff; // Start page low
+		data[2] = (y + _pixelBufferHeight - 1) >> 8; // End page high
+		data[3] = (y + _pixelBufferHeight - 1) & 0xff; // End page low
+		writeCommandAndData(0x2B, data, 4);
+
+		// Memory write
+		writeCommandAndData(0x2C, _pixelBuffer, _pixelBufferLength);
 	}
 }

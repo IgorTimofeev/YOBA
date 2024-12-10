@@ -1,5 +1,4 @@
 #include "screenBuffer.h"
-#include "screenBuffer.h"
 
 namespace yoba {
 	ScreenBuffer::ScreenBuffer(ScreenDriver* driver) : _driver(driver) {
