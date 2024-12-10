@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../element.h"
+#include "ui/element.h"
 
 namespace yoba {
-	class TextAware : public virtual Element {
+	class TextElement : public virtual Element {
 		public:
 			const wchar_t* getText() const {
 				return _text;

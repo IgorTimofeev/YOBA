@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "point.h"
+#include "vector.h"
 
 namespace yoba {
 	// -------------------------------- Event --------------------------------

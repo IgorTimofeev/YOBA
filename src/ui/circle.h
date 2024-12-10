@@ -1,21 +1,21 @@
 #pragma once
 
-#include "../../color.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
-#include "../element.h"
-#include "../traits/backgroundColorAware.h"
+#include "color.h"
+#include "hardware/screen/buffers/screenBuffer.h"
+#include "element.h"
+#include "primaryColorElement.h"
 
 namespace yoba {
-	class Circle : public virtual Element, public BackgroundColorAware {
+	class Circle : public virtual Element, public PrimaryColorElement {
 		public:
 			Circle() = default;
 
 			explicit Circle(const Color* color) {
-				setBackgroundColor(color);
+				setPrimaryColor(color);
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getBackgroundColor())
+				if (!getPrimaryColor())
 					return;
 
 				const auto& bounds = getBounds();
@@ -23,7 +23,7 @@ namespace yoba {
 				screenBuffer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2),
 					min(bounds.getWidth(), bounds.getHeight()) / 2,
-					getBackgroundColor()
+					getPrimaryColor()
 				);
 			}
 	};

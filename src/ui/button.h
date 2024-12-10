@@ -2,40 +2,40 @@
 
 #include "element.h"
 #include "../color.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
-#include "traits/backgroundColorAware.h"
-#include "traits/foregroundColorAware.h"
-#include "traits/textAware.h"
-#include "traits/fontAware.h"
-#include "traits/cornerRadiusAware.h"
+#include "hardware/screen/buffers/screenBuffer.h"
+#include "primaryColorElement.h"
+#include "secondaryColorElement.h"
+#include "textElement.h"
+#include "fontElement.h"
+#include "cornerRadiusElement.h"
 #include "../event.h"
 
 namespace yoba {
 	class ClickEvent;
 
-	class Button : public TextAware, public FontAware, public BackgroundColorAware, public ForegroundColorAware, public CornerRadiusAware {
+	class Button : public TextElement, public FontElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override;
 
 			void onEvent(InputEvent &event) override;
 
 			bool isPressed() const;
-			void setPressed(bool pressed);
+			void setPressed(bool value);
 
 			bool isToggle() const;
-			void setToggle(bool toggle);
+			void setToggle(bool value);
 
-			const Color *getPressedBackground() const;
-			void setPressedBackground(const Color *pressedBackground);
+			const Color *getPressedPrimaryColor() const;
+			void setPressedPrimaryColor(const Color *value);
 
-			const Color *getPressedForeground() const;
-			void setPressedForeground(const Color *pressedForeground);
+			const Color *getPressedSecondaryColor() const;
+			void setPressedForeground(const Color *value);
 
 		private:
 			bool _pressed = false;
 			bool _toggle = false;
 
-			const Color* _pressedBackground = nullptr;
-			const Color* _pressedForeground = nullptr;
+			const Color* _pressedPrimaryColor = nullptr;
+			const Color* _pressedSecondaryColor = nullptr;
 	};
 }

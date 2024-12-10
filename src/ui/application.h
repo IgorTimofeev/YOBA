@@ -1,7 +1,7 @@
 #pragma once
 
 #include "layout.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 #include "../hardware/input/inputDevice.h"
 #include "../font.h"
 #include "../resources/fonts/unscii16Font.h"
@@ -40,7 +40,6 @@ namespace yoba {
 			Callback<>& getOnTick();
 
 			ScreenBuffer* getScreenBuffer() const;
-			void setScreenBuffer(ScreenBuffer* screenBuffer);
 
 			void addInputDevice(InputDevice* inputDevice);
 

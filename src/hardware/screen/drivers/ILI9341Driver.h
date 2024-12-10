@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include "generic/bufferedScreenDriver.h"
+#include "bufferedScreenDriver.h"
 #include "../../../size.h"
-#include "generic/SPIScreenDriver.h"
+#include "SPIScreenDriver.h"
 
 namespace yoba {
 	class ILI9341Driver : public virtual SPIScreenDriver, public virtual BufferedScreenDriver {

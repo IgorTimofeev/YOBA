@@ -121,4 +121,12 @@ namespace yoba {
 			}
 		}
 	}
+
+	std::vector<Element*>::iterator Layout::begin() {
+		return _children.begin();
+	}
+
+	std::vector<Element*>::iterator Layout::end() {
+		return _children.end();
+	}
 }

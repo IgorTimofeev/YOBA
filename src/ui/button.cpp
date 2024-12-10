@@ -4,14 +4,14 @@ namespace yoba {
 	void Button::onRender(ScreenBuffer* screenBuffer) {
 		const auto& bounds = getBounds();
 
-		// Background
-		if (getBackgroundColor()) {
+		// Primary color
+		if (getPrimaryColor()) {
 			screenBuffer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				isPressed() && getPressedBackground()
-				? getPressedBackground()
-				: getBackgroundColor()
+				isPressed() && getPressedPrimaryColor()
+				? getPressedPrimaryColor()
+				: getPrimaryColor()
 			);
 		}
 
@@ -28,16 +28,16 @@ namespace yoba {
 						bounds.getYCenter() - textSize.getHeight() / 2
 					),
 					font,
-					isPressed() && getPressedForeground()
-					? getPressedForeground()
-					: getForegroundColor(),
+					isPressed() && getPressedSecondaryColor()
+					? getPressedSecondaryColor()
+					: getSecondaryColor(),
 					getText()
 				);
 			}
 		}
 	}
 
-	void Button::onEvent(InputEvent &event) {
+	void Button::onEvent(InputEvent& event) {
 		if (event.getTypeID() == TouchDownEvent::typeID) {
 			setCaptured(true);
 			setPressed(!isToggle() || !isPressed());
@@ -58,31 +58,31 @@ namespace yoba {
 		return _pressed;
 	}
 
-	void Button::setPressed(bool pressed) {
-		_pressed = pressed;
+	void Button::setPressed(bool value) {
+		_pressed = value;
 	}
 
 	bool Button::isToggle() const {
 		return _toggle;
 	}
 
-	void Button::setToggle(bool toggle) {
-		_toggle = toggle;
+	void Button::setToggle(bool value) {
+		_toggle = value;
 	}
 
-	const Color *Button::getPressedBackground() const {
-		return _pressedBackground;
+	const Color *Button::getPressedPrimaryColor() const {
+		return _pressedPrimaryColor;
 	}
 
-	void Button::setPressedBackground(const Color *pressedBackground) {
-		_pressedBackground = pressedBackground;
+	void Button::setPressedPrimaryColor(const Color* value) {
+		_pressedPrimaryColor = value;
 	}
 
-	const Color *Button::getPressedForeground() const {
-		return _pressedForeground;
+	const Color *Button::getPressedSecondaryColor() const {
+		return _pressedSecondaryColor;
 	}
 
-	void Button::setPressedForeground(const Color *pressedForeground) {
-		_pressedForeground = pressedForeground;
+	void Button::setPressedForeground(const Color* value) {
+		_pressedSecondaryColor = value;
 	}
 }

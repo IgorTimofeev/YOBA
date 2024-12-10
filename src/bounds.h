@@ -2,151 +2,49 @@
 
 #include "Arduino.h"
 #include <cstdint>
-#include "point.h"
+#include "vector.h"
 #include "size.h"
 
 namespace yoba {
 	class Bounds {
 		public:
-			Bounds(int32_t x, int32_t y, int32_t width, int32_t height) :
-				_x(x),
-				_y(y),
-				_width(width),
-				_height(height)
-			{
+			Bounds(int32_t x, int32_t y, int32_t width, int32_t height);
 
-			}
+			Bounds();
 
-			Bounds() : Bounds(0, 0, 0, 0) {
+			Bounds(const Point& position, const Size &size);
 
-			}
+			explicit Bounds(const Size &size);
 
-			Bounds(const Point& position, const Size &size) : Bounds(position.getX(), position.getY(), size.getWidth(), size.getHeight()) {
+			int32_t getX() const;
+			void setX(int32_t value);
 
-			}
+			int32_t getY() const;
+			void setY(int32_t value);
 
-			explicit Bounds(const Size &size) : Bounds(Point(), size) {
+			uint16_t getWidth() const;
+			void setWidth(uint16_t value);
 
-			}
+			uint16_t getHeight() const;
+			void setHeight(uint16_t value);
 
-			int32_t getX() const {
-				return _x;
-			}
+			Point getSize() const;
+			int32_t getX2() const;
+			int32_t getY2() const;
+			int32_t getXCenter() const;
+			int32_t getYCenter() const;
+			Point getCenter() const;
+			Point getTopLeft() const;
+			Point getTopRight() const;
+			Point getBottomRight() const;
+			Point getBottomLeft() const;
 
-			void setX(int32_t value) {
-				_x = value;
-			}
+			bool intersects(const Point& point) const;
+			bool intersects(const Bounds& bounds) const;
 
-			int32_t getY() const {
-				return _y;
-			}
+			bool isNonZero() const;
 
-			void setY(int32_t value) {
-				_y = value;
-			}
-
-			uint16_t getWidth() const {
-				return _width;
-			}
-
-			void setWidth(uint16_t value) {
-				_width = value;
-			}
-
-			uint16_t getHeight() const {
-				return _height;
-			}
-
-			void setHeight(uint16_t value) {
-				_height = value;
-			}
-
-			Point getSize() const {
-				return {getWidth(), getHeight()};
-			}
-
-			int32_t getX2() const {
-				return _x + _width - 1;
-			}
-
-			int32_t getY2() const {
-				return _y + _height - 1;
-			}
-
-			int32_t getXCenter() const {
-				return _x + _width / 2;
-			}
-
-			int32_t getYCenter() const {
-				return _y + _height / 2;
-			}
-
-			Point getCenter() const {
-				return {
-					getXCenter(),
-					getYCenter()
-				};
-			}
-
-			Point getTopLeft() const {
-				return {
-					getX(),
-					getY()
-				};
-			}
-
-			Point getTopRight() const {
-				return {
-					getX2(),
-					getY()
-				};
-			}
-
-			Point getBottomRight() const {
-				return {
-					getX2(),
-					getY2()
-				};
-			}
-
-			Point getBottomLeft() const {
-				return {
-					getX(),
-					getY2()
-				};
-			}
-
-			bool intersects(const Point& point) const {
-				return
-					point.getX() >= getX()
-					&& point.getY() >= getY()
-					&& point.getX() <= getX2()
-					&& point.getY() <= getY2();
-			}
-
-			bool intersects(const Bounds& bounds) const {
-				return !(
-					getX() > bounds.getX2()
-					|| getX2() < bounds.getX()
-					|| getY() > bounds.getY2()
-					|| getY2() < bounds.getY()
-				);
-			}
-
-			bool isNonZero() const {
-				return getWidth() > 0 && getHeight() > 0;
-			}
-
-			Bounds getIntersection(const Bounds& bounds) const {
-				Bounds result = Bounds();
-
-				result.setX(max(getX(), bounds.getX()));
-				result.setY(max(getY(), bounds.getY()));
-				result.setWidth(min(getX2(), bounds.getX2()) - result.getX() + 1);
-				result.setHeight(min(getY2(), bounds.getY2()) - result.getY() + 1);
-
-				return result;
-			}
+			Bounds getIntersection(const Bounds& bounds) const;
 
 		private:
 			int32_t _x = 0;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../element.h"
+#include "ui/element.h"
 
 namespace yoba {
-	class CornerRadiusAware : public virtual Element {
+	class CornerRadiusElement : public virtual Element {
 		public:
 			uint16_t getCornerRadius() const {
 				return _cornerRadius;

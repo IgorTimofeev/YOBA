@@ -2,18 +2,18 @@
 
 #include "element.h"
 #include "../color.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
 #include "../callback.h"
-#include "traits/backgroundColorAware.h"
-#include "traits/foregroundColorAware.h"
+#include "primaryColorElement.h"
+#include "secondaryColorElement.h"
 #include "../event.h"
 #include "../number.h"
 
 namespace yoba {
 	class KnobRotateEvent;
 
-	class Knob : public BackgroundColorAware {
+	class Knob : public PrimaryColorElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override;
 
@@ -28,8 +28,8 @@ namespace yoba {
 			const Color *getLineColor() const;
 			void setLineColor(const Color *lineColor);
 
-			const Color *getCenterColor() const;
-			void setCenterColor(const Color *centerColor);
+			const Color *getMiddleColor() const;
+			void setMiddleColor(const Color *value);
 
 			Callback<KnobRotateEvent&>& getOnRotate();
 
@@ -38,7 +38,7 @@ namespace yoba {
 			float _angle = 0;
 			float _angleStep = radians(10);
 			const Color* _lineColor = nullptr;
-			const Color* _centerColor = nullptr;
+			const Color* _middleColor = nullptr;
 
 			template<typename Base, typename T>
 			inline bool instanceof(const T*) {

@@ -1,8 +1,9 @@
 #include "selector.h"
-#include "selectorItem.h"
 
 namespace yoba {
-	SelectorItem *Selector::getItemAt(size_t index) {
+	// -------------------------------- Selector --------------------------------
+
+	SelectorItem* Selector::getItemAt(size_t index) {
 		return
 			_itemsLayout
 			? (SelectorItem*) (*_itemsLayout)[index]
@@ -57,5 +58,25 @@ namespace yoba {
 
 	const Callback<>& Selector::getOnSelectionChanged() const {
 		return _onSelectionChanged;
+	}
+
+	// -------------------------------- SelectorItem --------------------------------
+
+	void SelectorItem::onEvent(InputEvent &event) {
+		if (!(event.getTypeID() == TouchDownEvent::typeID || event.getTypeID() == TouchDragEvent::typeID))
+			return;
+
+		if (getSelector())
+			getSelector()->setSelectedIndex(getSelector()->getIndexOfItem(this));
+
+		event.setHandled(true);
+	}
+
+	Selector *SelectorItem::getSelector() const {
+		return _selector;
+	}
+
+	void SelectorItem::setSelector(Selector *value) {
+		_selector = value;
 	}
 }

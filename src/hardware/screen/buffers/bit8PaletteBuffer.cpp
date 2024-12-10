@@ -1,6 +1,6 @@
 #include "bit8PaletteBuffer.h"
 #include "bounds.h"
-#include "../drivers/generic/bufferedScreenDriver.h"
+#include "hardware/screen/drivers/bufferedScreenDriver.h"
 
 namespace yoba {
 	Bit8PaletteBuffer::Bit8PaletteBuffer(ScreenDriver* driver, uint16_t paletteLength) : PaletteBuffer(driver, paletteLength) {

@@ -7,8 +7,6 @@
 #include "callback.h"
 
 namespace yoba {
-	class Element;
-
 	class Animation {
 		public:
 			Animation();

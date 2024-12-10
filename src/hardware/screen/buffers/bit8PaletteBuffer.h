@@ -1,7 +1,7 @@
 #pragma once
 
-#include "generic/paletteBuffer.h"
-#include "generic/screenBuffer.h"
+#include "paletteBuffer.h"
+#include "screenBuffer.h"
 
 namespace yoba {
 	class Bit8PaletteBuffer : public PaletteBuffer {

@@ -1,24 +1,24 @@
 #pragma once
 
 #include "element.h"
-#include "traits/textAware.h"
-#include "traits/foregroundColorAware.h"
-#include "traits/fontAware.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
+#include "textElement.h"
+#include "secondaryColorElement.h"
+#include "fontElement.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 #include "../size.h"
 
 namespace yoba {
-	class Text : public TextAware, public FontAware, public ForegroundColorAware {
+	class Text : public TextElement, public FontElement, public SecondaryColorElement {
 		public:
 			Text() = default;
 
 			Text(const Font* font, const Color* foreground) {
 				setFont(font);
-				setForegroundColor(foreground);
+				setSecondaryColor(foreground);
 			}
 
 			explicit Text(const Color* foreground) {
-				setForegroundColor(foreground);
+				setSecondaryColor(foreground);
 			}
 
 			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
@@ -31,7 +31,7 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getForegroundColor() || !getText())
+				if (!getSecondaryColor() || !getText())
 					return;
 
 				const auto font = getFontOrDefault();
@@ -42,7 +42,7 @@ namespace yoba {
 				screenBuffer->renderText(
 					getBounds().getTopLeft(),
 					font,
-					getForegroundColor(),
+					getSecondaryColor(),
 					getText()
 				);
 			}

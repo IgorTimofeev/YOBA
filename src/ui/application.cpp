@@ -127,10 +127,6 @@ namespace yoba {
 		return _screenBuffer;
 	}
 
-	void Application::setScreenBuffer(ScreenBuffer* screenBuffer) {
-		_screenBuffer = screenBuffer;
-	}
-
 	void Application::addInputDevice(InputDevice* inputDevice) {
 		_onTick += [this, inputDevice]() {
 			inputDevice->tick(this);

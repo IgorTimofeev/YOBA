@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cstdint>
-#include "generic/SPIScreenDriver.h"
-#include "generic/directScreenDriver.h"
-#include "generic/contrastScreenDriver.h"
-#include "generic/invertibleScreenDriver.h"
+#include "SPIScreenDriver.h"
+#include "directScreenDriver.h"
+#include "contrastScreenDriver.h"
+#include "invertibleScreenDriver.h"
 #include "../../../size.h"
 
 namespace yoba {

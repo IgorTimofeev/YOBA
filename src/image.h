@@ -9,20 +9,10 @@ namespace yoba {
 			Image(
 				const Size& size,
 				const uint8_t* bitmap
-			) :
-				_size(size),
-				_bitmap(bitmap)
-			{
+			);
 
-			}
-
-			const Size& getSize() const {
-				return _size;
-			}
-
-			const uint8_t* getBitmap() const {
-				return _bitmap;
-			}
+			const Size& getSize() const;
+			const uint8_t* getBitmap() const;
 
 		private:
 			const Size _size;

@@ -1,5 +1,5 @@
 #include "monochromeBuffer.h"
-#include "../drivers/generic/directScreenDriver.h"
+#include "hardware/screen/drivers/directScreenDriver.h"
 
 namespace yoba {
 	MonochromeBuffer::MonochromeBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {

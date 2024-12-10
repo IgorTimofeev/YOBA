@@ -7,7 +7,7 @@
 #include "../margin.h"
 #include "../bounds.h"
 #include "../size.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 
 namespace yoba {
 	enum class Alignment: uint8_t {

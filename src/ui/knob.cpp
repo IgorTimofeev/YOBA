@@ -6,21 +6,21 @@ namespace yoba {
 		const uint16_t radius = max(bounds.getWidth(), bounds.getHeight()) / 2;
 		const auto center = bounds.getCenter();
 
-		// Background circle
-		if (getBackgroundColor()) {
+		// Primary circle
+		if (getPrimaryColor()) {
 			screenBuffer->renderFilledCircle(
 				center,
 				radius,
-				getBackgroundColor()
+				getPrimaryColor()
 			);
 		}
 
 		// Center circle
-		if (getCenterColor()) {
+		if (getMiddleColor()) {
 			screenBuffer->renderFilledCircle(
 				center,
 				(uint16_t) ((float) radius * 0.5f),
-				getCenterColor()
+				getMiddleColor()
 			);
 		}
 
@@ -87,12 +87,12 @@ namespace yoba {
 		_lineColor = lineColor;
 	}
 
-	const Color *Knob::getCenterColor() const {
-		return _centerColor;
+	const Color *Knob::getMiddleColor() const {
+		return _middleColor;
 	}
 
-	void Knob::setCenterColor(const Color *centerColor) {
-		_centerColor = centerColor;
+	void Knob::setMiddleColor(const Color* value) {
+		_middleColor = value;
 	}
 
 	Callback<KnobRotateEvent&> &Knob::getOnRotate() {

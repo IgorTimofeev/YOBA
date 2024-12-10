@@ -2,9 +2,10 @@
 
 #include "element.h"
 #include "vector"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 #include "../bounds.h"
 #include "../size.h"
+#include "../event.h"
 #include <iterator>
 
 namespace yoba {
@@ -30,13 +31,9 @@ namespace yoba {
 
 			virtual void addChild(Element* child);
 
-			std::vector<Element*>::iterator begin() {
-				return _children.begin();
-			}
+			std::vector<Element*>::iterator begin();
 
-			std::vector<Element*>::iterator end() {
-				return _children.end();
-			}
+			std::vector<Element*>::iterator end();
 
 			virtual Element* operator[](size_t index);
 

@@ -2,20 +2,20 @@
 
 #include "element.h"
 #include "../color.h"
-#include "../hardware/screen/buffers/generic/screenBuffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
 #include "../callback.h"
-#include "traits/cornerRadiusAware.h"
-#include "traits/backgroundColorAware.h"
-#include "traits/foregroundColorAware.h"
+#include "cornerRadiusElement.h"
+#include "primaryColorElement.h"
+#include "secondaryColorElement.h"
 #include "../event.h"
 #include "../number.h"
 
 namespace yoba {
-	class Slider : public BackgroundColorAware, public ForegroundColorAware, public CornerRadiusAware {
+	class Slider : public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getBackgroundColor() || !getForegroundColor())
+				if (!getPrimaryColor() || !getSecondaryColor())
 					return;
 
 				auto& bounds = getBounds();
@@ -24,7 +24,7 @@ namespace yoba {
 				screenBuffer->renderFilledRectangle(
 					bounds,
 					getCornerRadius(),
-					getBackgroundColor()
+					getPrimaryColor()
 				);
 
 				screenBuffer->renderFilledRectangle(
@@ -36,7 +36,7 @@ namespace yoba {
 						)
 					),
 					getCornerRadius(),
-					getForegroundColor()
+					getSecondaryColor()
 				);
 			}
 

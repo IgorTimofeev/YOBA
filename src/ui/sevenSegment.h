@@ -2,13 +2,13 @@
 
 #include "stackLayout.h"
 #include "../color.h"
-#include "hardware/screen/buffers/generic/screenBuffer.h"
+#include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
-#include "traits/backgroundColorAware.h"
-#include "traits/foregroundColorAware.h"
+#include "primaryColorElement.h"
+#include "secondaryColorElement.h"
 
 namespace yoba {
-	class SevenSegment : public BackgroundColorAware, public ForegroundColorAware {
+	class SevenSegment : public PrimaryColorElement, public SecondaryColorElement {
 		public:
 			static const uint32_t dashes = 0xFFFFFFFF;
 
@@ -123,13 +123,13 @@ namespace yoba {
 				const uint8_t t = getSegmentThickness();
 				const uint8_t l = getSegmentLength();
 
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getForegroundColor() : getBackgroundColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getForegroundColor() : getBackgroundColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getForegroundColor() : getBackgroundColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getForegroundColor() : getBackgroundColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getForegroundColor() : getBackgroundColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getForegroundColor() : getBackgroundColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getForegroundColor() : getBackgroundColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getSecondaryColor() : getPrimaryColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getSecondaryColor() : getPrimaryColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getSecondaryColor() : getPrimaryColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getSecondaryColor() : getPrimaryColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getSecondaryColor() : getPrimaryColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getSecondaryColor() : getPrimaryColor());
+				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getSecondaryColor() : getPrimaryColor());
 			}
 
 			void drawDigit(ScreenBuffer* screenBuffer, const Point& position, uint8_t digit) {

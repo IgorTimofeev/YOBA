@@ -4,7 +4,7 @@
 #include <driver/spi_master.h>
 #include "size.h"
 #include "color.h"
-#include "point.h"
+#include "vector.h"
 #include "SPI.h"
 
 namespace yoba {
