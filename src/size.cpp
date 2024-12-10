@@ -31,6 +31,14 @@ namespace yoba {
 		_height = value;
 	}
 
+	uint16_t Size::getXCenter() const {
+		return _width / 2;
+	}
+
+	uint16_t Size::getYCenter() const {
+		return _height / 2;
+	}
+
 	uint16_t Size::getSquare() const {
 		return _width * _height;
 	}

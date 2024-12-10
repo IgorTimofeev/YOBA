@@ -21,7 +21,7 @@ namespace yoba {
 				const auto& bounds = getBounds();
 
 				screenBuffer->renderFilledCircle(
-					Point(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2),
+					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
 					min(bounds.getWidth(), bounds.getHeight()) / 2,
 					getPrimaryColor()
 				);

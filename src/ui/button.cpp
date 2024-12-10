@@ -24,8 +24,8 @@ namespace yoba {
 
 				screenBuffer->renderText(
 					Point(
-						bounds.getXCenter() - textSize.getWidth() / 2,
-						bounds.getYCenter() - textSize.getHeight() / 2
+						bounds.getXCenter() - textSize.getXCenter(),
+						bounds.getYCenter() - textSize.getYCenter()
 					),
 					font,
 					isPressed() && getPressedSecondaryColor()

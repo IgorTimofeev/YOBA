@@ -20,6 +20,8 @@ namespace yoba {
 			uint16_t getHeight() const;
 			void setHeight(uint16_t value);
 
+			uint16_t getXCenter() const;
+			uint16_t getYCenter() const;
 			uint16_t getSquare() const;
 
 			Size interpolate(const Size &to, const double &position) const;
