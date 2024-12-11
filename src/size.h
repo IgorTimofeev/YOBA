@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arduino.h"
+#include "vector.h"
 #include <cstdint>
 #include <climits>
 #include <limits>
@@ -22,6 +23,7 @@ namespace yoba {
 
 			uint16_t getXCenter() const;
 			uint16_t getYCenter() const;
+			Point getCenter() const;
 			uint16_t getSquare() const;
 
 			Size interpolate(const Size &to, const double &position) const;

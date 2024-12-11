@@ -39,6 +39,13 @@ namespace yoba {
 		return _height / 2;
 	}
 
+	Point Size::getCenter() const {
+		return {
+			getXCenter(),
+			getYCenter()
+		};
+	}
+
 	uint16_t Size::getSquare() const {
 		return _width * _height;
 	}
