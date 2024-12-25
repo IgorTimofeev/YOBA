@@ -1,5 +1,5 @@
 #include "monochromeBuffer.h"
-#include "hardware/screen/drivers/directScreenDriver.h"
+#include "../drivers/directScreenDriver.h"
 
 namespace yoba {
 	MonochromeBuffer::MonochromeBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
@@ -13,8 +13,6 @@ namespace yoba {
 	void MonochromeBuffer::flush() {
 		switch (_driver->getPixelWritingMethod()) {
 			case ScreenPixelWritingMethod::Direct: {
-//				printBufferContentsAsBinary();
-
 				(dynamic_cast<DirectScreenDriver*>(_driver))->writePixels(_buffer);
 
 				break;
@@ -30,7 +28,7 @@ namespace yoba {
 
 	void MonochromeBuffer::renderPixelNative(const Point& point, const Color* color) {
 		switch (_driver->getPixelAlignment()) {
-			case ScreenPixelAlignment::Vertical: {
+			case ScreenPixelAlignment::XNormalYNormal: {
 				if (((MonochromeColor*) color)->getValue()) {
 					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}
@@ -40,13 +38,17 @@ namespace yoba {
 
 				break;
 			}
-			default:
-				// const auto pixelIndex = getIndex(point);
-				// const auto bufferIndex = pixelIndex / 8;
-				// const auto bitIndex = pixelIndex % 8;
-				//
-				// _buffer[bufferIndex] = ((_buffer[bufferIndex] & ~(1 << bitIndex)) | (((MonochromeColor*) color)->getValue() << bitIndex));
+			case ScreenPixelAlignment::XNormalYReversed: {
+				if (((MonochromeColor*) color)->getValue()) {
+					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
+				}
+				else {
+					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
+				}
 
+				break;
+			}
+			default:
 				break;
 		}
 	}

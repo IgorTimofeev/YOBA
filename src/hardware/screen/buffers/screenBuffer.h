@@ -2,13 +2,12 @@
 
 #include <cstdlib>
 #include <cstdint>
-#include "vector.h"
-#include "size.h"
-#include "bounds.h"
-#include "color.h"
-#include "font.h"
-#include "image.h"
-#include "hardware/screen/drivers/screenDriver.h"
+#include "../drivers/screenDriver.h"
+#include "../../../size.h"
+#include "../../../bounds.h"
+#include "../../../color.h"
+#include "../../../image.h"
+#include "../../../font.h"
 
 namespace yoba {
 	class ScreenBuffer {

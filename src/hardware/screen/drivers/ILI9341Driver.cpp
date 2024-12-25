@@ -12,7 +12,7 @@ namespace yoba {
 	) :
 		ScreenDriver(
 			ScreenPixelWritingMethod::Buffered,
-			ScreenPixelAlignment::Horizontal,
+			ScreenPixelAlignment::YNormalXNormal,
 			colorModel,
 			Size(240, 320),
 			orientation

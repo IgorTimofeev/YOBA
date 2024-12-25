@@ -10,7 +10,7 @@ namespace yoba {
 	) :
 		ScreenDriver(
 			ScreenPixelWritingMethod::Direct,
-			ScreenPixelAlignment::Vertical,
+			ScreenPixelAlignment::XNormalYNormal,
 			ColorModel::Monochrome,
 			Size(128, 64),
 			ScreenOrientation::Clockwise0

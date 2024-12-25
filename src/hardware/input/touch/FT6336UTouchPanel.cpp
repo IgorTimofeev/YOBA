@@ -6,12 +6,11 @@
 */
 /**************************************************************************/
 
+#include <Wire.h>
 #include "Arduino.h"
 #include "FT6336UTouchPanel.h"
-#include <Wire.h>
-#include "ui/application.h"
-#include "event.h"
 #include "FunctionalInterrupt.h"
+#include "../../../ui/application.h"
 
 namespace yoba {
 	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :

@@ -2,10 +2,10 @@
 
 #include <cstdint>
 #include <driver/spi_master.h>
-#include "size.h"
-#include "color.h"
-#include "vector.h"
 #include "SPI.h"
+#include "../../../color.h"
+#include "../../../vector.h"
+#include "../../../size.h"
 
 namespace yoba {
 	enum class ScreenOrientation : uint8_t {
@@ -16,8 +16,9 @@ namespace yoba {
 	};
 
 	enum class ScreenPixelAlignment : uint8_t {
-		Horizontal,
-		Vertical
+		YNormalXNormal,
+		XNormalYNormal,
+		XNormalYReversed
 	};
 
 	enum class ScreenPixelWritingMethod : uint8_t {

@@ -11,9 +11,9 @@
 #include <cstdint>
 #include <Arduino.h>
 #include "touchPanel.h"
-#include "vector.h"
 #include "touchPoint.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "../../screen/buffers/screenBuffer.h"
+#include "../../../vector.h"
 
 namespace yoba {
 	#define I2C_ADDR_FT6336U 0x38

@@ -1,5 +1,4 @@
 #include "screenDriver.h"
-#include "vector.h"
 
 namespace yoba {
 	ScreenDriver::ScreenDriver(
