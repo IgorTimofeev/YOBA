@@ -82,7 +82,7 @@ namespace yoba {
 		return _pressedSecondaryColor;
 	}
 
-	void Button::setPressedForeground(const Color* value) {
+	void Button::setPressedSecondaryColor(const Color* value) {
 		_pressedSecondaryColor = value;
 	}
 }

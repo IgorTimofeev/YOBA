@@ -29,7 +29,7 @@ namespace yoba {
 			void setPressedPrimaryColor(const Color *value);
 
 			const Color *getPressedSecondaryColor() const;
-			void setPressedForeground(const Color *value);
+			void setPressedSecondaryColor(const Color *value);
 
 		private:
 			bool _pressed = false;
