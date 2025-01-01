@@ -69,11 +69,22 @@ namespace yoba {
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch);
 			void renderChar(const Point& point, const Font* font, const Color* color, char ch);
 
+			// -------------------------------- Default colors --------------------------------
+
+			Color* getDefaultPrimaryColor() const;
+			void setDefaultPrimaryColor(Color* value);
+
+			Color* getDefaultSecondaryColor() const;
+			void setDefaultSecondaryColor(Color* value);
+
 		protected:
 			ScreenDriver* _driver;
 
 			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;
+
+			Color* _defaultPrimaryColor = nullptr;
+			Color* _defaultSecondaryColor = nullptr;
 
 			Bounds _viewport = Bounds();
 

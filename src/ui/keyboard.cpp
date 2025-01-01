@@ -17,10 +17,6 @@ namespace yoba {
 
 	}
 
-	KeyboardKey::~KeyboardKey() {
-
-	}
-
 	KeyCode KeyboardKey::getCode() const {
 		return _code;
 	}
@@ -50,7 +46,6 @@ namespace yoba {
 	const wchar_t* TextKeyboardKey::getUppercaseName() const {
 		return _uppercaseName;
 	}
-
 
 	// ----------------------------- KeyboardButton -----------------------------
 
@@ -100,11 +95,6 @@ namespace yoba {
 
 	}
 
-	KeyboardLayoutRow::~KeyboardLayoutRow() {
-		for (auto key : keys)
-			delete key;
-	}
-
 	// ----------------------------- KeyboardLayout -----------------------------
 
 	KeyboardLayout::KeyboardLayout(const wchar_t* name, const wchar_t* nameAbbreviated) :
@@ -115,8 +105,7 @@ namespace yoba {
 	}
 
 	KeyboardLayout::~KeyboardLayout() {
-		for (auto row : rows)
-			delete row;
+
 	}
 
 	// ----------------------------- Keyboard -----------------------------
@@ -139,15 +128,13 @@ namespace yoba {
 		if (!_layout)
 			return;
 
-		delete _layout;
-
 		for (auto element : _rowsLayout) {
-			auto row = dynamic_cast<KeyboardUIRow*>(element);
-
-			delete row;
+			delete dynamic_cast<KeyboardUIRow*>(element);
 		}
 
 		_rowsLayout.removeChildren();
+
+		delete _layout;
 	}
 
 	const Color* Keyboard::getBackgroundColor() const {
@@ -248,6 +235,12 @@ namespace yoba {
 
 	}
 
+	KeyboardUIRow::~KeyboardUIRow() {
+		for (auto child : *this) {
+			delete dynamic_cast<KeyboardButton*>(child);
+		}
+	}
+
 	Keyboard* KeyboardUIRow::getKeyboard() const {
 		return _keyboard;
 	}
@@ -308,6 +301,51 @@ namespace yoba {
 			));
 
 			x += buttonSize.getWidth() + _keyboard->getHorizontalKeySpacing();
+		}
+	}
+
+	// ----------------------------- KeyboardRootLayout -----------------------------
+
+	Size KeyboardRootLayout::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+		auto result = Size();
+
+		auto visibleChildrenCount = 0;
+
+		for (auto child : *this) {
+			if (!child->isVisible())
+				continue;
+
+			child->measure(
+				screenBuffer,
+				Size(
+					availableSize.getWidth(),
+					Size::Infinity
+				)
+			);
+
+			if (child->getMeasuredSize().getWidth() > result.getWidth())
+				result.setWidth(child->getMeasuredSize().getWidth());
+
+			result.setHeight(result.getHeight() + child->getMeasuredSize().getHeight());
+
+			visibleChildrenCount++;
+		}
+
+		return result;
+	}
+
+	void KeyboardRootLayout::onArrange(const Bounds& bounds) {
+		auto y = bounds.getY2() + 1;
+
+		for (auto child : *this) {
+			y -= child->getMeasuredSize().getHeight();
+
+			child->arrange(Bounds(
+				bounds.getX(),
+				y,
+				bounds.getWidth(),
+				child->getMeasuredSize().getHeight()
+			));
 		}
 	}
 

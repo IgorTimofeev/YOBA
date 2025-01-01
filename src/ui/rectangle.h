@@ -19,8 +19,13 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (getPrimaryColor())
-					screenBuffer->renderFilledRectangle(getBounds(), getCornerRadius(), getPrimaryColor());
+				auto primaryColor = getPrimaryColor();
+
+				if (!primaryColor)
+					primaryColor = screenBuffer->getDefaultPrimaryColor();
+
+				if (primaryColor)
+					screenBuffer->renderFilledRectangle(getBounds(), getCornerRadius(), primaryColor);
 			}
 	};
 }

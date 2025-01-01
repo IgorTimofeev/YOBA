@@ -4,7 +4,8 @@
 
 namespace yoba {
 	Bit8PaletteBuffer::Bit8PaletteBuffer(ScreenDriver* driver, uint16_t paletteLength) : PaletteBuffer(driver, paletteLength) {
-
+		setDefaultPrimaryColor(&_defaultPrimaryColor);
+		setDefaultSecondaryColor(&_defaultSecondaryColor);
 	}
 
 	size_t Bit8PaletteBuffer::getRequiredBufferLength() {

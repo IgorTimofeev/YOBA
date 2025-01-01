@@ -3,7 +3,8 @@
 
 namespace yoba {
 	MonochromeBuffer::MonochromeBuffer(ScreenDriver* driver) : ScreenBuffer(driver) {
-
+		setDefaultPrimaryColor(&_defaultPrimaryColor);
+		setDefaultSecondaryColor(&_defaultSecondaryColor);
 	}
 
 	size_t MonochromeBuffer::getRequiredBufferLength() {

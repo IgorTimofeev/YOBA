@@ -22,5 +22,9 @@ namespace yoba {
 			inline void renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) override;
 			inline void renderFilledRectangleNative(const Bounds& bounds, const Color* color) override;
 			inline void renderImageNative(const Point& point, const Image* image) override;
+
+		private:
+			PaletteColor _defaultPrimaryColor = PaletteColor(0);
+			PaletteColor _defaultSecondaryColor = PaletteColor(1);
 	};
 }

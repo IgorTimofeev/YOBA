@@ -2,11 +2,10 @@
 
 #include "color.h"
 #include "hardware/screen/buffers/screenBuffer.h"
-#include "element.h"
-#include "primaryColorElement.h"
+#include "shape.h"
 
 namespace yoba {
-	class Circle : public virtual Element, public PrimaryColorElement {
+	class Circle : public Shape {
 		public:
 			Circle() = default;
 
@@ -15,15 +14,17 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getPrimaryColor())
-					return;
+				auto primaryColor = getPrimaryColor();
+
+				if (!primaryColor)
+					primaryColor = screenBuffer->getDefaultPrimaryColor();
 
 				const auto& bounds = getBounds();
 
 				screenBuffer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
 					min(bounds.getWidth(), bounds.getHeight()) / 2,
-					getPrimaryColor()
+					primaryColor
 				);
 			}
 	};

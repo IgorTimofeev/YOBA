@@ -5,13 +5,18 @@ namespace yoba {
 		const auto& bounds = getBounds();
 
 		// Primary color
-		if (getPrimaryColor()) {
+		auto primaryColor = getPrimaryColor();
+
+		if (!primaryColor)
+			primaryColor = screenBuffer->getDefaultPrimaryColor();
+
+		if (primaryColor) {
 			screenBuffer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
 				isPressed() && getPressedPrimaryColor()
 				? getPressedPrimaryColor()
-				: getPrimaryColor()
+				: primaryColor
 			);
 		}
 
@@ -22,15 +27,21 @@ namespace yoba {
 			if (font) {
 				auto textSize = font->getSize(getText());
 
+				auto secondaryColor =
+					isPressed() && getPressedSecondaryColor()
+					? getPressedSecondaryColor()
+					: getSecondaryColor();
+
+				if (!secondaryColor)
+					secondaryColor = screenBuffer->getDefaultSecondaryColor();
+
 				screenBuffer->renderText(
 					Point(
 						bounds.getXCenter() - textSize.getXCenter(),
 						bounds.getYCenter() - textSize.getYCenter()
 					),
 					font,
-					isPressed() && getPressedSecondaryColor()
-					? getPressedSecondaryColor()
-					: getSecondaryColor(),
+					secondaryColor,
 					getText()
 				);
 			}

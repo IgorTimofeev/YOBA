@@ -194,8 +194,6 @@ namespace yoba {
 				float width
 			);
 
-			~KeyboardKey();
-
 			KeyboardKeyType getKeyType() const;
 			KeyCode getCode() const;
 			const wchar_t* getName() const;
@@ -231,6 +229,8 @@ namespace yoba {
 		public:
 			KeyboardUIRow(Keyboard* keyboard);
 
+			~KeyboardUIRow();
+
 			Keyboard* getKeyboard() const;
 
 		protected:
@@ -246,8 +246,6 @@ namespace yoba {
 		public:
 			KeyboardLayoutRow();
 
-			~KeyboardLayoutRow();
-
 			std::vector<KeyboardKey*> keys;
 	};
 
@@ -258,7 +256,7 @@ namespace yoba {
 				const wchar_t* nameAbbreviated
 			);
 
-			~KeyboardLayout();
+			virtual ~KeyboardLayout();
 
 			std::vector<KeyboardLayoutRow*> rows {};
 
@@ -342,6 +340,13 @@ namespace yoba {
 			float _keyHeight = 0.1f;
 
 			void deleteLayoutAndUIElements();
+	};
+
+	class KeyboardRootLayout : public Layout {
+		protected:
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+
+			void onArrange(const Bounds& bounds) override;
 	};
 
 	// --

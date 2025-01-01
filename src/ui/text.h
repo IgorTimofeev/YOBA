@@ -2,23 +2,23 @@
 
 #include "element.h"
 #include "textElement.h"
-#include "secondaryColorElement.h"
+#include "primaryColorElement.h"
 #include "fontElement.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "../size.h"
 
 namespace yoba {
-	class Text : public TextElement, public FontElement, public SecondaryColorElement {
+	class Text : public TextElement, public FontElement, public PrimaryColorElement {
 		public:
 			Text() = default;
 
 			Text(const Font* font, const Color* foreground) {
 				setFont(font);
-				setSecondaryColor(foreground);
+				setPrimaryColor(foreground);
 			}
 
 			explicit Text(const Color* foreground) {
-				setSecondaryColor(foreground);
+				setPrimaryColor(foreground);
 			}
 
 			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
@@ -31,7 +31,7 @@ namespace yoba {
 			}
 
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getSecondaryColor() || !getText())
+				if (!getText())
 					return;
 
 				const auto font = getFontOrDefault();
@@ -39,10 +39,15 @@ namespace yoba {
 				if (!font)
 					return;
 
+				auto primaryColor = getPrimaryColor();
+
+				if (!primaryColor)
+					primaryColor = screenBuffer->getDefaultPrimaryColor();
+
 				screenBuffer->renderText(
 					getBounds().getTopLeft(),
 					font,
-					getSecondaryColor(),
+					primaryColor,
 					getText()
 				);
 			}

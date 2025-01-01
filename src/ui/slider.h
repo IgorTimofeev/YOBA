@@ -15,8 +15,15 @@ namespace yoba {
 	class Slider : public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
-				if (!getPrimaryColor() || !getSecondaryColor())
-					return;
+				auto primaryColor = getPrimaryColor();
+
+				if (!primaryColor)
+					primaryColor = screenBuffer->getDefaultPrimaryColor();
+
+				auto secondaryColor = getSecondaryColor();
+
+				if (!secondaryColor)
+					secondaryColor = screenBuffer->getDefaultSecondaryColor();
 
 				auto& bounds = getBounds();
 				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());
@@ -24,7 +31,7 @@ namespace yoba {
 				screenBuffer->renderFilledRectangle(
 					bounds,
 					getCornerRadius(),
-					getPrimaryColor()
+					primaryColor
 				);
 
 				screenBuffer->renderFilledRectangle(
@@ -36,7 +43,7 @@ namespace yoba {
 						)
 					),
 					getCornerRadius(),
-					getSecondaryColor()
+					secondaryColor
 				);
 			}
 

@@ -22,5 +22,9 @@ namespace yoba {
 			inline void renderFilledRectangleNative(const Bounds& bounds, const Color* color) override;
 			inline void renderImageNative(const Point& point, const Image* image) override;
 
+		private:
+			MonochromeColor
+				_defaultPrimaryColor = MonochromeColor(false),
+				_defaultSecondaryColor = MonochromeColor(true);
 	};
 }
