@@ -44,7 +44,7 @@ namespace yoba {
 
 			virtual void startAnimation(Animation* animation);
 
-			const Callback<InputEvent&>& getEventHandlers() const;
+			Callback<InputEvent&>& getEventHandlers();
 
 			Application* getRoot();
 			virtual void setRoot(Application* value);

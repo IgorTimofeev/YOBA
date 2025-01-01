@@ -9,7 +9,7 @@
 #include <iterator>
 
 namespace yoba {
-	class Layout : public Element {
+	class Layout : public virtual Element {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override;
 

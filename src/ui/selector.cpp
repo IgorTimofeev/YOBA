@@ -6,7 +6,7 @@ namespace yoba {
 	SelectorItem* Selector::getItemAt(size_t index) {
 		return
 			_itemsLayout
-			? (SelectorItem*) (*_itemsLayout)[index]
+			? dynamic_cast<SelectorItem*>((*_itemsLayout)[index])
 			: nullptr;
 	}
 
@@ -36,7 +36,7 @@ namespace yoba {
 		_selectedIndex = index;
 
 		for (size_t i = 0; i < _itemsLayout->getChildrenCount(); i++) {
-			((SelectorItem*) (*_itemsLayout)[i])->setSelected(i == index);
+			(dynamic_cast<SelectorItem*>((*_itemsLayout)[i]))->setSelected(i == index);
 		}
 
 		onSelectionChanged();

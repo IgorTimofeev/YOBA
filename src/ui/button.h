@@ -31,11 +31,17 @@ namespace yoba {
 			const Color *getPressedSecondaryColor() const;
 			void setPressedSecondaryColor(const Color *value);
 
+			Callback<>& getOnClick();
+
+			void setOnClick(const Callback<>& onClick);
+
 		private:
 			bool _pressed = false;
 			bool _toggle = false;
 
 			const Color* _pressedPrimaryColor = nullptr;
 			const Color* _pressedSecondaryColor = nullptr;
+
+			Callback<> _onClick {};
 	};
 }

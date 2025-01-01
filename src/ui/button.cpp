@@ -42,6 +42,8 @@ namespace yoba {
 			setCaptured(true);
 			setPressed(!isToggle() || !isPressed());
 
+			_onClick.call();
+
 			event.setHandled(true);
 		}
 		else if (event.getTypeID() == TouchUpEvent::typeID) {
@@ -84,5 +86,13 @@ namespace yoba {
 
 	void Button::setPressedSecondaryColor(const Color* value) {
 		_pressedSecondaryColor = value;
+	}
+
+	Callback<>& Button::getOnClick() {
+		return _onClick;
+	}
+
+	void Button::setOnClick(const Callback<>& onClick) {
+		_onClick = onClick;
 	}
 }
