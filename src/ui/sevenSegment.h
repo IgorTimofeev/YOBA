@@ -12,7 +12,7 @@ namespace yoba {
 		public:
 			static const uint32_t dashes = 0xFFFFFFFF;
 
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				return {
 					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
 					getDigitHeight()

@@ -9,7 +9,8 @@
 namespace yoba {
 	class Size {
 		public:
-			static const uint16_t Calculated = 0xFFFF;
+			static const uint16_t Auto = 0xFFFF;
+			static const uint16_t Infinity = 0xFFFE;
 
 			Size();
 			Size(uint16_t width, uint16_t height);
@@ -26,7 +27,7 @@ namespace yoba {
 			Point getCenter() const;
 			uint16_t getSquare() const;
 
-			Size interpolate(const Size &to, const double &position) const;
+			Size interpolate(const Size& to, const double &position) const;
 
 		private:
 			uint16_t _width;

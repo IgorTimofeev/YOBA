@@ -22,10 +22,10 @@ namespace yoba {
 			}
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
-				bool haveVisibleChildren = false;
+				auto visibleChildrenCount = 0;
 
 				switch (getOrientation()) {
 					case Orientation::Horizontal:
@@ -36,7 +36,7 @@ namespace yoba {
 							child->measure(
 								screenBuffer,
 								Size(
-									Size::Calculated,
+									Size::Infinity,
 									availableSize.getHeight()
 								)
 							);
@@ -46,10 +46,10 @@ namespace yoba {
 							if (child->getMeasuredSize().getHeight() > result.getHeight())
 								result.setHeight(child->getMeasuredSize().getHeight());
 
-							haveVisibleChildren = true;
+							visibleChildrenCount++;
 						}
 
-						if (haveVisibleChildren)
+						if (visibleChildrenCount > 1)
 							result.setWidth(result.getWidth() - getSpacing());
 
 						break;
@@ -63,7 +63,7 @@ namespace yoba {
 								screenBuffer,
 								Size(
 									availableSize.getWidth(),
-									Size::Calculated
+									Size::Infinity
 								)
 							);
 
@@ -72,10 +72,10 @@ namespace yoba {
 
 							result.setHeight(result.getHeight() + child->getMeasuredSize().getHeight() + getSpacing());
 
-							haveVisibleChildren = true;
+							visibleChildrenCount++;
 						}
 
-						if (haveVisibleChildren > 0)
+						if (visibleChildrenCount > 1)
 							result.setHeight(result.getHeight() - getSpacing());
 
 						break;

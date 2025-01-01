@@ -6,6 +6,8 @@ namespace yoba {
 		for (const auto& child : _children) {
 			child->render(screenBuffer);
 		}
+
+//		screenBuffer->renderRectangle(getBounds(), new PaletteColor(6));
 	}
 
 	void Layout::onEvent(InputEvent &event) {
@@ -95,7 +97,7 @@ namespace yoba {
 		removeChild(child);
 	}
 
-	Size Layout::onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) {
+	Size Layout::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : _children) {

@@ -87,7 +87,7 @@ namespace yoba {
 			const Bounds& getBounds();
 
 		protected:
-			virtual Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize);
+			virtual Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(ScreenBuffer* screenBuffer);
 			virtual void onEvent(InputEvent& event);
@@ -97,7 +97,7 @@ namespace yoba {
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 
-			Size _size = Size(Size::Calculated, Size::Calculated);
+			Size _size = Size(Size::Auto, Size::Auto);
 			Alignment _horizontalAlignment = Alignment::Stretch;
 			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;
@@ -113,7 +113,7 @@ namespace yoba {
 
 			void setBounds(const Bounds& value);
 
-			static void calculateMeasureShit(
+			static void computeMeasureShit(
 				const Alignment &alignment,
 				const uint16_t &size,
 				const uint16_t &desiredSize,
@@ -122,7 +122,7 @@ namespace yoba {
 				int32_t &newSize
 			);
 
-			static void calculateArrangeShit(
+			static void computeArrangeShit(
 				const Alignment& alignment,
 				const int32_t& position,
 				const uint16_t& size,

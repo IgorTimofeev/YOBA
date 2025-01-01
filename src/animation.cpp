@@ -73,8 +73,8 @@ namespace yoba {
 
 	// -------------------------------- Size --------------------------------
 
-	SizeAnimation::SizeAnimation(const Size &from, const Size &to, const uint32_t &duration,
-								 const std::function<void(const Size &)> &interpolator) :
+	SizeAnimation::SizeAnimation(const Size& from, const Size& to, const uint32_t &duration,
+								 const std::function<void(const Size& )> &interpolator) :
 		Animation(
 			duration,
 			[from, to, interpolator](const double& position) {

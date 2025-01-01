@@ -24,11 +24,14 @@ namespace yoba {
 		invalidate();
 	}
 
-	Size Element::onMeasure(ScreenBuffer* screenBuffer, const Size &availableSize) {
-		return { 0, 0 };
+	Size Element::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+		return Size(
+			availableSize.getWidth() == Size::Infinity ? 0 : availableSize.getWidth(),
+			availableSize.getHeight() == Size::Infinity ? 0 : availableSize.getHeight()
+		);
 	}
 
-	void Element::setMeasuredSize(const Size &value) {
+	void Element::setMeasuredSize(const Size& value) {
 		_measuredSize = value;
 	}
 
@@ -36,7 +39,7 @@ namespace yoba {
 		_bounds = value;
 	}
 
-	void Element::calculateMeasureShit(
+	void Element::computeMeasureShit(
 		const Alignment &alignment,
 		const uint16_t &size,
 		const uint16_t &desiredSize,
@@ -44,7 +47,7 @@ namespace yoba {
 		const int32_t &marginEnd,
 		int32_t &newSize
 	) {
-		if (size == Size::Calculated) {
+		if (size == Size::Auto) {
 			newSize = desiredSize;
 		}
 		else {
@@ -57,16 +60,19 @@ namespace yoba {
 			newSize = 0;
 	}
 
-	void Element::measure(ScreenBuffer* screenBuffer, const Size &availableSize) {
-		auto desiredSize = onMeasure(screenBuffer, availableSize);
+	void Element::measure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+		const auto& size = getSize();
+		const auto& margin = getMargin();
 
-		auto& size = getSize();
-		auto& margin = getMargin();
+		auto desiredSize = computeDesiredSize(screenBuffer, Size(
+			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
+			availableSize.getHeight() - margin.getTop() - margin.getBottom()
+		));
 
 		int32_t newSize = 0;
 
 		// Width
-		calculateMeasureShit(
+		computeMeasureShit(
 			getHorizontalAlignment(),
 			size.getWidth(),
 			desiredSize.getWidth(),
@@ -78,7 +84,7 @@ namespace yoba {
 		desiredSize.setWidth(newSize);
 
 		// Height
-		calculateMeasureShit(
+		computeMeasureShit(
 			getVerticalAlignment(),
 			size.getHeight(),
 			desiredSize.getHeight(),
@@ -92,7 +98,7 @@ namespace yoba {
 		setMeasuredSize(desiredSize);
 	}
 
-	void Element::calculateArrangeShit(
+	void Element::computeArrangeShit(
 		const Alignment &alignment,
 		const int32_t &position,
 		const uint16_t &size,
@@ -137,7 +143,7 @@ namespace yoba {
 				break;
 
 			case Alignment::Stretch:
-				if (size == Size::Calculated) {
+				if (size == Size::Auto) {
 					newSize = limit;
 				}
 				else {
@@ -168,7 +174,7 @@ namespace yoba {
 		int32_t newPosition = 0;
 		int32_t newSize = 0;
 
-		calculateArrangeShit(
+		computeArrangeShit(
 			getHorizontalAlignment(),
 			bounds.getX(),
 			size.getWidth(),
@@ -183,7 +189,7 @@ namespace yoba {
 		newBounds.setX(newPosition);
 		newBounds.setWidth(newSize);
 
-		calculateArrangeShit(
+		computeArrangeShit(
 			getVerticalAlignment(),
 			bounds.getY(),
 			size.getHeight(),
@@ -250,17 +256,17 @@ namespace yoba {
 		return _bounds;
 	}
 
-	const Size &Element::getMeasuredSize() {
+	const Size& Element::getMeasuredSize() {
 		return _measuredSize;
 	}
 
-	void Element::setSize(const Size &value) {
+	void Element::setSize(const Size& value) {
 		_size = value;
 
 		invalidate();
 	}
 
-	const Size &Element::getSize() {
+	const Size& Element::getSize() {
 		return _size;
 	}
 

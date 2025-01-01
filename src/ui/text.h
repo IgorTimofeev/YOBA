@@ -21,7 +21,7 @@ namespace yoba {
 				setSecondaryColor(foreground);
 			}
 
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				const auto font = getFontOrDefault();
 
 				return

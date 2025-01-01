@@ -12,9 +12,9 @@ namespace yoba {
 
 			Bounds();
 
-			Bounds(const Point& position, const Size &size);
+			Bounds(const Point& position, const Size& size);
 
-			explicit Bounds(const Size &size);
+			explicit Bounds(const Size& size);
 
 			int32_t getX() const;
 			void setX(int32_t value);

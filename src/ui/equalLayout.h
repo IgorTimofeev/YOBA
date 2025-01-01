@@ -21,7 +21,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
 				uint16_t spacingSubstraction =
@@ -38,7 +38,7 @@ namespace yoba {
 							child->measure(
 								screenBuffer,
 								Size(
-									Size::Calculated,
+									Size::Infinity,
 									availableSize.getHeight()
 								)
 							);
@@ -76,7 +76,7 @@ namespace yoba {
 								screenBuffer,
 								Size(
 									availableSize.getWidth(),
-									getChildAutoSize(child) ? Size::Calculated : equalSize
+									getChildAutoSize(child) ? Size::Infinity : equalSize
 								)
 							);
 
