@@ -26,8 +26,8 @@ namespace yoba {
 
 	Size Element::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		return Size(
-			availableSize.getWidth() == Size::Infinity ? screenBuffer->getSize().getWidth() : availableSize.getWidth(),
-			availableSize.getHeight() == Size::Infinity ? screenBuffer->getSize().getHeight() : availableSize.getHeight()
+			availableSize.getWidth() == Size::Infinity ? 0 : availableSize.getWidth(),
+			availableSize.getHeight() == Size::Infinity ? 0 : availableSize.getHeight()
 		);
 	}
 

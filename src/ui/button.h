@@ -35,6 +35,9 @@ namespace yoba {
 
 			void setOnClick(const Callback<>& onClick);
 
+		protected:
+			virtual void onClick();
+
 		private:
 			bool _pressed = false;
 			bool _toggle = false;

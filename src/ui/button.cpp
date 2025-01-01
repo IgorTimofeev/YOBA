@@ -53,8 +53,6 @@ namespace yoba {
 			setCaptured(true);
 			setPressed(!isToggle() || !isPressed());
 
-			_onClick.call();
-
 			event.setHandled(true);
 		}
 		else if (event.getTypeID() == TouchUpEvent::typeID) {
@@ -62,6 +60,8 @@ namespace yoba {
 
 			if (!isToggle())
 				setPressed(false);
+
+			onClick();
 
 			event.setHandled(true);
 		}
@@ -105,5 +105,9 @@ namespace yoba {
 
 	void Button::setOnClick(const Callback<>& onClick) {
 		_onClick = onClick;
+	}
+
+	void Button::onClick() {
+		_onClick.call();
 	}
 }

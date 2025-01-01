@@ -179,8 +179,7 @@ namespace yoba {
 		Enter,
 		Shift,
 		Characters,
-		Layout,
-		Hide
+		Layout
 	};
 
 	class Keyboard;
@@ -276,6 +275,9 @@ namespace yoba {
 
 			uint8_t getKeyIndex() const;
 
+		protected:
+			void onClick() override;
+
 		private:
 			uint8_t _rowIndex;
 			uint8_t _keyIndex;
@@ -321,7 +323,11 @@ namespace yoba {
 			uint8_t getVerticalKeySpacing() const;
 			void setVerticalKeySpacing(uint8_t value);
 
+			void setKeyHeight(float keyHeight);
+
 			float getKeyHeight() const;
+
+			Callback<KeyboardKey*>& getOnKeyDown();
 
 		private:
 			const Color* _textButtonPrimaryColor = nullptr;
@@ -337,7 +343,9 @@ namespace yoba {
 			StackLayout _rowsLayout = StackLayout();
 
 			uint8_t _horizontalKeySpacing = 2;
-			float _keyHeight = 0.1f;
+			float _keyHeight = 1.f / 10.f;
+
+			Callback<KeyboardKey*> _onKeyDown {};
 
 			void deleteLayoutAndUIElements();
 	};

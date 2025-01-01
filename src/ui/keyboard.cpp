@@ -89,6 +89,12 @@ namespace yoba {
 		return _keyIndex;
 	}
 
+	void KeyboardButton::onClick() {
+		Button::onClick();
+
+		_keyboard->getOnKeyDown().call(getKeyboardKey());
+	}
+
 	// ----------------------------- KeyboardRow -----------------------------
 
 	KeyboardLayoutRow::KeyboardLayoutRow() {
@@ -229,6 +235,14 @@ namespace yoba {
 		return _keyHeight;
 	}
 
+	void Keyboard::setKeyHeight(float keyHeight) {
+		_keyHeight = keyHeight;
+	}
+
+	Callback<KeyboardKey*>& Keyboard::getOnKeyDown() {
+		return _onKeyDown;
+	}
+
 	// ----------------------------- KeyboardRow -----------------------------
 
 	KeyboardUIRow::KeyboardUIRow(Keyboard* keyboard) : _keyboard(keyboard) {
@@ -281,9 +295,6 @@ namespace yoba {
 
 	void KeyboardUIRow::onArrange(const Bounds& bounds) {
 		auto x = bounds.getX();
-
-		const auto spacingTotalWidth = _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
-		const auto availableWidthWithoutSpacing = bounds.getWidth() - spacingTotalWidth;
 
 		for (auto child : *this) {
 			if (!child->isVisible())
