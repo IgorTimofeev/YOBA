@@ -22,10 +22,10 @@ namespace yoba {
 			}
 
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
-				auto visibleChildrenCount = 0;
+				size_t visibleChildrenCount = 0;
 
 				switch (getOrientation()) {
 					case Orientation::Horizontal:
@@ -41,10 +41,12 @@ namespace yoba {
 								)
 							);
 
-							result.setWidth(result.getWidth() + child->getMeasuredSize().getWidth() + getSpacing());
+							const auto& childSize = child->getMeasuredSize();
 
-							if (child->getMeasuredSize().getHeight() > result.getHeight())
-								result.setHeight(child->getMeasuredSize().getHeight());
+							result.setWidth(result.getWidth() + childSize.getWidth() + getSpacing());
+
+							if (childSize.getHeight() > result.getHeight())
+								result.setHeight(childSize.getHeight());
 
 							visibleChildrenCount++;
 						}
@@ -67,10 +69,12 @@ namespace yoba {
 								)
 							);
 
-							if (child->getMeasuredSize().getWidth() > result.getWidth())
-								result.setWidth(child->getMeasuredSize().getWidth());
+							const auto& childSize = child->getMeasuredSize();
 
-							result.setHeight(result.getHeight() + child->getMeasuredSize().getHeight() + getSpacing());
+							if (childSize.getWidth() > result.getWidth())
+								result.setWidth(childSize.getWidth());
+
+							result.setHeight(result.getHeight() + childSize.getHeight() + getSpacing());
 
 							visibleChildrenCount++;
 						}
@@ -92,14 +96,19 @@ namespace yoba {
 						position = bounds.getX();
 
 						for (auto child : *this) {
+							if (!child->isVisible())
+								continue;
+
+							const auto& childSize = child->getMeasuredSize();
+
 							child->arrange(Bounds(
 								position,
 								bounds.getY(),
-								child->getMeasuredSize().getWidth(),
+								childSize.getWidth(),
 								bounds.getHeight()
 							));
 
-							position += child->getMeasuredSize().getWidth() + getSpacing();
+							position += childSize.getWidth() + getSpacing();
 						}
 
 						break;
@@ -108,14 +117,19 @@ namespace yoba {
 						position = bounds.getY();
 
 						for (auto child : *this) {
+							if (!child->isVisible())
+								continue;
+
+							const auto& childSize = child->getMeasuredSize();
+
 							child->arrange(Bounds(
 								bounds.getX(),
 								position,
 								bounds.getWidth(),
-								child->getMeasuredSize().getHeight()
+								childSize.getHeight()
 							));
 
-							position += child->getMeasuredSize().getHeight() + getSpacing();
+							position += childSize.getHeight() + getSpacing();
 						}
 
 						break;

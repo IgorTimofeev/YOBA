@@ -97,7 +97,7 @@ namespace yoba {
 		removeChild(child);
 	}
 
-	Size Layout::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size Layout::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : _children) {

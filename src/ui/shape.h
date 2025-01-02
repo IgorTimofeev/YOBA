@@ -7,9 +7,5 @@ namespace yoba {
 	class Shape : public PrimaryColorElement {
 		public:
 			Shape() = default;
-
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
-				return { 0, 0 };
-			}
 	};
 }

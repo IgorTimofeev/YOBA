@@ -87,7 +87,7 @@ namespace yoba {
 			const Bounds& getBounds();
 
 		protected:
-			virtual Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
+			virtual Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(ScreenBuffer* screenBuffer);
 			virtual void onEvent(InputEvent& event);

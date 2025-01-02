@@ -233,7 +233,7 @@ namespace yoba {
 			Keyboard* getKeyboard() const;
 
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 
@@ -269,7 +269,7 @@ namespace yoba {
 			KeyboardButton(Keyboard* keyboard, uint8_t rowIndex, uint8_t columnIndex);
 
 			Keyboard* getKeyboard();
-			KeyboardKey* getKeyboardKey();
+			KeyboardKey* getKey();
 
 			uint8_t getRowIndex() const;
 
@@ -352,7 +352,7 @@ namespace yoba {
 
 	class KeyboardRootLayout : public Layout {
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};

@@ -1,5 +1,6 @@
 #include "keyboard.h"
 #include "stackLayout.h"
+#include "../number.h"
 
 namespace yoba {
 	// ----------------------------- KeyboardKey -----------------------------
@@ -55,9 +56,9 @@ namespace yoba {
 		_keyIndex(columnIndex)
 	{
 		setCornerRadius(2);
-		setText(getKeyboardKey()->getName());
+		setText(getKey()->getName());
 
-		if (getKeyboardKey()->getKeyType() == KeyboardKeyType::Text) {
+		if (getKey()->getKeyType() == KeyboardKeyType::Text) {
 			setPrimaryColor(keyboard->getTextButtonPrimaryColor());
 			setSecondaryColor(keyboard->getTextButtonSecondaryColor());
 
@@ -77,7 +78,7 @@ namespace yoba {
 		return _keyboard;
 	}
 
-	KeyboardKey* KeyboardButton::getKeyboardKey() {
+	KeyboardKey* KeyboardButton::getKey() {
 		return _keyboard->getLayout()->rows[_rowIndex]->keys[_keyIndex];
 	}
 
@@ -92,7 +93,7 @@ namespace yoba {
 	void KeyboardButton::onClick() {
 		Button::onClick();
 
-		_keyboard->getOnKeyDown().call(getKeyboardKey());
+		_keyboard->getOnKeyDown().call(getKey());
 	}
 
 	// ----------------------------- KeyboardRow -----------------------------
@@ -259,73 +260,68 @@ namespace yoba {
 		return _keyboard;
 	}
 
-	Size KeyboardUIRow::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
-		const auto spacingTotalWidth = _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
-		const auto availableWidthWithoutSpacing = availableSize.getWidth() - spacingTotalWidth;
+	Size KeyboardUIRow::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+		const auto availableWidthWithoutSpacing = availableSize.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
 
-		float floatButtonWidth;
-		float floatWidth = 0;
+		float resultWidth = 0;
 
-		auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * availableSize.getWidth());
+		const auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * availableSize.getWidth());
 
 		for (auto child : *this) {
-			if (!child->isVisible())
-				continue;
-
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			floatButtonWidth = button->getKeyboardKey()->getWidth() * availableWidthWithoutSpacing;
+			const auto buttonWidth = button->getKey()->getWidth() * availableWidthWithoutSpacing;
 
 			button->measure(
 				screenBuffer,
 				Size(
-					(uint16_t) floatButtonWidth,
+					std::round(buttonWidth),
 					buttonHeight
 				)
 			);
 
-			floatWidth += floatButtonWidth + _keyboard->getHorizontalKeySpacing();
+			resultWidth += buttonWidth + _keyboard->getHorizontalKeySpacing();
 		}
 
 		return Size(
-			floatWidth - _keyboard->getHorizontalKeySpacing(),
+			std::round(resultWidth - _keyboard->getHorizontalKeySpacing()),
 			buttonHeight
 		);
 	}
 
 	void KeyboardUIRow::onArrange(const Bounds& bounds) {
-		auto x = bounds.getX();
+		const auto availableWidthWithoutSpacing = bounds.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
+
+		float widthSum = 0;
 
 		for (auto child : *this) {
-			if (!child->isVisible())
-				continue;
+			widthSum += dynamic_cast<KeyboardButton*>(child)->getKey()->getWidth();
+		}
 
+		float x = bounds.getX();
+
+		for (auto child : *this) {
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			const auto& buttonSize = button->getMeasuredSize();
+			const float buttonWidth = button->getKey()->getWidth() / widthSum * availableWidthWithoutSpacing;
 
 			button->arrange(Bounds(
-				(int32_t) x,
+				std::round(x),
 				bounds.getY(),
-				buttonSize.getWidth(),
-				buttonSize.getHeight()
+				std::round(buttonWidth),
+				bounds.getHeight()
 			));
 
-			x += buttonSize.getWidth() + _keyboard->getHorizontalKeySpacing();
+			x += buttonWidth + _keyboard->getHorizontalKeySpacing();
 		}
 	}
 
 	// ----------------------------- KeyboardRootLayout -----------------------------
 
-	Size KeyboardRootLayout::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardRootLayout::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		auto result = Size();
 
-		auto visibleChildrenCount = 0;
-
 		for (auto child : *this) {
-			if (!child->isVisible())
-				continue;
-
 			child->measure(
 				screenBuffer,
 				Size(
@@ -334,12 +330,12 @@ namespace yoba {
 				)
 			);
 
-			if (child->getMeasuredSize().getWidth() > result.getWidth())
-				result.setWidth(child->getMeasuredSize().getWidth());
+			const auto& childSize = child->getMeasuredSize();
 
-			result.setHeight(result.getHeight() + child->getMeasuredSize().getHeight());
+			if (childSize.getWidth() > result.getWidth())
+				result.setWidth(childSize.getWidth());
 
-			visibleChildrenCount++;
+			result.setHeight(result.getHeight() + childSize.getHeight());
 		}
 
 		return result;

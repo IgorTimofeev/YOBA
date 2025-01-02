@@ -10,10 +10,6 @@ namespace yoba {
 		public:
 			Rectangle() = default;
 
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
-				return {0, 0};
-			}
-
 			explicit Rectangle(const Color* color) {
 				setPrimaryColor(color);
 			}

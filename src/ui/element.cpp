@@ -24,11 +24,8 @@ namespace yoba {
 		invalidate();
 	}
 
-	Size Element::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
-		return Size(
-			availableSize.getWidth() == Size::Infinity ? 0 : availableSize.getWidth(),
-			availableSize.getHeight() == Size::Infinity ? 0 : availableSize.getHeight()
-		);
+	Size Element::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+		return { 0, 0 };
 	}
 
 	void Element::setMeasuredSize(const Size& value) {
@@ -64,7 +61,7 @@ namespace yoba {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
 
-		auto desiredSize = computeDesiredSize(screenBuffer, Size(
+		auto desiredSize = onMeasure(screenBuffer, Size(
 			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));
