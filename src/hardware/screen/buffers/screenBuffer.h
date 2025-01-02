@@ -61,14 +61,12 @@ namespace yoba {
 			template<typename TChar>
 			void renderText(const Point& point, const Font* font, const Color *color, const std::basic_string_view<TChar>& text);
 			void renderText(const Point& point, const Font* font, const Color* color, const std::string_view& text);
-			void renderText(const Point& point, const Font* font, const Color* color, const std::u16string_view& text);
-			void renderText(const Point& point, const Font* font, const Color* color, const std::u32string_view& text);
+			void renderText(const Point& point, const Font* font, const Color* color, const std::wstring_view& text);
 
 			template<typename TChar>
 			void renderChar(const Point& point, const Font* font, const Color* color, TChar ch);
 			void renderChar(const Point& point, const Font* font, const Color* color, char ch);
-			void renderChar(const Point& point, const Font* font, const Color* color, char16_t ch);
-			void renderChar(const Point& point, const Font* font, const Color* color, char32_t ch);
+			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch);
 
 			// -------------------------------- Default colors --------------------------------
 

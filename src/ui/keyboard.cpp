@@ -9,7 +9,7 @@ namespace yoba {
 		return _keyType;
 	}
 
-	KeyboardKey::KeyboardKey(KeyboardKeyType keyType, KeyCode code, const std::u32string_view& name, float width) :
+	KeyboardKey::KeyboardKey(KeyboardKeyType keyType, KeyCode code, const std::wstring_view& name, float width) :
 		_keyType(keyType),
 		_code(code),
 		_name(name),
@@ -22,7 +22,7 @@ namespace yoba {
 		return _code;
 	}
 
-	const std::u32string_view& KeyboardKey::getName() const {
+	const std::wstring_view& KeyboardKey::getName() const {
 		return _name;
 	}
 
@@ -32,7 +32,7 @@ namespace yoba {
 
 	// ----------------------------- TextKeyboardKey -----------------------------
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::u32string_view& name, KeyCode uppercaseCode, const std::u32string_view& uppercaseName, float width) :
+	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, KeyCode uppercaseCode, const std::wstring_view& uppercaseName, float width) :
 		KeyboardKey(KeyboardKeyType::Text, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
@@ -44,7 +44,7 @@ namespace yoba {
 		return _uppercaseCode;
 	}
 
-	const std::u32string_view& TextKeyboardKey::getUppercaseName() const {
+	const std::wstring_view& TextKeyboardKey::getUppercaseName() const {
 		return _uppercaseName;
 	}
 
@@ -104,7 +104,7 @@ namespace yoba {
 
 	// ----------------------------- KeyboardLayout -----------------------------
 
-	KeyboardLayout::KeyboardLayout(const std::u32string_view& name, const std::u32string_view& nameAbbreviated) :
+	KeyboardLayout::KeyboardLayout(const std::wstring_view& name, const std::wstring_view& nameAbbreviated) :
 		_name(name),
 		_nameAbbreviated(nameAbbreviated)
 	{
@@ -358,7 +358,7 @@ namespace yoba {
 
 	// ----------------------------- EnglishKeyboard -----------------------------
 
-	EnglishKeyboardLayout::EnglishKeyboardLayout() : KeyboardLayout(U"English", U"EN") {
+	EnglishKeyboardLayout::EnglishKeyboardLayout() : KeyboardLayout(L"English", L"EN") {
 		_row0.keys.push_back(&_keyQ);
 		_row0.keys.push_back(&_keyW);
 		_row0.keys.push_back(&_keyE);

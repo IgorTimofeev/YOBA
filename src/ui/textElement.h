@@ -5,17 +5,17 @@
 namespace yoba {
 	class TextElement : public virtual Element {
 		public:
-			const std::u32string_view& getText() const {
+			const std::wstring_view& getText() const {
 				return _text;
 			}
 
-			void setText(const std::u32string_view& value) {
+			void setText(const std::wstring_view& value) {
 				_text = value;
 
 				invalidate();
 			}
 
 		protected:
-			std::u32string_view _text {};
+			std::wstring_view _text {};
 	};
 }

@@ -37,7 +37,7 @@ namespace yoba {
 		return _height;
 	}
 
-	Size Font::getSize(const std::u32string_view& text) const {
+	Size Font::getSize(const std::wstring_view& text) const {
 		return {
 			getWidth(text),
 			getHeight()

@@ -33,7 +33,7 @@ namespace yoba {
 			uint16_t getWidth(const std::basic_string_view<TChar>& text) const;
 
 			uint8_t getHeight() const;
-			Size getSize(const std::u32string_view& text) const;
+			Size getSize(const std::wstring_view& text) const;
 
 		private:
 			const uint32_t _fromCodepoint;
