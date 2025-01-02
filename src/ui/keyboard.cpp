@@ -30,16 +30,16 @@ namespace yoba {
 		return _style;
 	}
 
-	KeyCode KeyboardKeyModel::getCodeForCase(Keyboard* keyboard) const {
+	KeyCode KeyboardKeyModel::getCodeForCase(KeyboardCase value) const {
 		return getCode();
 	}
 
-	const std::wstring_view& KeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+	const std::wstring_view& KeyboardKeyModel::getNameFromCase(KeyboardCase value) const {
 		return getName();
 	}
 
 	void KeyboardKeyModel::onClick(Keyboard* keyboard) {
-		keyboard->getOnKeyDown().call(getCodeForCase(keyboard));
+		keyboard->getOnKeyDown().call(getCodeForCase(keyboard->getCase()));
 	}
 
 	// ----------------------------- TextKeyboardKeyModel -----------------------------
@@ -70,12 +70,19 @@ namespace yoba {
 		return _uppercaseName;
 	}
 
-	KeyCode TextKeyboardKeyModel::getCodeForCase(Keyboard* keyboard) const {
-		return keyboard->getLayout()->getCase() ? getUppercaseCode() : getCode();
+	void TextKeyboardKeyModel::onClick(Keyboard* keyboard) {
+		KeyboardKeyModel::onClick(keyboard);
+
+		if (keyboard->getCase() == KeyboardCase::Upper)
+			keyboard->setCase(KeyboardCase::Lower);
 	}
 
-	const std::wstring_view& TextKeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
-		return keyboard->getLayout()->getCase() ? getUppercaseName() : getName();
+	KeyCode TextKeyboardKeyModel::getCodeForCase(KeyboardCase value) const {
+		return value == KeyboardCase::Lower ? getCode() : getUppercaseCode();
+	}
+
+	const std::wstring_view& TextKeyboardKeyModel::getNameFromCase(KeyboardCase value) const {
+		return value == KeyboardCase::Lower ? getName() : getUppercaseName();
 	}
 
 	// ----------------------------- ActionKeyboardKeyModel -----------------------------
@@ -86,53 +93,81 @@ namespace yoba {
 
 	// ----------------------------- ActionKeyboardKeyModel -----------------------------
 
-	ShiftKeyModel::ShiftKeyModel(KeyCode code, const std::wstring_view& name, float width) : ActionKeyboardKeyModel(code, name, width) {
+	ShiftKeyboardKeyModel::ShiftKeyboardKeyModel(
+		const std::wstring_view& name,
+		const std::wstring_view& uppercaseName,
+		const std::wstring_view& capsName,
+		float width
+	) :
+		ActionKeyboardKeyModel(
+			KeyCode::Shift,
+			name,
+			width
+		),
+		_uppercaseName(uppercaseName),
+		_capsName(capsName)
+	{
 
 	}
 
-	void ShiftKeyModel::onClick(Keyboard* keyboard) {
+	void ShiftKeyboardKeyModel::onClick(Keyboard* keyboard) {
 		KeyboardKeyModel::onClick(keyboard);
 
-		keyboard->getLayout()->setCase(!keyboard->getLayout()->getCase());
+		switch (keyboard->getCase()) {
+			case KeyboardCase::Lower:
+				keyboard->setCase(KeyboardCase::Upper);
+				break;
+			case KeyboardCase::Upper:
+				keyboard->setCase(KeyboardCase::Caps);
+				break;
+			default:
+				keyboard->setCase(KeyboardCase::Lower);
+				break;
+		}
+	}
+
+	const std::wstring_view& ShiftKeyboardKeyModel::getNameFromCase(KeyboardCase value) const {
+		switch (value) {
+			case KeyboardCase::Lower:
+				return getName();
+			case KeyboardCase::Upper:
+				return _uppercaseName;
+			default:
+				return _capsName;
+		}
 	}
 
 	// ----------------------------- KeyboardLayout -----------------------------
 
-	bool KeyboardLayout::getCase() const {
-		return _case;
-	}
 
-	void KeyboardLayout::setCase(bool isShiftDown) {
-		_case = isShiftDown;
-
-	}
 
 	// ----------------------------- KeyboardButton -----------------------------
 
-	KeyboardButton::KeyboardButton(Keyboard* keyboard, uint8_t rowIndex, uint8_t columnIndex) :
+	KeyboardButton::KeyboardButton(Keyboard* keyboard, KeyboardKeyModel* model) :
 		_keyboard(keyboard),
-		_rowIndex(rowIndex),
-		_keyIndex(columnIndex)
+		_model(model)
 	{
 		setCornerRadius(2);
 		updateTextFromCase();
 
-		switch (getKey()->getStyle()) {
-			case KeyboardKeyStyle::Default: {
-				setPrimaryColor(keyboard->getDefaultButtonPrimaryColor());
-				setSecondaryColor(keyboard->getDefaultButtonSecondaryColor());
+		setFont(_keyboard->getFont());
 
-				setPressedPrimaryColor(keyboard->getDefaultButtonSecondaryColor());
-				setPressedSecondaryColor(keyboard->getDefaultButtonPrimaryColor());
+		switch (_model->getStyle()) {
+			case KeyboardKeyStyle::Default: {
+				setPrimaryColor(_keyboard->getDefaultButtonPrimaryColor());
+				setSecondaryColor(_keyboard->getDefaultButtonSecondaryColor());
+
+				setPressedPrimaryColor(_keyboard->getDefaultButtonSecondaryColor());
+				setPressedSecondaryColor(_keyboard->getDefaultButtonPrimaryColor());
 
 				break;
 			}
 			case KeyboardKeyStyle::Action: {
-				setPrimaryColor(keyboard->getActionButtonPrimaryColor());
-				setSecondaryColor(keyboard->getActionButtonSecondaryColor());
+				setPrimaryColor(_keyboard->getActionButtonPrimaryColor());
+				setSecondaryColor(_keyboard->getActionButtonSecondaryColor());
 
-				setPressedPrimaryColor(keyboard->getActionButtonSecondaryColor());
-				setPressedSecondaryColor(keyboard->getActionButtonPrimaryColor());
+				setPressedPrimaryColor(_keyboard->getActionButtonSecondaryColor());
+				setPressedSecondaryColor(_keyboard->getActionButtonPrimaryColor());
 
 				break;
 			}
@@ -143,30 +178,22 @@ namespace yoba {
 		return _keyboard;
 	}
 
-	KeyboardKeyModel* KeyboardButton::getKey() {
-		return _keyboard->getLayout()->rows[_rowIndex]->keys[_keyIndex];
-	}
-
-	uint8_t KeyboardButton::getRowIndex() const {
-		return _rowIndex;
-	}
-
-	uint8_t KeyboardButton::getKeyIndex() const {
-		return _keyIndex;
+	KeyboardKeyModel* KeyboardButton::getModel() {
+		return _model;
 	}
 
 	void KeyboardButton::onClick() {
 		Button::onClick();
 
-		getKey()->onClick(_keyboard);
-	}
-
-	void KeyboardButton::onCaseChanged() {
-		updateTextFromCase();
+		getModel()->onClick(_keyboard);
 	}
 
 	void KeyboardButton::updateTextFromCase() {
-		setText(getKey()->getNameFromCase(getKeyboard()));
+		setText(getModel()->getNameFromCase(getKeyboard()->getCase()));
+	}
+
+	void KeyboardButton::updateFromCase() {
+		updateTextFromCase();
 	}
 
 	// ----------------------------- KeyboardRow -----------------------------
@@ -252,6 +279,7 @@ namespace yoba {
 
 		deleteLayoutAndUIElements();
 
+		_case = KeyboardCase::Lower;
 		_layout = _layoutIndex >= 0 ? _layoutBuilders[_layoutIndex]() : nullptr;
 
 		if (!_layout)
@@ -264,7 +292,7 @@ namespace yoba {
 			UIRow->setHorizontalAlignment(Alignment::Center);
 
 			for (int keyIndex = 0; keyIndex < layoutRow->keys.size(); keyIndex++) {
-				*UIRow += new KeyboardButton(this, rowIndex, keyIndex);
+				*UIRow += new KeyboardButton(this, layoutRow->keys[keyIndex]);
 			}
 
 			_rowsLayout += UIRow;
@@ -307,6 +335,31 @@ namespace yoba {
 		return _onKeyDown;
 	}
 
+	KeyboardCase Keyboard::getCase() const {
+		return _case;
+	}
+
+	void Keyboard::setCase(KeyboardCase value) {
+		_case = value;
+
+		if (!_layout)
+			return;
+
+		iterateOverButtons([](KeyboardButton* button) {
+			button->updateFromCase();
+		});
+	}
+
+	void Keyboard::iterateOverButtons(std::function<void(KeyboardButton*)> handler) {
+		for (auto rowElement : _rowsLayout) {
+			auto row = dynamic_cast<KeyboardButtonsRow*>(rowElement);
+
+			for (auto buttonElement : *row) {
+				handler(dynamic_cast<KeyboardButton*>(buttonElement));
+			}
+		}
+	}
+
 	// ----------------------------- KeyboardRow -----------------------------
 
 	KeyboardButtonsRow::KeyboardButtonsRow(Keyboard* keyboard) : _keyboard(keyboard) {
@@ -333,7 +386,7 @@ namespace yoba {
 		for (auto child : *this) {
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			const auto buttonWidth = button->getKey()->getWidth() * availableWidthWithoutSpacing;
+			const auto buttonWidth = button->getModel()->getWidth() * availableWidthWithoutSpacing;
 
 			button->measure(
 				screenBuffer,
@@ -358,7 +411,7 @@ namespace yoba {
 		float widthSum = 0;
 
 		for (auto child : *this) {
-			widthSum += dynamic_cast<KeyboardButton*>(child)->getKey()->getWidth();
+			widthSum += dynamic_cast<KeyboardButton*>(child)->getModel()->getWidth();
 		}
 
 		float x = bounds.getX();
@@ -366,7 +419,7 @@ namespace yoba {
 		for (auto child : *this) {
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			const float buttonWidth = button->getKey()->getWidth() / widthSum * availableWidthWithoutSpacing;
+			const float buttonWidth = button->getModel()->getWidth() / widthSum * availableWidthWithoutSpacing;
 
 			button->arrange(Bounds(
 				std::round(x),
@@ -381,7 +434,7 @@ namespace yoba {
 
 	// ----------------------------- KeyboardRootLayout -----------------------------
 
-	Size KeyboardRootLayout::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardApplicationContainer::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : *this) {
@@ -404,7 +457,7 @@ namespace yoba {
 		return result;
 	}
 
-	void KeyboardRootLayout::onArrange(const Bounds& bounds) {
+	void KeyboardApplicationContainer::onArrange(const Bounds& bounds) {
 		auto y = bounds.getY2() + 1;
 
 		for (auto child : *this) {

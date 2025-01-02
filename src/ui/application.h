@@ -13,7 +13,7 @@ namespace yoba {
 		public:
 			// Sexy old school font that will be used as fallback value when rendering
 			// child elements that contain text, but doesn't have any specific font
-			static const Unscii16Font defaultFont;
+			static const unscii16Font defaultFont;
 
 			explicit Application(
 				ScreenBuffer* screenBuffer

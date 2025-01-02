@@ -3,7 +3,7 @@
 #include "animation.h"
 
 namespace yoba {
-	const Unscii16Font Application::defaultFont = Unscii16Font();
+	const unscii16Font Application::defaultFont = unscii16Font();
 
 	Application::Application(
 		ScreenBuffer* screenBuffer

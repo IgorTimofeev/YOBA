@@ -181,6 +181,12 @@ namespace yoba {
 		Action
 	};
 
+	enum class KeyboardCase : uint8_t {
+		Lower,
+		Upper,
+		Caps
+	};
+
 	class KeyboardKeyModel {
 		public:
 			KeyboardKeyModel(
@@ -199,9 +205,9 @@ namespace yoba {
 
 			virtual void onClick(Keyboard* keyboard);
 
-			virtual KeyCode getCodeForCase(Keyboard* keyboard) const;
+			virtual KeyCode getCodeForCase(KeyboardCase value) const;
 
-			virtual const std::wstring_view& getNameFromCase(Keyboard* keyboard) const;
+			virtual const std::wstring_view& getNameFromCase(KeyboardCase value) const;
 
 		private:
 			KeyboardKeyStyle _style;
@@ -229,9 +235,11 @@ namespace yoba {
 			KeyCode getUppercaseCode() const;
 			const std::wstring_view& getUppercaseName() const;
 
-			KeyCode getCodeForCase(Keyboard* keyboard) const override;
+			KeyCode getCodeForCase(KeyboardCase value) const override;
 
-			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
+			const std::wstring_view& getNameFromCase(KeyboardCase value) const override;
+
+			void onClick(Keyboard* keyboard) override;
 
 		private:
 			KeyCode _uppercaseCode;
@@ -244,11 +252,17 @@ namespace yoba {
 
 	};
 
-	class ShiftKeyModel : public ActionKeyboardKeyModel {
+	class ShiftKeyboardKeyModel : public ActionKeyboardKeyModel {
 		public:
-			ShiftKeyModel(KeyCode code, const std::wstring_view& name, float width);
+			ShiftKeyboardKeyModel(const std::wstring_view& name, const std::wstring_view& uppercaseName, const std::wstring_view& capsName, float width);
 
 			void onClick(Keyboard* keyboard) override;
+
+			const std::wstring_view& getNameFromCase(KeyboardCase value) const override;
+
+		private:
+			const std::wstring_view _uppercaseName;
+			const std::wstring_view _capsName;
 	};
 
 	class KeyboardButtonsRow : public Container {
@@ -278,35 +292,22 @@ namespace yoba {
 	class KeyboardLayout {
 		public:
 			std::vector<KeyboardLayoutRow*> rows {};
-
-			bool getCase() const;
-
-			void setCase(bool isShiftDown);
-
-		private:
-			bool _case = false;
 	};
 
 	class KeyboardButton : public Button {
 		public:
-			KeyboardButton(Keyboard* keyboard, uint8_t rowIndex, uint8_t columnIndex);
+			KeyboardButton(Keyboard* keyboard, KeyboardKeyModel* model);
 
 			Keyboard* getKeyboard();
-			KeyboardKeyModel* getKey();
+			KeyboardKeyModel* getModel();
 
-			uint8_t getRowIndex() const;
-
-			uint8_t getKeyIndex() const;
-
-			void onCaseChanged();
+			void updateFromCase();
 
 		protected:
 			void onClick() override;
 
 		private:
-			uint8_t _rowIndex;
-			uint8_t _keyIndex;
-
+			KeyboardKeyModel* _model;
 			Keyboard* _keyboard;
 
 			void updateTextFromCase();
@@ -355,12 +356,16 @@ namespace yoba {
 
 			Callback<KeyCode>& getOnKeyDown();
 
+			KeyboardCase getCase() const;
+			void setCase(KeyboardCase value);
+
 		private:
 			const Color* _defaultButtonPrimaryColor = nullptr;
 			const Color* _defaultButtonSecondaryColor = nullptr;
 			const Color* _actionButtonPrimaryColor = nullptr;
 			const Color* _actionButtonSecondaryColor = nullptr;
 
+			KeyboardCase _case = KeyboardCase::Lower;
 			int8_t _layoutIndex = -1;
 			KeyboardLayout* _layout = nullptr;
 			std::vector<std::function<KeyboardLayout*()>> _layoutBuilders;
@@ -374,62 +379,64 @@ namespace yoba {
 			Callback<KeyCode> _onKeyDown {};
 
 			void deleteLayoutAndUIElements();
+
+			void iterateOverButtons(std::function<void(KeyboardButton*)> handler);
 	};
 
-	// ----------------------------- Layouts -----------------------------
-
-	class KeyboardRootLayout : public Container {
+	class KeyboardApplicationContainer : public Container {
 		protected:
 			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};
 
+	// ----------------------------- Layouts -----------------------------
+
 	class EnglishKeyboardLayout : public KeyboardLayout {
 		public:
 			EnglishKeyboardLayout();
 
 		private:
-			KeyboardKeyModel _keyQ = TextKeyboardKeyModel(KeyCode::Q, L"q", KeyCode::Q, L"Q", 0.1f);
-			KeyboardKeyModel _keyW = TextKeyboardKeyModel(KeyCode::W, L"w", KeyCode::W, L"W", 0.1f);
-			KeyboardKeyModel _keyE = TextKeyboardKeyModel(KeyCode::E, L"e", KeyCode::E, L"E", 0.1f);
-			KeyboardKeyModel _keyR = TextKeyboardKeyModel(KeyCode::R, L"r", KeyCode::R, L"R", 0.1f);
-			KeyboardKeyModel _keyT = TextKeyboardKeyModel(KeyCode::T, L"t", KeyCode::T, L"T", 0.1f);
-			KeyboardKeyModel _keyY = TextKeyboardKeyModel(KeyCode::Y, L"y", KeyCode::Y, L"Y", 0.1f);
-			KeyboardKeyModel _keyU = TextKeyboardKeyModel(KeyCode::U, L"u", KeyCode::U, L"L", 0.1f);
-			KeyboardKeyModel _keyI = TextKeyboardKeyModel(KeyCode::I, L"i", KeyCode::I, L"I", 0.1f);
-			KeyboardKeyModel _keyO = TextKeyboardKeyModel(KeyCode::O, L"o", KeyCode::O, L"O", 0.1f);
-			KeyboardKeyModel _keyP = TextKeyboardKeyModel(KeyCode::P, L"p", KeyCode::P, L"P", 0.1f);
+			TextKeyboardKeyModel _keyQ = TextKeyboardKeyModel(KeyCode::Q, L"q", KeyCode::Q, L"Q", 0.1f);
+			TextKeyboardKeyModel _keyW = TextKeyboardKeyModel(KeyCode::W, L"w", KeyCode::W, L"W", 0.1f);
+			TextKeyboardKeyModel _keyE = TextKeyboardKeyModel(KeyCode::E, L"e", KeyCode::E, L"E", 0.1f);
+			TextKeyboardKeyModel _keyR = TextKeyboardKeyModel(KeyCode::R, L"r", KeyCode::R, L"R", 0.1f);
+			TextKeyboardKeyModel _keyT = TextKeyboardKeyModel(KeyCode::T, L"t", KeyCode::T, L"T", 0.1f);
+			TextKeyboardKeyModel _keyY = TextKeyboardKeyModel(KeyCode::Y, L"y", KeyCode::Y, L"Y", 0.1f);
+			TextKeyboardKeyModel _keyU = TextKeyboardKeyModel(KeyCode::U, L"u", KeyCode::U, L"L", 0.1f);
+			TextKeyboardKeyModel _keyI = TextKeyboardKeyModel(KeyCode::I, L"i", KeyCode::I, L"I", 0.1f);
+			TextKeyboardKeyModel _keyO = TextKeyboardKeyModel(KeyCode::O, L"o", KeyCode::O, L"O", 0.1f);
+			TextKeyboardKeyModel _keyP = TextKeyboardKeyModel(KeyCode::P, L"p", KeyCode::P, L"P", 0.1f);
 			KeyboardLayoutRow _row0 = KeyboardLayoutRow();
 
-			KeyboardKeyModel _keyA = TextKeyboardKeyModel(KeyCode::A, L"a", KeyCode::A, L"A", 0.1f);
-			KeyboardKeyModel _keyS = TextKeyboardKeyModel(KeyCode::S, L"s", KeyCode::S, L"S", 0.1f);
-			KeyboardKeyModel _keyD = TextKeyboardKeyModel(KeyCode::D, L"d", KeyCode::D, L"D", 0.1f);
-			KeyboardKeyModel _keyF = TextKeyboardKeyModel(KeyCode::F, L"f", KeyCode::F, L"F", 0.1f);
-			KeyboardKeyModel _keyG = TextKeyboardKeyModel(KeyCode::G, L"g", KeyCode::G, L"G", 0.1f);
-			KeyboardKeyModel _keyH = TextKeyboardKeyModel(KeyCode::H, L"h", KeyCode::H, L"H", 0.1f);
-			KeyboardKeyModel _keyJ = TextKeyboardKeyModel(KeyCode::J, L"j", KeyCode::J, L"J", 0.1f);
-			KeyboardKeyModel _keyK = TextKeyboardKeyModel(KeyCode::K, L"k", KeyCode::K, L"K", 0.1f);
-			KeyboardKeyModel _keyL = TextKeyboardKeyModel(KeyCode::L, L"l", KeyCode::L, L"L", 0.1f);
+			TextKeyboardKeyModel _keyA = TextKeyboardKeyModel(KeyCode::A, L"a", KeyCode::A, L"A", 0.1f);
+			TextKeyboardKeyModel _keyS = TextKeyboardKeyModel(KeyCode::S, L"s", KeyCode::S, L"S", 0.1f);
+			TextKeyboardKeyModel _keyD = TextKeyboardKeyModel(KeyCode::D, L"d", KeyCode::D, L"D", 0.1f);
+			TextKeyboardKeyModel _keyF = TextKeyboardKeyModel(KeyCode::F, L"f", KeyCode::F, L"F", 0.1f);
+			TextKeyboardKeyModel _keyG = TextKeyboardKeyModel(KeyCode::G, L"g", KeyCode::G, L"G", 0.1f);
+			TextKeyboardKeyModel _keyH = TextKeyboardKeyModel(KeyCode::H, L"h", KeyCode::H, L"H", 0.1f);
+			TextKeyboardKeyModel _keyJ = TextKeyboardKeyModel(KeyCode::J, L"j", KeyCode::J, L"J", 0.1f);
+			TextKeyboardKeyModel _keyK = TextKeyboardKeyModel(KeyCode::K, L"k", KeyCode::K, L"K", 0.1f);
+			TextKeyboardKeyModel _keyL = TextKeyboardKeyModel(KeyCode::L, L"l", KeyCode::L, L"L", 0.1f);
 			KeyboardLayoutRow _row1 = KeyboardLayoutRow();
 
-			KeyboardKeyModel _keyShift = ActionKeyboardKeyModel(KeyCode::Shift, L"^", 0.15f);
-			KeyboardKeyModel _keyZ = TextKeyboardKeyModel(KeyCode::Z, L"z", KeyCode::Z, L"Z", 0.1f);
-			KeyboardKeyModel _keyX = TextKeyboardKeyModel(KeyCode::X, L"x", KeyCode::X, L"X", 0.1f);
-			KeyboardKeyModel _keyC = TextKeyboardKeyModel(KeyCode::C, L"c", KeyCode::C, L"C", 0.1f);
-			KeyboardKeyModel _keyV = TextKeyboardKeyModel(KeyCode::V, L"v", KeyCode::V, L"V", 0.1f);
-			KeyboardKeyModel _keyB = TextKeyboardKeyModel(KeyCode::B, L"b", KeyCode::B, L"B", 0.1f);
-			KeyboardKeyModel _keyN = TextKeyboardKeyModel(KeyCode::N, L"n", KeyCode::N, L"N", 0.1f);
-			KeyboardKeyModel _keyM = TextKeyboardKeyModel(KeyCode::M, L"m", KeyCode::M, L"M", 0.1f);
-			KeyboardKeyModel _keyBackspace = ActionKeyboardKeyModel(KeyCode::Backspace, L"<", 0.15f);
+			ShiftKeyboardKeyModel _keyShift = ShiftKeyboardKeyModel(L"^", L"^^", L"^^^", 0.15f);
+			TextKeyboardKeyModel _keyZ = TextKeyboardKeyModel(KeyCode::Z, L"z", KeyCode::Z, L"Z", 0.1f);
+			TextKeyboardKeyModel _keyX = TextKeyboardKeyModel(KeyCode::X, L"x", KeyCode::X, L"X", 0.1f);
+			TextKeyboardKeyModel _keyC = TextKeyboardKeyModel(KeyCode::C, L"c", KeyCode::C, L"C", 0.1f);
+			TextKeyboardKeyModel _keyV = TextKeyboardKeyModel(KeyCode::V, L"v", KeyCode::V, L"V", 0.1f);
+			TextKeyboardKeyModel _keyB = TextKeyboardKeyModel(KeyCode::B, L"b", KeyCode::B, L"B", 0.1f);
+			TextKeyboardKeyModel _keyN = TextKeyboardKeyModel(KeyCode::N, L"n", KeyCode::N, L"N", 0.1f);
+			TextKeyboardKeyModel _keyM = TextKeyboardKeyModel(KeyCode::M, L"m", KeyCode::M, L"M", 0.1f);
+			ActionKeyboardKeyModel _keyBackspace = ActionKeyboardKeyModel(KeyCode::Backspace, L"<", 0.15f);
 			KeyboardLayoutRow _row2 = KeyboardLayoutRow();
 
-			KeyboardKeyModel _keyCharacters = ActionKeyboardKeyModel(KeyCode::None, L"123", 0.1f);
-			KeyboardKeyModel _keyLayout = ActionKeyboardKeyModel(KeyCode::None, L"Lang", 0.1f);
-			KeyboardKeyModel _keyComma = ActionKeyboardKeyModel(KeyCode::Comma, L",", 0.1f);
-			KeyboardKeyModel _keySpace = ActionKeyboardKeyModel(KeyCode::Space, L"Space", 0.4f);
-			KeyboardKeyModel _keyPeriod = ActionKeyboardKeyModel(KeyCode::Period, L".", 0.1f);
-			KeyboardKeyModel _keyEnter = ActionKeyboardKeyModel(KeyCode::Enter, L"Enter", 0.2f);
+			ActionKeyboardKeyModel _keyCharacters = ActionKeyboardKeyModel(KeyCode::None, L"123", 0.1f);
+			ActionKeyboardKeyModel _keyLayout = ActionKeyboardKeyModel(KeyCode::None, L"Lang", 0.1f);
+			TextKeyboardKeyModel _keyComma = TextKeyboardKeyModel(KeyCode::Comma, L",", 0.1f);
+			ActionKeyboardKeyModel _keySpace = ActionKeyboardKeyModel(KeyCode::Space, L"Space", 0.4f);
+			TextKeyboardKeyModel _keyPeriod = TextKeyboardKeyModel(KeyCode::Period, L".", 0.1f);
+			ActionKeyboardKeyModel _keyEnter = ActionKeyboardKeyModel(KeyCode::Enter, L"Enter", 0.2f);
 			KeyboardLayoutRow _row3 = KeyboardLayoutRow();
 	};
 
@@ -438,46 +445,46 @@ namespace yoba {
 			CharactersKeyboardLayout();
 
 		private:
-			KeyboardKeyModel _key1 = TextKeyboardKeyModel(KeyCode::Number1, L"1", 0.1f);
-			KeyboardKeyModel _key2 = TextKeyboardKeyModel(KeyCode::Number2, L"2", 0.1f);
-			KeyboardKeyModel _key3 = TextKeyboardKeyModel(KeyCode::Number3, L"3", 0.1f);
-			KeyboardKeyModel _key4 = TextKeyboardKeyModel(KeyCode::Number4, L"4", 0.1f);
-			KeyboardKeyModel _key5 = TextKeyboardKeyModel(KeyCode::Number5, L"5", 0.1f);
-			KeyboardKeyModel _key6 = TextKeyboardKeyModel(KeyCode::Number6, L"6", 0.1f);
-			KeyboardKeyModel _key7 = TextKeyboardKeyModel(KeyCode::Number7, L"7", 0.1f);
-			KeyboardKeyModel _key8 = TextKeyboardKeyModel(KeyCode::Number8, L"8", 0.1f);
-			KeyboardKeyModel _key9 = TextKeyboardKeyModel(KeyCode::Number9, L"9", 0.1f);
-			KeyboardKeyModel _key0 = TextKeyboardKeyModel(KeyCode::Number0, L"0", 0.1f);
+			TextKeyboardKeyModel _key1 = TextKeyboardKeyModel(KeyCode::Number1, L"1", 0.1f);
+			TextKeyboardKeyModel _key2 = TextKeyboardKeyModel(KeyCode::Number2, L"2", 0.1f);
+			TextKeyboardKeyModel _key3 = TextKeyboardKeyModel(KeyCode::Number3, L"3", 0.1f);
+			TextKeyboardKeyModel _key4 = TextKeyboardKeyModel(KeyCode::Number4, L"4", 0.1f);
+			TextKeyboardKeyModel _key5 = TextKeyboardKeyModel(KeyCode::Number5, L"5", 0.1f);
+			TextKeyboardKeyModel _key6 = TextKeyboardKeyModel(KeyCode::Number6, L"6", 0.1f);
+			TextKeyboardKeyModel _key7 = TextKeyboardKeyModel(KeyCode::Number7, L"7", 0.1f);
+			TextKeyboardKeyModel _key8 = TextKeyboardKeyModel(KeyCode::Number8, L"8", 0.1f);
+			TextKeyboardKeyModel _key9 = TextKeyboardKeyModel(KeyCode::Number9, L"9", 0.1f);
+			TextKeyboardKeyModel _key0 = TextKeyboardKeyModel(KeyCode::Number0, L"0", 0.1f);
 			KeyboardLayoutRow _row0 = KeyboardLayoutRow();
 
-			KeyboardKeyModel _keyAt = TextKeyboardKeyModel(KeyCode::At, L"@", 0.1f);
-			KeyboardKeyModel _keyNumberSign = TextKeyboardKeyModel(KeyCode::NumberSign, L"#", 0.1f);
-			KeyboardKeyModel _keyDollar = TextKeyboardKeyModel(KeyCode::Dollar, L"$", 0.1f);
-			KeyboardKeyModel _keyUnderscore = TextKeyboardKeyModel(KeyCode::Underscore, L"_", 0.1f);
-			KeyboardKeyModel _keyAmpersand = TextKeyboardKeyModel(KeyCode::Ampersand, L"&", 0.1f);
-			KeyboardKeyModel _keyMinus = TextKeyboardKeyModel(KeyCode::Minus, L"-", 0.1f);
-			KeyboardKeyModel _keyPlus = TextKeyboardKeyModel(KeyCode::Plus, L"+", 0.1f);
-			KeyboardKeyModel _keyLeftBrace = TextKeyboardKeyModel(KeyCode::LeftBrace, L"(", 0.1f);
-			KeyboardKeyModel _keyRightBrace = TextKeyboardKeyModel(KeyCode::RightBrace, L")", 0.1f);
-			KeyboardKeyModel _keySlash = TextKeyboardKeyModel(KeyCode::Slash, L"/", 0.1f);
+			TextKeyboardKeyModel _keyAt = TextKeyboardKeyModel(KeyCode::At, L"@", 0.1f);
+			TextKeyboardKeyModel _keyNumberSign = TextKeyboardKeyModel(KeyCode::NumberSign, L"#", 0.1f);
+			TextKeyboardKeyModel _keyDollar = TextKeyboardKeyModel(KeyCode::Dollar, L"$", 0.1f);
+			TextKeyboardKeyModel _keyUnderscore = TextKeyboardKeyModel(KeyCode::Underscore, L"_", 0.1f);
+			TextKeyboardKeyModel _keyAmpersand = TextKeyboardKeyModel(KeyCode::Ampersand, L"&", 0.1f);
+			TextKeyboardKeyModel _keyMinus = TextKeyboardKeyModel(KeyCode::Minus, L"-", 0.1f);
+			TextKeyboardKeyModel _keyPlus = TextKeyboardKeyModel(KeyCode::Plus, L"+", 0.1f);
+			TextKeyboardKeyModel _keyLeftBrace = TextKeyboardKeyModel(KeyCode::LeftBrace, L"(", 0.1f);
+			TextKeyboardKeyModel _keyRightBrace = TextKeyboardKeyModel(KeyCode::RightBrace, L")", 0.1f);
+			TextKeyboardKeyModel _keySlash = TextKeyboardKeyModel(KeyCode::Slash, L"/", 0.1f);
 			KeyboardLayoutRow _row1 = KeyboardLayoutRow();
 
-			KeyboardKeyModel _keyAsterisk = TextKeyboardKeyModel(KeyCode::Asterisk, L"*", 0.1f);
-			KeyboardKeyModel _keyDoubleQuote = TextKeyboardKeyModel(KeyCode::DoubleQuote, L"\"", 0.1f);
-			KeyboardKeyModel _keyQuote = TextKeyboardKeyModel(KeyCode::Quote, L"\'", 0.1f);
-			KeyboardKeyModel _keyColon = TextKeyboardKeyModel(KeyCode::Colon, L":", 0.1f);
-			KeyboardKeyModel _keySemicolon = TextKeyboardKeyModel(KeyCode::Semicolon, L";", 0.1f);
-			KeyboardKeyModel _keyExclamationMark = TextKeyboardKeyModel(KeyCode::ExclamationMark, L"!", 0.1f);
-			KeyboardKeyModel _keyQuestionMark = TextKeyboardKeyModel(KeyCode::QuestionMark, L"?", 0.1f);
-			KeyboardKeyModel _keyBackspace = ActionKeyboardKeyModel(KeyCode::Backspace, L"<", 0.3f);
+			TextKeyboardKeyModel _keyAsterisk = TextKeyboardKeyModel(KeyCode::Asterisk, L"*", 0.1f);
+			TextKeyboardKeyModel _keyDoubleQuote = TextKeyboardKeyModel(KeyCode::DoubleQuote, L"\"", 0.1f);
+			TextKeyboardKeyModel _keyQuote = TextKeyboardKeyModel(KeyCode::Quote, L"\'", 0.1f);
+			TextKeyboardKeyModel _keyColon = TextKeyboardKeyModel(KeyCode::Colon, L":", 0.1f);
+			TextKeyboardKeyModel _keySemicolon = TextKeyboardKeyModel(KeyCode::Semicolon, L";", 0.1f);
+			TextKeyboardKeyModel _keyExclamationMark = TextKeyboardKeyModel(KeyCode::ExclamationMark, L"!", 0.1f);
+			TextKeyboardKeyModel _keyQuestionMark = TextKeyboardKeyModel(KeyCode::QuestionMark, L"?", 0.1f);
+			ActionKeyboardKeyModel _keyBackspace = ActionKeyboardKeyModel(KeyCode::Backspace, L"<", 0.3f);
 			KeyboardLayoutRow _row2 = KeyboardLayoutRow();
 
-			KeyboardKeyModel _keyCharacters = ActionKeyboardKeyModel(KeyCode::None, L"Abc", 0.1f);
-			KeyboardKeyModel _keyLayout = ActionKeyboardKeyModel(KeyCode::None, L"Lang", 0.1f);
-			KeyboardKeyModel _keyComma = ActionKeyboardKeyModel(KeyCode::Comma, L",", 0.1f);
-			KeyboardKeyModel _keySpace = ActionKeyboardKeyModel(KeyCode::Space, L"Space", 0.4f);
-			KeyboardKeyModel _keyPeriod = ActionKeyboardKeyModel(KeyCode::Period, L".", 0.1f);
-			KeyboardKeyModel _keyEnter = ActionKeyboardKeyModel(KeyCode::Enter, L"Enter", 0.2f);
+			ActionKeyboardKeyModel _keyCharacters = ActionKeyboardKeyModel(KeyCode::None, L"Abc", 0.1f);
+			ActionKeyboardKeyModel _keyLayout = ActionKeyboardKeyModel(KeyCode::None, L"Lang", 0.1f);
+			TextKeyboardKeyModel _keyComma = TextKeyboardKeyModel(KeyCode::Comma, L",", 0.1f);
+			ActionKeyboardKeyModel _keySpace = ActionKeyboardKeyModel(KeyCode::Space, L"Space", 0.4f);
+			TextKeyboardKeyModel _keyPeriod = TextKeyboardKeyModel(KeyCode::Period, L".", 0.1f);
+			ActionKeyboardKeyModel _keyEnter = ActionKeyboardKeyModel(KeyCode::Enter, L"Enter", 0.2f);
 			KeyboardLayoutRow _row3 = KeyboardLayoutRow();
 	};
 }

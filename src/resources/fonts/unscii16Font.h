@@ -3,9 +3,9 @@
 #include "../../font.h"
 
 namespace yoba {
-	class Unscii16Font : public Font {
+	class unscii16Font : public Font {
 		public:
-			Unscii16Font() : Font(
+			unscii16Font() : Font(
 				32,
 				126,
 				18,

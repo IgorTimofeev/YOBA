@@ -48,10 +48,10 @@ namespace yoba {
 		});
 
 		keyboard->setKeyHeight(0.08f);
-
+		keyboard->setFont(getKeyboardFont());
 		keyboard->setBackgroundColor(getKeyboardBackgroundColor());
-		keyboard->setDefaultButtonPrimaryColor(getKeyboardTextButtonPrimaryColor());
-		keyboard->setDefaultButtonSecondaryColor(getKeyboardTextButtonSecondaryColor());
+		keyboard->setDefaultButtonPrimaryColor(getKeyboardDefaultButtonPrimaryColor());
+		keyboard->setDefaultButtonSecondaryColor(getKeyboardDefaultButtonSecondaryColor());
 		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
 		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
 
@@ -59,7 +59,7 @@ namespace yoba {
 
 		auto root = getApplication();
 
-		auto keyboardAndChildrenLayout = new KeyboardRootLayout();
+		auto keyboardAndChildrenLayout = new KeyboardApplicationContainer();
 		*keyboardAndChildrenLayout += keyboard;
 
 		auto temporaryRootChildrenLayout = new Container();
@@ -74,15 +74,9 @@ namespace yoba {
 		root->removeChildren();
 		*root += keyboardAndChildrenLayout;
 
-		keyboard->getOnKeyDown() += [=](KeyboardKeyModel* key) {
-			switch (key->getKeyType()) {
-				case KeyboardKeyType::Text: {
-					break;
-				}
-				case KeyboardKeyType::Backspace: {
-					break;
-				}
-				case KeyboardKeyType::Enter: {
+		keyboard->getOnKeyDown() += [=](KeyCode code) {
+			switch (code) {
+				case KeyCode::Enter: {
 					root->removeChildren();
 
 					// Moving children back to root
@@ -95,33 +89,26 @@ namespace yoba {
 
 					break;
 				}
-				case KeyboardKeyType::Shift: {
+				default:
 					break;
-				}
-				case KeyboardKeyType::Characters: {
-					break;
-				}
-				case KeyboardKeyType::Layout: {
-					break;
-				}
 			}
 		};
 	}
 
-	const Color* TextField::getKeyboardTextButtonPrimaryColor() const {
-		return _keyboardTextButtonPrimaryColor;
+	const Color* TextField::getKeyboardDefaultButtonPrimaryColor() const {
+		return _keyboardDefaultButtonPrimaryColor;
 	}
 
-	void TextField::setKeyboardTextButtonPrimaryColor(const Color* keyboardTextButtonPrimaryColor) {
-		_keyboardTextButtonPrimaryColor = keyboardTextButtonPrimaryColor;
+	void TextField::setKeyboardDefaultButtonPrimaryColor(const Color* keyboardTextButtonPrimaryColor) {
+		_keyboardDefaultButtonPrimaryColor = keyboardTextButtonPrimaryColor;
 	}
 
-	const Color* TextField::getKeyboardTextButtonSecondaryColor() const {
-		return _keyboardTextButtonSecondaryColor;
+	const Color* TextField::getKeyboardDefaultButtonSecondaryColor() const {
+		return _keyboardDefaultButtonSecondaryColor;
 	}
 
-	void TextField::setKeyboardTextButtonSecondaryColor(const Color* keyboardTextButtonSecondaryColor) {
-		_keyboardTextButtonSecondaryColor = keyboardTextButtonSecondaryColor;
+	void TextField::setKeyboardDefaultButtonSecondaryColor(const Color* keyboardTextButtonSecondaryColor) {
+		_keyboardDefaultButtonSecondaryColor = keyboardTextButtonSecondaryColor;
 	}
 
 	const Color* TextField::getKeyboardActionButtonPrimaryColor() const {
@@ -146,5 +133,13 @@ namespace yoba {
 
 	void TextField::setKeyboardBackgroundColor(const Color* keyboardBackgroundColor) {
 		_keyboardBackgroundColor = keyboardBackgroundColor;
+	}
+
+	const Font* TextField::getKeyboardFont() const {
+		return _keyboardFont;
+	}
+
+	void TextField::setKeyboardFont(const Font* keyboardFont) {
+		_keyboardFont = keyboardFont;
 	}
 }

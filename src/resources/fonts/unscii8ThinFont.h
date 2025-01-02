@@ -3,9 +3,9 @@
 #include "../../font.h"
 
 namespace yoba {
-	class Unscii8ThinFont : public Font {
+	class unscii8ThinFont : public Font {
 		public:
-			Unscii8ThinFont() : Font(
+			unscii8ThinFont() : Font(
 				32,
 				126,
 				9,
