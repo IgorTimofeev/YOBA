@@ -30,16 +30,16 @@ namespace yoba {
 		return _style;
 	}
 
-	KeyCode KeyboardKeyModel::getCodeForCase(KeyboardCase value) const {
+	KeyCode KeyboardKeyModel::getCodeFromCase(Keyboard* keyboard) const {
 		return getCode();
 	}
 
-	const std::wstring_view& KeyboardKeyModel::getNameFromCase(KeyboardCase value) const {
+	const std::wstring_view& KeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
 		return getName();
 	}
 
 	void KeyboardKeyModel::onClick(Keyboard* keyboard) {
-		keyboard->getOnKeyDown().call(getCodeForCase(keyboard->getCase()));
+		keyboard->getOnKeyDown().call(getCodeFromCase(keyboard));
 	}
 
 	// ----------------------------- TextKeyboardKeyModel -----------------------------
@@ -73,16 +73,20 @@ namespace yoba {
 	void TextKeyboardKeyModel::onClick(Keyboard* keyboard) {
 		KeyboardKeyModel::onClick(keyboard);
 
-		if (keyboard->getCase() == KeyboardCase::Upper)
+		const auto keyboardCase = keyboard->getCase();
+
+		keyboard->getOnInput().call(getCodeFromCase(keyboard), getNameFromCase(keyboard));
+
+		if (keyboardCase == KeyboardCase::Upper)
 			keyboard->setCase(KeyboardCase::Lower);
 	}
 
-	KeyCode TextKeyboardKeyModel::getCodeForCase(KeyboardCase value) const {
-		return value == KeyboardCase::Lower ? getCode() : getUppercaseCode();
+	KeyCode TextKeyboardKeyModel::getCodeFromCase(Keyboard* keyboard) const {
+		return keyboard->getCase() == KeyboardCase::Lower ? getCode() : getUppercaseCode();
 	}
 
-	const std::wstring_view& TextKeyboardKeyModel::getNameFromCase(KeyboardCase value) const {
-		return value == KeyboardCase::Lower ? getName() : getUppercaseName();
+	const std::wstring_view& TextKeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+		return keyboard->getCase() == KeyboardCase::Lower ? getName() : getUppercaseName();
 	}
 
 	// ----------------------------- ActionKeyboardKeyModel -----------------------------
@@ -126,8 +130,8 @@ namespace yoba {
 		}
 	}
 
-	const std::wstring_view& ShiftKeyboardKeyModel::getNameFromCase(KeyboardCase value) const {
-		switch (value) {
+	const std::wstring_view& ShiftKeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+		switch (keyboard->getCase()) {
 			case KeyboardCase::Lower:
 				return getName();
 			case KeyboardCase::Upper:
@@ -189,7 +193,7 @@ namespace yoba {
 	}
 
 	void KeyboardButton::updateTextFromCase() {
-		setText(getModel()->getNameFromCase(getKeyboard()->getCase()));
+		setText(getModel()->getNameFromCase(getKeyboard()));
 	}
 
 	void KeyboardButton::updateFromCase() {
@@ -331,10 +335,6 @@ namespace yoba {
 		_keyHeight = keyHeight;
 	}
 
-	Callback<KeyCode>& Keyboard::getOnKeyDown() {
-		return _onKeyDown;
-	}
-
 	KeyboardCase Keyboard::getCase() const {
 		return _case;
 	}
@@ -358,6 +358,14 @@ namespace yoba {
 				handler(dynamic_cast<KeyboardButton*>(buttonElement));
 			}
 		}
+	}
+
+	Callback<KeyCode>& Keyboard::getOnKeyDown() {
+		return _onKeyDown;
+	}
+
+	Callback<KeyCode, const std::wstring_view&>& Keyboard::getOnInput() {
+		return _onInput;
 	}
 
 	// ----------------------------- KeyboardRow -----------------------------

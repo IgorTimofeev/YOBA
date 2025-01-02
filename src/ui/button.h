@@ -13,7 +13,7 @@
 namespace yoba {
 	class ClickEvent;
 
-	class Button : public TextElement, public FontElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
+	class Button : public TextElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override;
 
@@ -25,11 +25,11 @@ namespace yoba {
 			bool isToggle() const;
 			void setToggle(bool value);
 
-			const Color *getPressedPrimaryColor() const;
-			void setPressedPrimaryColor(const Color *value);
+			const Color* getPressedPrimaryColor() const;
+			void setPressedPrimaryColor(const Color* value);
 
-			const Color *getPressedSecondaryColor() const;
-			void setPressedSecondaryColor(const Color *value);
+			const Color* getPressedSecondaryColor() const;
+			void setPressedSecondaryColor(const Color* value);
 
 			Callback<>& getOnClick();
 

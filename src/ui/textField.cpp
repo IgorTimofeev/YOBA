@@ -1,40 +1,150 @@
+#include <sstream>
 #include "textField.h"
 
 #include "../../../../lib/YOBA/src/ui/keyboard.h"
 #include "../../../../lib/YOBA/src/ui/application.h"
 
 namespace yoba {
+	void TextField::tick() {
+		Element::tick();
+
+		if (!isFocused() || isCaptured() || millis() < _cursorBlinkTime)
+			return;
+
+		_cursorBlinkState = !_cursorBlinkState;
+		_cursorBlinkTime = millis() + 500;
+
+		invalidateRender();
+	}
+
 	void TextField::onRender(ScreenBuffer* screenBuffer) {
+		auto& bounds = getBounds();
+
+		// Background
 		auto primaryColor = getPrimaryColor();
 
 		if (!primaryColor)
 			primaryColor = screenBuffer->getPrimaryColor();
+
+		if (primaryColor) {
+			screenBuffer->renderFilledRectangle(
+				bounds,
+				getCornerRadius(),
+				primaryColor
+			);
+		}
+
+		// Border
+		if (isFocused() && getBorderColor()) {
+			screenBuffer->renderRectangle(
+				bounds,
+				getCornerRadius(),
+				getBorderColor()
+			);
+		}
+
+		// Text
+		const auto font = getFontOrDefault();
+
+		if (!font)
+			return;
 
 		auto secondaryColor = getSecondaryColor();
 
 		if (!secondaryColor)
 			secondaryColor = screenBuffer->getSecondaryColor();
 
-		auto& bounds = getBounds();
+		if (!secondaryColor)
+			return;
 
-		screenBuffer->renderFilledRectangle(
-			bounds,
-			getCornerRadius(),
-			primaryColor
+		const auto& text = getText();
+
+		auto textPosition = Point(
+			bounds.getX(),
+			bounds.getYCenter() - font->getHeight() / 2
 		);
+
+		auto blinkX = textPosition.getX();
+
+		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
+			screenBuffer->renderChar(
+				textPosition,
+				font,
+				secondaryColor,
+				text[charIndex]
+			);
+
+			if (charIndex == _cursorPosition)
+				blinkX = textPosition.getX();
+
+			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex]));
+		}
+
+		// Cursor
+		if (_cursorBlinkState) {
+			// End of text
+			if (_cursorPosition == text.length())
+				blinkX = textPosition.getX();
+
+			screenBuffer->renderFilledRectangle(
+				Bounds(
+					blinkX,
+					textPosition.getY() + font->getHeight() / 2 - _cursorSize.getHeight() / 2,
+					_cursorSize.getWidth(),
+					_cursorSize.getHeight()
+				),
+				getCursorColor()
+			);
+		}
 	}
 
 	void TextField::onEvent(InputEvent& event) {
 		const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
+		const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
 		const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
 
-		if (!(isTouchDown || isTouchDrag))
+		if (!(isTouchDown || isTouchUp || isTouchDrag))
 			return;
 
 		if (isTouchDown) {
-//					setCaptured(true);
+			setCaptured(true);
 
-			showKeyboard();
+			if (!isFocused()) {
+				setFocused(true);
+				showKeyboard();
+			}
+		}
+		else if (isTouchUp) {
+			setCaptured(false);
+			return;
+		}
+
+		const auto font = getFontOrDefault();
+
+		if (font) {
+			auto touchEvent = (TouchEvent&) event;
+			const auto& bounds = getBounds();
+			auto touchX = touchEvent.getPosition().getX();
+
+			const auto text = getText();
+
+			int32_t textX = bounds.getX();
+			size_t cursorPosition = 0;
+
+			for (size_t i = 0; i < text.length(); i++) {
+				if (touchX > textX) {
+					cursorPosition++;
+					textX += font->getCharWidth(text[i]);
+				}
+				else {
+					break;
+				}
+			}
+
+			setCursorPosition(cursorPosition);
+		}
+		else {
+			setCursorToEnd();
 		}
 
 		event.setHandled(true);
@@ -74,9 +184,11 @@ namespace yoba {
 		root->removeChildren();
 		*root += keyboardAndChildrenLayout;
 
-		keyboard->getOnKeyDown() += [=](KeyCode code) {
+		keyboard->getOnKeyDown() += [this, temporaryRootChildrenLayout, keyboard, root, keyboardAndChildrenLayout](KeyCode code) {
 			switch (code) {
 				case KeyCode::Enter: {
+					setFocused(false);
+
 					root->removeChildren();
 
 					// Moving children back to root
@@ -89,10 +201,98 @@ namespace yoba {
 
 					break;
 				}
+				case KeyCode::Backspace: {
+					backspace();
+					break;
+				}
 				default:
 					break;
 			}
 		};
+
+		keyboard->getOnInput() += [this](KeyCode code, const std::wstring_view& text) {
+			insert(text);
+		};
+	}
+
+	void TextField::insert(const std::wstring_view& value) {
+		const auto text = getText();
+		const auto cursorPosition = getCursorPosition();
+
+		// ABCDE
+		// -----
+
+		// Start
+		if (cursorPosition == 0) {
+			if (text.length() > 0) {
+				std::wstringstream stream {};
+				stream << text;
+				stream << value;
+				setText(stream.str());
+			}
+			else {
+				setText(value);
+			}
+		}
+		// End
+		else if (cursorPosition == text.length()) {
+			std::wstringstream stream {};
+			stream << text;
+			stream << value;
+			setText(stream.str());
+
+//			auto part1 = std::wstring(text);
+//			part1.erase(std::find(part1.begin(), part1.end(), '\0'), part1.end());
+//
+//			auto part2 = std::wstring(value);
+//			part2.erase(std::find(part2.begin(), part2.end(), '\0'), part2.end());
+//
+//			setText(part1 + part2);
+		}
+		// Middle
+		else {
+			std::wstringstream stream {};
+			stream << text.substr(0, cursorPosition);
+			stream << value;
+			stream << text.substr(cursorPosition);
+			setText(stream.str());
+		}
+
+		setCursorPosition(getCursorPosition() + value.length());
+	}
+
+	void TextField::backspace() {
+		const auto text = getText();
+		const auto cursorPosition = getCursorPosition();
+
+		// Start
+		if (cursorPosition == 0) {
+			return;
+		}
+		// End
+		else if (cursorPosition == text.length()) {
+			if (text.length() > 0) {
+				setText(text.substr(0, text.length() - 1));
+			}
+		}
+		// 1
+		else if (cursorPosition == 1) {
+			if (text.length() > 1) {
+				setText(text.substr(1));
+			}
+			else if (text.length() > 0) {
+				setText(std::wstring());
+			}
+		}
+		// Middle
+		else {
+			std::wstringstream stream {};
+			stream << text.substr(0, cursorPosition - 1);
+			stream << text.substr(cursorPosition);
+			setText(stream.str());
+		}
+
+		setCursorPosition(getCursorPosition() - 1);
 	}
 
 	const Color* TextField::getKeyboardDefaultButtonPrimaryColor() const {
@@ -141,5 +341,63 @@ namespace yoba {
 
 	void TextField::setKeyboardFont(const Font* keyboardFont) {
 		_keyboardFont = keyboardFont;
+	}
+
+	size_t TextField::getCursorPosition() const {
+		return _cursorPosition;
+	}
+
+	void TextField::setCursorPosition(size_t cursorPosition) {
+		_cursorPosition = cursorPosition;
+
+		const auto textLength = getText().length();
+
+		if (_cursorPosition > textLength)
+			_cursorPosition = textLength;
+
+		if (isFocused())
+			_cursorBlinkState = true;
+
+		invalidateRender();
+	}
+
+	uint32_t TextField::getCursorBlinkInterval() const {
+		return _cursorBlinkInterval;
+	}
+
+	void TextField::setCursorBlinkInterval(uint32_t cursorBlinkInterval) {
+		_cursorBlinkInterval = cursorBlinkInterval;
+	}
+
+	const Color* TextField::getCursorColor() const {
+		return _cursorColor;
+	}
+
+	void TextField::setCursorColor(const Color* cursorColor) {
+		_cursorColor = cursorColor;
+	}
+
+	const Size& TextField::getCursorSize() const {
+		return _cursorSize;
+	}
+
+	void TextField::setCursorSize(const Size& cursorSize) {
+		_cursorSize = cursorSize;
+
+		invalidateRender();
+	}
+
+	void TextField::setCursorToStart() {
+		setCursorPosition(0);
+	}
+
+	void TextField::setCursorToEnd() {
+		setCursorPosition(getText().length());
+	}
+
+	void TextField::setFocused(bool value) {
+		Element::setFocused(value);
+
+		_cursorBlinkState = value;
 	}
 }

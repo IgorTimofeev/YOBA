@@ -79,15 +79,15 @@ namespace yoba {
 		_angleStep = angleStep;
 	}
 
-	const Color *Knob::getLineColor() const {
+	const Color* Knob::getLineColor() const {
 		return _lineColor;
 	}
 
-	void Knob::setLineColor(const Color *lineColor) {
+	void Knob::setLineColor(const Color* lineColor) {
 		_lineColor = lineColor;
 	}
 
-	const Color *Knob::getMiddleColor() const {
+	const Color* Knob::getMiddleColor() const {
 		return _middleColor;
 	}
 

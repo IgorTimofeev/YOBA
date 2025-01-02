@@ -24,6 +24,7 @@ namespace yoba {
 			ScreenOrientation getOrientation() const;
 			void setOrientation(ScreenOrientation value) const;
 
+			void tick() override;
 			void invalidateLayout() override;
 			void invalidateRender() override;
 			void invalidate() override;
@@ -31,27 +32,28 @@ namespace yoba {
 			void handleEvent(InputEvent &event) override;
 			void startAnimation(Animation* animation) override;
 
-			Element *getCapturedElement() const;
-			void setCapturedElement(Element *capturedElement);
+			Element* getCapturedElement() const;
+			void setCapturedElement(Element* capturedElement);
+
+			Element* getFocusedElement() const;
+			void setFocusedElement(Element* focusedElement);
 
 			const Font* getFont() const;
 			void setFont(const Font* font);
-
-			Callback<>& getOnTick();
 
 			ScreenBuffer* getScreenBuffer() const;
 
 			void addInputDevice(InputDevice* inputDevice);
 
-			virtual void tick();
+			Callback<>& getOnTick();
 
 		private:
 			ScreenBuffer* _screenBuffer;
 
 			bool _isRendered = false;
-			bool _isMeasured = false;
-			bool _isArranged = false;
+			bool _isMeasuredAndArranged = false;
 			Element* _capturedElement = nullptr;
+			Element* _focusedElement = nullptr;
 
 			std::vector<Animation*> _animations {};
 			Callback<> _onTick {};

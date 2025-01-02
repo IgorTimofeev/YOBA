@@ -1,7 +1,7 @@
 #pragma once
 
 #include "element.h"
-#include "color.h"
+#include "../color.h"
 
 namespace yoba {
 	class PrimaryColorElement : public virtual Element {

@@ -18,8 +18,7 @@ namespace yoba {
 	}
 
 	void Application::invalidateLayout() {
-		_isMeasured = false;
-		_isArranged = false;
+		_isMeasuredAndArranged = false;
 	}
 
 	void Application::invalidateRender() {
@@ -56,24 +55,20 @@ namespace yoba {
 	void Application::tick() {
 		setSize(_screenBuffer->getSize());
 
+		Container::tick();
+
 		// Handling tick handlers first
 		_onTick.call();
 
 		// Playing animations
 		animationsTick();
 
-		// Computing sizes
-		if (!_isMeasured) {
+		// Computing sizes & positions
+		if (!_isMeasuredAndArranged) {
 			measure(_screenBuffer, getSize());
-
-			_isMeasured = true;
-		}
-
-		// Computing positions
-		if (!_isArranged) {
 			arrange(Bounds(getSize()));
 
-			_isArranged = true;
+			_isMeasuredAndArranged = true;
 		}
 
 		// Rendering
@@ -86,12 +81,20 @@ namespace yoba {
 		}
 	}
 
-	Element *Application::getCapturedElement() const {
+	Element* Application::getCapturedElement() const {
 		return _capturedElement;
 	}
 
-	void Application::setCapturedElement(Element *capturedElement) {
+	void Application::setCapturedElement(Element* capturedElement) {
 		_capturedElement = capturedElement;
+	}
+
+	Element* Application::getFocusedElement() const {
+		return _focusedElement;
+	}
+
+	void Application::setFocusedElement(Element* focusedElement) {
+		_focusedElement = focusedElement;
 	}
 
 	void Application::handleEvent(InputEvent &event) {

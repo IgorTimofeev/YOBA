@@ -8,7 +8,7 @@
 #include "../size.h"
 
 namespace yoba {
-	class Text : public TextElement, public FontElement, public PrimaryColorElement {
+	class Text : public TextElement, public PrimaryColorElement {
 		public:
 			Text() = default;
 

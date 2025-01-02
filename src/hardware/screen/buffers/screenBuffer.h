@@ -33,23 +33,25 @@ namespace yoba {
 
 			// -------------------------------- Native rendering --------------------------------
 
-			void clear(const Color *color);
-			void renderPixel(const Point& point, const Color *color);
-			void renderHorizontalLine(const Point& point, uint16_t length, const Color *color);
-			void renderVerticalLine(const Point& point, uint16_t length, const Color *color);
-			void renderFilledRectangle(const Bounds& bounds, const Color *color);
-			void renderFilledRectangle(const Bounds& bounds, uint16_t radius, const Color* color);
+			void clear(const Color* color);
+			void renderPixel(const Point& point, const Color* color);
+			void renderHorizontalLine(const Point& point, uint16_t length, const Color* color);
+			void renderVerticalLine(const Point& point, uint16_t length, const Color* color);
+			void renderFilledRectangle(const Bounds& bounds, const Color* color);
+			void renderFilledRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
 			void renderImage(const Point& point, const Image* image);
 
 			// -------------------------------- Non-native rendering --------------------------------
 
 			void renderRectangle(const Bounds& bounds, const Color* color);
+			void renderRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
+
 			// Thanks, AdaFruit!
-			void renderLine(const Point& from, const Point& to, const Color *color);
-			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color *color);
-			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color *color);
+			void renderLine(const Point& from, const Point& to, const Color* color);
+			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
 			void renderCircle(const Point& center, uint16_t radius, const Color* color);
-			void renderFilledCircle(const Point& center, uint16_t radius, const Color *color);
+			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
+			void renderFilledCircle(const Point& center, uint16_t radius, const Color* color);
 
 			/**
 			* @brief Renders single line of text
@@ -59,7 +61,7 @@ namespace yoba {
 			* @param text Template-based pointer to first character in text
 			*/
 			template<typename TChar>
-			void renderText(const Point& point, const Font* font, const Color *color, const std::basic_string_view<TChar>& text);
+			void renderText(const Point& point, const Font* font, const Color* color, const std::basic_string_view<TChar>& text);
 			void renderText(const Point& point, const Font* font, const Color* color, const std::string_view& text);
 			void renderText(const Point& point, const Font* font, const Color* color, const std::wstring_view& text);
 
@@ -70,11 +72,11 @@ namespace yoba {
 
 			// -------------------------------- Default colors --------------------------------
 
-			Color* getPrimaryColor() const;
-			void setPrimaryColor(Color* value);
+			const Color* getPrimaryColor() const;
+			void setPrimaryColor(const Color* value);
 
-			Color* getSecondaryColor() const;
-			void setSecondaryColor(Color* value);
+			const Color* getSecondaryColor() const;
+			void setSecondaryColor(const Color* value);
 
 		protected:
 			ScreenDriver* _driver;
@@ -86,24 +88,27 @@ namespace yoba {
 
 			virtual size_t getRequiredBufferLength() = 0;
 
-			virtual void clearNative(const Color *color) = 0;
+			virtual void clearNative(const Color* color) = 0;
 
-			virtual void renderPixelNative(const Point& point, const Color *color) = 0;
+			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
 
-			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color *color) = 0;
+			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
 
-			virtual void renderVerticalLineNative(const Point& point, uint16_t length, const Color *color) = 0;
+			virtual void renderVerticalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
 
-			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color *color) = 0;
+			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color* color) = 0;
 
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
 		private:
-			Color* _primaryColor = nullptr;
-			Color* _secondaryColor = nullptr;
+			const Color* _primaryColor = nullptr;
+			const Color* _secondaryColor = nullptr;
 
-			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color);
+			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
+			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph);
+
+			void renderMissingGlyph(const Point& point, const Font* font, const Color* color);
 	};
 
 	template<typename TChar>
@@ -148,15 +153,16 @@ namespace yoba {
 				}
 
 				x = x2;
-
-				// Stopping rendering if next glyphs will not be in viewport
-				if (x > viewportX2)
-					break;
 			}
-			// For non-existing glyphs we can just simulate whitespace
 			else {
+				renderMissingGlyph(Point(x, point.getY()), font, color);
+
 				x += Font::missingGlyphWidth;
 			}
+
+			// Stopping rendering if next glyphs will not be in viewport
+			if (x > viewportX2)
+				break;
 		}
 	}
 
@@ -174,14 +180,19 @@ namespace yoba {
 
 		const auto glyph = font->getGlyph(ch);
 
-		if (!glyph || point.getX() + glyph->getWidth() < viewport.getX())
-			return;
+		if (glyph) {
+			if (point.getX() + glyph->getWidth() < viewport.getX())
+				return;
 
-		renderGlyph(
-			point,
-			font,
-			color,
-			glyph
-		);
+			renderGlyph(
+				point,
+				font,
+				color,
+				glyph
+			);
+		}
+		else {
+			renderMissingGlyph(point, font, color);
+		}
 	}
 }

@@ -57,6 +57,10 @@ namespace yoba {
 			newSize = 0;
 	}
 
+	void Element::tick() {
+
+	}
+
 	void Element::measure(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
@@ -226,12 +230,21 @@ namespace yoba {
 			_application->setCapturedElement(value ? this : nullptr);
 	}
 
+	bool Element::isFocused() {
+		return _application && _application->getFocusedElement() == this;
+	}
+
+	void Element::setFocused(bool value) {
+		if (_application)
+			_application->setFocusedElement(value ? this : nullptr);
+	}
+
 	void Element::startAnimation(Animation* animation) {
 		if (_application)
 			_application->startAnimation(animation);
 	}
 
-	Element *Element::getParent() {
+	Element* Element::getParent() {
 		return _parent;
 	}
 

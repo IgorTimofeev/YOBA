@@ -50,16 +50,16 @@ namespace yoba {
 
 	// -------------------------------- Native rendering --------------------------------
 
-	void ScreenBuffer::clear(const Color *color) {
+	void ScreenBuffer::clear(const Color* color) {
 		clearNative(color);
 	}
 
-	void ScreenBuffer::renderPixel(const Point& point, const Color *color) {
+	void ScreenBuffer::renderPixel(const Point& point, const Color* color) {
 		if (getViewport().intersects(point))
 			renderPixelNative(point, color);
 	}
 
-	void ScreenBuffer::renderHorizontalLine(const Point& point, uint16_t length, const Color *color) {
+	void ScreenBuffer::renderHorizontalLine(const Point& point, uint16_t length, const Color* color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -79,7 +79,7 @@ namespace yoba {
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
 	}
 
-	void ScreenBuffer::renderVerticalLine(const Point& point, uint16_t length, const Color *color) {
+	void ScreenBuffer::renderVerticalLine(const Point& point, uint16_t length, const Color* color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -99,7 +99,7 @@ namespace yoba {
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
 	}
 
-	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, const Color *color) {
+	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, const Color* color) {
 		const auto& viewport = getViewport();
 
 		if (!bounds.isNonZero() || !viewport.intersects(bounds))
@@ -115,15 +115,15 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, uint16_t radius, const Color *color) {
-		if (radius > 0) {
+	void ScreenBuffer::renderFilledRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color) {
+		if (cornerRadius > 0) {
 			// Rect in middle
 			renderFilledRectangle(
 				Bounds(
 					bounds.getX(),
-					bounds.getY() + radius,
+					bounds.getY() + cornerRadius,
 					bounds.getWidth(),
-					bounds.getHeight() - radius - radius
+					bounds.getHeight() - cornerRadius - cornerRadius
 				),
 				color
 			);
@@ -131,24 +131,24 @@ namespace yoba {
 			// 2 upper corners
 			renderFilledRoundedCorners(
 				Point(
-					bounds.getX() + radius,
-					bounds.getY() + radius
+					bounds.getX() + cornerRadius,
+					bounds.getY() + cornerRadius
 				),
-				radius,
+				cornerRadius,
 				true,
-				bounds.getWidth() - radius - radius,
+				bounds.getWidth() - cornerRadius - cornerRadius,
 				color
 			);
 
 			// And 2 lower
 			renderFilledRoundedCorners(
 				Point(
-					bounds.getX() + radius,
-					bounds.getY() + bounds.getHeight() - radius - 1
+					bounds.getX() + cornerRadius,
+					bounds.getY() + bounds.getHeight() - cornerRadius - 1
 				),
-				radius,
+				cornerRadius,
 				false,
-				bounds.getWidth() - radius - radius,
+				bounds.getWidth() - cornerRadius - cornerRadius,
 				color
 			);
 		}
@@ -201,6 +201,65 @@ namespace yoba {
 		}
 		else {
 			renderPixel(bounds.getTopLeft(), color);
+		}
+	}
+
+	void ScreenBuffer::renderRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color) {
+		if (cornerRadius > 0) {
+			renderHorizontalLine(
+				Point(bounds.getX() + cornerRadius, bounds.getY()),
+				bounds.getWidth() - cornerRadius - cornerRadius,
+				color
+			);
+
+			renderHorizontalLine(
+				Point(bounds.getX() + cornerRadius, bounds.getY() + bounds.getHeight() - 1),
+				bounds.getWidth() - cornerRadius - cornerRadius,
+				color
+			);
+
+			renderVerticalLine(
+				Point(bounds.getX() , bounds.getY() + cornerRadius),
+				bounds.getHeight() - cornerRadius - cornerRadius,
+				color
+			);
+
+			renderVerticalLine(
+				Point(bounds.getX() + bounds.getWidth() - 1, bounds.getY() + cornerRadius),
+				bounds.getHeight() - cornerRadius - cornerRadius,
+				color
+			);
+
+			renderRoundedCorners(
+				Point(bounds.getX() + cornerRadius, bounds.getY() + cornerRadius),
+				cornerRadius,
+				1,
+				color
+			);
+
+			renderRoundedCorners(
+				Point(bounds.getX() + bounds.getWidth() - cornerRadius - 1, bounds.getY() + cornerRadius),
+				cornerRadius,
+				2,
+				color
+			);
+
+			renderRoundedCorners(
+				Point(bounds.getX() + bounds.getWidth() - cornerRadius - 1, bounds.getY() + bounds.getHeight() - cornerRadius - 1),
+				cornerRadius,
+				4,
+				color
+			);
+
+			renderRoundedCorners(
+				Point(bounds.getX() + cornerRadius, bounds.getY() + bounds.getHeight() - cornerRadius - 1),
+				cornerRadius,
+				8,
+				color
+			);
+		}
+		else {
+			renderRectangle(bounds, color);
 		}
 	}
 
@@ -421,7 +480,7 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderCircle(const Point& center, uint16_t radius, const Color *color) {
+	void ScreenBuffer::renderCircle(const Point& center, uint16_t radius, const Color* color) {
 		if (radius == 0)
 			return;
 
@@ -482,7 +541,7 @@ namespace yoba {
 		} while (xe < --radius);
 	}
 
-	void ScreenBuffer::renderFilledCircle(const Point& center, uint16_t radius, const Color *color) {
+	void ScreenBuffer::renderFilledCircle(const Point& center, uint16_t radius, const Color* color) {
 		if (radius == 0)
 			return;
 
@@ -512,7 +571,71 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color) {
+	void ScreenBuffer::renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color) {
+		int32_t f     = 1 - radius;
+		int32_t ddF_x = 1;
+		int32_t ddF_y = -2 * radius;
+		int32_t xe    = 0;
+		int32_t xs    = 0;
+		int32_t len   = 0;
+
+		do
+		{
+			while (f < 0) {
+				++xe;
+				f += (ddF_x += 2);
+			}
+			f += (ddF_y += 2);
+
+			if (xe-xs==1) {
+				if (corner & 0x1) { // left top
+					renderPixel(Point(center.getX() - xe, center.getY() - radius), color);
+					renderPixel(Point(center.getX() - radius, center.getY() - xe), color);
+				}
+
+				if (corner & 0x2) { // right top
+					renderPixel(Point(center.getX() + radius    , center.getY() - xe), color);
+					renderPixel(Point(center.getX() + xs + 1, center.getY() - radius), color);
+				}
+
+				if (corner & 0x4) { // right bottom
+					renderPixel(Point(center.getX() + xs + 1, center.getY() + radius), color);
+					renderPixel(Point(center.getX() + radius, center.getY() + xs + 1), color);
+				}
+
+				if (corner & 0x8) { // left bottom
+					renderPixel(Point(center.getX() - radius, center.getY() + xs + 1), color);
+					renderPixel(Point(center.getX() - xe, center.getY() + radius) , color);
+				}
+			}
+			else {
+				len = xe - xs++;
+				
+				if (corner & 0x1) { // left top
+					renderHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
+					renderVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
+				}
+
+				if (corner & 0x2) { // right top
+					renderVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
+					renderHorizontalLine(Point(center.getX() + xs, center.getY() - radius), len, color);
+				}
+
+				if (corner & 0x4) { // right bottom
+					renderHorizontalLine(Point(center.getX() + xs, center.getY() + radius), len, color);
+					renderVerticalLine(Point(center.getX() + radius, center.getY() + xs), len, color);
+				}
+
+				if (corner & 0x8) { // left bottom
+					renderVerticalLine(Point(center.getX() - radius, center.getY() + xs), len, color);
+					renderHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
+				}
+			}
+			xs = xe;
+		} while (xe < radius--);
+	}
+
+	void ScreenBuffer::renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color) {
 		int32_t f = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -radius - radius;
@@ -541,6 +664,18 @@ namespace yoba {
 				renderHorizontalLine(Point(center.getX() - radius, upper ? center.getY() - y : center.getY() + y), lineLength, color);
 			}
 		}
+	}
+
+	void ScreenBuffer::renderMissingGlyph(const Point& point, const Font* font, const Color* color) {
+		renderRectangle(
+			Bounds(
+				point.getX(),
+				point.getY(),
+				Font::missingGlyphWidth,
+				font->getHeight()
+			),
+			color
+		);
 	}
 
 	void ScreenBuffer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph) {
@@ -576,19 +711,19 @@ namespace yoba {
 		renderChar<wchar_t>(point, font, color, ch);
 	}
 
-	Color* ScreenBuffer::getPrimaryColor() const {
+	const Color* ScreenBuffer::getPrimaryColor() const {
 		return _primaryColor;
 	}
 
-	void ScreenBuffer::setPrimaryColor(Color* value) {
+	void ScreenBuffer::setPrimaryColor(const Color* value) {
 		_primaryColor = value;
 	}
 
-	Color* ScreenBuffer::getSecondaryColor() const {
+	const Color* ScreenBuffer::getSecondaryColor() const {
 		return _secondaryColor;
 	}
 
-	void ScreenBuffer::setSecondaryColor(Color* value) {
+	void ScreenBuffer::setSecondaryColor(const Color* value) {
 		_secondaryColor = value;
 	}
 }

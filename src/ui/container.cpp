@@ -2,12 +2,18 @@
 #include "../event.h"
 
 namespace yoba {
-	void Container::onRender(ScreenBuffer* screenBuffer) {
-		for (const auto& child : _children) {
-			child->render(screenBuffer);
-		}
+	void Container::tick() {
+		Element::tick();
 
-//		screenBuffer->renderRectangle(getBounds(), new PaletteColor(6));
+		for (auto element : _children)
+			element->tick();
+	}
+
+	void Container::onRender(ScreenBuffer* screenBuffer) {
+		for (auto element : _children)
+			element->render(screenBuffer);
+
+//		screenBuffer->renderRectangle(getBounds(), screenBuffer->getSecondaryColor());
 	}
 
 	void Container::onEvent(InputEvent &event) {
@@ -48,7 +54,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	void Container::removeChild(Element *child) {
+	void Container::removeChild(Element* child) {
 		auto iterator = std::find(_children.begin(), _children.end(), child);
 
 		if (iterator == _children.end())
@@ -71,7 +77,7 @@ namespace yoba {
 		return _children[index];
 	}
 
-	void Container::addChild(Element *child) {
+	void Container::addChild(Element* child) {
 		_children.push_back(child);
 
 		child->onAddedToParent(this);
@@ -83,11 +89,11 @@ namespace yoba {
 		return getChildAt(index);
 	}
 
-	void Container::operator+=(Element *child) {
+	void Container::operator+=(Element* child) {
 		addChild(child);
 	}
 
-	void Container::operator-=(Element *child) {
+	void Container::operator-=(Element* child) {
 		removeChild(child);
 	}
 

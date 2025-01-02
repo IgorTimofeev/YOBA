@@ -79,7 +79,7 @@ namespace yoba {
 		_toggle = value;
 	}
 
-	const Color *Button::getPressedPrimaryColor() const {
+	const Color* Button::getPressedPrimaryColor() const {
 		return _pressedPrimaryColor;
 	}
 
@@ -87,7 +87,7 @@ namespace yoba {
 		_pressedPrimaryColor = value;
 	}
 
-	const Color *Button::getPressedSecondaryColor() const {
+	const Color* Button::getPressedSecondaryColor() const {
 		return _pressedSecondaryColor;
 	}
 

@@ -205,9 +205,9 @@ namespace yoba {
 
 			virtual void onClick(Keyboard* keyboard);
 
-			virtual KeyCode getCodeForCase(KeyboardCase value) const;
+			virtual KeyCode getCodeFromCase(Keyboard* keyboard) const;
 
-			virtual const std::wstring_view& getNameFromCase(KeyboardCase value) const;
+			virtual const std::wstring_view& getNameFromCase(Keyboard* keyboard) const;
 
 		private:
 			KeyboardKeyStyle _style;
@@ -235,11 +235,13 @@ namespace yoba {
 			KeyCode getUppercaseCode() const;
 			const std::wstring_view& getUppercaseName() const;
 
-			KeyCode getCodeForCase(KeyboardCase value) const override;
+			KeyCode getCodeFromCase(Keyboard* keyboard) const override;
 
-			const std::wstring_view& getNameFromCase(KeyboardCase value) const override;
+			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
 
 			void onClick(Keyboard* keyboard) override;
+
+
 
 		private:
 			KeyCode _uppercaseCode;
@@ -258,7 +260,7 @@ namespace yoba {
 
 			void onClick(Keyboard* keyboard) override;
 
-			const std::wstring_view& getNameFromCase(KeyboardCase value) const override;
+			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
 
 		private:
 			const std::wstring_view _uppercaseName;
@@ -354,10 +356,11 @@ namespace yoba {
 			void setKeyHeight(float keyHeight);
 			float getKeyHeight() const;
 
-			Callback<KeyCode>& getOnKeyDown();
-
 			KeyboardCase getCase() const;
 			void setCase(KeyboardCase value);
+
+			Callback<KeyCode>& getOnKeyDown();
+			Callback<KeyCode, const std::wstring_view&>& getOnInput();
 
 		private:
 			const Color* _defaultButtonPrimaryColor = nullptr;
@@ -377,6 +380,7 @@ namespace yoba {
 			float _keyHeight = 0.1f;
 
 			Callback<KeyCode> _onKeyDown {};
+			Callback<KeyCode, const std::wstring_view&> _onInput {};
 
 			void deleteLayoutAndUIElements();
 
@@ -434,7 +438,7 @@ namespace yoba {
 			ActionKeyboardKeyModel _keyCharacters = ActionKeyboardKeyModel(KeyCode::None, L"123", 0.1f);
 			ActionKeyboardKeyModel _keyLayout = ActionKeyboardKeyModel(KeyCode::None, L"Lang", 0.1f);
 			TextKeyboardKeyModel _keyComma = TextKeyboardKeyModel(KeyCode::Comma, L",", 0.1f);
-			ActionKeyboardKeyModel _keySpace = ActionKeyboardKeyModel(KeyCode::Space, L"Space", 0.4f);
+			TextKeyboardKeyModel _keySpace = TextKeyboardKeyModel(KeyCode::Space, L" ", 0.4f);
 			TextKeyboardKeyModel _keyPeriod = TextKeyboardKeyModel(KeyCode::Period, L".", 0.1f);
 			ActionKeyboardKeyModel _keyEnter = ActionKeyboardKeyModel(KeyCode::Enter, L"Enter", 0.2f);
 			KeyboardLayoutRow _row3 = KeyboardLayoutRow();
@@ -482,7 +486,7 @@ namespace yoba {
 			ActionKeyboardKeyModel _keyCharacters = ActionKeyboardKeyModel(KeyCode::None, L"Abc", 0.1f);
 			ActionKeyboardKeyModel _keyLayout = ActionKeyboardKeyModel(KeyCode::None, L"Lang", 0.1f);
 			TextKeyboardKeyModel _keyComma = TextKeyboardKeyModel(KeyCode::Comma, L",", 0.1f);
-			ActionKeyboardKeyModel _keySpace = ActionKeyboardKeyModel(KeyCode::Space, L"Space", 0.4f);
+			TextKeyboardKeyModel _keySpace = TextKeyboardKeyModel(KeyCode::Space, L" ", 0.4f);
 			TextKeyboardKeyModel _keyPeriod = TextKeyboardKeyModel(KeyCode::Period, L".", 0.1f);
 			ActionKeyboardKeyModel _keyEnter = ActionKeyboardKeyModel(KeyCode::Enter, L"Enter", 0.2f);
 			KeyboardLayoutRow _row3 = KeyboardLayoutRow();

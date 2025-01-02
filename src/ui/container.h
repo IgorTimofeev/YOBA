@@ -11,6 +11,8 @@
 namespace yoba {
 	class Container : public virtual Element {
 		public:
+			void tick() override;
+
 			void onRender(ScreenBuffer* screenBuffer) override;
 
 			void onEvent(InputEvent& event) override;

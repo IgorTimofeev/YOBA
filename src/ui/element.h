@@ -35,6 +35,8 @@ namespace yoba {
 
 			virtual ~Element() = default;
 
+			virtual void tick();
+
 			void measure(ScreenBuffer* screenBuffer, const Size& availableSize);
 			void arrange(const Bounds& bounds);
 
@@ -58,8 +60,11 @@ namespace yoba {
 			bool isEnabled() const;
 			void setEnabled(bool value);
 
-			void setCaptured(bool value);
 			bool isCaptured();
+			void setCaptured(bool value);
+
+			bool isFocused();
+			virtual void setFocused(bool value);
 
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);

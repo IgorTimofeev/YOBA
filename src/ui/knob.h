@@ -25,11 +25,11 @@ namespace yoba {
 			float getAngleStep() const;
 			void setAngleStep(float angleStep);
 
-			const Color *getLineColor() const;
-			void setLineColor(const Color *lineColor);
+			const Color* getLineColor() const;
+			void setLineColor(const Color* lineColor);
 
-			const Color *getMiddleColor() const;
-			void setMiddleColor(const Color *value);
+			const Color* getMiddleColor() const;
+			void setMiddleColor(const Color* value);
 
 			Callback<KnobRotateEvent&>& getOnRotate();
 

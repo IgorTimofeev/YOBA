@@ -48,7 +48,7 @@ namespace yoba {
 		}
 	}
 
-	uint16_t PaletteBuffer::getPaletteIndex(const Color *color) {
+	uint16_t PaletteBuffer::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
 			case ColorModel::Palette:
 				return ((PaletteColor*) color)->getIndex();

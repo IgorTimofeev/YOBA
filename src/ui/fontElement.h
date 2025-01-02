@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ui/element.h"
-#include "font.h"
+#include "element.h"
+#include "../font.h"
 
 namespace yoba {
 	class FontElement : public virtual Element {
