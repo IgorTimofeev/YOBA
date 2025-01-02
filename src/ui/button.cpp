@@ -21,30 +21,28 @@ namespace yoba {
 		}
 
 		// Text
-		if (getText()) {
-			const auto font = getFontOrDefault();
+		const auto font = getFontOrDefault();
 
-			if (font) {
-				auto textSize = font->getSize(getText());
+		if (font) {
+			auto textSize = font->getSize(getText());
 
-				auto secondaryColor =
-					isPressed() && getPressedSecondaryColor()
-					? getPressedSecondaryColor()
-					: getSecondaryColor();
+			auto secondaryColor =
+				isPressed() && getPressedSecondaryColor()
+				? getPressedSecondaryColor()
+				: getSecondaryColor();
 
-				if (!secondaryColor)
-					secondaryColor = screenBuffer->getSecondaryColor();
+			if (!secondaryColor)
+				secondaryColor = screenBuffer->getSecondaryColor();
 
-				screenBuffer->renderText(
-					Point(
-						bounds.getXCenter() - textSize.getXCenter(),
-						bounds.getYCenter() - textSize.getYCenter()
-					),
-					font,
-					secondaryColor,
-					getText()
-				);
-			}
+			screenBuffer->renderText(
+				Point(
+					bounds.getXCenter() - textSize.getXCenter(),
+					bounds.getYCenter() - textSize.getYCenter()
+				),
+				font,
+				secondaryColor,
+				getText()
+			);
 		}
 	}
 

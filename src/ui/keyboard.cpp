@@ -9,7 +9,7 @@ namespace yoba {
 		return _keyType;
 	}
 
-	KeyboardKey::KeyboardKey(KeyboardKeyType keyType, KeyCode code, const wchar_t* name, float width) :
+	KeyboardKey::KeyboardKey(KeyboardKeyType keyType, KeyCode code, const std::u32string_view& name, float width) :
 		_keyType(keyType),
 		_code(code),
 		_name(name),
@@ -22,7 +22,7 @@ namespace yoba {
 		return _code;
 	}
 
-	const wchar_t* KeyboardKey::getName() const {
+	const std::u32string_view& KeyboardKey::getName() const {
 		return _name;
 	}
 
@@ -32,7 +32,7 @@ namespace yoba {
 
 	// ----------------------------- TextKeyboardKey -----------------------------
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, const wchar_t* name, KeyCode uppercaseCode, const wchar_t* uppercaseName, float width) :
+	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::u32string_view& name, KeyCode uppercaseCode, const std::u32string_view& uppercaseName, float width) :
 		KeyboardKey(KeyboardKeyType::Text, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
@@ -44,7 +44,7 @@ namespace yoba {
 		return _uppercaseCode;
 	}
 
-	const wchar_t* TextKeyboardKey::getUppercaseName() const {
+	const std::u32string_view& TextKeyboardKey::getUppercaseName() const {
 		return _uppercaseName;
 	}
 
@@ -104,7 +104,7 @@ namespace yoba {
 
 	// ----------------------------- KeyboardLayout -----------------------------
 
-	KeyboardLayout::KeyboardLayout(const wchar_t* name, const wchar_t* nameAbbreviated) :
+	KeyboardLayout::KeyboardLayout(const std::u32string_view& name, const std::u32string_view& nameAbbreviated) :
 		_name(name),
 		_nameAbbreviated(nameAbbreviated)
 	{
@@ -358,7 +358,7 @@ namespace yoba {
 
 	// ----------------------------- EnglishKeyboard -----------------------------
 
-	EnglishKeyboardLayout::EnglishKeyboardLayout() : KeyboardLayout(L"English", L"EN") {
+	EnglishKeyboardLayout::EnglishKeyboardLayout() : KeyboardLayout(U"English", U"EN") {
 		_row0.keys.push_back(&_keyQ);
 		_row0.keys.push_back(&_keyW);
 		_row0.keys.push_back(&_keyE);

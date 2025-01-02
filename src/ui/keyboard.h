@@ -189,13 +189,13 @@ namespace yoba {
 			KeyboardKey(
 				KeyboardKeyType keyType,
 				KeyCode code,
-				const wchar_t* name,
+				const std::u32string_view& name,
 				float width
 			);
 
 			KeyboardKeyType getKeyType() const;
 			KeyCode getCode() const;
-			const wchar_t* getName() const;
+			const std::u32string_view& getName() const;
 
 			float getWidth() const;
 
@@ -203,25 +203,25 @@ namespace yoba {
 			float _width;
 			KeyboardKeyType _keyType;
 			KeyCode _code;
-			const wchar_t* _name;
+			const std::u32string_view _name;
 	};
 
 	class TextKeyboardKey : public KeyboardKey {
 		public:
 			TextKeyboardKey(
 				KeyCode code,
-				const wchar_t* name,
+				const std::u32string_view& name,
 				KeyCode uppercaseCode,
-				const wchar_t* uppercaseName,
+				const std::u32string_view& uppercaseName,
 				float width
 			);
 
 			KeyCode getUppercaseCode() const;
-			const wchar_t* getUppercaseName() const;
+			const std::u32string_view& getUppercaseName() const;
 
 		private:
 			KeyCode _uppercaseCode;
-			const wchar_t* _uppercaseName;
+			const std::u32string_view _uppercaseName;
 	};
 
 	class KeyboardButtonsRow : public Container {
@@ -251,8 +251,8 @@ namespace yoba {
 	class KeyboardLayout {
 		public:
 			KeyboardLayout(
-				const wchar_t* name,
-				const wchar_t* nameAbbreviated
+				const std::u32string_view& name,
+				const std::u32string_view& nameAbbreviated
 			);
 
 			virtual ~KeyboardLayout();
@@ -260,8 +260,8 @@ namespace yoba {
 			std::vector<KeyboardLayoutRow*> rows {};
 
 		private:
-			const wchar_t* _name;
-			const wchar_t* _nameAbbreviated;
+			const std::u32string_view _name;
+			const std::u32string_view _nameAbbreviated;
 	};
 
 	class KeyboardButton : public Button {
@@ -365,52 +365,52 @@ namespace yoba {
 
 		private:
 			// Row 1
-			KeyboardKey _keyQ = TextKeyboardKey(KeyCode::Q, L"q", KeyCode::Q, L"Q", 1.f / 10.f);
-			KeyboardKey _keyW = TextKeyboardKey(KeyCode::W, L"w", KeyCode::W, L"W", 1.f / 10.f);
-			KeyboardKey _keyE = TextKeyboardKey(KeyCode::E, L"e", KeyCode::E, L"E", 1.f / 10.f);
-			KeyboardKey _keyR = TextKeyboardKey(KeyCode::R, L"r", KeyCode::R, L"R", 1.f / 10.f);
-			KeyboardKey _keyT = TextKeyboardKey(KeyCode::T, L"t", KeyCode::T, L"T", 1.f / 10.f);
+			KeyboardKey _keyQ = TextKeyboardKey(KeyCode::Q, U"q", KeyCode::Q, U"Q", 1.f / 10.f);
+			KeyboardKey _keyW = TextKeyboardKey(KeyCode::W, U"w", KeyCode::W, U"W", 1.f / 10.f);
+			KeyboardKey _keyE = TextKeyboardKey(KeyCode::E, U"e", KeyCode::E, U"E", 1.f / 10.f);
+			KeyboardKey _keyR = TextKeyboardKey(KeyCode::R, U"r", KeyCode::R, U"R", 1.f / 10.f);
+			KeyboardKey _keyT = TextKeyboardKey(KeyCode::T, U"t", KeyCode::T, U"T", 1.f / 10.f);
 
-			KeyboardKey _keyY = TextKeyboardKey(KeyCode::Y, L"y", KeyCode::Y, L"Y", 1.f / 10.f);
-			KeyboardKey _keyU = TextKeyboardKey(KeyCode::U, L"u", KeyCode::U, L"U", 1.f / 10.f);
-			KeyboardKey _keyI = TextKeyboardKey(KeyCode::I, L"i", KeyCode::I, L"I", 1.f / 10.f);
-			KeyboardKey _keyO = TextKeyboardKey(KeyCode::O, L"o", KeyCode::O, L"O", 1.f / 10.f);
-			KeyboardKey _keyP = TextKeyboardKey(KeyCode::P, L"p", KeyCode::P, L"P", 1.f / 10.f);
+			KeyboardKey _keyY = TextKeyboardKey(KeyCode::Y, U"y", KeyCode::Y, U"Y", 1.f / 10.f);
+			KeyboardKey _keyU = TextKeyboardKey(KeyCode::U, U"u", KeyCode::U, U"U", 1.f / 10.f);
+			KeyboardKey _keyI = TextKeyboardKey(KeyCode::I, U"i", KeyCode::I, U"I", 1.f / 10.f);
+			KeyboardKey _keyO = TextKeyboardKey(KeyCode::O, U"o", KeyCode::O, U"O", 1.f / 10.f);
+			KeyboardKey _keyP = TextKeyboardKey(KeyCode::P, U"p", KeyCode::P, U"P", 1.f / 10.f);
 			KeyboardLayoutRow _row0 = KeyboardLayoutRow();
 
 			// Row 2
-			KeyboardKey _keyA = TextKeyboardKey(KeyCode::A, L"a", KeyCode::A, L"A", 1.f / 10.f);
-			KeyboardKey _keyS = TextKeyboardKey(KeyCode::S, L"s", KeyCode::S, L"S", 1.f / 10.f);
-			KeyboardKey _keyD = TextKeyboardKey(KeyCode::D, L"d", KeyCode::D, L"D", 1.f / 10.f);
-			KeyboardKey _keyF = TextKeyboardKey(KeyCode::F, L"f", KeyCode::F, L"F", 1.f / 10.f);
-			KeyboardKey _keyG = TextKeyboardKey(KeyCode::G, L"g", KeyCode::G, L"G", 1.f / 10.f);
+			KeyboardKey _keyA = TextKeyboardKey(KeyCode::A, U"a", KeyCode::A, U"A", 1.f / 10.f);
+			KeyboardKey _keyS = TextKeyboardKey(KeyCode::S, U"s", KeyCode::S, U"S", 1.f / 10.f);
+			KeyboardKey _keyD = TextKeyboardKey(KeyCode::D, U"d", KeyCode::D, U"D", 1.f / 10.f);
+			KeyboardKey _keyF = TextKeyboardKey(KeyCode::F, U"f", KeyCode::F, U"F", 1.f / 10.f);
+			KeyboardKey _keyG = TextKeyboardKey(KeyCode::G, U"g", KeyCode::G, U"G", 1.f / 10.f);
 
-			KeyboardKey _keyH = TextKeyboardKey(KeyCode::H, L"h", KeyCode::H, L"H", 1.f / 10.f);
-			KeyboardKey _keyJ = TextKeyboardKey(KeyCode::J, L"j", KeyCode::J, L"J", 1.f / 10.f);
-			KeyboardKey _keyK = TextKeyboardKey(KeyCode::K, L"k", KeyCode::K, L"K", 1.f / 10.f);
-			KeyboardKey _keyL = TextKeyboardKey(KeyCode::L, L"l", KeyCode::L, L"L", 1.f / 10.f);
+			KeyboardKey _keyH = TextKeyboardKey(KeyCode::H, U"h", KeyCode::H, U"H", 1.f / 10.f);
+			KeyboardKey _keyJ = TextKeyboardKey(KeyCode::J, U"j", KeyCode::J, U"J", 1.f / 10.f);
+			KeyboardKey _keyK = TextKeyboardKey(KeyCode::K, U"k", KeyCode::K, U"K", 1.f / 10.f);
+			KeyboardKey _keyL = TextKeyboardKey(KeyCode::L, U"l", KeyCode::L, U"U", 1.f / 10.f);
 			KeyboardLayoutRow _row1 = KeyboardLayoutRow();
 
 			// Row 3
-			KeyboardKey _keyShift = KeyboardKey(KeyboardKeyType::Shift, KeyCode::Shift, L"^", 1.5f / 10.f);
-			KeyboardKey _keyZ = TextKeyboardKey(KeyCode::Z, L"z", KeyCode::Z, L"Z", 1.f / 10.f);
-			KeyboardKey _keyX = TextKeyboardKey(KeyCode::X, L"x", KeyCode::X, L"X", 1.f / 10.f);
-			KeyboardKey _keyC = TextKeyboardKey(KeyCode::C, L"c", KeyCode::C, L"C", 1.f / 10.f);
-			KeyboardKey _keyV = TextKeyboardKey(KeyCode::V, L"v", KeyCode::V, L"V", 1.f / 10.f);
+			KeyboardKey _keyShift = KeyboardKey(KeyboardKeyType::Shift, KeyCode::Shift, U"^", 1.5f / 10.f);
+			KeyboardKey _keyZ = TextKeyboardKey(KeyCode::Z, U"z", KeyCode::Z, U"Z", 1.f / 10.f);
+			KeyboardKey _keyX = TextKeyboardKey(KeyCode::X, U"x", KeyCode::X, U"X", 1.f / 10.f);
+			KeyboardKey _keyC = TextKeyboardKey(KeyCode::C, U"c", KeyCode::C, U"C", 1.f / 10.f);
+			KeyboardKey _keyV = TextKeyboardKey(KeyCode::V, U"v", KeyCode::V, U"V", 1.f / 10.f);
 
-			KeyboardKey _keyB = TextKeyboardKey(KeyCode::B, L"b", KeyCode::B, L"B", 1.f / 10.f);
-			KeyboardKey _keyN = TextKeyboardKey(KeyCode::N, L"n", KeyCode::N, L"N", 1.f / 10.f);
-			KeyboardKey _keyM = TextKeyboardKey(KeyCode::M, L"m", KeyCode::M, L"M", 1.f / 10.f);
-			KeyboardKey _keyBackspace = KeyboardKey(KeyboardKeyType::Backspace, KeyCode::Backspace, L"<", 1.5f / 10.f);
+			KeyboardKey _keyB = TextKeyboardKey(KeyCode::B, U"b", KeyCode::B, U"B", 1.f / 10.f);
+			KeyboardKey _keyN = TextKeyboardKey(KeyCode::N, U"n", KeyCode::N, U"N", 1.f / 10.f);
+			KeyboardKey _keyM = TextKeyboardKey(KeyCode::M, U"m", KeyCode::M, U"M", 1.f / 10.f);
+			KeyboardKey _keyBackspace = KeyboardKey(KeyboardKeyType::Backspace, KeyCode::Backspace, U"<", 1.5f / 10.f);
 			KeyboardLayoutRow _row2 = KeyboardLayoutRow();
 
 			// Row 4
-			KeyboardKey _keyCharacters = KeyboardKey(KeyboardKeyType::Characters, KeyCode::None, L"123", 1.f / 10.f);
-			KeyboardKey _keyLayout = KeyboardKey(KeyboardKeyType::Layout, KeyCode::None, L"Lang", 1.f / 10.f);
-			KeyboardKey _keyComma = KeyboardKey(KeyboardKeyType::Text, KeyCode::Comma, L",", 1.f / 10.f);
-			KeyboardKey _keySpace = KeyboardKey(KeyboardKeyType::Text, KeyCode::Space, L"Space", 4.f / 10.f);
-			KeyboardKey _keyPeriod = KeyboardKey(KeyboardKeyType::Text, KeyCode::Period, L".", 1.f / 10.f);
-			KeyboardKey _keyEnter = KeyboardKey(KeyboardKeyType::Enter, KeyCode::Enter, L"Enter", 2.f / 10.f);
+			KeyboardKey _keyCharacters = KeyboardKey(KeyboardKeyType::Characters, KeyCode::None, U"123", 1.f / 10.f);
+			KeyboardKey _keyLayout = KeyboardKey(KeyboardKeyType::Layout, KeyCode::None, U"Lang", 1.f / 10.f);
+			KeyboardKey _keyComma = KeyboardKey(KeyboardKeyType::Text, KeyCode::Comma, U",", 1.f / 10.f);
+			KeyboardKey _keySpace = KeyboardKey(KeyboardKeyType::Text, KeyCode::Space, U"Space", 4.f / 10.f);
+			KeyboardKey _keyPeriod = KeyboardKey(KeyboardKeyType::Text, KeyCode::Period, U".", 1.f / 10.f);
+			KeyboardKey _keyEnter = KeyboardKey(KeyboardKeyType::Enter, KeyCode::Enter, U"Enter", 2.f / 10.f);
 			KeyboardLayoutRow _row3 = KeyboardLayoutRow();
 	};
 }

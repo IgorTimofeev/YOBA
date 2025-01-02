@@ -30,10 +30,10 @@ namespace yoba {
 			uint8_t getCharWidth(TChar codepoint) const;
 
 			template<typename TChar>
-			uint16_t getWidth(const TChar* text) const;
+			uint16_t getWidth(const std::basic_string_view<TChar>& text) const;
 
 			uint8_t getHeight() const;
-			Size getSize(const wchar_t* text) const;
+			Size getSize(const std::u32string_view& text) const;
 
 		private:
 			const uint32_t _fromCodepoint;
@@ -59,23 +59,11 @@ namespace yoba {
 	}
 
 	template<typename TChar>
-	uint16_t Font::getWidth(const TChar* text) const {
-		wchar_t ch;
-		size_t charIndex = 0;
-
+	uint16_t Font::getWidth(const std::basic_string_view<TChar>& text) const {
 		uint16_t width = 0;
 
-		while (true) {
-			ch = text[charIndex];
-
-			// End of text
-			if (ch == '\0')
-				break;
-
-			width += getCharWidth(ch);
-
-			charIndex++;
-		}
+		for (size_t charIndex = 0; charIndex < text.length(); charIndex++)
+			width += getCharWidth(text[charIndex]);
 
 		return width;
 	}

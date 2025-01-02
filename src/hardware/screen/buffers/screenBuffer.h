@@ -59,15 +59,16 @@ namespace yoba {
 			* @param text Template-based pointer to first character in text
 			*/
 			template<typename TChar>
-			void renderText(const Point& point, const Font* font, const Color *color, const TChar* text);
-			void renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text);
-			void renderText(const Point& point, const Font* font, const Color* color, const char* text);
-			void renderText(const Point& point, const Font* font, const Color* color, const String& text);
+			void renderText(const Point& point, const Font* font, const Color *color, const std::basic_string_view<TChar>& text);
+			void renderText(const Point& point, const Font* font, const Color* color, const std::string_view& text);
+			void renderText(const Point& point, const Font* font, const Color* color, const std::u16string_view& text);
+			void renderText(const Point& point, const Font* font, const Color* color, const std::u32string_view& text);
 
 			template<typename TChar>
 			void renderChar(const Point& point, const Font* font, const Color* color, TChar ch);
-			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch);
 			void renderChar(const Point& point, const Font* font, const Color* color, char ch);
+			void renderChar(const Point& point, const Font* font, const Color* color, char16_t ch);
+			void renderChar(const Point& point, const Font* font, const Color* color, char32_t ch);
 
 			// -------------------------------- Default colors --------------------------------
 
@@ -108,7 +109,7 @@ namespace yoba {
 	};
 
 	template<typename TChar>
-	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const TChar* text) {
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const std::basic_string_view<TChar>& text) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
@@ -120,23 +121,15 @@ namespace yoba {
 		)
 			return;
 
-		TChar ch;
-		size_t charIndex = 0;
 		const Glyph* glyph;
 
 		int32_t
 			x = point.getX(),
 			x2;
 
-		while (true) {
-			ch = text[charIndex];
-
-			// End of text
-			if (ch == '\0')
-				break;
-
+		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
 			// Trying to find glyph matched to char
-			glyph = font->getGlyph(ch);
+			glyph = font->getGlyph(text[charIndex]);
 
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example,U+007F "DEL" symbol often has zero width in some fonts
@@ -166,8 +159,6 @@ namespace yoba {
 			else {
 				x += Font::missingGlyphWidth;
 			}
-
-			charIndex++;
 		}
 	}
 

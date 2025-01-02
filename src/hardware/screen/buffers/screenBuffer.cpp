@@ -560,24 +560,28 @@ namespace yoba {
 		}
 	}
 
-	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const wchar_t* text) {
-		renderText<wchar_t>(point, font, color, text);
-	}
-
-	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const char* text) {
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const std::string_view& text) {
 		renderText<char>(point, font, color, text);
 	}
 
-	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const String& text) {
-		renderText(point, font, color, text.c_str());
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const std::u16string_view& text) {
+		renderText<char16_t>(point, font, color, text);
 	}
 
-	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch) {
-		renderChar<wchar_t>(point, font, color, ch);
+	void ScreenBuffer::renderText(const Point& point, const Font* font, const Color* color, const std::u32string_view& text) {
+		renderText<char32_t>(point, font, color, text);
 	}
 
 	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, char ch) {
 		renderChar<char>(point, font, color, ch);
+	}
+
+	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, char16_t ch) {
+		renderChar<char16_t>(point, font, color, ch);
+	}
+
+	void ScreenBuffer::renderChar(const Point& point, const Font* font, const Color* color, char32_t ch) {
+		renderChar<char32_t>(point, font, color, ch);
 	}
 
 	Color* ScreenBuffer::getPrimaryColor() const {
