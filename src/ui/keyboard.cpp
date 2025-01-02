@@ -3,14 +3,10 @@
 #include "../number.h"
 
 namespace yoba {
-	// ----------------------------- KeyboardKey -----------------------------
+	// ----------------------------- KeyboardKeyModel -----------------------------
 
-	KeyboardKeyType KeyboardKey::getKeyType() const {
-		return _keyType;
-	}
-
-	KeyboardKey::KeyboardKey(KeyboardKeyType keyType, KeyCode code, const std::wstring_view& name, float width) :
-		_keyType(keyType),
+	KeyboardKeyModel::KeyboardKeyModel(KeyboardKeyStyle style, KeyCode code, const std::wstring_view& name, float width) :
+		_style(style),
 		_code(code),
 		_name(name),
 		_width(width)
@@ -18,34 +14,97 @@ namespace yoba {
 
 	}
 
-	KeyCode KeyboardKey::getCode() const {
+	KeyCode KeyboardKeyModel::getCode() const {
 		return _code;
 	}
 
-	const std::wstring_view& KeyboardKey::getName() const {
+	const std::wstring_view& KeyboardKeyModel::getName() const {
 		return _name;
 	}
 
-	float KeyboardKey::getWidth() const {
+	float KeyboardKeyModel::getWidth() const {
 		return _width;
 	}
 
-	// ----------------------------- TextKeyboardKey -----------------------------
+	KeyboardKeyStyle KeyboardKeyModel::getStyle() const {
+		return _style;
+	}
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, KeyCode uppercaseCode, const std::wstring_view& uppercaseName, float width) :
-		KeyboardKey(KeyboardKeyType::Text, code, name, width),
+	KeyCode KeyboardKeyModel::getCodeForCase(Keyboard* keyboard) const {
+		return getCode();
+	}
+
+	const std::wstring_view& KeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+		return getName();
+	}
+
+	void KeyboardKeyModel::onClick(Keyboard* keyboard) {
+		keyboard->getOnKeyDown().call(getCodeForCase(keyboard));
+	}
+
+	// ----------------------------- TextKeyboardKeyModel -----------------------------
+
+	TextKeyboardKeyModel::TextKeyboardKeyModel(KeyCode code, const std::wstring_view& name, KeyCode uppercaseCode, const std::wstring_view& uppercaseName, float width) :
+		KeyboardKeyModel(KeyboardKeyStyle::Default, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
 	{
 
 	}
 
-	KeyCode TextKeyboardKey::getUppercaseCode() const {
+	TextKeyboardKeyModel::TextKeyboardKeyModel(KeyCode code, const std::wstring_view& name, float width) : TextKeyboardKeyModel(
+		code,
+		name,
+		code,
+		name,
+		width
+	) {
+
+	}
+
+	KeyCode TextKeyboardKeyModel::getUppercaseCode() const {
 		return _uppercaseCode;
 	}
 
-	const std::wstring_view& TextKeyboardKey::getUppercaseName() const {
+	const std::wstring_view& TextKeyboardKeyModel::getUppercaseName() const {
 		return _uppercaseName;
+	}
+
+	KeyCode TextKeyboardKeyModel::getCodeForCase(Keyboard* keyboard) const {
+		return keyboard->getLayout()->getCase() ? getUppercaseCode() : getCode();
+	}
+
+	const std::wstring_view& TextKeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+		return keyboard->getLayout()->getCase() ? getUppercaseName() : getName();
+	}
+
+	// ----------------------------- ActionKeyboardKeyModel -----------------------------
+
+	ActionKeyboardKeyModel::ActionKeyboardKeyModel(KeyCode code, const std::wstring_view& name, float width) : KeyboardKeyModel(KeyboardKeyStyle::Action, code, name, width) {
+
+	}
+
+	// ----------------------------- ActionKeyboardKeyModel -----------------------------
+
+	ShiftKeyModel::ShiftKeyModel(KeyCode code, const std::wstring_view& name, float width) : ActionKeyboardKeyModel(code, name, width) {
+
+	}
+
+	void ShiftKeyModel::onClick(Keyboard* keyboard) {
+		KeyboardKeyModel::onClick(keyboard);
+
+		keyboard->getLayout()->setCase(!keyboard->getLayout()->getCase());
+	}
+
+	// ----------------------------- KeyboardLayout -----------------------------
+
+	bool KeyboardLayout::getCase() const {
+		return _case;
+	}
+
+	void KeyboardLayout::setCase(bool isShiftDown) {
+		_case = isShiftDown;
+
 	}
 
 	// ----------------------------- KeyboardButton -----------------------------
@@ -56,21 +115,27 @@ namespace yoba {
 		_keyIndex(columnIndex)
 	{
 		setCornerRadius(2);
-		setText(getKey()->getName());
+		updateTextFromCase();
 
-		if (getKey()->getKeyType() == KeyboardKeyType::Text) {
-			setPrimaryColor(keyboard->getTextButtonPrimaryColor());
-			setSecondaryColor(keyboard->getTextButtonSecondaryColor());
+		switch (getKey()->getStyle()) {
+			case KeyboardKeyStyle::Default: {
+				setPrimaryColor(keyboard->getDefaultButtonPrimaryColor());
+				setSecondaryColor(keyboard->getDefaultButtonSecondaryColor());
 
-			setPressedPrimaryColor(keyboard->getTextButtonSecondaryColor());
-			setPressedSecondaryColor(keyboard->getTextButtonPrimaryColor());
-		}
-		else {
-			setPrimaryColor(keyboard->getActionButtonPrimaryColor());
-			setSecondaryColor(keyboard->getActionButtonSecondaryColor());
+				setPressedPrimaryColor(keyboard->getDefaultButtonSecondaryColor());
+				setPressedSecondaryColor(keyboard->getDefaultButtonPrimaryColor());
 
-			setPressedPrimaryColor(keyboard->getActionButtonSecondaryColor());
-			setPressedSecondaryColor(keyboard->getActionButtonPrimaryColor());
+				break;
+			}
+			case KeyboardKeyStyle::Action: {
+				setPrimaryColor(keyboard->getActionButtonPrimaryColor());
+				setSecondaryColor(keyboard->getActionButtonSecondaryColor());
+
+				setPressedPrimaryColor(keyboard->getActionButtonSecondaryColor());
+				setPressedSecondaryColor(keyboard->getActionButtonPrimaryColor());
+
+				break;
+			}
 		}
 	}
 
@@ -78,7 +143,7 @@ namespace yoba {
 		return _keyboard;
 	}
 
-	KeyboardKey* KeyboardButton::getKey() {
+	KeyboardKeyModel* KeyboardButton::getKey() {
 		return _keyboard->getLayout()->rows[_rowIndex]->keys[_keyIndex];
 	}
 
@@ -93,7 +158,15 @@ namespace yoba {
 	void KeyboardButton::onClick() {
 		Button::onClick();
 
-		_keyboard->getOnKeyDown().call(getKey());
+		getKey()->onClick(_keyboard);
+	}
+
+	void KeyboardButton::onCaseChanged() {
+		updateTextFromCase();
+	}
+
+	void KeyboardButton::updateTextFromCase() {
+		setText(getKey()->getNameFromCase(getKeyboard()));
 	}
 
 	// ----------------------------- KeyboardRow -----------------------------
@@ -104,16 +177,6 @@ namespace yoba {
 
 	// ----------------------------- KeyboardLayout -----------------------------
 
-	KeyboardLayout::KeyboardLayout(const std::wstring_view& name, const std::wstring_view& nameAbbreviated) :
-		_name(name),
-		_nameAbbreviated(nameAbbreviated)
-	{
-
-	}
-
-	KeyboardLayout::~KeyboardLayout() {
-
-	}
 
 	// ----------------------------- Keyboard -----------------------------
 
@@ -152,20 +215,20 @@ namespace yoba {
 		_backgroundPanel.setPrimaryColor(value);
 	}
 
-	const Color* Keyboard::getTextButtonPrimaryColor() const {
-		return _textButtonPrimaryColor;
+	const Color* Keyboard::getDefaultButtonPrimaryColor() const {
+		return _defaultButtonPrimaryColor;
 	}
 
-	void Keyboard::setTextButtonPrimaryColor(const Color* value) {
-		_textButtonPrimaryColor = value;
+	void Keyboard::setDefaultButtonPrimaryColor(const Color* value) {
+		_defaultButtonPrimaryColor = value;
 	}
 
-	const Color* Keyboard::getTextButtonSecondaryColor() const {
-		return _textButtonSecondaryColor;
+	const Color* Keyboard::getDefaultButtonSecondaryColor() const {
+		return _defaultButtonSecondaryColor;
 	}
 
-	void Keyboard::setTextButtonSecondaryColor(const Color* value) {
-		_textButtonSecondaryColor = value;
+	void Keyboard::setDefaultButtonSecondaryColor(const Color* value) {
+		_defaultButtonSecondaryColor = value;
 	}
 
 	const Color* Keyboard::getActionButtonPrimaryColor() const {
@@ -240,7 +303,7 @@ namespace yoba {
 		_keyHeight = keyHeight;
 	}
 
-	Callback<KeyboardKey*>& Keyboard::getOnKeyDown() {
+	Callback<KeyCode>& Keyboard::getOnKeyDown() {
 		return _onKeyDown;
 	}
 
@@ -356,9 +419,9 @@ namespace yoba {
 		}
 	}
 
-	// ----------------------------- EnglishKeyboard -----------------------------
+	// ----------------------------- EnglishKeyboardLayout -----------------------------
 
-	EnglishKeyboardLayout::EnglishKeyboardLayout() : KeyboardLayout(L"English", L"EN") {
+	EnglishKeyboardLayout::EnglishKeyboardLayout() {
 		_row0.keys.push_back(&_keyQ);
 		_row0.keys.push_back(&_keyW);
 		_row0.keys.push_back(&_keyE);
@@ -390,6 +453,52 @@ namespace yoba {
 		_row2.keys.push_back(&_keyB);
 		_row2.keys.push_back(&_keyN);
 		_row2.keys.push_back(&_keyM);
+		_row2.keys.push_back(&_keyBackspace);
+		rows.push_back(&_row2);
+
+		_row3.keys.push_back(&_keyCharacters);
+		_row3.keys.push_back(&_keyLayout);
+		_row3.keys.push_back(&_keyComma);
+		_row3.keys.push_back(&_keySpace);
+		_row3.keys.push_back(&_keyPeriod);
+		_row3.keys.push_back(&_keyEnter);
+		rows.push_back(&_row3);
+	}
+
+	// ----------------------------- NumericKeyboardLayout -----------------------------
+
+	CharactersKeyboardLayout::CharactersKeyboardLayout() {
+		_row0.keys.push_back(&_key1);
+		_row0.keys.push_back(&_key2);
+		_row0.keys.push_back(&_key3);
+		_row0.keys.push_back(&_key4);
+		_row0.keys.push_back(&_key5);
+		_row0.keys.push_back(&_key6);
+		_row0.keys.push_back(&_key7);
+		_row0.keys.push_back(&_key8);
+		_row0.keys.push_back(&_key9);
+		_row0.keys.push_back(&_key0);
+		rows.push_back(&_row0);
+
+		_row1.keys.push_back(&_keyAt);
+		_row1.keys.push_back(&_keyNumberSign);
+		_row1.keys.push_back(&_keyDollar);
+		_row1.keys.push_back(&_keyUnderscore);
+		_row1.keys.push_back(&_keyAmpersand);
+		_row1.keys.push_back(&_keyMinus);
+		_row1.keys.push_back(&_keyPlus);
+		_row1.keys.push_back(&_keyLeftBrace);
+		_row1.keys.push_back(&_keyRightBrace);
+		_row1.keys.push_back(&_keySlash);
+		rows.push_back(&_row1);
+
+		_row2.keys.push_back(&_keyAsterisk);
+		_row2.keys.push_back(&_keyDoubleQuote);
+		_row2.keys.push_back(&_keyQuote);
+		_row2.keys.push_back(&_keyColon);
+		_row2.keys.push_back(&_keySemicolon);
+		_row2.keys.push_back(&_keyExclamationMark);
+		_row2.keys.push_back(&_keyQuestionMark);
 		_row2.keys.push_back(&_keyBackspace);
 		rows.push_back(&_row2);
 

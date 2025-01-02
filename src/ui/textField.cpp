@@ -50,8 +50,8 @@ namespace yoba {
 		keyboard->setKeyHeight(0.08f);
 
 		keyboard->setBackgroundColor(getKeyboardBackgroundColor());
-		keyboard->setTextButtonPrimaryColor(getKeyboardTextButtonPrimaryColor());
-		keyboard->setTextButtonSecondaryColor(getKeyboardTextButtonSecondaryColor());
+		keyboard->setDefaultButtonPrimaryColor(getKeyboardTextButtonPrimaryColor());
+		keyboard->setDefaultButtonSecondaryColor(getKeyboardTextButtonSecondaryColor());
 		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
 		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
 
@@ -74,7 +74,7 @@ namespace yoba {
 		root->removeChildren();
 		*root += keyboardAndChildrenLayout;
 
-		keyboard->getOnKeyDown() += [=](KeyboardKey* key) {
+		keyboard->getOnKeyDown() += [=](KeyboardKeyModel* key) {
 			switch (key->getKeyType()) {
 				case KeyboardKeyType::Text: {
 					break;
