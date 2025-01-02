@@ -5,7 +5,7 @@
 namespace yoba {
 	class TextElement : public virtual FontElement {
 		public:
-			const std::wstring_view& getText() const {
+			const std::wstring_view getText() const {
 				return _text;
 			}
 
@@ -16,6 +16,6 @@ namespace yoba {
 			}
 
 		protected:
-			std::wstring_view _text {};
+			std::wstring _text {};
 	};
 }

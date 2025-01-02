@@ -11,10 +11,7 @@ namespace yoba {
 		if (!isFocused() || isCaptured() || millis() < _cursorBlinkTime)
 			return;
 
-		_cursorBlinkState = !_cursorBlinkState;
-		_cursorBlinkTime = millis() + 500;
-
-		invalidateRender();
+		setCursorBlinkStateAndTime(!_cursorBlinkState);
 	}
 
 	void TextField::onRender(ScreenBuffer* screenBuffer) {
@@ -225,10 +222,7 @@ namespace yoba {
 		// Start
 		if (cursorPosition == 0) {
 			if (text.length() > 0) {
-				std::wstringstream stream {};
-				stream << text;
-				stream << value;
-				setText(stream.str());
+				setText(std::wstring(value) + std::wstring(text));
 			}
 			else {
 				setText(value);
@@ -236,26 +230,11 @@ namespace yoba {
 		}
 		// End
 		else if (cursorPosition == text.length()) {
-			std::wstringstream stream {};
-			stream << text;
-			stream << value;
-			setText(stream.str());
-
-//			auto part1 = std::wstring(text);
-//			part1.erase(std::find(part1.begin(), part1.end(), '\0'), part1.end());
-//
-//			auto part2 = std::wstring(value);
-//			part2.erase(std::find(part2.begin(), part2.end(), '\0'), part2.end());
-//
-//			setText(part1 + part2);
+			setText(std::wstring(text) + std::wstring(value));
 		}
 		// Middle
 		else {
-			std::wstringstream stream {};
-			stream << text.substr(0, cursorPosition);
-			stream << value;
-			stream << text.substr(cursorPosition);
-			setText(stream.str());
+			setText(std::wstring(text.substr(0, cursorPosition)) + std::wstring(value) + std::wstring(text.substr(cursorPosition)));
 		}
 
 		setCursorPosition(getCursorPosition() + value.length());
@@ -286,10 +265,7 @@ namespace yoba {
 		}
 		// Middle
 		else {
-			std::wstringstream stream {};
-			stream << text.substr(0, cursorPosition - 1);
-			stream << text.substr(cursorPosition);
-			setText(stream.str());
+			setText(std::wstring(text.substr(0, cursorPosition - 1)) + std::wstring(text.substr(cursorPosition)));
 		}
 
 		setCursorPosition(getCursorPosition() - 1);
@@ -356,7 +332,7 @@ namespace yoba {
 			_cursorPosition = textLength;
 
 		if (isFocused())
-			_cursorBlinkState = true;
+			setCursorBlinkStateAndTime(true);
 
 		invalidateRender();
 	}
@@ -398,6 +374,12 @@ namespace yoba {
 	void TextField::setFocused(bool value) {
 		Element::setFocused(value);
 
+		setCursorBlinkStateAndTime(value);
+		invalidateRender();
+	}
+
+	void TextField::setCursorBlinkStateAndTime(bool value) {
 		_cursorBlinkState = value;
+		_cursorBlinkTime = millis() + _cursorBlinkInterval;
 	}
 }
