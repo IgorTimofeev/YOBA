@@ -580,19 +580,19 @@ namespace yoba {
 		renderChar<char>(point, font, color, ch);
 	}
 
-	Color* ScreenBuffer::getDefaultPrimaryColor() const {
-		return _defaultPrimaryColor;
+	Color* ScreenBuffer::getPrimaryColor() const {
+		return _primaryColor;
 	}
 
-	void ScreenBuffer::setDefaultPrimaryColor(Color* value) {
-		_defaultPrimaryColor = value;
+	void ScreenBuffer::setPrimaryColor(Color* value) {
+		_primaryColor = value;
 	}
 
-	Color* ScreenBuffer::getDefaultSecondaryColor() const {
-		return _defaultSecondaryColor;
+	Color* ScreenBuffer::getSecondaryColor() const {
+		return _secondaryColor;
 	}
 
-	void ScreenBuffer::setDefaultSecondaryColor(Color* value) {
-		_defaultSecondaryColor = value;
+	void ScreenBuffer::setSecondaryColor(Color* value) {
+		_secondaryColor = value;
 	}
 }

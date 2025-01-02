@@ -1,11 +1,11 @@
 #pragma once
 
 #include <optional>
-#include "layout.h"
+#include "container.h"
 #include "fontElement.h"
 #include "button.h"
 #include "rectangle.h"
-#include "stackLayout.h"
+#include "stackContainer.h"
 
 namespace yoba {
 	enum class KeyCode : uint16_t {
@@ -224,16 +224,16 @@ namespace yoba {
 			const wchar_t* _uppercaseName;
 	};
 
-	class KeyboardUIRow : public Layout {
+	class KeyboardButtonsRow : public Container {
 		public:
-			KeyboardUIRow(Keyboard* keyboard);
+			KeyboardButtonsRow(Keyboard* keyboard);
 
-			~KeyboardUIRow();
+			~KeyboardButtonsRow();
 
 			Keyboard* getKeyboard() const;
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 
@@ -285,7 +285,7 @@ namespace yoba {
 			Keyboard* _keyboard;
 	};
 
-	class Keyboard : public Layout, public FontElement {
+	class Keyboard : public Container, public FontElement {
 		public:
 			Keyboard(std::vector<std::function<KeyboardLayout*()>> layoutBuilders);
 
@@ -340,7 +340,7 @@ namespace yoba {
 			std::vector<std::function<KeyboardLayout*()>> _layoutBuilders;
 
 			Rectangle _backgroundPanel = Rectangle();
-			StackLayout _rowsLayout = StackLayout();
+			StackContainer _rowsLayout = StackContainer();
 
 			uint8_t _horizontalKeySpacing = 2;
 			float _keyHeight = 1.f / 10.f;
@@ -350,9 +350,9 @@ namespace yoba {
 			void deleteLayoutAndUIElements();
 	};
 
-	class KeyboardRootLayout : public Layout {
+	class KeyboardRootLayout : public Container {
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};

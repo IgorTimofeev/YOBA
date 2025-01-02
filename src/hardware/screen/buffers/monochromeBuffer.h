@@ -24,7 +24,7 @@ namespace yoba {
 
 		private:
 			MonochromeColor
-				_defaultPrimaryColor = MonochromeColor(false),
-				_defaultSecondaryColor = MonochromeColor(true);
+				_primaryColor = MonochromeColor(false),
+				_secondaryColor = MonochromeColor(true);
 	};
 }

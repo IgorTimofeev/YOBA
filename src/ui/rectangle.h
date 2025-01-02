@@ -18,7 +18,7 @@ namespace yoba {
 				auto primaryColor = getPrimaryColor();
 
 				if (!primaryColor)
-					primaryColor = screenBuffer->getDefaultPrimaryColor();
+					primaryColor = screenBuffer->getPrimaryColor();
 
 				if (primaryColor)
 					screenBuffer->renderFilledRectangle(getBounds(), getCornerRadius(), primaryColor);

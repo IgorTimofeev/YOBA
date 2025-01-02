@@ -18,12 +18,12 @@ namespace yoba {
 				auto primaryColor = getPrimaryColor();
 
 				if (!primaryColor)
-					primaryColor = screenBuffer->getDefaultPrimaryColor();
+					primaryColor = screenBuffer->getPrimaryColor();
 
 				auto secondaryColor = getSecondaryColor();
 
 				if (!secondaryColor)
-					secondaryColor = screenBuffer->getDefaultSecondaryColor();
+					secondaryColor = screenBuffer->getSecondaryColor();
 
 				auto& bounds = getBounds();
 				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());

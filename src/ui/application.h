@@ -1,6 +1,6 @@
 #pragma once
 
-#include "layout.h"
+#include "container.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "../hardware/input/inputDevice.h"
 #include "../font.h"
@@ -9,7 +9,7 @@
 namespace yoba {
 	class Animation;
 
-	class Application : public Layout {
+	class Application : public Container {
 		public:
 			// Sexy old school font that will be used as fallback value when rendering
 			// child elements that contain text, but doesn't have any specific font
@@ -56,7 +56,7 @@ namespace yoba {
 			std::vector<Animation*> _animations {};
 			Callback<> _onTick {};
 
-			const Font* _font = &defaultFont;
+			const Font* _defaultFont = &defaultFont;
 
 			void animationsTick();
 	};

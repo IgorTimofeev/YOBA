@@ -1,8 +1,8 @@
-#include "layout.h"
+#include "container.h"
 #include "../event.h"
 
 namespace yoba {
-	void Layout::onRender(ScreenBuffer* screenBuffer) {
+	void Container::onRender(ScreenBuffer* screenBuffer) {
 		for (const auto& child : _children) {
 			child->render(screenBuffer);
 		}
@@ -10,7 +10,7 @@ namespace yoba {
 //		screenBuffer->renderRectangle(getBounds(), new PaletteColor(6));
 	}
 
-	void Layout::onEvent(InputEvent &event) {
+	void Container::onEvent(InputEvent &event) {
 		if (getChildrenCount() == 0)
 			return;
 
@@ -26,19 +26,12 @@ namespace yoba {
 		}
 	}
 
-	void Layout::setRoot(Application* value) {
-		Element::setRoot(value);
 
-		for (const auto& child : _children) {
-			child->setRoot(value);
-		}
-	}
-
-	size_t Layout::getChildrenCount() {
+	size_t Container::getChildrenCount() {
 		return _children.size();
 	}
 
-	int32_t Layout::getIndexOfChild(Element* element) {
+	int32_t Container::getIndexOfChild(Element* element) {
 		auto iterator = find(_children.begin(), _children.end(), element);
 
 		if (iterator == _children.end()) {
@@ -49,13 +42,13 @@ namespace yoba {
 		}
 	}
 
-	void Layout::removeChildAt(int index) {
+	void Container::removeChildAt(int index) {
 		_children.erase(_children.begin() + index);
 
 		invalidate();
 	}
 
-	void Layout::removeChild(Element *child) {
+	void Container::removeChild(Element *child) {
 		auto iterator = std::find(_children.begin(), _children.end(), child);
 
 		if (iterator == _children.end())
@@ -63,41 +56,42 @@ namespace yoba {
 
 		_children.erase(iterator);
 
+		child->onRemovedFromParent(this);
+
 		invalidate();
 	}
 
-	void Layout::removeChildren() {
+	void Container::removeChildren() {
 		_children.clear();
 
 		invalidate();
 	}
 
-	Element* Layout::getChildAt(size_t index) {
+	Element* Container::getChildAt(size_t index) {
 		return _children[index];
 	}
 
-	void Layout::addChild(Element *child) {
-		child->setParent(this);
-		child->setRoot(getRoot());
-
+	void Container::addChild(Element *child) {
 		_children.push_back(child);
+
+		child->onAddedToParent(this);
 
 		invalidate();
 	}
 
-	Element* Layout::operator[](size_t index) {
+	Element* Container::operator[](size_t index) {
 		return getChildAt(index);
 	}
 
-	void Layout::operator+=(Element *child) {
+	void Container::operator+=(Element *child) {
 		addChild(child);
 	}
 
-	void Layout::operator-=(Element *child) {
+	void Container::operator-=(Element *child) {
 		removeChild(child);
 	}
 
-	Size Layout::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size Container::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : _children) {
@@ -116,7 +110,7 @@ namespace yoba {
 		return result;
 	}
 
-	void Layout::onArrange(const Bounds& bounds) {
+	void Container::onArrange(const Bounds& bounds) {
 		for (auto child : _children) {
 			if (child->isVisible()) {
 				child->arrange(bounds);
@@ -124,11 +118,18 @@ namespace yoba {
 		}
 	}
 
-	std::vector<Element*>::iterator Layout::begin() {
+	std::vector<Element*>::iterator Container::begin() {
 		return _children.begin();
 	}
 
-	std::vector<Element*>::iterator Layout::end() {
+	std::vector<Element*>::iterator Container::end() {
 		return _children.end();
+	}
+
+	void Container::setRoot(Application* value) {
+		Element::setRoot(value);
+
+		for (auto child : _children)
+			child->setRoot(value);
 	}
 }

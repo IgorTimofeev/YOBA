@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stackLayout.h"
+#include "stackContainer.h"
 #include "../color.h"
 #include "hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
@@ -12,7 +12,7 @@ namespace yoba {
 		public:
 			static const uint32_t dashes = 0xFFFFFFFF;
 
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				return {
 					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
 					getDigitHeight()

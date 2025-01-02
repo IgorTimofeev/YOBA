@@ -24,7 +24,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	Size Element::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size Element::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		return { 0, 0 };
 	}
 
@@ -37,7 +37,6 @@ namespace yoba {
 	}
 
 	void Element::computeMeasureShit(
-		const Alignment &alignment,
 		const uint16_t &size,
 		const uint16_t &desiredSize,
 		const int32_t &marginStart,
@@ -61,7 +60,7 @@ namespace yoba {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
 
-		auto desiredSize = onMeasure(screenBuffer, Size(
+		auto desiredSize = computeDesiredSize(screenBuffer, Size(
 			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));
@@ -70,7 +69,6 @@ namespace yoba {
 
 		// Width
 		computeMeasureShit(
-			getHorizontalAlignment(),
 			size.getWidth(),
 			desiredSize.getWidth(),
 			margin.getLeft(),
@@ -82,7 +80,6 @@ namespace yoba {
 
 		// Height
 		computeMeasureShit(
-			getVerticalAlignment(),
 			size.getHeight(),
 			desiredSize.getHeight(),
 			margin.getTop(),
@@ -233,10 +230,6 @@ namespace yoba {
 			_root->startAnimation(animation);
 	}
 
-	void Element::setParent(Element *value) {
-		_parent = value;
-	}
-
 	Element *Element::getParent() {
 		return _parent;
 	}
@@ -363,5 +356,15 @@ namespace yoba {
 
 	Callback<InputEvent&>& Element::getEventHandlers() {
 		return _eventHandlers;
+	}
+
+	void Element::onAddedToParent(Container* parent) {
+		_parent = parent;
+		setRoot(_parent->getRoot());
+	}
+
+	void Element::onRemovedFromParent(Container* parent) {
+		_parent = nullptr;
+		setRoot(nullptr);
 	}
 }

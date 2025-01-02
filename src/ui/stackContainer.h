@@ -1,9 +1,9 @@
 #pragma once
 
-#include "layout.h"
+#include "container.h"
 
 namespace yoba {
-	class StackLayout : public Layout {
+	class StackContainer : public Container {
 		public:
 			Orientation getOrientation() const {
 				return _orientation;
@@ -22,7 +22,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
 				size_t visibleChildrenCount = 0;

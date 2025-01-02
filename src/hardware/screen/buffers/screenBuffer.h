@@ -71,20 +71,17 @@ namespace yoba {
 
 			// -------------------------------- Default colors --------------------------------
 
-			Color* getDefaultPrimaryColor() const;
-			void setDefaultPrimaryColor(Color* value);
+			Color* getPrimaryColor() const;
+			void setPrimaryColor(Color* value);
 
-			Color* getDefaultSecondaryColor() const;
-			void setDefaultSecondaryColor(Color* value);
+			Color* getSecondaryColor() const;
+			void setSecondaryColor(Color* value);
 
 		protected:
 			ScreenDriver* _driver;
 
 			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;
-
-			Color* _defaultPrimaryColor = nullptr;
-			Color* _defaultSecondaryColor = nullptr;
 
 			Bounds _viewport = Bounds();
 
@@ -103,6 +100,9 @@ namespace yoba {
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
 		private:
+			Color* _primaryColor = nullptr;
+			Color* _secondaryColor = nullptr;
+
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color *color);
 			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph);
 	};

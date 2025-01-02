@@ -10,7 +10,7 @@ namespace yoba {
 	) :
 		_screenBuffer(screenBuffer)
 	{
-		Layout::setRoot(this);
+		Container::setRoot(this);
 	}
 
 	void Application::setup() {
@@ -104,11 +104,11 @@ namespace yoba {
 	}
 
 	const Font* Application::getFont() const {
-		return _font;
+		return _defaultFont;
 	}
 
 	void Application::setFont(const Font* font) {
-		_font = font;
+		_defaultFont = font;
 	}
 
 	ScreenOrientation Application::getOrientation() const {

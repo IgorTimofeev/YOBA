@@ -17,7 +17,7 @@ namespace yoba {
 				auto primaryColor = getPrimaryColor();
 
 				if (!primaryColor)
-					primaryColor = screenBuffer->getDefaultPrimaryColor();
+					primaryColor = screenBuffer->getPrimaryColor();
 
 				const auto& bounds = getBounds();
 

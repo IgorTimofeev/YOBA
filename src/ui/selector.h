@@ -1,12 +1,12 @@
 #pragma once
 
-#include "layout.h"
+#include "container.h"
 #include "vector"
 
 namespace yoba {
 	class SelectorItem;
 
-	class Selector : public Layout {
+	class Selector : public Container {
 		public:
 			size_t getItemsCount();
 
@@ -20,7 +20,7 @@ namespace yoba {
 
 			void setSelectedIndex(int32_t index);
 
-			void setItemsLayout(Layout* layout);
+			void setItemsLayout(Container* layout);
 
 			const Callback<>& getOnSelectionChanged() const;
 
@@ -28,12 +28,12 @@ namespace yoba {
 			virtual void onSelectionChanged();
 
 		private:
-			Layout* _itemsLayout = nullptr;
+			Container* _itemsLayout = nullptr;
 			int32_t _selectedIndex = -1;
 			Callback<> _onSelectionChanged {};
 	};
 
-	class SelectorItem : public Layout {
+	class SelectorItem : public Container {
 		public:
 			bool isSelected() const {
 				return _isSelected;

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "stackLayout.h"
+#include "stackContainer.h"
 #include "set"
 #include "../size.h"
 
 namespace yoba {
-	class EqualLayout : public StackLayout {
+	class EqualLayout : public StackContainer {
 		public:
 			void setChildAutoSize(Element* element, bool value) {
 				if (value) {
@@ -21,7 +21,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
 				auto result = Size();
 
 				uint16_t spacingSubstraction =

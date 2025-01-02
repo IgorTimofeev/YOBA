@@ -1,5 +1,5 @@
 #include "keyboard.h"
-#include "stackLayout.h"
+#include "stackContainer.h"
 #include "../number.h"
 
 namespace yoba {
@@ -136,7 +136,7 @@ namespace yoba {
 			return;
 
 		for (auto element : _rowsLayout) {
-			delete dynamic_cast<KeyboardUIRow*>(element);
+			delete dynamic_cast<KeyboardButtonsRow*>(element);
 		}
 
 		_rowsLayout.removeChildren();
@@ -197,7 +197,7 @@ namespace yoba {
 		for (int rowIndex = 0; rowIndex < _layout->rows.size(); rowIndex++) {
 			auto layoutRow = _layout->rows[rowIndex];
 
-			auto UIRow = new KeyboardUIRow(this);
+			auto UIRow = new KeyboardButtonsRow(this);
 			UIRow->setHorizontalAlignment(Alignment::Center);
 
 			for (int keyIndex = 0; keyIndex < layoutRow->keys.size(); keyIndex++) {
@@ -246,21 +246,21 @@ namespace yoba {
 
 	// ----------------------------- KeyboardRow -----------------------------
 
-	KeyboardUIRow::KeyboardUIRow(Keyboard* keyboard) : _keyboard(keyboard) {
+	KeyboardButtonsRow::KeyboardButtonsRow(Keyboard* keyboard) : _keyboard(keyboard) {
 
 	}
 
-	KeyboardUIRow::~KeyboardUIRow() {
+	KeyboardButtonsRow::~KeyboardButtonsRow() {
 		for (auto child : *this) {
 			delete dynamic_cast<KeyboardButton*>(child);
 		}
 	}
 
-	Keyboard* KeyboardUIRow::getKeyboard() const {
+	Keyboard* KeyboardButtonsRow::getKeyboard() const {
 		return _keyboard;
 	}
 
-	Size KeyboardUIRow::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardButtonsRow::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		const auto availableWidthWithoutSpacing = availableSize.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
 
 		float resultWidth = 0;
@@ -289,7 +289,7 @@ namespace yoba {
 		);
 	}
 
-	void KeyboardUIRow::onArrange(const Bounds& bounds) {
+	void KeyboardButtonsRow::onArrange(const Bounds& bounds) {
 		const auto availableWidthWithoutSpacing = bounds.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
 
 		float widthSum = 0;
@@ -318,7 +318,7 @@ namespace yoba {
 
 	// ----------------------------- KeyboardRootLayout -----------------------------
 
-	Size KeyboardRootLayout::onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardRootLayout::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : *this) {

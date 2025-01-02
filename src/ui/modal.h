@@ -1,10 +1,10 @@
 #pragma once
 
-#include "layout.h"
+#include "container.h"
 #include "rectangle.h"
 
 namespace yoba {
-	class ModalOverlay : public Layout {
+	class ModalOverlay : public Container {
 		public:
 			ModalOverlay() {
 				*this += &_backgroundRectangle;

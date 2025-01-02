@@ -24,7 +24,7 @@ namespace yoba {
 			inline void renderImageNative(const Point& point, const Image* image) override;
 
 		private:
-			PaletteColor _defaultPrimaryColor = PaletteColor(0);
-			PaletteColor _defaultSecondaryColor = PaletteColor(1);
+			PaletteColor _primaryColor = PaletteColor(0);
+			PaletteColor _secondaryColor = PaletteColor(1);
 	};
 }

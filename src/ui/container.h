@@ -9,13 +9,11 @@
 #include <iterator>
 
 namespace yoba {
-	class Layout : public virtual Element {
+	class Container : public virtual Element {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override;
 
 			void onEvent(InputEvent& event) override;
-
-			void setRoot(Application* value) override;
 
 			size_t getChildrenCount();
 
@@ -42,7 +40,9 @@ namespace yoba {
 			virtual void operator-=(Element* child);
 
 		protected:
-			Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			void setRoot(Application* value) override;
+
+			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 

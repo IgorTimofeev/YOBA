@@ -52,7 +52,7 @@ namespace yoba {
 		return _itemsLayout ? _itemsLayout->getChildrenCount() : 0;
 	}
 
-	void Selector::setItemsLayout(Layout *layout) {
+	void Selector::setItemsLayout(Container *layout) {
 		_itemsLayout = layout;
 	}
 

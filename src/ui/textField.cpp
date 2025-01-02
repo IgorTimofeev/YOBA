@@ -8,12 +8,12 @@ namespace yoba {
 		auto primaryColor = getPrimaryColor();
 
 		if (!primaryColor)
-			primaryColor = screenBuffer->getDefaultPrimaryColor();
+			primaryColor = screenBuffer->getPrimaryColor();
 
 		auto secondaryColor = getSecondaryColor();
 
 		if (!secondaryColor)
-			secondaryColor = screenBuffer->getDefaultSecondaryColor();
+			secondaryColor = screenBuffer->getSecondaryColor();
 
 		auto& bounds = getBounds();
 
@@ -62,7 +62,7 @@ namespace yoba {
 		auto keyboardAndChildrenLayout = new KeyboardRootLayout();
 		*keyboardAndChildrenLayout += keyboard;
 
-		auto temporaryRootChildrenLayout = new Layout();
+		auto temporaryRootChildrenLayout = new Container();
 		temporaryRootChildrenLayout->setSize(root->getScreenBuffer()->getSize());
 
 		// Moving children from root to temporary layout

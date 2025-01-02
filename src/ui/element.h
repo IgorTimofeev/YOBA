@@ -25,8 +25,11 @@ namespace yoba {
 	class InputEvent;
 	class Application;
 	class Animation;
+	class Container;
 
 	class Element {
+		friend Container;
+
 		public:
 			Element() = default;
 
@@ -47,10 +50,7 @@ namespace yoba {
 			Callback<InputEvent&>& getEventHandlers();
 
 			Application* getRoot();
-			virtual void setRoot(Application* value);
-
 			Element* getParent();
-			void setParent(Element* value);
 
 			bool isVisible() const;
 			void setVisible(bool value);
@@ -83,11 +83,15 @@ namespace yoba {
 			void setHeight(uint16_t value);
 
 			const Size& getMeasuredSize();
-
 			const Bounds& getBounds();
 
 		protected:
-			virtual Size onMeasure(ScreenBuffer* screenBuffer, const Size& availableSize);
+			virtual void setRoot(Application* value);
+
+			virtual void onAddedToParent(Container* parent);
+			virtual void onRemovedFromParent(Container* parent);
+
+			virtual Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(ScreenBuffer* screenBuffer);
 			virtual void onEvent(InputEvent& event);
@@ -114,7 +118,6 @@ namespace yoba {
 			void setBounds(const Bounds& value);
 
 			static void computeMeasureShit(
-				const Alignment &alignment,
 				const uint16_t &size,
 				const uint16_t &desiredSize,
 				const int32_t &marginStart,

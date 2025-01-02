@@ -8,7 +8,7 @@ namespace yoba {
 		auto primaryColor = getPrimaryColor();
 
 		if (!primaryColor)
-			primaryColor = screenBuffer->getDefaultPrimaryColor();
+			primaryColor = screenBuffer->getPrimaryColor();
 
 		if (primaryColor) {
 			screenBuffer->renderFilledRectangle(
@@ -33,7 +33,7 @@ namespace yoba {
 					: getSecondaryColor();
 
 				if (!secondaryColor)
-					secondaryColor = screenBuffer->getDefaultSecondaryColor();
+					secondaryColor = screenBuffer->getSecondaryColor();
 
 				screenBuffer->renderText(
 					Point(
