@@ -10,7 +10,7 @@ namespace yoba {
 	) :
 		_screenBuffer(screenBuffer)
 	{
-		Container::setRoot(this);
+		Container::setApplication(this);
 	}
 
 	void Application::setup() {

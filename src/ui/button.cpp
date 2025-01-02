@@ -24,8 +24,6 @@ namespace yoba {
 		const auto font = getFontOrDefault();
 
 		if (font) {
-			auto textSize = font->getSize(getText());
-
 			auto secondaryColor =
 				isPressed() && getPressedSecondaryColor()
 				? getPressedSecondaryColor()
@@ -36,8 +34,8 @@ namespace yoba {
 
 			screenBuffer->renderText(
 				Point(
-					bounds.getXCenter() - textSize.getXCenter(),
-					bounds.getYCenter() - textSize.getYCenter()
+					bounds.getXCenter() - font->getWidth(getText()) / 2,
+					bounds.getYCenter() - font->getHeight() / 2
 				),
 				font,
 				secondaryColor,

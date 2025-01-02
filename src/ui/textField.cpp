@@ -57,7 +57,7 @@ namespace yoba {
 
 		keyboard->setLayoutIndex(0);
 
-		auto root = getRoot();
+		auto root = getApplication();
 
 		auto keyboardAndChildrenLayout = new KeyboardRootLayout();
 		*keyboardAndChildrenLayout += keyboard;

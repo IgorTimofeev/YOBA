@@ -13,6 +13,6 @@ namespace yoba {
 	}
 
 	const Font* FontElement::getFontOrDefault() {
-		return _font ? _font : (getRoot() ? getRoot()->getFont() : nullptr);
+		return _font ? _font : (getApplication() ? getApplication()->getFont() : nullptr);
 	}
 }

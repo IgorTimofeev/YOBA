@@ -126,10 +126,10 @@ namespace yoba {
 		return _children.end();
 	}
 
-	void Container::setRoot(Application* value) {
-		Element::setRoot(value);
+	void Container::setApplication(Application* value) {
+		Element::setApplication(value);
 
 		for (auto child : _children)
-			child->setRoot(value);
+			child->setApplication(value);
 	}
 }

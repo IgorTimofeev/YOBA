@@ -40,7 +40,7 @@ namespace yoba {
 			virtual void operator-=(Element* child);
 
 		protected:
-			void setRoot(Application* value) override;
+			void setApplication(Application* value) override;
 
 			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 

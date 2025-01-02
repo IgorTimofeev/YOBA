@@ -33,14 +33,11 @@ namespace yoba {
 		return _bitmap;
 	}
 
-	uint8_t Font::getHeight() const {
-		return _height;
+	uint16_t Font::getWidth(const std::wstring_view& text) const {
+		return getWidth<wchar_t>(text);
 	}
 
-	Size Font::getSize(const std::wstring_view& text) const {
-		return {
-			getWidth(text),
-			getHeight()
-		};
+	uint8_t Font::getHeight() const {
+		return _height;
 	}
 }

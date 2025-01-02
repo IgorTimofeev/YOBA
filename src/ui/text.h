@@ -26,7 +26,10 @@ namespace yoba {
 
 				return
 					font
-					? font->getSize(getText())
+					? Size(
+						font->getWidth(getText()),
+						font->getHeight()
+					)
 					: Size();
 			}
 

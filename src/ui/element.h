@@ -49,7 +49,7 @@ namespace yoba {
 
 			Callback<InputEvent&>& getEventHandlers();
 
-			Application* getRoot();
+			Application* getApplication();
 			Element* getParent();
 
 			bool isVisible() const;
@@ -86,7 +86,7 @@ namespace yoba {
 			const Bounds& getBounds();
 
 		protected:
-			virtual void setRoot(Application* value);
+			virtual void setApplication(Application* value);
 
 			virtual void onAddedToParent(Container* parent);
 			virtual void onRemovedFromParent(Container* parent);
@@ -105,8 +105,8 @@ namespace yoba {
 			Alignment _horizontalAlignment = Alignment::Stretch;
 			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;
-			Application* _root = nullptr;
-			Element* _parent = nullptr;
+			Application* _application = nullptr;
+			Container* _parent = nullptr;
 
 			Bounds _bounds;
 			Size _measuredSize = Size();

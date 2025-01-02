@@ -1,4 +1,5 @@
 #include "element.h"
+#include "container.h"
 #include "application.h"
 #include "../animation.h"
 #include "../event.h"
@@ -217,29 +218,29 @@ namespace yoba {
 	}
 
 	bool Element::isCaptured() {
-		return _root && _root->getCapturedElement() == this;
+		return _application && _application->getCapturedElement() == this;
 	}
 
 	void Element::setCaptured(bool value) {
-		if (_root)
-			_root->setCapturedElement(value ? this : nullptr);
+		if (_application)
+			_application->setCapturedElement(value ? this : nullptr);
 	}
 
 	void Element::startAnimation(Animation* animation) {
-		if (_root)
-			_root->startAnimation(animation);
+		if (_application)
+			_application->startAnimation(animation);
 	}
 
 	Element *Element::getParent() {
 		return _parent;
 	}
 
-	void Element::setRoot(Application *value) {
-		_root = value;
+	void Element::setApplication(Application *value) {
+		_application = value;
 	}
 
-	Application *Element::getRoot() {
-		return _root;
+	Application *Element::getApplication() {
+		return _application;
 	}
 
 	const Bounds &Element::getBounds() {
@@ -302,18 +303,18 @@ namespace yoba {
 	}
 
 	void Element::invalidateRender() {
-		if (_root)
-			_root->invalidateRender();
+		if (_application)
+			_application->invalidateRender();
 	}
 
 	void Element::invalidateLayout() {
-		if (_root)
-			_root->invalidateLayout();
+		if (_application)
+			_application->invalidateLayout();
 	}
 
 	void Element::invalidate() {
-		if (_root)
-			_root->invalidate();
+		if (_application)
+			_application->invalidate();
 	}
 
 	void Element::render(ScreenBuffer* screenBuffer) {
@@ -360,11 +361,11 @@ namespace yoba {
 
 	void Element::onAddedToParent(Container* parent) {
 		_parent = parent;
-		setRoot(_parent->getRoot());
+		setApplication(_parent->getApplication());
 	}
 
 	void Element::onRemovedFromParent(Container* parent) {
 		_parent = nullptr;
-		setRoot(nullptr);
+		setApplication(nullptr);
 	}
 }
