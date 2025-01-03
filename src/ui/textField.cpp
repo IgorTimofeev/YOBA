@@ -360,19 +360,23 @@ namespace yoba {
 		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
 		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
 
+		keyboard->setCharactersLayoutBuilder([]() {
+			return new CharactersKeyboardLayout();
+		});
+
 		keyboard->setCyclicLayoutBuilders({
 			[]() {
 				return new EnglishKeyboardLayout();
 			},
-			[]() {
-				return new RussianKeyboardLayout();
-			}
+//			[]() {
+//				return new RussianKeyboardLayout();
+//			}
 		});
 
 		keyboard->setCyclicLayoutIndex(0);
 
 		keyboard->getOnKeyPressedChanged() += [this](KeyCode code, bool pressed) {
-			if (!pressed)
+			if (pressed)
 				return;
 
 			switch (code) {

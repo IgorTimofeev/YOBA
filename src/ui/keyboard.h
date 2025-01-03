@@ -181,6 +181,8 @@ namespace yoba {
 
 	enum class KeyboardKeyType : uint8_t {
 		Default,
+		CharactersLayout,
+		CyclicLayout,
 		Action
 	};
 
@@ -199,6 +201,8 @@ namespace yoba {
 				float width
 			);
 
+			static float fit;
+
 			virtual void tick(KeyboardButton* button);
 			virtual void onPressedChanged(KeyboardButton* button);
 			virtual KeyCode getCodeFromCase(Keyboard* keyboard) const;
@@ -209,7 +213,6 @@ namespace yoba {
 
 			KeyCode getCode() const;
 			const std::wstring_view& getName() const;
-
 
 		private:
 			KeyboardKeyType _type;
@@ -271,9 +274,14 @@ namespace yoba {
 			EnterKeyboardKey(const std::wstring_view& name, float width);
 	};
 
-	class LayoutBuilderKeyboardKey : public KeyboardKey {
+	class SpaceKeyboardKey : public KeyboardKey {
 		public:
-			LayoutBuilderKeyboardKey(const std::wstring_view& name, float width, const std::function<KeyboardLayout*()>& layoutBuilder);
+			SpaceKeyboardKey(const std::wstring_view& name);
+	};
+
+	class CharactersLayoutKeyboardKey : public KeyboardKey {
+		public:
+			CharactersLayoutKeyboardKey(const std::wstring_view& name, float width);
 
 			void onPressedChanged(KeyboardButton* button) override;
 
@@ -392,6 +400,10 @@ namespace yoba {
 			std::vector<std::function<KeyboardLayout*()>>& getCyclicLayoutBuilders();
 			void setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& cyclicLayoutBuilders);
 
+			const std::optional<std::function<KeyboardLayout*()>>& getCharactersLayoutBuilder() const;
+
+			void setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& charactersLayoutBuilder);
+
 			Callback<KeyCode, bool>& getOnKeyPressedChanged();
 			Callback<KeyCode, const std::wstring_view&>& getOnInput();
 
@@ -400,6 +412,7 @@ namespace yoba {
 
 			uint16_t getContinuousTypingInterval() const;
 			void setContinuousTypingInterval(uint16_t value);
+
 
 		private:
 			const Color* _defaultButtonPrimaryColor = nullptr;
@@ -415,6 +428,7 @@ namespace yoba {
 			int8_t _cyclicLayoutIndex = -1;
 			KeyboardLayout* _layout = nullptr;
 			std::vector<std::function<KeyboardLayout*()>> _cyclicLayoutBuilders;
+			std::optional<std::function<KeyboardLayout*()>> _charactersLayoutBuilder = std::nullopt;
 
 			Rectangle _backgroundPanel = Rectangle();
 			KeyboardButtonsContainer _buttonsContainer;
@@ -529,13 +543,10 @@ namespace yoba {
 			TextKeyboardKey _keyM = TextKeyboardKey(KeyCode::M, L"m", KeyCode::M, L"M", 0.1f);
 			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 0.15f);
 
-			LayoutBuilderKeyboardKey _keyCharactersLayout = LayoutBuilderKeyboardKey(L"123", 0.1f, []() {
-				return new CharactersKeyboardLayout();
-			});
-
+			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f);
 			CyclicLayoutKeyboardKey _keyCyclicLayout = CyclicLayoutKeyboardKey(L"Lang", 0.1f);
 			TextKeyboardKey _keyComma = TextKeyboardKey(KeyCode::Comma, L",", 0.1f);
-			TextKeyboardKey _keySpace = TextKeyboardKey(KeyCode::Space, L" ", 0.4f);
+			SpaceKeyboardKey _keySpace = SpaceKeyboardKey(L" ");
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
 			EnterKeyboardKey _keyEnter = EnterKeyboardKey( L"Enter", 0.2f);
 	};
@@ -581,13 +592,10 @@ namespace yoba {
 			TextKeyboardKey _keyMoreThan = TextKeyboardKey(KeyCode::MoreThan, L"ю", KeyCode::M, L"Ю", 1.f / 11.f);
 			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 1.f / 11.f);
 
-			LayoutBuilderKeyboardKey _keyCharactersLayout = LayoutBuilderKeyboardKey(L"123", 0.1f, []() {
-				return new CharactersKeyboardLayout();
-			});
-
+			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f);
 			CyclicLayoutKeyboardKey _keyCyclicLayout = CyclicLayoutKeyboardKey(L"Lang", 0.1f);
 			TextKeyboardKey _keyComma = TextKeyboardKey(KeyCode::Comma, L",", 0.1f);
-			TextKeyboardKey _keySpace = TextKeyboardKey(KeyCode::Space, L" ", 0.4f);
+			SpaceKeyboardKey _keySpace = SpaceKeyboardKey(L" ");
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
 			EnterKeyboardKey _keyEnter = EnterKeyboardKey( L"Enter", 0.2f);
 	};
