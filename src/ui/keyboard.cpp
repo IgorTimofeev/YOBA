@@ -183,8 +183,8 @@ namespace yoba {
 
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
-	SpaceKeyboardKey::SpaceKeyboardKey(const std::wstring_view& name) :
-		KeyboardKey(KeyboardKeyType::Default, KeyCode::Space, name, KeyboardKey::fit)
+	SpaceKeyboardKey::SpaceKeyboardKey() :
+		KeyboardKey(KeyboardKeyType::Default, KeyCode::Space, L" ", KeyboardKey::fit)
 	{
 
 	}
@@ -570,13 +570,14 @@ namespace yoba {
 		uint8_t rowButtonCount = 0;
 		uint16_t y = bounds.getY();
 		const auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * bounds.getWidth());
-		uint16_t availableWidthWithoutSpacing;
 
-		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &availableWidthWithoutSpacing, &buttonHeight, &buttonIndexFrom](size_t buttonIndexTo) {
+		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonHeight, &buttonIndexFrom](size_t buttonIndexTo) {
 			if (rowButtonCount == 0)
 				return;
 
-			float nonFitWidth = 0;
+			const uint16_t totalSpacing = _keyboard->getHorizontalKeySpacing() * (rowButtonCount - 1);
+			const uint16_t availableWidthWithoutSpacing = bounds.getWidth() - totalSpacing;
+			float nonFitWidthWithoutSpacing = 0;
 			uint8_t fitCount = 0;
 			float buttonWidth;
 
@@ -589,23 +590,22 @@ namespace yoba {
 					fitCount++;
 				}
 				else {
-					buttonWidth *= availableWidthWithoutSpacing;
-					nonFitWidth += buttonWidth + _keyboard->getHorizontalKeySpacing();
+					nonFitWidthWithoutSpacing += buttonWidth * availableWidthWithoutSpacing;
 				}
 			}
-
-			nonFitWidth -= _keyboard->getHorizontalKeySpacing();
 
 			float fitWidth;
 			float x;
 
 			if (fitCount > 0) {
-				fitWidth = (bounds.getWidth() - nonFitWidth) / fitCount;
+				fitWidth = (availableWidthWithoutSpacing - nonFitWidthWithoutSpacing) / fitCount;
 				x = bounds.getX();
 			}
 			else {
+				const float nonFitWidthWithSpacing = nonFitWidthWithoutSpacing + totalSpacing;
+
 				fitWidth = 0;
-				x = bounds.getXCenter() - nonFitWidth / 2;
+				x = bounds.getXCenter() - nonFitWidthWithSpacing / 2;
 			}
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
@@ -631,8 +631,6 @@ namespace yoba {
 			}
 		};
 
-		availableWidthWithoutSpacing = bounds.getWidth();
-
 		for (size_t i = 0; i < getChildrenCount(); i++) {
 			auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
 
@@ -643,11 +641,7 @@ namespace yoba {
 				buttonIndexFrom = i;
 				rowButtonCount = 0;
 				rowIndex++;
-				availableWidthWithoutSpacing = bounds.getWidth();
 			}
-
-			if (rowButtonCount > 0 && button->getKey()->getWidth() != KeyboardKey::fit)
-				availableWidthWithoutSpacing -= _keyboard->getHorizontalKeySpacing();
 
 			rowButtonCount++;
 		}
