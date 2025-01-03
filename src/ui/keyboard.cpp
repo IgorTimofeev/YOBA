@@ -21,6 +21,10 @@ namespace yoba {
 	}
 
 	void KeyboardKey::onPressedChanged(KeyboardButton* button) {
+		performAction(button);
+	}
+
+	void KeyboardKey::performAction(KeyboardButton* button) {
 		const auto keyboard = button->getKeyboard();
 		const auto code = getCodeFromCase(keyboard);
 
@@ -66,7 +70,7 @@ namespace yoba {
 		if (!button->isPressed() || millis() < _continuousTypingTime)
 			return;
 
-		onPressedChanged(button);
+		performAction(button);
 
 		_continuousTypingTime = millis() + button->getKeyboard()->getContinuousTypingInterval();
 	}
@@ -116,8 +120,16 @@ namespace yoba {
 		return _uppercaseName;
 	}
 
-	void TextKeyboardKey::onPressedChanged(KeyboardButton* button) {
-		ContinuousTypingKeyboardKey::onPressedChanged(button);
+	KeyCode TextKeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
+		return keyboard->getCase() == KeyboardCase::Lower ? getCode() : getUppercaseCode();
+	}
+
+	const std::wstring_view& TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
+		return keyboard->getCase() == KeyboardCase::Lower ? getName() : getUppercaseName();
+	}
+
+	void TextKeyboardKey::performAction(KeyboardButton* button) {
+		KeyboardKey::performAction(button);
 
 		if (!button->isPressed())
 			return;
@@ -126,18 +138,8 @@ namespace yoba {
 
 		keyboard->getOnInput()(getCodeFromCase(keyboard), getNameFromCase(keyboard));
 
-		const auto keyboardCase = keyboard->getCase();
-
-		if (keyboardCase == KeyboardCase::Upper)
+		if (keyboard->getCase() == KeyboardCase::Upper)
 			keyboard->setCase(KeyboardCase::Lower);
-	}
-
-	KeyCode TextKeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
-		return keyboard->getCase() == KeyboardCase::Lower ? getCode() : getUppercaseCode();
-	}
-
-	const std::wstring_view& TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
-		return keyboard->getCase() == KeyboardCase::Lower ? getName() : getUppercaseName();
 	}
 
 	// ----------------------------- ActionKeyboardKey -----------------------------
@@ -685,22 +687,23 @@ namespace yoba {
 		if (_keyboard)
 			return _keyboard;
 
+		_application = application;
 		_keyboard = new Keyboard();
 
 		_keyboardAndChildrenLayout = new KeyboardApplicationContainer();
 		*_keyboardAndChildrenLayout += _keyboard;
 
 		_appChildrenContainer = new Container();
-		_appChildrenContainer->setSize(application->getScreenBuffer()->getSize());
+		_appChildrenContainer->setSize(_application->getScreenBuffer()->getSize());
 
 		// Moving children from root to temporary layout
-		for (auto child : *application)
+		for (auto child : *_application)
 			*_appChildrenContainer += child;
 
 		*_keyboardAndChildrenLayout += _appChildrenContainer;
 
-		application->removeChildren();
-		*application += _keyboardAndChildrenLayout;
+		_application->removeChildren();
+		*_application += _keyboardAndChildrenLayout;
 
 		return _keyboard;
 	}
@@ -709,14 +712,11 @@ namespace yoba {
 		if (!_keyboard)
 			return;
 
-		auto application = _keyboardAndChildrenLayout->getApplication();
-//		application->setCapturedElement(nullptr);
-//		application->setFocusedElement(nullptr);
-		application->removeChildren();
+		_application->removeChildren();
 
 		// Moving children back to root
 		for (auto child : *_appChildrenContainer)
-			*application += child;
+			*_application += child;
 
 		delete _keyboard;
 		_keyboard = nullptr;

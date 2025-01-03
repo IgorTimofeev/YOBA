@@ -201,6 +201,7 @@ namespace yoba {
 
 			virtual KeyCode getCodeFromCase(Keyboard* keyboard) const;
 			virtual const std::wstring_view& getNameFromCase(Keyboard* keyboard) const;
+			virtual void performAction(KeyboardButton* button);
 
 			virtual void tick(KeyboardButton* button);
 
@@ -211,6 +212,7 @@ namespace yoba {
 
 			KeyCode getCode() const;
 			const std::wstring_view& getName() const;
+
 
 		private:
 			KeyboardKeyType _type;
@@ -254,7 +256,7 @@ namespace yoba {
 
 			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
 
-			void onPressedChanged(KeyboardButton* button) override;
+			void performAction(KeyboardButton* button) override;
 
 		private:
 			KeyCode _uppercaseCode;
@@ -453,13 +455,14 @@ namespace yoba {
 
 	class KeyboardController {
 		public:
-			Keyboard* show(Application* application);
+			Keyboard* show(Application* _application);
 
 			void hide();
 
 			Keyboard* getKeyboard() const;
 
 		private:
+			Application* _application = nullptr;
 			Keyboard* _keyboard = nullptr;
 			Container* _appChildrenContainer = nullptr;
 			KeyboardApplicationContainer* _keyboardAndChildrenLayout = nullptr;

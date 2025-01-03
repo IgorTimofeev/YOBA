@@ -93,7 +93,6 @@ namespace yoba {
 			const Color* _keyboardActionButtonSecondaryColor = nullptr;
 
 			void setCursorBlinkStateAndTime(bool value);
-
 			void showKeyboard();
 	};
 }
