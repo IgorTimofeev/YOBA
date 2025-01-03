@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cstdint>
 #include "textField.h"
 
 #include "../../../../lib/YOBA/src/ui/keyboard.h"
@@ -54,10 +55,19 @@ namespace yoba {
 		if (!secondaryColor)
 			return;
 
+		const auto& oldViewport = screenBuffer->getViewport();
+
+		screenBuffer->setViewport(Bounds(
+			bounds.getX() + _textMargin,
+			bounds.getY(),
+			bounds.getWidth() - _textMargin * 2,
+			bounds.getHeight()
+		));
+
 		const auto& text = getText();
 
 		auto textPosition = Point(
-			bounds.getX(),
+			_scrollValue + bounds.getX() + _textMargin,
 			bounds.getYCenter() - font->getHeight() / 2
 		);
 
@@ -93,6 +103,8 @@ namespace yoba {
 				getCursorColor()
 			);
 		}
+
+		screenBuffer->setViewport(oldViewport);
 	}
 
 	void TextField::onEvent(InputEvent& event) {
@@ -103,12 +115,13 @@ namespace yoba {
 		if (!(isTouchDown || isTouchUp || isTouchDrag))
 			return;
 
+		Serial.printf("Pizda 2: %d, %d, %d\n", isTouchDown, isTouchUp, isTouchDrag);
+
 		if (isTouchDown) {
 			setCaptured(true);
 
 			if (!isFocused()) {
 				setFocused(true);
-				showKeyboard();
 			}
 		}
 		else if (isTouchUp) {
@@ -164,33 +177,33 @@ namespace yoba {
 
 		keyboard->setLayoutIndex(0);
 
-		auto root = getApplication();
+		auto app = getApplication();
 
 		auto keyboardAndChildrenLayout = new KeyboardApplicationContainer();
 		*keyboardAndChildrenLayout += keyboard;
 
 		auto temporaryRootChildrenLayout = new Container();
-		temporaryRootChildrenLayout->setSize(root->getScreenBuffer()->getSize());
+		temporaryRootChildrenLayout->setSize(app->getScreenBuffer()->getSize());
 
 		// Moving children from root to temporary layout
-		for (auto child : *root)
+		for (auto child : *app)
 			*temporaryRootChildrenLayout += child;
 
 		*keyboardAndChildrenLayout += temporaryRootChildrenLayout;
 
-		root->removeChildren();
-		*root += keyboardAndChildrenLayout;
+		app->removeChildren();
+		*app += keyboardAndChildrenLayout;
 
-		keyboard->getOnKeyDown() += [this, temporaryRootChildrenLayout, keyboard, root, keyboardAndChildrenLayout](KeyCode code) {
+		keyboard->getOnKeyPress() += [this, temporaryRootChildrenLayout, keyboard, app, keyboardAndChildrenLayout](KeyCode code) {
 			switch (code) {
 				case KeyCode::Enter: {
-					setFocused(false);
+//					setFocused(false);
 
-					root->removeChildren();
+					app->removeChildren();
 
 					// Moving children back to root
 					for (auto child : *temporaryRootChildrenLayout)
-						*root += child;
+						*app += child;
 
 					delete keyboard;
 					delete temporaryRootChildrenLayout;
@@ -371,15 +384,29 @@ namespace yoba {
 		setCursorPosition(getText().length());
 	}
 
-	void TextField::setFocused(bool value) {
-		Element::setFocused(value);
+	void TextField::onFocusChanged() {
+		Element::onFocusChanged();
 
-		setCursorBlinkStateAndTime(value);
+		setCursorBlinkStateAndTime(isFocused());
+
+		if (isFocused())
+			showKeyboard();
+
 		invalidateRender();
 	}
 
 	void TextField::setCursorBlinkStateAndTime(bool value) {
 		_cursorBlinkState = value;
 		_cursorBlinkTime = millis() + _cursorBlinkInterval;
+	}
+
+	const uint16_t& TextField::getTextMargin() const {
+		return _textMargin;
+	}
+
+	void TextField::setTextMargin(const uint16_t& textMargin) {
+		_textMargin = textMargin;
+
+		invalidateRender();
 	}
 }

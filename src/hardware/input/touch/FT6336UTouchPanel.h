@@ -12,7 +12,7 @@
 #include <Arduino.h>
 #include "touchPanel.h"
 #include "touchPoint.h"
-#include "../../screen/buffers/screenBuffer.h"
+#include "../../screen/drivers/screenDriver.h"
 #include "../../../vector.h"
 
 namespace yoba {
@@ -162,7 +162,7 @@ namespace yoba {
 			bool _wasTouched = false;
 			bool _wasPinched = false;
 
-			Point readOrientedPoint1(ScreenBuffer* screenBuffer);
-			Point readOrientedPoint2(ScreenBuffer* screenBuffer);
+			Point readOrientedPoint1(ScreenDriver* screenDriver);
+			Point readOrientedPoint2(ScreenDriver* screenDriver);
 	};
 }

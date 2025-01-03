@@ -1,18 +1,18 @@
+#include <cstdint>
 #include "event.h"
 #include "ui/element.h"
 
 namespace yoba {
 	// -------------------------------- Event --------------------------------
 
-	uint16_t Event::_nextTypeID = 0;
-
-	void Event::registerTypeID(uint16_t& staticTypeID) {
-		if (staticTypeID == 0) {
+	Event::Event(uint16_t& staticTypeID) {
+		if (staticTypeID == 0)
 			staticTypeID = _nextTypeID++;
-		}
 
 		_typeID = staticTypeID;
 	}
+
+	uint16_t Event::_nextTypeID = 0;
 
 	bool Event::isHandled() const {
 		return _handled;
@@ -30,7 +30,17 @@ namespace yoba {
 		return _typeID;
 	}
 
+	// -------------------------------- Unput --------------------------------
+
+	InputEvent::InputEvent(uint16_t& staticTypeID) : Event(staticTypeID) {
+
+	}
+
 	// -------------------------------- Screen --------------------------------
+
+	ScreenEvent::ScreenEvent(uint16_t& staticTypeID) : InputEvent(staticTypeID) {
+
+	}
 
 	bool ScreenEvent::matches(Element* element) {
 		return element->isVisible() && element->isEnabled();
@@ -38,7 +48,8 @@ namespace yoba {
 
 	// -------------------------------- Touch --------------------------------
 
-	TouchEvent::TouchEvent(const Point& position) :
+	TouchEvent::TouchEvent(uint16_t& staticTypeID, const Point& position) :
+		ScreenEvent(staticTypeID),
 		_position(position)
 	{
 
@@ -62,30 +73,34 @@ namespace yoba {
 	}
 
 	TouchDownEvent::TouchDownEvent(const Point& position) : TouchEvent(
+		typeID,
 		position
 	) {
-		registerTypeID(typeID);
+
 	}
 
 	uint16_t TouchDownEvent::typeID = 0;
 
 	TouchDragEvent::TouchDragEvent(const Point& position) : TouchEvent(
+		typeID,
 		position
 	) {
-		registerTypeID(typeID);
+
 	}
 
 	uint16_t TouchDragEvent::typeID = 0;
 
 	TouchUpEvent::TouchUpEvent(const Point& position) : TouchEvent(
+		typeID,
 		position
 	) {
-		registerTypeID(typeID);
+		;
 	}
 
 	uint16_t TouchUpEvent::typeID = 0;
 
-	PinchEvent::PinchEvent(const Point& position1, const Point& position2) :
+	PinchEvent::PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2) :
+		ScreenEvent(staticTypeID),
 		_position1(position1),
 		_position2(position2)
 	{
@@ -120,28 +135,31 @@ namespace yoba {
 	}
 
 	PinchDownEvent::PinchDownEvent(const Point& position1, const Point& position2) : PinchEvent(
+		typeID,
 		position1,
 		position2
 	) {
-		registerTypeID(typeID);
+
 	}
 
 	uint16_t PinchDownEvent::typeID = 0;
 
 	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) : PinchEvent(
+		typeID,
 		position1,
 		position2
 	) {
-		registerTypeID(typeID);
+
 	}
 
 	uint16_t PinchDragEvent::typeID = 0;
 
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
+		typeID,
 		position1,
 		position2
 	) {
-		registerTypeID(typeID);
+
 	}
 
 	uint16_t PinchUpEvent::typeID = 0;

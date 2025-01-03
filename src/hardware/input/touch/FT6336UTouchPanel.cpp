@@ -284,15 +284,15 @@ namespace yoba {
 
 	// ------------------------------------------------------------------------
 
-	Point FT6336UTouchPanel::readOrientedPoint1(ScreenBuffer* screenBuffer) {
-		return screenBuffer->getDriver()->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint1(ScreenDriver* screenDriver) {
+		return screenDriver->orientPoint(Point(
 			read_touch1_x(),
 			read_touch1_y()
 		));
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint2(ScreenBuffer* screenBuffer) {
-		return screenBuffer->getDriver()->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint2(ScreenDriver* screenDriver) {
+		return screenDriver->orientPoint(Point(
 			read_touch2_x(),
 			read_touch2_y()
 		));
@@ -307,14 +307,14 @@ namespace yoba {
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;
 
-		auto screenBuffer = application->getScreenBuffer();
+		auto screenDriver = application->getScreenBuffer()->getDriver();
 
 		if (isDown1) {
 			if (isDown2) {
 				// Pinch drag
 				if (_wasPinched) {
-					const auto point1 = readOrientedPoint1(screenBuffer);
-					const auto point2 = readOrientedPoint2(screenBuffer);
+					const auto point1 = readOrientedPoint1(screenDriver);
+					const auto point2 = readOrientedPoint2(screenDriver);
 
 					if (
 						point1 != _touchPoints[0].getPosition()
@@ -337,10 +337,10 @@ namespace yoba {
 					_wasPinched = true;
 
 					_touchPoints[0].setDown(true);
-					_touchPoints[0].setPosition(readOrientedPoint1(screenBuffer));
+					_touchPoints[0].setPosition(readOrientedPoint1(screenDriver));
 
 					_touchPoints[1].setDown(true);
-					_touchPoints[1].setPosition(readOrientedPoint2(screenBuffer));
+					_touchPoints[1].setPosition(readOrientedPoint2(screenDriver));
 
 					auto event = PinchDownEvent(
 						_touchPoints[0].getPosition(),
@@ -356,7 +356,7 @@ namespace yoba {
 					_wasPinched = false;
 
 					_touchPoints[1].setDown(false);
-					_touchPoints[1].setPosition(readOrientedPoint2(screenBuffer));
+					_touchPoints[1].setPosition(readOrientedPoint2(screenDriver));
 
 					auto event = PinchUpEvent(
 						_touchPoints[0].getPosition(),
@@ -367,7 +367,7 @@ namespace yoba {
 				}
 				// Touch drag
 				else if (_wasTouched) {
-					auto point1 = readOrientedPoint1(screenBuffer);
+					auto point1 = readOrientedPoint1(screenDriver);
 
 					if (point1 != _touchPoints[0].getPosition()) {
 						_touchPoints[0].setPosition(point1);
@@ -384,7 +384,7 @@ namespace yoba {
 					_wasTouched = true;
 
 					_touchPoints[0].setDown(true);
-					_touchPoints[0].setPosition(readOrientedPoint1(screenBuffer));
+					_touchPoints[0].setPosition(readOrientedPoint1(screenDriver));
 
 					auto event = TouchDownEvent(
 						_touchPoints[0].getPosition()
@@ -400,7 +400,7 @@ namespace yoba {
 				_wasPinched = false;
 
 				_touchPoints[1].setDown(false);
-				_touchPoints[1].setPosition(readOrientedPoint2(screenBuffer));
+				_touchPoints[1].setPosition(readOrientedPoint2(screenDriver));
 
 				auto event = PinchUpEvent(
 					_touchPoints[0].getPosition(),
@@ -415,7 +415,7 @@ namespace yoba {
 				_wasTouched = false;
 
 				_touchPoints[0].setDown(false);
-				_touchPoints[0].setPosition(readOrientedPoint1(screenBuffer));
+				_touchPoints[0].setPosition(readOrientedPoint1(screenDriver));
 
 				auto event = TouchUpEvent(
 					_touchPoints[0].getPosition()

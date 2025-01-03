@@ -226,8 +226,15 @@ namespace yoba {
 	}
 
 	void Element::setCaptured(bool value) {
-		if (_application)
-			_application->setCapturedElement(value ? this : nullptr);
+		if (!_application)
+			return;
+
+		const auto oldValue = _application->getCapturedElement() == this;
+
+		_application->setCapturedElement(value ? this : nullptr);
+
+		if (oldValue != value)
+			onCaptureChanged();
 	}
 
 	bool Element::isFocused() {
@@ -235,8 +242,15 @@ namespace yoba {
 	}
 
 	void Element::setFocused(bool value) {
-		if (_application)
-			_application->setFocusedElement(value ? this : nullptr);
+		if (!_application)
+			return;
+
+		const auto oldValue = _application->getFocusedElement() == this;
+
+		_application->setFocusedElement(value ? this : nullptr);
+
+		if (oldValue != value)
+			onFocusChanged();
 	}
 
 	void Element::startAnimation(Animation* animation) {
@@ -380,5 +394,13 @@ namespace yoba {
 	void Element::onRemovedFromParent(Container* parent) {
 		_parent = nullptr;
 		setApplication(nullptr);
+	}
+
+	void Element::onFocusChanged() {
+
+	}
+
+	void Element::onCaptureChanged() {
+
 	}
 }

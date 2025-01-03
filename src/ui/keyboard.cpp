@@ -1,12 +1,13 @@
+#include <cstdint>
 #include "keyboard.h"
 #include "stackContainer.h"
 #include "../number.h"
 
 namespace yoba {
-	// ----------------------------- KeyboardKeyModel -----------------------------
+	// ----------------------------- KeyboardKey -----------------------------
 
-	KeyboardKeyModel::KeyboardKeyModel(KeyboardKeyStyle style, KeyCode code, const std::wstring_view& name, float width) :
-		_style(style),
+	KeyboardKey::KeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width) :
+		_type(type),
 		_code(code),
 		_name(name),
 		_width(width)
@@ -14,45 +15,56 @@ namespace yoba {
 
 	}
 
-	KeyCode KeyboardKeyModel::getCode() const {
+	KeyCode KeyboardKey::getCode() const {
 		return _code;
 	}
 
-	const std::wstring_view& KeyboardKeyModel::getName() const {
+	const std::wstring_view& KeyboardKey::getName() const {
 		return _name;
 	}
 
-	float KeyboardKeyModel::getWidth() const {
+	float KeyboardKey::getWidth() const {
 		return _width;
 	}
 
-	KeyboardKeyStyle KeyboardKeyModel::getStyle() const {
-		return _style;
+	KeyboardKeyType KeyboardKey::getType() const {
+		return _type;
 	}
 
-	KeyCode KeyboardKeyModel::getCodeFromCase(Keyboard* keyboard) const {
+	KeyCode KeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
 		return getCode();
 	}
 
-	const std::wstring_view& KeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+	const std::wstring_view& KeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		return getName();
 	}
 
-	void KeyboardKeyModel::onClick(Keyboard* keyboard) {
-		keyboard->getOnKeyDown().call(getCodeFromCase(keyboard));
+	void KeyboardKey::onPress(Keyboard* keyboard) {
+		const auto code = getCodeFromCase(keyboard);
+
+		if (code != KeyCode::None)
+			keyboard->getOnKeyPress().call(code);
 	}
 
-	// ----------------------------- TextKeyboardKeyModel -----------------------------
+	bool KeyboardKey::isContinuousTypingEnabled() const {
+		return _continuousTypingEnabled;
+	}
 
-	TextKeyboardKeyModel::TextKeyboardKeyModel(KeyCode code, const std::wstring_view& name, KeyCode uppercaseCode, const std::wstring_view& uppercaseName, float width) :
-		KeyboardKeyModel(KeyboardKeyStyle::Default, code, name, width),
+	void KeyboardKey::setContinuousTypingEnabled(bool value) {
+		_continuousTypingEnabled = value;
+	}
+
+	// ----------------------------- TextKeyboardKey -----------------------------
+
+	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, KeyCode uppercaseCode, const std::wstring_view& uppercaseName, float width) :
+		KeyboardKey(KeyboardKeyType::Default, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
 	{
-
+		setContinuousTypingEnabled(true);
 	}
 
-	TextKeyboardKeyModel::TextKeyboardKeyModel(KeyCode code, const std::wstring_view& name, float width) : TextKeyboardKeyModel(
+	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, float width) : TextKeyboardKey(
 		code,
 		name,
 		code,
@@ -62,16 +74,16 @@ namespace yoba {
 
 	}
 
-	KeyCode TextKeyboardKeyModel::getUppercaseCode() const {
+	KeyCode TextKeyboardKey::getUppercaseCode() const {
 		return _uppercaseCode;
 	}
 
-	const std::wstring_view& TextKeyboardKeyModel::getUppercaseName() const {
+	const std::wstring_view& TextKeyboardKey::getUppercaseName() const {
 		return _uppercaseName;
 	}
 
-	void TextKeyboardKeyModel::onClick(Keyboard* keyboard) {
-		KeyboardKeyModel::onClick(keyboard);
+	void TextKeyboardKey::onPress(Keyboard* keyboard) {
+		KeyboardKey::onPress(keyboard);
 
 		const auto keyboardCase = keyboard->getCase();
 
@@ -81,29 +93,29 @@ namespace yoba {
 			keyboard->setCase(KeyboardCase::Lower);
 	}
 
-	KeyCode TextKeyboardKeyModel::getCodeFromCase(Keyboard* keyboard) const {
+	KeyCode TextKeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
 		return keyboard->getCase() == KeyboardCase::Lower ? getCode() : getUppercaseCode();
 	}
 
-	const std::wstring_view& TextKeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+	const std::wstring_view& TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		return keyboard->getCase() == KeyboardCase::Lower ? getName() : getUppercaseName();
 	}
 
-	// ----------------------------- ActionKeyboardKeyModel -----------------------------
+	// ----------------------------- ActionKeyboardKey -----------------------------
 
-	ActionKeyboardKeyModel::ActionKeyboardKeyModel(KeyCode code, const std::wstring_view& name, float width) : KeyboardKeyModel(KeyboardKeyStyle::Action, code, name, width) {
+	ActionKeyboardKey::ActionKeyboardKey(KeyCode code, const std::wstring_view& name, float width) : KeyboardKey(KeyboardKeyType::Action, code, name, width) {
 
 	}
 
-	// ----------------------------- ActionKeyboardKeyModel -----------------------------
+	// ----------------------------- ActionKeyboardKey -----------------------------
 
-	ShiftKeyboardKeyModel::ShiftKeyboardKeyModel(
+	ShiftKeyboardKey::ShiftKeyboardKey(
 		const std::wstring_view& name,
 		const std::wstring_view& uppercaseName,
 		const std::wstring_view& capsName,
 		float width
 	) :
-		ActionKeyboardKeyModel(
+		ActionKeyboardKey(
 			KeyCode::Shift,
 			name,
 			width
@@ -114,8 +126,8 @@ namespace yoba {
 
 	}
 
-	void ShiftKeyboardKeyModel::onClick(Keyboard* keyboard) {
-		KeyboardKeyModel::onClick(keyboard);
+	void ShiftKeyboardKey::onPress(Keyboard* keyboard) {
+		KeyboardKey::onPress(keyboard);
 
 		switch (keyboard->getCase()) {
 			case KeyboardCase::Lower:
@@ -130,7 +142,7 @@ namespace yoba {
 		}
 	}
 
-	const std::wstring_view& ShiftKeyboardKeyModel::getNameFromCase(Keyboard* keyboard) const {
+	const std::wstring_view& ShiftKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		switch (keyboard->getCase()) {
 			case KeyboardCase::Lower:
 				return getName();
@@ -141,23 +153,65 @@ namespace yoba {
 		}
 	}
 
+	// ----------------------------- BackspaceKeyboardKey -----------------------------
+
+	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view& name, float width) : ActionKeyboardKey(KeyCode::Backspace, name, width) {
+		setContinuousTypingEnabled(true);
+	}
+
+	// ----------------------------- CharactersLayoutKeyboardKey -----------------------------
+
+	CharactersLayoutKeyboardKey::CharactersLayoutKeyboardKey(
+		const std::wstring_view& name,
+		float width,
+		const std::function<KeyboardLayout*()>& layoutBuilder
+	) :
+		ActionKeyboardKey(KeyCode::None, name, width),
+		_layoutBuilder(layoutBuilder)
+	{
+
+	}
+
+	void CharactersLayoutKeyboardKey::onPress(Keyboard* keyboard) {
+		KeyboardKey::onPress(keyboard);
+
+		keyboard->setLayout(_layoutBuilder());
+	}
+
+	// ----------------------------- CyclicLayoutKeyboardKey -----------------------------
+
+	CyclicLayoutKeyboardKey::CyclicLayoutKeyboardKey(
+		const std::wstring_view& name,
+		float width
+	) :
+		ActionKeyboardKey(KeyCode::None, name, width)
+	{
+
+	}
+
+	void CyclicLayoutKeyboardKey::onPress(Keyboard* keyboard) {
+		KeyboardKey::onPress(keyboard);
+
+		keyboard->setLayoutIndex(keyboard->getLayoutIndex());
+	}
+
 	// ----------------------------- KeyboardLayout -----------------------------
 
 
 
 	// ----------------------------- KeyboardButton -----------------------------
 
-	KeyboardButton::KeyboardButton(Keyboard* keyboard, KeyboardKeyModel* model) :
+	KeyboardButton::KeyboardButton(Keyboard* keyboard, KeyboardKey* key) :
 		_keyboard(keyboard),
-		_model(model)
+		_key(key)
 	{
 		setCornerRadius(2);
 		updateTextFromCase();
 
 		setFont(_keyboard->getFont());
 
-		switch (_model->getStyle()) {
-			case KeyboardKeyStyle::Default: {
+		switch (_key->getType()) {
+			case KeyboardKeyType::Default: {
 				setPrimaryColor(_keyboard->getDefaultButtonPrimaryColor());
 				setSecondaryColor(_keyboard->getDefaultButtonSecondaryColor());
 
@@ -166,7 +220,7 @@ namespace yoba {
 
 				break;
 			}
-			case KeyboardKeyStyle::Action: {
+			case KeyboardKeyType::Action: {
 				setPrimaryColor(_keyboard->getActionButtonPrimaryColor());
 				setSecondaryColor(_keyboard->getActionButtonSecondaryColor());
 
@@ -178,26 +232,45 @@ namespace yoba {
 		}
 	}
 
-	Keyboard* KeyboardButton::getKeyboard() {
-		return _keyboard;
+	void KeyboardButton::tick() {
+		Element::tick();
+
+		if (!_key->isContinuousTypingEnabled() || !isPressed() || millis() < _continuousTypingTime)
+			return;
+
+		_key->onPress(_keyboard);
+
+		_continuousTypingTime = millis() + _keyboard->getContinuousTypingInterval();
 	}
 
-	KeyboardKeyModel* KeyboardButton::getModel() {
-		return _model;
-	}
+	void KeyboardButton::onPressedChanged() {
+		Button::onPressedChanged();
 
-	void KeyboardButton::onClick() {
-		Button::onClick();
+		if (!isPressed())
+			return;
 
-		getModel()->onClick(_keyboard);
+		_key->onPress(_keyboard);
+
+		if (!_key->isContinuousTypingEnabled())
+			return;
+
+		_continuousTypingTime = millis() + _keyboard->getContinuousTypingDelay();
 	}
 
 	void KeyboardButton::updateTextFromCase() {
-		setText(getModel()->getNameFromCase(getKeyboard()));
+		setText(_key->getNameFromCase(getKeyboard()));
 	}
 
 	void KeyboardButton::updateFromCase() {
 		updateTextFromCase();
+	}
+
+	Keyboard* KeyboardButton::getKeyboard() {
+		return _keyboard;
+	}
+
+	KeyboardKey* KeyboardButton::getKey() {
+		return _key;
 	}
 
 	// ----------------------------- KeyboardRow -----------------------------
@@ -211,13 +284,12 @@ namespace yoba {
 
 	// ----------------------------- Keyboard -----------------------------
 
-	Keyboard::Keyboard(std::vector<std::function<KeyboardLayout*()>> layoutBuilders) :
-		_layoutBuilders(layoutBuilders)
+	Keyboard::Keyboard(std::vector<std::function<KeyboardLayout*()>> cyclicLayoutBuilders) :
+		_cyclicLayoutBuilders(cyclicLayoutBuilders)
 	{
 		*this += &_backgroundPanel;
 
 		_rowsLayout.setSpacing(2);
-//		_rowsLayout.setMargin(Margin(5));
 		*this += &_rowsLayout;
 	}
 
@@ -278,13 +350,15 @@ namespace yoba {
 		_actionButtonSecondaryColor = actionButtonSecondaryColor;
 	}
 
-	void Keyboard::setLayoutIndex(int8_t value) {
-		_layoutIndex = value;
+	KeyboardLayout* Keyboard::getLayout() const {
+		return _layout;
+	}
 
+	void Keyboard::setLayout(KeyboardLayout* value) {
 		deleteLayoutAndUIElements();
 
 		_case = KeyboardCase::Lower;
-		_layout = _layoutIndex >= 0 ? _layoutBuilders[_layoutIndex]() : nullptr;
+		_layout = value;
 
 		if (!_layout)
 			return;
@@ -301,6 +375,12 @@ namespace yoba {
 
 			_rowsLayout += UIRow;
 		}
+	}
+
+	void Keyboard::setLayoutIndex(int8_t value) {
+		_layoutIndex = value;
+
+		setLayout(_layoutIndex >= 0 ? _cyclicLayoutBuilders[_layoutIndex]() : nullptr);
 	}
 
 	int8_t Keyboard::getLayoutIndex() {
@@ -321,10 +401,6 @@ namespace yoba {
 
 	void Keyboard::setVerticalKeySpacing(uint8_t value) {
 		_rowsLayout.setSpacing(value);
-	}
-
-	KeyboardLayout* Keyboard::getLayout() const {
-		return _layout;
 	}
 
 	float Keyboard::getKeyHeight() const {
@@ -360,12 +436,28 @@ namespace yoba {
 		}
 	}
 
-	Callback<KeyCode>& Keyboard::getOnKeyDown() {
-		return _onKeyDown;
+	Callback<KeyCode>& Keyboard::getOnKeyPress() {
+		return _onKeyPress;
 	}
 
 	Callback<KeyCode, const std::wstring_view&>& Keyboard::getOnInput() {
 		return _onInput;
+	}
+
+	uint16_t Keyboard::getContinuousTypingDelay() const {
+		return _continuousTypingDelay;
+	}
+
+	void Keyboard::setContinuousTypingDelay(uint16_t value) {
+		_continuousTypingDelay = value;
+	}
+
+	uint16_t Keyboard::getContinuousTypingInterval() const {
+		return _continuousTypingInterval;
+	}
+
+	void Keyboard::setContinuousTypingInterval(uint16_t value) {
+		_continuousTypingInterval = value;
 	}
 
 	// ----------------------------- KeyboardRow -----------------------------
@@ -394,7 +486,7 @@ namespace yoba {
 		for (auto child : *this) {
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			const auto buttonWidth = button->getModel()->getWidth() * availableWidthWithoutSpacing;
+			const auto buttonWidth = button->getKey()->getWidth() * availableWidthWithoutSpacing;
 
 			button->measure(
 				screenBuffer,
@@ -419,7 +511,7 @@ namespace yoba {
 		float widthSum = 0;
 
 		for (auto child : *this) {
-			widthSum += dynamic_cast<KeyboardButton*>(child)->getModel()->getWidth();
+			widthSum += dynamic_cast<KeyboardButton*>(child)->getKey()->getWidth();
 		}
 
 		float x = bounds.getX();
@@ -427,7 +519,7 @@ namespace yoba {
 		for (auto child : *this) {
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			const float buttonWidth = button->getModel()->getWidth() / widthSum * availableWidthWithoutSpacing;
+			const float buttonWidth = button->getKey()->getWidth() / widthSum * availableWidthWithoutSpacing;
 
 			button->arrange(Bounds(
 				std::round(x),
@@ -517,7 +609,7 @@ namespace yoba {
 		_row2.keys.push_back(&_keyBackspace);
 		rows.push_back(&_row2);
 
-		_row3.keys.push_back(&_keyCharacters);
+		_row3.keys.push_back(&_keyCharactersLayout);
 		_row3.keys.push_back(&_keyLayout);
 		_row3.keys.push_back(&_keyComma);
 		_row3.keys.push_back(&_keySpace);
@@ -563,7 +655,7 @@ namespace yoba {
 		_row2.keys.push_back(&_keyBackspace);
 		rows.push_back(&_row2);
 
-		_row3.keys.push_back(&_keyCharacters);
+		_row3.keys.push_back(&_keyCyclicLayout);
 		_row3.keys.push_back(&_keyLayout);
 		_row3.keys.push_back(&_keyComma);
 		_row3.keys.push_back(&_keySpace);

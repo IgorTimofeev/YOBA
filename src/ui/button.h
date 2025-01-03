@@ -31,12 +31,12 @@ namespace yoba {
 			const Color* getPressedSecondaryColor() const;
 			void setPressedSecondaryColor(const Color* value);
 
-			Callback<>& getOnClick();
+			Callback<>& getOnPressedChanged();
 
 			void setOnClick(const Callback<>& onClick);
 
 		protected:
-			virtual void onClick();
+			virtual void onPressedChanged();
 
 		private:
 			bool _pressed = false;
@@ -45,6 +45,6 @@ namespace yoba {
 			const Color* _pressedPrimaryColor = nullptr;
 			const Color* _pressedSecondaryColor = nullptr;
 
-			Callback<> _onClick {};
+			Callback<> _onPressedChanged {};
 	};
 }

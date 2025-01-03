@@ -31,10 +31,10 @@ namespace yoba {
 			const Color* getMiddleColor() const;
 			void setMiddleColor(const Color* value);
 
-			Callback<KnobRotateEvent&>& getOnRotate();
+			Callback<float, float>& getOnRotate();
 
 		private:
-			Callback<KnobRotateEvent&> _onRotate {};
+			Callback<float, float> _onRotate {};
 			float _angle = 0;
 			float _angleStep = radians(10);
 			const Color* _lineColor = nullptr;
@@ -44,18 +44,5 @@ namespace yoba {
 			inline bool instanceof(const T*) {
 				return std::is_base_of<Base, T>::value;
 			}
-	};
-
-	class KnobRotateEvent : public TargetEvent<Knob*> {
-		public:
-			KnobRotateEvent(Knob* target, float oldAngle, float newAngle);
-
-			float getOldAngle() const;
-			float getNewAngle() const;
-			float getDeltaAngle() const;
-
-		private:
-			float _oldAngle;
-			float _newAngle;
 	};
 }

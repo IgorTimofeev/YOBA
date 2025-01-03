@@ -53,17 +53,19 @@ namespace yoba {
 	}
 
 	void Application::tick() {
+		// Root element size should match screen size
 		setSize(_screenBuffer->getSize());
 
 		Container::tick();
 
-		// Handling tick handlers first
-		_onTick.call();
+		// Handling input from devices like touchscreens, rotary encoders, etc
+		for (auto inputDevice : _inputDevices)
+			inputDevice->tick(this);
 
 		// Playing animations
 		animationsTick();
 
-		// Computing sizes & positions
+		// Measuring & arranging child elements
 		if (!_isMeasuredAndArranged) {
 			measure(_screenBuffer, getSize());
 			arrange(Bounds(getSize()));
@@ -122,17 +124,11 @@ namespace yoba {
 		return _screenBuffer->getDriver()->setOrientation(value);
 	}
 
-	Callback<>& Application::getOnTick() {
-		return _onTick;
-	}
-
 	ScreenBuffer* Application::getScreenBuffer() const {
 		return _screenBuffer;
 	}
 
 	void Application::addInputDevice(InputDevice* inputDevice) {
-		_onTick += [this, inputDevice]() {
-			inputDevice->tick(this);
-		};
+		_inputDevices.push_back(inputDevice);
 	}
 }

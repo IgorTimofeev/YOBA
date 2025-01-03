@@ -15,7 +15,7 @@ namespace yoba {
 				invalidate();
 			}
 
-		protected:
+		private:
 			std::wstring _text {};
 	};
 }

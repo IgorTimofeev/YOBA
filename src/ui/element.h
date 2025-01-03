@@ -64,7 +64,7 @@ namespace yoba {
 			void setCaptured(bool value);
 
 			bool isFocused();
-			virtual void setFocused(bool value);
+			void setFocused(bool value);
 
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);
@@ -95,6 +95,9 @@ namespace yoba {
 
 			virtual void onAddedToParent(Container* parent);
 			virtual void onRemovedFromParent(Container* parent);
+
+			virtual void onFocusChanged();
+			virtual void onCaptureChanged();
 
 			virtual Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);

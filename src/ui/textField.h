@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include "element.h"
 #include "cornerRadiusElement.h"
 #include "primaryColorElement.h"
@@ -27,7 +28,7 @@ namespace yoba {
 
 			void onEvent(InputEvent &event) override;
 
-			void setFocused(bool value) override;
+			void onFocusChanged() override;
 
 			void showKeyboard();
 			const Color* getKeyboardBackgroundColor() const;
@@ -45,6 +46,10 @@ namespace yoba {
 			const Color* getKeyboardActionButtonSecondaryColor() const;
 			void setKeyboardActionButtonSecondaryColor(const Color* keyboardActionButtonSecondaryColor);
 
+			const uint16_t& getTextMargin() const;
+
+			void setTextMargin(const uint16_t& textMargin);
+
 			const Font* getKeyboardFont() const;
 			void setKeyboardFont(const Font* keyboardFont);
 
@@ -61,11 +66,12 @@ namespace yoba {
 			void setCursorPosition(size_t cursorPosition);
 
 			void setCursorToStart();
-
 			void setCursorToEnd();
 
 			void insert(const std::wstring_view& value);
 			void backspace();
+
+
 
 		private:
 			uint32_t _cursorBlinkTime = 0;
@@ -73,6 +79,8 @@ namespace yoba {
 			bool _cursorBlinkState = false;
 			size_t _cursorPosition = 0;
 			Size _cursorSize = Size(2, 14);
+			uint16_t _textMargin = 10;
+			int32_t _scrollValue = 0;
 
 			const Font* _keyboardFont = nullptr;
 			const Color* _cursorColor = nullptr;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cstdint>
 #include "vector.h"
 
 namespace yoba {
@@ -10,14 +11,13 @@ namespace yoba {
 
 	class Event {
 		public:
+			explicit Event(uint16_t& staticTypeID);
+
 			virtual bool matches(Element* element);
 
 			bool isHandled() const;
 			void setHandled(bool handled);
 			uint16_t getTypeID() const;
-
-		protected:
-			void registerTypeID(uint16_t& staticTypeID);
 
 		private:
 			static uint16_t _nextTypeID;
@@ -29,13 +29,16 @@ namespace yoba {
 	// -------------------------------- InputEvent --------------------------------
 
 	class InputEvent : public Event {
-
+		public:
+			explicit InputEvent(uint16_t& staticTypeID);
 	};
 
 	// -------------------------------- Screen --------------------------------
 
 	class ScreenEvent : public InputEvent {
 		public:
+			explicit ScreenEvent(uint16_t& staticTypeID);
+
 			bool matches(Element* element) override;
 	};
 
@@ -43,7 +46,7 @@ namespace yoba {
 
 	class TouchEvent : public ScreenEvent {
 		public:
-			explicit TouchEvent(const Point& position);
+			TouchEvent(uint16_t& staticTypeID, const Point& position);
 
 			bool matches(Element* element) override;
 
@@ -77,7 +80,7 @@ namespace yoba {
 
 	class PinchEvent : public ScreenEvent {
 		public:
-			explicit PinchEvent(const Point& position1, const Point& position2);
+			PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2);
 
 			bool matches(Element* element) override;
 
@@ -93,50 +96,22 @@ namespace yoba {
 
 	class PinchDownEvent : public PinchEvent {
 		public:
-			explicit PinchDownEvent(const Point& position1, const Point& position2);
+			PinchDownEvent(const Point& position1, const Point& position2);
 
 			static uint16_t typeID;
 	};
 
 	class PinchDragEvent : public PinchEvent {
 		public:
-			explicit PinchDragEvent(const Point& position1, const Point& position2);
+			PinchDragEvent(const Point& position1, const Point& position2);
 
 			static uint16_t typeID;
 	};
 
 	class PinchUpEvent : public PinchEvent {
 		public:
-			explicit PinchUpEvent(const Point& position1, const Point& position2);
+			PinchUpEvent(const Point& position1, const Point& position2);
 
 			static uint16_t typeID;
 	};
-
-	// -------------------------------- ElementEvent --------------------------------
-
-	template<typename TTarget>
-	class TargetEvent : public Event {
-		public:
-			explicit TargetEvent(TTarget target);
-
-			static uint16_t typeID;
-
-			TTarget getTarget() const;
-
-		private:
-			TTarget _target;
-	};
-
-	template<typename TElement>
-	uint16_t TargetEvent<TElement>::typeID = 0;
-
-	template<typename TElement>
-	TargetEvent<TElement>::TargetEvent(TElement target) : _target(target) {
-		registerTypeID(typeID);
-	}
-
-	template<typename TElement>
-	TElement TargetEvent<TElement>::getTarget() const {
-		return _target;
-	}
 }
