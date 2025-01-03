@@ -15,6 +15,18 @@ namespace yoba {
 
 	}
 
+	void KeyboardKey::tick(KeyboardButton* button) {
+
+	}
+
+	void KeyboardKey::onPressedChanged(KeyboardButton* button) {
+		const auto keyboard = button->getKeyboard();
+		const auto code = getCodeFromCase(keyboard);
+
+		if (code != KeyCode::None)
+			keyboard->getOnKeyPressedChanged()(code, button->isPressed());
+	}
+
 	KeyCode KeyboardKey::getCode() const {
 		return _code;
 	}
@@ -39,38 +51,59 @@ namespace yoba {
 		return getName();
 	}
 
-	void KeyboardKey::onPress(Keyboard* keyboard) {
-		const auto code = getCodeFromCase(keyboard);
+	// ----------------------------- ContinuousTypingKeyboardKey -----------------------------
 
-		if (code != KeyCode::None)
-			keyboard->getOnKeyPress().call(code);
+	ContinuousTypingKeyboardKey::ContinuousTypingKeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width) :
+		KeyboardKey(type, code, name, width)
+	{
+
 	}
 
-	bool KeyboardKey::isContinuousTypingEnabled() const {
-		return _continuousTypingEnabled;
+	void ContinuousTypingKeyboardKey::tick(KeyboardButton* button) {
+		KeyboardKey::tick(button);
+
+		if (!button->isPressed() || millis() < _continuousTypingTime)
+			return;
+
+		onPressedChanged(button);
+
+		_continuousTypingTime = millis() + button->getKeyboard()->getContinuousTypingInterval();
 	}
 
-	void KeyboardKey::setContinuousTypingEnabled(bool value) {
-		_continuousTypingEnabled = value;
+	void ContinuousTypingKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onPressedChanged(button);
+
+		if (!button->isPressed())
+			return;
+
+		_continuousTypingTime = millis() + button->getKeyboard()->getContinuousTypingDelay();
 	}
 
 	// ----------------------------- TextKeyboardKey -----------------------------
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, KeyCode uppercaseCode, const std::wstring_view& uppercaseName, float width) :
-		KeyboardKey(KeyboardKeyType::Default, code, name, width),
+	TextKeyboardKey::TextKeyboardKey(
+		KeyCode code,
+		const std::wstring_view& name,
+		KeyCode uppercaseCode,
+		const std::wstring_view& uppercaseName,
+		float width
+	) :
+		ContinuousTypingKeyboardKey(KeyboardKeyType::Default, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
 	{
-		setContinuousTypingEnabled(true);
+
 	}
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, float width) : TextKeyboardKey(
-		code,
-		name,
-		code,
-		name,
-		width
-	) {
+	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, float width) :
+		TextKeyboardKey(
+			code,
+			name,
+			code,
+			name,
+			width
+		)
+	{
 
 	}
 
@@ -82,12 +115,17 @@ namespace yoba {
 		return _uppercaseName;
 	}
 
-	void TextKeyboardKey::onPress(Keyboard* keyboard) {
-		KeyboardKey::onPress(keyboard);
+	void TextKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		ContinuousTypingKeyboardKey::onPressedChanged(button);
+
+		if (!button->isPressed())
+			return;
+
+		const auto keyboard = button->getKeyboard();
+
+		keyboard->getOnInput()(getCodeFromCase(keyboard), getNameFromCase(keyboard));
 
 		const auto keyboardCase = keyboard->getCase();
-
-		keyboard->getOnInput().call(getCodeFromCase(keyboard), getNameFromCase(keyboard));
 
 		if (keyboardCase == KeyboardCase::Upper)
 			keyboard->setCase(KeyboardCase::Lower);
@@ -103,19 +141,14 @@ namespace yoba {
 
 	// ----------------------------- ActionKeyboardKey -----------------------------
 
-	ActionKeyboardKey::ActionKeyboardKey(KeyCode code, const std::wstring_view& name, float width) : KeyboardKey(KeyboardKeyType::Action, code, name, width) {
-
-	}
-
-	// ----------------------------- ActionKeyboardKey -----------------------------
-
 	ShiftKeyboardKey::ShiftKeyboardKey(
 		const std::wstring_view& name,
 		const std::wstring_view& uppercaseName,
 		const std::wstring_view& capsName,
 		float width
 	) :
-		ActionKeyboardKey(
+		KeyboardKey(
+			KeyboardKeyType::Action,
 			KeyCode::Shift,
 			name,
 			width
@@ -126,8 +159,10 @@ namespace yoba {
 
 	}
 
-	void ShiftKeyboardKey::onPress(Keyboard* keyboard) {
-		KeyboardKey::onPress(keyboard);
+	void ShiftKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onPressedChanged(button);
+
+		const auto keyboard = button->getKeyboard();
 
 		switch (keyboard->getCase()) {
 			case KeyboardCase::Lower:
@@ -155,8 +190,18 @@ namespace yoba {
 
 	// ----------------------------- BackspaceKeyboardKey -----------------------------
 
-	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view& name, float width) : ActionKeyboardKey(KeyCode::Backspace, name, width) {
-		setContinuousTypingEnabled(true);
+	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view& name, float width) :
+		ContinuousTypingKeyboardKey(KeyboardKeyType::Action, KeyCode::Backspace, name, width)
+	{
+
+	}
+
+	// ----------------------------- EnterKeyboardKey -----------------------------
+
+	EnterKeyboardKey::EnterKeyboardKey(const std::wstring_view& name, float width) :
+		KeyboardKey(KeyboardKeyType::Action, KeyCode::Enter, name, width)
+	{
+
 	}
 
 	// ----------------------------- CharactersLayoutKeyboardKey -----------------------------
@@ -166,16 +211,39 @@ namespace yoba {
 		float width,
 		const std::function<KeyboardLayout*()>& layoutBuilder
 	) :
-		ActionKeyboardKey(KeyCode::None, name, width),
+		KeyboardKey(KeyboardKeyType::Action, KeyCode::None, name, width),
 		_layoutBuilder(layoutBuilder)
 	{
 
 	}
 
-	void CharactersLayoutKeyboardKey::onPress(Keyboard* keyboard) {
-		KeyboardKey::onPress(keyboard);
+	void CharactersLayoutKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onPressedChanged(button);
 
-		keyboard->setLayout(_layoutBuilder());
+		if (!button->isPressed())
+			button->getKeyboard()->setLayout(_layoutBuilder());
+	}
+
+	// ----------------------------- DefaultLayoutKeyboardKey -----------------------------
+
+	CurrentCyclicLayoutKeyboardKey::CurrentCyclicLayoutKeyboardKey(
+		const std::wstring_view& name,
+		float width
+	) :
+		KeyboardKey(KeyboardKeyType::Action, KeyCode::None, name, width)
+	{
+
+	}
+
+	void CurrentCyclicLayoutKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onPressedChanged(button);
+
+		if (button->isPressed())
+			return;
+
+		const auto keyboard = button->getKeyboard();
+
+		button->getKeyboard()->setCyclicLayoutIndex(keyboard->getCyclicLayoutIndex());
 	}
 
 	// ----------------------------- CyclicLayoutKeyboardKey -----------------------------
@@ -184,20 +252,17 @@ namespace yoba {
 		const std::wstring_view& name,
 		float width
 	) :
-		ActionKeyboardKey(KeyCode::None, name, width)
+		KeyboardKey(KeyboardKeyType::Action, KeyCode::None, name, width)
 	{
 
 	}
 
-	void CyclicLayoutKeyboardKey::onPress(Keyboard* keyboard) {
-		KeyboardKey::onPress(keyboard);
+	void CyclicLayoutKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onPressedChanged(button);
 
-		keyboard->setLayoutIndex(keyboard->getLayoutIndex());
+		if (!button->isPressed())
+			button->getKeyboard()->setNextCyclicLayoutIndex();
 	}
-
-	// ----------------------------- KeyboardLayout -----------------------------
-
-
 
 	// ----------------------------- KeyboardButton -----------------------------
 
@@ -235,26 +300,13 @@ namespace yoba {
 	void KeyboardButton::tick() {
 		Element::tick();
 
-		if (!_key->isContinuousTypingEnabled() || !isPressed() || millis() < _continuousTypingTime)
-			return;
-
-		_key->onPress(_keyboard);
-
-		_continuousTypingTime = millis() + _keyboard->getContinuousTypingInterval();
+		_key->tick(this);
 	}
 
 	void KeyboardButton::onPressedChanged() {
 		Button::onPressedChanged();
 
-		if (!isPressed())
-			return;
-
-		_key->onPress(_keyboard);
-
-		if (!_key->isContinuousTypingEnabled())
-			return;
-
-		_continuousTypingTime = millis() + _keyboard->getContinuousTypingDelay();
+		_key->onPressedChanged(this);
 	}
 
 	void KeyboardButton::updateTextFromCase() {
@@ -279,9 +331,6 @@ namespace yoba {
 
 	}
 
-	// ----------------------------- KeyboardLayout -----------------------------
-
-
 	// ----------------------------- Keyboard -----------------------------
 
 	Keyboard::Keyboard(std::vector<std::function<KeyboardLayout*()>> cyclicLayoutBuilders) :
@@ -301,13 +350,31 @@ namespace yoba {
 		if (!_layout)
 			return;
 
-		for (auto element : _rowsLayout) {
-			delete dynamic_cast<KeyboardButtonsRow*>(element);
+		std::vector<Element*> elementsToDelete {};
+
+		for (auto rowElement : _rowsLayout) {
+			auto row = dynamic_cast<KeyboardButtonsRowContainer*>(rowElement);
+
+			elementsToDelete.push_back(row);
+
+			for (auto buttonElement : *row) {
+				auto button = dynamic_cast<KeyboardButton*>(buttonElement);
+
+				elementsToDelete.push_back(button);
+			}
 		}
 
 		_rowsLayout.removeChildren();
 
+		for (auto element : elementsToDelete) {
+			delete element;
+		}
+
 		delete _layout;
+
+		Serial.printf("esp_get_free_heap_size: %d\n", esp_get_free_heap_size() / 1024);
+		Serial.printf("esp_get_free_internal_heap_size: %d\n", esp_get_free_internal_heap_size() / 1024);
+		Serial.printf("esp_get_minimum_free_heap_size: %d\n", esp_get_minimum_free_heap_size() / 1024);
 	}
 
 	const Color* Keyboard::getBackgroundColor() const {
@@ -366,7 +433,7 @@ namespace yoba {
 		for (int rowIndex = 0; rowIndex < _layout->rows.size(); rowIndex++) {
 			auto layoutRow = _layout->rows[rowIndex];
 
-			auto UIRow = new KeyboardButtonsRow(this);
+			auto UIRow = new KeyboardButtonsRowContainer(this);
 			UIRow->setHorizontalAlignment(Alignment::Center);
 
 			for (int keyIndex = 0; keyIndex < layoutRow->keys.size(); keyIndex++) {
@@ -377,14 +444,14 @@ namespace yoba {
 		}
 	}
 
-	void Keyboard::setLayoutIndex(int8_t value) {
-		_layoutIndex = value;
+	void Keyboard::setCyclicLayoutIndex(int8_t value) {
+		_cyclicLayoutIndex = value;
 
-		setLayout(_layoutIndex >= 0 ? _cyclicLayoutBuilders[_layoutIndex]() : nullptr);
+		setLayout(_cyclicLayoutIndex >= 0 ? _cyclicLayoutBuilders[_cyclicLayoutIndex]() : nullptr);
 	}
 
-	int8_t Keyboard::getLayoutIndex() {
-		return _layoutIndex;
+	int8_t Keyboard::getCyclicLayoutIndex() {
+		return _cyclicLayoutIndex;
 	}
 
 	uint8_t Keyboard::getHorizontalKeySpacing() const {
@@ -428,7 +495,7 @@ namespace yoba {
 
 	void Keyboard::iterateOverButtons(std::function<void(KeyboardButton*)> handler) {
 		for (auto rowElement : _rowsLayout) {
-			auto row = dynamic_cast<KeyboardButtonsRow*>(rowElement);
+			auto row = dynamic_cast<KeyboardButtonsRowContainer*>(rowElement);
 
 			for (auto buttonElement : *row) {
 				handler(dynamic_cast<KeyboardButton*>(buttonElement));
@@ -436,8 +503,8 @@ namespace yoba {
 		}
 	}
 
-	Callback<KeyCode>& Keyboard::getOnKeyPress() {
-		return _onKeyPress;
+	Callback<KeyCode, bool>& Keyboard::getOnKeyPressedChanged() {
+		return _onKeyPressedChanged;
 	}
 
 	Callback<KeyCode, const std::wstring_view&>& Keyboard::getOnInput() {
@@ -460,23 +527,30 @@ namespace yoba {
 		_continuousTypingInterval = value;
 	}
 
-	// ----------------------------- KeyboardRow -----------------------------
+	uint8_t Keyboard::getCyclicLayoutsCount() {
+		return _cyclicLayoutBuilders.size();
+	}
 
-	KeyboardButtonsRow::KeyboardButtonsRow(Keyboard* keyboard) : _keyboard(keyboard) {
+	void Keyboard::setNextCyclicLayoutIndex() {
+		auto index = _cyclicLayoutIndex + 1;
+
+		if (index >= getCyclicLayoutsCount())
+			index = 0;
+
+		setCyclicLayoutIndex(index);
+	}
+
+	// ----------------------------- KeyboardButtonsRowContainer -----------------------------
+
+	KeyboardButtonsRowContainer::KeyboardButtonsRowContainer(Keyboard* keyboard) : _keyboard(keyboard) {
 
 	}
 
-	KeyboardButtonsRow::~KeyboardButtonsRow() {
-		for (auto child : *this) {
-			delete dynamic_cast<KeyboardButton*>(child);
-		}
-	}
-
-	Keyboard* KeyboardButtonsRow::getKeyboard() const {
+	Keyboard* KeyboardButtonsRowContainer::getKeyboard() const {
 		return _keyboard;
 	}
 
-	Size KeyboardButtonsRow::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardButtonsRowContainer::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
 		const auto availableWidthWithoutSpacing = availableSize.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
 
 		float resultWidth = 0;
@@ -505,7 +579,7 @@ namespace yoba {
 		);
 	}
 
-	void KeyboardButtonsRow::onArrange(const Bounds& bounds) {
+	void KeyboardButtonsRowContainer::onArrange(const Bounds& bounds) {
 		const auto availableWidthWithoutSpacing = bounds.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
 
 		float widthSum = 0;
@@ -572,6 +646,52 @@ namespace yoba {
 		}
 	}
 
+	// ----------------------------- NumericKeyboardLayout -----------------------------
+
+	CharactersKeyboardLayout::CharactersKeyboardLayout() {
+		_row0.keys.push_back(&_key1);
+		_row0.keys.push_back(&_key2);
+		_row0.keys.push_back(&_key3);
+		_row0.keys.push_back(&_key4);
+		_row0.keys.push_back(&_key5);
+		_row0.keys.push_back(&_key6);
+		_row0.keys.push_back(&_key7);
+		_row0.keys.push_back(&_key8);
+		_row0.keys.push_back(&_key9);
+		_row0.keys.push_back(&_key0);
+		rows.push_back(&_row0);
+
+		_row1.keys.push_back(&_keyAt);
+		_row1.keys.push_back(&_keyNumberSign);
+		_row1.keys.push_back(&_keyDollar);
+		_row1.keys.push_back(&_keyUnderscore);
+		_row1.keys.push_back(&_keyAmpersand);
+		_row1.keys.push_back(&_keyMinus);
+		_row1.keys.push_back(&_keyPlus);
+		_row1.keys.push_back(&_keyLeftBrace);
+		_row1.keys.push_back(&_keyRightBrace);
+		_row1.keys.push_back(&_keySlash);
+		rows.push_back(&_row1);
+
+		_row2.keys.push_back(&_keyShift);
+		_row2.keys.push_back(&_keyAsterisk);
+		_row2.keys.push_back(&_keyDoubleQuote);
+		_row2.keys.push_back(&_keyQuote);
+		_row2.keys.push_back(&_keyColon);
+		_row2.keys.push_back(&_keySemicolon);
+		_row2.keys.push_back(&_keyExclamationMark);
+		_row2.keys.push_back(&_keyQuestionMark);
+		_row2.keys.push_back(&_keyBackspace);
+		rows.push_back(&_row2);
+
+		_row3.keys.push_back(&_keyCyclicLayout);
+		_row3.keys.push_back(&_keyComma);
+		_row3.keys.push_back(&_keySpace);
+		_row3.keys.push_back(&_keyPeriod);
+		_row3.keys.push_back(&_keyEnter);
+		rows.push_back(&_row3);
+	}
+
 	// ----------------------------- EnglishKeyboardLayout -----------------------------
 
 	EnglishKeyboardLayout::EnglishKeyboardLayout() {
@@ -610,53 +730,7 @@ namespace yoba {
 		rows.push_back(&_row2);
 
 		_row3.keys.push_back(&_keyCharactersLayout);
-		_row3.keys.push_back(&_keyLayout);
-		_row3.keys.push_back(&_keyComma);
-		_row3.keys.push_back(&_keySpace);
-		_row3.keys.push_back(&_keyPeriod);
-		_row3.keys.push_back(&_keyEnter);
-		rows.push_back(&_row3);
-	}
-
-	// ----------------------------- NumericKeyboardLayout -----------------------------
-
-	CharactersKeyboardLayout::CharactersKeyboardLayout() {
-		_row0.keys.push_back(&_key1);
-		_row0.keys.push_back(&_key2);
-		_row0.keys.push_back(&_key3);
-		_row0.keys.push_back(&_key4);
-		_row0.keys.push_back(&_key5);
-		_row0.keys.push_back(&_key6);
-		_row0.keys.push_back(&_key7);
-		_row0.keys.push_back(&_key8);
-		_row0.keys.push_back(&_key9);
-		_row0.keys.push_back(&_key0);
-		rows.push_back(&_row0);
-
-		_row1.keys.push_back(&_keyAt);
-		_row1.keys.push_back(&_keyNumberSign);
-		_row1.keys.push_back(&_keyDollar);
-		_row1.keys.push_back(&_keyUnderscore);
-		_row1.keys.push_back(&_keyAmpersand);
-		_row1.keys.push_back(&_keyMinus);
-		_row1.keys.push_back(&_keyPlus);
-		_row1.keys.push_back(&_keyLeftBrace);
-		_row1.keys.push_back(&_keyRightBrace);
-		_row1.keys.push_back(&_keySlash);
-		rows.push_back(&_row1);
-
-		_row2.keys.push_back(&_keyAsterisk);
-		_row2.keys.push_back(&_keyDoubleQuote);
-		_row2.keys.push_back(&_keyQuote);
-		_row2.keys.push_back(&_keyColon);
-		_row2.keys.push_back(&_keySemicolon);
-		_row2.keys.push_back(&_keyExclamationMark);
-		_row2.keys.push_back(&_keyQuestionMark);
-		_row2.keys.push_back(&_keyBackspace);
-		rows.push_back(&_row2);
-
 		_row3.keys.push_back(&_keyCyclicLayout);
-		_row3.keys.push_back(&_keyLayout);
 		_row3.keys.push_back(&_keyComma);
 		_row3.keys.push_back(&_keySpace);
 		_row3.keys.push_back(&_keyPeriod);

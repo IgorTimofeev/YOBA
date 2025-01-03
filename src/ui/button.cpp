@@ -51,8 +51,6 @@ namespace yoba {
 
 			setPressed(!isToggle() || !isPressed());
 
-			onPressedChanged();
-
 			event.setHandled(true);
 		}
 		else if (event.getTypeID() == TouchUpEvent::typeID) {
@@ -61,8 +59,6 @@ namespace yoba {
 
 			if (!isToggle())
 				setPressed(false);
-
-			onPressedChanged();
 
 			event.setHandled(true);
 		}
@@ -73,7 +69,12 @@ namespace yoba {
 	}
 
 	void Button::setPressed(bool value) {
+		if (value == _pressed)
+			return;
+
 		_pressed = value;
+
+		onPressedChanged();
 	}
 
 	bool Button::isToggle() const {
@@ -109,6 +110,6 @@ namespace yoba {
 	}
 
 	void Button::onPressedChanged() {
-		_onPressedChanged.call();
+		_onPressedChanged();
 	}
 }

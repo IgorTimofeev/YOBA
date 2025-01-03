@@ -56,7 +56,7 @@ namespace yoba {
 			const auto oldAngle = _angle;
 			_angle = ((TouchDragEvent&) event).getPosition().getRotation(getBounds().getCenter()) - (float) radians(90);
 
-			_onRotate.call(oldAngle, _angle);
+			_onRotate(oldAngle, _angle);
 		}
 
 		event.setHandled(true);

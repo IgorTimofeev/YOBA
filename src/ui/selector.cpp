@@ -41,7 +41,7 @@ namespace yoba {
 
 		onSelectionChanged();
 
-		_onSelectionChanged.call();
+		_onSelectionChanged();
 	}
 
 	void Selector::onSelectionChanged() {

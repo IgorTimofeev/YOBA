@@ -82,7 +82,7 @@ namespace yoba {
 				clampValue();
 				invalidateRender();
 
-				_onValueChanged.call();
+				_onValueChanged();
 			}
 
 			const Callback<>& getOnValueChanged() const {

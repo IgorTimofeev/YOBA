@@ -7,7 +7,7 @@ namespace yoba {
 	template <typename ...T>
 	class Callback {
 		public:
-			void call(T... args) {
+			void operator()(T... args) {
 				for (const auto& callback : _functions) {
 					callback(args...);
 				}

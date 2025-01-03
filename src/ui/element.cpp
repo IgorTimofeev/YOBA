@@ -219,7 +219,7 @@ namespace yoba {
 
 		onEvent(event);
 
-		_eventHandlers.call(event);
+		_eventHandlers(event);
 	}
 
 	void Element::onEvent(InputEvent &event) {

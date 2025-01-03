@@ -175,7 +175,7 @@ namespace yoba {
 		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
 		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
 
-		keyboard->setLayoutIndex(0);
+		keyboard->setCyclicLayoutIndex(0);
 
 		auto app = getApplication();
 
@@ -194,7 +194,10 @@ namespace yoba {
 		app->removeChildren();
 		*app += keyboardAndChildrenLayout;
 
-		keyboard->getOnKeyPress() += [this, temporaryRootChildrenLayout, keyboard, app, keyboardAndChildrenLayout](KeyCode code) {
+		keyboard->getOnKeyPressedChanged() += [this, temporaryRootChildrenLayout, keyboard, app, keyboardAndChildrenLayout](KeyCode code, bool pressed) {
+			if (pressed)
+				return;
+
 			switch (code) {
 				case KeyCode::Enter: {
 					app->setCapturedElement(nullptr);

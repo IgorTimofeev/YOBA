@@ -31,7 +31,7 @@ namespace yoba {
 			return true;
 		}
 		else {
-			_onCompleted.call();
+			_onCompleted();
 
 			return false;
 		}
