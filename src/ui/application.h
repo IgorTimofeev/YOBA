@@ -10,8 +10,6 @@ namespace yoba {
 	class Animation;
 
 	class Application : public Container {
-		friend Element;
-
 		public:
 			// Sexy old school font that will be used as fallback value when rendering
 			// child elements that contain text, but doesn't have any specific font
@@ -41,6 +39,12 @@ namespace yoba {
 
 			void addInputDevice(InputDevice* inputDevice);
 
+			Element* getCapturedElement() const;
+			void setCapturedElement(Element* element);
+
+			Element* getFocusedElement() const;
+			void setFocusedElement(Element* element);
+
 		private:
 			ScreenBuffer* _screenBuffer;
 
@@ -53,12 +57,6 @@ namespace yoba {
 			std::vector<InputDevice*> _inputDevices {};
 
 			const Font* _defaultFont = &defaultFont;
-
-			Element* getCapturedElement() const;
-			void setCapturedElement(Element* capturedElement);
-
-			Element* getFocusedElement() const;
-			void setFocusedElement(Element* focusedElement);
 
 			void animationsTick();
 	};

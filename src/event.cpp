@@ -12,7 +12,7 @@ namespace yoba {
 		_typeID = staticTypeID;
 	}
 
-	uint16_t Event::_nextTypeID = 0;
+	uint16_t Event::_nextTypeID = 1;
 
 	bool Event::isHandled() const {
 		return _handled;

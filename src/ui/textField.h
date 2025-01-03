@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "element.h"
+#include "focusableElement.h"
 #include "cornerRadiusElement.h"
 #include "primaryColorElement.h"
 #include "secondaryColorElement.h"
@@ -15,6 +16,7 @@
 
 namespace yoba {
 	class TextField :
+		public FocusableElement,
 		public PrimaryColorElement,
 		public SecondaryColorElement,
 		public CornerRadiusElement,
@@ -70,8 +72,6 @@ namespace yoba {
 
 			void insert(const std::wstring_view& value);
 			void backspace();
-
-
 
 		private:
 			uint32_t _cursorBlinkTime = 0;

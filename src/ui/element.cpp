@@ -5,6 +5,11 @@
 #include "../event.h"
 
 namespace yoba {
+	Element::~Element() {
+		if (isCaptured())
+			setCaptured(false);
+	}
+
 	bool Element::isVisible() const {
 		return _isVisible;
 	}
@@ -226,31 +231,8 @@ namespace yoba {
 	}
 
 	void Element::setCaptured(bool value) {
-		if (!_application)
-			return;
-
-		const auto oldValue = _application->getCapturedElement() == this;
-
-		_application->setCapturedElement(value ? this : nullptr);
-
-		if (oldValue != value)
-			onCaptureChanged();
-	}
-
-	bool Element::isFocused() {
-		return _application && _application->getFocusedElement() == this;
-	}
-
-	void Element::setFocused(bool value) {
-		if (!_application)
-			return;
-
-		const auto oldValue = _application->getFocusedElement() == this;
-
-		_application->setFocusedElement(value ? this : nullptr);
-
-		if (oldValue != value)
-			onFocusChanged();
+		if (_application)
+			_application->setCapturedElement(value ? this : nullptr);
 	}
 
 	void Element::startAnimation(Animation* animation) {
@@ -262,7 +244,7 @@ namespace yoba {
 		return _parent;
 	}
 
-	void Element::setApplication(Application *value) {
+	void Element::setApplication(Application* value) {
 		_application = value;
 	}
 
@@ -382,7 +364,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	Callback<InputEvent&>& Element::getEventHandlers() {
+	Callback<InputEvent&>& Element::getOnEvent() {
 		return _eventHandlers;
 	}
 

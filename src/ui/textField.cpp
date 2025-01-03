@@ -115,8 +115,6 @@ namespace yoba {
 		if (!(isTouchDown || isTouchUp || isTouchDrag))
 			return;
 
-		Serial.printf("Pizda 2: %d, %d, %d\n", isTouchDown, isTouchUp, isTouchDrag);
-
 		if (isTouchDown) {
 			setCaptured(true);
 
@@ -136,22 +134,24 @@ namespace yoba {
 			const auto& bounds = getBounds();
 			auto touchX = touchEvent.getPosition().getX();
 
-			const auto text = getText();
+			if (touchX >= bounds.getX() && touchX <= bounds.getX2()) {
+				const auto text = getText();
 
-			int32_t textX = bounds.getX();
-			size_t cursorPosition = 0;
+				auto textX = _scrollValue + bounds.getX() + _textMargin;
+				size_t cursorPosition = 0;
 
-			for (size_t i = 0; i < text.length(); i++) {
-				if (touchX > textX) {
-					cursorPosition++;
-					textX += font->getCharWidth(text[i]);
+				for (size_t i = 0; i < text.length(); i++) {
+					if (touchX > textX) {
+						cursorPosition++;
+						textX += font->getCharWidth(text[i]);
+					}
+					else {
+						break;
+					}
 				}
-				else {
-					break;
-				}
+
+				setCursorPosition(cursorPosition);
 			}
-
-			setCursorPosition(cursorPosition);
 		}
 		else {
 			setCursorToEnd();
@@ -197,8 +197,8 @@ namespace yoba {
 		keyboard->getOnKeyPress() += [this, temporaryRootChildrenLayout, keyboard, app, keyboardAndChildrenLayout](KeyCode code) {
 			switch (code) {
 				case KeyCode::Enter: {
-//					setFocused(false);
-
+					app->setCapturedElement(nullptr);
+					app->setFocusedElement(nullptr);
 					app->removeChildren();
 
 					// Moving children back to root

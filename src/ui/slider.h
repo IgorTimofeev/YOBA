@@ -5,6 +5,7 @@
 #include "../hardware/screen/buffers/screenBuffer.h"
 #include "cmath"
 #include "../callback.h"
+#include "focusableElement.h"
 #include "cornerRadiusElement.h"
 #include "primaryColorElement.h"
 #include "secondaryColorElement.h"
@@ -12,7 +13,7 @@
 #include "../number.h"
 
 namespace yoba {
-	class Slider : public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
+	class Slider : public FocusableElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override {
 				auto primaryColor = getPrimaryColor();
@@ -57,9 +58,11 @@ namespace yoba {
 
 				if (isTouchDown) {
 					setCaptured(true);
+					setFocused(true);
 				}
 				else if (isTouchUp) {
 					setCaptured(false);
+					setFocused(false);
 				}
 
 				const auto& bounds = getBounds();

@@ -87,16 +87,36 @@ namespace yoba {
 		return _capturedElement;
 	}
 
-	void Application::setCapturedElement(Element* capturedElement) {
-		_capturedElement = capturedElement;
+	void Application::setCapturedElement(Element* element) {
+		const auto oldCapturedElement = _capturedElement;
+
+		_capturedElement = element;
+
+		if (oldCapturedElement && oldCapturedElement != _capturedElement)
+			oldCapturedElement->onCaptureChanged();
+
+		if (_capturedElement && _capturedElement != oldCapturedElement)
+			_capturedElement->onCaptureChanged();
+
+		invalidate();
 	}
 
 	Element* Application::getFocusedElement() const {
 		return _focusedElement;
 	}
 
-	void Application::setFocusedElement(Element* focusedElement) {
-		_focusedElement = focusedElement;
+	void Application::setFocusedElement(Element* element) {
+		const auto oldFocusedElement = _focusedElement;
+
+		_focusedElement = element;
+
+		if (oldFocusedElement && oldFocusedElement != _focusedElement)
+			oldFocusedElement->onFocusChanged();
+
+		if (_focusedElement && _focusedElement != oldFocusedElement)
+			_focusedElement->onFocusChanged();
+
+		invalidate();
 	}
 
 	void Application::handleEvent(InputEvent &event) {

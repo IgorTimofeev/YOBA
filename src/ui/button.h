@@ -8,12 +8,11 @@
 #include "textElement.h"
 #include "fontElement.h"
 #include "cornerRadiusElement.h"
+#include "focusableElement.h"
 #include "../event.h"
 
 namespace yoba {
-	class ClickEvent;
-
-	class Button : public TextElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
+	class Button : public FocusableElement, public TextElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
 			void onRender(ScreenBuffer* screenBuffer) override;
 

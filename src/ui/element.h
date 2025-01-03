@@ -22,18 +22,19 @@ namespace yoba {
 		Vertical
 	};
 
-	class InputEvent;
 	class Application;
-	class Animation;
 	class Container;
+	class Animation;
+	class InputEvent;
 
 	class Element {
+		friend Application;
 		friend Container;
 
 		public:
 			Element() = default;
 
-			virtual ~Element() = default;
+			virtual ~Element();
 
 			virtual void tick();
 
@@ -49,7 +50,7 @@ namespace yoba {
 
 			virtual void startAnimation(Animation* animation);
 
-			Callback<InputEvent&>& getEventHandlers();
+			Callback<InputEvent&>& getOnEvent();
 
 			Application* getApplication();
 			Element* getParent();
@@ -62,9 +63,6 @@ namespace yoba {
 
 			bool isCaptured();
 			void setCaptured(bool value);
-
-			bool isFocused();
-			void setFocused(bool value);
 
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);
@@ -144,5 +142,7 @@ namespace yoba {
 				int32_t& newPosition,
 				int32_t& newSize
 			);
+
+			void removeCaptureAndFocus();
 	};
 }

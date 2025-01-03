@@ -328,11 +328,10 @@ namespace yoba {
 							_touchPoints[1].getPosition()
 						);
 
-
 						application->handleEvent(event);
 					}
 				}
-					// Pinch down
+				// Pinch down
 				else {
 					_wasPinched = true;
 

@@ -47,6 +47,8 @@ namespace yoba {
 	void Button::onEvent(InputEvent& event) {
 		if (event.getTypeID() == TouchDownEvent::typeID) {
 			setCaptured(true);
+			setFocused(true);
+
 			setPressed(!isToggle() || !isPressed());
 
 			onPressedChanged();
@@ -55,6 +57,7 @@ namespace yoba {
 		}
 		else if (event.getTypeID() == TouchUpEvent::typeID) {
 			setCaptured(false);
+			setFocused(true);
 
 			if (!isToggle())
 				setPressed(false);

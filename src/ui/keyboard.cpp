@@ -205,10 +205,10 @@ namespace yoba {
 		_keyboard(keyboard),
 		_key(key)
 	{
+		setFocusable(false);
 		setCornerRadius(2);
-		updateTextFromCase();
-
 		setFont(_keyboard->getFont());
+		updateTextFromCase();
 
 		switch (_key->getType()) {
 			case KeyboardKeyType::Default: {
