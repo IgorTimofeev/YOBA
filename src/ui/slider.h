@@ -76,16 +76,24 @@ namespace yoba {
 			}
 
 			void setValue(float value) {
-				_value = value;
+				if (value == _value)
+					return;
 
+				_value = value;
 				clampValue();
+
 				invalidateRender();
 
+				onValueChanged();
 				_onValueChanged();
 			}
 
 			const Callback<>& getOnValueChanged() const {
 				return _onValueChanged;
+			}
+
+			virtual void onValueChanged() {
+
 			}
 
 		private:

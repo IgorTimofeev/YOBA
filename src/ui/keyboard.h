@@ -387,19 +387,15 @@ namespace yoba {
 			void setBackgroundColor(const Color* value);
 
 			const Color* getDefaultButtonPrimaryColor() const;
-
 			void setDefaultButtonPrimaryColor(const Color* value);
 
 			const Color* getDefaultButtonSecondaryColor() const;
-
 			void setDefaultButtonSecondaryColor(const Color* value);
 
 			const Color* getActionButtonPrimaryColor() const;
-
 			void setActionButtonPrimaryColor(const Color* value);
 
 			const Color* getActionButtonSecondaryColor() const;
-
 			void setActionButtonSecondaryColor(const Color* actionButtonSecondaryColor);
 
 			uint8_t getHorizontalKeySpacing() const;
@@ -429,7 +425,6 @@ namespace yoba {
 
 			uint16_t getContinuousTypingInterval() const;
 			void setContinuousTypingInterval(uint16_t value);
-
 
 		private:
 			const Color* _defaultButtonPrimaryColor = nullptr;

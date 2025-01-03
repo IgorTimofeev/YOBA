@@ -75,7 +75,10 @@ namespace yoba {
 
 		_pressed = value;
 
+		invalidate();
+
 		onPressedChanged();
+		_onPressedChanged();
 	}
 
 	bool Button::isToggle() const {
@@ -111,6 +114,6 @@ namespace yoba {
 	}
 
 	void Button::onPressedChanged() {
-		_onPressedChanged();
+
 	}
 }

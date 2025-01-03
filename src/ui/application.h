@@ -45,6 +45,8 @@ namespace yoba {
 			Element* getFocusedElement() const;
 			void setFocusedElement(Element* element);
 
+			void enqueueOnTick(const std::function<void()>& task);
+
 		private:
 			ScreenBuffer* _screenBuffer;
 
@@ -55,6 +57,7 @@ namespace yoba {
 
 			std::vector<Animation*> _animations {};
 			std::vector<InputDevice*> _inputDevices {};
+			std::vector<std::function<void()>> _enqueuedTasksOnTick {};
 
 			const Font* _defaultFont = &defaultFont;
 

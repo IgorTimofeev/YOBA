@@ -33,33 +33,26 @@ namespace yoba {
 
 			void onFocusChanged() override;
 
-			const Color* getKeyboardBackgroundColor() const;
-			void setKeyboardBackgroundColor(const Color* keyboardBackgroundColor);
-
-			const Color* getKeyboardDefaultButtonPrimaryColor() const;
-			void setKeyboardDefaultButtonPrimaryColor(const Color* keyboardTextButtonPrimaryColor);
-
-			const Color* getKeyboardDefaultButtonSecondaryColor() const;
-			void setKeyboardDefaultButtonSecondaryColor(const Color* keyboardTextButtonSecondaryColor);
-
-			const Color* getKeyboardActionButtonPrimaryColor() const;
-			void setKeyboardActionButtonPrimaryColor(const Color* keyboardActionButtonPrimaryColor);
-
-			const Color* getKeyboardActionButtonSecondaryColor() const;
-			void setKeyboardActionButtonSecondaryColor(const Color* keyboardActionButtonSecondaryColor);
-
 			const uint16_t& getTextMargin() const;
-
 			void setTextMargin(const uint16_t& textMargin);
-
-			const Font* getKeyboardFont() const;
-			void setKeyboardFont(const Font* keyboardFont);
 
 			const Size& getCursorSize() const;
 			void setCursorSize(const Size& cursorSize);
 
 			const Color* getCursorColor() const;
 			void setCursorColor(const Color* cursorColor);
+
+			const Color* getFocusedBorderColor() const;
+
+			void setFocusedBorderColor(const Color* focusedBorderColor);
+
+			const Color* getFocusedPrimaryColor() const;
+
+			void setFocusedPrimaryColor(const Color* focusedPrimaryColor);
+
+			const Color* getFocusedSecondaryColor() const;
+
+			void setFocusedSecondaryColor(const Color* focusedSecondaryColor);
 
 			uint32_t getCursorBlinkInterval() const;
 			void setCursorBlinkInterval(uint32_t cursorBlinkInterval);
@@ -73,6 +66,9 @@ namespace yoba {
 			void insert(const std::wstring_view& value);
 			void backspace();
 
+			const std::optional<std::function<void(Keyboard*)>>& getKeyboardConfigurator() const;
+			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
+
 		private:
 			uint32_t _cursorBlinkTime = 0;
 			uint32_t _cursorBlinkInterval = 500;
@@ -82,13 +78,12 @@ namespace yoba {
 			uint16_t _textMargin = 10;
 			int32_t _scrollValue = 0;
 
-			const Font* _keyboardFont = nullptr;
+			const Color* _focusedBorderColor = nullptr;
+			const Color* _focusedPrimaryColor = nullptr;
+			const Color* _focusedSecondaryColor = nullptr;
 			const Color* _cursorColor = nullptr;
-			const Color* _keyboardBackgroundColor = nullptr;
-			const Color* _keyboardDefaultButtonPrimaryColor = nullptr;
-			const Color* _keyboardDefaultButtonSecondaryColor = nullptr;
-			const Color* _keyboardActionButtonPrimaryColor = nullptr;
-			const Color* _keyboardActionButtonSecondaryColor = nullptr;
+
+			std::optional<std::function<void(Keyboard*)>> _keyboardConfigurator = std::nullopt;
 
 			void setCursorBlinkStateAndTime(bool value);
 			void showKeyboard();

@@ -7,7 +7,6 @@
 namespace yoba {
 	// ----------------------------- KeyboardKey -----------------------------
 
-
 	KeyboardKey::KeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width) :
 		_type(type),
 		_code(code),
@@ -207,6 +206,7 @@ namespace yoba {
 			return;
 
 		auto keyboard = button->getKeyboard();
+
 		keyboard->setLayout(keyboard->getCharactersLayoutBuilder().value()());
 	}
 
@@ -229,7 +229,7 @@ namespace yoba {
 
 		const auto keyboard = button->getKeyboard();
 
-		button->getKeyboard()->setCyclicLayoutIndex(keyboard->getCyclicLayoutIndex());
+		keyboard->setCyclicLayoutIndex(keyboard->getCyclicLayoutIndex());
 	}
 
 	// ----------------------------- CyclicLayoutKeyboardKey -----------------------------
@@ -246,8 +246,9 @@ namespace yoba {
 	void CyclicLayoutKeyboardKey::onPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onPressedChanged(button);
 
-		if (!button->isPressed())
+		if (!button->isPressed()) {
 			button->getKeyboard()->setNextCyclicLayoutIndex();
+		}
 	}
 
 	// ----------------------------- KeyboardButton -----------------------------
@@ -293,7 +294,9 @@ namespace yoba {
 	void KeyboardButton::onPressedChanged() {
 		Button::onPressedChanged();
 
-		getKey()->onPressedChanged(this);
+		getApplication()->enqueueOnTick([this]() {
+			getKey()->onPressedChanged(this);
+		});
 	}
 
 	void KeyboardButton::updateTextFromCase() {

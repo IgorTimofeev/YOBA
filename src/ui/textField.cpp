@@ -18,11 +18,10 @@ namespace yoba {
 	void TextField::onRender(ScreenBuffer* screenBuffer) {
 		auto& bounds = getBounds();
 
-		// Background
-		auto primaryColor = getPrimaryColor();
+		const auto focused = isFocused();
 
-		if (!primaryColor)
-			primaryColor = screenBuffer->getPrimaryColor();
+		// Background
+		const auto primaryColor = selectColor(focused, _primaryColor, _focusedPrimaryColor, screenBuffer->getPrimaryColor());
 
 		if (primaryColor) {
 			screenBuffer->renderFilledRectangle(
@@ -33,11 +32,13 @@ namespace yoba {
 		}
 
 		// Border
-		if (isFocused() && getBorderColor()) {
+		const auto borderColor = selectColor(focused, _borderColor, _focusedBorderColor, nullptr);
+
+		if (borderColor) {
 			screenBuffer->renderRectangle(
 				bounds,
 				getCornerRadius(),
-				getBorderColor()
+				borderColor
 			);
 		}
 
@@ -47,10 +48,7 @@ namespace yoba {
 		if (!font)
 			return;
 
-		auto secondaryColor = getSecondaryColor();
-
-		if (!secondaryColor)
-			secondaryColor = screenBuffer->getSecondaryColor();
+		const auto secondaryColor = selectColor(focused, _secondaryColor, _focusedSecondaryColor, screenBuffer->getSecondaryColor());
 
 		if (!secondaryColor)
 			return;
@@ -100,7 +98,7 @@ namespace yoba {
 					_cursorSize.getWidth(),
 					_cursorSize.getHeight()
 				),
-				getCursorColor()
+				_cursorColor ? _cursorColor : screenBuffer->getSecondaryColor()
 			);
 		}
 
@@ -219,54 +217,6 @@ namespace yoba {
 		setCursorPosition(getCursorPosition() - 1);
 	}
 
-	const Color* TextField::getKeyboardDefaultButtonPrimaryColor() const {
-		return _keyboardDefaultButtonPrimaryColor;
-	}
-
-	void TextField::setKeyboardDefaultButtonPrimaryColor(const Color* keyboardTextButtonPrimaryColor) {
-		_keyboardDefaultButtonPrimaryColor = keyboardTextButtonPrimaryColor;
-	}
-
-	const Color* TextField::getKeyboardDefaultButtonSecondaryColor() const {
-		return _keyboardDefaultButtonSecondaryColor;
-	}
-
-	void TextField::setKeyboardDefaultButtonSecondaryColor(const Color* keyboardTextButtonSecondaryColor) {
-		_keyboardDefaultButtonSecondaryColor = keyboardTextButtonSecondaryColor;
-	}
-
-	const Color* TextField::getKeyboardActionButtonPrimaryColor() const {
-		return _keyboardActionButtonPrimaryColor;
-	}
-
-	void TextField::setKeyboardActionButtonPrimaryColor(const Color* keyboardActionButtonPrimaryColor) {
-		_keyboardActionButtonPrimaryColor = keyboardActionButtonPrimaryColor;
-	}
-
-	const Color* TextField::getKeyboardActionButtonSecondaryColor() const {
-		return _keyboardActionButtonSecondaryColor;
-	}
-
-	void TextField::setKeyboardActionButtonSecondaryColor(const Color* keyboardActionButtonSecondaryColor) {
-		_keyboardActionButtonSecondaryColor = keyboardActionButtonSecondaryColor;
-	}
-
-	const Color* TextField::getKeyboardBackgroundColor() const {
-		return _keyboardBackgroundColor;
-	}
-
-	void TextField::setKeyboardBackgroundColor(const Color* keyboardBackgroundColor) {
-		_keyboardBackgroundColor = keyboardBackgroundColor;
-	}
-
-	const Font* TextField::getKeyboardFont() const {
-		return _keyboardFont;
-	}
-
-	void TextField::setKeyboardFont(const Font* keyboardFont) {
-		_keyboardFont = keyboardFont;
-	}
-
 	size_t TextField::getCursorPosition() const {
 		return _cursorPosition;
 	}
@@ -352,28 +302,8 @@ namespace yoba {
 	void TextField::showKeyboard() {
 		auto keyboard = ApplicationKeyboardController::show(getApplication());
 
-		keyboard->setKeyHeight(0.08f);
-		keyboard->setFont(getKeyboardFont());
-		keyboard->setBackgroundColor(getKeyboardBackgroundColor());
-		keyboard->setDefaultButtonPrimaryColor(getKeyboardDefaultButtonPrimaryColor());
-		keyboard->setDefaultButtonSecondaryColor(getKeyboardDefaultButtonSecondaryColor());
-		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
-		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
-
-		keyboard->setCharactersLayoutBuilder([]() {
-			return new CharactersKeyboardLayout();
-		});
-
-		keyboard->setCyclicLayoutBuilders({
-			[]() {
-				return new EnglishKeyboardLayout();
-			},
-//			[]() {
-//				return new RussianKeyboardLayout();
-//			}
-		});
-
-		keyboard->setCyclicLayoutIndex(0);
+		if (_keyboardConfigurator.has_value())
+			_keyboardConfigurator.value()(keyboard);
 
 		keyboard->getOnKeyPressedChanged() += [this](KeyCode code, bool pressed) {
 			if (pressed)
@@ -396,5 +326,37 @@ namespace yoba {
 		keyboard->getOnInput() += [this](KeyCode code, const std::wstring_view& text) {
 			insert(text);
 		};
+	}
+
+	const std::optional<std::function<void(Keyboard*)>>& TextField::getKeyboardConfigurator() const {
+		return _keyboardConfigurator;
+	}
+
+	void TextField::setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator) {
+		_keyboardConfigurator = keyboardConfigurator;
+	}
+
+	const Color* TextField::getFocusedBorderColor() const {
+		return _focusedBorderColor;
+	}
+
+	void TextField::setFocusedBorderColor(const Color* focusedBorderColor) {
+		_focusedBorderColor = focusedBorderColor;
+	}
+
+	const Color* TextField::getFocusedPrimaryColor() const {
+		return _focusedPrimaryColor;
+	}
+
+	void TextField::setFocusedPrimaryColor(const Color* focusedPrimaryColor) {
+		_focusedPrimaryColor = focusedPrimaryColor;
+	}
+
+	const Color* TextField::getFocusedSecondaryColor() const {
+		return _focusedSecondaryColor;
+	}
+
+	void TextField::setFocusedSecondaryColor(const Color* focusedSecondaryColor) {
+		_focusedSecondaryColor = focusedSecondaryColor;
 	}
 }

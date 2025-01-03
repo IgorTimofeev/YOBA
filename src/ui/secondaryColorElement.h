@@ -18,5 +18,26 @@ namespace yoba {
 
 		protected:
 			const Color* _secondaryColor = nullptr;
+
+			const Color* selectColor(
+				bool condition,
+				const Color* defaultColor,
+				const Color* conditionColor,
+				const Color* fallbackColor
+			) {
+				if (condition) {
+					if (conditionColor) {
+						return conditionColor;
+					}
+					else if (defaultColor) {
+						return defaultColor;
+					}
+				}
+				else if (defaultColor) {
+					return defaultColor;
+				}
+
+				return fallbackColor;
+			}
 	};
 }

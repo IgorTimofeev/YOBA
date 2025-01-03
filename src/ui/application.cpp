@@ -81,6 +81,14 @@ namespace yoba {
 
 			_isRendered = true;
 		}
+
+		// Running enqueued tasks if any
+		if (_enqueuedTasksOnTick.size() > 0) {
+			for (const auto& task : _enqueuedTasksOnTick)
+				task();
+
+			_enqueuedTasksOnTick.clear();
+		}
 	}
 
 	Element* Application::getCapturedElement() const {
@@ -150,5 +158,9 @@ namespace yoba {
 
 	void Application::addInputDevice(InputDevice* inputDevice) {
 		_inputDevices.push_back(inputDevice);
+	}
+
+	void Application::enqueueOnTick(const std::function<void()>& task) {
+		_enqueuedTasksOnTick.push_back(task);
 	}
 }
