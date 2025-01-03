@@ -288,7 +288,7 @@ namespace yoba {
 
 	class EnterKeyboardKey : public KeyboardKey {
 		public:
-			EnterKeyboardKey(const std::wstring_view& name, float width);
+			EnterKeyboardKey(float width);
 	};
 
 	class SpaceKeyboardKey : public KeyboardKey {
@@ -516,7 +516,7 @@ namespace yoba {
 			TextKeyboardKey _keyComma = TextKeyboardKey(KeyCode::Comma, L",", 0.1f);
 			TextKeyboardKey _keySpace = TextKeyboardKey(KeyCode::Space, L" ", 0.5f);
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
-			EnterKeyboardKey _keyEnter = EnterKeyboardKey(L"Enter", 0.2f);
+			EnterKeyboardKey _keyEnter = EnterKeyboardKey(0.2f);
 	};
 
 	class EnglishKeyboardLayout : public KeyboardLayout {
@@ -560,7 +560,7 @@ namespace yoba {
 			TextKeyboardKey _keyComma = TextKeyboardKey(KeyCode::Comma, L",", 0.1f);
 			SpaceKeyboardKey _keySpace = SpaceKeyboardKey();
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
-			EnterKeyboardKey _keyEnter = EnterKeyboardKey( L"Enter", 0.2f);
+			EnterKeyboardKey _keyEnter = EnterKeyboardKey(0.2f);
 	};
 
 	class RussianKeyboardLayout : public KeyboardLayout {
@@ -609,6 +609,6 @@ namespace yoba {
 			TextKeyboardKey _keyComma = TextKeyboardKey(KeyCode::Comma, L",", 0.1f);
 			SpaceKeyboardKey _keySpace = SpaceKeyboardKey();
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
-			EnterKeyboardKey _keyEnter = EnterKeyboardKey( L"Enter", 0.2f);
+			EnterKeyboardKey _keyEnter = EnterKeyboardKey(0.2f);
 	};
 }

@@ -174,8 +174,8 @@ namespace yoba {
 
 	// ----------------------------- EnterKeyboardKey -----------------------------
 
-	EnterKeyboardKey::EnterKeyboardKey(const std::wstring_view& name, float width) :
-		KeyboardKey(KeyboardKeyType::Action, KeyCode::Enter, name, width)
+	EnterKeyboardKey::EnterKeyboardKey(float width) :
+		KeyboardKey(KeyboardKeyType::Action, KeyCode::Enter, L"<-", width)
 	{
 
 	}
