@@ -366,9 +366,9 @@ namespace yoba {
 
 		delete _layout;
 
-		Serial.printf("esp_get_free_heap_size: %d\n", esp_get_free_heap_size() / 1024);
-		Serial.printf("esp_get_free_internal_heap_size: %d\n", esp_get_free_internal_heap_size() / 1024);
-		Serial.printf("esp_get_minimum_free_heap_size: %d\n", esp_get_minimum_free_heap_size() / 1024);
+//		Serial.printf("esp_get_free_heap_size: %d\n", esp_get_free_heap_size() / 1024);
+//		Serial.printf("esp_get_free_internal_heap_size: %d\n", esp_get_free_internal_heap_size() / 1024);
+//		Serial.printf("esp_get_minimum_free_heap_size: %d\n", esp_get_minimum_free_heap_size() / 1024);
 	}
 
 	const Color* Keyboard::getBackgroundColor() const {
@@ -752,6 +752,60 @@ namespace yoba {
 			&_keyB,
 			&_keyN,
 			&_keyM,
+			&_keyBackspace,
+		},
+		{
+			&_keyCharactersLayout,
+			&_keyCyclicLayout,
+			&_keyComma,
+			&_keySpace,
+			&_keyPeriod,
+			&_keyEnter,
+		}
+	}) {
+
+	}
+
+	// ----------------------------- RussianKeyboardLayout -----------------------------
+
+	RussianKeyboardLayout::RussianKeyboardLayout() : KeyboardLayout({
+		{
+			&_keyQ,
+			&_keyW,
+			&_keyE,
+			&_keyR,
+			&_keyT,
+			&_keyY,
+			&_keyU,
+			&_keyI,
+			&_keyO,
+			&_keyP,
+			&_keyBracket
+		},
+		{
+			&_keyA,
+			&_keyS,
+			&_keyD,
+			&_keyF,
+			&_keyG,
+			&_keyH,
+			&_keyJ,
+			&_keyK,
+			&_keyL,
+			&_keySemicolon,
+			&_keyQuote
+		},
+		{
+			&_keyShift,
+			&_keyZ,
+			&_keyX,
+			&_keyC,
+			&_keyV,
+			&_keyB,
+			&_keyN,
+			&_keyM,
+			&_keyLessThan,
+			&_keyMoreThan,
 			&_keyBackspace,
 		},
 		{

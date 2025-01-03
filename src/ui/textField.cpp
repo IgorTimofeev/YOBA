@@ -164,6 +164,9 @@ namespace yoba {
 		auto keyboard = new Keyboard({
 			[]() {
 				return new EnglishKeyboardLayout();
+			},
+			[]() {
+				return new RussianKeyboardLayout();
 			}
 		});
 
