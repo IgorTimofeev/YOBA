@@ -266,16 +266,17 @@ namespace yoba {
 
 	// ----------------------------- KeyboardButton -----------------------------
 
-	KeyboardButton::KeyboardButton(Keyboard* keyboard, KeyboardKey* key) :
+	KeyboardButton::KeyboardButton(Keyboard* keyboard, uint8_t row, uint8_t column) :
 		_keyboard(keyboard),
-		_key(key)
+		_row(row),
+		_column(column)
 	{
 		setFocusable(false);
 		setCornerRadius(2);
 		setFont(_keyboard->getFont());
 		updateTextFromCase();
 
-		switch (_key->getType()) {
+		switch (getKey()->getType()) {
 			case KeyboardKeyType::Default: {
 				setPrimaryColor(_keyboard->getDefaultButtonPrimaryColor());
 				setSecondaryColor(_keyboard->getDefaultButtonSecondaryColor());
@@ -300,17 +301,17 @@ namespace yoba {
 	void KeyboardButton::tick() {
 		Element::tick();
 
-		_key->tick(this);
+		getKey()->tick(this);
 	}
 
 	void KeyboardButton::onPressedChanged() {
 		Button::onPressedChanged();
 
-		_key->onPressedChanged(this);
+		getKey()->onPressedChanged(this);
 	}
 
 	void KeyboardButton::updateTextFromCase() {
-		setText(_key->getNameFromCase(getKeyboard()));
+		setText(getKey()->getNameFromCase(getKeyboard()));
 	}
 
 	void KeyboardButton::updateFromCase() {
@@ -322,24 +323,25 @@ namespace yoba {
 	}
 
 	KeyboardKey* KeyboardButton::getKey() {
-		return _key;
+		return _keyboard->getLayout()->keys[_row][_column];
 	}
 
-	// ----------------------------- KeyboardRow -----------------------------
+	uint8_t KeyboardButton::getRow() const {
+		return _row;
+	}
 
-	KeyboardLayoutRow::KeyboardLayoutRow() {
-
+	uint8_t KeyboardButton::getColumn() const {
+		return _column;
 	}
 
 	// ----------------------------- Keyboard -----------------------------
 
 	Keyboard::Keyboard(std::vector<std::function<KeyboardLayout*()>> cyclicLayoutBuilders) :
-		_cyclicLayoutBuilders(cyclicLayoutBuilders)
+		_cyclicLayoutBuilders(cyclicLayoutBuilders),
+		_buttonsContainer(this)
 	{
 		*this += &_backgroundPanel;
-
-		_rowsLayout.setSpacing(2);
-		*this += &_rowsLayout;
+		*this += &_buttonsContainer;
 	}
 
 	Keyboard::~Keyboard() {
@@ -350,21 +352,13 @@ namespace yoba {
 		if (!_layout)
 			return;
 
-		std::vector<Element*> elementsToDelete {};
+		auto elementsToDelete = std::vector<Element*>(_buttonsContainer.getChildrenCount());
 
-		for (auto rowElement : _rowsLayout) {
-			auto row = dynamic_cast<KeyboardButtonsRowContainer*>(rowElement);
-
-			elementsToDelete.push_back(row);
-
-			for (auto buttonElement : *row) {
-				auto button = dynamic_cast<KeyboardButton*>(buttonElement);
-
-				elementsToDelete.push_back(button);
-			}
+		for (auto buttonElement : _buttonsContainer) {
+			elementsToDelete.push_back(buttonElement);
 		}
 
-		_rowsLayout.removeChildren();
+		_buttonsContainer.removeChildren();
 
 		for (auto element : elementsToDelete) {
 			delete element;
@@ -430,17 +424,12 @@ namespace yoba {
 		if (!_layout)
 			return;
 
-		for (int rowIndex = 0; rowIndex < _layout->rows.size(); rowIndex++) {
-			auto layoutRow = _layout->rows[rowIndex];
+		for (int rowIndex = 0; rowIndex < _layout->keys.size(); rowIndex++) {
+			auto layoutRow = _layout->keys[rowIndex];
 
-			auto UIRow = new KeyboardButtonsRowContainer(this);
-			UIRow->setHorizontalAlignment(Alignment::Center);
-
-			for (int keyIndex = 0; keyIndex < layoutRow->keys.size(); keyIndex++) {
-				*UIRow += new KeyboardButton(this, layoutRow->keys[keyIndex]);
+			for (int columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
+				_buttonsContainer += new KeyboardButton(this, rowIndex, columnIndex);
 			}
-
-			_rowsLayout += UIRow;
 		}
 	}
 
@@ -463,11 +452,11 @@ namespace yoba {
 	}
 
 	uint8_t Keyboard::getVerticalKeySpacing() const {
-		return _rowsLayout.getSpacing();
+		return _verticalKeySpacing;
 	}
 
 	void Keyboard::setVerticalKeySpacing(uint8_t value) {
-		_rowsLayout.setSpacing(value);
+		_verticalKeySpacing = value;
 	}
 
 	float Keyboard::getKeyHeight() const {
@@ -488,18 +477,8 @@ namespace yoba {
 		if (!_layout)
 			return;
 
-		iterateOverButtons([](KeyboardButton* button) {
-			button->updateFromCase();
-		});
-	}
-
-	void Keyboard::iterateOverButtons(std::function<void(KeyboardButton*)> handler) {
-		for (auto rowElement : _rowsLayout) {
-			auto row = dynamic_cast<KeyboardButtonsRowContainer*>(rowElement);
-
-			for (auto buttonElement : *row) {
-				handler(dynamic_cast<KeyboardButton*>(buttonElement));
-			}
+		for (auto element : _buttonsContainer) {
+			dynamic_cast<KeyboardButton*>(element)->updateFromCase();
 		}
 	}
 
@@ -540,70 +519,113 @@ namespace yoba {
 		setCyclicLayoutIndex(index);
 	}
 
-	// ----------------------------- KeyboardButtonsRowContainer -----------------------------
+	// ----------------------------- KeyboardButtonsContainer -----------------------------
 
-	KeyboardButtonsRowContainer::KeyboardButtonsRowContainer(Keyboard* keyboard) : _keyboard(keyboard) {
+	KeyboardButtonsContainer::KeyboardButtonsContainer(Keyboard* keyboard) : _keyboard(keyboard) {
 
 	}
 
-	Keyboard* KeyboardButtonsRowContainer::getKeyboard() const {
-		return _keyboard;
-	}
+	Size KeyboardButtonsContainer::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+		const auto layout = _keyboard->getLayout();
 
-	Size KeyboardButtonsRowContainer::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
-		const auto availableWidthWithoutSpacing = availableSize.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
-
-		float resultWidth = 0;
+		if (!layout)
+			return { 0, 0 };
 
 		const auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * availableSize.getWidth());
+		uint8_t rowIndex = 0;
+		uint8_t rowButtonCount = 0;
 
 		for (auto child : *this) {
 			auto button = dynamic_cast<KeyboardButton*>(child);
 
-			const auto buttonWidth = button->getKey()->getWidth() * availableWidthWithoutSpacing;
+			if (button->getRow() > rowIndex) {
+				rowIndex++;
+				rowButtonCount = 0;
+			}
+
+			const auto availableWidthWithoutSpacing = availableSize.getWidth() - _keyboard->getHorizontalKeySpacing() * rowButtonCount;
 
 			button->measure(
 				screenBuffer,
 				Size(
-					std::round(buttonWidth),
+					std::round(button->getKey()->getWidth() * availableWidthWithoutSpacing),
 					buttonHeight
 				)
 			);
 
-			resultWidth += buttonWidth + _keyboard->getHorizontalKeySpacing();
+			rowButtonCount++;
 		}
 
 		return Size(
-			std::round(resultWidth - _keyboard->getHorizontalKeySpacing()),
-			buttonHeight
+			availableSize.getWidth(),
+			(buttonHeight + _keyboard->getVerticalKeySpacing()) * layout->keys.size() - _keyboard->getVerticalKeySpacing()
 		);
 	}
 
-	void KeyboardButtonsRowContainer::onArrange(const Bounds& bounds) {
-		const auto availableWidthWithoutSpacing = bounds.getWidth() - _keyboard->getHorizontalKeySpacing() * (getChildrenCount() - 1);
+	void KeyboardButtonsContainer::onArrange(const Bounds& bounds) {
+		const auto layout = _keyboard->getLayout();
 
-		float widthSum = 0;
+		if (!layout)
+			return;
 
-		for (auto child : *this) {
-			widthSum += dynamic_cast<KeyboardButton*>(child)->getKey()->getWidth();
+		uint8_t buttonIndexFrom = 0;
+		uint8_t rowIndex = 0;
+		uint8_t rowButtonCount = 0;
+		uint16_t y = bounds.getY();
+		const auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * bounds.getWidth());
+
+		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonHeight, &buttonIndexFrom](size_t buttonIndexTo) {
+			if (rowButtonCount == 0)
+				return;
+
+			auto availableWidthWithoutSpacing = bounds.getWidth() - _keyboard->getHorizontalKeySpacing() * rowButtonCount;
+			float rowWidth = 0;
+			float buttonWidth;
+
+			for (size_t j = buttonIndexFrom; j < buttonIndexTo; j++) {
+				auto button = dynamic_cast<KeyboardButton*>(getChildAt(j));
+
+				buttonWidth = button->getKey()->getWidth() * availableWidthWithoutSpacing;
+				rowWidth += buttonWidth + _keyboard->getHorizontalKeySpacing();
+			}
+
+			rowWidth -= _keyboard->getHorizontalKeySpacing();
+
+			float x = bounds.getXCenter() - rowWidth / 2;
+
+			for (size_t j = buttonIndexFrom; j < buttonIndexTo; j++) {
+				auto button = dynamic_cast<KeyboardButton*>(getChildAt(j));
+
+				buttonWidth = button->getKey()->getWidth() * availableWidthWithoutSpacing;
+
+				button->arrange(Bounds(
+					std::round(x),
+					y,
+					std::round(buttonWidth),
+					buttonHeight
+				));
+
+				x += buttonWidth + _keyboard->getHorizontalKeySpacing();
+			}
+		};
+
+		for (size_t i = 0; i < getChildrenCount(); i++) {
+			auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+
+			if (button->getRow() > rowIndex) {
+				arrangeRow(i);
+
+				y += buttonHeight + _keyboard->getVerticalKeySpacing();
+				buttonIndexFrom = i;
+				rowButtonCount = 0;
+				rowIndex++;
+			}
+
+			rowButtonCount++;
 		}
 
-		float x = bounds.getX();
-
-		for (auto child : *this) {
-			auto button = dynamic_cast<KeyboardButton*>(child);
-
-			const float buttonWidth = button->getKey()->getWidth() / widthSum * availableWidthWithoutSpacing;
-
-			button->arrange(Bounds(
-				std::round(x),
-				bounds.getY(),
-				std::round(buttonWidth),
-				bounds.getHeight()
-			));
-
-			x += buttonWidth + _keyboard->getHorizontalKeySpacing();
-		}
+		if (buttonIndexFrom < getChildrenCount() - 1)
+			arrangeRow(getChildrenCount());
 	}
 
 	// ----------------------------- KeyboardRootLayout -----------------------------
@@ -648,93 +670,99 @@ namespace yoba {
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------
 
-	CharactersKeyboardLayout::CharactersKeyboardLayout() {
-		_row0.keys.push_back(&_key1);
-		_row0.keys.push_back(&_key2);
-		_row0.keys.push_back(&_key3);
-		_row0.keys.push_back(&_key4);
-		_row0.keys.push_back(&_key5);
-		_row0.keys.push_back(&_key6);
-		_row0.keys.push_back(&_key7);
-		_row0.keys.push_back(&_key8);
-		_row0.keys.push_back(&_key9);
-		_row0.keys.push_back(&_key0);
-		rows.push_back(&_row0);
+	CharactersKeyboardLayout::CharactersKeyboardLayout() : KeyboardLayout({
+		{
+			&_key1,
+			&_key2,
+			&_key3,
+			&_key4,
+			&_key5,
+			&_key6,
+			&_key7,
+			&_key8,
+			&_key9,
+			&_key0
+		},
+		{
+			&_keyAt,
+			&_keyNumberSign,
+			&_keyDollar,
+			&_keyUnderscore,
+			&_keyAmpersand,
+			&_keyMinus,
+			&_keyPlus,
+			&_keyLeftBrace,
+			&_keyRightBrace,
+			&_keySlash,
+		},
+		{
+			&_keyShift,
+			&_keyAsterisk,
+			&_keyDoubleQuote,
+			&_keyQuote,
+			&_keyColon,
+			&_keySemicolon,
+			&_keyExclamationMark,
+			&_keyQuestionMark,
+			&_keyBackspace,
+		},
+		{
+			&_keyCyclicLayout,
+			&_keyComma,
+			&_keySpace,
+			&_keyPeriod,
+			&_keyEnter,
+		}
+	}) {
 
-		_row1.keys.push_back(&_keyAt);
-		_row1.keys.push_back(&_keyNumberSign);
-		_row1.keys.push_back(&_keyDollar);
-		_row1.keys.push_back(&_keyUnderscore);
-		_row1.keys.push_back(&_keyAmpersand);
-		_row1.keys.push_back(&_keyMinus);
-		_row1.keys.push_back(&_keyPlus);
-		_row1.keys.push_back(&_keyLeftBrace);
-		_row1.keys.push_back(&_keyRightBrace);
-		_row1.keys.push_back(&_keySlash);
-		rows.push_back(&_row1);
-
-		_row2.keys.push_back(&_keyShift);
-		_row2.keys.push_back(&_keyAsterisk);
-		_row2.keys.push_back(&_keyDoubleQuote);
-		_row2.keys.push_back(&_keyQuote);
-		_row2.keys.push_back(&_keyColon);
-		_row2.keys.push_back(&_keySemicolon);
-		_row2.keys.push_back(&_keyExclamationMark);
-		_row2.keys.push_back(&_keyQuestionMark);
-		_row2.keys.push_back(&_keyBackspace);
-		rows.push_back(&_row2);
-
-		_row3.keys.push_back(&_keyCyclicLayout);
-		_row3.keys.push_back(&_keyComma);
-		_row3.keys.push_back(&_keySpace);
-		_row3.keys.push_back(&_keyPeriod);
-		_row3.keys.push_back(&_keyEnter);
-		rows.push_back(&_row3);
 	}
 
 	// ----------------------------- EnglishKeyboardLayout -----------------------------
 
-	EnglishKeyboardLayout::EnglishKeyboardLayout() {
-		_row0.keys.push_back(&_keyQ);
-		_row0.keys.push_back(&_keyW);
-		_row0.keys.push_back(&_keyE);
-		_row0.keys.push_back(&_keyR);
-		_row0.keys.push_back(&_keyT);
-		_row0.keys.push_back(&_keyY);
-		_row0.keys.push_back(&_keyU);
-		_row0.keys.push_back(&_keyI);
-		_row0.keys.push_back(&_keyO);
-		_row0.keys.push_back(&_keyP);
-		rows.push_back(&_row0);
+	EnglishKeyboardLayout::EnglishKeyboardLayout() : KeyboardLayout({
+		{
+			&_keyQ,
+			&_keyW,
+			&_keyE,
+			&_keyR,
+			&_keyT,
+			&_keyY,
+			&_keyU,
+			&_keyI,
+			&_keyO,
+			&_keyP,
+		},
+		{
+			&_keyA,
+			&_keyS,
+			&_keyD,
+			&_keyF,
+			&_keyG,
+			&_keyH,
+			&_keyJ,
+			&_keyK,
+			&_keyL
+		},
+		{
+			&_keyShift,
+			&_keyZ,
+			&_keyX,
+			&_keyC,
+			&_keyV,
+			&_keyB,
+			&_keyN,
+			&_keyM,
+			&_keyBackspace,
+		},
+		{
+			&_keyCharactersLayout,
+			&_keyCyclicLayout,
+			&_keyComma,
+			&_keySpace,
+			&_keyPeriod,
+			&_keyEnter,
+		}
+	}) {
 
-		_row1.keys.push_back(&_keyA);
-		_row1.keys.push_back(&_keyS);
-		_row1.keys.push_back(&_keyD);
-		_row1.keys.push_back(&_keyF);
-		_row1.keys.push_back(&_keyG);
-		_row1.keys.push_back(&_keyH);
-		_row1.keys.push_back(&_keyJ);
-		_row1.keys.push_back(&_keyK);
-		_row1.keys.push_back(&_keyL);
-		rows.push_back(&_row1);
-
-		_row2.keys.push_back(&_keyShift);
-		_row2.keys.push_back(&_keyZ);
-		_row2.keys.push_back(&_keyX);
-		_row2.keys.push_back(&_keyC);
-		_row2.keys.push_back(&_keyV);
-		_row2.keys.push_back(&_keyB);
-		_row2.keys.push_back(&_keyN);
-		_row2.keys.push_back(&_keyM);
-		_row2.keys.push_back(&_keyBackspace);
-		rows.push_back(&_row2);
-
-		_row3.keys.push_back(&_keyCharactersLayout);
-		_row3.keys.push_back(&_keyCyclicLayout);
-		_row3.keys.push_back(&_keyComma);
-		_row3.keys.push_back(&_keySpace);
-		_row3.keys.push_back(&_keyPeriod);
-		_row3.keys.push_back(&_keyEnter);
-		rows.push_back(&_row3);
 	}
 }

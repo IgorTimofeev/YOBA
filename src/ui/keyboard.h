@@ -308,41 +308,41 @@ namespace yoba {
 			void onPressedChanged(KeyboardButton* button) override;
 	};
 
-	class KeyboardButtonsRowContainer : public Container {
+	class KeyboardButtonsContainer : public Container {
+		protected:
 		public:
-			KeyboardButtonsRowContainer(Keyboard* keyboard);
-
-			Keyboard* getKeyboard() const;
+			explicit KeyboardButtonsContainer(Keyboard* keyboard);
 
 		protected:
+
 			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
-			void onArrange(const Bounds& bounds) override;
+			void onArrange(const Bounds& buttonIndexTo) override;
 
 		private:
 			Keyboard* _keyboard;
 	};
 
-	class KeyboardLayoutRow {
-		public:
-			KeyboardLayoutRow();
-
-			std::vector<KeyboardKey*> keys;
-	};
-
 	class KeyboardLayout {
 		public:
-			std::vector<KeyboardLayoutRow*> rows {};
+			KeyboardLayout(std::vector<std::vector<KeyboardKey*>> keys) : keys(keys) {
+
+			}
+
+			std::vector<std::vector<KeyboardKey*>> keys;
 	};
 
 	class KeyboardButton : public Button {
 		public:
-			KeyboardButton(Keyboard* keyboard, KeyboardKey* key);
+			KeyboardButton(Keyboard* keyboard, uint8_t row, uint8_t column);
 
 			void tick() override;
 
 			Keyboard* getKeyboard();
 			KeyboardKey* getKey();
+
+			uint8_t getRow() const;
+			uint8_t getColumn() const;
 
 			void updateFromCase();
 
@@ -350,7 +350,8 @@ namespace yoba {
 			void onPressedChanged() override;
 
 		private:
-			KeyboardKey* _key;
+			uint8_t _row;
+			uint8_t _column;
 			Keyboard* _keyboard;
 
 			void updateTextFromCase();
@@ -428,17 +429,16 @@ namespace yoba {
 			std::vector<std::function<KeyboardLayout*()>> _cyclicLayoutBuilders;
 
 			Rectangle _backgroundPanel = Rectangle();
-			StackContainer _rowsLayout = StackContainer();
+			KeyboardButtonsContainer _buttonsContainer;
 
 			uint8_t _horizontalKeySpacing = 2;
+			uint8_t _verticalKeySpacing = 2;
 			float _keyHeight = 0.1f;
 
 			Callback<KeyCode, bool> _onKeyPressedChanged {};
 			Callback<KeyCode, const std::wstring_view&> _onInput {};
 
 			void deleteLayoutAndUIElements();
-
-			void iterateOverButtons(std::function<void(KeyboardButton*)> handler);
 	};
 
 	class KeyboardApplicationContainer : public Container {
@@ -465,7 +465,6 @@ namespace yoba {
 			TextKeyboardKey _key8 = TextKeyboardKey(KeyCode::Number8, L"8", 0.1f);
 			TextKeyboardKey _key9 = TextKeyboardKey(KeyCode::Number9, L"9", 0.1f);
 			TextKeyboardKey _key0 = TextKeyboardKey(KeyCode::Number0, L"0", 0.1f);
-			KeyboardLayoutRow _row0 = KeyboardLayoutRow();
 
 			TextKeyboardKey _keyAt = TextKeyboardKey(KeyCode::At, L"@", 0.1f);
 			TextKeyboardKey _keyNumberSign = TextKeyboardKey(KeyCode::NumberSign, L"#", 0.1f);
@@ -477,7 +476,6 @@ namespace yoba {
 			TextKeyboardKey _keyLeftBrace = TextKeyboardKey(KeyCode::LeftBrace, L"(", 0.1f);
 			TextKeyboardKey _keyRightBrace = TextKeyboardKey(KeyCode::RightBrace, L")", 0.1f);
 			TextKeyboardKey _keySlash = TextKeyboardKey(KeyCode::Slash, L"/", 0.1f);
-			KeyboardLayoutRow _row1 = KeyboardLayoutRow();
 
 			ShiftKeyboardKey _keyShift = ShiftKeyboardKey(L"^", L"^^", L"^^^", 0.15f);
 			TextKeyboardKey _keyAsterisk = TextKeyboardKey(KeyCode::Asterisk, L"*", 0.1f);
@@ -488,14 +486,12 @@ namespace yoba {
 			TextKeyboardKey _keyExclamationMark = TextKeyboardKey(KeyCode::ExclamationMark, L"!", 0.1f);
 			TextKeyboardKey _keyQuestionMark = TextKeyboardKey(KeyCode::QuestionMark, L"?", 0.1f);
 			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 0.15f);
-			KeyboardLayoutRow _row2 = KeyboardLayoutRow();
 
 			CurrentCyclicLayoutKeyboardKey _keyCyclicLayout = CurrentCyclicLayoutKeyboardKey(L"Abc", 0.1f);
 			TextKeyboardKey _keyComma = TextKeyboardKey(KeyCode::Comma, L",", 0.1f);
 			TextKeyboardKey _keySpace = TextKeyboardKey(KeyCode::Space, L" ", 0.5f);
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
 			EnterKeyboardKey _keyEnter = EnterKeyboardKey(L"Enter", 0.2f);
-			KeyboardLayoutRow _row3 = KeyboardLayoutRow();
 	};
 
 	class EnglishKeyboardLayout : public KeyboardLayout {
@@ -513,7 +509,6 @@ namespace yoba {
 			TextKeyboardKey _keyI = TextKeyboardKey(KeyCode::I, L"i", KeyCode::I, L"I", 0.1f);
 			TextKeyboardKey _keyO = TextKeyboardKey(KeyCode::O, L"o", KeyCode::O, L"O", 0.1f);
 			TextKeyboardKey _keyP = TextKeyboardKey(KeyCode::P, L"p", KeyCode::P, L"P", 0.1f);
-			KeyboardLayoutRow _row0 = KeyboardLayoutRow();
 
 			TextKeyboardKey _keyA = TextKeyboardKey(KeyCode::A, L"a", KeyCode::A, L"A", 0.1f);
 			TextKeyboardKey _keyS = TextKeyboardKey(KeyCode::S, L"s", KeyCode::S, L"S", 0.1f);
@@ -524,7 +519,6 @@ namespace yoba {
 			TextKeyboardKey _keyJ = TextKeyboardKey(KeyCode::J, L"j", KeyCode::J, L"J", 0.1f);
 			TextKeyboardKey _keyK = TextKeyboardKey(KeyCode::K, L"k", KeyCode::K, L"K", 0.1f);
 			TextKeyboardKey _keyL = TextKeyboardKey(KeyCode::L, L"l", KeyCode::L, L"L", 0.1f);
-			KeyboardLayoutRow _row1 = KeyboardLayoutRow();
 
 			ShiftKeyboardKey _keyShift = ShiftKeyboardKey(L"^", L"^^", L"^^^", 0.15f);
 			TextKeyboardKey _keyZ = TextKeyboardKey(KeyCode::Z, L"z", KeyCode::Z, L"Z", 0.1f);
@@ -535,7 +529,6 @@ namespace yoba {
 			TextKeyboardKey _keyN = TextKeyboardKey(KeyCode::N, L"n", KeyCode::N, L"N", 0.1f);
 			TextKeyboardKey _keyM = TextKeyboardKey(KeyCode::M, L"m", KeyCode::M, L"M", 0.1f);
 			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 0.15f);
-			KeyboardLayoutRow _row2 = KeyboardLayoutRow();
 
 			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f, []() {
 				return new CharactersKeyboardLayout();
@@ -546,6 +539,5 @@ namespace yoba {
 			TextKeyboardKey _keySpace = TextKeyboardKey(KeyCode::Space, L" ", 0.4f);
 			TextKeyboardKey _keyPeriod = TextKeyboardKey(KeyCode::Period, L".", 0.1f);
 			EnterKeyboardKey _keyEnter = EnterKeyboardKey( L"Enter", 0.2f);
-			KeyboardLayoutRow _row3 = KeyboardLayoutRow();
 	};
 }

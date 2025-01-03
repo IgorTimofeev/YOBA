@@ -341,7 +341,7 @@ namespace yoba {
 	}
 
 	void Element::onRender(ScreenBuffer* screenBuffer) {
-
+//		screenBuffer->renderRectangle(getBounds(), screenBuffer->getSecondaryColor());
 	}
 
 	bool Element::getClipToBounds() const {

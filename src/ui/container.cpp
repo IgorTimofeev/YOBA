@@ -13,7 +13,7 @@ namespace yoba {
 		for (auto element : _children)
 			element->render(screenBuffer);
 
-//		screenBuffer->renderRectangle(getBounds(), screenBuffer->getSecondaryColor());
+		Element::onRender(screenBuffer);
 	}
 
 	void Container::onEvent(InputEvent &event) {
@@ -68,6 +68,10 @@ namespace yoba {
 	}
 
 	void Container::removeChildren() {
+		for (auto child : _children) {
+			child->onRemovedFromParent(this);
+		}
+
 		_children.clear();
 
 		invalidate();

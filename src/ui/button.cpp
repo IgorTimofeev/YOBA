@@ -42,6 +42,8 @@ namespace yoba {
 				getText()
 			);
 		}
+
+		Element::onRender(screenBuffer);
 	}
 
 	void Button::onEvent(InputEvent& event) {
