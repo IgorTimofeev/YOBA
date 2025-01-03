@@ -62,7 +62,6 @@ namespace yoba {
 				}
 				else if (isTouchUp) {
 					setCaptured(false);
-					setFocused(false);
 				}
 
 				const auto& bounds = getBounds();

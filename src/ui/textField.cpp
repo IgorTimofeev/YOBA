@@ -161,14 +161,7 @@ namespace yoba {
 	}
 
 	void TextField::showKeyboard() {
-		auto keyboard = new Keyboard({
-			[]() {
-				return new EnglishKeyboardLayout();
-			},
-			[]() {
-				return new RussianKeyboardLayout();
-			}
-		});
+		auto keyboard = _keyboardController.show(getApplication());
 
 		keyboard->setKeyHeight(0.08f);
 		keyboard->setFont(getKeyboardFont());
@@ -178,43 +171,24 @@ namespace yoba {
 		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
 		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
 
+		keyboard->setCyclicLayoutBuilders({
+			[]() {
+				return new EnglishKeyboardLayout();
+			},
+			[]() {
+				return new RussianKeyboardLayout();
+			}
+		});
+
 		keyboard->setCyclicLayoutIndex(0);
 
-		auto app = getApplication();
-
-		auto keyboardAndChildrenLayout = new KeyboardApplicationContainer();
-		*keyboardAndChildrenLayout += keyboard;
-
-		auto temporaryRootChildrenLayout = new Container();
-		temporaryRootChildrenLayout->setSize(app->getScreenBuffer()->getSize());
-
-		// Moving children from root to temporary layout
-		for (auto child : *app)
-			*temporaryRootChildrenLayout += child;
-
-		*keyboardAndChildrenLayout += temporaryRootChildrenLayout;
-
-		app->removeChildren();
-		*app += keyboardAndChildrenLayout;
-
-		keyboard->getOnKeyPressedChanged() += [this, temporaryRootChildrenLayout, keyboard, app, keyboardAndChildrenLayout](KeyCode code, bool pressed) {
+		keyboard->getOnKeyPressedChanged() += [this](KeyCode code, bool pressed) {
 			if (pressed)
 				return;
 
 			switch (code) {
 				case KeyCode::Enter: {
-					app->setCapturedElement(nullptr);
-					app->setFocusedElement(nullptr);
-					app->removeChildren();
-
-					// Moving children back to root
-					for (auto child : *temporaryRootChildrenLayout)
-						*app += child;
-
-					delete keyboard;
-					delete temporaryRootChildrenLayout;
-					delete keyboardAndChildrenLayout;
-
+					setFocused(false);
 					break;
 				}
 				case KeyCode::Backspace: {
@@ -229,6 +203,77 @@ namespace yoba {
 		keyboard->getOnInput() += [this](KeyCode code, const std::wstring_view& text) {
 			insert(text);
 		};
+
+//		auto keyboard = new Keyboard();
+//
+//		keyboard->setKeyHeight(0.08f);
+//		keyboard->setFont(getKeyboardFont());
+//		keyboard->setBackgroundColor(getKeyboardBackgroundColor());
+//		keyboard->setDefaultButtonPrimaryColor(getKeyboardDefaultButtonPrimaryColor());
+//		keyboard->setDefaultButtonSecondaryColor(getKeyboardDefaultButtonSecondaryColor());
+//		keyboard->setActionButtonPrimaryColor(getKeyboardActionButtonPrimaryColor());
+//		keyboard->setActionButtonSecondaryColor(getKeyboardActionButtonSecondaryColor());
+//
+//		keyboard->setCyclicLayoutBuilders({
+//			[]() {
+//				return new EnglishKeyboardLayout();
+//			},
+//			[]() {
+//				return new RussianKeyboardLayout();
+//			}
+//		});
+//
+//		keyboard->setCyclicLayoutIndex(0);
+//
+//		auto app = getApplication();
+//
+//		auto keyboardAndChildrenLayout = new KeyboardApplicationContainer();
+//		*keyboardAndChildrenLayout += keyboard;
+//
+//		auto temporaryRootChildrenLayout = new Container();
+//		temporaryRootChildrenLayout->setSize(app->getScreenBuffer()->getSize());
+//
+//		// Moving children from root to temporary layout
+//		for (auto child : *app)
+//			*temporaryRootChildrenLayout += child;
+//
+//		*keyboardAndChildrenLayout += temporaryRootChildrenLayout;
+//
+//		app->removeChildren();
+//		*app += keyboardAndChildrenLayout;
+//
+//		keyboard->getOnKeyPressedChanged() += [this, temporaryRootChildrenLayout, keyboard, app, keyboardAndChildrenLayout](KeyCode code, bool pressed) {
+//			if (pressed)
+//				return;
+//
+//			switch (code) {
+//				case KeyCode::Enter: {
+//					app->setCapturedElement(nullptr);
+//					app->setFocusedElement(nullptr);
+//					app->removeChildren();
+//
+//					// Moving children back to root
+//					for (auto child : *temporaryRootChildrenLayout)
+//						*app += child;
+//
+//					delete keyboard;
+//					delete temporaryRootChildrenLayout;
+//					delete keyboardAndChildrenLayout;
+//
+//					break;
+//				}
+//				case KeyCode::Backspace: {
+//					backspace();
+//					break;
+//				}
+//				default:
+//					break;
+//			}
+//		};
+//
+//		keyboard->getOnInput() += [this](KeyCode code, const std::wstring_view& text) {
+//			insert(text);
+//		};
 	}
 
 	void TextField::insert(const std::wstring_view& value) {
@@ -395,8 +440,12 @@ namespace yoba {
 
 		setCursorBlinkStateAndTime(isFocused());
 
-		if (isFocused())
+		if (isFocused()) {
 			showKeyboard();
+		}
+		else {
+			_keyboardController.hide();
+		}
 
 		invalidateRender();
 	}

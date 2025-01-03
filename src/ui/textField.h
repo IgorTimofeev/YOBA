@@ -9,6 +9,7 @@
 #include "textElement.h"
 #include "fontElement.h"
 #include "borderElement.h"
+#include "keyboard.h"
 
 #include "../callback.h"
 #include "../event.h"
@@ -32,7 +33,6 @@ namespace yoba {
 
 			void onFocusChanged() override;
 
-			void showKeyboard();
 			const Color* getKeyboardBackgroundColor() const;
 			void setKeyboardBackgroundColor(const Color* keyboardBackgroundColor);
 
@@ -82,6 +82,8 @@ namespace yoba {
 			uint16_t _textMargin = 10;
 			int32_t _scrollValue = 0;
 
+			KeyboardController _keyboardController = KeyboardController();
+
 			const Font* _keyboardFont = nullptr;
 			const Color* _cursorColor = nullptr;
 			const Color* _keyboardBackgroundColor = nullptr;
@@ -91,5 +93,7 @@ namespace yoba {
 			const Color* _keyboardActionButtonSecondaryColor = nullptr;
 
 			void setCursorBlinkStateAndTime(bool value);
+
+			void showKeyboard();
 	};
 }

@@ -1,6 +1,7 @@
 #include <cstdint>
 #include "keyboard.h"
 #include "stackContainer.h"
+#include "application.h"
 #include "../number.h"
 
 namespace yoba {
@@ -161,6 +162,9 @@ namespace yoba {
 
 	void ShiftKeyboardKey::onPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onPressedChanged(button);
+
+		if (button->isPressed())
+			return;
 
 		const auto keyboard = button->getKeyboard();
 
@@ -336,8 +340,7 @@ namespace yoba {
 
 	// ----------------------------- Keyboard -----------------------------
 
-	Keyboard::Keyboard(std::vector<std::function<KeyboardLayout*()>> cyclicLayoutBuilders) :
-		_cyclicLayoutBuilders(cyclicLayoutBuilders),
+	Keyboard::Keyboard() :
 		_buttonsContainer(this)
 	{
 		*this += &_backgroundPanel;
@@ -519,6 +522,14 @@ namespace yoba {
 		setCyclicLayoutIndex(index);
 	}
 
+	std::vector<std::function<KeyboardLayout*()>>& Keyboard::getCyclicLayoutBuilders() {
+		return _cyclicLayoutBuilders;
+	}
+
+	void Keyboard::setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& cyclicLayoutBuilders) {
+		_cyclicLayoutBuilders = cyclicLayoutBuilders;
+	}
+
 	// ----------------------------- KeyboardButtonsContainer -----------------------------
 
 	KeyboardButtonsContainer::KeyboardButtonsContainer(Keyboard* keyboard) : _keyboard(keyboard) {
@@ -666,6 +677,59 @@ namespace yoba {
 				child->getMeasuredSize().getHeight()
 			));
 		}
+	}
+
+	// ----------------------------- KeyboardController -----------------------------
+
+	Keyboard* KeyboardController::show(Application* application) {
+		if (_keyboard)
+			return _keyboard;
+
+		_keyboard = new Keyboard();
+
+		_keyboardAndChildrenLayout = new KeyboardApplicationContainer();
+		*_keyboardAndChildrenLayout += _keyboard;
+
+		_appChildrenContainer = new Container();
+		_appChildrenContainer->setSize(application->getScreenBuffer()->getSize());
+
+		// Moving children from root to temporary layout
+		for (auto child : *application)
+			*_appChildrenContainer += child;
+
+		*_keyboardAndChildrenLayout += _appChildrenContainer;
+
+		application->removeChildren();
+		*application += _keyboardAndChildrenLayout;
+
+		return _keyboard;
+	}
+
+	void KeyboardController::hide() {
+		if (!_keyboard)
+			return;
+
+		auto application = _keyboardAndChildrenLayout->getApplication();
+//		application->setCapturedElement(nullptr);
+//		application->setFocusedElement(nullptr);
+		application->removeChildren();
+
+		// Moving children back to root
+		for (auto child : *_appChildrenContainer)
+			*application += child;
+
+		delete _keyboard;
+		_keyboard = nullptr;
+
+		delete _appChildrenContainer;
+		_appChildrenContainer = nullptr;
+
+		delete _keyboardAndChildrenLayout;
+		_keyboardAndChildrenLayout = nullptr;
+	}
+
+	Keyboard* KeyboardController::getKeyboard() const {
+		return _keyboard;
 	}
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------
@@ -819,4 +883,5 @@ namespace yoba {
 	}) {
 
 	}
+
 }

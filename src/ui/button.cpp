@@ -57,7 +57,6 @@ namespace yoba {
 		}
 		else if (event.getTypeID() == TouchUpEvent::typeID) {
 			setCaptured(false);
-			setFocused(true);
 
 			if (!isToggle())
 				setPressed(false);

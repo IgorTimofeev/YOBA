@@ -359,7 +359,7 @@ namespace yoba {
 
 	class Keyboard : public Container, public FontElement {
 		public:
-			Keyboard(std::vector<std::function<KeyboardLayout*()>> cyclicLayoutBuilders);
+			Keyboard();
 
 			~Keyboard();
 
@@ -404,6 +404,9 @@ namespace yoba {
 			KeyboardCase getCase() const;
 			void setCase(KeyboardCase value);
 
+			std::vector<std::function<KeyboardLayout*()>>& getCyclicLayoutBuilders();
+			void setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& cyclicLayoutBuilders);
+
 			Callback<KeyCode, bool>& getOnKeyPressedChanged();
 			Callback<KeyCode, const std::wstring_view&>& getOnInput();
 
@@ -446,6 +449,20 @@ namespace yoba {
 			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
+	};
+
+	class KeyboardController {
+		public:
+			Keyboard* show(Application* application);
+
+			void hide();
+
+			Keyboard* getKeyboard() const;
+
+		private:
+			Keyboard* _keyboard = nullptr;
+			Container* _appChildrenContainer = nullptr;
+			KeyboardApplicationContainer* _keyboardAndChildrenLayout = nullptr;
 	};
 
 	// ----------------------------- Layouts -----------------------------
