@@ -21,10 +21,6 @@ namespace yoba {
 	}
 
 	void KeyboardKey::onPressedChanged(KeyboardButton* button) {
-		performAction(button);
-	}
-
-	void KeyboardKey::performAction(KeyboardButton* button) {
 		const auto keyboard = button->getKeyboard();
 		const auto code = getCodeFromCase(keyboard);
 
@@ -56,34 +52,6 @@ namespace yoba {
 		return getName();
 	}
 
-	// ----------------------------- ContinuousTypingKeyboardKey -----------------------------
-
-	ContinuousTypingKeyboardKey::ContinuousTypingKeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width) :
-		KeyboardKey(type, code, name, width)
-	{
-
-	}
-
-	void ContinuousTypingKeyboardKey::tick(KeyboardButton* button) {
-		KeyboardKey::tick(button);
-
-		if (!button->isPressed() || millis() < _continuousTypingTime)
-			return;
-
-		performAction(button);
-
-		_continuousTypingTime = millis() + button->getKeyboard()->getContinuousTypingInterval();
-	}
-
-	void ContinuousTypingKeyboardKey::onPressedChanged(KeyboardButton* button) {
-		KeyboardKey::onPressedChanged(button);
-
-		if (!button->isPressed())
-			return;
-
-		_continuousTypingTime = millis() + button->getKeyboard()->getContinuousTypingDelay();
-	}
-
 	// ----------------------------- TextKeyboardKey -----------------------------
 
 	TextKeyboardKey::TextKeyboardKey(
@@ -93,7 +61,7 @@ namespace yoba {
 		const std::wstring_view& uppercaseName,
 		float width
 	) :
-		ContinuousTypingKeyboardKey(KeyboardKeyType::Default, code, name, width),
+		KeyboardKey(KeyboardKeyType::Default, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
 	{
@@ -128,10 +96,10 @@ namespace yoba {
 		return keyboard->getCase() == KeyboardCase::Lower ? getName() : getUppercaseName();
 	}
 
-	void TextKeyboardKey::performAction(KeyboardButton* button) {
-		KeyboardKey::performAction(button);
+	void TextKeyboardKey::onPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onPressedChanged(button);
 
-		if (!button->isPressed())
+		if (button->isPressed())
 			return;
 
 		const auto keyboard = button->getKeyboard();
@@ -197,7 +165,7 @@ namespace yoba {
 	// ----------------------------- BackspaceKeyboardKey -----------------------------
 
 	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view& name, float width) :
-		ContinuousTypingKeyboardKey(KeyboardKeyType::Action, KeyCode::Backspace, name, width)
+		KeyboardKey(KeyboardKeyType::Action, KeyCode::Backspace, name, width)
 	{
 
 	}
@@ -212,7 +180,7 @@ namespace yoba {
 
 	// ----------------------------- CharactersLayoutKeyboardKey -----------------------------
 
-	CharactersLayoutKeyboardKey::CharactersLayoutKeyboardKey(
+	LayoutBuilderKeyboardKey::LayoutBuilderKeyboardKey(
 		const std::wstring_view& name,
 		float width,
 		const std::function<KeyboardLayout*()>& layoutBuilder
@@ -223,7 +191,7 @@ namespace yoba {
 
 	}
 
-	void CharactersLayoutKeyboardKey::onPressedChanged(KeyboardButton* button) {
+	void LayoutBuilderKeyboardKey::onPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onPressedChanged(button);
 
 		if (!button->isPressed())
@@ -683,53 +651,54 @@ namespace yoba {
 
 	// ----------------------------- KeyboardController -----------------------------
 
-	Keyboard* KeyboardController::show(Application* application) {
+	Keyboard* ApplicationKeyboardController::_keyboard = nullptr;
+	Container* ApplicationKeyboardController::_applicationChildrenContainer = nullptr;
+	KeyboardApplicationContainer* ApplicationKeyboardController::_keyboardAndApplicationChildrenContainer = nullptr;
+
+	Keyboard* ApplicationKeyboardController::show(Application* application) {
 		if (_keyboard)
 			return _keyboard;
 
-		_application = application;
 		_keyboard = new Keyboard();
 
-		_keyboardAndChildrenLayout = new KeyboardApplicationContainer();
-		*_keyboardAndChildrenLayout += _keyboard;
+		_keyboardAndApplicationChildrenContainer = new KeyboardApplicationContainer();
+		*_keyboardAndApplicationChildrenContainer += _keyboard;
 
-		_appChildrenContainer = new Container();
-		_appChildrenContainer->setSize(_application->getScreenBuffer()->getSize());
+		_applicationChildrenContainer = new Container();
+		_applicationChildrenContainer->setSize(application->getScreenBuffer()->getSize());
 
 		// Moving children from root to temporary layout
-		for (auto child : *_application)
-			*_appChildrenContainer += child;
+		for (auto child : *application)
+			*_applicationChildrenContainer += child;
 
-		*_keyboardAndChildrenLayout += _appChildrenContainer;
+		*_keyboardAndApplicationChildrenContainer += _applicationChildrenContainer;
 
-		_application->removeChildren();
-		*_application += _keyboardAndChildrenLayout;
+		application->removeChildren();
+		*application += _keyboardAndApplicationChildrenContainer;
 
 		return _keyboard;
 	}
 
-	void KeyboardController::hide() {
+	void ApplicationKeyboardController::hide() {
 		if (!_keyboard)
 			return;
 
-		_application->removeChildren();
+		auto application = _keyboardAndApplicationChildrenContainer->getApplication();
+
+		application->removeChildren();
 
 		// Moving children back to root
-		for (auto child : *_appChildrenContainer)
-			*_application += child;
+		for (auto child : *_applicationChildrenContainer)
+			*application += child;
 
 		delete _keyboard;
 		_keyboard = nullptr;
 
-		delete _appChildrenContainer;
-		_appChildrenContainer = nullptr;
+		delete _applicationChildrenContainer;
+		_applicationChildrenContainer = nullptr;
 
-		delete _keyboardAndChildrenLayout;
-		_keyboardAndChildrenLayout = nullptr;
-	}
-
-	Keyboard* KeyboardController::getKeyboard() const {
-		return _keyboard;
+		delete _keyboardAndApplicationChildrenContainer;
+		_keyboardAndApplicationChildrenContainer = nullptr;
 	}
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------

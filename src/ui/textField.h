@@ -82,8 +82,6 @@ namespace yoba {
 			uint16_t _textMargin = 10;
 			int32_t _scrollValue = 0;
 
-			KeyboardController _keyboardController = KeyboardController();
-
 			const Font* _keyboardFont = nullptr;
 			const Color* _cursorColor = nullptr;
 			const Color* _keyboardBackgroundColor = nullptr;

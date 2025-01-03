@@ -328,7 +328,7 @@ namespace yoba {
 			showKeyboard();
 		}
 		else {
-			_keyboardController.hide();
+			ApplicationKeyboardController::hide();
 		}
 
 		invalidateRender();
@@ -350,7 +350,7 @@ namespace yoba {
 	}
 
 	void TextField::showKeyboard() {
-		auto keyboard = _keyboardController.show(getApplication());
+		auto keyboard = ApplicationKeyboardController::show(getApplication());
 
 		keyboard->setKeyHeight(0.08f);
 		keyboard->setFont(getKeyboardFont());
@@ -372,17 +372,16 @@ namespace yoba {
 		keyboard->setCyclicLayoutIndex(0);
 
 		keyboard->getOnKeyPressedChanged() += [this](KeyCode code, bool pressed) {
+			if (!pressed)
+				return;
+
 			switch (code) {
 				case KeyCode::Enter: {
-					if (!pressed)
-						setFocused(false);
-
+					setFocused(false);
 					break;
 				}
 				case KeyCode::Backspace: {
-					if (pressed)
-						backspace();
-
+					backspace();
 					break;
 				}
 				default:

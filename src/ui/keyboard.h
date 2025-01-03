@@ -199,13 +199,10 @@ namespace yoba {
 				float width
 			);
 
+			virtual void tick(KeyboardButton* button);
+			virtual void onPressedChanged(KeyboardButton* button);
 			virtual KeyCode getCodeFromCase(Keyboard* keyboard) const;
 			virtual const std::wstring_view& getNameFromCase(Keyboard* keyboard) const;
-			virtual void performAction(KeyboardButton* button);
-
-			virtual void tick(KeyboardButton* button);
-
-			virtual void onPressedChanged(KeyboardButton* button);
 
 			float getWidth() const;
 			KeyboardKeyType getType() const;
@@ -221,19 +218,7 @@ namespace yoba {
 			const std::wstring_view _name;
 	};
 
-	class ContinuousTypingKeyboardKey : public KeyboardKey {
-		public:
-			ContinuousTypingKeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width);
-
-			void tick(KeyboardButton* button) override;
-
-			void onPressedChanged(KeyboardButton* button) override;
-
-		private:
-			uint32_t _continuousTypingTime = 0;
-	};
-
-	class TextKeyboardKey : public ContinuousTypingKeyboardKey {
+	class TextKeyboardKey : public KeyboardKey {
 		public:
 			TextKeyboardKey(
 				KeyCode code,
@@ -256,7 +241,7 @@ namespace yoba {
 
 			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
 
-			void performAction(KeyboardButton* button) override;
+			void onPressedChanged(KeyboardButton* button) override;
 
 		private:
 			KeyCode _uppercaseCode;
@@ -276,7 +261,7 @@ namespace yoba {
 			const std::wstring_view _capsName;
 	};
 
-	class BackspaceKeyboardKey : public ContinuousTypingKeyboardKey {
+	class BackspaceKeyboardKey : public KeyboardKey {
 		public:
 			BackspaceKeyboardKey(const std::wstring_view& name, float width);
 	};
@@ -286,9 +271,9 @@ namespace yoba {
 			EnterKeyboardKey(const std::wstring_view& name, float width);
 	};
 
-	class CharactersLayoutKeyboardKey : public KeyboardKey {
+	class LayoutBuilderKeyboardKey : public KeyboardKey {
 		public:
-			CharactersLayoutKeyboardKey(const std::wstring_view& name, float width, const std::function<KeyboardLayout*()>& layoutBuilder);
+			LayoutBuilderKeyboardKey(const std::wstring_view& name, float width, const std::function<KeyboardLayout*()>& layoutBuilder);
 
 			void onPressedChanged(KeyboardButton* button) override;
 
@@ -311,12 +296,10 @@ namespace yoba {
 	};
 
 	class KeyboardButtonsContainer : public Container {
-		protected:
 		public:
 			explicit KeyboardButtonsContainer(Keyboard* keyboard);
 
 		protected:
-
 			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& buttonIndexTo) override;
@@ -453,19 +436,15 @@ namespace yoba {
 			void onArrange(const Bounds& bounds) override;
 	};
 
-	class KeyboardController {
+	class ApplicationKeyboardController {
 		public:
-			Keyboard* show(Application* _application);
-
-			void hide();
-
-			Keyboard* getKeyboard() const;
+			static Keyboard* show(Application* application);
+			static void hide();
 
 		private:
-			Application* _application = nullptr;
-			Keyboard* _keyboard = nullptr;
-			Container* _appChildrenContainer = nullptr;
-			KeyboardApplicationContainer* _keyboardAndChildrenLayout = nullptr;
+			static Keyboard* _keyboard;
+			static Container* _applicationChildrenContainer;
+			static KeyboardApplicationContainer* _keyboardAndApplicationChildrenContainer;
 	};
 
 	// ----------------------------- Layouts -----------------------------
@@ -550,7 +529,7 @@ namespace yoba {
 			TextKeyboardKey _keyM = TextKeyboardKey(KeyCode::M, L"m", KeyCode::M, L"M", 0.1f);
 			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 0.15f);
 
-			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f, []() {
+			LayoutBuilderKeyboardKey _keyCharactersLayout = LayoutBuilderKeyboardKey(L"123", 0.1f, []() {
 				return new CharactersKeyboardLayout();
 			});
 
@@ -602,7 +581,7 @@ namespace yoba {
 			TextKeyboardKey _keyMoreThan = TextKeyboardKey(KeyCode::MoreThan, L"ю", KeyCode::M, L"Ю", 1.f / 11.f);
 			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 1.f / 11.f);
 
-			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f, []() {
+			LayoutBuilderKeyboardKey _keyCharactersLayout = LayoutBuilderKeyboardKey(L"123", 0.1f, []() {
 				return new CharactersKeyboardLayout();
 			});
 
