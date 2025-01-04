@@ -9,10 +9,18 @@ namespace yoba {
 	void TextField::tick() {
 		Element::tick();
 
-		if (!isFocused() || isCaptured() || millis() < _cursorBlinkTime)
-			return;
-
-		setCursorBlinkStateAndTime(!_cursorBlinkState);
+		if (isFocused()) {
+			if (isCaptured()) {
+				if (millis() >= _continuousScrollTime) {
+					applyContinuousScroll();
+				}
+			}
+			else {
+				if (millis() >= _cursorBlinkTime) {
+					setCursorBlinkStateAndTime(!_cursorBlinkState);
+				}
+			}
+		}
 	}
 
 	void TextField::onRender(ScreenBuffer* screenBuffer) {
@@ -125,77 +133,81 @@ namespace yoba {
 			return;
 		}
 
-		const auto font = getFontOrDefault();
+		auto touchEvent = (TouchEvent&) event;
+		_lastTouchX = touchEvent.getPosition().getX();
 
-		if (font) {
-			auto touchEvent = (TouchEvent&) event;
-			const auto& bounds = getBounds();
-			const int32_t boundsXWithoutMargin = bounds.getX() + _textMargin;
-			const uint16_t boundsWidthWithoutMargin = bounds.getWidth() - _textMargin * 2;
-			const int32_t boundsX2WithoutMargin = boundsXWithoutMargin + boundsWidthWithoutMargin - 1;
-
-			auto touchX = touchEvent.getPosition().getX();
-			const auto text = getText();
-
-			size_t cursorPosition;
-			int32_t cursorX;
-
-			const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, &text](int32_t targetX) {
-				cursorX = boundsXWithoutMargin - _scrollPosition;
-				cursorPosition = 0;
-
-				for (size_t i = 0; i < text.length(); i++) {
-					if (cursorX < targetX) {
-						cursorPosition++;
-						cursorX += font->getCharWidth(text[i]);
-					}
-					else {
-						break;
-					}
-				}
-
-				// Converting to [0 px; Cursor px]
-				cursorX -= (boundsXWithoutMargin - _scrollPosition);
-			};
-
-			if (touchX < boundsXWithoutMargin) {
-				computeCursorPositionFor(boundsXWithoutMargin);
-
-				if (cursorPosition > 0) {
-					cursorPosition--;
-
-					if (_scrollPosition > 0) {
-						const auto previousCharWidth = font->getCharWidth(text[cursorPosition]);
-
-						_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
-					}
-				}
-
-				setCursorPosition(cursorPosition);
-			}
-			else if (touchX > boundsX2WithoutMargin) {
-				computeCursorPositionFor(boundsX2WithoutMargin);
-
-				if (cursorPosition < text.length()) {
-					int32_t pizda = cursorX + font->getCharWidth(text[cursorPosition]) - boundsWidthWithoutMargin;
-
-					_scrollPosition = pizda > 0 ? pizda : 0;
-
-					cursorPosition++;
-				}
-
-				setCursorPosition(cursorPosition);
-			}
-			else {
-				computeCursorPositionFor(touchX);
-				setCursorPosition(cursorPosition);
-			}
-		}
-		else {
-			setCursorToEnd();
-		}
+		applyContinuousScroll();
 
 		event.setHandled(true);
+	}
+
+	void TextField::applyContinuousScroll() {
+		const auto font = getFontOrDefault();
+
+		if (!font)
+			return;
+
+		const auto text = getText();
+		const auto& bounds = getBounds();
+		const int32_t boundsXWithoutMargin = bounds.getX() + _textMargin;
+		const uint16_t boundsWidthWithoutMargin = bounds.getWidth() - _textMargin * 2;
+		const int32_t boundsX2WithoutMargin = boundsXWithoutMargin + boundsWidthWithoutMargin - 1;
+
+		size_t cursorPosition;
+		int32_t cursorX;
+
+		const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, &text](int32_t targetX) {
+			cursorX = boundsXWithoutMargin - _scrollPosition;
+			cursorPosition = 0;
+
+			for (size_t i = 0; i < text.length(); i++) {
+				if (cursorX < targetX) {
+					cursorPosition++;
+					cursorX += font->getCharWidth(text[i]);
+				}
+				else {
+					break;
+				}
+			}
+
+			// Converting to [0 px; Cursor px]
+			cursorX -= (boundsXWithoutMargin - _scrollPosition);
+		};
+
+		if (_lastTouchX < boundsXWithoutMargin) {
+			computeCursorPositionFor(boundsXWithoutMargin);
+
+			if (cursorPosition > 0) {
+				cursorPosition--;
+
+				if (_scrollPosition > 0) {
+					const auto previousCharWidth = font->getCharWidth(text[cursorPosition]);
+
+					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
+				}
+			}
+
+			setCursorPosition(cursorPosition);
+		}
+		else if (_lastTouchX > boundsX2WithoutMargin) {
+			computeCursorPositionFor(boundsX2WithoutMargin);
+
+			if (cursorPosition < text.length()) {
+				int32_t pizda = cursorX + font->getCharWidth(text[cursorPosition]) - boundsWidthWithoutMargin;
+
+				_scrollPosition = pizda > 0 ? pizda : 0;
+
+				cursorPosition++;
+			}
+
+			setCursorPosition(cursorPosition);
+		}
+		else {
+			computeCursorPositionFor(_lastTouchX);
+			setCursorPosition(cursorPosition);
+		}
+
+		_continuousScrollTime = millis() + _continuousScrollInterval;
 	}
 
 	void TextField::insert(const std::wstring_view& value) {
@@ -324,21 +336,6 @@ namespace yoba {
 		invalidateRender();
 	}
 
-	void TextField::setCursorBlinkStateAndTime(bool value) {
-		_cursorBlinkState = value;
-		_cursorBlinkTime = millis() + _cursorBlinkInterval;
-	}
-
-	const uint16_t& TextField::getTextMargin() const {
-		return _textMargin;
-	}
-
-	void TextField::setTextMargin(const uint16_t& textMargin) {
-		_textMargin = textMargin;
-
-		invalidateRender();
-	}
-
 	void TextField::showKeyboard() {
 		auto keyboard = ApplicationKeyboardController::show(getApplication());
 
@@ -366,6 +363,21 @@ namespace yoba {
 		keyboard->getOnInput() += [this](KeyCode code, const std::wstring_view& text) {
 			insert(text);
 		};
+	}
+
+	void TextField::setCursorBlinkStateAndTime(bool value) {
+		_cursorBlinkState = value;
+		_cursorBlinkTime = millis() + _cursorBlinkInterval;
+	}
+
+	const uint16_t& TextField::getTextMargin() const {
+		return _textMargin;
+	}
+
+	void TextField::setTextMargin(const uint16_t& textMargin) {
+		_textMargin = textMargin;
+
+		invalidateRender();
 	}
 
 	const std::optional<std::function<void(Keyboard*)>>& TextField::getKeyboardConfigurator() const {

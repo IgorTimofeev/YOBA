@@ -69,8 +69,10 @@ namespace yoba {
 			const std::optional<std::function<void(Keyboard*)>>& getKeyboardConfigurator() const;
 			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
 
-		private:
 
+
+		private:
+			int32_t _lastTouchX = -1;
 			uint16_t _textMargin = 10;
 
 			uint32_t _cursorBlinkTime = 0;
@@ -80,8 +82,8 @@ namespace yoba {
 			Size _cursorSize = Size(2, 14);
 
 			uint16_t _scrollPosition = 0;
-			uint32_t _scrollTime = 0;
-			uint32_t _scrollInterval = 100;
+			uint32_t _continuousScrollTime = 0;
+			uint32_t _continuousScrollInterval = 50;
 
 			const Color* _focusedBorderColor = nullptr;
 			const Color* _focusedPrimaryColor = nullptr;
@@ -92,5 +94,7 @@ namespace yoba {
 
 			void setCursorBlinkStateAndTime(bool value);
 			void showKeyboard();
+
+			void applyContinuousScroll();
 	};
 }
