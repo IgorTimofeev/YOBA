@@ -29,7 +29,7 @@ namespace yoba {
 
 			void onRender(ScreenBuffer* screenBuffer) override;
 
-			void onEvent(InputEvent &event) override;
+			void onEvent(InputEvent &targetX) override;
 
 			void onFocusChanged() override;
 
@@ -70,13 +70,18 @@ namespace yoba {
 			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
 
 		private:
+
+			uint16_t _textMargin = 10;
+
 			uint32_t _cursorBlinkTime = 0;
 			uint32_t _cursorBlinkInterval = 500;
 			bool _cursorBlinkState = false;
 			size_t _cursorPosition = 0;
 			Size _cursorSize = Size(2, 14);
-			uint16_t _textMargin = 10;
-			int32_t _scrollValue = 0;
+
+			uint16_t _scrollPosition = 0;
+			uint32_t _scrollTime = 0;
+			uint32_t _scrollInterval = 100;
 
 			const Color* _focusedBorderColor = nullptr;
 			const Color* _focusedPrimaryColor = nullptr;

@@ -53,7 +53,7 @@ namespace yoba {
 		if (!secondaryColor)
 			return;
 
-		const auto& oldViewport = screenBuffer->getViewport();
+		const auto oldViewport = screenBuffer->getViewport();
 
 		screenBuffer->setViewport(Bounds(
 			bounds.getX() + _textMargin,
@@ -65,7 +65,7 @@ namespace yoba {
 		const auto& text = getText();
 
 		auto textPosition = Point(
-			_scrollValue + bounds.getX() + _textMargin,
+			bounds.getX() + _textMargin - _scrollPosition,
 			bounds.getYCenter() - font->getHeight() / 2
 		);
 
@@ -85,6 +85,8 @@ namespace yoba {
 			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex]));
 		}
 
+		screenBuffer->setViewport(oldViewport);
+
 		// Cursor
 		if (_cursorBlinkState) {
 			// End of text
@@ -101,8 +103,6 @@ namespace yoba {
 				_cursorColor ? _cursorColor : screenBuffer->getSecondaryColor()
 			);
 		}
-
-		screenBuffer->setViewport(oldViewport);
 	}
 
 	void TextField::onEvent(InputEvent& event) {
@@ -130,24 +130,64 @@ namespace yoba {
 		if (font) {
 			auto touchEvent = (TouchEvent&) event;
 			const auto& bounds = getBounds();
+			const int32_t boundsXWithoutMargin = bounds.getX() + _textMargin;
+			const uint16_t boundsWidthWithoutMargin = bounds.getWidth() - _textMargin * 2;
+			const int32_t boundsX2WithoutMargin = boundsXWithoutMargin + boundsWidthWithoutMargin - 1;
+
 			auto touchX = touchEvent.getPosition().getX();
+			const auto text = getText();
 
-			if (touchX >= bounds.getX() && touchX <= bounds.getX2()) {
-				const auto text = getText();
+			size_t cursorPosition;
+			int32_t cursorX;
 
-				auto textX = _scrollValue + bounds.getX() + _textMargin;
-				size_t cursorPosition = 0;
+			const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, &text](int32_t targetX) {
+				cursorX = boundsXWithoutMargin - _scrollPosition;
+				cursorPosition = 0;
 
 				for (size_t i = 0; i < text.length(); i++) {
-					if (touchX > textX) {
+					if (cursorX < targetX) {
 						cursorPosition++;
-						textX += font->getCharWidth(text[i]);
+						cursorX += font->getCharWidth(text[i]);
 					}
 					else {
 						break;
 					}
 				}
 
+				// Converting to [0 px; Cursor px]
+				cursorX -= (boundsXWithoutMargin - _scrollPosition);
+			};
+
+			if (touchX < boundsXWithoutMargin) {
+				computeCursorPositionFor(boundsXWithoutMargin);
+
+				if (cursorPosition > 0) {
+					cursorPosition--;
+
+					if (_scrollPosition > 0) {
+						const auto previousCharWidth = font->getCharWidth(text[cursorPosition]);
+
+						_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
+					}
+				}
+
+				setCursorPosition(cursorPosition);
+			}
+			else if (touchX > boundsX2WithoutMargin) {
+				computeCursorPositionFor(boundsX2WithoutMargin);
+
+				if (cursorPosition < text.length()) {
+					int32_t pizda = cursorX + font->getCharWidth(text[cursorPosition]) - boundsWidthWithoutMargin;
+
+					_scrollPosition = pizda > 0 ? pizda : 0;
+
+					cursorPosition++;
+				}
+
+				setCursorPosition(cursorPosition);
+			}
+			else {
+				computeCursorPositionFor(touchX);
 				setCursorPosition(cursorPosition);
 			}
 		}

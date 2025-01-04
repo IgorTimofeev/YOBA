@@ -10,6 +10,8 @@ namespace yoba {
 		public:
 			Bounds(int32_t x, int32_t y, int32_t width, int32_t height);
 
+			Bounds(const Bounds& bounds);
+
 			Bounds();
 
 			Bounds(const Point& position, const Size& size);
