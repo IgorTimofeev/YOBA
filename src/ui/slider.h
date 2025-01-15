@@ -15,6 +15,8 @@
 namespace yoba::ui {
 	class Slider : public FocusableElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
+			Callback<> valueChanged {};
+
 			void onRender(Renderer* renderer) override {
 				auto primaryColor = getPrimaryColor();
 
@@ -85,11 +87,7 @@ namespace yoba::ui {
 				invalidateRender();
 
 				onValueChanged();
-				_onValueChanged();
-			}
-
-			const Callback<>& getOnValueChanged() const {
-				return _onValueChanged;
+				valueChanged();
 			}
 
 			virtual void onValueChanged() {
@@ -98,8 +96,6 @@ namespace yoba::ui {
 
 		private:
 			float _value = 1;
-
-			Callback<> _onValueChanged {};
 
 			void clampValue() {
 				_value = clamp(_value, 0.0f, 1.0f);

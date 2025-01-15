@@ -1,6 +1,6 @@
 #include <cstdint>
 #include "keyboard.h"
-#include "stackContainer.h"
+#include "stackLayout.h"
 #include "application.h"
 #include "number.h"
 
@@ -27,7 +27,7 @@ namespace yoba::ui {
 		const auto code = getCodeFromCase(keyboard);
 
 		if (code != KeyCode::None)
-			keyboard->getOnKeyPressedChanged()(code, button->isPressed());
+			keyboard->keyPressedChanged(code, button->isPressed());
 	}
 
 	KeyCode KeyboardKey::getCode() const {
@@ -106,7 +106,7 @@ namespace yoba::ui {
 
 		const auto keyboard = button->getKeyboard();
 
-		keyboard->getOnInput()(getCodeFromCase(keyboard), getNameFromCase(keyboard));
+		keyboard->input(getCodeFromCase(keyboard), getNameFromCase(keyboard));
 
 		if (keyboard->getCase() == KeyboardCase::Upper)
 			keyboard->setCase(KeyboardCase::Lower);
@@ -326,10 +326,10 @@ namespace yoba::ui {
 	// ----------------------------- Keyboard -----------------------------
 
 	Keyboard::Keyboard() :
-		_buttonsContainer(this)
+		_buttonsLayout(this)
 	{
 		*this += &_backgroundPanel;
-		*this += &_buttonsContainer;
+		*this += &_buttonsLayout;
 	}
 
 	Keyboard::~Keyboard() {
@@ -340,13 +340,13 @@ namespace yoba::ui {
 		if (!_layout)
 			return;
 
-		auto elementsToDelete = std::vector<Element*>(_buttonsContainer.getChildrenCount());
+		auto elementsToDelete = std::vector<Element*>(_buttonsLayout.getChildrenCount());
 
-		for (auto buttonElement : _buttonsContainer) {
+		for (auto buttonElement : _buttonsLayout) {
 			elementsToDelete.push_back(buttonElement);
 		}
 
-		_buttonsContainer.removeChildren();
+		_buttonsLayout.removeChildren();
 
 		for (auto element : elementsToDelete) {
 			delete element;
@@ -435,7 +435,7 @@ namespace yoba::ui {
 						break;
 				}
 
-				_buttonsContainer += new KeyboardButton(this, rowIndex, columnIndex);
+				_buttonsLayout += new KeyboardButton(this, rowIndex, columnIndex);
 			}
 		}
 	}
@@ -484,17 +484,9 @@ namespace yoba::ui {
 		if (!_layout)
 			return;
 
-		for (auto element : _buttonsContainer) {
+		for (auto element : _buttonsLayout) {
 			dynamic_cast<KeyboardButton*>(element)->updateFromCase();
 		}
-	}
-
-	Callback<KeyCode, bool>& Keyboard::getOnKeyPressedChanged() {
-		return _onKeyPressedChanged;
-	}
-
-	Callback<KeyCode, const std::wstring_view&>& Keyboard::getOnInput() {
-		return _onInput;
 	}
 
 	uint16_t Keyboard::getContinuousTypingDelay() const {
@@ -542,13 +534,13 @@ namespace yoba::ui {
 		_charactersLayoutBuilder = charactersLayoutBuilder;
 	}
 
-	// ----------------------------- KeyboardButtonsContainer -----------------------------
+	// ----------------------------- KeyboardButtonsLayout -----------------------------
 
-	KeyboardButtonsContainer::KeyboardButtonsContainer(Keyboard* keyboard) : _keyboard(keyboard) {
+	KeyboardButtonsLayout::KeyboardButtonsLayout(Keyboard* keyboard) : _keyboard(keyboard) {
 
 	}
 
-	Size KeyboardButtonsContainer::onMeasure(Renderer* renderer, const Size& availableSize) {
+	Size KeyboardButtonsLayout::onMeasure(Renderer* renderer, const Size& availableSize) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
@@ -562,7 +554,7 @@ namespace yoba::ui {
 		);
 	}
 
-	void KeyboardButtonsContainer::onArrange(const Bounds& bounds) {
+	void KeyboardButtonsLayout::onArrange(const Bounds& bounds) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
@@ -655,7 +647,7 @@ namespace yoba::ui {
 
 	// ----------------------------- KeyboardRootLayout -----------------------------
 
-	Size KeyboardApplicationContainer::onMeasure(Renderer* renderer, const Size& availableSize) {
+	Size KeyboardApplicationLayout::onMeasure(Renderer* renderer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : *this) {
@@ -678,7 +670,7 @@ namespace yoba::ui {
 		return result;
 	}
 
-	void KeyboardApplicationContainer::onArrange(const Bounds& bounds) {
+	void KeyboardApplicationLayout::onArrange(const Bounds& bounds) {
 		auto y = bounds.getY2() + 1;
 
 		for (auto child : *this) {
@@ -696,8 +688,8 @@ namespace yoba::ui {
 	// ----------------------------- KeyboardController -----------------------------
 
 	Keyboard* ApplicationKeyboardController::_keyboard = nullptr;
-	Container* ApplicationKeyboardController::_applicationChildrenContainer = nullptr;
-	KeyboardApplicationContainer* ApplicationKeyboardController::_keyboardAndApplicationChildrenContainer = nullptr;
+	Layout* ApplicationKeyboardController::_applicationChildrenLayout = nullptr;
+	KeyboardApplicationLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
 
 	Keyboard* ApplicationKeyboardController::show(Application* application) {
 		if (_keyboard)
@@ -705,20 +697,20 @@ namespace yoba::ui {
 
 		_keyboard = new Keyboard();
 
-		_keyboardAndApplicationChildrenContainer = new KeyboardApplicationContainer();
-		*_keyboardAndApplicationChildrenContainer += _keyboard;
+		_keyboardAndApplicationChildrenLayout = new KeyboardApplicationLayout();
+		*_keyboardAndApplicationChildrenLayout += _keyboard;
 
-		_applicationChildrenContainer = new Container();
-		_applicationChildrenContainer->setSize(application->getRenderer()->getSize());
+		_applicationChildrenLayout = new Layout();
+		_applicationChildrenLayout->setSize(application->getRenderer()->getSize());
 
 		// Moving children from root to temporary layout
 		for (auto child : *application)
-			*_applicationChildrenContainer += child;
+			*_applicationChildrenLayout += child;
 
-		*_keyboardAndApplicationChildrenContainer += _applicationChildrenContainer;
+		*_keyboardAndApplicationChildrenLayout += _applicationChildrenLayout;
 
 		application->removeChildren();
-		*application += _keyboardAndApplicationChildrenContainer;
+		*application += _keyboardAndApplicationChildrenLayout;
 
 		return _keyboard;
 	}
@@ -727,22 +719,22 @@ namespace yoba::ui {
 		if (!_keyboard)
 			return;
 
-		auto application = _keyboardAndApplicationChildrenContainer->getApplication();
+		auto application = _keyboardAndApplicationChildrenLayout->getApplication();
 
 		application->removeChildren();
 
 		// Moving children back to root
-		for (auto child : *_applicationChildrenContainer)
+		for (auto child : *_applicationChildrenLayout)
 			*application += child;
 
 		delete _keyboard;
 		_keyboard = nullptr;
 
-		delete _applicationChildrenContainer;
-		_applicationChildrenContainer = nullptr;
+		delete _applicationChildrenLayout;
+		_applicationChildrenLayout = nullptr;
 
-		delete _keyboardAndApplicationChildrenContainer;
-		_keyboardAndApplicationChildrenContainer = nullptr;
+		delete _keyboardAndApplicationChildrenLayout;
+		_keyboardAndApplicationChildrenLayout = nullptr;
 	}
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ui/element.h"
-#include "ui/container.h"
+#include "ui/layout.h"
 
 #include "ui/traits/borderElement.h"
 #include "ui/traits/cornerRadiusElement.h"
@@ -11,7 +11,7 @@
 #include "ui/traits/secondaryColorElement.h"
 #include "ui/traits/textElement.h"
 
-#include "ui/stackContainer.h"
+#include "ui/stackLayout.h"
 #include "ui/application.h"
 #include "ui/modal.h"
 #include "ui/keyboard.h"

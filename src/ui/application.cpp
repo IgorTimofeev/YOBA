@@ -8,7 +8,7 @@ namespace yoba::ui {
 	Application::Application(Renderer* renderer) :
 		_renderer(renderer)
 	{
-		Container::setApplication(this);
+		Layout::setApplication(this);
 	}
 
 	void Application::setup() {
@@ -54,7 +54,7 @@ namespace yoba::ui {
 		// Root element size should match screen size
 		setSize(_renderer->getSize());
 
-		Container::tick();
+		Layout::tick();
 
 		// Handling input from devices like touchscreens, rotary encoders, etc
 		for (auto inputDevice : _inputDevices)

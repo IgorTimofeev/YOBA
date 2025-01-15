@@ -78,7 +78,7 @@ namespace yoba::ui {
 		invalidate();
 
 		onPressedChanged();
-		_onPressedChanged();
+		pressedChanged();
 	}
 
 	bool Button::isToggle() const {
@@ -103,14 +103,6 @@ namespace yoba::ui {
 
 	void Button::setPressedSecondaryColor(const Color* value) {
 		_pressedSecondaryColor = value;
-	}
-
-	Callback<>& Button::getOnPressedChanged() {
-		return _onPressedChanged;
-	}
-
-	void Button::setOnClick(const Callback<>& onClick) {
-		_onPressedChanged = onClick;
 	}
 
 	void Button::onPressedChanged() {

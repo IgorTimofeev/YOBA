@@ -41,7 +41,7 @@ namespace yoba::ui {
 
 		onSelectionChanged();
 
-		_onSelectionChanged();
+		selectionChanged();
 	}
 
 	void Selector::onSelectionChanged() {
@@ -52,12 +52,8 @@ namespace yoba::ui {
 		return _itemsLayout ? _itemsLayout->getChildrenCount() : 0;
 	}
 
-	void Selector::setItemsLayout(Container *layout) {
+	void Selector::setItemsLayout(Layout *layout) {
 		_itemsLayout = layout;
-	}
-
-	const Callback<>& Selector::getOnSelectionChanged() const {
-		return _onSelectionChanged;
 	}
 
 	// -------------------------------- SelectorItem --------------------------------

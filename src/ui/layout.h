@@ -9,7 +9,7 @@
 #include <iterator>
 
 namespace yoba::ui {
-	class Container : public virtual Element {
+	class Layout : public virtual Element {
 		public:
 			void tick() override;
 

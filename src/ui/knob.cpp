@@ -56,7 +56,7 @@ namespace yoba::ui {
 			const auto oldAngle = _angle;
 			_angle = ((TouchDragEvent&) event).getPosition().getRotation(getBounds().getCenter()) - (float) radians(90);
 
-			_onRotate(oldAngle, _angle);
+			rotated(oldAngle, _angle);
 		}
 
 		event.setHandled(true);
@@ -92,9 +92,5 @@ namespace yoba::ui {
 
 	void Knob::setMiddleColor(const Color* value) {
 		_middleColor = value;
-	}
-
-	Callback<float, float> &Knob::getOnRotate() {
-		return _onRotate;
 	}
 }

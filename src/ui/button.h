@@ -14,6 +14,8 @@
 namespace yoba::ui {
 	class Button : public FocusableElement, public TextElement, public FontElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
+			Callback<> pressedChanged {};
+
 			void onRender(Renderer* renderer) override;
 
 			void onEvent(Event& event) override;
@@ -30,10 +32,6 @@ namespace yoba::ui {
 			const Color* getPressedSecondaryColor() const;
 			void setPressedSecondaryColor(const Color* value);
 
-			Callback<>& getOnPressedChanged();
-
-			void setOnClick(const Callback<>& onClick);
-
 		protected:
 			virtual void onPressedChanged();
 
@@ -43,7 +41,5 @@ namespace yoba::ui {
 
 			const Color* _pressedPrimaryColor = nullptr;
 			const Color* _pressedSecondaryColor = nullptr;
-
-			Callback<> _onPressedChanged {};
 	};
 }

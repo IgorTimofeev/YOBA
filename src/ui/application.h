@@ -1,13 +1,13 @@
 #pragma once
 
-#include "container.h"
+#include "layout.h"
 #include "hardware/inputDevice.h"
 #include "font.h"
 #include "../resources/fonts/unscii16Font.h"
 #include "rendering/renderer.h"
 
 namespace yoba::ui {
-	class Application : public Container {
+	class Application : public Layout {
 		public:
 			// Sexy old school font that will be used as fallback value when rendering
 			// child elements that contain text, but doesn't have any specific font

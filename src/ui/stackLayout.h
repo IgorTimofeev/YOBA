@@ -1,9 +1,9 @@
 #pragma once
 
-#include "container.h"
+#include "layout.h"
 
 namespace yoba::ui {
-	class StackContainer : public Container {
+	class StackLayout : public Layout {
 		public:
 			Orientation getOrientation() const {
 				return _orientation;

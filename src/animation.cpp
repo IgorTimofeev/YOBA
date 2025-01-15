@@ -31,7 +31,7 @@ namespace yoba {
 			return true;
 		}
 		else {
-			_onCompleted();
+			completed();
 
 			return false;
 		}
@@ -51,10 +51,6 @@ namespace yoba {
 
 	void Animation::setInterpolator(const std::function<void(const double &)> &interpolator) {
 		_interpolator = interpolator;
-	}
-
-	const Callback<>& Animation::getOnCompleted() const {
-		return _onCompleted;
 	}
 
 	// -------------------------------- Margin --------------------------------

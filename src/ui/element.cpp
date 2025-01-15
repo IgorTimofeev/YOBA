@@ -1,5 +1,5 @@
 #include "element.h"
-#include "container.h"
+#include "layout.h"
 #include "application.h"
 #include "animation.h"
 #include "event.h"
@@ -362,12 +362,12 @@ namespace yoba::ui {
 		invalidate();
 	}
 
-	void Element::onAddedToParent(Container* parent) {
+	void Element::onAddedToParent(Layout* parent) {
 		_parent = parent;
 		setApplication(_parent->getApplication());
 	}
 
-	void Element::onRemovedFromParent(Container* parent) {
+	void Element::onRemovedFromParent(Layout* parent) {
 		_parent = nullptr;
 		setApplication(nullptr);
 	}

@@ -28,11 +28,11 @@ namespace yoba::ui {
 	};
 
 	class Application;
-	class Container;
+	class Layout;
 
 	class Element {
 		friend Application;
-		friend Container;
+		friend Layout;
 
 		public:
 			Element() = default;
@@ -92,8 +92,8 @@ namespace yoba::ui {
 		protected:
 			virtual void setApplication(Application* value);
 
-			virtual void onAddedToParent(Container* parent);
-			virtual void onRemovedFromParent(Container* parent);
+			virtual void onAddedToParent(Layout* parent);
+			virtual void onRemovedFromParent(Layout* parent);
 
 			virtual void onFocusChanged();
 			virtual void onCaptureChanged();
@@ -113,7 +113,7 @@ namespace yoba::ui {
 			Alignment _verticalAlignment = Alignment::Stretch;
 			Margin _margin = Margin::zero;
 			Application* _application = nullptr;
-			Container* _parent = nullptr;
+			Layout* _parent = nullptr;
 
 			Bounds _bounds;
 			Size _measuredSize = Size();

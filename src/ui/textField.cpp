@@ -341,7 +341,7 @@ namespace yoba::ui {
 		if (_keyboardConfigurator.has_value())
 			_keyboardConfigurator.value()(keyboard);
 
-		keyboard->getOnKeyPressedChanged() += [this](KeyCode code, bool pressed) {
+		keyboard->keyPressedChanged += [this](KeyCode code, bool pressed) {
 			if (pressed)
 				return;
 
@@ -359,7 +359,7 @@ namespace yoba::ui {
 			}
 		};
 
-		keyboard->getOnInput() += [this](KeyCode code, const std::wstring_view& text) {
+		keyboard->input += [this](KeyCode code, const std::wstring_view& text) {
 			insert(text);
 		};
 	}

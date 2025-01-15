@@ -15,6 +15,8 @@ namespace yoba::ui {
 
 	class Knob : public PrimaryColorElement {
 		public:
+			Callback<float, float> rotated {};
+
 			void onRender(Renderer* renderer) override;
 
 			void onEvent(Event& event) override;
@@ -31,10 +33,7 @@ namespace yoba::ui {
 			const Color* getMiddleColor() const;
 			void setMiddleColor(const Color* value);
 
-			Callback<float, float>& getOnRotate();
-
 		private:
-			Callback<float, float> _onRotate {};
 			float _angle = 0;
 			float _angleStep = radians(10);
 			const Color* _lineColor = nullptr;

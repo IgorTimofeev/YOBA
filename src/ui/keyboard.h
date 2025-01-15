@@ -2,11 +2,11 @@
 
 #include <optional>
 #include <cstdint>
-#include "container.h"
+#include "layout.h"
 #include "ui/traits/fontElement.h"
 #include "button.h"
 #include "ui/shapes/rectangle.h"
-#include "stackContainer.h"
+#include "stackLayout.h"
 
 namespace yoba::ui {
 	enum class KeyCode : uint16_t {
@@ -320,9 +320,9 @@ namespace yoba::ui {
 			void onPressedChanged(KeyboardButton* button) override;
 	};
 
-	class KeyboardButtonsContainer : public Container {
+	class KeyboardButtonsLayout : public Layout {
 		public:
-			explicit KeyboardButtonsContainer(Keyboard* keyboard);
+			explicit KeyboardButtonsLayout(Keyboard* keyboard);
 
 		protected:
 			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
@@ -367,11 +367,14 @@ namespace yoba::ui {
 			void updateTextFromCase();
 	};
 
-	class Keyboard : public Container, public FontElement {
+	class Keyboard : public Layout, public FontElement {
 		public:
 			Keyboard();
-
+		
 			~Keyboard();
+
+			Callback<KeyCode, bool> keyPressedChanged {};
+			Callback<KeyCode, const std::wstring_view&> input {};
 
 			void setLayout(KeyboardLayout* value);
 			KeyboardLayout* getLayout() const;
@@ -417,9 +420,6 @@ namespace yoba::ui {
 
 			void setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& charactersLayoutBuilder);
 
-			Callback<KeyCode, bool>& getOnKeyPressedChanged();
-			Callback<KeyCode, const std::wstring_view&>& getOnInput();
-
 			uint16_t getContinuousTypingDelay() const;
 			void setContinuousTypingDelay(uint16_t value);
 
@@ -443,19 +443,16 @@ namespace yoba::ui {
 			std::optional<std::function<KeyboardLayout*()>> _charactersLayoutBuilder = std::nullopt;
 
 			Rectangle _backgroundPanel = Rectangle();
-			KeyboardButtonsContainer _buttonsContainer;
+			KeyboardButtonsLayout _buttonsLayout;
 
 			uint8_t _horizontalKeySpacing = 2;
 			uint8_t _verticalKeySpacing = 2;
 			float _keyHeight = 0.1f;
 
-			Callback<KeyCode, bool> _onKeyPressedChanged {};
-			Callback<KeyCode, const std::wstring_view&> _onInput {};
-
 			void deleteLayoutAndUIElements();
 	};
 
-	class KeyboardApplicationContainer : public Container {
+	class KeyboardApplicationLayout : public Layout {
 		protected:
 			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
 
@@ -469,8 +466,8 @@ namespace yoba::ui {
 
 		private:
 			static Keyboard* _keyboard;
-			static Container* _applicationChildrenContainer;
-			static KeyboardApplicationContainer* _keyboardAndApplicationChildrenContainer;
+			static Layout* _applicationChildrenLayout;
+			static KeyboardApplicationLayout* _keyboardAndApplicationChildrenLayout;
 	};
 
 	// ----------------------------- Layouts -----------------------------

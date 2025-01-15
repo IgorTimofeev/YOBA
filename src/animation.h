@@ -11,6 +11,8 @@ namespace yoba {
 		public:
 			Animation();
 
+			Callback<> completed;
+
 			explicit Animation(const uint32_t& duration, const std::function<void(const double &)>& interpolator);
 
 			void start();
@@ -27,11 +29,8 @@ namespace yoba {
 
 			void setInterpolator(const std::function<void(const double &)> &interpolator);
 
-			const Callback<>& getOnCompleted() const;
-
 		private:
 			std::function<void(const double&)> _interpolator;
-			Callback<> _onCompleted;
 			uint32_t _start = 0;
 			uint32_t _duration = 0;
 	};
