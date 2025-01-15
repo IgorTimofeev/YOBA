@@ -16,7 +16,7 @@ namespace yoba::ui {
 		Element::onRender(renderer);
 	}
 
-	void Container::onEvent(InputEvent &event) {
+	void Container::onEvent(InputEvent& event) {
 		if (getChildrenCount() == 0)
 			return;
 

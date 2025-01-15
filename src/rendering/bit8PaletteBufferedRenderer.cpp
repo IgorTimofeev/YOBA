@@ -17,22 +17,22 @@ namespace yoba {
 	void Bit8PaletteBufferedRenderer::flush() {
 		switch (_renderTarget->getPixelWriting()) {
 			case RenderTargetPixelWriting::Buffered: {
-				const auto bufferedRenderTarget = dynamic_cast<BufferedDisplay*>(_renderTarget);
+				const auto bufferedDisplay = dynamic_cast<BufferedDisplay*>(_renderTarget);
 
 				switch (_renderTarget->getColorModel()) {
-					case ColorModel::Rgb565:
-						bufferedRenderTarget->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+					case ColorModel::Rgb565: {
+						bufferedDisplay->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
 							((uint16_t*) destination)[0] = ((uint16_t*) _palette)[_buffer[pixelIndex]];
 							destination += 2;
 							pixelIndex++;
 						});
 
 						break;
-
-					case ColorModel::Rgb666:
+					}
+					case ColorModel::Rgb666: {
 						const uint8_t* palettePtr;
 
-						bufferedRenderTarget->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+						bufferedDisplay->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
 							palettePtr = _palette + _buffer[pixelIndex] * 3;
 
 							destination[0] = palettePtr[0];
@@ -44,7 +44,7 @@ namespace yoba {
 						});
 
 						break;
-
+					}
 					default:
 						break;
 				}

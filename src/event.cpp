@@ -32,7 +32,7 @@ namespace yoba {
 		return _typeID;
 	}
 
-	// -------------------------------- Unput --------------------------------
+	// -------------------------------- Input --------------------------------
 
 	InputEvent::InputEvent(uint16_t& staticTypeID) : Event(staticTypeID) {
 

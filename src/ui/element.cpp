@@ -213,7 +213,7 @@ namespace yoba::ui {
 		onArrange(newBounds);
 	}
 
-	void Element::handleEvent(InputEvent &event) {
+	void Element::handleEvent(InputEvent& event) {
 		if (!event.matches(this))
 			return;
 
@@ -222,7 +222,7 @@ namespace yoba::ui {
 		_eventHandlers(event);
 	}
 
-	void Element::onEvent(InputEvent &event) {
+	void Element::onEvent(InputEvent& event) {
 		event.setHandled(true);
 	}
 

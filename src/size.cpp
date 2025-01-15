@@ -46,7 +46,7 @@ namespace yoba {
 		};
 	}
 
-	uint16_t Size::getSquare() const {
+	uint32_t Size::getSquare() const {
 		return _width * _height;
 	}
 

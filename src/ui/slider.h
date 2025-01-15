@@ -48,7 +48,7 @@ namespace yoba::ui {
 				);
 			}
 
-			void onEvent(InputEvent &event) override {
+			void onEvent(InputEvent& event) override {
 				const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
 				const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
 				const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;

@@ -25,7 +25,7 @@ namespace yoba {
 			uint16_t getXCenter() const;
 			uint16_t getYCenter() const;
 			Point getCenter() const;
-			uint16_t getSquare() const;
+			uint32_t getSquare() const;
 
 			Size interpolate(const Size& to, const double &position) const;
 

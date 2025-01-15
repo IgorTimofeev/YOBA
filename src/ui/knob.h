@@ -17,7 +17,7 @@ namespace yoba::ui {
 		public:
 			void onRender(Renderer* renderer) override;
 
-			void onEvent(InputEvent &event) override;
+			void onEvent(InputEvent& event) override;
 
 			float getAngle() const;
 			void setAngle(float angle);

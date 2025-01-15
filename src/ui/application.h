@@ -22,7 +22,7 @@ namespace yoba::ui {
 			void invalidateRender() override;
 			void invalidate() override;
 
-			void handleEvent(InputEvent &event) override;
+			void handleEvent(InputEvent& event) override;
 			void startAnimation(Animation* animation) override;
 
 			const Font* getFont() const;

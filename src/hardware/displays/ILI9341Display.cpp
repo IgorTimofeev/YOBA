@@ -242,7 +242,7 @@ namespace yoba::hardware {
 		// Column Address Set
 		data[0] = 0; //Start Col High
 		data[1] = 0; //Start Col Low
-		data[2] = (this->getResolution().getWidth() - 1) >> 8; //End Col High
+		data[2] = (this->_resolution.getWidth() - 1) >> 8; //End Col High
 		data[3] = (this->_resolution.getWidth() - 1) & 0xff; //End Col Low
 		writeCommandAndData(0x2A, data, 4);
 
