@@ -15,7 +15,7 @@ namespace yoba::ui {
 
 			void onRender(Renderer* renderer) override;
 
-			void onEvent(InputEvent& event) override;
+			void onEvent(Event& event) override;
 
 			size_t getChildrenCount();
 

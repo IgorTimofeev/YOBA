@@ -11,7 +11,7 @@
 
 namespace yoba {
 	class Animation;
-	class InputEvent;
+	class Event;
 }
 
 namespace yoba::ui {
@@ -45,15 +45,13 @@ namespace yoba::ui {
 			void arrange(const Bounds& bounds);
 
 			virtual void render(Renderer* renderer);
-			virtual void handleEvent(InputEvent& event);
+			virtual void handleEvent(Event& event);
 
 			virtual void invalidateRender();
 			virtual void invalidateLayout();
 			virtual void invalidate();
 
 			virtual void startAnimation(Animation* animation);
-
-			Callback<InputEvent&>& getOnEvent();
 
 			Application* getApplication();
 			Element* getParent();
@@ -103,7 +101,7 @@ namespace yoba::ui {
 			virtual Size onMeasure(Renderer* renderer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(Renderer* renderer);
-			virtual void onEvent(InputEvent& event);
+			virtual void onEvent(Event& event);
 
 		private:
 			bool _isVisible = true;
@@ -119,8 +117,6 @@ namespace yoba::ui {
 
 			Bounds _bounds;
 			Size _measuredSize = Size();
-
-			Callback<InputEvent&> _eventHandlers {};
 
 			void setMeasuredSize(const Size& value);
 

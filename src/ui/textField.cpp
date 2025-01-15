@@ -112,7 +112,7 @@ namespace yoba::ui {
 		}
 	}
 
-	void TextField::onEvent(InputEvent& event) {
+	void TextField::onEvent(Event& event) {
 		const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
 		const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
 		const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;

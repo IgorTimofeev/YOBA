@@ -62,7 +62,7 @@ namespace yoba::ui {
 
 	// -------------------------------- SelectorItem --------------------------------
 
-	void SelectorItem::onEvent(InputEvent& event) {
+	void SelectorItem::onEvent(Event& event) {
 		if (!(event.getTypeID() == TouchDownEvent::typeID || event.getTypeID() == TouchDragEvent::typeID))
 			return;
 

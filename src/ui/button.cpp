@@ -46,7 +46,7 @@ namespace yoba::ui {
 		Element::onRender(renderer);
 	}
 
-	void Button::onEvent(InputEvent& event) {
+	void Button::onEvent(Event& event) {
 		if (event.getTypeID() == TouchDownEvent::typeID) {
 			setCaptured(true);
 			setFocused(true);

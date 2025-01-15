@@ -213,16 +213,14 @@ namespace yoba::ui {
 		onArrange(newBounds);
 	}
 
-	void Element::handleEvent(InputEvent& event) {
+	void Element::handleEvent(Event& event) {
 		if (!event.matches(this))
 			return;
 
 		onEvent(event);
-
-		_eventHandlers(event);
 	}
 
-	void Element::onEvent(InputEvent& event) {
+	void Element::onEvent(Event& event) {
 		event.setHandled(true);
 	}
 
@@ -362,10 +360,6 @@ namespace yoba::ui {
 		_size.setHeight(value);
 
 		invalidate();
-	}
-
-	Callback<InputEvent&>& Element::getOnEvent() {
-		return _eventHandlers;
 	}
 
 	void Element::onAddedToParent(Container* parent) {

@@ -16,7 +16,7 @@ namespace yoba::ui {
 		public:
 			void onRender(Renderer* renderer) override;
 
-			void onEvent(InputEvent& event) override;
+			void onEvent(Event& event) override;
 
 			bool isPressed() const;
 			void setPressed(bool value);

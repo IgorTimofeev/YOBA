@@ -30,7 +30,7 @@ namespace yoba::ui {
 
 			void onRender(Renderer* renderer) override;
 
-			void onEvent(InputEvent& targetX) override;
+			void onEvent(Event& targetX) override;
 
 			void onFocusChanged() override;
 
