@@ -1,7 +1,7 @@
 #include "container.h"
-#include "../event.h"
+#include "event.h"
 
-namespace yoba {
+namespace yoba::ui {
 	void Container::tick() {
 		Element::tick();
 
@@ -9,11 +9,11 @@ namespace yoba {
 			element->tick();
 	}
 
-	void Container::onRender(ScreenBuffer* screenBuffer) {
+	void Container::onRender(Renderer* renderer) {
 		for (auto element : _children)
-			element->render(screenBuffer);
+			element->render(renderer);
 
-		Element::onRender(screenBuffer);
+		Element::onRender(renderer);
 	}
 
 	void Container::onEvent(InputEvent &event) {
@@ -101,14 +101,14 @@ namespace yoba {
 		removeChild(child);
 	}
 
-	Size Container::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size Container::onMeasure(Renderer* renderer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : _children) {
 			if (!child->isVisible())
 				continue;
 
-			child->measure(screenBuffer, availableSize);
+			child->measure(renderer, availableSize);
 
 			if (child->getMeasuredSize().getWidth() > result.getWidth())
 				result.setWidth(child->getMeasuredSize().getWidth());

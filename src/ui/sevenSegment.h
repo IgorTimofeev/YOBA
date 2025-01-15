@@ -1,25 +1,25 @@
 #pragma once
 
 #include "stackContainer.h"
-#include "../color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "color.h"
+#include "rendering/renderer.h"
 #include "cmath"
-#include "primaryColorElement.h"
-#include "secondaryColorElement.h"
+#include "ui/traits/primaryColorElement.h"
+#include "ui/traits/secondaryColorElement.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class SevenSegment : public PrimaryColorElement, public SecondaryColorElement {
 		public:
 			static const uint32_t dashes = 0xFFFFFFFF;
 
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
 				return {
 					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
 					getDigitHeight()
 				};
 			}
 
-			void onRender(ScreenBuffer* screenBuffer) override {
+			void onRender(Renderer* renderer) override {
 				auto bounds = getBounds();
 				bounds.setX(bounds.getX() + (getDigitWidth() + getSpacing()) * (getDigitCount() - 1));
 
@@ -27,15 +27,15 @@ namespace yoba {
 
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
 					if (value == dashes) {
-						drawDashes(screenBuffer, bounds.getTopLeft());
+						drawDashes(renderer, bounds.getTopLeft());
 					}
 					else if (value > 0) {
-						drawDigit(screenBuffer, bounds.getTopLeft(), value % 10);
+						drawDigit(renderer, bounds.getTopLeft(), value % 10);
 
 						value /= 10;
 					}
 					else {
-						drawDigit(screenBuffer, bounds.getTopLeft(), 0);
+						drawDigit(renderer, bounds.getTopLeft(), 0);
 					}
 
 					bounds.setX(bounds.getX() - getDigitWidth() - getSpacing());
@@ -110,7 +110,7 @@ namespace yoba {
 			uint8_t _segmentLength = 9;
 
 			void drawSegments(
-				ScreenBuffer* screenBuffer,
+				Renderer* renderer,
 				const Point& position,
 				bool s0,
 				bool s1,
@@ -123,20 +123,20 @@ namespace yoba {
 				const uint8_t t = getSegmentThickness();
 				const uint8_t l = getSegmentLength();
 
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getSecondaryColor() : getPrimaryColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getSecondaryColor() : getPrimaryColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getSecondaryColor() : getPrimaryColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getSecondaryColor() : getPrimaryColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getSecondaryColor() : getPrimaryColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getSecondaryColor() : getPrimaryColor());
-				screenBuffer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getSecondaryColor() : getPrimaryColor());
 			}
 
-			void drawDigit(ScreenBuffer* screenBuffer, const Point& position, uint8_t digit) {
+			void drawDigit(Renderer* renderer, const Point& position, uint8_t digit) {
 				switch (digit) {
 					case 0:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							true,
@@ -151,7 +151,7 @@ namespace yoba {
 
 					case 1:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							false,
 							true,
@@ -166,7 +166,7 @@ namespace yoba {
 
 					case 2:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							true,
@@ -181,7 +181,7 @@ namespace yoba {
 
 					case 3:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							true,
@@ -196,7 +196,7 @@ namespace yoba {
 
 					case 4:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							false,
 							true,
@@ -211,7 +211,7 @@ namespace yoba {
 
 					case 5:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							false,
@@ -226,7 +226,7 @@ namespace yoba {
 
 					case 6:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							false,
@@ -241,7 +241,7 @@ namespace yoba {
 
 					case 7:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							true,
@@ -256,7 +256,7 @@ namespace yoba {
 
 					case 8:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							true,
@@ -271,7 +271,7 @@ namespace yoba {
 
 					default:
 						drawSegments(
-							screenBuffer,
+							renderer,
 							position,
 							true,
 							true,
@@ -286,9 +286,9 @@ namespace yoba {
 				}
 			}
 
-			void drawDashes(ScreenBuffer* screenBuffer, const Point& position) {
+			void drawDashes(Renderer* renderer, const Point& position) {
 				drawSegments(
-					screenBuffer,
+					renderer,
 					position,
 					false,
 					false,

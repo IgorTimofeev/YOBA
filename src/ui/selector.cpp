@@ -1,6 +1,6 @@
 #include "selector.h"
 
-namespace yoba {
+namespace yoba::ui {
 	// -------------------------------- Selector --------------------------------
 
 	SelectorItem* Selector::getItemAt(size_t index) {

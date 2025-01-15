@@ -1,17 +1,17 @@
 #include "button.h"
 
-namespace yoba {
-	void Button::onRender(ScreenBuffer* screenBuffer) {
+namespace yoba::ui {
+	void Button::onRender(Renderer* renderer) {
 		const auto& bounds = getBounds();
 
 		// Primary color
 		auto primaryColor = getPrimaryColor();
 
 		if (!primaryColor)
-			primaryColor = screenBuffer->getPrimaryColor();
+			primaryColor = renderer->getPrimaryColor();
 
 		if (primaryColor) {
-			screenBuffer->renderFilledRectangle(
+			renderer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
 				isPressed() && getPressedPrimaryColor()
@@ -30,9 +30,9 @@ namespace yoba {
 				: getSecondaryColor();
 
 			if (!secondaryColor)
-				secondaryColor = screenBuffer->getSecondaryColor();
+				secondaryColor = renderer->getSecondaryColor();
 
-			screenBuffer->renderText(
+			renderer->renderText(
 				Point(
 					bounds.getXCenter() - font->getWidth(getText()) / 2,
 					bounds.getYCenter() - font->getHeight() / 2
@@ -43,7 +43,7 @@ namespace yoba {
 			);
 		}
 
-		Element::onRender(screenBuffer);
+		Element::onRender(renderer);
 	}
 
 	void Button::onEvent(InputEvent& event) {

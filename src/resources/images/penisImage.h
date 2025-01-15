@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../size.h"
-#include "../../image.h"
+#include "size.h"
+#include "image.h"
 
 namespace yoba {
 	class PenisImage : public Image {

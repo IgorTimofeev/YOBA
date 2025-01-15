@@ -1,28 +1,21 @@
 #pragma once
 
 #include "container.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "../hardware/input/inputDevice.h"
-#include "../font.h"
+#include "hardware/inputDevice.h"
+#include "font.h"
 #include "../resources/fonts/unscii16Font.h"
+#include "rendering/renderer.h"
 
-namespace yoba {
-	class Animation;
-
+namespace yoba::ui {
 	class Application : public Container {
 		public:
 			// Sexy old school font that will be used as fallback value when rendering
 			// child elements that contain text, but doesn't have any specific font
 			static const unscii16Font defaultFont;
 
-			explicit Application(
-				ScreenBuffer* screenBuffer
-			);
+			explicit Application(Renderer* renderer);
 
 			virtual void setup();
-
-			ScreenOrientation getOrientation() const;
-			void setOrientation(ScreenOrientation value) const;
 
 			void tick() override;
 			void invalidateLayout() override;
@@ -35,9 +28,9 @@ namespace yoba {
 			const Font* getFont() const;
 			void setFont(const Font* font);
 
-			ScreenBuffer* getScreenBuffer() const;
+			Renderer* getRenderer() const;
 
-			void addInputDevice(InputDevice* inputDevice);
+			void addInputDevice(hardware::InputDevice* inputDevice);
 
 			Element* getCapturedElement() const;
 			void setCapturedElement(Element* element);
@@ -48,7 +41,7 @@ namespace yoba {
 			void enqueueOnTick(const std::function<void()>& task);
 
 		private:
-			ScreenBuffer* _screenBuffer;
+			Renderer* _renderer;
 
 			bool _isRendered = false;
 			bool _isMeasuredAndArranged = false;
@@ -56,7 +49,7 @@ namespace yoba {
 			Element* _focusedElement = nullptr;
 
 			std::vector<Animation*> _animations {};
-			std::vector<InputDevice*> _inputDevices {};
+			std::vector<hardware::InputDevice*> _inputDevices {};
 			std::vector<std::function<void()>> _enqueuedTasksOnTick {};
 
 			const Font* _defaultFont = &defaultFont;

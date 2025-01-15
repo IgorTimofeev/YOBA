@@ -1,10 +1,10 @@
 #include "element.h"
 #include "container.h"
 #include "application.h"
-#include "../animation.h"
-#include "../event.h"
+#include "animation.h"
+#include "event.h"
 
-namespace yoba {
+namespace yoba::ui {
 	Element::~Element() {
 		if (isCaptured())
 			setCaptured(false);
@@ -30,7 +30,7 @@ namespace yoba {
 		invalidate();
 	}
 
-	Size Element::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size Element::onMeasure(Renderer* renderer, const Size& availableSize) {
 		return { 0, 0 };
 	}
 
@@ -66,11 +66,11 @@ namespace yoba {
 
 	}
 
-	void Element::measure(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	void Element::measure(Renderer* renderer, const Size& availableSize) {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
 
-		auto desiredSize = computeDesiredSize(screenBuffer, Size(
+		auto desiredSize = onMeasure(renderer, Size(
 			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));
@@ -326,22 +326,22 @@ namespace yoba {
 			_application->invalidate();
 	}
 
-	void Element::render(ScreenBuffer* screenBuffer) {
+	void Element::render(Renderer* renderer) {
 		if (!isVisible())
 			return;
 
 		if (_clipToBounds) {
-			screenBuffer->setViewport(getBounds());
+			renderer->setViewport(getBounds());
 		}
 		else {
-			screenBuffer->resetViewport();
+			renderer->resetViewport();
 		}
 
-		onRender(screenBuffer);
+		onRender(renderer);
 	}
 
-	void Element::onRender(ScreenBuffer* screenBuffer) {
-//		screenBuffer->renderRectangle(getBounds(), screenBuffer->getSecondaryColor());
+	void Element::onRender(Renderer* renderer) {
+//		renderer->renderRectangle(getBounds(), renderer->getSecondaryColor());
 	}
 
 	bool Element::getClipToBounds() const {

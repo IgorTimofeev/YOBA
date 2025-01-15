@@ -1,21 +1,21 @@
 #pragma once
 
 #include "element.h"
-#include "../color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "color.h"
+#include "rendering/renderer.h"
 #include "cmath"
-#include "../callback.h"
-#include "primaryColorElement.h"
-#include "secondaryColorElement.h"
-#include "../event.h"
-#include "../number.h"
+#include "callback.h"
+#include "ui/traits/primaryColorElement.h"
+#include "ui/traits/secondaryColorElement.h"
+#include "event.h"
+#include "number.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class KnobRotateEvent;
 
 	class Knob : public PrimaryColorElement {
 		public:
-			void onRender(ScreenBuffer* screenBuffer) override;
+			void onRender(Renderer* renderer) override;
 
 			void onEvent(InputEvent &event) override;
 

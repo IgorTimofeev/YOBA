@@ -4,16 +4,18 @@
 #include <cstdint>
 #include "vector.h"
 
+namespace yoba::ui {
+	class Element;
+}
+
 namespace yoba {
 	// -------------------------------- Event --------------------------------
-
-	class Element;
 
 	class Event {
 		public:
 			explicit Event(uint16_t& staticTypeID);
 
-			virtual bool matches(Element* element);
+			virtual bool matches(ui::Element* element);
 
 			bool isHandled() const;
 			void setHandled(bool handled);
@@ -39,7 +41,7 @@ namespace yoba {
 		public:
 			explicit ScreenEvent(uint16_t& staticTypeID);
 
-			bool matches(Element* element) override;
+			bool matches(ui::Element* element) override;
 	};
 
 	// -------------------------------- Touch --------------------------------
@@ -48,7 +50,7 @@ namespace yoba {
 		public:
 			TouchEvent(uint16_t& staticTypeID, const Point& position);
 
-			bool matches(Element* element) override;
+			bool matches(ui::Element* element) override;
 
 			const Point& getPosition() const;
 			void setPosition(const Point& position);
@@ -82,7 +84,7 @@ namespace yoba {
 		public:
 			PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2);
 
-			bool matches(Element* element) override;
+			bool matches(ui::Element* element) override;
 
 			const Point& getPosition1() const;
 			void setPosition1(const Point& position1);

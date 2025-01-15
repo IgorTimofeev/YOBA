@@ -3,6 +3,8 @@
 #include "ui/element.h"
 
 namespace yoba {
+	using namespace yoba::ui;
+
 	// -------------------------------- Event --------------------------------
 
 	Event::Event(uint16_t& staticTypeID) {
@@ -94,7 +96,7 @@ namespace yoba {
 		typeID,
 		position
 	) {
-		;
+
 	}
 
 	uint16_t TouchUpEvent::typeID = 0;

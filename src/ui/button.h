@@ -1,20 +1,20 @@
 #pragma once
 
 #include "element.h"
-#include "../color.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "primaryColorElement.h"
-#include "secondaryColorElement.h"
-#include "textElement.h"
-#include "fontElement.h"
-#include "cornerRadiusElement.h"
-#include "focusableElement.h"
-#include "../event.h"
+#include "color.h"
+#include "rendering/renderer.h"
+#include "ui/traits/primaryColorElement.h"
+#include "ui/traits/secondaryColorElement.h"
+#include "ui/traits/textElement.h"
+#include "ui/traits/fontElement.h"
+#include "ui/traits/cornerRadiusElement.h"
+#include "ui/traits/focusableElement.h"
+#include "event.h"
 
-namespace yoba {
-	class Button : public FocusableElement, public TextElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
+namespace yoba::ui {
+	class Button : public FocusableElement, public TextElement, public FontElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
-			void onRender(ScreenBuffer* screenBuffer) override;
+			void onRender(Renderer* renderer) override;
 
 			void onEvent(InputEvent &event) override;
 

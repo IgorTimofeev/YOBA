@@ -1,14 +1,14 @@
 #pragma once
 
 #include "element.h"
-#include "textElement.h"
-#include "primaryColorElement.h"
-#include "fontElement.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "../size.h"
+#include "ui/traits/textElement.h"
+#include "ui/traits/primaryColorElement.h"
+#include "ui/traits/fontElement.h"
+#include "rendering/renderer.h"
+#include "size.h"
 
-namespace yoba {
-	class Text : public TextElement, public PrimaryColorElement {
+namespace yoba::ui {
+	class Text : public TextElement, public FontElement, public PrimaryColorElement {
 		public:
 			Text() = default;
 
@@ -21,7 +21,7 @@ namespace yoba {
 				setPrimaryColor(foreground);
 			}
 
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
 				const auto font = getFontOrDefault();
 
 				return
@@ -33,7 +33,7 @@ namespace yoba {
 					: Size();
 			}
 
-			void onRender(ScreenBuffer* screenBuffer) override {
+			void onRender(Renderer* renderer) override {
 				const auto font = getFontOrDefault();
 
 				if (!font)
@@ -42,9 +42,9 @@ namespace yoba {
 				auto primaryColor = getPrimaryColor();
 
 				if (!primaryColor)
-					primaryColor = screenBuffer->getPrimaryColor();
+					primaryColor = renderer->getPrimaryColor();
 
-				screenBuffer->renderText(
+				renderer->renderText(
 					getBounds().getTopLeft(),
 					font,
 					primaryColor,

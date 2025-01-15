@@ -2,10 +2,9 @@
 #include <cstdint>
 #include "textField.h"
 
-#include "../../../../lib/YOBA/src/ui/keyboard.h"
-#include "../../../../lib/YOBA/src/ui/application.h"
+#include "application.h"
 
-namespace yoba {
+namespace yoba::ui {
 	void TextField::tick() {
 		Element::tick();
 
@@ -23,16 +22,16 @@ namespace yoba {
 		}
 	}
 
-	void TextField::onRender(ScreenBuffer* screenBuffer) {
+	void TextField::onRender(Renderer* renderer) {
 		auto& bounds = getBounds();
 
 		const auto focused = isFocused();
 
 		// Background
-		const auto primaryColor = selectColor(focused, _primaryColor, _focusedPrimaryColor, screenBuffer->getPrimaryColor());
+		const auto primaryColor = selectColor(focused, _primaryColor, _focusedPrimaryColor, renderer->getPrimaryColor());
 
 		if (primaryColor) {
-			screenBuffer->renderFilledRectangle(
+			renderer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
 				primaryColor
@@ -43,7 +42,7 @@ namespace yoba {
 		const auto borderColor = selectColor(focused, _borderColor, _focusedBorderColor, nullptr);
 
 		if (borderColor) {
-			screenBuffer->renderRectangle(
+			renderer->renderRectangle(
 				bounds,
 				getCornerRadius(),
 				borderColor
@@ -56,14 +55,14 @@ namespace yoba {
 		if (!font)
 			return;
 
-		const auto secondaryColor = selectColor(focused, _secondaryColor, _focusedSecondaryColor, screenBuffer->getSecondaryColor());
+		const auto secondaryColor = selectColor(focused, _secondaryColor, _focusedSecondaryColor, renderer->getSecondaryColor());
 
 		if (!secondaryColor)
 			return;
 
-		const auto oldViewport = screenBuffer->getViewport();
+		const auto oldViewport = renderer->getViewport();
 
-		screenBuffer->setViewport(Bounds(
+		renderer->setViewport(Bounds(
 			bounds.getX() + _textMargin,
 			bounds.getY(),
 			bounds.getWidth() - _textMargin * 2,
@@ -80,7 +79,7 @@ namespace yoba {
 		auto blinkX = textPosition.getX();
 
 		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-			screenBuffer->renderChar(
+			renderer->renderChar(
 				textPosition,
 				font,
 				secondaryColor,
@@ -93,7 +92,7 @@ namespace yoba {
 			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex]));
 		}
 
-		screenBuffer->setViewport(oldViewport);
+		renderer->setViewport(oldViewport);
 
 		// Cursor
 		if (_cursorBlinkState) {
@@ -101,14 +100,14 @@ namespace yoba {
 			if (_cursorPosition == text.length())
 				blinkX = textPosition.getX();
 
-			screenBuffer->renderFilledRectangle(
+			renderer->renderFilledRectangle(
 				Bounds(
 					blinkX,
 					textPosition.getY() + font->getHeight() / 2 - _cursorSize.getHeight() / 2,
 					_cursorSize.getWidth(),
 					_cursorSize.getHeight()
 				),
-				_cursorColor ? _cursorColor : screenBuffer->getSecondaryColor()
+				_cursorColor ? _cursorColor : renderer->getSecondaryColor()
 			);
 		}
 	}

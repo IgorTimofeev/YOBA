@@ -3,7 +3,7 @@
 #include "container.h"
 #include "vector"
 
-namespace yoba {
+namespace yoba::ui {
 	class SelectorItem;
 
 	class Selector : public Container {

@@ -2,18 +2,18 @@
 
 #include "element.h"
 #include "vector"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "../bounds.h"
-#include "../size.h"
-#include "../event.h"
+#include "rendering/renderer.h"
+#include "bounds.h"
+#include "size.h"
+#include "event.h"
 #include <iterator>
 
-namespace yoba {
+namespace yoba::ui {
 	class Container : public virtual Element {
 		public:
 			void tick() override;
 
-			void onRender(ScreenBuffer* screenBuffer) override;
+			void onRender(Renderer* renderer) override;
 
 			void onEvent(InputEvent& event) override;
 
@@ -44,7 +44,7 @@ namespace yoba {
 		protected:
 			void setApplication(Application* value) override;
 
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 

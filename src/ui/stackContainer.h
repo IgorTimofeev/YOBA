@@ -2,7 +2,7 @@
 
 #include "container.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class StackContainer : public Container {
 		public:
 			Orientation getOrientation() const {
@@ -22,7 +22,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
 				auto result = Size();
 
 				size_t visibleChildrenCount = 0;
@@ -34,7 +34,7 @@ namespace yoba {
 								continue;
 
 							child->measure(
-								screenBuffer,
+								renderer,
 								Size(
 									Size::Infinity,
 									availableSize.getHeight()
@@ -62,7 +62,7 @@ namespace yoba {
 								continue;
 
 							child->measure(
-								screenBuffer,
+								renderer,
 								Size(
 									availableSize.getWidth(),
 									Size::Infinity

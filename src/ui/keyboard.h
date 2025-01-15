@@ -3,12 +3,12 @@
 #include <optional>
 #include <cstdint>
 #include "container.h"
-#include "fontElement.h"
+#include "ui/traits/fontElement.h"
 #include "button.h"
-#include "rectangle.h"
+#include "ui/shapes/rectangle.h"
 #include "stackContainer.h"
 
-namespace yoba {
+namespace yoba::ui {
 	enum class KeyCode : uint16_t {
 		None,
 		Cancel,
@@ -325,7 +325,7 @@ namespace yoba {
 			explicit KeyboardButtonsContainer(Keyboard* keyboard);
 
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& buttonIndexTo) override;
 
@@ -457,7 +457,7 @@ namespace yoba {
 
 	class KeyboardApplicationContainer : public Container {
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override;
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};

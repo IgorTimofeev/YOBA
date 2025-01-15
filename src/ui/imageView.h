@@ -1,11 +1,11 @@
 #pragma once
 
 #include "element.h"
-#include "hardware/screen/buffers/screenBuffer.h"
-#include "../bounds.h"
-#include "../image.h"
+#include "rendering/renderer.h"
+#include "bounds.h"
+#include "image.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class ImageView : public Element {
 		public:
 			ImageView() = default;
@@ -14,11 +14,11 @@ namespace yoba {
 				setImage(image);
 			}
 
-			void onRender(ScreenBuffer* screenBuffer) override {
+			void onRender(Renderer* renderer) override {
 				if (!getImage())
 					return;
 
-				screenBuffer->renderImage(
+				renderer->renderImage(
 					getBounds().getTopLeft(),
 					getImage()
 				);
@@ -36,7 +36,7 @@ namespace yoba {
 			}
 
 		protected:
-			Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) override {
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
 				return
 					getImage()
 					? getImage()->getSize()

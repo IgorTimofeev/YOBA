@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../../font.h"
+#include "font.h"
 
 namespace yoba {
 	class Vaticanus8Font : public Font {

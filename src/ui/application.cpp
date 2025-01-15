@@ -2,19 +2,17 @@
 #include "element.h"
 #include "animation.h"
 
-namespace yoba {
+namespace yoba::ui {
 	const unscii16Font Application::defaultFont = unscii16Font();
 
-	Application::Application(
-		ScreenBuffer* screenBuffer
-	) :
-		_screenBuffer(screenBuffer)
+	Application::Application(Renderer* renderer) :
+		_renderer(renderer)
 	{
 		Container::setApplication(this);
 	}
 
 	void Application::setup() {
-		_screenBuffer->setup();
+		_renderer->setup();
 	}
 
 	void Application::invalidateLayout() {
@@ -54,7 +52,7 @@ namespace yoba {
 
 	void Application::tick() {
 		// Root element size should match screen size
-		setSize(_screenBuffer->getSize());
+		setSize(_renderer->getSize());
 
 		Container::tick();
 
@@ -67,7 +65,7 @@ namespace yoba {
 
 		// Measuring & arranging child elements
 		if (!_isMeasuredAndArranged) {
-			measure(_screenBuffer, getSize());
+			measure(_renderer, getSize());
 			arrange(Bounds(getSize()));
 
 			_isMeasuredAndArranged = true;
@@ -75,9 +73,9 @@ namespace yoba {
 
 		// Rendering
 		if (!_isRendered) {
-			render(_screenBuffer);
+			render(_renderer);
 
-			_screenBuffer->flush();
+			_renderer->flush();
 
 			_isRendered = true;
 		}
@@ -144,19 +142,11 @@ namespace yoba {
 		_defaultFont = font;
 	}
 
-	ScreenOrientation Application::getOrientation() const {
-		return _screenBuffer->getDriver()->getOrientation();
+	Renderer* Application::getRenderer() const {
+		return _renderer;
 	}
 
-	void Application::setOrientation(ScreenOrientation value) const {
-		return _screenBuffer->getDriver()->setOrientation(value);
-	}
-
-	ScreenBuffer* Application::getScreenBuffer() const {
-		return _screenBuffer;
-	}
-
-	void Application::addInputDevice(InputDevice* inputDevice) {
+	void Application::addInputDevice(hardware::InputDevice* inputDevice) {
 		_inputDevices.push_back(inputDevice);
 	}
 

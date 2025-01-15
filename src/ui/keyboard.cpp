@@ -2,9 +2,9 @@
 #include "keyboard.h"
 #include "stackContainer.h"
 #include "application.h"
-#include "../number.h"
+#include "number.h"
 
-namespace yoba {
+namespace yoba::ui {
 	// ----------------------------- KeyboardKey -----------------------------
 
 	KeyboardKey::KeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width) :
@@ -548,7 +548,7 @@ namespace yoba {
 
 	}
 
-	Size KeyboardButtonsContainer::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardButtonsContainer::onMeasure(Renderer* renderer, const Size& availableSize) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
@@ -655,12 +655,12 @@ namespace yoba {
 
 	// ----------------------------- KeyboardRootLayout -----------------------------
 
-	Size KeyboardApplicationContainer::computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize) {
+	Size KeyboardApplicationContainer::onMeasure(Renderer* renderer, const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : *this) {
 			child->measure(
-				screenBuffer,
+				renderer,
 				Size(
 					availableSize.getWidth(),
 					Size::Infinity
@@ -709,7 +709,7 @@ namespace yoba {
 		*_keyboardAndApplicationChildrenContainer += _keyboard;
 
 		_applicationChildrenContainer = new Container();
-		_applicationChildrenContainer->setSize(application->getScreenBuffer()->getSize());
+		_applicationChildrenContainer->setSize(application->getRenderer()->getSize());
 
 		// Moving children from root to temporary layout
 		for (auto child : *application)

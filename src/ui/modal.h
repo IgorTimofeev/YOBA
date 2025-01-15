@@ -1,9 +1,9 @@
 #pragma once
 
 #include "container.h"
-#include "rectangle.h"
+#include "ui/shapes/rectangle.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class ModalOverlay : public Container {
 		public:
 			ModalOverlay() {

@@ -1,41 +1,41 @@
 #pragma once
 
 #include "element.h"
-#include "../color.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "color.h"
+#include "../rendering/renderer.h"
 #include "cmath"
-#include "../callback.h"
-#include "focusableElement.h"
-#include "cornerRadiusElement.h"
-#include "primaryColorElement.h"
-#include "secondaryColorElement.h"
-#include "../event.h"
-#include "../number.h"
+#include "callback.h"
+#include "ui/traits/focusableElement.h"
+#include "ui/traits/cornerRadiusElement.h"
+#include "ui/traits/primaryColorElement.h"
+#include "ui/traits/secondaryColorElement.h"
+#include "event.h"
+#include "number.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class Slider : public FocusableElement, public PrimaryColorElement, public SecondaryColorElement, public CornerRadiusElement {
 		public:
-			void onRender(ScreenBuffer* screenBuffer) override {
+			void onRender(Renderer* renderer) override {
 				auto primaryColor = getPrimaryColor();
 
 				if (!primaryColor)
-					primaryColor = screenBuffer->getPrimaryColor();
+					primaryColor = renderer->getPrimaryColor();
 
 				auto secondaryColor = getSecondaryColor();
 
 				if (!secondaryColor)
-					secondaryColor = screenBuffer->getSecondaryColor();
+					secondaryColor = renderer->getSecondaryColor();
 
 				auto& bounds = getBounds();
 				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());
 
-				screenBuffer->renderFilledRectangle(
+				renderer->renderFilledRectangle(
 					bounds,
 					getCornerRadius(),
 					primaryColor
 				);
 
-				screenBuffer->renderFilledRectangle(
+				renderer->renderFilledRectangle(
 					Bounds(
 						bounds.getTopLeft(),
 						Size(

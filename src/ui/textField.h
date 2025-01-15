@@ -2,32 +2,33 @@
 
 #include <cstdint>
 #include "element.h"
-#include "focusableElement.h"
-#include "cornerRadiusElement.h"
-#include "primaryColorElement.h"
-#include "secondaryColorElement.h"
-#include "textElement.h"
-#include "fontElement.h"
-#include "borderElement.h"
+#include "ui/traits/focusableElement.h"
+#include "ui/traits/cornerRadiusElement.h"
+#include "ui/traits/primaryColorElement.h"
+#include "ui/traits/secondaryColorElement.h"
+#include "ui/traits/textElement.h"
+#include "ui/traits/fontElement.h"
+#include "ui/traits/borderElement.h"
 #include "keyboard.h"
 
-#include "../callback.h"
-#include "../event.h"
-#include "../hardware/screen/buffers/screenBuffer.h"
+#include "callback.h"
+#include "event.h"
+#include "../rendering/renderer.h"
 
-namespace yoba {
+namespace yoba::ui {
 	class TextField :
 		public FocusableElement,
 		public PrimaryColorElement,
 		public SecondaryColorElement,
 		public CornerRadiusElement,
 		public BorderElement,
-		public TextElement
+		public TextElement,
+		public FontElement
 	{
 		public:
 			void tick() override;
 
-			void onRender(ScreenBuffer* screenBuffer) override;
+			void onRender(Renderer* renderer) override;
 
 			void onEvent(InputEvent &targetX) override;
 

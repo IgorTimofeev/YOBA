@@ -3,13 +3,18 @@
 #include <cstdint>
 #include <limits>
 
-#include "../callback.h"
-#include "../margin.h"
-#include "../bounds.h"
-#include "../size.h"
-#include "hardware/screen/buffers/screenBuffer.h"
+#include "callback.h"
+#include "margin.h"
+#include "bounds.h"
+#include "size.h"
+#include "rendering/renderer.h"
 
 namespace yoba {
+	class Animation;
+	class InputEvent;
+}
+
+namespace yoba::ui {
 	enum class Alignment: uint8_t {
 		Start,
 		Center,
@@ -24,8 +29,6 @@ namespace yoba {
 
 	class Application;
 	class Container;
-	class Animation;
-	class InputEvent;
 
 	class Element {
 		friend Application;
@@ -38,10 +41,10 @@ namespace yoba {
 
 			virtual void tick();
 
-			void measure(ScreenBuffer* screenBuffer, const Size& availableSize);
+			void measure(Renderer* renderer, const Size& availableSize);
 			void arrange(const Bounds& bounds);
 
-			virtual void render(ScreenBuffer* screenBuffer);
+			virtual void render(Renderer* renderer);
 			virtual void handleEvent(InputEvent& event);
 
 			virtual void invalidateRender();
@@ -97,9 +100,9 @@ namespace yoba {
 			virtual void onFocusChanged();
 			virtual void onCaptureChanged();
 
-			virtual Size computeDesiredSize(ScreenBuffer* screenBuffer, const Size& availableSize);
+			virtual Size onMeasure(Renderer* renderer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
-			virtual void onRender(ScreenBuffer* screenBuffer);
+			virtual void onRender(Renderer* renderer);
 			virtual void onEvent(InputEvent& event);
 
 		private:
@@ -142,7 +145,5 @@ namespace yoba {
 				int32_t& newPosition,
 				int32_t& newSize
 			);
-
-			void removeCaptureAndFocus();
 	};
 }
