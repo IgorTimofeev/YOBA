@@ -9,11 +9,11 @@ namespace yoba::hardware {
 		uint32_t SPIFrequency
 	) :
 		Display(
-			RenderTargetPixelWriting::Direct,
-			RenderTargetPixelOrder::XY,
-			ColorModel::Monochrome,
 			Size(128, 64),
-			RenderTargetOrientation::Clockwise0
+			RenderingOrientation::Clockwise0,
+			ColorModel::Monochrome,
+			RenderingPixelWriting::Direct,
+			RenderingPixelOrder::XY
 		),
 		SPIDisplay(
 			csPin,

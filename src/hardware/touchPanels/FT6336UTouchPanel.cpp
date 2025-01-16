@@ -12,9 +12,9 @@
 #include "FunctionalInterrupt.h"
 #include "ui/application.h"
 
-using namespace yoba::ui;
-
 namespace yoba::hardware {
+	using namespace yoba::ui;
+
 	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
 		_intPin(intPin),
 		_rstPin(rstPin),

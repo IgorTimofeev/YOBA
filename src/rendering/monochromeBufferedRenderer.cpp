@@ -15,7 +15,7 @@ namespace yoba {
 
 	void MonochromeBufferedRenderer::flush() {
 		switch (_renderTarget->getPixelWriting()) {
-			case RenderTargetPixelWriting::Direct: {
+			case RenderingPixelWriting::Direct: {
 				(dynamic_cast<DirectWritingDisplay*>(_renderTarget))->writePixels(_buffer);
 
 				break;
@@ -31,7 +31,7 @@ namespace yoba {
 
 	void MonochromeBufferedRenderer::renderPixelNative(const Point& point, const Color* color) {
 		switch (_renderTarget->getPixelOrder()) {
-			case RenderTargetPixelOrder::XY: {
+			case RenderingPixelOrder::XY: {
 				if (((MonochromeColor*) color)->getValue()) {
 					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}
@@ -41,7 +41,7 @@ namespace yoba {
 
 				break;
 			}
-			case RenderTargetPixelOrder::XYReversed: {
+			case RenderingPixelOrder::XYReversed: {
 				if (((MonochromeColor*) color)->getValue()) {
 					_buffer[point.getX() + (point.getY() / 8) * getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
 				}

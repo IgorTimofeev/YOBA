@@ -59,7 +59,7 @@ namespace yoba {
 		}
 	}
 
-	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, const Rgb888Color &color) {
+	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
 		uint32_t tColor;
 
 		switch (_renderTarget->getColorModel()) {

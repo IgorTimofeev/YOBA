@@ -16,7 +16,7 @@ namespace yoba {
 
 	void Bit8PaletteBufferedRenderer::flush() {
 		switch (_renderTarget->getPixelWriting()) {
-			case RenderTargetPixelWriting::Buffered: {
+			case RenderingPixelWriting::Buffered: {
 				const auto bufferedDisplay = dynamic_cast<BufferedDisplay*>(_renderTarget);
 
 				switch (_renderTarget->getColorModel()) {

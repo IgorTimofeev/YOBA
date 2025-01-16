@@ -3,13 +3,11 @@
 #include "animation.h"
 
 namespace yoba::ui {
-	const unscii16Font Application::defaultFont = unscii16Font();
-
-	Application::Application(Renderer* renderer) :
-		_renderer(renderer)
-	{
+	Application::Application(Renderer* renderer) : _renderer(renderer) {
 		Layout::setApplication(this);
 	}
+
+	const unscii16Font Application::defaultFont = unscii16Font();
 
 	void Application::setup() {
 		_renderer->setup();

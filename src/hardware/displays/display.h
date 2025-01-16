@@ -5,7 +5,13 @@
 namespace yoba::hardware {
 	class Display : public RenderTarget {
 		public:
-			Display(RenderTargetPixelWriting pixelWriting, RenderTargetPixelOrder pixelOrder, ColorModel colorModel, const Size& resolution, RenderTargetOrientation orientation) : RenderTarget(pixelWriting, pixelOrder, colorModel, resolution, orientation) {
+			Display(
+				const Size& resolution,
+				RenderingOrientation orientation,
+				ColorModel colorModel,
+				RenderingPixelWriting pixelWriting,
+				RenderingPixelOrder pixelOrder
+			) : RenderTarget(resolution, orientation, colorModel, pixelWriting, pixelOrder) {
 
 			}
 	};
