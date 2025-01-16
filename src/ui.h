@@ -13,6 +13,7 @@
 #include "ui/traits/textElement.h"
 
 #include "ui/stackLayout.h"
+#include "ui/titler.h"
 #include "ui/modal.h"
 #include "ui/keyboard.h"
 #include "ui/selector.h"

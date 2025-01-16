@@ -9,16 +9,16 @@ namespace yoba::ui {
 
 			}
 
-			StackLayout& withSpacing(uint16_t value) {
-				_spacing = value;
+			StackLayout(Orientation orientation) : _orientation(orientation) {
 
-				return *this;
 			}
 
-			StackLayout& withOrientation(Orientation value) {
-				_orientation = value;
+			StackLayout(uint16_t spacing) : _spacing(spacing) {
 
-				return *this;
+			}
+
+			StackLayout(Orientation orientation, uint16_t spacing) : _orientation(orientation), _spacing(spacing) {
+
 			}
 
 			Orientation getOrientation() const {
