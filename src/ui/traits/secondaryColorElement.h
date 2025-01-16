@@ -22,8 +22,7 @@ namespace yoba::ui {
 			const Color* selectColor(
 				bool condition,
 				const Color* defaultColor,
-				const Color* conditionColor,
-				const Color* fallbackColor
+				const Color* conditionColor
 			) {
 				if (condition) {
 					if (conditionColor) {
@@ -37,7 +36,7 @@ namespace yoba::ui {
 					return defaultColor;
 				}
 
-				return fallbackColor;
+				return nullptr;
 			}
 	};
 }

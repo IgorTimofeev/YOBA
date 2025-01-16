@@ -36,7 +36,7 @@ namespace yoba::ui {
 		_selectedIndex = index;
 
 		for (size_t i = 0; i < _itemsLayout->getChildrenCount(); i++) {
-			(dynamic_cast<SelectorItem*>((*_itemsLayout)[i]))->setSelected(i == index);
+			getItemAt(i)->setSelected(i == index);
 		}
 
 		onSelectionChanged();

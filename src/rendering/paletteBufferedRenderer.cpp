@@ -15,10 +15,10 @@ namespace yoba {
 
 	uint32_t PaletteBufferedRenderer::getPaletteColor(uint16_t index) {
 		switch (_renderTarget->getColorModel()) {
-			case ColorModel::Rgb565:
+			case ColorModel::rgb565:
 				return ((uint16_t*) _palette)[index];
 
-			case ColorModel::Rgb666:
+			case ColorModel::rgb666:
 				return ((uint32_t*) (_palette + index * 3))[0];
 
 			default:
@@ -28,12 +28,12 @@ namespace yoba {
 
 	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, uint32_t value) {
 		switch (_renderTarget->getColorModel()) {
-			case ColorModel::Rgb565: {
+			case ColorModel::rgb565: {
 				((uint16_t*) _palette)[index] = (uint16_t) value;
 				break;
 			}
 
-			case ColorModel::Rgb666: {
+			case ColorModel::rgb666: {
 				const auto palettePtr = _palette + index * 3;
 				const auto valuePtr = (uint8_t*) &value;
 				palettePtr[0] = valuePtr[2];
@@ -51,7 +51,7 @@ namespace yoba {
 
 	uint16_t PaletteBufferedRenderer::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
-			case ColorModel::Palette:
+			case ColorModel::palette:
 				return ((PaletteColor*) color)->getIndex();
 
 			default:
@@ -63,11 +63,11 @@ namespace yoba {
 		uint32_t tColor;
 
 		switch (_renderTarget->getColorModel()) {
-			case ColorModel::Rgb565:
+			case ColorModel::rgb565:
 				tColor = color.toRgb565().getValue();
 				break;
 
-			case ColorModel::Rgb666:
+			case ColorModel::rgb666:
 				tColor = color.toRgb666().getValue();
 				break;
 

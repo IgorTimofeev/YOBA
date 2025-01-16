@@ -17,9 +17,6 @@ namespace yoba::ui {
 			void onRender(Renderer* renderer) override {
 				auto primaryColor = getPrimaryColor();
 
-				if (!primaryColor)
-					primaryColor = renderer->getPrimaryColor();
-
 				if (primaryColor)
 					renderer->renderFilledRectangle(getBounds(), getCornerRadius(), primaryColor);
 			}

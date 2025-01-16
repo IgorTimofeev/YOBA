@@ -44,7 +44,7 @@ namespace yoba::ui {
 				size_t visibleChildrenCount = 0;
 
 				switch (getOrientation()) {
-					case Orientation::Horizontal:
+					case Orientation::horizontal:
 						for (auto child : *this) {
 							if (!child->isVisible())
 								continue;
@@ -72,7 +72,7 @@ namespace yoba::ui {
 
 						break;
 
-					case Orientation::Vertical:
+					case Orientation::vertical:
 						for (auto child : *this) {
 							if (!child->isVisible())
 								continue;
@@ -108,7 +108,7 @@ namespace yoba::ui {
 				int32_t position;
 
 				switch (getOrientation()) {
-					case Orientation::Horizontal:
+					case Orientation::horizontal:
 						position = bounds.getX();
 
 						for (auto child : *this) {
@@ -129,7 +129,7 @@ namespace yoba::ui {
 
 						break;
 
-					case Orientation::Vertical:
+					case Orientation::vertical:
 						position = bounds.getY();
 
 						for (auto child : *this) {
@@ -154,6 +154,6 @@ namespace yoba::ui {
 
 		private:
 			uint16_t _spacing = 0;
-			Orientation _orientation = Orientation::Vertical;
+			Orientation _orientation = Orientation::vertical;
 	};
 }

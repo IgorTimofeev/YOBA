@@ -10,9 +10,9 @@ namespace yoba::hardware {
 	) :
 		Display(
 			Size(128, 64),
-			RenderTargetOrientation::Clockwise0,
-			ColorModel::Monochrome,
-			RenderTargetPixelWriting::Direct,
+			RenderTargetOrientation::clockwise0,
+			ColorModel::monochrome,
+			RenderTargetPixelWriting::direct,
 			RenderTargetPixelOrder::XYReversed
 		),
 		SPIDisplay(

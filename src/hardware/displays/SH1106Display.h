@@ -31,44 +31,44 @@ namespace yoba::hardware {
 			static const uint8_t pageCount = 8;
 
 			enum class Command : uint8_t {
-				SetContrast = 0x81,
-				DisplayAllOnResume = 0xA4,
-				DisplayAllOn = 0xA5,
-				NormalDisplay = 0xA6,
-				InvertDisplay = 0xA7,
-				DisplayOff = 0xAE,
-				DisplayOn = 0xAF,
-				OutputFollowsRam = 0xA4,
+				setContrast = 0x81,
+				displayAllOnResume = 0xA4,
+				displayAllOn = 0xA5,
+				normalDisplay = 0xA6,
+				invertDisplay = 0xA7,
+				displayOff = 0xAE,
+				displayOn = 0xAF,
+				outputFollowsRam = 0xA4,
 
-				SetDisplayOffset = 0xD3,
-				SetComPins = 0xDA,
+				setDisplayOffset = 0xD3,
+				setComPins = 0xDA,
 
-				SetVComDetect = 0xDB,
+				setVComDetect = 0xDB,
 
-				SetDisplayClockDiv = 0xD5,
-				SetPrecharge = 0xD9,
+				setDisplayClockDiv = 0xD5,
+				setPrecharge = 0xD9,
 
-				SetMultiplex = 0xA8,
+				setMultiplex = 0xA8,
 
-				SetLowColumn = 0x00,
-				SetHighColumn = 0x10,
-				SetSegmentRemap = 0xA1,
+				setLowColumn = 0x00,
+				setHighColumn = 0x10,
+				setSegmentRemap = 0xA1,
 
-				SetStartLine = 0x40,
+				setStartLine = 0x40,
 
-				MemoryMode = 0x20,
-				ColumnAddress = 0x21,
-				PageAddress = 0x22,
-				SetPageAddress = 0xB0,
-				SetColumnAddressLow = 0x02,
-				SetColumnAddressHigh = 0x10,
+				memoryMode = 0x20,
+				columnAddress = 0x21,
+				pageAddress = 0x22,
+				setPageAddress = 0xB0,
+				setColumnAddressLow = 0x02,
+				setColumnAddressHigh = 0x10,
 
-				ComScanInc = 0xC0,
-				ComScanDec = 0xC8,
+				comScanInc = 0xC0,
+				comScanDec = 0xC8,
 
-				Segremap = 0xA0,
+				segremap = 0xA0,
 
-				ChargePump = 0x8D,
+				chargePump = 0x8D,
 			};
 	};
 }

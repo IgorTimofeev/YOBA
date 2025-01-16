@@ -17,7 +17,7 @@ namespace yoba::ui {
 				auto primaryColor = getPrimaryColor();
 
 				if (!primaryColor)
-					primaryColor = renderer->getPrimaryColor();
+					return;
 
 				const auto& bounds = getBounds();
 

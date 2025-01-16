@@ -16,15 +16,15 @@ namespace yoba {
 
 namespace yoba::ui {
 	enum class Alignment: uint8_t {
-		Start,
-		Center,
-		End,
-		Stretch
+		start,
+		center,
+		end,
+		stretch
 	};
 
 	enum class Orientation: uint8_t {
-		Horizontal,
-		Vertical
+		horizontal,
+		vertical
 	};
 
 	class Application;
@@ -109,8 +109,8 @@ namespace yoba::ui {
 			bool _clipToBounds = false;
 
 			Size _size = Size(Size::Auto, Size::Auto);
-			Alignment _horizontalAlignment = Alignment::Stretch;
-			Alignment _verticalAlignment = Alignment::Stretch;
+			Alignment _horizontalAlignment = Alignment::stretch;
+			Alignment _verticalAlignment = Alignment::stretch;
 			Margin _margin = Margin::zero;
 			Application* _application = nullptr;
 			Layout* _parent = nullptr;

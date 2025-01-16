@@ -4,12 +4,12 @@
 
 namespace yoba {
 	enum class ColorModel : uint8_t {
-		Palette,
-		Hsb,
-		Monochrome,
-		Rgb666,
-		Rgb565,
-		Rgb888
+		palette,
+		hsb,
+		monochrome,
+		rgb666,
+		rgb565,
+		rgb888
 	};
 
 	class Rgb888Color;
@@ -145,6 +145,8 @@ namespace yoba {
 	class PaletteColor : public Color {
 		public:
 			explicit PaletteColor(uint16_t index);
+
+			PaletteColor();
 
 			uint16_t getIndex() const;
 			void setIndex(uint16_t index);

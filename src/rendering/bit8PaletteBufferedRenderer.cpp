@@ -6,8 +6,7 @@ namespace yoba {
 	using namespace yoba::hardware;
 
 	Bit8PaletteBufferedRenderer::Bit8PaletteBufferedRenderer(RenderTarget* renderTarget, uint16_t paletteLength) : PaletteBufferedRenderer(renderTarget, paletteLength) {
-		setPrimaryColor(&_primaryColor);
-		setSecondaryColor(&_secondaryColor);
+
 	}
 
 	size_t Bit8PaletteBufferedRenderer::getRequiredBufferLength() {
@@ -16,11 +15,11 @@ namespace yoba {
 
 	void Bit8PaletteBufferedRenderer::flush() {
 		switch (_renderTarget->getPixelWriting()) {
-			case RenderTargetPixelWriting::Buffered: {
+			case RenderTargetPixelWriting::buffered: {
 				const auto bufferedDisplay = dynamic_cast<BufferedDisplay*>(_renderTarget);
 
 				switch (_renderTarget->getColorModel()) {
-					case ColorModel::Rgb565: {
+					case ColorModel::rgb565: {
 						bufferedDisplay->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
 							((uint16_t*) destination)[0] = ((uint16_t*) getPalette())[getBuffer()[pixelIndex]];
 							destination += 2;
@@ -29,7 +28,7 @@ namespace yoba {
 
 						break;
 					}
-					case ColorModel::Rgb666: {
+					case ColorModel::rgb666: {
 						const uint8_t* palettePtr;
 
 						bufferedDisplay->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {

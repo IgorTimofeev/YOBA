@@ -5,8 +5,7 @@ namespace yoba {
 	using namespace yoba::hardware;
 
 	MonochromeBufferedRenderer::MonochromeBufferedRenderer(RenderTarget* renderTarget) : BufferedRenderer(renderTarget) {
-		setPrimaryColor(&_primaryColor);
-		setSecondaryColor(&_secondaryColor);
+
 	}
 
 	size_t MonochromeBufferedRenderer::getRequiredBufferLength() {
@@ -15,7 +14,7 @@ namespace yoba {
 
 	void MonochromeBufferedRenderer::flush() {
 		switch (_renderTarget->getPixelWriting()) {
-			case RenderTargetPixelWriting::Direct: {
+			case RenderTargetPixelWriting::direct: {
 				(dynamic_cast<DirectWritingDisplay*>(_renderTarget))->writePixels(getBuffer());
 
 				break;

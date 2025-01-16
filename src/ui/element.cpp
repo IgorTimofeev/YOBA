@@ -116,7 +116,7 @@ namespace yoba::ui {
 		int32_t &newSize
 	) {
 		switch (alignment) {
-			case Alignment::Start:
+			case Alignment::start:
 				newSize = measuredSize - marginStart - marginEnd;
 
 				if (newSize < 0)
@@ -126,7 +126,7 @@ namespace yoba::ui {
 
 				break;
 
-			case Alignment::Center:
+			case Alignment::center:
 				newSize = measuredSize - marginStart - marginEnd;
 
 				if (newSize < 0)
@@ -136,7 +136,7 @@ namespace yoba::ui {
 
 				break;
 
-			case Alignment::End:
+			case Alignment::end:
 				newSize = measuredSize - marginStart - marginEnd;
 
 				if (newSize < 0)
@@ -146,7 +146,7 @@ namespace yoba::ui {
 
 				break;
 
-			case Alignment::Stretch:
+			case Alignment::stretch:
 				if (size == Size::Auto) {
 					newSize = limit;
 				}
@@ -339,7 +339,7 @@ namespace yoba::ui {
 	}
 
 	void Element::onRender(Renderer* renderer) {
-//		renderer->renderRectangle(getBounds(), renderer->getSecondaryColor());
+
 	}
 
 	bool Element::getClipToBounds() const {

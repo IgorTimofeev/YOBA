@@ -19,23 +19,18 @@ namespace yoba::ui {
 
 			void onRender(Renderer* renderer) override {
 				auto primaryColor = getPrimaryColor();
-
-				if (!primaryColor)
-					primaryColor = renderer->getPrimaryColor();
-
 				auto secondaryColor = getSecondaryColor();
-
-				if (!secondaryColor)
-					secondaryColor = renderer->getSecondaryColor();
 
 				auto& bounds = getBounds();
 				auto part = (uint16_t) std::round(_value * (float) bounds.getWidth());
 
-				renderer->renderFilledRectangle(
-					bounds,
-					getCornerRadius(),
-					primaryColor
-				);
+				if (primaryColor) {
+					renderer->renderFilledRectangle(
+						bounds,
+						getCornerRadius(),
+						primaryColor
+					);
+				}
 
 				renderer->renderFilledRectangle(
 					Bounds(

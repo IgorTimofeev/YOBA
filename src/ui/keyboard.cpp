@@ -26,7 +26,7 @@ namespace yoba::ui {
 		const auto keyboard = button->getKeyboard();
 		const auto code = getCodeFromCase(keyboard);
 
-		if (code != KeyCode::None)
+		if (code != KeyCode::none)
 			keyboard->keyPressedChanged(code, button->isPressed());
 	}
 
@@ -63,7 +63,7 @@ namespace yoba::ui {
 		const std::wstring_view& uppercaseName,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::Default, code, name, width),
+		KeyboardKey(KeyboardKeyType::normal, code, name, width),
 		_uppercaseCode(uppercaseCode),
 		_uppercaseName(uppercaseName)
 	{
@@ -91,11 +91,11 @@ namespace yoba::ui {
 	}
 
 	KeyCode TextKeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
-		return keyboard->getCase() == KeyboardCase::Lower ? getCode() : getUppercaseCode();
+		return keyboard->getCase() == KeyboardCase::lower ? getCode() : getUppercaseCode();
 	}
 
 	const std::wstring_view& TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
-		return keyboard->getCase() == KeyboardCase::Lower ? getName() : getUppercaseName();
+		return keyboard->getCase() == KeyboardCase::lower ? getName() : getUppercaseName();
 	}
 
 	void TextKeyboardKey::onPressedChanged(KeyboardButton* button) {
@@ -108,8 +108,8 @@ namespace yoba::ui {
 
 		keyboard->input(getCodeFromCase(keyboard), getNameFromCase(keyboard));
 
-		if (keyboard->getCase() == KeyboardCase::Upper)
-			keyboard->setCase(KeyboardCase::Lower);
+		if (keyboard->getCase() == KeyboardCase::upper)
+			keyboard->setCase(KeyboardCase::lower);
 	}
 
 	// ----------------------------- ActionKeyboardKey -----------------------------
@@ -121,8 +121,8 @@ namespace yoba::ui {
 		float width
 	) :
 		KeyboardKey(
-			KeyboardKeyType::Action,
-			KeyCode::Shift,
+			KeyboardKeyType::action,
+			KeyCode::shift,
 			name,
 			width
 		),
@@ -141,23 +141,23 @@ namespace yoba::ui {
 		const auto keyboard = button->getKeyboard();
 
 		switch (keyboard->getCase()) {
-			case KeyboardCase::Lower:
-				keyboard->setCase(KeyboardCase::Upper);
+			case KeyboardCase::lower:
+				keyboard->setCase(KeyboardCase::upper);
 				break;
-			case KeyboardCase::Upper:
-				keyboard->setCase(KeyboardCase::Caps);
+			case KeyboardCase::upper:
+				keyboard->setCase(KeyboardCase::caps);
 				break;
 			default:
-				keyboard->setCase(KeyboardCase::Lower);
+				keyboard->setCase(KeyboardCase::lower);
 				break;
 		}
 	}
 
 	const std::wstring_view& ShiftKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		switch (keyboard->getCase()) {
-			case KeyboardCase::Lower:
+			case KeyboardCase::lower:
 				return getName();
-			case KeyboardCase::Upper:
+			case KeyboardCase::upper:
 				return _uppercaseName;
 			default:
 				return _capsName;
@@ -167,7 +167,7 @@ namespace yoba::ui {
 	// ----------------------------- BackspaceKeyboardKey -----------------------------
 
 	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view& name, float width) :
-		KeyboardKey(KeyboardKeyType::Action, KeyCode::Backspace, name, width)
+		KeyboardKey(KeyboardKeyType::action, KeyCode::backspace, name, width)
 	{
 
 	}
@@ -175,7 +175,7 @@ namespace yoba::ui {
 	// ----------------------------- EnterKeyboardKey -----------------------------
 
 	EnterKeyboardKey::EnterKeyboardKey(float width) :
-		KeyboardKey(KeyboardKeyType::Action, KeyCode::Enter, L"<-", width)
+		KeyboardKey(KeyboardKeyType::action, KeyCode::enter, L"<-", width)
 	{
 
 	}
@@ -183,7 +183,7 @@ namespace yoba::ui {
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
 	SpaceKeyboardKey::SpaceKeyboardKey() :
-		KeyboardKey(KeyboardKeyType::Default, KeyCode::Space, L" ", KeyboardKey::fit)
+		KeyboardKey(KeyboardKeyType::normal, KeyCode::space, L" ", KeyboardKey::fit)
 	{
 
 	}
@@ -194,7 +194,7 @@ namespace yoba::ui {
 		const std::wstring_view& name,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::CharactersLayout, KeyCode::None, name, width)
+		KeyboardKey(KeyboardKeyType::charactersLayout, KeyCode::none, name, width)
 	{
 
 	}
@@ -216,7 +216,7 @@ namespace yoba::ui {
 		const std::wstring_view& name,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::Action, KeyCode::None, name, width)
+		KeyboardKey(KeyboardKeyType::action, KeyCode::none, name, width)
 	{
 
 	}
@@ -238,7 +238,7 @@ namespace yoba::ui {
 		const std::wstring_view& name,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::CyclicLayout, KeyCode::None, name, width)
+		KeyboardKey(KeyboardKeyType::cyclicLayout, KeyCode::none, name, width)
 	{
 
 	}
@@ -264,7 +264,7 @@ namespace yoba::ui {
 		updateTextFromCase();
 
 		switch (getKey()->getType()) {
-			case KeyboardKeyType::Default: {
+			case KeyboardKeyType::normal: {
 				setPrimaryColor(_keyboard->getDefaultButtonPrimaryColor());
 				setSecondaryColor(_keyboard->getDefaultButtonSecondaryColor());
 
@@ -406,7 +406,7 @@ namespace yoba::ui {
 	void Keyboard::setLayout(KeyboardLayout* value) {
 		deleteLayoutAndUIElements();
 
-		_case = KeyboardCase::Lower;
+		_case = KeyboardCase::lower;
 		_layout = value;
 
 		if (!_layout)
@@ -419,13 +419,13 @@ namespace yoba::ui {
 				auto key = layoutRow[columnIndex];
 
 				switch (key->getType()) {
-					case KeyboardKeyType::CharactersLayout: {
+					case KeyboardKeyType::charactersLayout: {
 						if (!_charactersLayoutBuilder.has_value())
 							continue;
 
 						break;
 					}
-					case KeyboardKeyType::CyclicLayout: {
+					case KeyboardKeyType::cyclicLayout: {
 						if (_cyclicLayoutBuilders.size() < 2)
 							continue;
 

@@ -52,20 +52,20 @@ namespace yoba {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
 		switch (getOrientation()) {
-			case RenderTargetOrientation::Clockwise0:
+			case RenderTargetOrientation::clockwise0:
 				return {
 					point.getX(),
 					point.getY()
 				};
 
-			case RenderTargetOrientation::Clockwise90: {
+			case RenderTargetOrientation::clockwise90: {
 				return {
 					_resolution.getWidth() - point.getY(),
 					point.getX()
 				};
 			}
 
-			case RenderTargetOrientation::Clockwise180:
+			case RenderTargetOrientation::clockwise180:
 				return {
 					_resolution.getWidth() - point.getX(),
 					_resolution.getHeight() - point.getY()
@@ -82,13 +82,13 @@ namespace yoba {
 
 	void RenderTarget::updateFromOrientation() {
 		switch (_orientation) {
-			case RenderTargetOrientation::Clockwise0:
-			case RenderTargetOrientation::Clockwise180:
+			case RenderTargetOrientation::clockwise0:
+			case RenderTargetOrientation::clockwise180:
 				_resolution = _defaultResolution;
 				break;
 
-			case RenderTargetOrientation::Clockwise90:
-			case RenderTargetOrientation::Clockwise270:
+			case RenderTargetOrientation::clockwise90:
+			case RenderTargetOrientation::clockwise270:
 				_resolution.setWidth(_defaultResolution.getHeight());
 				_resolution.setHeight(_defaultResolution.getWidth());
 				break;

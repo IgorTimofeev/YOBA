@@ -7,10 +7,10 @@
 
 namespace yoba {
 	enum class RenderTargetOrientation : uint8_t {
-		Clockwise0,
-		Clockwise90,
-		Clockwise180,
-		Clockwise270
+		clockwise0,
+		clockwise90,
+		clockwise180,
+		clockwise270
 	};
 
 	enum class RenderTargetPixelOrder : uint8_t {
@@ -28,8 +28,8 @@ namespace yoba {
 	};
 
 	enum class RenderTargetPixelWriting : uint8_t {
-		Direct,
-		Buffered
+		direct,
+		buffered
 	};
 
 	class RenderTarget {
@@ -60,7 +60,7 @@ namespace yoba {
 			ColorModel _colorModel;
 			const Size _defaultResolution;
 			Size _resolution;
-			RenderTargetOrientation _orientation = RenderTargetOrientation::Clockwise270;
+			RenderTargetOrientation _orientation = RenderTargetOrientation::clockwise270;
 
 			virtual void updateFromOrientation();
 			virtual void onOrientationChanged();

@@ -697,20 +697,4 @@ namespace yoba {
 	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch) {
 		renderChar<wchar_t>(point, font, color, ch);
 	}
-
-	const Color* Renderer::getPrimaryColor() const {
-		return _primaryColor;
-	}
-
-	void Renderer::setPrimaryColor(const Color* value) {
-		_primaryColor = value;
-	}
-
-	const Color* Renderer::getSecondaryColor() const {
-		return _secondaryColor;
-	}
-
-	void Renderer::setSecondaryColor(const Color* value) {
-		_secondaryColor = value;
-	}
 }

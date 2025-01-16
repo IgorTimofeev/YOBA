@@ -7,9 +7,6 @@ namespace yoba::ui {
 		// Primary color
 		auto primaryColor = getPrimaryColor();
 
-		if (!primaryColor)
-			primaryColor = renderer->getPrimaryColor();
-
 		if (primaryColor) {
 			renderer->renderFilledRectangle(
 				bounds,
@@ -29,18 +26,17 @@ namespace yoba::ui {
 				? getPressedSecondaryColor()
 				: getSecondaryColor();
 
-			if (!secondaryColor)
-				secondaryColor = renderer->getSecondaryColor();
-
-			renderer->renderText(
-				Point(
-					bounds.getXCenter() - font->getWidth(getText()) / 2,
-					bounds.getYCenter() - font->getHeight() / 2
-				),
-				font,
-				secondaryColor,
-				getText()
-			);
+			if (secondaryColor) {
+				renderer->renderText(
+					Point(
+						bounds.getXCenter() - font->getWidth(getText()) / 2,
+						bounds.getYCenter() - font->getHeight() / 2
+					),
+					font,
+					secondaryColor,
+					getText()
+				);
+			}
 		}
 
 		Element::onRender(renderer);

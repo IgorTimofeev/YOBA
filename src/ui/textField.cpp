@@ -28,7 +28,7 @@ namespace yoba::ui {
 		const auto focused = isFocused();
 
 		// Background
-		const auto primaryColor = selectColor(focused, _primaryColor, _focusedPrimaryColor, renderer->getPrimaryColor());
+		const auto primaryColor = selectColor(focused, _primaryColor, _focusedPrimaryColor);
 
 		if (primaryColor) {
 			renderer->renderFilledRectangle(
@@ -39,7 +39,7 @@ namespace yoba::ui {
 		}
 
 		// Border
-		const auto borderColor = selectColor(focused, _borderColor, _focusedBorderColor, nullptr);
+		const auto borderColor = selectColor(focused, _borderColor, _focusedBorderColor);
 
 		if (borderColor) {
 			renderer->renderRectangle(
@@ -55,7 +55,7 @@ namespace yoba::ui {
 		if (!font)
 			return;
 
-		const auto secondaryColor = selectColor(focused, _secondaryColor, _focusedSecondaryColor, renderer->getSecondaryColor());
+		const auto secondaryColor = selectColor(focused, _secondaryColor, _focusedSecondaryColor);
 
 		if (!secondaryColor)
 			return;
@@ -95,7 +95,7 @@ namespace yoba::ui {
 		renderer->setViewport(oldViewport);
 
 		// Cursor
-		if (_cursorBlinkState) {
+		if (_cursorBlinkState && _cursorColor) {
 			// End of text
 			if (_cursorPosition == text.length())
 				blinkX = textPosition.getX();
@@ -107,7 +107,7 @@ namespace yoba::ui {
 					_cursorSize.getWidth(),
 					_cursorSize.getHeight()
 				),
-				_cursorColor ? _cursorColor : renderer->getSecondaryColor()
+				_cursorColor
 			);
 		}
 	}
@@ -346,11 +346,11 @@ namespace yoba::ui {
 				return;
 
 			switch (code) {
-				case KeyCode::Enter: {
+				case KeyCode::enter: {
 					setFocused(false);
 					break;
 				}
-				case KeyCode::Backspace: {
+				case KeyCode::backspace: {
 					backspace();
 					break;
 				}

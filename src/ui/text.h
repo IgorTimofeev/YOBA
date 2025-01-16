@@ -41,15 +41,14 @@ namespace yoba::ui {
 
 				auto primaryColor = getPrimaryColor();
 
-				if (!primaryColor)
-					primaryColor = renderer->getPrimaryColor();
-
-				renderer->renderText(
-					getBounds().getPosition(),
-					font,
-					primaryColor,
-					getText()
-				);
+				if (primaryColor) {
+					renderer->renderText(
+						getBounds().getPosition(),
+						font,
+						primaryColor,
+						getText()
+					);
+				}
 			}
 	};
 }

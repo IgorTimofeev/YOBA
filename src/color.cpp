@@ -15,11 +15,11 @@ namespace yoba {
 
 	uint8_t Color::getBytesPerType(ColorModel colorModel) {
 		switch (colorModel) {
-			case ColorModel::Rgb565:
+			case ColorModel::rgb565:
 				return 2;
 
-			case ColorModel::Rgb666:
-			case ColorModel::Rgb888:
+			case ColorModel::rgb666:
+			case ColorModel::rgb888:
 				return 3;
 
 			default:
@@ -29,14 +29,14 @@ namespace yoba {
 
 	size_t Color::getBytesPerType(size_t pixelsCount, ColorModel colorModel) {
 		switch (colorModel) {
-			case ColorModel::Monochrome:
+			case ColorModel::monochrome:
 				return pixelsCount >= 8 ? pixelsCount / 8 : 1;
 
-			case ColorModel::Rgb565:
+			case ColorModel::rgb565:
 				return pixelsCount * 2;
 
-			case ColorModel::Rgb666:
-			case ColorModel::Rgb888:
+			case ColorModel::rgb666:
+			case ColorModel::rgb888:
 				return pixelsCount * 3;
 
 			default:
@@ -47,7 +47,7 @@ namespace yoba {
 	// -------------------------------- Rgb888Color --------------------------------
 
 	Rgb888Color::Rgb888Color(uint8_t r, uint8_t g, uint8_t b) :
-		Color(ColorModel::Rgb888),
+		Color(ColorModel::rgb888),
 		_r(r),
 		_g(g),
 		_b(b)
@@ -124,7 +124,7 @@ namespace yoba {
 
 	// -------------------------------- HsbColor --------------------------------
 
-	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorModel::Hsb), _h(h), _s(s), _b(b) {
+	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorModel::hsb), _h(h), _s(s), _b(b) {
 
 	}
 
@@ -208,7 +208,7 @@ namespace yoba {
 
 	// -------------------------------- MonochromeColor --------------------------------
 
-	MonochromeColor::MonochromeColor(bool value) : ValueColor<bool>(ColorModel::Monochrome, value) {
+	MonochromeColor::MonochromeColor(bool value) : ValueColor<bool>(ColorModel::monochrome, value) {
 
 	}
 
@@ -221,7 +221,7 @@ namespace yoba {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorModel::Rgb565, value) {
+	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorModel::rgb565, value) {
 
 	}
 
@@ -235,7 +235,7 @@ namespace yoba {
 
 	// -------------------------------- Rgb666Color --------------------------------
 
-	Rgb666Color::Rgb666Color(uint32_t value) : ValueColor<uint32_t>(ColorModel::Rgb666, value) {
+	Rgb666Color::Rgb666Color(uint32_t value) : ValueColor<uint32_t>(ColorModel::rgb666, value) {
 
 	}
 
@@ -249,7 +249,11 @@ namespace yoba {
 
 	// -------------------------------- PaletteColor --------------------------------
 
-	PaletteColor::PaletteColor(uint16_t index) : Color(ColorModel::Palette), _index(index) {
+	PaletteColor::PaletteColor(uint16_t index) : Color(ColorModel::palette), _index(index) {
+
+	}
+
+	PaletteColor::PaletteColor() : PaletteColor(0) {
 
 	}
 

@@ -14,7 +14,7 @@ namespace yoba::hardware {
 			Size(240, 320),
 			orientation,
 			colorModel,
-			RenderTargetPixelWriting::Buffered,
+			RenderTargetPixelWriting::buffered,
 			RenderTargetPixelOrder::YX
 		),
 		SPIDisplay(
@@ -32,19 +32,19 @@ namespace yoba::hardware {
 		auto data = (uint8_t) Command::MADCTL_BGR;
 
 		switch (getOrientation()) {
-			case RenderTargetOrientation::Clockwise0:
+			case RenderTargetOrientation::clockwise0:
 				data |= (uint8_t) Command::MADCTL_MX;
 				break;
 
-			case RenderTargetOrientation::Clockwise90:
+			case RenderTargetOrientation::clockwise90:
 				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
 				break;
 
-			case RenderTargetOrientation::Clockwise180:
+			case RenderTargetOrientation::clockwise180:
 				data |= (uint8_t) Command::MADCTL_MY;
 				break;
 
-			case RenderTargetOrientation::Clockwise270:
+			case RenderTargetOrientation::clockwise270:
 				data |= (uint8_t) Command::MADCTL_MV;
 				break;
 
@@ -57,7 +57,7 @@ namespace yoba::hardware {
 
 	uint8_t ILI9341Display::getPixelBufferHeightForOrientation() {
 		return
-			this->_orientation == RenderTargetOrientation::Clockwise0 || this->_orientation == RenderTargetOrientation::Clockwise180
+			this->_orientation == RenderTargetOrientation::clockwise0 || this->_orientation == RenderTargetOrientation::clockwise180
 			? 64 // 5 transactions
 			: 40; // 6 transactions
 	}
@@ -71,7 +71,7 @@ namespace yoba::hardware {
 		uint8_t value;
 
 		switch (_colorModel) {
-			case ColorModel::Rgb666:
+			case ColorModel::rgb666:
 				value = 0b01100110;
 				break;
 
