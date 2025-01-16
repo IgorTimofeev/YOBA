@@ -106,13 +106,11 @@ namespace yoba::ui {
 
 					const auto& elementSize = element->getMeasuredSize();
 
-					if (elementSize.getWidth() > result.getWidth()) {
+					if (elementSize.getWidth() > result.getWidth())
 						result.setWidth(elementSize.getWidth());
-					}
 
-					if (elementSize.getHeight() > result.getHeight()) {
+					if (elementSize.getHeight() > result.getHeight())
 						result.setHeight(elementSize.getHeight());
-					}
 				}
 
 				_horizontalScrollBar.measure(renderer, availableSize);
@@ -155,31 +153,35 @@ namespace yoba::ui {
 					element->arrange(_contentBounds);
 				}
 
-				// Hor
-				_horizontalScrollBar.setTotalSize(_contentBounds.getWidth());
-				_horizontalScrollBar.setViewportSize(bounds.getWidth());
-				_horizontalScrollPossible = _horizontalScrollMode != ScrollMode::disabled && _contentBounds.getWidth() > bounds.getWidth();
+				const auto& arrangeScrollBar = [&bounds](ScrollBar& bar, bool& possible, ScrollMode mode, uint16_t size, uint16_t contentSize) {
+					bar.setTotalSize(contentSize);
+					bar.setViewportSize(size);
+					possible = mode != ScrollMode::disabled && contentSize > size;
 
-				_horizontalScrollBar.setVisible(
-					_horizontalScrollMode == ScrollMode::enabled
-					|| _horizontalScrollMode == ScrollMode::computed && _horizontalScrollPossible
+					bar.setVisible(
+						mode == ScrollMode::enabled
+						|| mode == ScrollMode::computed && possible
+					);
+
+					if (bar.isVisible())
+						bar.arrange(bounds);
+				};
+
+				arrangeScrollBar(
+					_horizontalScrollBar,
+					_horizontalScrollPossible,
+					_horizontalScrollMode,
+					bounds.getWidth(),
+					_contentBounds.getWidth()
 				);
 
-				if (_horizontalScrollBar.isVisible())
-					_horizontalScrollBar.arrange(bounds);
-
-				// Vert
-				_verticalScrollBar.setTotalSize(_contentBounds.getHeight());
-				_verticalScrollBar.setViewportSize(bounds.getHeight());
-				_verticalScrollPossible = _verticalScrollMode != ScrollMode::disabled && _contentBounds.getHeight() > bounds.getHeight();
-
-				_verticalScrollBar.setVisible(
-					_verticalScrollMode == ScrollMode::enabled
-					|| _verticalScrollMode == ScrollMode::computed && _verticalScrollPossible
+				arrangeScrollBar(
+					_verticalScrollBar,
+					_verticalScrollPossible,
+					_verticalScrollMode,
+					bounds.getHeight(),
+					_contentBounds.getHeight()
 				);
-
-				if (_verticalScrollBar.isVisible())
-					_verticalScrollBar.arrange(bounds);
 			}
 
 		public:

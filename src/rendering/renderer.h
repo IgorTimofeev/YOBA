@@ -19,7 +19,10 @@ namespace yoba {
 			RenderTarget* getRenderTarget() const;
 
 			const Bounds& getViewport();
-			void setViewport(const Bounds& bounds);
+
+			Bounds pushViewport(const Bounds& bounds);
+			void popViewport(const Bounds& bounds);
+
 			void resetViewport();
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
@@ -67,8 +70,6 @@ namespace yoba {
 			virtual void flush() = 0;
 
 		protected:
-			const Bounds& getClampedViewport();
-
 			virtual void clearNative(const Color* color) = 0;
 			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
 			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
@@ -79,19 +80,17 @@ namespace yoba {
 		private:
 			RenderTarget* _renderTarget;
 			Bounds _viewport = Bounds();
-			Bounds _clampedViewport;
 
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph);
 
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color);
-
 	};
 
 	template<typename TChar>
 	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::basic_string_view<TChar>& text) {
-		const auto& viewport = getClampedViewport();
+		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
 		// Skipping rendering if text is obviously not in viewport
@@ -146,7 +145,7 @@ namespace yoba {
 
 	template<typename TChar>
 	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, TChar ch) {
-		const auto& viewport = getClampedViewport();
+		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
 		if (

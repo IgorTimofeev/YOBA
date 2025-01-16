@@ -60,9 +60,7 @@ namespace yoba::ui {
 		if (!secondaryColor)
 			return;
 
-		const auto oldViewport = renderer->getViewport();
-
-		renderer->setViewport(Bounds(
+		const auto oldViewport = renderer->pushViewport(Bounds(
 			bounds.getX() + _textMargin,
 			bounds.getY(),
 			bounds.getWidth() - _textMargin * 2,
@@ -92,7 +90,7 @@ namespace yoba::ui {
 			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex]));
 		}
 
-		renderer->setViewport(oldViewport);
+		renderer->popViewport(oldViewport);
 
 		// Cursor
 		if (_cursorBlinkState && _cursorColor) {

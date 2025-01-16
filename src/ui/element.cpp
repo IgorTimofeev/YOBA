@@ -324,10 +324,9 @@ namespace yoba::ui {
 			return;
 
 		if (_clipToBounds) {
-			auto oldViewport = renderer->getViewport();
-			renderer->setViewport(getBounds());
+			auto viewport = renderer->pushViewport(getBounds());
 			onRender(renderer);
-			renderer->setViewport(oldViewport);
+			renderer->popViewport(viewport);
 		}
 		else {
 			onRender(renderer);
