@@ -5,6 +5,22 @@
 namespace yoba::ui {
 	class StackLayout : public Layout {
 		public:
+			StackLayout() {
+
+			}
+
+			StackLayout& withSpacing(uint16_t value) {
+				_spacing = value;
+
+				return *this;
+			}
+
+			StackLayout& withOrientation(Orientation value) {
+				_orientation = value;
+
+				return *this;
+			}
+
 			Orientation getOrientation() const {
 				return _orientation;
 			}
