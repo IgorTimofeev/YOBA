@@ -34,13 +34,6 @@ namespace yoba::ui {
 		return { 0, 0 };
 	}
 
-	void Element::setMeasuredSize(const Size& value) {
-		_measuredSize = value;
-	}
-
-	void Element::setBounds(const Bounds &value) {
-		_bounds = value;
-	}
 
 	void Element::computeMeasureShit(
 		const uint16_t &size,
@@ -49,7 +42,7 @@ namespace yoba::ui {
 		const int32_t &marginEnd,
 		int32_t &newSize
 	) {
-		if (size == Size::Auto) {
+		if (size == Size::computed) {
 			newSize = desiredSize;
 		}
 		else {
@@ -99,7 +92,7 @@ namespace yoba::ui {
 
 		desiredSize.setHeight(newSize);
 
-		setMeasuredSize(desiredSize);
+		_measuredSize = desiredSize;
 	}
 
 	void Element::computeArrangeShit(
@@ -147,7 +140,7 @@ namespace yoba::ui {
 				break;
 
 			case Alignment::stretch:
-				if (size == Size::Auto) {
+				if (size == Size::computed) {
 					newSize = limit;
 				}
 				else {
@@ -208,9 +201,11 @@ namespace yoba::ui {
 		newBounds.setY(newPosition);
 		newBounds.setHeight(newSize);
 
-		setBounds(newBounds);
+		_bounds = newBounds;
 
 		onArrange(newBounds);
+
+		onBoundsChanged();
 	}
 
 	void Element::handleEvent(Event& event) {
@@ -329,13 +324,14 @@ namespace yoba::ui {
 			return;
 
 		if (_clipToBounds) {
+			auto oldViewport = renderer->getViewport();
 			renderer->setViewport(getBounds());
+			onRender(renderer);
+			renderer->setViewport(oldViewport);
 		}
 		else {
-			renderer->resetViewport();
+			onRender(renderer);
 		}
-
-		onRender(renderer);
 	}
 
 	void Element::onRender(Renderer* renderer) {
@@ -377,6 +373,10 @@ namespace yoba::ui {
 	}
 
 	void Element::onCaptureChanged() {
+
+	}
+
+	void Element::onBoundsChanged() {
 
 	}
 }

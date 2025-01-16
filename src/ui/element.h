@@ -100,6 +100,7 @@ namespace yoba::ui {
 
 			virtual Size onMeasure(Renderer* renderer, const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
+			virtual void onBoundsChanged();
 			virtual void onRender(Renderer* renderer);
 			virtual void onEvent(Event& event);
 
@@ -108,7 +109,7 @@ namespace yoba::ui {
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 
-			Size _size = Size(Size::Auto, Size::Auto);
+			Size _size = Size(Size::computed, Size::computed);
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
 			Margin _margin = Margin::zero;
@@ -117,10 +118,6 @@ namespace yoba::ui {
 
 			Bounds _bounds;
 			Size _measuredSize = Size();
-
-			void setMeasuredSize(const Size& value);
-
-			void setBounds(const Bounds& value);
 
 			static void computeMeasureShit(
 				const uint16_t &size,

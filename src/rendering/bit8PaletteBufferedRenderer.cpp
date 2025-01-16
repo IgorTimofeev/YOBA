@@ -14,11 +14,11 @@ namespace yoba {
 	}
 
 	void Bit8PaletteBufferedRenderer::flush() {
-		switch (_renderTarget->getPixelWriting()) {
+		switch (getRenderTarget()->getPixelWriting()) {
 			case RenderTargetPixelWriting::buffered: {
-				const auto bufferedDisplay = dynamic_cast<BufferedDisplay*>(_renderTarget);
+				const auto bufferedDisplay = dynamic_cast<BufferedDisplay*>(getRenderTarget());
 
-				switch (_renderTarget->getColorModel()) {
+				switch (getRenderTarget()->getColorModel()) {
 					case ColorModel::rgb565: {
 						bufferedDisplay->writePixelBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
 							((uint16_t*) destination)[0] = ((uint16_t*) getPalette())[getBuffer()[pixelIndex]];
@@ -60,6 +60,17 @@ namespace yoba {
 	}
 
 	void Bit8PaletteBufferedRenderer::renderPixelNative(const Point& point, const Color* color) {
+//		if (point.getX() < 0 || point.getX() >= 320 || point.getY() < 0 || point.getY() >= 240) {
+//			Serial.printf("CYKA?? %d, %d\f", point.getX(), point.getY());
+//			return;
+//		}
+//
+//		if (getIndex(point) >= getBufferLength()) {
+//			Serial.printf("getIndex POINT %d, %d\f", point.getX(), point.getY());
+//			Serial.printf("getIndex INDEX %d, %d\f", getIndex(point), getBufferLength());
+//			return;
+//		}
+
 		getBuffer()[getIndex(point)] = getPaletteIndex(color);
 	}
 

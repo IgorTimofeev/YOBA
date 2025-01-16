@@ -9,7 +9,7 @@ namespace yoba::ui {
 			const Font* getFont() const;
 			void setFont(const Font* value);
 
-		protected:
+		private:
 			const Font* _font = nullptr;
 	};
 }

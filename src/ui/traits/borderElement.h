@@ -16,7 +16,7 @@ namespace yoba::ui {
 				invalidate();
 			}
 
-		protected:
+		private:
 			const Color* _borderColor = nullptr;
 	};
 }

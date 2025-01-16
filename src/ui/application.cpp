@@ -47,6 +47,9 @@ namespace yoba::ui {
 	}
 
 	void Application::tick() {
+		// Resetting viewport just in case if some UI element broke it
+		_renderer->resetViewport();
+
 		// Root element size should match screen size
 		setSize(_renderer->getRenderTarget()->getResolution());
 

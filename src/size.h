@@ -9,8 +9,8 @@
 namespace yoba {
 	class Size {
 		public:
-			static const uint16_t Auto = 0xFFFF;
-			static const uint16_t Infinity = 0xFFFE;
+			static const uint16_t computed = 0xFFFF;
+			static const uint16_t infinity = 0xFFFE;
 
 			Size();
 			Size(uint16_t width, uint16_t height);

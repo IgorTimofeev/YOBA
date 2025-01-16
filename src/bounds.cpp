@@ -159,10 +159,10 @@ namespace yoba {
 	Bounds Bounds::getIntersection(const Bounds& bounds) const {
 		Bounds result = Bounds();
 
-		result.setX(max(_x, bounds._x));
-		result.setY(max(_y, bounds._y));
-		result.setWidth(min(getX2(), bounds.getX2()) - result._x + 1);
-		result.setHeight(min(getY2(), bounds.getY2()) - result._y + 1);
+		result.setX(std::max(_x, bounds._x));
+		result.setY(std::max(_y, bounds._y));
+		result.setWidth(std::min(_x + _width, bounds._x + bounds._width) - result._x);
+		result.setHeight(std::min(_y + _height, bounds._y + bounds._height) - result._y);
 
 		return result;
 	}

@@ -1,13 +1,17 @@
 #include "renderer.h"
 
 namespace yoba {
-
 	Renderer::Renderer(RenderTarget* renderTarget) : _renderTarget(renderTarget) {
-		resetViewport();
+
 	}
 
 	void Renderer::setup() {
 		_renderTarget->setup();
+
+		// Resetting viewport after renderTarget initialization, because viewport
+		// depends on renderTarget resolution, which can be determined only after
+		// calling setup(), where orientation is being set first time
+		resetViewport();
 	}
 
 	RenderTarget* Renderer::getRenderTarget() const {
@@ -18,13 +22,40 @@ namespace yoba {
 		return _viewport;
 	}
 
+	const Bounds& Renderer::getClampedViewport() {
+		return _clampedViewport;
+	}
+
 	void Renderer::setViewport(const Bounds& bounds) {
 		_viewport = bounds;
+
+		const auto& resolution = _renderTarget->getResolution();
+
+		if (
+			_viewport.getX() >= resolution.getWidth()
+			|| _viewport.getY() >= resolution.getHeight()
+			|| _viewport.getX2() < 0
+			|| _viewport.getY2() < 0
+		) {
+			_clampedViewport.setX(0);
+			_clampedViewport.setY(0);
+			_clampedViewport.setWidth(0);
+			_clampedViewport.setHeight(0);
+		}
+		else {
+			_clampedViewport.setX(std::max(0, _viewport.getX()));
+			_clampedViewport.setY(std::max(0, _viewport.getY()));
+			_clampedViewport.setWidth(std::min((int32_t) resolution.getWidth(), _viewport.getX() + _viewport.getWidth()) - _clampedViewport.getX());
+			_clampedViewport.setHeight(std::min((int32_t) resolution.getHeight(), _viewport.getY() + _viewport.getHeight()) - _clampedViewport.getY());
+		}
 	}
 
 	void Renderer::resetViewport() {
-		_viewport.setPosition(Point());
+		_viewport.setX(0);
+		_viewport.setX(0);
 		_viewport.setSize(_renderTarget->getResolution());
+
+		_clampedViewport = _viewport;
 	}
 
 	size_t Renderer::getIndex(uint16_t x, uint16_t y) const {
@@ -42,12 +73,12 @@ namespace yoba {
 	}
 
 	void Renderer::renderPixel(const Point& point, const Color* color) {
-		if (getViewport().intersects(point))
+		if (getClampedViewport().intersects(point))
 			renderPixelNative(point, color);
 	}
 
 	void Renderer::renderHorizontalLine(const Point& point, uint16_t length, const Color* color) {
-		const auto& viewport = getViewport();
+		const auto& viewport = getClampedViewport();
 
 		if (
 			length == 0
@@ -67,7 +98,7 @@ namespace yoba {
 	}
 
 	void Renderer::renderVerticalLine(const Point& point, uint16_t length, const Color* color) {
-		const auto& viewport = getViewport();
+		const auto& viewport = getClampedViewport();
 
 		if (
 			length == 0
@@ -87,7 +118,7 @@ namespace yoba {
 	}
 
 	void Renderer::renderFilledRectangle(const Bounds& bounds, const Color* color) {
-		const auto& viewport = getViewport();
+		const auto& viewport = getClampedViewport();
 
 		if (!bounds.isNonZero() || !viewport.intersects(bounds))
 			return;
@@ -145,7 +176,7 @@ namespace yoba {
 	}
 
 	void Renderer::renderImage(const Point& point, const Image* image) {
-		if (getViewport().intersects(Bounds(point, image->getSize())))
+		if (getClampedViewport().intersects(Bounds(point, image->getSize())))
 			renderImageNative(point, image);
 	}
 

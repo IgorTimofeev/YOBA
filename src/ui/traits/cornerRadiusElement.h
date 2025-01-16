@@ -15,7 +15,7 @@ namespace yoba::ui {
 				invalidate();
 			}
 
-		protected:
+		private:
 			uint16_t _cornerRadius = 0;
 	};
 }

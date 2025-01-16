@@ -1,32 +1,25 @@
 #pragma once
 
 #include "layout.h"
+#include "traits/orientationElement.h"
 
 namespace yoba::ui {
-	class StackLayout : public Layout {
+	class StackLayout : public Layout, public OrientationElement {
 		public:
 			StackLayout() {
 
 			}
 
-			StackLayout(Orientation orientation) : _orientation(orientation) {
-
+			StackLayout(Orientation orientation) {
+				setOrientation(orientation);
 			}
 
 			StackLayout(uint16_t spacing) : _spacing(spacing) {
 
 			}
 
-			StackLayout(Orientation orientation, uint16_t spacing) : _orientation(orientation), _spacing(spacing) {
-
-			}
-
-			Orientation getOrientation() const {
-				return _orientation;
-			}
-
-			void setOrientation(Orientation orientation) {
-				_orientation = orientation;
+			StackLayout(Orientation orientation, uint16_t spacing) :  _spacing(spacing) {
+				setOrientation(orientation);
 			}
 
 			uint16_t getSpacing() const {
@@ -52,7 +45,7 @@ namespace yoba::ui {
 							child->measure(
 								renderer,
 								Size(
-									Size::Infinity,
+									Size::infinity,
 									availableSize.getHeight()
 								)
 							);
@@ -81,7 +74,7 @@ namespace yoba::ui {
 								renderer,
 								Size(
 									availableSize.getWidth(),
-									Size::Infinity
+									Size::infinity
 								)
 							);
 
@@ -154,6 +147,5 @@ namespace yoba::ui {
 
 		private:
 			uint16_t _spacing = 0;
-			Orientation _orientation = Orientation::vertical;
 	};
 }

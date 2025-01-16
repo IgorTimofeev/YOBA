@@ -1,0 +1,297 @@
+#pragma once
+
+#include "scrollBar.h"
+#include "layout.h"
+
+namespace yoba::ui {
+	enum class ScrollMode : uint8_t {
+		computed,
+		enabled,
+		hidden,
+		disabled
+	};
+
+	class ScrollView : public Layout {
+		public:
+			ScrollView() {
+				setClipToBounds(true);
+
+				_horizontalScrollBar.setOrientation(Orientation::horizontal);
+				_horizontalScrollBar.setAlignment(Alignment::stretch, Alignment::end);
+
+				_verticalScrollBar.setOrientation(Orientation::vertical);
+				_verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
+
+				setScrollBarSize(4);
+				setScrollBarOffset(4);
+			}
+
+			ScrollMode getHorizontalScrollMode() const {
+				return _horizontalScrollMode;
+			}
+
+			void setHorizontalScrollMode(ScrollMode value) {
+				_horizontalScrollMode = value;
+
+				invalidate();
+			}
+
+			ScrollMode getVerticalScrollMode() const {
+				return _verticalScrollMode;
+			}
+
+			void setVerticalScrollMode(ScrollMode value) {
+				_verticalScrollMode = value;
+
+				invalidate();
+			}
+
+			uint16_t getHorizontalPosition() const {
+				return _horizontalScrollBar.getPosition();
+			}
+
+			void setHorizontalPosition(uint16_t value) {
+				_horizontalScrollBar.setPosition(value);
+
+				invalidate();
+			}
+
+			uint16_t getVerticalPosition() const {
+				return _verticalScrollBar.getPosition();
+			}
+
+			void setVerticalPosition(uint16_t value) {
+				_verticalScrollBar.setPosition(value);
+
+				invalidate();
+			}
+
+			void setScrollBarOffset(uint16_t value) {
+				_horizontalScrollBar.setMargin(Margin(value, 0, value, value));
+				_verticalScrollBar.setMargin(Margin(0, value, value, value));
+			}
+
+			void setScrollBarSize(uint16_t value) {
+				_horizontalScrollBar.setSize(Size(Size::computed, value));
+				_horizontalScrollBar.setCornerRadius(value / 2);
+
+				_verticalScrollBar.setSize(Size(value, Size::computed));
+				_verticalScrollBar.setCornerRadius(value / 2);
+			}
+
+			void setScrollBarColor(const Color* value) {
+				_horizontalScrollBar.setPrimaryColor(value);
+				_verticalScrollBar.setPrimaryColor(value);
+			}
+
+		protected:
+			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+				const auto& contentSize = Size(
+					_horizontalScrollMode == ScrollMode::disabled
+					? availableSize.getWidth()
+					: Size::infinity,
+
+					_verticalScrollMode == ScrollMode::disabled
+					? availableSize.getHeight()
+					: Size::infinity
+				);
+
+				Size result = Size();
+
+				for (auto element : *this) {
+					if (!element->isVisible())
+						continue;
+
+					element->measure(renderer, contentSize);
+
+					const auto& elementSize = element->getMeasuredSize();
+
+					if (elementSize.getWidth() > result.getWidth()) {
+						result.setWidth(elementSize.getWidth());
+					}
+
+					if (elementSize.getHeight() > result.getHeight()) {
+						result.setHeight(elementSize.getHeight());
+					}
+				}
+
+				_horizontalScrollBar.measure(renderer, availableSize);
+				_verticalScrollBar.measure(renderer, availableSize);
+
+				return result;
+			}
+
+			void onArrange(const Bounds& bounds) override {
+				const auto& measuredSize = getMeasuredSize();
+
+				_contentBounds.setX(
+					_horizontalScrollMode == ScrollMode::disabled
+					? bounds.getX()
+					: bounds.getX() - _horizontalScrollBar.getPosition()
+				);
+
+				_contentBounds.setY(
+					_verticalScrollMode == ScrollMode::disabled
+					? bounds.getY()
+					: bounds.getY() - _verticalScrollBar.getPosition()
+				);
+
+				_contentBounds.setWidth(
+					_horizontalScrollMode == ScrollMode::disabled
+					? bounds.getWidth()
+					: measuredSize.getWidth()
+				);
+
+				_contentBounds.setHeight(
+					_verticalScrollMode == ScrollMode::disabled
+					? bounds.getHeight()
+					: measuredSize.getHeight()
+				);
+
+				for (auto element : *this) {
+					if (!element->isVisible())
+						continue;
+
+					element->arrange(_contentBounds);
+				}
+
+				// Hor
+				_horizontalScrollBar.setTotalSize(_contentBounds.getWidth());
+				_horizontalScrollBar.setViewportSize(bounds.getWidth());
+				_horizontalScrollPossible = _horizontalScrollMode != ScrollMode::disabled && _contentBounds.getWidth() > bounds.getWidth();
+
+				_horizontalScrollBar.setVisible(
+					_horizontalScrollMode == ScrollMode::enabled
+					|| _horizontalScrollMode == ScrollMode::computed && _horizontalScrollPossible
+				);
+
+				if (_horizontalScrollBar.isVisible())
+					_horizontalScrollBar.arrange(bounds);
+
+				// Vert
+				_verticalScrollBar.setTotalSize(_contentBounds.getHeight());
+				_verticalScrollBar.setViewportSize(bounds.getHeight());
+				_verticalScrollPossible = _verticalScrollMode != ScrollMode::disabled && _contentBounds.getHeight() > bounds.getHeight();
+
+				_verticalScrollBar.setVisible(
+					_verticalScrollMode == ScrollMode::enabled
+					|| _verticalScrollMode == ScrollMode::computed && _verticalScrollPossible
+				);
+
+				if (_verticalScrollBar.isVisible())
+					_verticalScrollBar.arrange(bounds);
+			}
+
+		public:
+			void onRender(Renderer* renderer) override {
+				Layout::onRender(renderer);
+
+				_horizontalScrollBar.render(renderer);
+				_verticalScrollBar.render(renderer);
+			}
+
+		public:
+			void onEvent(Event& event) override {
+				Layout::onEvent(event);
+
+				if (event.isHandled())
+					return;
+
+				const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
+				const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
+				const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
+
+				if (!(isTouchDown || isTouchUp || isTouchDrag))
+					return;
+
+				const auto& touchPosition = ((TouchEvent&) event).getPosition();
+
+				if (isTouchDown) {
+					_lastTouchPosition = touchPosition;
+
+					setCaptured(true);
+				}
+				else if (isTouchDrag) {
+					if (_lastTouchPosition.getX() >= 0) {
+						const auto touchDelta = touchPosition - _lastTouchPosition;
+						_lastTouchPosition = touchPosition;
+
+						if (_horizontalScrollPossible)
+							scrollHorizontallyBy(-touchDelta.getX());
+
+						if (_verticalScrollPossible)
+							scrollVerticallyBy(-touchDelta.getY());
+					}
+				}
+				else {
+					_lastTouchPosition.setX(-1);
+
+					setCaptured(false);
+				}
+			}
+
+			void scrollHorizontallyBy(int32_t delta) {
+				if (_horizontalScrollMode == ScrollMode::disabled)
+					return;
+
+				auto position = getHorizontalPosition();
+
+				computeScrollPositionForDelta(
+					position,
+					delta,
+					getBounds().getX2(),
+					_contentBounds.getX2()
+				);
+
+				setHorizontalPosition(position);
+			}
+
+			void scrollVerticallyBy(int32_t delta) {
+				if (_verticalScrollMode == ScrollMode::disabled)
+					return;
+
+				auto position = getVerticalPosition();
+
+				computeScrollPositionForDelta(
+					position,
+					delta,
+					getBounds().getY2(),
+					_contentBounds.getY2()
+				);
+
+				setVerticalPosition(position);
+			}
+
+		private:
+			ScrollBar _horizontalScrollBar = ScrollBar();
+			ScrollBar _verticalScrollBar = ScrollBar();
+
+			ScrollMode _horizontalScrollMode = ScrollMode::disabled;
+			ScrollMode _verticalScrollMode = ScrollMode::computed;
+
+			Bounds _contentBounds = Bounds();
+
+			bool _horizontalScrollPossible = false;
+			bool _verticalScrollPossible = false;
+
+			Point _lastTouchPosition = Point(-1, -1);
+
+			void computeScrollPositionForDelta(uint16_t& position, int32_t delta, int32_t boundsPosition2, int32_t contentPosition2) {
+				if (delta <= 0) {
+					if (-delta > position) {
+						position = 0;
+					}
+					else {
+						position += delta;
+					}
+				}
+				else {
+					auto position2Delta = contentPosition2 - boundsPosition2;
+
+					if (position2Delta > 0) {
+						position += (delta > position2Delta ? position2Delta : delta);
+					}
+				}
+			}
+	};
+}

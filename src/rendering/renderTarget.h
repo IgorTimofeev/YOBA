@@ -50,7 +50,7 @@ namespace yoba {
 			const Size& getResolution() const;
 
 			RenderTargetOrientation getOrientation() const;
-			void setOrientation(RenderTargetOrientation orientation);
+			void setOrientation(RenderTargetOrientation value);
 
 			Point orientPoint(const Point& point);
 

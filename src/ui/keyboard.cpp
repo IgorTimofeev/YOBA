@@ -655,7 +655,7 @@ namespace yoba::ui {
 				renderer,
 				Size(
 					availableSize.getWidth(),
-					Size::Infinity
+					Size::infinity
 				)
 			);
 

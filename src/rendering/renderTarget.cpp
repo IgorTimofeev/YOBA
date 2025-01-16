@@ -42,8 +42,11 @@ namespace yoba {
 		return _orientation;
 	}
 
-	void RenderTarget::setOrientation(RenderTargetOrientation orientation) {
-		_orientation = orientation;
+	void RenderTarget::setOrientation(RenderTargetOrientation value) {
+		if (value == _orientation)
+			return;
+
+		_orientation = value;
 
 		onOrientationChanged();
 	}

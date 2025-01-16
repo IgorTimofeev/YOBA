@@ -17,8 +17,6 @@ namespace yoba::ui {
 			}
 
 		protected:
-			const Color* _secondaryColor = nullptr;
-
 			const Color* selectColor(
 				bool condition,
 				const Color* defaultColor,
@@ -38,5 +36,8 @@ namespace yoba::ui {
 
 				return nullptr;
 			}
+
+		private:
+			const Color* _secondaryColor = nullptr;
 	};
 }

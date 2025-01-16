@@ -13,7 +13,7 @@ namespace yoba::ui {
 			bool isFocused();
 			void setFocused(bool value);
 
-		protected:
+		private:
 			bool _focusable = true;
 	};
 }
