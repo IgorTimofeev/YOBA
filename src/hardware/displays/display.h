@@ -7,10 +7,10 @@ namespace yoba::hardware {
 		public:
 			Display(
 				const Size& resolution,
-				RenderingOrientation orientation,
+				RenderTargetOrientation orientation,
 				ColorModel colorModel,
-				RenderingPixelWriting pixelWriting,
-				RenderingPixelOrder pixelOrder
+				RenderTargetPixelWriting pixelWriting,
+				RenderTargetPixelOrder pixelOrder
 			) : RenderTarget(resolution, orientation, colorModel, pixelWriting, pixelOrder) {
 
 			}

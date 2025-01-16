@@ -22,7 +22,7 @@ namespace yoba::ui {
 			}
 
 			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
-				const auto font = getFontOrDefault();
+				const auto font = getFont();
 
 				return
 					font
@@ -34,7 +34,7 @@ namespace yoba::ui {
 			}
 
 			void onRender(Renderer* renderer) override {
-				const auto font = getFontOrDefault();
+				const auto font = getFont();
 
 				if (!font)
 					return;
@@ -45,7 +45,7 @@ namespace yoba::ui {
 					primaryColor = renderer->getPrimaryColor();
 
 				renderer->renderText(
-					getBounds().getTopLeft(),
+					getBounds().getPosition(),
 					font,
 					primaryColor,
 					getText()

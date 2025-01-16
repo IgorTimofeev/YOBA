@@ -9,7 +9,7 @@ namespace yoba::hardware {
 		public:
 			ILI9341Display(
 				ColorModel colorModel,
-				RenderingOrientation orientation,
+				RenderTargetOrientation orientation,
 
 				uint8_t csPin,
 				uint8_t dcPin,

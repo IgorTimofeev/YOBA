@@ -79,12 +79,29 @@ namespace yoba {
 		setPaletteColor(index, tColor);
 	}
 
+	void PaletteBufferedRenderer::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
+		uint16_t index = 0;
+
+		for (const auto& color : colors) {
+			setPaletteColor(index, color);
+			index++;
+		}
+	}
+
 	void PaletteBufferedRenderer::setPaletteColors(std::initializer_list<uint32_t> colors) {
 		uint16_t index = 0;
 
-		for (auto color : colors) {
-			setPaletteColor(index, Rgb888Color(color));
+		for (const auto& color : colors) {
+			setPaletteColor(index, color);
 			index++;
 		}
+	}
+
+	uint16_t PaletteBufferedRenderer::getPaletteLength() const {
+		return _paletteLength;
+	}
+
+	uint8_t* PaletteBufferedRenderer::getPalette() const {
+		return _palette;
 	}
 }

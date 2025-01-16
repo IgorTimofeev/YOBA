@@ -18,7 +18,12 @@ namespace yoba {
 
 	}
 
-	Bounds::Bounds(const Point& position, const Size& size) : Bounds(position.getX(), position.getY(), size.getWidth(), size.getHeight()) {
+	Bounds::Bounds(const Point& position, const Size& size) : Bounds(
+		position.getX(),
+		position.getY(),
+		size.getWidth(),
+		size.getHeight()
+	) {
 
 	}
 
@@ -42,6 +47,18 @@ namespace yoba {
 		_y = value;
 	}
 
+	Point Bounds::getPosition() const {
+		return {
+			_x,
+			_y
+		};
+	}
+
+	void Bounds::setPosition(const Point& value) {
+		_x = value.getX();
+		_y = value.getY();
+	}
+
 	uint16_t Bounds::getWidth() const {
 		return _width;
 	}
@@ -59,7 +76,15 @@ namespace yoba {
 	}
 
 	Point Bounds::getSize() const {
-		return {getWidth(), getHeight()};
+		return {
+			_width,
+			_height
+		};
+	}
+
+	void Bounds::setSize(const Size& value) {
+		_width = value.getWidth();
+		_height = value.getHeight();
 	}
 
 	int32_t Bounds::getX2() const {
@@ -86,16 +111,13 @@ namespace yoba {
 	}
 
 	Point Bounds::getTopLeft() const {
-		return {
-			getX(),
-			getY()
-		};
+		return getPosition();
 	}
 
 	Point Bounds::getTopRight() const {
 		return {
 			getX2(),
-			getY()
+			_y
 		};
 	}
 
@@ -108,25 +130,25 @@ namespace yoba {
 
 	Point Bounds::getBottomLeft() const {
 		return {
-			getX(),
+			_x,
 			getY2()
 		};
 	}
 
 	bool Bounds::intersects(const Point& point) const {
 		return
-			point.getX() >= getX()
-			&& point.getY() >= getY()
+			point.getX() >= _x
+			&& point.getY() >= _y
 			&& point.getX() <= getX2()
 			&& point.getY() <= getY2();
 	}
 
 	bool Bounds::intersects(const Bounds& bounds) const {
 		return !(
-			getX() > bounds.getX2()
-			|| getX2() < bounds.getX()
-			|| getY() > bounds.getY2()
-			|| getY2() < bounds.getY()
+			_x > bounds.getX2()
+			|| getX2() < bounds._x
+			|| _y > bounds.getY2()
+			|| getY2() < bounds._y
 		);
 	}
 
@@ -137,10 +159,10 @@ namespace yoba {
 	Bounds Bounds::getIntersection(const Bounds& bounds) const {
 		Bounds result = Bounds();
 
-		result.setX(max(getX(), bounds.getX()));
-		result.setY(max(getY(), bounds.getY()));
-		result.setWidth(min(getX2(), bounds.getX2()) - result.getX() + 1);
-		result.setHeight(min(getY2(), bounds.getY2()) - result.getY() + 1);
+		result.setX(max(_x, bounds._x));
+		result.setY(max(_y, bounds._y));
+		result.setWidth(min(getX2(), bounds.getX2()) - result._x + 1);
+		result.setHeight(min(getY2(), bounds.getY2()) - result._y + 1);
 
 		return result;
 	}

@@ -14,10 +14,6 @@ namespace yoba {
 		return _renderTarget;
 	}
 
-	const Size& Renderer::getSize() const {
-		return _renderTarget->getResolution();
-	}
-
 	const Bounds& Renderer::getViewport() {
 		return _viewport;
 	}
@@ -27,14 +23,12 @@ namespace yoba {
 	}
 
 	void Renderer::resetViewport() {
-		_viewport.setX(0);
-		_viewport.setY(0);
-		_viewport.setWidth(getSize().getWidth());
-		_viewport.setHeight(getSize().getHeight());
+		_viewport.setPosition(Point());
+		_viewport.setSize(_renderTarget->getResolution());
 	}
 
 	size_t Renderer::getIndex(uint16_t x, uint16_t y) const {
-		return y * getSize().getWidth() + x;
+		return y * _renderTarget->getResolution().getWidth() + x;
 	}
 
 	size_t Renderer::getIndex(const Point& point) const {
@@ -104,7 +98,7 @@ namespace yoba {
 			renderFilledRectangleNative(intersection, color);
 		}
 		else {
-			renderPixelNative(intersection.getTopLeft(), color);
+			renderPixelNative(intersection.getPosition(), color);
 		}
 	}
 
@@ -163,7 +157,7 @@ namespace yoba {
 
 		if (bounds.getWidth() > 1 || bounds.getHeight() > 1) {
 			renderVerticalLine(
-				bounds.getTopLeft(),
+				bounds.getPosition(),
 				bounds.getHeight(),
 				color
 			);
@@ -193,7 +187,7 @@ namespace yoba {
 			);
 		}
 		else {
-			renderPixel(bounds.getTopLeft(), color);
+			renderPixel(bounds.getPosition(), color);
 		}
 	}
 

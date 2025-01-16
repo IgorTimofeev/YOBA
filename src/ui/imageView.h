@@ -19,7 +19,7 @@ namespace yoba::ui {
 					return;
 
 				renderer->renderImage(
-					getBounds().getTopLeft(),
+					getBounds().getPosition(),
 					getImage()
 				);
 			}

@@ -7,8 +7,6 @@ namespace yoba::ui {
 		Layout::setApplication(this);
 	}
 
-	const unscii16Font Application::defaultFont = unscii16Font();
-
 	void Application::setup() {
 		_renderer->setup();
 	}
@@ -50,7 +48,7 @@ namespace yoba::ui {
 
 	void Application::tick() {
 		// Root element size should match screen size
-		setSize(_renderer->getSize());
+		setSize(_renderer->getRenderTarget()->getResolution());
 
 		Layout::tick();
 
@@ -130,14 +128,6 @@ namespace yoba::ui {
 		else {
 			Element::handleEvent(event);
 		}
-	}
-
-	const Font* Application::getFont() const {
-		return _defaultFont;
-	}
-
-	void Application::setFont(const Font* font) {
-		_defaultFont = font;
 	}
 
 	Renderer* Application::getRenderer() const {

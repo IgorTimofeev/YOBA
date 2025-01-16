@@ -50,7 +50,7 @@ namespace yoba::ui {
 		}
 
 		// Text
-		const auto font = getFontOrDefault();
+		const auto font = getFont();
 
 		if (!font)
 			return;
@@ -141,7 +141,7 @@ namespace yoba::ui {
 	}
 
 	void TextField::applyContinuousScroll() {
-		const auto font = getFontOrDefault();
+		const auto font = getFont();
 
 		if (!font)
 			return;

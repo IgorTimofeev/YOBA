@@ -39,7 +39,7 @@ namespace yoba::ui {
 
 				renderer->renderFilledRectangle(
 					Bounds(
-						bounds.getTopLeft(),
+						bounds.getPosition(),
 						Size(
 							part,
 							bounds.getHeight()

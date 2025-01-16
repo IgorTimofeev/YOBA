@@ -18,8 +18,6 @@ namespace yoba {
 
 			RenderTarget* getRenderTarget() const;
 
-			const Size& getSize() const;
-
 			const Bounds& getViewport();
 			void setViewport(const Bounds& bounds);
 			void resetViewport();
@@ -78,9 +76,6 @@ namespace yoba {
 
 		protected:
 			RenderTarget* _renderTarget;
-
-			uint8_t* _buffer = nullptr;
-			size_t _bufferLength = 0;
 
 			Bounds _viewport = Bounds();
 

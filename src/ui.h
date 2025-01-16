@@ -2,6 +2,7 @@
 
 #include "ui/element.h"
 #include "ui/layout.h"
+#include "ui/application.h"
 
 #include "ui/traits/borderElement.h"
 #include "ui/traits/cornerRadiusElement.h"
@@ -12,7 +13,6 @@
 #include "ui/traits/textElement.h"
 
 #include "ui/stackLayout.h"
-#include "ui/application.h"
 #include "ui/modal.h"
 #include "ui/keyboard.h"
 #include "ui/selector.h"

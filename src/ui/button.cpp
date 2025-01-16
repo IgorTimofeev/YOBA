@@ -21,7 +21,7 @@ namespace yoba::ui {
 		}
 
 		// Text
-		const auto font = getFontOrDefault();
+		const auto font = getFont();
 
 		if (font) {
 			auto secondaryColor =

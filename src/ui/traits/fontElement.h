@@ -9,8 +9,6 @@ namespace yoba::ui {
 			const Font* getFont() const;
 			void setFont(const Font* value);
 
-			const Font* getFontOrDefault();
-
 		protected:
 			const Font* _font = nullptr;
 	};

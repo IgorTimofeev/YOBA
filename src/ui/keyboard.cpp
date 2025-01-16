@@ -701,7 +701,7 @@ namespace yoba::ui {
 		*_keyboardAndApplicationChildrenLayout += _keyboard;
 
 		_applicationChildrenLayout = new Layout();
-		_applicationChildrenLayout->setSize(application->getRenderer()->getSize());
+		_applicationChildrenLayout->setSize(application->getRenderer()->getRenderTarget()->getResolution());
 
 		// Moving children from root to temporary layout
 		for (auto child : *application)

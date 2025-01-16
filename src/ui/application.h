@@ -11,10 +11,6 @@ namespace yoba::ui {
 		public:
 			explicit Application(Renderer* renderer);
 
-			// Sexy old school font that will be used as fallback value when rendering
-			// child elements that contain text, but doesn't have any specific font
-			static const unscii16Font defaultFont;
-
 			virtual void setup();
 
 			void tick() override;
@@ -24,9 +20,6 @@ namespace yoba::ui {
 
 			void handleEvent(Event& event) override;
 			void startAnimation(Animation* animation) override;
-
-			const Font* getFont() const;
-			void setFont(const Font* font);
 
 			Renderer* getRenderer() const;
 
@@ -51,8 +44,6 @@ namespace yoba::ui {
 			std::vector<Animation*> _animations {};
 			std::vector<hardware::InputDevice*> _inputDevices {};
 			std::vector<std::function<void()>> _enqueuedTasksOnTick {};
-
-			const Font* _defaultFont = &defaultFont;
 
 			void animationsTick();
 	};

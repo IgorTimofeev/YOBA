@@ -24,6 +24,9 @@ namespace yoba {
 			int32_t getY() const;
 			void setY(int32_t value);
 
+			Point getPosition() const;
+			void setPosition(const Point& value);
+
 			uint16_t getWidth() const;
 			void setWidth(uint16_t value);
 
@@ -31,6 +34,8 @@ namespace yoba {
 			void setHeight(uint16_t value);
 
 			Point getSize() const;
+			void setSize(const Size& value);
+
 			int32_t getX2() const;
 			int32_t getY2() const;
 			int32_t getXCenter() const;

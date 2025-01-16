@@ -157,6 +157,7 @@ namespace yoba {
 		return !operator==(right);
 	}
 
-	using Point = Vector2<int32_t>;
 	using Vector2F = Vector2<float>;
+	using Vector2I = Vector2<int32_t>;
+	using Point = Vector2I;
 }

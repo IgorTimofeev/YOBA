@@ -3,10 +3,10 @@
 namespace yoba {
 	RenderTarget::RenderTarget(
 		const Size& resolution,
-		RenderingOrientation orientation,
+		RenderTargetOrientation orientation,
 		ColorModel colorModel,
-		RenderingPixelWriting pixelWriting,
-		RenderingPixelOrder pixelOrder
+		RenderTargetPixelWriting pixelWriting,
+		RenderTargetPixelOrder pixelOrder
 	) :
 		_pixelWriting(pixelWriting),
 		_pixelOrder(pixelOrder),
@@ -22,11 +22,11 @@ namespace yoba {
 		updateFromOrientation();
 	}
 
-	RenderingPixelWriting RenderTarget::getPixelWriting() const {
+	RenderTargetPixelWriting RenderTarget::getPixelWriting() const {
 		return _pixelWriting;
 	}
 
-	RenderingPixelOrder RenderTarget::getPixelOrder() const {
+	RenderTargetPixelOrder RenderTarget::getPixelOrder() const {
 		return _pixelOrder;
 	}
 
@@ -38,11 +38,11 @@ namespace yoba {
 		return _resolution;
 	}
 
-	RenderingOrientation RenderTarget::getOrientation() const {
+	RenderTargetOrientation RenderTarget::getOrientation() const {
 		return _orientation;
 	}
 
-	void RenderTarget::setOrientation(RenderingOrientation orientation) {
+	void RenderTarget::setOrientation(RenderTargetOrientation orientation) {
 		_orientation = orientation;
 
 		onOrientationChanged();
@@ -52,20 +52,20 @@ namespace yoba {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
 		switch (getOrientation()) {
-			case RenderingOrientation::Clockwise0:
+			case RenderTargetOrientation::Clockwise0:
 				return {
 					point.getX(),
 					point.getY()
 				};
 
-			case RenderingOrientation::Clockwise90: {
+			case RenderTargetOrientation::Clockwise90: {
 				return {
 					_resolution.getWidth() - point.getY(),
 					point.getX()
 				};
 			}
 
-			case RenderingOrientation::Clockwise180:
+			case RenderTargetOrientation::Clockwise180:
 				return {
 					_resolution.getWidth() - point.getX(),
 					_resolution.getHeight() - point.getY()
@@ -82,13 +82,13 @@ namespace yoba {
 
 	void RenderTarget::updateFromOrientation() {
 		switch (_orientation) {
-			case RenderingOrientation::Clockwise0:
-			case RenderingOrientation::Clockwise180:
+			case RenderTargetOrientation::Clockwise0:
+			case RenderTargetOrientation::Clockwise180:
 				_resolution = _defaultResolution;
 				break;
 
-			case RenderingOrientation::Clockwise90:
-			case RenderingOrientation::Clockwise270:
+			case RenderTargetOrientation::Clockwise90:
+			case RenderTargetOrientation::Clockwise270:
 				_resolution.setWidth(_defaultResolution.getHeight());
 				_resolution.setHeight(_defaultResolution.getWidth());
 				break;
