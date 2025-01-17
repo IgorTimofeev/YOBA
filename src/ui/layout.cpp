@@ -62,6 +62,7 @@ namespace yoba::ui {
 
 		_children.erase(iterator);
 
+		onChildRemoved(child);
 		child->onRemovedFromParent(this);
 
 		invalidate();
@@ -69,6 +70,7 @@ namespace yoba::ui {
 
 	void Layout::removeChildren() {
 		for (auto child : _children) {
+			onChildRemoved(child);
 			child->onRemovedFromParent(this);
 		}
 
@@ -84,6 +86,7 @@ namespace yoba::ui {
 	void Layout::addChild(Element* child) {
 		_children.push_back(child);
 
+		onChildAdded(child);
 		child->onAddedToParent(this);
 
 		invalidate();
@@ -141,5 +144,13 @@ namespace yoba::ui {
 
 		for (auto child : _children)
 			child->setApplication(value);
+	}
+
+	void Layout::onChildAdded(Element* element) {
+
+	}
+
+	void Layout::onChildRemoved(Element* element) {
+
 	}
 }

@@ -2,9 +2,10 @@
 
 #include "layout.h"
 #include "traits/orientationElement.h"
+#include "traits/spacingElement.h"
 
 namespace yoba::ui {
-	class StackLayout : public Layout, public OrientationElement {
+	class StackLayout : public Layout, public OrientationElement, public SpacingElement {
 		public:
 			StackLayout() {
 
@@ -14,20 +15,13 @@ namespace yoba::ui {
 				setOrientation(orientation);
 			}
 
-			StackLayout(uint16_t spacing) : _spacing(spacing) {
-
+			StackLayout(uint16_t spacing) {
+				setSpacing(spacing);
 			}
 
-			StackLayout(Orientation orientation, uint16_t spacing) :  _spacing(spacing) {
+			StackLayout(Orientation orientation, uint16_t spacing) {
 				setOrientation(orientation);
-			}
-
-			uint16_t getSpacing() const {
-				return _spacing;
-			}
-
-			void setSpacing(uint16_t value) {
-				_spacing = value;
+				setSpacing(spacing);
 			}
 
 		protected:
@@ -144,8 +138,5 @@ namespace yoba::ui {
 						break;
 				}
 			}
-
-		private:
-			uint16_t _spacing = 0;
 	};
 }

@@ -22,6 +22,10 @@ namespace yoba {
 		return _viewport;
 	}
 
+	void Renderer::setViewport(const Bounds& viewport) {
+		_viewport = viewport;
+	}
+
 	Bounds Renderer::pushViewport(const Bounds& bounds) {
 		auto oldViewport = _viewport;
 

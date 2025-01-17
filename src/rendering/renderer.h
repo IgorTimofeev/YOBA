@@ -19,6 +19,7 @@ namespace yoba {
 			RenderTarget* getRenderTarget() const;
 
 			const Bounds& getViewport();
+			void setViewport(const Bounds& viewport);
 
 			Bounds pushViewport(const Bounds& bounds);
 			void popViewport(const Bounds& bounds);

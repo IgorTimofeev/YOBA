@@ -2,6 +2,7 @@
 
 #include "layout.h"
 #include "vector"
+#include "traits/focusableElement.h"
 
 namespace yoba::ui {
 	class SelectorItem;
@@ -32,18 +33,12 @@ namespace yoba::ui {
 			int32_t _selectedIndex = -1;
 	};
 
-	class SelectorItem : public Layout {
+	class SelectorItem : public Layout, public FocusableElement {
 		public:
-			bool isSelected() const {
-				return _isSelected;
-			}
-
-			virtual void setSelected(bool value) {
-				_isSelected = value;
-			}
+			bool isSelected() const;
+			virtual void setSelected(bool value);
 
 			Selector *getSelector() const;
-
 			void setSelector(Selector *value);
 
 		protected:

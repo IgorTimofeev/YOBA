@@ -645,71 +645,34 @@ namespace yoba::ui {
 			arrangeRow(getChildrenCount());
 	}
 
-	// ----------------------------- KeyboardRootLayout -----------------------------
-
-	Size KeyboardApplicationLayout::onMeasure(Renderer* renderer, const Size& availableSize) {
-		auto result = Size();
-
-		for (auto child : *this) {
-			child->measure(
-				renderer,
-				Size(
-					availableSize.getWidth(),
-					Size::infinity
-				)
-			);
-
-			const auto& childSize = child->getMeasuredSize();
-
-			if (childSize.getWidth() > result.getWidth())
-				result.setWidth(childSize.getWidth());
-
-			result.setHeight(result.getHeight() + childSize.getHeight());
-		}
-
-		return result;
-	}
-
-	void KeyboardApplicationLayout::onArrange(const Bounds& bounds) {
-		auto y = bounds.getY2() + 1;
-
-		for (auto child : *this) {
-			y -= child->getMeasuredSize().getHeight();
-
-			child->arrange(Bounds(
-				bounds.getX(),
-				y,
-				bounds.getWidth(),
-				child->getMeasuredSize().getHeight()
-			));
-		}
-	}
-
 	// ----------------------------- KeyboardController -----------------------------
 
 	Keyboard* ApplicationKeyboardController::_keyboard = nullptr;
 	Layout* ApplicationKeyboardController::_applicationChildrenLayout = nullptr;
-	KeyboardApplicationLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
+	EqualStackLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
 
 	Keyboard* ApplicationKeyboardController::show(Application* application) {
 		if (_keyboard)
 			return _keyboard;
 
-		_keyboard = new Keyboard();
-
-		_keyboardAndApplicationChildrenLayout = new KeyboardApplicationLayout();
-		*_keyboardAndApplicationChildrenLayout += _keyboard;
-
-		_applicationChildrenLayout = new Layout();
-		_applicationChildrenLayout->setSize(application->getRenderer()->getRenderTarget()->getResolution());
+		_keyboardAndApplicationChildrenLayout = new EqualStackLayout();
+		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getRenderTarget()->getResolution());
 
 		// Moving children from root to temporary layout
+		_applicationChildrenLayout = new Layout();
+
 		for (auto child : *application)
 			*_applicationChildrenLayout += child;
 
+		application->removeChildren();
+
 		*_keyboardAndApplicationChildrenLayout += _applicationChildrenLayout;
 
-		application->removeChildren();
+		// Creating keyboard
+		_keyboard = new Keyboard();
+		_keyboardAndApplicationChildrenLayout->setFit(_keyboard);
+		*_keyboardAndApplicationChildrenLayout += _keyboard;
+
 		*application += _keyboardAndApplicationChildrenLayout;
 
 		return _keyboard;

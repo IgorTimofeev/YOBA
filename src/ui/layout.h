@@ -42,6 +42,9 @@ namespace yoba::ui {
 			void onRender(Renderer* renderer) override;
 			void onEvent(Event& event) override;
 
+			virtual void onChildAdded(Element* element);
+			virtual void onChildRemoved(Element* element);
+
 			void setApplication(Application* value) override;
 
 		private:

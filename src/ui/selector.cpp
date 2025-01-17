@@ -59,8 +59,13 @@ namespace yoba::ui {
 	// -------------------------------- SelectorItem --------------------------------
 
 	void SelectorItem::onEvent(Event& event) {
-		if (!(event.getTypeID() == TouchDownEvent::typeID || event.getTypeID() == TouchDragEvent::typeID))
+		const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
+		const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
+
+		if (!(isTouchDown || isTouchDrag))
 			return;
+
+		setFocused(true);
 
 		if (getSelector())
 			getSelector()->setSelectedIndex(getSelector()->getIndexOfItem(this));
@@ -74,5 +79,13 @@ namespace yoba::ui {
 
 	void SelectorItem::setSelector(Selector *value) {
 		_selector = value;
+	}
+
+	bool SelectorItem::isSelected() const {
+		return _isSelected;
+	}
+
+	void SelectorItem::setSelected(bool value) {
+		_isSelected = value;
 	}
 }
