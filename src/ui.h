@@ -26,6 +26,7 @@
 #include "ui/textField.h"
 #include "ui/imageView.h"
 #include "ui/scrollView.h"
+#include "ui/switch.h"
 
 #include "ui/shapes/shape.h"
 #include "ui/shapes/circle.h"

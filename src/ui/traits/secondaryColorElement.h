@@ -16,27 +16,6 @@ namespace yoba::ui {
 				invalidate();
 			}
 
-		protected:
-			const Color* selectColor(
-				bool condition,
-				const Color* defaultColor,
-				const Color* conditionColor
-			) {
-				if (condition) {
-					if (conditionColor) {
-						return conditionColor;
-					}
-					else if (defaultColor) {
-						return defaultColor;
-					}
-				}
-				else if (defaultColor) {
-					return defaultColor;
-				}
-
-				return nullptr;
-			}
-
 		private:
 			const Color* _secondaryColor = nullptr;
 	};

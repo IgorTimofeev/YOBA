@@ -28,7 +28,7 @@ namespace yoba::ui {
 		const auto focused = isFocused();
 
 		// Background
-		const auto primaryColor = selectColor(focused, getPrimaryColor(), _focusedPrimaryColor);
+		const auto primaryColor = Color::select(focused, getPrimaryColor(), _focusedPrimaryColor);
 
 		if (primaryColor) {
 			renderer->renderFilledRectangle(
@@ -39,7 +39,7 @@ namespace yoba::ui {
 		}
 
 		// Border
-		const auto borderColor = selectColor(focused, getBorderColor(), _focusedBorderColor);
+		const auto borderColor = Color::select(focused, getBorderColor(), _focusedBorderColor);
 
 		if (borderColor) {
 			renderer->renderRectangle(
@@ -55,7 +55,7 @@ namespace yoba::ui {
 		if (!font)
 			return;
 
-		const auto secondaryColor = selectColor(focused, getSecondaryColor(), _focusedSecondaryColor);
+		const auto secondaryColor = Color::select(focused, getSecondaryColor(), _focusedSecondaryColor);
 
 		if (!secondaryColor)
 			return;

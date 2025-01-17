@@ -23,6 +23,27 @@ namespace yoba {
 			static uint8_t getBytesPerType(ColorModel colorModel);
 			static size_t getBytesPerType(size_t pixelsCount, ColorModel colorModel);
 
+			static const Color* select(
+				bool condition,
+				const Color* defaultColor,
+				const Color* conditionColor,
+				const Color* fallbackColor = nullptr
+			) {
+				if (condition) {
+					if (conditionColor) {
+						return conditionColor;
+					}
+					else if (defaultColor) {
+						return defaultColor;
+					}
+				}
+				else if (defaultColor) {
+					return defaultColor;
+				}
+
+				return fallbackColor;
+			}
+
 		private:
 			ColorModel _type;
 	};
