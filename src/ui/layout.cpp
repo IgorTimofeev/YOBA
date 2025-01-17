@@ -2,11 +2,11 @@
 #include "event.h"
 
 namespace yoba::ui {
-	void Layout::tick() {
-		Element::tick();
+	void Layout::onTick() {
+		Element::onTick();
 
 		for (auto element : _children)
-			element->tick();
+			element->onTick();
 	}
 
 	void Layout::onRender(Renderer* renderer) {

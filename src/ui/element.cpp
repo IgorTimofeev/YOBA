@@ -55,7 +55,7 @@ namespace yoba::ui {
 			newSize = 0;
 	}
 
-	void Element::tick() {
+	void Element::onTick() {
 
 	}
 

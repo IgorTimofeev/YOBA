@@ -26,7 +26,7 @@ namespace yoba::ui {
 		public FontElement
 	{
 		public:
-			void tick() override;
+			void onTick() override;
 
 			void onRender(Renderer* renderer) override;
 

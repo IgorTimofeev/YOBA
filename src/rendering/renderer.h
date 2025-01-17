@@ -98,6 +98,7 @@ namespace yoba {
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
 			|| point.getY() + font->getHeight() < viewport.getY()
+			|| !color
 		)
 			return;
 
@@ -152,6 +153,7 @@ namespace yoba {
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
 			|| point.getY() + font->getHeight() < viewport.getY()
+			|| !color
 		)
 			return;
 

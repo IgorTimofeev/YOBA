@@ -5,8 +5,8 @@
 #include "application.h"
 
 namespace yoba::ui {
-	void TextField::tick() {
-		Element::tick();
+	void TextField::onTick() {
+		Element::onTick();
 
 		if (isFocused()) {
 			if (isCaptured()) {

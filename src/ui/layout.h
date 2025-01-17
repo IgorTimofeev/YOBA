@@ -11,12 +11,6 @@
 namespace yoba::ui {
 	class Layout : public virtual Element {
 		public:
-			void tick() override;
-
-			void onRender(Renderer* renderer) override;
-
-			void onEvent(Event& event) override;
-
 			size_t getChildrenCount();
 
 			int32_t getIndexOfChild(Element* element);
@@ -42,11 +36,13 @@ namespace yoba::ui {
 			virtual void operator-=(Element* child);
 
 		protected:
-			void setApplication(Application* value) override;
-
+			void onTick() override;
 			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
-
 			void onArrange(const Bounds& bounds) override;
+			void onRender(Renderer* renderer) override;
+			void onEvent(Event& event) override;
+
+			void setApplication(Application* value) override;
 
 		private:
 			std::vector<Element*> _children {};

@@ -346,7 +346,7 @@ namespace yoba::ui {
 		public:
 			KeyboardButton(Keyboard* keyboard, uint8_t row, uint8_t column);
 
-			void tick() override;
+			void onTick() override;
 
 			Keyboard* getKeyboard();
 			KeyboardKey* getKey();

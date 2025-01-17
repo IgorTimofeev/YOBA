@@ -22,8 +22,9 @@ namespace yoba::ui {
 				_verticalScrollBar.setOrientation(Orientation::vertical);
 				_verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
 
-				setScrollBarSize(4);
-				setScrollBarOffset(4);
+				setScrollBarSize(2);
+				setScrollBarSize(1);
+				setScrollBarOffset(3);
 			}
 
 			ScrollMode getHorizontalScrollMode() const {
@@ -73,10 +74,12 @@ namespace yoba::ui {
 
 			void setScrollBarSize(uint16_t value) {
 				_horizontalScrollBar.setSize(Size(Size::computed, value));
-				_horizontalScrollBar.setCornerRadius(value / 2);
-
 				_verticalScrollBar.setSize(Size(value, Size::computed));
-				_verticalScrollBar.setCornerRadius(value / 2);
+			}
+
+			void setScrollBarCornerRadius(uint16_t value) {
+				_horizontalScrollBar.setCornerRadius(value);
+				_verticalScrollBar.setCornerRadius(value);
 			}
 
 			void setScrollBarColor(const Color* value) {

@@ -1,6 +1,7 @@
 #include "application.h"
 #include "element.h"
 #include "animation.h"
+#include <sstream>
 
 namespace yoba::ui {
 	Application::Application(Renderer* renderer) : _renderer(renderer) {
@@ -47,17 +48,17 @@ namespace yoba::ui {
 	}
 
 	void Application::tick() {
-		// Resetting viewport just in case if some UI element broke it
-		_renderer->resetViewport();
-
 		// Root element size should match screen size
 		setSize(_renderer->getRenderTarget()->getResolution());
 
-		Layout::tick();
+		// Resetting viewport just in case if some UI element broke it
+		_renderer->resetViewport();
 
-		// Handling input from devices like touchscreens, rotary encoders, etc
-		for (auto inputDevice : _inputDevices)
-			inputDevice->tick(this);
+		// Handling input from devices like touchscreens, rotary encoders, etc.
+		inputDevicesTick();
+
+		// Handling child elements onTick()
+		onTick();
 
 		// Playing animations
 		animationsTick();
@@ -73,7 +74,6 @@ namespace yoba::ui {
 		// Rendering
 		if (!_isRendered) {
 			render(_renderer);
-
 			_renderer->flush();
 
 			_isRendered = true;
@@ -143,5 +143,10 @@ namespace yoba::ui {
 
 	void Application::enqueueOnTick(const std::function<void()>& task) {
 		_enqueuedTasksOnTick.push_back(task);
+	}
+
+	void Application::inputDevicesTick() {
+		for (auto inputDevice : _inputDevices)
+			inputDevice->tick(this);
 	}
 }

@@ -285,8 +285,8 @@ namespace yoba::ui {
 		}
 	}
 
-	void KeyboardButton::tick() {
-		Element::tick();
+	void KeyboardButton::onTick() {
+		Element::onTick();
 
 		getKey()->tick(this);
 	}

@@ -12,8 +12,8 @@ namespace yoba::ui {
 			explicit Application(Renderer* renderer);
 
 			virtual void setup();
+			virtual void tick();
 
-			void tick() override;
 			void invalidateLayout() override;
 			void invalidateRender() override;
 			void invalidate() override;
@@ -46,5 +46,6 @@ namespace yoba::ui {
 			std::vector<std::function<void()>> _enqueuedTasksOnTick {};
 
 			void animationsTick();
+			void inputDevicesTick();
 	};
 }
