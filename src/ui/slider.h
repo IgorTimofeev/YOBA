@@ -1,8 +1,7 @@
 #pragma once
 
 #include "element.h"
-#include "ui/traits/focusableElement.h"
-#include "ui/traits/cornerRadiusElement.h"
+#include "traits/focusableElement.h"
 #include "event.h"
 #include "number.h"
 
@@ -11,22 +10,22 @@ namespace yoba::ui {
 		public:
 			Callback<> valueChanged {};
 
-			const Color* getDefaultTrackColor() const {
-				return _defaultTrackColor;
+			const Color* getTrackColor() const {
+				return _trackColor;
 			}
 
-			void setDefaultTrackColor(const Color* value) {
-				_defaultTrackColor = value;
+			void setTrackColor(const Color* value) {
+				_trackColor = value;
 
 				invalidateRender();
 			}
 
-			const Color* getActiveTrackColor() const {
-				return _activeTrackColor;
+			const Color* getFillColor() const {
+				return _fillColor;
 			}
 
-			void setActiveTrackColor(const Color* value) {
-				_activeTrackColor = value;
+			void setFillColor(const Color* value) {
+				_fillColor = value;
 
 				invalidateRender();
 			}
@@ -105,8 +104,8 @@ namespace yoba::ui {
 				const auto trackY = bounds.getY() + handleHalf - _trackSize / 2;
 				const auto handleCenterLocal = handleHalf + (uint16_t) std::round(_value * (float) (bounds.getWidth() - bounds.getHeight()));
 
-				// Active track
-				if (_value > 0 && _activeTrackColor) {
+				// Fill
+				if (_value > 0 && _fillColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX(),
@@ -115,12 +114,12 @@ namespace yoba::ui {
 							_trackSize
 						),
 						_trackCornerRadius,
-						_activeTrackColor
+						_fillColor
 					);
 				}
 
-				// Default track
-				if (_value < 1 && _defaultTrackColor) {
+				// Track
+				if (_value < 1 && _trackColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX() + handleCenterLocal,
@@ -129,7 +128,7 @@ namespace yoba::ui {
 							_trackSize
 						),
 						_trackCornerRadius,
-						_defaultTrackColor
+						_trackColor
 					);
 				}
 
@@ -195,8 +194,8 @@ namespace yoba::ui {
 			uint8_t _handleSize = 8;
 			uint8_t _handleCornerRadius = 4;
 
-			const Color* _defaultTrackColor;
-			const Color* _activeTrackColor;
+			const Color* _trackColor;
+			const Color* _fillColor;
 			const Color* _handleColor;
 
 			float _value = 1;

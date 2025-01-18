@@ -18,22 +18,22 @@ namespace yoba::ui {
 				setChecked(checked);
 			}
 
-			const Color* getDefaultTrackColor() const {
-				return _defaultTrackColor;
+			const Color* getTrackColor() const {
+				return _trackColor;
 			}
 
-			void setDefaultTrackColor(const Color* value) {
-				_defaultTrackColor = value;
+			void setTrackColor(const Color* value) {
+				_trackColor = value;
 
 				invalidateRender();
 			}
 
-			const Color* getCheckedTrackColor() const {
-				return _checkedTrackColor;
+			const Color* getCheckedColor() const {
+				return _checkedColor;
 			}
 
-			void setCheckedTrackColor(const Color* value) {
-				_checkedTrackColor = value;
+			void setCheckedColor(const Color* value) {
+				_checkedColor = value;
 
 				invalidateRender();
 			}
@@ -56,8 +56,8 @@ namespace yoba::ui {
 				const auto handleHalf = bounds.getHeight() / 2;
 				const auto handleOffsetCenter = _handleOffset + handleHalf;
 
-				// Checked track
-				if (_handleOffset > 0 && _checkedTrackColor) {
+				// Checked
+				if (_handleOffset > 0 && _checkedColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX(),
@@ -66,12 +66,12 @@ namespace yoba::ui {
 							bounds.getHeight()
 						),
 						getCornerRadius(),
-						_checkedTrackColor
+						_checkedColor
 					);
 				}
 
-				// Default track
-				if (_handleOffset + bounds.getHeight() < bounds.getX2() && _defaultTrackColor) {
+				// Track
+				if (_handleOffset + bounds.getHeight() < bounds.getX2() && _trackColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX() + handleOffsetCenter - handleHalf,
@@ -80,7 +80,7 @@ namespace yoba::ui {
 							bounds.getHeight()
 						),
 						getCornerRadius(),
-						_defaultTrackColor
+						_trackColor
 					);
 				}
 
@@ -123,8 +123,8 @@ namespace yoba::ui {
 			}
 
 		private:
-			const Color* _defaultTrackColor;
-			const Color* _checkedTrackColor;
+			const Color* _trackColor;
+			const Color* _checkedColor;
 			const Color* _handleColor;
 
 			uint16_t _handleOffset = 0;

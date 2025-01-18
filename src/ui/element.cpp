@@ -215,7 +215,7 @@ namespace yoba::ui {
 	}
 
 	void Element::onEvent(Event& event) {
-		event.setHandled(true);
+
 	}
 
 	bool Element::isCaptured() {

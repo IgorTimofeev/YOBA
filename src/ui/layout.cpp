@@ -17,13 +17,15 @@ namespace yoba::ui {
 	}
 
 	void Layout::onEvent(Event& event) {
+		Element::onEvent(event);
+
 		if (getChildrenCount() == 0 || isCaptured())
 			return;
 
 		size_t i = getChildrenCount() - 1;
 
 		while (true) {
-			(*this)[i]->handleEvent(event);
+			_children[i]->handleEvent(event);
 
 			if (event.isHandled() || i == 0)
 				return;
