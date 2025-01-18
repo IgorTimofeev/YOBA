@@ -548,7 +548,7 @@ namespace yoba::ui {
 
 	}
 
-	Size KeyboardButtonsLayout::onMeasure(Renderer* renderer, const Size& availableSize) {
+	Size KeyboardButtonsLayout::onMeasure(const Size& availableSize) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)

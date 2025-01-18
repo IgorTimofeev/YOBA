@@ -88,7 +88,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+			Size onMeasure(const Size& availableSize) override {
 				const auto& contentSize = Size(
 					_horizontalScrollMode == ScrollMode::disabled
 					? availableSize.getWidth()
@@ -105,7 +105,7 @@ namespace yoba::ui {
 					if (!element->isVisible())
 						continue;
 
-					element->measure(renderer, contentSize);
+					element->measure(contentSize);
 
 					const auto& elementSize = element->getMeasuredSize();
 
@@ -116,8 +116,8 @@ namespace yoba::ui {
 						result.setHeight(elementSize.getHeight());
 				}
 
-				_horizontalScrollBar.measure(renderer, availableSize);
-				_verticalScrollBar.measure(renderer, availableSize);
+				_horizontalScrollBar.measure(availableSize);
+				_verticalScrollBar.measure(availableSize);
 
 				return result;
 			}

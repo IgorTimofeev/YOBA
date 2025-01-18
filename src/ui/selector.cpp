@@ -94,5 +94,7 @@ namespace yoba::ui {
 
 	void SelectorItem::setSelected(bool value) {
 		_isSelected = value;
+
+		invalidate();
 	}
 }

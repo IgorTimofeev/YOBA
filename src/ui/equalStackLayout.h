@@ -37,7 +37,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+			Size onMeasure(const Size& availableSize) override {
 				auto result = Size();
 
 				size_t
@@ -60,7 +60,6 @@ namespace yoba::ui {
 
 							if (isFit(child)) {
 								child->measure(
-									renderer,
 									Size(
 										Size::infinity,
 										availableSize.getHeight()
@@ -93,7 +92,6 @@ namespace yoba::ui {
 
 							if (!isFit(child)) {
 								child->measure(
-									renderer,
 									Size(
 										equalSize,
 										availableSize.getHeight()
@@ -121,7 +119,6 @@ namespace yoba::ui {
 
 							if (isFit(child)) {
 								child->measure(
-									renderer,
 									Size(
 										availableSize.getWidth(),
 										Size::infinity
@@ -154,7 +151,6 @@ namespace yoba::ui {
 
 							if (!isFit(child)) {
 								child->measure(
-									renderer,
 									Size(
 										availableSize.getWidth(),
 										equalSize

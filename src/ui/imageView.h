@@ -36,7 +36,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+			Size onMeasure(const Size& availableSize) override {
 				return
 					getImage()
 					? getImage()->getSize()

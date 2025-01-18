@@ -30,10 +30,9 @@ namespace yoba::ui {
 		invalidate();
 	}
 
-	Size Element::onMeasure(Renderer* renderer, const Size& availableSize) {
+	Size Element::onMeasure(const Size& availableSize) {
 		return { 0, 0 };
 	}
-
 
 	void Element::computeMeasureShit(
 		const uint16_t &size,
@@ -59,11 +58,11 @@ namespace yoba::ui {
 
 	}
 
-	void Element::measure(Renderer* renderer, const Size& availableSize) {
+	void Element::measure(const Size& availableSize) {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
 
-		auto desiredSize = onMeasure(renderer, Size(
+		auto desiredSize = onMeasure(Size(
 			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));

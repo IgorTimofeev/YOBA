@@ -64,7 +64,7 @@ namespace yoba::ui {
 
 		// Measuring & arranging child elements
 		if (!_isMeasuredAndArranged) {
-			measure(_renderer, getSize());
+			measure(getSize());
 			arrange(Bounds(getSize()));
 
 			_isMeasuredAndArranged = true;

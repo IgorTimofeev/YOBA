@@ -39,7 +39,7 @@ namespace yoba::ui {
 
 			virtual ~Element();
 
-			void measure(Renderer* renderer, const Size& availableSize);
+			void measure(const Size& availableSize);
 			void arrange(const Bounds& bounds);
 
 			virtual void render(Renderer* renderer);
@@ -97,7 +97,7 @@ namespace yoba::ui {
 			virtual void onCaptureChanged();
 
 			virtual void onTick();
-			virtual Size onMeasure(Renderer* renderer, const Size& availableSize);
+			virtual Size onMeasure(const Size& availableSize);
 			virtual void onArrange(const Bounds& bounds);
 			virtual void onBoundsChanged();
 			virtual void onRender(Renderer* renderer);

@@ -25,7 +25,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+			Size onMeasure(const Size& availableSize) override {
 				auto result = Size();
 
 				size_t visibleChildrenCount = 0;
@@ -37,7 +37,6 @@ namespace yoba::ui {
 								continue;
 
 							child->measure(
-								renderer,
 								Size(
 									Size::infinity,
 									availableSize.getHeight()
@@ -65,7 +64,6 @@ namespace yoba::ui {
 								continue;
 
 							child->measure(
-								renderer,
 								Size(
 									availableSize.getWidth(),
 									Size::infinity

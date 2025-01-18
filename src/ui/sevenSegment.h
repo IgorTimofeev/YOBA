@@ -12,7 +12,7 @@ namespace yoba::ui {
 		public:
 			static const uint32_t dashes = 0xFFFFFFFF;
 
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+			Size onMeasure(const Size& availableSize) override {
 				return {
 					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
 					getDigitHeight()

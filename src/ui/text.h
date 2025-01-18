@@ -21,7 +21,7 @@ namespace yoba::ui {
 				setPrimaryColor(foreground);
 			}
 
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override {
+			Size onMeasure(const Size& availableSize) override {
 				const auto font = getFont();
 
 				return

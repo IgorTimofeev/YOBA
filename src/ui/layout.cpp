@@ -104,14 +104,14 @@ namespace yoba::ui {
 		removeChild(child);
 	}
 
-	Size Layout::onMeasure(Renderer* renderer, const Size& availableSize) {
+	Size Layout::onMeasure(const Size& availableSize) {
 		auto result = Size();
 
 		for (auto child : _children) {
 			if (!child->isVisible())
 				continue;
 
-			child->measure(renderer, availableSize);
+			child->measure(availableSize);
 
 			if (child->getMeasuredSize().getWidth() > result.getWidth())
 				result.setWidth(child->getMeasuredSize().getWidth());

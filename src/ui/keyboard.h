@@ -325,7 +325,7 @@ namespace yoba::ui {
 			explicit KeyboardButtonsLayout(Keyboard* keyboard);
 
 		protected:
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
+			Size onMeasure(const Size& availableSize) override;
 
 			void onArrange(const Bounds& buttonIndexTo) override;
 
@@ -458,7 +458,7 @@ namespace yoba::ui {
 
 	class KeyboardApplicationLayout : public Layout {
 		protected:
-			Size onMeasure(Renderer* renderer, const Size& availableSize) override;
+			Size onMeasure(const Size& availableSize) override;
 
 			void onArrange(const Bounds& bounds) override;
 	};
