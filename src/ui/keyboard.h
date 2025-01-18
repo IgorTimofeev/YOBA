@@ -389,17 +389,17 @@ namespace yoba::ui {
 
 			void setBackgroundColor(const Color* value);
 
-			const Color* getDefaultButtonPrimaryColor() const;
-			void setDefaultButtonPrimaryColor(const Color* value);
+			const Color* getDefaultKeyPrimaryColor() const;
+			void setDefaultKeyPrimaryColor(const Color* value);
 
-			const Color* getDefaultButtonSecondaryColor() const;
-			void setDefaultButtonSecondaryColor(const Color* value);
+			const Color* getDefaultKeySecondaryColor() const;
+			void setDefaultKeySecondaryColor(const Color* value);
 
-			const Color* getActionButtonPrimaryColor() const;
-			void setActionButtonPrimaryColor(const Color* value);
+			const Color* getActionKeyPrimaryColor() const;
+			void setActionKeyPrimaryColor(const Color* value);
 
-			const Color* getActionButtonSecondaryColor() const;
-			void setActionButtonSecondaryColor(const Color* actionButtonSecondaryColor);
+			const Color* getActionKeySecondaryColor() const;
+			void setActionKeySecondaryColor(const Color* actionButtonSecondaryColor);
 
 			uint8_t getHorizontalKeySpacing() const;
 			void setHorizontalKeySpacing(uint8_t horizontalKeySpacing);
@@ -407,8 +407,11 @@ namespace yoba::ui {
 			uint8_t getVerticalKeySpacing() const;
 			void setVerticalKeySpacing(uint8_t value);
 
-			void setKeyHeight(float keyHeight);
-			float getKeyHeight() const;
+			uint8_t getKeyCornerRadius() const;
+			void setKeyCornerRadius(uint8_t value);
+
+			uint16_t getKeyHeight() const;
+			void setKeyHeight(uint16_t value);
 
 			KeyboardCase getCase() const;
 			void setCase(KeyboardCase value);
@@ -427,13 +430,14 @@ namespace yoba::ui {
 			void setContinuousTypingInterval(uint16_t value);
 
 		private:
-			const Color* _defaultButtonPrimaryColor = nullptr;
-			const Color* _defaultButtonSecondaryColor = nullptr;
-			const Color* _actionButtonPrimaryColor = nullptr;
-			const Color* _actionButtonSecondaryColor = nullptr;
+			const Color* _defaultKeyPrimaryColor = nullptr;
+			const Color* _defaultKeySecondaryColor = nullptr;
+			const Color* _actionKeyPrimaryColor = nullptr;
+			const Color* _actionKeySecondaryColor = nullptr;
 
 			KeyboardCase _case = KeyboardCase::lower;
 
+			uint8_t _keyCornerRadius = 0;
 			uint16_t _continuousTypingDelay = 500;
 			uint16_t _continuousTypingInterval = 50;
 
@@ -445,9 +449,9 @@ namespace yoba::ui {
 			Rectangle _backgroundPanel = Rectangle();
 			KeyboardButtonsLayout _buttonsLayout;
 
-			uint8_t _horizontalKeySpacing = 2;
-			uint8_t _verticalKeySpacing = 2;
-			float _keyHeight = 0.1f;
+			uint8_t _horizontalKeySpacing = 1;
+			uint8_t _verticalKeySpacing = 1;
+			uint16_t _keyHeight = 25;
 
 			void deleteLayoutAndUIElements();
 	};

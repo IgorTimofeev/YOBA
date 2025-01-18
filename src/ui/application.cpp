@@ -1,7 +1,6 @@
 #include "application.h"
 #include "element.h"
 #include "animation.h"
-#include <sstream>
 
 namespace yoba::ui {
 	Application::Application(Renderer* renderer) : _renderer(renderer) {

@@ -20,6 +20,7 @@ namespace yoba::ui {
 			void addItem(SelectorItem* item);
 
 			int32_t getSelectedIndex() const;
+			SelectorItem* getSelectedItem();
 
 			void setSelectedIndex(int32_t index);
 

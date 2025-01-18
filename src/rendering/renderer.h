@@ -58,14 +58,7 @@ namespace yoba {
 			* @param color Color with which the text will be rendered
 			* @param text Template-based pointer to first character in text
 			*/
-			template<typename TChar>
-			void renderText(const Point& point, const Font* font, const Color* color, const std::basic_string_view<TChar>& text);
-			void renderText(const Point& point, const Font* font, const Color* color, const std::string_view& text);
-			void renderText(const Point& point, const Font* font, const Color* color, const std::wstring_view& text);
-
-			template<typename TChar>
-			void renderChar(const Point& point, const Font* font, const Color* color, TChar ch);
-			void renderChar(const Point& point, const Font* font, const Color* color, char ch);
+			void renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& text);
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch);
 
 			virtual void flush() = 0;
@@ -88,91 +81,4 @@ namespace yoba {
 
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color);
 	};
-
-	template<typename TChar>
-	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::basic_string_view<TChar>& text) {
-		const auto& viewport = getViewport();
-		const auto viewportX2 = viewport.getX2();
-
-		// Skipping rendering if text is obviously not in viewport
-		if (
-			point.getX() > viewportX2
-			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getHeight() < viewport.getY()
-			|| !color
-		)
-			return;
-
-		const Glyph* glyph;
-
-		int32_t
-			x = point.getX(),
-			x2;
-
-		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-			// Trying to find glyph matched to char
-			glyph = font->getGlyph(text[charIndex]);
-
-			// If glyph was found in bitmap & can be rendered as "human-readable"
-			// For example,U+007F "DEL" symbol often has zero width in some fonts
-			if (glyph && glyph->getWidth() > 0) {
-				x2 = x + glyph->getWidth();
-
-				// Rendering current glyph only if it's in viewport
-				if (x2 > viewport.getX()) {
-					renderGlyph(
-						Point(
-							x,
-							point.getY()
-						),
-						font,
-						color,
-						glyph
-					);
-				}
-
-				x = x2;
-			}
-			else {
-				renderMissingGlyph(Point(x, point.getY()), font, color);
-
-				x += Font::missingGlyphWidth;
-			}
-
-			// Stopping rendering if next glyphs will not be in viewport
-			if (x > viewportX2)
-				break;
-		}
-	}
-
-	template<typename TChar>
-	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, TChar ch) {
-		const auto& viewport = getViewport();
-		const auto viewportX2 = viewport.getX2();
-
-		if (
-			point.getX() > viewportX2
-			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getHeight() < viewport.getY()
-			|| !color
-		)
-			return;
-
-		const auto glyph = font->getGlyph(ch);
-
-		if (glyph) {
-			if (point.getX() + glyph->getWidth() < viewport.getX())
-				return;
-
-			renderGlyph(
-				point,
-				font,
-				color,
-				glyph
-			);
-		}
-		else {
-			renderMissingGlyph(point, font, color);
-		}
-	}
 }

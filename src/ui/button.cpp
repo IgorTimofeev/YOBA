@@ -27,7 +27,7 @@ namespace yoba::ui {
 				: getSecondaryColor();
 
 			if (secondaryColor) {
-				renderer->renderText(
+				renderer->renderString(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText()) / 2,
 						bounds.getYCenter() - font->getHeight() / 2

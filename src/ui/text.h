@@ -42,7 +42,7 @@ namespace yoba::ui {
 				auto primaryColor = getPrimaryColor();
 
 				if (primaryColor) {
-					renderer->renderText(
+					renderer->renderString(
 						getBounds().getPosition(),
 						font,
 						primaryColor,

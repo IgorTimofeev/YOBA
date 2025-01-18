@@ -259,26 +259,26 @@ namespace yoba::ui {
 		_column(column)
 	{
 		setFocusable(false);
-		setCornerRadius(2);
+		setCornerRadius(_keyboard->getKeyCornerRadius());
 		setFont(_keyboard->getFont());
 		updateTextFromCase();
 
 		switch (getKey()->getType()) {
 			case KeyboardKeyType::normal: {
-				setPrimaryColor(_keyboard->getDefaultButtonPrimaryColor());
-				setSecondaryColor(_keyboard->getDefaultButtonSecondaryColor());
+				setPrimaryColor(_keyboard->getDefaultKeyPrimaryColor());
+				setSecondaryColor(_keyboard->getDefaultKeySecondaryColor());
 
-				setPressedPrimaryColor(_keyboard->getDefaultButtonSecondaryColor());
-				setPressedSecondaryColor(_keyboard->getDefaultButtonPrimaryColor());
+				setPressedPrimaryColor(_keyboard->getDefaultKeySecondaryColor());
+				setPressedSecondaryColor(_keyboard->getDefaultKeyPrimaryColor());
 
 				break;
 			}
 			default: {
-				setPrimaryColor(_keyboard->getActionButtonPrimaryColor());
-				setSecondaryColor(_keyboard->getActionButtonSecondaryColor());
+				setPrimaryColor(_keyboard->getActionKeyPrimaryColor());
+				setSecondaryColor(_keyboard->getActionKeySecondaryColor());
 
-				setPressedPrimaryColor(_keyboard->getActionButtonSecondaryColor());
-				setPressedSecondaryColor(_keyboard->getActionButtonPrimaryColor());
+				setPressedPrimaryColor(_keyboard->getActionKeySecondaryColor());
+				setPressedSecondaryColor(_keyboard->getActionKeyPrimaryColor());
 
 				break;
 			}
@@ -367,36 +367,36 @@ namespace yoba::ui {
 		_backgroundPanel.setPrimaryColor(value);
 	}
 
-	const Color* Keyboard::getDefaultButtonPrimaryColor() const {
-		return _defaultButtonPrimaryColor;
+	const Color* Keyboard::getDefaultKeyPrimaryColor() const {
+		return _defaultKeyPrimaryColor;
 	}
 
-	void Keyboard::setDefaultButtonPrimaryColor(const Color* value) {
-		_defaultButtonPrimaryColor = value;
+	void Keyboard::setDefaultKeyPrimaryColor(const Color* value) {
+		_defaultKeyPrimaryColor = value;
 	}
 
-	const Color* Keyboard::getDefaultButtonSecondaryColor() const {
-		return _defaultButtonSecondaryColor;
+	const Color* Keyboard::getDefaultKeySecondaryColor() const {
+		return _defaultKeySecondaryColor;
 	}
 
-	void Keyboard::setDefaultButtonSecondaryColor(const Color* value) {
-		_defaultButtonSecondaryColor = value;
+	void Keyboard::setDefaultKeySecondaryColor(const Color* value) {
+		_defaultKeySecondaryColor = value;
 	}
 
-	const Color* Keyboard::getActionButtonPrimaryColor() const {
-		return _actionButtonPrimaryColor;
+	const Color* Keyboard::getActionKeyPrimaryColor() const {
+		return _actionKeyPrimaryColor;
 	}
 
-	void Keyboard::setActionButtonPrimaryColor(const Color* value) {
-		_actionButtonPrimaryColor = value;
+	void Keyboard::setActionKeyPrimaryColor(const Color* value) {
+		_actionKeyPrimaryColor = value;
 	}
 
-	const Color* Keyboard::getActionButtonSecondaryColor() const {
-		return _actionButtonSecondaryColor;
+	const Color* Keyboard::getActionKeySecondaryColor() const {
+		return _actionKeySecondaryColor;
 	}
 
-	void Keyboard::setActionButtonSecondaryColor(const Color* actionButtonSecondaryColor) {
-		_actionButtonSecondaryColor = actionButtonSecondaryColor;
+	void Keyboard::setActionKeySecondaryColor(const Color* actionButtonSecondaryColor) {
+		_actionKeySecondaryColor = actionButtonSecondaryColor;
 	}
 
 	KeyboardLayout* Keyboard::getLayout() const {
@@ -466,12 +466,12 @@ namespace yoba::ui {
 		_verticalKeySpacing = value;
 	}
 
-	float Keyboard::getKeyHeight() const {
+	uint16_t Keyboard::getKeyHeight() const {
 		return _keyHeight;
 	}
 
-	void Keyboard::setKeyHeight(float keyHeight) {
-		_keyHeight = keyHeight;
+	void Keyboard::setKeyHeight(uint16_t value) {
+		_keyHeight = value;
 	}
 
 	KeyboardCase Keyboard::getCase() const {
@@ -534,6 +534,14 @@ namespace yoba::ui {
 		_charactersLayoutBuilder = charactersLayoutBuilder;
 	}
 
+	uint8_t Keyboard::getKeyCornerRadius() const {
+		return _keyCornerRadius;
+	}
+
+	void Keyboard::setKeyCornerRadius(uint8_t value) {
+		_keyCornerRadius = value;
+	}
+
 	// ----------------------------- KeyboardButtonsLayout -----------------------------
 
 	KeyboardButtonsLayout::KeyboardButtonsLayout(Keyboard* keyboard) : _keyboard(keyboard) {
@@ -546,11 +554,9 @@ namespace yoba::ui {
 		if (!layout)
 			return { 0, 0 };
 
-		const auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * availableSize.getWidth());
-
 		return Size(
 			availableSize.getWidth(),
-			(buttonHeight + _keyboard->getVerticalKeySpacing()) * layout->keys.size() - _keyboard->getVerticalKeySpacing()
+			(_keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing()) * layout->keys.size() - _keyboard->getVerticalKeySpacing()
 		);
 	}
 
@@ -564,9 +570,8 @@ namespace yoba::ui {
 		uint8_t rowIndex = 0;
 		uint8_t rowButtonCount = 0;
 		uint16_t y = bounds.getY();
-		const auto buttonHeight = (uint16_t) (_keyboard->getKeyHeight() * bounds.getWidth());
 
-		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonHeight, &buttonIndexFrom](size_t buttonIndexTo) {
+		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom](size_t buttonIndexTo) {
 			if (rowButtonCount == 0)
 				return;
 
@@ -619,7 +624,7 @@ namespace yoba::ui {
 					std::round(x),
 					y,
 					std::round(buttonWidth),
-					buttonHeight
+					_keyboard->getKeyHeight()
 				));
 
 				x += buttonWidth + _keyboard->getHorizontalKeySpacing();
@@ -632,7 +637,7 @@ namespace yoba::ui {
 			if (button->getRow() > rowIndex) {
 				arrangeRow(i);
 
-				y += buttonHeight + _keyboard->getVerticalKeySpacing();
+				y += _keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing();
 				buttonIndexFrom = i;
 				rowButtonCount = 0;
 				rowIndex++;

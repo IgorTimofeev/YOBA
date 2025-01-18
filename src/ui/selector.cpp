@@ -29,6 +29,13 @@ namespace yoba::ui {
 		return _selectedIndex;
 	}
 
+	SelectorItem* Selector::getSelectedItem() {
+		return
+			_selectedIndex >= 0
+			? getItemAt(_selectedIndex)
+			: nullptr;
+	}
+
 	void Selector::setSelectedIndex(int32_t index) {
 		if (index == _selectedIndex || !_itemsLayout)
 			return;
