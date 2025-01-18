@@ -8,7 +8,6 @@ namespace yoba {
 			Glyph(uint32_t bitmapBitIndex, uint16_t width);
 
 			uint32_t getBitmapBitIndex() const;
-
 			uint8_t getWidth() const;
 
 		private:

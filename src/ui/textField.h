@@ -2,13 +2,14 @@
 
 #include <cstdint>
 #include "element.h"
-#include "ui/traits/focusableElement.h"
-#include "ui/traits/cornerRadiusElement.h"
-#include "ui/traits/primaryColorElement.h"
-#include "ui/traits/secondaryColorElement.h"
-#include "ui/traits/textElement.h"
-#include "ui/traits/fontElement.h"
-#include "ui/traits/borderElement.h"
+#include "traits/focusableElement.h"
+#include "traits/cornerRadiusElement.h"
+#include "traits/primaryColorElement.h"
+#include "traits/secondaryColorElement.h"
+#include "traits/textElement.h"
+#include "traits/fontElement.h"
+#include "traits/borderElement.h"
+#include "traits/fontScaleElement.h"
 #include "keyboard.h"
 
 #include "callback.h"
@@ -23,7 +24,8 @@ namespace yoba::ui {
 		public CornerRadiusElement,
 		public BorderElement,
 		public TextElement,
-		public FontElement
+		public FontElement,
+		public FontScaleElement
 	{
 		public:
 			void onTick() override;

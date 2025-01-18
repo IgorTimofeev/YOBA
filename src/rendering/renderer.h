@@ -56,10 +56,10 @@ namespace yoba {
 			* @param point Position of upper-left corner of the first character in text
 			* @param font Font with which the text will be rendered
 			* @param color Color with which the text will be rendered
-			* @param text Template-based pointer to first character in text
+			* @param string Template-based pointer to first character in text
 			*/
-			void renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& text);
-			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch);
+			void renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& string, uint8_t fontScale = 1);
+			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
 
 			virtual void flush() = 0;
 
@@ -77,8 +77,7 @@ namespace yoba {
 
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
-			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph);
-
-			void renderMissingGlyph(const Point& point, const Font* font, const Color* color);
+			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
+			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale);
 	};
 }

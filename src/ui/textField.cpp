@@ -68,10 +68,11 @@ namespace yoba::ui {
 		));
 
 		const auto& text = getText();
+		const auto fontHeight = font->getHeight(getFontScale());
 
 		auto textPosition = Point(
 			bounds.getX() + _textMargin - _scrollPosition,
-			bounds.getYCenter() - font->getHeight() / 2
+			bounds.getYCenter() - fontHeight / 2
 		);
 
 		auto blinkX = textPosition.getX();
@@ -81,13 +82,14 @@ namespace yoba::ui {
 				textPosition,
 				font,
 				secondaryColor,
-				text[charIndex]
+				text[charIndex],
+				getFontScale()
 			);
 
 			if (charIndex == _cursorPosition)
 				blinkX = textPosition.getX();
 
-			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex]));
+			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex], getFontScale()));
 		}
 
 		renderer->popViewport(oldViewport);
@@ -101,7 +103,7 @@ namespace yoba::ui {
 			renderer->renderFilledRectangle(
 				Bounds(
 					blinkX,
-					textPosition.getY() + font->getHeight() / 2 - _cursorSize.getHeight() / 2,
+					textPosition.getY() + fontHeight / 2 - _cursorSize.getHeight() / 2,
 					_cursorSize.getWidth(),
 					_cursorSize.getHeight()
 				),
@@ -178,7 +180,7 @@ namespace yoba::ui {
 				cursorPosition--;
 
 				if (_scrollPosition > 0) {
-					const auto previousCharWidth = font->getCharWidth(text[cursorPosition]);
+					const auto previousCharWidth = font->getCharWidth(text[cursorPosition], getFontScale());
 
 					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
 				}
@@ -190,7 +192,7 @@ namespace yoba::ui {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
 			if (cursorPosition < text.length()) {
-				int32_t pizda = cursorX + font->getCharWidth(text[cursorPosition]) - boundsWidthWithoutMargin;
+				int32_t pizda = cursorX + font->getCharWidth(text[cursorPosition], getFontScale()) - boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 

@@ -23,18 +23,13 @@ namespace yoba {
 			const Glyph* getGlyphs() const;
 			const uint8_t* getBitmap() const;
 
-			template<typename TChar>
-			const Glyph* getGlyph(TChar codepoint) const;
+			const Glyph* getGlyph(wchar_t codepoint) const;
+			uint8_t getCharWidth(wchar_t codepoint, uint8_t scale = 1) const;
 
-			template<typename TChar>
-			uint8_t getCharWidth(TChar codepoint) const;
-
-			template<typename TChar>
-			uint16_t getWidth(const std::basic_string_view<TChar>& text) const;
-
-			uint16_t getWidth(const std::wstring_view& text) const;
+			uint16_t getWidth(const std::wstring_view& text, uint8_t scale = 1) const;
 
 			uint8_t getHeight() const;
+			uint8_t getHeight(uint8_t scale) const;
 
 		private:
 			const uint32_t _fromCodepoint;
@@ -43,29 +38,4 @@ namespace yoba {
 			const Glyph* _glyphs;
 			const uint8_t* _bitmap;
 	};
-
-	template<typename TChar>
-	const Glyph* Font::getGlyph(TChar codepoint) const {
-		return
-			codepoint < _fromCodepoint || codepoint > _toCodepoint
-			? nullptr
-			: &_glyphs[codepoint - _fromCodepoint];
-	}
-
-	template<typename TChar>
-	uint8_t Font::getCharWidth(TChar codepoint) const {
-		const auto glyph = getGlyph(codepoint);
-
-		return glyph ? glyph->getWidth() : missingGlyphWidth;
-	}
-
-	template<typename TChar>
-	uint16_t Font::getWidth(const std::basic_string_view<TChar>& text) const {
-		uint16_t width = 0;
-
-		for (size_t charIndex = 0; charIndex < text.length(); charIndex++)
-			width += getCharWidth(text[charIndex]);
-
-		return width;
-	}
 }

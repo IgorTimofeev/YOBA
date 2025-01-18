@@ -1,24 +1,25 @@
 #pragma once
 
 #include "element.h"
-#include "ui/traits/textElement.h"
-#include "ui/traits/primaryColorElement.h"
-#include "ui/traits/fontElement.h"
+#include "traits/textElement.h"
+#include "traits/textColorElement.h"
+#include "traits/fontElement.h"
+#include "traits/fontScaleElement.h"
 #include "rendering/renderer.h"
 #include "size.h"
 
 namespace yoba::ui {
-	class Text : public TextElement, public FontElement, public PrimaryColorElement {
+	class Text : public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
 		public:
 			Text() = default;
 
 			Text(const Font* font, const Color* foreground) {
 				setFont(font);
-				setPrimaryColor(foreground);
+				setTextColor(foreground);
 			}
 
 			explicit Text(const Color* foreground) {
-				setPrimaryColor(foreground);
+				setTextColor(foreground);
 			}
 
 			Size onMeasure(const Size& availableSize) override {
@@ -27,8 +28,8 @@ namespace yoba::ui {
 				return
 					font
 					? Size(
-						font->getWidth(getText()),
-						font->getHeight()
+						font->getWidth(getText(), getFontScale()),
+						font->getHeight(getFontScale())
 					)
 					: Size();
 			}
@@ -39,14 +40,15 @@ namespace yoba::ui {
 				if (!font)
 					return;
 
-				auto primaryColor = getPrimaryColor();
+				auto color = getTextColor();
 
-				if (primaryColor) {
+				if (color) {
 					renderer->renderString(
 						getBounds().getPosition(),
 						font,
-						primaryColor,
-						getText()
+						color,
+						getText(),
+						getFontScale()
 					);
 				}
 			}

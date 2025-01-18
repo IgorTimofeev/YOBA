@@ -11,14 +11,14 @@ namespace yoba::ui {
 			Rectangle() = default;
 
 			explicit Rectangle(const Color* color) {
-				setPrimaryColor(color);
+				setFillColor(color);
 			}
 
 			void onRender(Renderer* renderer) override {
-				auto primaryColor = getPrimaryColor();
+				auto color = getFillColor();
 
-				if (primaryColor)
-					renderer->renderFilledRectangle(getBounds(), getCornerRadius(), primaryColor);
+				if (color)
+					renderer->renderFilledRectangle(getBounds(), getCornerRadius(), color);
 			}
 	};
 }

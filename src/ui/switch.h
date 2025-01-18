@@ -1,14 +1,14 @@
 #pragma once
 
 #include "element.h"
-#include "traits/checkableElement.h"
+#include "traits/checkedElement.h"
 #include "traits/cornerRadiusElement.h"
 #include "traits/focusableElement.h"
 #include "event.h"
 #include "animation.h"
 
 namespace yoba::ui {
-	class Switch : public CheckableElement, public CornerRadiusElement, public FocusableElement {
+	class Switch : public CheckedElement, public CornerRadiusElement, public FocusableElement {
 		public:
 			Switch() {
 
@@ -111,7 +111,7 @@ namespace yoba::ui {
 			}
 
 			void onIsCheckedChanged() override {
-				CheckableElement::onIsCheckedChanged();
+				CheckedElement::onIsCheckedChanged();
 
 				startAnimation(new Animation(250, [this](double position) {
 					const auto& bounds = getBounds();

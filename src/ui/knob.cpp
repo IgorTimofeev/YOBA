@@ -7,11 +7,11 @@ namespace yoba::ui {
 		const auto center = bounds.getCenter();
 
 		// Primary circle
-		if (getPrimaryColor()) {
+		if (getBackgroundColor()) {
 			renderer->renderFilledCircle(
 				center,
 				radius,
-				getPrimaryColor()
+				getBackgroundColor()
 			);
 		}
 

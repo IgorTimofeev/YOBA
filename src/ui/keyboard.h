@@ -389,16 +389,16 @@ namespace yoba::ui {
 
 			void setBackgroundColor(const Color* value);
 
-			const Color* getDefaultKeyPrimaryColor() const;
-			void setDefaultKeyPrimaryColor(const Color* value);
+			const Color* getDefaultKeyBackgroundColor() const;
+			void setDefaultKeyBackgroundColor(const Color* value);
 
-			const Color* getDefaultKeySecondaryColor() const;
-			void setDefaultKeySecondaryColor(const Color* value);
+			const Color* getDefaultKeyTextColor() const;
+			void setDefaultKeyTextColor(const Color* value);
 
-			const Color* getActionKeyPrimaryColor() const;
-			void setActionKeyPrimaryColor(const Color* value);
+			const Color* getActionKeyBackgroundColor() const;
+			void setActionKeyBackgroundColor(const Color* value);
 
-			const Color* getActionKeySecondaryColor() const;
+			const Color* getActionKeyTextColor() const;
 			void setActionKeySecondaryColor(const Color* actionButtonSecondaryColor);
 
 			uint8_t getHorizontalKeySpacing() const;

@@ -6,7 +6,7 @@
 #include "traits/orientationElement.h"
 
 namespace yoba::ui {
-	class ScrollBar : public OrientationElement, public CornerRadiusElement, public PrimaryColorElement {
+	class ScrollBar : public OrientationElement, public CornerRadiusElement {
 		public:
 			uint16_t getPosition() const {
 				return _position;
@@ -38,9 +38,20 @@ namespace yoba::ui {
 				invalidate();
 			}
 
+			const Color* getThumbColor() const {
+				return _thumbColor;
+			}
+
+			void setThumbColor(const Color* value) {
+				_thumbColor = value;
+
+				invalidate();
+			}
+
 		protected:
 			void onRender(Renderer* renderer) override {
-				if (!getPrimaryColor())
+				// Thumb
+				if (!_thumbColor)
 					return;
 
 				const auto& bounds = getBounds();
@@ -56,7 +67,7 @@ namespace yoba::ui {
 							bounds.getHeight()
 						),
 						getCornerRadius(),
-						getPrimaryColor()
+						_thumbColor
 					);
 				}
 				else {
@@ -68,7 +79,7 @@ namespace yoba::ui {
 							size
 						),
 						getCornerRadius(),
-						getPrimaryColor()
+						_thumbColor
 					);
 				}
 			}
@@ -77,5 +88,7 @@ namespace yoba::ui {
 			uint16_t _position = 0;
 			uint16_t _viewportSize = 0;
 			uint16_t _totalSize = 0;
+
+			const Color* _thumbColor = nullptr;
 	};
 }

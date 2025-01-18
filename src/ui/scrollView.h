@@ -82,9 +82,9 @@ namespace yoba::ui {
 				_verticalScrollBar.setCornerRadius(value);
 			}
 
-			void setScrollBarColor(const Color* value) {
-				_horizontalScrollBar.setPrimaryColor(value);
-				_verticalScrollBar.setPrimaryColor(value);
+			void setScrollBarThumbColor(const Color* value) {
+				_horizontalScrollBar.setThumbColor(value);
+				_verticalScrollBar.setThumbColor(value);
 			}
 
 		protected:

@@ -10,13 +10,13 @@ namespace yoba::ui {
 			Circle() = default;
 
 			explicit Circle(const Color* color) {
-				setPrimaryColor(color);
+				setFillColor(color);
 			}
 
 			void onRender(Renderer* renderer) override {
-				auto primaryColor = getPrimaryColor();
+				auto color = getFillColor();
 
-				if (!primaryColor)
+				if (!color)
 					return;
 
 				const auto& bounds = getBounds();
@@ -24,7 +24,7 @@ namespace yoba::ui {
 				renderer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
 					min(bounds.getWidth(), bounds.getHeight()) / 2,
-					primaryColor
+					color
 				);
 			}
 	};

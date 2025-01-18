@@ -675,36 +675,58 @@ namespace yoba {
 		}
 	}
 
-	void Renderer::renderMissingGlyph(const Point& point, const Font* font, const Color* color) {
+	void Renderer::renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale) {
 		renderRectangle(
 			Bounds(
 				point.getX(),
 				point.getY(),
-				Font::missingGlyphWidth,
-				font->getHeight()
+				Font::missingGlyphWidth * fontScale,
+				font->getHeight() * fontScale
 			),
 			color
 		);
 	}
 
-	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph) {
-		auto bitmapBitIndex = glyph->getBitmapBitIndex();
+	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale) {
+		auto bitIndex = glyph->getBitmapBitIndex();
 		uint8_t bitmapByte;
 
-		for (uint8_t j = 0; j < font->getHeight(); j++) {
-			for (uint8_t i = 0; i < glyph->getWidth(); i++) {
-				bitmapByte = font->getBitmap()[bitmapBitIndex / 8];
+		// Non-scaled fonts can be drawn a little bit faster
+		if (fontScale == 1) {
+			for (uint8_t j = 0; j < font->getHeight(); j++) {
+				for (uint8_t i = 0; i < glyph->getWidth(); i++) {
+					bitmapByte = font->getBitmap()[bitIndex / 8];
 
-				// We have pixel!
-				if ((bitmapByte >> bitmapBitIndex % 8) & 1)
-					renderPixel(Point(point.getX() + i, point.getY() + j), color);
+					if ((bitmapByte >> bitIndex % 8) & 1)
+						renderPixel(Point(point.getX() + i, point.getY() + j), color);
 
-				bitmapBitIndex++;
+					bitIndex++;
+				}
+			}
+		}
+		else {
+			int32_t
+				x = point.getX(),
+				y = point.getY();
+
+			for (uint8_t j = 0; j < font->getHeight(); j++) {
+				for (uint8_t i = 0; i < glyph->getWidth(); i++) {
+					bitmapByte = font->getBitmap()[bitIndex / 8];
+
+					if ((bitmapByte >> bitIndex % 8) & 1)
+						renderFilledRectangle(Bounds(x, y, fontScale, fontScale), color);
+
+					bitIndex++;
+					x += fontScale;
+				}
+
+				x = point.getX();
+				y += fontScale;
 			}
 		}
 	}
 
-	void Renderer::renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& text) {
+	void Renderer::renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& string, uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
@@ -712,7 +734,7 @@ namespace yoba {
 		if (
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getHeight() < viewport.getY()
+			|| point.getY() + font->getHeight(fontScale) < viewport.getY()
 			|| !color
 		)
 			return;
@@ -723,14 +745,14 @@ namespace yoba {
 			x = point.getX(),
 			x2;
 
-		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
+		for (size_t charIndex = 0; charIndex < string.length(); charIndex++) {
 			// Trying to find glyph matched to char
-			glyph = font->getGlyph(text[charIndex]);
+			glyph = font->getGlyph(string[charIndex]);
 
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example,U+007F "DEL" symbol often has zero width in some fonts
 			if (glyph && glyph->getWidth() > 0) {
-				x2 = x + glyph->getWidth();
+				x2 = x + glyph->getWidth() * fontScale;
 
 				// Rendering current glyph only if it's in viewport
 				if (x2 > viewport.getX()) {
@@ -741,16 +763,17 @@ namespace yoba {
 						),
 						font,
 						color,
-						glyph
+						glyph,
+						fontScale
 					);
 				}
 
 				x = x2;
 			}
 			else {
-				renderMissingGlyph(Point(x, point.getY()), font, color);
+				renderMissingGlyph(Point(x, point.getY()), font, color, fontScale);
 
-				x += Font::missingGlyphWidth;
+				x += Font::missingGlyphWidth * fontScale;
 			}
 
 			// Stopping rendering if next glyphs will not be in viewport
@@ -759,14 +782,14 @@ namespace yoba {
 		}
 	}
 
-	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch) {
+	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
 		if (
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getHeight() < viewport.getY()
+			|| point.getY() + font->getHeight(fontScale) < viewport.getY()
 			|| !color
 		)
 			return;
@@ -774,18 +797,19 @@ namespace yoba {
 		const auto glyph = font->getGlyph(ch);
 
 		if (glyph) {
-			if (point.getX() + glyph->getWidth() < viewport.getX())
+			if (point.getX() + glyph->getWidth() * fontScale < viewport.getX())
 				return;
 
 			renderGlyph(
 				point,
 				font,
 				color,
-				glyph
+				glyph,
+				fontScale
 			);
 		}
 		else {
-			renderMissingGlyph(point, font, color);
+			renderMissingGlyph(point, font, color, fontScale);
 		}
 	}
 }

@@ -265,20 +265,20 @@ namespace yoba::ui {
 
 		switch (getKey()->getType()) {
 			case KeyboardKeyType::normal: {
-				setPrimaryColor(_keyboard->getDefaultKeyPrimaryColor());
-				setSecondaryColor(_keyboard->getDefaultKeySecondaryColor());
+				setDefaultBackgroundColor(_keyboard->getDefaultKeyBackgroundColor());
+				setDefaultTextColor(_keyboard->getDefaultKeyTextColor());
 
-				setPressedPrimaryColor(_keyboard->getDefaultKeySecondaryColor());
-				setPressedSecondaryColor(_keyboard->getDefaultKeyPrimaryColor());
+				setPressedBackgroundColor(_keyboard->getDefaultKeyTextColor());
+				setPressedTextColor(_keyboard->getDefaultKeyBackgroundColor());
 
 				break;
 			}
 			default: {
-				setPrimaryColor(_keyboard->getActionKeyPrimaryColor());
-				setSecondaryColor(_keyboard->getActionKeySecondaryColor());
+				setDefaultBackgroundColor(_keyboard->getActionKeyBackgroundColor());
+				setDefaultTextColor(_keyboard->getActionKeyTextColor());
 
-				setPressedPrimaryColor(_keyboard->getActionKeySecondaryColor());
-				setPressedSecondaryColor(_keyboard->getActionKeyPrimaryColor());
+				setPressedBackgroundColor(_keyboard->getActionKeyTextColor());
+				setPressedTextColor(_keyboard->getActionKeyBackgroundColor());
 
 				break;
 			}
@@ -360,38 +360,38 @@ namespace yoba::ui {
 	}
 
 	const Color* Keyboard::getBackgroundColor() const {
-		return _backgroundPanel.getPrimaryColor();
+		return _backgroundPanel.getFillColor();
 	}
 
 	void Keyboard::setBackgroundColor(const Color* value) {
-		_backgroundPanel.setPrimaryColor(value);
+		_backgroundPanel.setFillColor(value);
 	}
 
-	const Color* Keyboard::getDefaultKeyPrimaryColor() const {
+	const Color* Keyboard::getDefaultKeyBackgroundColor() const {
 		return _defaultKeyPrimaryColor;
 	}
 
-	void Keyboard::setDefaultKeyPrimaryColor(const Color* value) {
+	void Keyboard::setDefaultKeyBackgroundColor(const Color* value) {
 		_defaultKeyPrimaryColor = value;
 	}
 
-	const Color* Keyboard::getDefaultKeySecondaryColor() const {
+	const Color* Keyboard::getDefaultKeyTextColor() const {
 		return _defaultKeySecondaryColor;
 	}
 
-	void Keyboard::setDefaultKeySecondaryColor(const Color* value) {
+	void Keyboard::setDefaultKeyTextColor(const Color* value) {
 		_defaultKeySecondaryColor = value;
 	}
 
-	const Color* Keyboard::getActionKeyPrimaryColor() const {
+	const Color* Keyboard::getActionKeyBackgroundColor() const {
 		return _actionKeyPrimaryColor;
 	}
 
-	void Keyboard::setActionKeyPrimaryColor(const Color* value) {
+	void Keyboard::setActionKeyBackgroundColor(const Color* value) {
 		_actionKeyPrimaryColor = value;
 	}
 
-	const Color* Keyboard::getActionKeySecondaryColor() const {
+	const Color* Keyboard::getActionKeyTextColor() const {
 		return _actionKeySecondaryColor;
 	}
 

@@ -17,7 +17,7 @@ namespace yoba::ui {
 	}
 
 	void Layout::onEvent(Event& event) {
-		if (getChildrenCount() == 0)
+		if (getChildrenCount() == 0 || isCaptured())
 			return;
 
 		size_t i = getChildrenCount() - 1;
@@ -31,7 +31,6 @@ namespace yoba::ui {
 			i--;
 		}
 	}
-
 
 	size_t Layout::getChildrenCount() {
 		return _children.size();

@@ -4,7 +4,7 @@
 #include "../../callback.h"
 
 namespace yoba::ui {
-	class CheckableElement : public virtual Element {
+	class CheckedElement : public virtual Element {
 		public:
 			Callback<> isCheckedChanged {};
 

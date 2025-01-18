@@ -5,15 +5,14 @@
 #include "rendering/renderer.h"
 #include "cmath"
 #include "callback.h"
-#include "ui/traits/primaryColorElement.h"
-#include "ui/traits/secondaryColorElement.h"
+#include "ui/traits/backgroundColorElement.h"
 #include "event.h"
 #include "number.h"
 
 namespace yoba::ui {
 	class KnobRotateEvent;
 
-	class Knob : public PrimaryColorElement {
+	class Knob : public BackgroundColorElement {
 		public:
 			Callback<float, float> rotated {};
 

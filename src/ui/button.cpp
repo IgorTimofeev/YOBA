@@ -5,15 +5,13 @@ namespace yoba::ui {
 		const auto& bounds = getBounds();
 
 		// Primary color
-		auto primaryColor = getPrimaryColor();
+		auto backgroundColor = Color::select(isPressed(), _defaultBackgroundColor, _pressedBackgroundColor);
 
-		if (primaryColor) {
+		if (backgroundColor) {
 			renderer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				isPressed() && getPressedPrimaryColor()
-				? getPressedPrimaryColor()
-				: primaryColor
+				backgroundColor
 			);
 		}
 
@@ -21,20 +19,18 @@ namespace yoba::ui {
 		const auto font = getFont();
 
 		if (font) {
-			auto secondaryColor =
-				isPressed() && getPressedSecondaryColor()
-				? getPressedSecondaryColor()
-				: getSecondaryColor();
+			auto textColor = Color::select(isPressed(), _defaultTextColor, _pressedTextColor);
 
-			if (secondaryColor) {
+			if (textColor) {
 				renderer->renderString(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText()) / 2,
 						bounds.getYCenter() - font->getHeight() / 2
 					),
 					font,
-					secondaryColor,
-					getText()
+					textColor,
+					getText(),
+					getFontScale()
 				);
 			}
 		}
@@ -85,23 +81,39 @@ namespace yoba::ui {
 		_toggle = value;
 	}
 
-	const Color* Button::getPressedPrimaryColor() const {
-		return _pressedPrimaryColor;
+	const Color* Button::getPressedBackgroundColor() const {
+		return _pressedBackgroundColor;
 	}
 
-	void Button::setPressedPrimaryColor(const Color* value) {
-		_pressedPrimaryColor = value;
+	void Button::setPressedBackgroundColor(const Color* value) {
+		_pressedBackgroundColor = value;
 	}
 
-	const Color* Button::getPressedSecondaryColor() const {
-		return _pressedSecondaryColor;
+	const Color* Button::getPressedTextColor() const {
+		return _pressedTextColor;
 	}
 
-	void Button::setPressedSecondaryColor(const Color* value) {
-		_pressedSecondaryColor = value;
+	void Button::setPressedTextColor(const Color* value) {
+		_pressedTextColor = value;
 	}
 
 	void Button::onPressedChanged() {
 
+	}
+
+	const Color* Button::getDefaultBackgroundColor() const {
+		return _defaultBackgroundColor;
+	}
+
+	void Button::setDefaultBackgroundColor(const Color* value) {
+		_defaultBackgroundColor = value;
+	}
+
+	const Color* Button::getDefaultTextColor() const {
+		return _defaultTextColor;
+	}
+
+	void Button::setDefaultTextColor(const Color* value) {
+		_defaultTextColor = value;
 	}
 }
