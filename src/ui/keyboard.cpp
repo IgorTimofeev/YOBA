@@ -16,7 +16,7 @@ namespace yoba::ui {
 
 	}
 
-	float KeyboardKey::fit = -1;
+	float KeyboardKey::stretched = -1;
 
 	void KeyboardKey::tick(KeyboardButton* button) {
 
@@ -183,7 +183,7 @@ namespace yoba::ui {
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
 	SpaceKeyboardKey::SpaceKeyboardKey() :
-		KeyboardKey(KeyboardKeyType::normal, KeyCode::space, L" ", KeyboardKey::fit)
+		KeyboardKey(KeyboardKeyType::normal, KeyCode::space, L" ", KeyboardKey::stretched)
 	{
 
 	}
@@ -353,10 +353,6 @@ namespace yoba::ui {
 		}
 
 		delete _layout;
-
-//		Serial.printf("esp_get_free_heap_size: %d\n", esp_get_free_heap_size() / 1024);
-//		Serial.printf("esp_get_free_internal_heap_size: %d\n", esp_get_free_internal_heap_size() / 1024);
-//		Serial.printf("esp_get_minimum_free_heap_size: %d\n", esp_get_minimum_free_heap_size() / 1024);
 	}
 
 	const Color* Keyboard::getBackgroundColor() const {
@@ -577,8 +573,8 @@ namespace yoba::ui {
 
 			const uint16_t totalSpacing = _keyboard->getHorizontalKeySpacing() * (rowButtonCount - 1);
 			const uint16_t availableWidthWithoutSpacing = bounds.getWidth() - totalSpacing;
-			float nonFitWidthWithoutSpacing = 0;
-			uint8_t fitCount = 0;
+			float defaultWidthWithoutSpacing = 0;
+			uint8_t stretchedCount = 0;
 			float buttonWidth;
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
@@ -586,26 +582,29 @@ namespace yoba::ui {
 
 				buttonWidth = button->getKey()->getWidth();
 
-				if (buttonWidth == KeyboardKey::fit) {
-					fitCount++;
+				if (buttonWidth == KeyboardKey::stretched) {
+					stretchedCount++;
 				}
 				else {
-					nonFitWidthWithoutSpacing += buttonWidth * availableWidthWithoutSpacing;
+					defaultWidthWithoutSpacing += buttonWidth * availableWidthWithoutSpacing;
 				}
 			}
 
-			float fitWidth;
-			float x;
+			float stretchedWidth;
+			int32_t localX;
 
-			if (fitCount > 0) {
-				fitWidth = (availableWidthWithoutSpacing - nonFitWidthWithoutSpacing) / fitCount;
-				x = bounds.getX();
+			const float defaultWidthWithSpacing = defaultWidthWithoutSpacing + totalSpacing;
+
+			// 1 is for float rounding correction
+			const auto rowIsFullOfDefaultKeys = defaultWidthWithSpacing >= bounds.getWidth() - 1;
+
+			if (stretchedCount > 0) {
+				stretchedWidth = (availableWidthWithoutSpacing - defaultWidthWithoutSpacing) / stretchedCount;
+				localX = bounds.getX();
 			}
 			else {
-				const float nonFitWidthWithSpacing = nonFitWidthWithoutSpacing + totalSpacing;
-
-				fitWidth = 0;
-				x = bounds.getXCenter() - nonFitWidthWithSpacing / 2;
+				stretchedWidth = 0;
+				localX = bounds.getXCenter() - defaultWidthWithSpacing / 2;
 			}
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
@@ -613,21 +612,31 @@ namespace yoba::ui {
 
 				buttonWidth = button->getKey()->getWidth();
 
-				if (buttonWidth == KeyboardKey::fit) {
-					buttonWidth = fitWidth;
-				}
-				else {
-					buttonWidth *= availableWidthWithoutSpacing;
-				}
+				const uint16_t roundedButtonWidth =
+					// Not last key in row
+					i < buttonIndexTo - 1
+					? (
+						buttonWidth == KeyboardKey::stretched
+						? std::round(stretchedWidth)
+						: std::round(buttonWidth * availableWidthWithoutSpacing)
+					)
+					// Last
+					: (
+						stretchedCount > 0 || rowIsFullOfDefaultKeys
+						// Stretching to end
+						? bounds.getWidth() - localX
+						// Using desired key size
+						: std::round(buttonWidth * availableWidthWithoutSpacing)
+					);
 
 				button->arrange(Bounds(
-					std::round(x),
+					bounds.getX() + localX,
 					y,
-					std::round(buttonWidth),
+					roundedButtonWidth,
 					_keyboard->getKeyHeight()
 				));
 
-				x += buttonWidth + _keyboard->getHorizontalKeySpacing();
+				localX += roundedButtonWidth + _keyboard->getHorizontalKeySpacing();
 			}
 		};
 

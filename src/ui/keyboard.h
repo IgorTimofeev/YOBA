@@ -218,7 +218,7 @@ namespace yoba::ui {
 				float width
 			);
 
-			static float fit;
+			static float stretched;
 
 			virtual void tick(KeyboardButton* button);
 			virtual void onPressedChanged(KeyboardButton* button);
