@@ -9,7 +9,7 @@ namespace yoba::ui {
 
 	class Selector : public Layout {
 		public:
-			Callback<> selectionChanged {};
+			Callback<> selectionChanged;
 			
 			size_t getItemsCount();
 

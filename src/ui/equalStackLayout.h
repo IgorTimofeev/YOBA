@@ -297,7 +297,7 @@ namespace yoba::ui {
 			}
 
 		private:
-			std::unordered_set<Element*> _fitElements {};
+			std::unordered_set<Element*> _fitElements;
 
 			void tryRemoveComputedSizeElement(Element* element) {
 				auto it = _fitElements.find(element);

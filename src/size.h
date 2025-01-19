@@ -29,6 +29,9 @@ namespace yoba {
 
 			Size interpolate(const Size& to, const double &position) const;
 
+			bool operator==(const Size& rhs) const;
+			bool operator!=(const Size& rhs) const;
+
 		private:
 			uint16_t _width;
 			uint16_t _height;

@@ -7,8 +7,6 @@
 namespace yoba {
 	class MonochromeBufferedRenderer : public BufferedRenderer {
 		public:
-			explicit MonochromeBufferedRenderer(RenderTarget* renderTarget);
-
 			void flush() override;
 			void printBufferContentsAsBinary();
 

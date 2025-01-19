@@ -373,8 +373,8 @@ namespace yoba::ui {
 		
 			~Keyboard();
 
-			Callback<KeyCode, bool> keyPressedChanged {};
-			Callback<KeyCode, const std::wstring_view&> input {};
+			Callback<KeyCode, bool> keyPressedChanged;
+			Callback<KeyCode, const std::wstring_view&> input;
 
 			void setLayout(KeyboardLayout* value);
 			KeyboardLayout* getLayout() const;

@@ -7,7 +7,7 @@
 namespace yoba {
 	class PaletteBufferedRenderer : public BufferedRenderer {
 		public:
-			PaletteBufferedRenderer(RenderTarget* renderTarget, uint16_t paletteLength);
+			PaletteBufferedRenderer(uint16_t paletteLength);
 
 			uint32_t getPaletteColor(uint16_t index);
 			void setPaletteColor(uint16_t index, uint32_t value);
@@ -19,7 +19,7 @@ namespace yoba {
 			virtual uint16_t getPaletteIndex(const Color* color);
 
 		protected:
-			void allocate() override;
+			void onTargetChanged() override;
 
 			uint16_t getPaletteLength() const;
 			uint8_t* getPalette() const;

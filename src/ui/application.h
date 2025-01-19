@@ -9,10 +9,10 @@
 namespace yoba::ui {
 	class Application : public Layout {
 		public:
-			explicit Application(Renderer* renderer);
+			explicit Application();
 
-			virtual void setup();
 			virtual void tick();
+			virtual void setupRenderingHardware(RenderTarget* renderTarget, Renderer* renderer);
 
 			void invalidateLayout() override;
 			void invalidateRender() override;
@@ -22,6 +22,7 @@ namespace yoba::ui {
 			void startAnimation(Animation* animation) override;
 
 			Renderer* getRenderer() const;
+			void setRenderer(Renderer* value);
 
 			void addInputDevice(hardware::InputDevice* inputDevice);
 
@@ -41,9 +42,9 @@ namespace yoba::ui {
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;
 
-			std::vector<Animation*> _animations {};
-			std::vector<hardware::InputDevice*> _inputDevices {};
-			std::vector<std::function<void()>> _enqueuedTasksOnTick {};
+			std::vector<Animation*> _animations;
+			std::vector<hardware::InputDevice*> _inputDevices;
+			std::vector<std::function<void()>> _enqueuedTasksOnTick;
 
 			void animationsTick();
 			void inputDevicesTick();

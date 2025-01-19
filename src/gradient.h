@@ -33,6 +33,6 @@ namespace yoba {
 			void addRGBStops();
 
 		private:
-			std::vector<GradientStop> _stops {};
+			std::vector<GradientStop> _stops;
 	};
 }

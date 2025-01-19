@@ -673,7 +673,7 @@ namespace yoba::ui {
 			return _keyboard;
 
 		_keyboardAndApplicationChildrenLayout = new EqualStackLayout();
-		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getRenderTarget()->getResolution());
+		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getTarget()->getSize());
 
 		// Moving children from root to temporary layout
 		_applicationChildrenLayout = new Layout();

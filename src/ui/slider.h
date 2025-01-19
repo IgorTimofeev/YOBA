@@ -8,7 +8,7 @@
 namespace yoba::ui {
 	class Slider : public FocusableElement {
 		public:
-			Callback<> valueChanged {};
+			Callback<> valueChanged;
 
 			const Color* getTrackColor() const {
 				return _trackColor;

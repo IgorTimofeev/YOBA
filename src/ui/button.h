@@ -13,7 +13,7 @@
 namespace yoba::ui {
 	class Button : public FocusableElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
 		public:
-			Callback<> pressedChanged {};
+			Callback<> pressedChanged;
 
 			void onRender(Renderer* renderer) override;
 

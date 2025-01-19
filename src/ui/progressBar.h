@@ -8,7 +8,7 @@
 namespace yoba::ui {
 	class ProgressBar : public CornerRadiusElement {
 		public:
-			Callback<> valueChanged {};
+			Callback<> valueChanged;
 
 			float getValue() const {
 				return _value;

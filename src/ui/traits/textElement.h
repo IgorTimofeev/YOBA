@@ -16,6 +16,6 @@ namespace yoba::ui {
 			}
 
 		private:
-			std::wstring _text {};
+			std::wstring _text = std::wstring();
 	};
 }

@@ -5,45 +5,45 @@ namespace yoba::hardware {
 
 	}
 
-	uint8_t BufferedDisplay::getPixelBufferHeight() const {
-		return _pixelBufferHeight;
+	uint8_t BufferedDisplay::getBufferHeight() const {
+		return _bufferHeight;
 	}
 
-	void BufferedDisplay::writePixelBuffer(const std::function<void(uint8_t*&, size_t&)>& pixelSetter) {
+	void BufferedDisplay::writeBuffer(const std::function<void(uint8_t*&, size_t&)>& pixelSetter) {
 		size_t pixelIndex = 0;
 		uint16_t y;
 		uint8_t* pixelBufferStart;
-		uint8_t* pixelBufferEnd = _pixelBuffer + _pixelBufferLength;
+		uint8_t* pixelBufferEnd = _buffer + _bufferLength;
 
-		for (y = 0; y < this->_resolution.getHeight(); y += _pixelBufferHeight) {
-			pixelBufferStart = _pixelBuffer;
+		for (y = 0; y < this->_size.getHeight(); y += _bufferHeight) {
+			pixelBufferStart = _buffer;
 
 			while (pixelBufferStart < pixelBufferEnd) {
 				pixelSetter(pixelBufferStart, pixelIndex);
 			}
 
-			writePixelBuffer(y);
+			writeBuffer(y);
 		}
 	}
 
-	uint8_t* BufferedDisplay::getPixelBuffer() const {
-		return _pixelBuffer;
+	uint8_t* BufferedDisplay::getBuffer() const {
+		return _buffer;
 	}
 
-	size_t BufferedDisplay::getPixelBufferLength() const {
-		return _pixelBufferLength;
+	size_t BufferedDisplay::getBufferLength() const {
+		return _bufferLength;
 	}
 
 	void BufferedDisplay::updateFromOrientation() {
 		RenderTarget::updateFromOrientation();
 
 		// Updating pixel buffer height
-		_pixelBufferHeight = getPixelBufferHeightForOrientation();
+		_bufferHeight = getBufferHeightForOrientation();
 
 		// Allocating pixel buffer
-		delete _pixelBuffer;
-		_pixelBufferLength = Color::getBytesPerType(this->_resolution.getWidth() * _pixelBufferHeight, _colorModel);
-		_pixelBuffer = (uint8_t*) heap_caps_malloc(_pixelBufferLength, MALLOC_CAP_DMA);
-		assert(_pixelBuffer != nullptr);
+		delete _buffer;
+		_bufferLength = Color::getBytesPerType(this->_size.getWidth() * _bufferHeight, _colorModel);
+		_buffer = (uint8_t*) heap_caps_malloc(_bufferLength, MALLOC_CAP_DMA);
+		assert(_buffer != nullptr);
 	}
 }

@@ -25,10 +25,10 @@ namespace yoba::hardware {
 			void writeOrientationChangeCommands() override;
 			void writeColorModeChangeCommands() override;
 
-			uint8_t getPixelBufferHeightForOrientation() override;
+			uint8_t getBufferHeightForOrientation() override;
 
 		public:
-			void writePixelBuffer(uint16_t y) override;
+			void writeBuffer(uint16_t y) override;
 
 		private:
 			enum class Command : uint8_t {

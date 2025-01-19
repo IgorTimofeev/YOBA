@@ -12,11 +12,8 @@
 namespace yoba {
 	class Renderer {
 		public:
-			explicit Renderer(RenderTarget* renderTarget);
-
-			virtual void setup();
-
-			RenderTarget* getRenderTarget() const;
+			RenderTarget* getTarget() const;
+			void setTarget(RenderTarget* value);
 
 			const Bounds& getViewport();
 			void setViewport(const Bounds& viewport);
@@ -64,6 +61,8 @@ namespace yoba {
 			virtual void flush() = 0;
 
 		protected:
+			virtual void onTargetChanged();
+
 			virtual void clearNative(const Color* color) = 0;
 			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
 			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
@@ -72,7 +71,7 @@ namespace yoba {
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
 		private:
-			RenderTarget* _renderTarget;
+			RenderTarget* _target;
 			Bounds _viewport = Bounds();
 
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);

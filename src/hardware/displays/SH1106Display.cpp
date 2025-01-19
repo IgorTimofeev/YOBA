@@ -78,7 +78,7 @@ namespace yoba::hardware {
 			writeCommand((uint8_t) Command::setColumnAddressHigh);
 
 			// Page
-			writeData(buffer + page * getResolution().getWidth(), getResolution().getWidth());
+			writeData(buffer + page * getSize().getWidth(), getSize().getWidth());
 		}
 	}
 

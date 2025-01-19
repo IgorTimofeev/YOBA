@@ -3,12 +3,20 @@
 #include "animation.h"
 
 namespace yoba::ui {
-	Application::Application(Renderer* renderer) : _renderer(renderer) {
+	Application::Application() {
 		Layout::setApplication(this);
 	}
 
-	void Application::setup() {
-		_renderer->setup();
+	void Application::setRenderer(Renderer* value) {
+		_renderer = value;
+
+		 invalidate();
+	}
+
+	void Application::setupRenderingHardware(RenderTarget* renderTarget, Renderer* renderer) {
+		renderTarget->setup();
+		renderer->setTarget(renderTarget);
+		setRenderer(renderer);
 	}
 
 	void Application::invalidateLayout() {
@@ -47,8 +55,8 @@ namespace yoba::ui {
 	}
 
 	void Application::tick() {
-		// Root element size should match screen size
-		setSize(_renderer->getRenderTarget()->getResolution());
+		// Root element size should match render target size
+		setSize(_renderer->getTarget()->getSize());
 
 		// Resetting viewport just in case if some UI element broke it
 		_renderer->resetViewport();

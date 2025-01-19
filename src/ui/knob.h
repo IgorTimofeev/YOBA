@@ -14,7 +14,7 @@ namespace yoba::ui {
 
 	class Knob : public BackgroundColorElement {
 		public:
-			Callback<float, float> rotated {};
+			Callback<float, float> rotated;
 
 			void onRender(Renderer* renderer) override;
 

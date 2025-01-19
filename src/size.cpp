@@ -56,4 +56,12 @@ namespace yoba {
 			(uint16_t) (getHeight() + position * (to.getHeight() - getHeight()))
 		};
 	}
+
+	bool Size::operator==(const Size& rhs) const {
+		return _width == rhs._width && _height == rhs._height;
+	}
+
+	bool Size::operator!=(const Size& rhs) const {
+		return !(rhs == *this);
+	}
 }

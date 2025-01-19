@@ -6,7 +6,7 @@
 namespace yoba {
 	class Bit8PaletteBufferedRenderer : public PaletteBufferedRenderer {
 		public:
-			Bit8PaletteBufferedRenderer(RenderTarget* renderTarget, uint16_t paletteLength);
+			explicit Bit8PaletteBufferedRenderer(uint16_t paletteLength);
 
 			void flush() override;
 

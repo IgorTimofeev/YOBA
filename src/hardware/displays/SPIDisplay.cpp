@@ -18,7 +18,7 @@ namespace yoba::hardware {
 	}
 
 	void SPIDisplay::setup() {
-		RenderTarget::setup();
+		Display::setup();
 
 		// Resetting CS pin just in case
 		pinMode(_csPin, OUTPUT);

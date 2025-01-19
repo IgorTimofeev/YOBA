@@ -4,18 +4,14 @@
 namespace yoba {
 	using namespace yoba::hardware;
 
-	MonochromeBufferedRenderer::MonochromeBufferedRenderer(RenderTarget* renderTarget) : BufferedRenderer(renderTarget) {
-
-	}
-
 	size_t MonochromeBufferedRenderer::getRequiredBufferLength() {
-		return getRenderTarget()->getResolution().getSquare() / 8;
+		return getTarget()->getSize().getSquare() / 8;
 	}
 
 	void MonochromeBufferedRenderer::flush() {
-		switch (getRenderTarget()->getPixelWriting()) {
+		switch (getTarget()->getPixelWriting()) {
 			case RenderTargetPixelWriting::direct: {
-				(dynamic_cast<DirectWritingDisplay*>(getRenderTarget()))->writePixels(getBuffer());
+				(dynamic_cast<DirectWritingDisplay*>(getTarget()))->writePixels(getBuffer());
 
 				break;
 			}
@@ -29,23 +25,23 @@ namespace yoba {
 	}
 
 	void MonochromeBufferedRenderer::renderPixelNative(const Point& point, const Color* color) {
-		switch (getRenderTarget()->getPixelOrder()) {
+		switch (getTarget()->getPixelOrder()) {
 			case RenderTargetPixelOrder::XY: {
 				if (((MonochromeColor*) color)->getValue()) {
-					getBuffer()[point.getX() + (point.getY() / 8) * getRenderTarget()->getResolution().getWidth()] |= (1 << (point.getY() & 7));
+					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}
 				else {
-					getBuffer()[point.getX() + (point.getY() / 8) * getRenderTarget()->getResolution().getWidth()] &= ~(1 << (point.getY() & 7));
+					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (point.getY() & 7));
 				}
 
 				break;
 			}
 			case RenderTargetPixelOrder::XYReversed: {
 				if (((MonochromeColor*) color)->getValue()) {
-					getBuffer()[point.getX() + (point.getY() / 8) * getRenderTarget()->getResolution().getWidth()] |= (1 << (7 - (point.getY() % 8)));
+					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
 				}
 				else {
-					getBuffer()[point.getX() + (point.getY() / 8) * getRenderTarget()->getResolution().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
+					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
 				}
 
 				break;
@@ -80,12 +76,12 @@ namespace yoba {
 	}
 
 	void MonochromeBufferedRenderer::printBufferContentsAsBinary() {
-		Serial.printf("Monochrome screen buffer %d x %d:\n", getRenderTarget()->getResolution().getWidth(), getRenderTarget()->getResolution().getHeight());
+		Serial.printf("Monochrome screen buffer %d x %d:\n", getTarget()->getSize().getWidth(), getTarget()->getSize().getHeight());
 
 		size_t bufferPtr = 0;
 
-		for (int j = 0; j < getRenderTarget()->getResolution().getHeight(); j++) {
-			for (int i = 0; i < getRenderTarget()->getResolution().getWidth(); i += 8) {
+		for (int j = 0; j < getTarget()->getSize().getHeight(); j++) {
+			for (int i = 0; i < getTarget()->getSize().getWidth(); i += 8) {
 				for (int k = 0; k < 8; k++) {
 					Serial.print((((getBuffer()[bufferPtr] >> (7 - k)) & 0b1) == 1) ? "#" : ".");
 				}

@@ -5,13 +5,11 @@
 namespace yoba {
 	class BufferedRenderer : public Renderer {
 		public:
-			explicit BufferedRenderer(RenderTarget* renderTarget);
-
-			void setup() override;
 
 		protected:
+			void onTargetChanged() override;
+
 			virtual size_t getRequiredBufferLength() = 0;
-			virtual void allocate();
 
 			uint8_t* getBuffer() const;
 			size_t getBufferLength() const;

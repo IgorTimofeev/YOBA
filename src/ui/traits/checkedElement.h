@@ -6,7 +6,7 @@
 namespace yoba::ui {
 	class CheckedElement : public virtual Element {
 		public:
-			Callback<> isCheckedChanged {};
+			Callback<> isCheckedChanged;
 
 			bool isChecked() const {
 				return _checked;

@@ -2,7 +2,7 @@
 
 namespace yoba {
 	RenderTarget::RenderTarget(
-		const Size& resolution,
+		const Size& size,
 		RenderTargetOrientation orientation,
 		ColorModel colorModel,
 		RenderTargetPixelWriting pixelWriting,
@@ -11,8 +11,8 @@ namespace yoba {
 		_pixelWriting(pixelWriting),
 		_pixelOrder(pixelOrder),
 		_colorModel(colorModel),
-		_defaultResolution(resolution),
-		_resolution(resolution),
+		_defaultSize(size),
+		_size(size),
 		_orientation(orientation)
 	{
 
@@ -34,8 +34,8 @@ namespace yoba {
 		return _colorModel;
 	}
 
-	const Size& RenderTarget::getResolution() const {
-		return _resolution;
+	const Size& RenderTarget::getSize() const {
+		return _size;
 	}
 
 	RenderTargetOrientation RenderTarget::getOrientation() const {
@@ -63,21 +63,21 @@ namespace yoba {
 
 			case RenderTargetOrientation::clockwise90: {
 				return {
-					_resolution.getWidth() - point.getY(),
+					_size.getWidth() - point.getY(),
 					point.getX()
 				};
 			}
 
 			case RenderTargetOrientation::clockwise180:
 				return {
-					_resolution.getWidth() - point.getX(),
-					_resolution.getHeight() - point.getY()
+					_size.getWidth() - point.getX(),
+					_size.getHeight() - point.getY()
 				};
 
 			default: {
 				return {
 					point.getY(),
-					_resolution.getHeight() - point.getX()
+					_size.getHeight() - point.getX()
 				};
 			}
 		}
@@ -87,18 +87,31 @@ namespace yoba {
 		switch (_orientation) {
 			case RenderTargetOrientation::clockwise0:
 			case RenderTargetOrientation::clockwise180:
-				_resolution = _defaultResolution;
+				_size = _defaultSize;
 				break;
 
 			case RenderTargetOrientation::clockwise90:
 			case RenderTargetOrientation::clockwise270:
-				_resolution.setWidth(_defaultResolution.getHeight());
-				_resolution.setHeight(_defaultResolution.getWidth());
+				_size.setWidth(_defaultSize.getHeight());
+				_size.setHeight(_defaultSize.getWidth());
 				break;
 		}
 	}
 
 	void RenderTarget::onOrientationChanged() {
 		updateFromOrientation();
+	}
+
+	bool RenderTarget::operator==(const RenderTarget& rhs) const {
+		return
+			_orientation == rhs._orientation &&
+			_defaultSize == rhs._defaultSize &&
+			_colorModel == rhs._colorModel &&
+			_pixelOrder == rhs._pixelOrder &&
+			_pixelWriting == rhs._pixelWriting;
+	}
+
+	bool RenderTarget::operator!=(const RenderTarget& rhs) const {
+		return !(rhs == *this);
 	}
 }

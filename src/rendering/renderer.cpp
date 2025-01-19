@@ -1,21 +1,28 @@
 #include "renderer.h"
 
 namespace yoba {
-	Renderer::Renderer(RenderTarget* renderTarget) : _renderTarget(renderTarget) {
-
+	RenderTarget* Renderer::getTarget() const {
+		return _target;
 	}
 
-	void Renderer::setup() {
-		_renderTarget->setup();
+	void Renderer::setTarget(RenderTarget* value) {
+		if (value == _target || _target && *value == *_target)
+			return;
 
-		// Resetting viewport after renderTarget initialization, because viewport
-		// depends on renderTarget resolution, which can be determined only after
-		// calling setup(), where orientation is being set first time
-		resetViewport();
+		auto fromTarget = _target;
+
+		_target = value;
+
+		if (!fromTarget) {
+			// Resetting viewport if it was first time when target was set
+			resetViewport();
+		}
+
+		onTargetChanged();
 	}
 
-	RenderTarget* Renderer::getRenderTarget() const {
-		return _renderTarget;
+	void Renderer::onTargetChanged() {
+
 	}
 
 	const Bounds& Renderer::getViewport() {
@@ -46,11 +53,11 @@ namespace yoba {
 	void Renderer::resetViewport() {
 		_viewport.setX(0);
 		_viewport.setX(0);
-		_viewport.setSize(_renderTarget->getResolution());
+		_viewport.setSize(_target->getSize());
 	}
 
 	size_t Renderer::getIndex(uint16_t x, uint16_t y) const {
-		return y * _renderTarget->getResolution().getWidth() + x;
+		return y * _target->getSize().getWidth() + x;
 	}
 
 	size_t Renderer::getIndex(const Point& point) const {

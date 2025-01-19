@@ -55,7 +55,7 @@ namespace yoba::hardware {
 		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 
-	uint8_t ILI9341Display::getPixelBufferHeightForOrientation() {
+	uint8_t ILI9341Display::getBufferHeightForOrientation() {
 		return
 			this->_orientation == RenderTargetOrientation::clockwise0 || this->_orientation == RenderTargetOrientation::clockwise180
 			? 64 // 5 transactions
@@ -236,24 +236,24 @@ namespace yoba::hardware {
 		vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
 
-	void ILI9341Display::writePixelBuffer(uint16_t y) {
+	void ILI9341Display::writeBuffer(uint16_t y) {
 		uint8_t data[4];
 
 		// Column Address Set
 		data[0] = 0; //Start Col High
 		data[1] = 0; //Start Col Low
-		data[2] = (this->_resolution.getWidth() - 1) >> 8; //End Col High
-		data[3] = (this->_resolution.getWidth() - 1) & 0xff; //End Col Low
+		data[2] = (this->_size.getWidth() - 1) >> 8; //End Col High
+		data[3] = (this->_size.getWidth() - 1) & 0xff; //End Col Low
 		writeCommandAndData(0x2A, data, 4);
 
 		//Page address set
 		data[0] = y >> 8; //Start page high
 		data[1] = y & 0xff; // Start page low
-		data[2] = (y + _pixelBufferHeight - 1) >> 8; // End page high
-		data[3] = (y + _pixelBufferHeight - 1) & 0xff; // End page low
+		data[2] = (y + _bufferHeight - 1) >> 8; // End page high
+		data[3] = (y + _bufferHeight - 1) & 0xff; // End page low
 		writeCommandAndData(0x2B, data, 4);
 
 		// Memory write
-		writeCommandAndData(0x2C, _pixelBuffer, _pixelBufferLength);
+		writeCommandAndData(0x2C, _buffer, _bufferLength);
 	}
 }

@@ -18,6 +18,6 @@ namespace yoba {
 			}
 
 		private:
-			std::vector<std::function<void(T...)>> _functions {};
+			std::vector<std::function<void(T...)>> _functions;
 	};
 }

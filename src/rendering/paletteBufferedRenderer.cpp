@@ -1,20 +1,15 @@
 #include "paletteBufferedRenderer.h"
 
 namespace yoba {
-
-	PaletteBufferedRenderer::PaletteBufferedRenderer(RenderTarget* renderTarget, uint16_t paletteLength) : BufferedRenderer(renderTarget), _paletteLength(paletteLength) {
+	PaletteBufferedRenderer::PaletteBufferedRenderer(uint16_t paletteLength) : _paletteLength(paletteLength) {
 
 	}
 
-	void PaletteBufferedRenderer::allocate() {
-		BufferedRenderer::allocate();
 
-		_palette = (uint8_t*) malloc(_paletteLength * Color::getBytesPerType(getRenderTarget()->getColorModel()));
-		assert(_palette != nullptr);
-	}
+
 
 	uint32_t PaletteBufferedRenderer::getPaletteColor(uint16_t index) {
-		switch (getRenderTarget()->getColorModel()) {
+		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
 				return ((uint16_t*) _palette)[index];
 
@@ -27,7 +22,7 @@ namespace yoba {
 	}
 
 	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, uint32_t value) {
-		switch (getRenderTarget()->getColorModel()) {
+		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565: {
 				((uint16_t*) _palette)[index] = (uint16_t) value;
 				break;
@@ -62,7 +57,7 @@ namespace yoba {
 	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
 		uint32_t tColor;
 
-		switch (getRenderTarget()->getColorModel()) {
+		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
 				tColor = color.toRgb565().getValue();
 				break;
@@ -103,5 +98,18 @@ namespace yoba {
 
 	uint8_t* PaletteBufferedRenderer::getPalette() const {
 		return _palette;
+	}
+
+	void PaletteBufferedRenderer::onTargetChanged() {
+		BufferedRenderer::onTargetChanged();
+
+		// (Re)allocating palette
+		delete _palette;
+
+		if (getTarget()) {
+			delete _palette;
+			_palette = (uint8_t*) malloc(_paletteLength * Color::getBytesPerType(getTarget()->getColorModel()));
+			assert(!!_palette);
+		}
 	}
 }

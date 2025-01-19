@@ -309,7 +309,7 @@ namespace yoba::hardware {
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;
 
-		auto renderTarget = application->getRenderer()->getRenderTarget();
+		auto renderTarget = application->getRenderer()->getTarget();
 
 		if (isDown1) {
 			if (isDown2) {

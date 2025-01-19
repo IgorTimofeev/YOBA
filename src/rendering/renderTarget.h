@@ -35,7 +35,7 @@ namespace yoba {
 	class RenderTarget {
 		public:
 			RenderTarget(
-				const Size& resolution,
+				const Size& size,
 				RenderTargetOrientation orientation,
 				ColorModel colorModel,
 				RenderTargetPixelWriting pixelWriting,
@@ -47,19 +47,22 @@ namespace yoba {
 			RenderTargetPixelWriting getPixelWriting() const;
 			RenderTargetPixelOrder getPixelOrder() const;
 			ColorModel getColorModel() const;
-			const Size& getResolution() const;
+			const Size& getSize() const;
 
 			RenderTargetOrientation getOrientation() const;
 			void setOrientation(RenderTargetOrientation value);
 
 			Point orientPoint(const Point& point);
 
+			bool operator==(const RenderTarget& rhs) const;
+			bool operator!=(const RenderTarget& rhs) const;
+
 		protected:
 			RenderTargetPixelWriting _pixelWriting;
 			RenderTargetPixelOrder _pixelOrder;
 			ColorModel _colorModel;
-			const Size _defaultResolution;
-			Size _resolution;
+			const Size _defaultSize;
+			Size _size;
 			RenderTargetOrientation _orientation = RenderTargetOrientation::clockwise270;
 
 			virtual void updateFromOrientation();

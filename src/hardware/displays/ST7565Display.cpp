@@ -88,8 +88,8 @@ namespace yoba::hardware {
 			writeCommand((uint8_t) Command::SET_COLUMN_UPPER | (((col) >> 4) & 0x0F));
 			writeCommand((uint8_t) Command::RMW);
 
-			for (; col < (uint8_t) getResolution().getWidth(); col++) {
-				writeData(buffer[(getResolution().getWidth() * p) + col]);
+			for (; col < (uint8_t) getSize().getWidth(); col++) {
+				writeData(buffer[(getSize().getWidth() * p) + col]);
 			}
 		}
 	}
