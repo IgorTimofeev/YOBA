@@ -5,7 +5,7 @@
 #include "traits/textColorElement.h"
 #include "traits/fontElement.h"
 #include "traits/fontScaleElement.h"
-#include "rendering/renderer.h"
+#include "rendering/renderers/renderer.h"
 #include "size.h"
 
 namespace yoba::ui {

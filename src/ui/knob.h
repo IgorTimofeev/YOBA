@@ -2,7 +2,7 @@
 
 #include "element.h"
 #include "color.h"
-#include "rendering/renderer.h"
+#include "rendering/renderers/renderer.h"
 #include "cmath"
 #include "callback.h"
 #include "ui/traits/backgroundColorElement.h"

@@ -22,7 +22,25 @@ namespace yoba {
 	}
 
 	void Renderer::onTargetChanged() {
+		// (Re)allocating pixel buffer
+		delete _buffer;
 
+		if (getTarget()) {
+			_bufferLength = getRequiredBufferLength();
+			_buffer = new uint8_t[_bufferLength];
+			assert(!!_buffer);
+		}
+		else {
+			_bufferLength = 0;
+		}
+	}
+
+	uint8_t* Renderer::getBuffer() const {
+		return _buffer;
+	}
+
+	size_t Renderer::getBufferLength() const {
+		return _bufferLength;
 	}
 
 	const Bounds& Renderer::getViewport() {

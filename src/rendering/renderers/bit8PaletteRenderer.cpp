@@ -1,26 +1,26 @@
-#include "bit8PaletteBufferedRenderer.h"
+#include "bit8PaletteRenderer.h"
 #include "bounds.h"
-#include "hardware/displays/bufferedDisplay.h"
+#include "rendering/targets/bufferedRenderTarget.h"
 
 namespace yoba {
 	using namespace yoba::hardware;
 
-	Bit8PaletteBufferedRenderer::Bit8PaletteBufferedRenderer(uint16_t paletteLength) : PaletteBufferedRenderer(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteRenderer(paletteLength) {
 
 	}
 
-	size_t Bit8PaletteBufferedRenderer::getRequiredBufferLength() {
+	size_t Bit8PaletteRenderer::getRequiredBufferLength() {
 		return getTarget()->getSize().getSquare();
 	}
 
-	void Bit8PaletteBufferedRenderer::flush() {
+	void Bit8PaletteRenderer::flushBuffer() {
 		switch (getTarget()->getPixelWriting()) {
 			case RenderTargetPixelWriting::buffered: {
-				const auto bufferedDisplay = dynamic_cast<BufferedDisplay*>(getTarget());
+				const auto bufferedRenderTarget = dynamic_cast<BufferedRenderTarget*>(getTarget());
 
 				switch (getTarget()->getColorModel()) {
 					case ColorModel::rgb565: {
-						bufferedDisplay->writeBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+						bufferedRenderTarget->flushBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
 							((uint16_t*) destination)[0] = ((uint16_t*) getPalette())[getBuffer()[pixelIndex]];
 							destination += 2;
 							pixelIndex++;
@@ -31,7 +31,7 @@ namespace yoba {
 					case ColorModel::rgb666: {
 						const uint8_t* palettePtr;
 
-						bufferedDisplay->writeBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
+						bufferedRenderTarget->flushBuffer([&](uint8_t*& destination, size_t& pixelIndex) {
 							palettePtr = getPalette() + getBuffer()[pixelIndex] * 3;
 
 							destination[0] = palettePtr[0];
@@ -55,11 +55,11 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBufferedRenderer::clearNative(const Color* color) {
+	void Bit8PaletteRenderer::clearNative(const Color* color) {
 		memset(getBuffer(), (int) getPaletteIndex(color), getBufferLength());
 	}
 
-	void Bit8PaletteBufferedRenderer::renderPixelNative(const Point& point, const Color* color) {
+	void Bit8PaletteRenderer::renderPixelNative(const Point& point, const Color* color) {
 //		if (point.getX() < 0 || point.getX() >= 320 || point.getY() < 0 || point.getY() >= 240) {
 //			Serial.printf("CYKA?? %d, %d\f", point.getX(), point.getY());
 //			return;
@@ -74,11 +74,11 @@ namespace yoba {
 		getBuffer()[getIndex(point)] = getPaletteIndex(color);
 	}
 
-	void Bit8PaletteBufferedRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
+	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
 		memset(getBuffer() + getIndex(point), getPaletteIndex(color), width);
 	}
 
-	void Bit8PaletteBufferedRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
+	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = getBuffer() + getIndex(point);
 		uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		auto paletteIndex = getPaletteIndex(color);
@@ -89,7 +89,7 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBufferedRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = getBuffer() + getIndex(bounds.getPosition());
 		uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		auto paletteIndex = getPaletteIndex(color);
@@ -100,7 +100,7 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBufferedRenderer::renderImageNative(const Point& point, const Image* image) {
+	void Bit8PaletteRenderer::renderImageNative(const Point& point, const Image* image) {
 		size_t
 			bufferIndex = getIndex(point),
 			scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth(),
@@ -118,7 +118,7 @@ namespace yoba {
 		}
 	}
 
-	void Bit8PaletteBufferedRenderer::setOpenComputersPaletteColors() {
+	void Bit8PaletteRenderer::setOpenComputersPaletteColors() {
 		const uint8_t reds = 6;
 		const uint8_t greens = 8;
 		const uint8_t blues = 5;

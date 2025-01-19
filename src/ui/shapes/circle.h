@@ -1,7 +1,7 @@
 #pragma once
 
 #include "color.h"
-#include "rendering/renderer.h"
+#include "rendering/renderers/renderer.h"
 #include "shape.h"
 
 namespace yoba::ui {

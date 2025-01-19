@@ -21,7 +21,7 @@ namespace yoba::hardware {
 			rstPin,
 			SPIFrequency
 		),
-		DirectWritingDisplay(),
+		DirectRenderTarget(),
 		ContrastDisplay()
 	{
 

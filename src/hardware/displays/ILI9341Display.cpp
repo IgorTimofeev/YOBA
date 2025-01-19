@@ -23,7 +23,7 @@ namespace yoba::hardware {
 			rstPin,
 			SPIFrequency
 		),
-		BufferedDisplay()
+		BufferedRenderTarget()
 	{
 
 	}
@@ -236,7 +236,7 @@ namespace yoba::hardware {
 		vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
 
-	void ILI9341Display::writeBuffer(uint16_t y) {
+	void ILI9341Display::flushBuffer(uint16_t y) {
 		uint8_t data[4];
 
 		// Column Address Set

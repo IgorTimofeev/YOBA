@@ -2,7 +2,7 @@
 
 #include "stackLayout.h"
 #include "color.h"
-#include "rendering/renderer.h"
+#include "rendering/renderers/renderer.h"
 #include "cmath"
 #include "ui/traits/primaryColorElement.h"
 #include "ui/traits/secondaryColorElement.h"

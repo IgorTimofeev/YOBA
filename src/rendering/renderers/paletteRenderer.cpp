@@ -1,14 +1,12 @@
-#include "paletteBufferedRenderer.h"
+#include "paletteRenderer.h"
 
 namespace yoba {
-	PaletteBufferedRenderer::PaletteBufferedRenderer(uint16_t paletteLength) : _paletteLength(paletteLength) {
+	PaletteRenderer::PaletteRenderer(uint16_t paletteLength) : _paletteLength(paletteLength) {
 
 	}
 
 
-
-
-	uint32_t PaletteBufferedRenderer::getPaletteColor(uint16_t index) {
+	uint32_t PaletteRenderer::getPaletteColor(uint16_t index) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
 				return ((uint16_t*) _palette)[index];
@@ -21,7 +19,7 @@ namespace yoba {
 		}
 	}
 
-	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, uint32_t value) {
+	void PaletteRenderer::setPaletteColor(uint16_t index, uint32_t value) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565: {
 				((uint16_t*) _palette)[index] = (uint16_t) value;
@@ -44,7 +42,7 @@ namespace yoba {
 		}
 	}
 
-	uint16_t PaletteBufferedRenderer::getPaletteIndex(const Color* color) {
+	uint16_t PaletteRenderer::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
 			case ColorModel::palette:
 				return ((PaletteColor*) color)->getIndex();
@@ -54,7 +52,7 @@ namespace yoba {
 		}
 	}
 
-	void PaletteBufferedRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
+	void PaletteRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
 		uint32_t tColor;
 
 		switch (getTarget()->getColorModel()) {
@@ -74,7 +72,7 @@ namespace yoba {
 		setPaletteColor(index, tColor);
 	}
 
-	void PaletteBufferedRenderer::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
+	void PaletteRenderer::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -83,7 +81,7 @@ namespace yoba {
 		}
 	}
 
-	void PaletteBufferedRenderer::setPaletteColors(std::initializer_list<uint32_t> colors) {
+	void PaletteRenderer::setPaletteColors(std::initializer_list<uint32_t> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -92,16 +90,16 @@ namespace yoba {
 		}
 	}
 
-	uint16_t PaletteBufferedRenderer::getPaletteLength() const {
+	uint16_t PaletteRenderer::getPaletteLength() const {
 		return _paletteLength;
 	}
 
-	uint8_t* PaletteBufferedRenderer::getPalette() const {
+	uint8_t* PaletteRenderer::getPalette() const {
 		return _palette;
 	}
 
-	void PaletteBufferedRenderer::onTargetChanged() {
-		BufferedRenderer::onTargetChanged();
+	void PaletteRenderer::onTargetChanged() {
+		Renderer::onTargetChanged();
 
 		// (Re)allocating palette
 		delete _palette;

@@ -2,12 +2,12 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "bufferedRenderer.h"
+#include "renderer.h"
 
 namespace yoba {
-	class PaletteBufferedRenderer : public BufferedRenderer {
+	class PaletteRenderer : public Renderer {
 		public:
-			PaletteBufferedRenderer(uint16_t paletteLength);
+			PaletteRenderer(uint16_t paletteLength);
 
 			uint32_t getPaletteColor(uint16_t index);
 			void setPaletteColor(uint16_t index, uint32_t value);

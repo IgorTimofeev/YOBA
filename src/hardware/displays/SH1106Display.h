@@ -2,13 +2,13 @@
 
 #include <cstdint>
 #include "SPIDisplay.h"
-#include "directWritingDisplay.h"
+#include "rendering/targets/directRenderTarget.h"
 #include "contrastDisplay.h"
 #include "invertibleDisplay.h"
 #include "size.h"
 
 namespace yoba::hardware {
-	class SH1106Display : public SPIDisplay, public DirectWritingDisplay, public ContrastDisplay, public InvertibleDisplay {
+	class SH1106Display : public SPIDisplay, public DirectRenderTarget, public ContrastDisplay, public InvertibleDisplay {
 		public:
 			SH1106Display(
 				uint8_t csPin,

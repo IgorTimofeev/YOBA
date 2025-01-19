@@ -1,15 +1,15 @@
-#include "bufferedDisplay.h"
+#include "bufferedRenderTarget.h"
 
 namespace yoba::hardware {
-	BufferedDisplay::BufferedDisplay() { // NOLINT(*-use-equals-default)
+	BufferedRenderTarget::BufferedRenderTarget() { // NOLINT(*-use-equals-default)
 
 	}
 
-	uint8_t BufferedDisplay::getBufferHeight() const {
+	uint8_t BufferedRenderTarget::getBufferHeight() const {
 		return _bufferHeight;
 	}
 
-	void BufferedDisplay::writeBuffer(const std::function<void(uint8_t*&, size_t&)>& pixelSetter) {
+	void BufferedRenderTarget::flushBuffer(const std::function<void(uint8_t*&, size_t&)>& pixelSetter) {
 		size_t pixelIndex = 0;
 		uint16_t y;
 		uint8_t* pixelBufferStart;
@@ -22,19 +22,19 @@ namespace yoba::hardware {
 				pixelSetter(pixelBufferStart, pixelIndex);
 			}
 
-			writeBuffer(y);
+			flushBuffer(y);
 		}
 	}
 
-	uint8_t* BufferedDisplay::getBuffer() const {
+	uint8_t* BufferedRenderTarget::getBuffer() const {
 		return _buffer;
 	}
 
-	size_t BufferedDisplay::getBufferLength() const {
+	size_t BufferedRenderTarget::getBufferLength() const {
 		return _bufferLength;
 	}
 
-	void BufferedDisplay::updateFromOrientation() {
+	void BufferedRenderTarget::updateFromOrientation() {
 		RenderTarget::updateFromOrientation();
 
 		// Updating pixel buffer height

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "display.h"
+#include "hardware/displays/display.h"
 
 namespace yoba::hardware {
-	class BufferedDisplay : public virtual Display {
+	class BufferedRenderTarget : public virtual Display {
 		public:
-			BufferedDisplay();
+			BufferedRenderTarget();
 
 			void updateFromOrientation() override;
 
@@ -27,9 +27,9 @@ namespace yoba::hardware {
 			// [Fucking important] Make sure screen height is dividable by this.
 			virtual uint8_t getBufferHeightForOrientation() = 0;
 
-			virtual void writeBuffer(uint16_t y) = 0;
+			virtual void flushBuffer(uint16_t y) = 0;
 
-			void writeBuffer(const std::function<void(uint8_t*& destination, size_t& pixelIndex)>& pixelSetter);
+			void flushBuffer(const std::function<void(uint8_t * & destination, size_t & pixelIndex)>& pixelSetter);
 
 		protected:
 			uint8_t _bufferHeight = 20;

@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include "bufferedDisplay.h"
+#include "rendering/targets/bufferedRenderTarget.h"
 #include "SPIDisplay.h"
 
 namespace yoba::hardware {
-	class ILI9341Display : public virtual SPIDisplay, public virtual BufferedDisplay {
+	class ILI9341Display : public virtual SPIDisplay, public virtual BufferedRenderTarget {
 		public:
 			ILI9341Display(
 				ColorModel colorModel,
@@ -28,7 +28,7 @@ namespace yoba::hardware {
 			uint8_t getBufferHeightForOrientation() override;
 
 		public:
-			void writeBuffer(uint16_t y) override;
+			void flushBuffer(uint16_t y) override;
 
 		private:
 			enum class Command : uint8_t {

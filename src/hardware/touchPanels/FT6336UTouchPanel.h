@@ -13,7 +13,7 @@
 #include "touchPanel.h"
 #include "touchPoint.h"
 #include "vector.h"
-#include "rendering/renderTarget.h"
+#include "rendering/targets/renderTarget.h"
 
 namespace yoba::ui {
 	class Application;

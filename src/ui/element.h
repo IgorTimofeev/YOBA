@@ -7,7 +7,7 @@
 #include "margin.h"
 #include "bounds.h"
 #include "size.h"
-#include "rendering/renderer.h"
+#include "rendering/renderers/renderer.h"
 
 namespace yoba {
 	class Animation;

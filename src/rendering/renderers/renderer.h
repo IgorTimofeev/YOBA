@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <cstdint>
-#include "renderTarget.h"
+#include "rendering/targets/renderTarget.h"
 #include "size.h"
 #include "bounds.h"
 #include "color.h"
@@ -58,9 +58,11 @@ namespace yoba {
 			void renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& string, uint8_t fontScale = 1);
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
 
-			virtual void flush() = 0;
+			virtual void flushBuffer() = 0;
 
 		protected:
+			virtual size_t getRequiredBufferLength() = 0;
+
 			virtual void onTargetChanged();
 
 			virtual void clearNative(const Color* color) = 0;
@@ -70,9 +72,15 @@ namespace yoba {
 			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color* color) = 0;
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
+			uint8_t* getBuffer() const;
+			size_t getBufferLength() const;
+
 		private:
 			RenderTarget* _target;
 			Bounds _viewport = Bounds();
+
+			uint8_t* _buffer = nullptr;
+			size_t _bufferLength = 0;
 
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);

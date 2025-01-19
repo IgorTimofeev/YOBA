@@ -81,7 +81,7 @@ namespace yoba::ui {
 		// Rendering
 		if (!_isRendered) {
 			render(_renderer);
-			_renderer->flush();
+			_renderer->flushBuffer();
 
 			_isRendered = true;
 		}

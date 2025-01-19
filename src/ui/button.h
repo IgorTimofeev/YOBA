@@ -2,7 +2,7 @@
 
 #include "element.h"
 #include "color.h"
-#include "rendering/renderer.h"
+#include "rendering/renderers/renderer.h"
 #include "traits/textElement.h"
 #include "traits/fontElement.h"
 #include "traits/cornerRadiusElement.h"

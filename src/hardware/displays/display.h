@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rendering/renderTarget.h"
+#include "rendering/targets/renderTarget.h"
 
 namespace yoba::hardware {
 	class Display : public RenderTarget {

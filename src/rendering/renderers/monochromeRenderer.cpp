@@ -1,17 +1,17 @@
-#include "monochromeBufferedRenderer.h"
-#include "hardware/displays/directWritingDisplay.h"
+#include "monochromeRenderer.h"
+#include "rendering/targets/directRenderTarget.h"
 
 namespace yoba {
 	using namespace yoba::hardware;
 
-	size_t MonochromeBufferedRenderer::getRequiredBufferLength() {
+	size_t MonochromeRenderer::getRequiredBufferLength() {
 		return getTarget()->getSize().getSquare() / 8;
 	}
 
-	void MonochromeBufferedRenderer::flush() {
+	void MonochromeRenderer::flushBuffer() {
 		switch (getTarget()->getPixelWriting()) {
 			case RenderTargetPixelWriting::direct: {
-				(dynamic_cast<DirectWritingDisplay*>(getTarget()))->writePixels(getBuffer());
+				(dynamic_cast<DirectRenderTarget*>(getTarget()))->writePixels(getBuffer());
 
 				break;
 			}
@@ -20,11 +20,11 @@ namespace yoba {
 		}
 	}
 
-	void MonochromeBufferedRenderer::clearNative(const Color* color) {
+	void MonochromeRenderer::clearNative(const Color* color) {
 		memset(getBuffer(), ((MonochromeColor*) color)->getValue() ? 0xFF : 0x00, getBufferLength());
 	}
 
-	void MonochromeBufferedRenderer::renderPixelNative(const Point& point, const Color* color) {
+	void MonochromeRenderer::renderPixelNative(const Point& point, const Color* color) {
 		switch (getTarget()->getPixelOrder()) {
 			case RenderTargetPixelOrder::XY: {
 				if (((MonochromeColor*) color)->getValue()) {
@@ -51,19 +51,19 @@ namespace yoba {
 		}
 	}
 
-	void MonochromeBufferedRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
+	void MonochromeRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
 		for (int32_t x = point.getX(); x < point.getX() + width; x++) {
 			renderPixelNative(Point(x, point.getY()), color);
 		}
 	}
 
-	void MonochromeBufferedRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
+	void MonochromeRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		for (int32_t y = point.getY(); y < point.getY() + height; y++) {
 			renderPixelNative(Point(point.getX(), y), color);
 		}
 	}
 
-	void MonochromeBufferedRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void MonochromeRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		for (int32_t y = bounds.getY(); y < bounds.getY() + bounds.getHeight(); y++) {
 			for (int32_t x = bounds.getX(); x < bounds.getX() + bounds.getWidth(); x++) {
 				renderPixelNative(Point(x, y), color);
@@ -71,11 +71,11 @@ namespace yoba {
 		}
 	}
 
-	void MonochromeBufferedRenderer::renderImageNative(const Point& point, const Image* image) {
+	void MonochromeRenderer::renderImageNative(const Point& point, const Image* image) {
 
 	}
 
-	void MonochromeBufferedRenderer::printBufferContentsAsBinary() {
+	void MonochromeRenderer::printBufferContentsAsBinary() {
 		Serial.printf("Monochrome screen buffer %d x %d:\n", getTarget()->getSize().getWidth(), getTarget()->getSize().getHeight());
 
 		size_t bufferPtr = 0;
