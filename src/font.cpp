@@ -40,19 +40,27 @@ namespace yoba {
 			: &_glyphs[codepoint - _fromCodepoint];
 	}
 
-	uint8_t Font::getCharWidth(wchar_t codepoint, uint8_t scale) const {
+	uint8_t Font::getCharWidth(wchar_t codepoint) const {
 		const auto glyph = getGlyph(codepoint);
 
-		return (glyph ? glyph->getWidth() : missingGlyphWidth) * scale;
+		return glyph ? glyph->getWidth() : missingGlyphWidth;
 	}
 
-	uint16_t Font::getWidth(const std::wstring_view& text, uint8_t scale) const {
+	uint8_t Font::getCharWidth(wchar_t codepoint, uint8_t scale) const {
+		return getCharWidth(codepoint) * scale;
+	}
+
+	uint16_t Font::getWidth(const std::wstring_view& text) const {
 		uint16_t width = 0;
 
 		for (size_t charIndex = 0; charIndex < text.length(); charIndex++)
-			width += getCharWidth(text[charIndex], scale);
+			width += getCharWidth(text[charIndex]);
 
 		return width;
+	}
+
+	uint16_t Font::getWidth(const std::wstring_view& text, uint8_t scale) const {
+		return getWidth(text) * scale;
 	}
 
 	uint8_t Font::getHeight() const {

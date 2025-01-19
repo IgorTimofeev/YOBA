@@ -575,10 +575,11 @@ namespace yoba::ui {
 			const uint16_t availableWidthWithoutSpacing = bounds.getWidth() - totalSpacing;
 			float defaultWidthWithoutSpacing = 0;
 			uint8_t stretchedCount = 0;
+			KeyboardButton* button;
 			float buttonWidth;
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
-				auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+				button = dynamic_cast<KeyboardButton*>(getChildAt(i));
 
 				buttonWidth = button->getKey()->getWidth();
 
@@ -608,11 +609,11 @@ namespace yoba::ui {
 			}
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
-				auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+				button = dynamic_cast<KeyboardButton*>(getChildAt(i));
 
 				buttonWidth = button->getKey()->getWidth();
 
-				const uint16_t roundedButtonWidth =
+				buttonWidth =
 					// Not last key in row
 					i < buttonIndexTo - 1
 					? (
@@ -632,16 +633,18 @@ namespace yoba::ui {
 				button->arrange(Bounds(
 					bounds.getX() + localX,
 					y,
-					roundedButtonWidth,
+					buttonWidth,
 					_keyboard->getKeyHeight()
 				));
 
-				localX += roundedButtonWidth + _keyboard->getHorizontalKeySpacing();
+				localX += buttonWidth + _keyboard->getHorizontalKeySpacing();
 			}
 		};
 
+		KeyboardButton* button;
+
 		for (size_t i = 0; i < getChildrenCount(); i++) {
-			auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+			button = dynamic_cast<KeyboardButton*>(getChildAt(i));
 
 			if (button->getRow() > rowIndex) {
 				arrangeRow(i);

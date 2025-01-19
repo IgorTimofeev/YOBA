@@ -24,9 +24,12 @@ namespace yoba {
 			const uint8_t* getBitmap() const;
 
 			const Glyph* getGlyph(wchar_t codepoint) const;
-			uint8_t getCharWidth(wchar_t codepoint, uint8_t scale = 1) const;
 
-			uint16_t getWidth(const std::wstring_view& text, uint8_t scale = 1) const;
+			uint8_t getCharWidth(wchar_t codepoint) const;
+			uint8_t getCharWidth(wchar_t codepoint, uint8_t scale) const;
+
+			uint16_t getWidth(const std::wstring_view& text) const;
+			uint16_t getWidth(const std::wstring_view& text, uint8_t scale) const;
 
 			uint8_t getHeight() const;
 			uint8_t getHeight(uint8_t scale) const;
