@@ -61,6 +61,8 @@ namespace yoba::ui {
 		// Resetting viewport just in case if some UI element broke it
 		_renderer->resetViewport();
 
+		auto time = millis();
+
 		// Handling input from devices like touchscreens, rotary encoders, etc.
 		inputDevicesTick();
 
@@ -70,18 +72,29 @@ namespace yoba::ui {
 		// Playing animations
 		animationsTick();
 
+		_tickDeltaTime = millis() - time;
+
 		// Measuring & arranging child elements
 		if (!_isMeasuredAndArranged) {
+			time = millis();
+
 			measure(getSize());
 			arrange(Bounds(getSize()));
+
+			_layoutDeltaTime = millis() - time;
 
 			_isMeasuredAndArranged = true;
 		}
 
 		// Rendering
 		if (!_isRendered) {
+			time = millis();
 			render(_renderer);
+			_renderDeltaTime = millis() - time;
+
+			time = millis();
 			_renderer->flushBuffer();
+			_flushDeltaTime = millis() - time;
 
 			_isRendered = true;
 		}
@@ -155,5 +168,21 @@ namespace yoba::ui {
 	void Application::inputDevicesTick() {
 		for (auto inputDevice : _inputDevices)
 			inputDevice->tick(this);
+	}
+
+	uint32_t Application::getTickDeltaTime() const {
+		return _tickDeltaTime;
+	}
+
+	uint32_t Application::getLayoutDeltaTime() const {
+		return _layoutDeltaTime;
+	}
+
+	uint32_t Application::getRenderDeltaTime() const {
+		return _renderDeltaTime;
+	}
+
+	uint32_t Application::getFlushDeltaTime() const {
+		return _flushDeltaTime;
 	}
 }

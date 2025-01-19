@@ -34,7 +34,17 @@ namespace yoba::ui {
 
 			void enqueueOnTick(const std::function<void()>& task);
 
+			uint32_t getTickDeltaTime() const;
+			uint32_t getLayoutDeltaTime() const;
+			uint32_t getRenderDeltaTime() const;
+			uint32_t getFlushDeltaTime() const;
+
 		private:
+			uint32_t _tickDeltaTime = 0;
+			uint32_t _layoutDeltaTime = 0;
+			uint32_t _renderDeltaTime = 0;
+			uint32_t _flushDeltaTime = 0;
+
 			Renderer* _renderer;
 
 			bool _isRendered = false;

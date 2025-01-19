@@ -34,6 +34,8 @@ namespace yoba {
 			uint8_t getHeight() const;
 			uint8_t getHeight(uint8_t scale) const;
 
+			void wrap(const std::wstring_view& text, uint8_t scale, uint16_t maxWidth, std::function<void(const std::wstring_view&, uint16_t width)> lineHandler) const;
+
 		private:
 			const uint32_t _fromCodepoint;
 			const uint32_t _toCodepoint;

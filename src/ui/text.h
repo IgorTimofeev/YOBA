@@ -22,16 +22,53 @@ namespace yoba::ui {
 				setTextColor(foreground);
 			}
 
+			bool isWrappingEnabled() const {
+				return _wrappingEnabled;
+			}
+
+			void setWrappingEnabled(bool value) {
+				if (value == _wrappingEnabled)
+					return;
+
+				_wrappingEnabled = value;
+				_wrappedLines.clear();
+
+				invalidate();
+			}
+
+		protected:
 			Size onMeasure(const Size& availableSize) override {
 				const auto font = getFont();
 
-				return
-					font
-					? Size(
+				if (!font)
+					return Size();
+
+				if (_wrappingEnabled) {
+					auto result = Size();
+					_wrappedLines.clear();
+
+					font->wrap(
+						getText(),
+						getFontScale(),
+						availableSize.getWidth(),
+						[this, &result, font](const std::wstring_view& line, uint16_t width) {
+							if (width > result.getWidth())
+								result.setWidth(width);
+
+							result.setHeight(result.getHeight() + font->getHeight(getFontScale()));
+
+							_wrappedLines.push_back(line);
+						}
+					);
+
+					return result;
+				}
+				else {
+					return Size(
 						font->getWidth(getText(), getFontScale()),
 						font->getHeight(getFontScale())
-					)
-					: Size();
+					);
+				}
 			}
 
 			void onRender(Renderer* renderer) override {
@@ -42,7 +79,25 @@ namespace yoba::ui {
 
 				auto color = getTextColor();
 
-				if (color) {
+				if (!color)
+					return;
+
+				if (_wrappingEnabled) {
+					auto position = getBounds().getPosition();
+
+					for (auto& line : _wrappedLines) {
+						renderer->renderString(
+							position,
+							font,
+							color,
+							line,
+							getFontScale()
+						);
+
+						position.setY(position.getY() + font->getHeight(getFontScale()));
+					}
+				}
+				else {
 					renderer->renderString(
 						getBounds().getPosition(),
 						font,
@@ -52,5 +107,9 @@ namespace yoba::ui {
 					);
 				}
 			}
+
+		private:
+			bool _wrappingEnabled = false;
+			std::vector<std::wstring_view> _wrappedLines {};
 	};
 }
