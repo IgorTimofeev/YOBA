@@ -11,6 +11,9 @@ namespace yoba::ui {
 			}
 
 			void setBackgroundColor(const Color* value) {
+				if (value == _backgroundColor)
+					return;
+
 				_backgroundColor = value;
 
 				invalidate();

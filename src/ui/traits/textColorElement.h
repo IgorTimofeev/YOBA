@@ -11,6 +11,9 @@ namespace yoba::ui {
 			}
 
 			void setTextColor(const Color* value) {
+				if (value == _textColor)
+					return;
+
 				_textColor = value;
 
 				invalidate();

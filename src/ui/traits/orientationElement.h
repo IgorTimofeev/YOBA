@@ -9,8 +9,13 @@ namespace yoba::ui {
 				return _orientation;
 			}
 
-			void setOrientation(Orientation orientation) {
-				_orientation = orientation;
+			void setOrientation(Orientation value) {
+				if (value == _orientation)
+					return;
+
+				_orientation = value;
+
+				invalidate();
 			}
 
 		private:

@@ -13,10 +13,10 @@ namespace yoba::hardware {
 	using namespace yoba::ui;
 
 	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin) :
-		_intPin(intPin),
-		_rstPin(rstPin),
 		_sdaPin(sdaPin),
-		_sclPin(sclPin)
+		_sclPin(sclPin),
+		_intPin(intPin),
+		_rstPin(rstPin)
 	{
 
 	}

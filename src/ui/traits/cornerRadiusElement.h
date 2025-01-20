@@ -10,6 +10,9 @@ namespace yoba::ui {
 			}
 
 			void setCornerRadius(uint16_t value) {
+				if (value == _cornerRadius)
+					return;
+
 				_cornerRadius = value;
 
 				invalidate();

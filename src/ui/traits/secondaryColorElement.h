@@ -11,6 +11,9 @@ namespace yoba::ui {
 			}
 
 			void setSecondaryColor(const Color* value) {
+				if (value == _secondaryColor)
+					return;
+
 				_secondaryColor = value;
 
 				invalidate();

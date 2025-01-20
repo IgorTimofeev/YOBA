@@ -4,11 +4,11 @@
 #include "hardware/inputDevice.h"
 
 #include "main/font.h"
-#include "../resources/fonts/UNSCII16Font.h"
 #include "rendering/renderers/renderer.h"
+#include "traits/backgroundColorElement.h"
 
 namespace yoba::ui {
-	class Application : public Layout {
+	class Application : public Layout, public BackgroundColorElement {
 		public:
 			explicit Application();
 
@@ -55,6 +55,9 @@ namespace yoba::ui {
 			uint32_t getLayoutDeltaTime() const;
 			uint32_t getRenderDeltaTime() const;
 			uint32_t getFlushDeltaTime() const;
+
+		protected:
+			void onRender(Renderer* renderer) override;
 
 		private:
 			uint32_t _tickDeltaTime = 0;

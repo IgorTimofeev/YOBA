@@ -1,11 +1,15 @@
+# Work in fucking progress
 
-# YOBA | Your Breathtaking Application
+Inf days left, go away for now, touch some grass instead of me...
 
 ---
 
+# YOBA | Your Breathtaking Application
+
 A comprehensive UI framework written on modern C++ for embedded devices.
 
-# Arduino
+
+# Arduino example
 
 ```cpp
 #include "yoba/src/main.h"
@@ -48,15 +52,6 @@ Slider button();
 
 uint16_t clickCount = 0;
 
-void updateText() {
-    static std::wstringstream stream;
-    stream.str(std::wstring());
-	
-    stream << L"Click count: " << clickCount;
-    
-    button.setText(stream.str());
-}
-
 void setup() {
     // Turning display on and attaching it to screen buffer,
     // configuring touch panel and adding it as input device
@@ -76,26 +71,29 @@ void setup() {
     text.setFont(&font);
     text.setFontScale(2);
     text.setColor(&white);
+    text.setText(L"");
     updateText();
 	
     // Button
     button.setHeight(30);
     button.setCornerRadius(3);
     button.setFont(&font);
-    button.setText(L"Click me");
-	
     button.setDefaultBackgroundColor(&black);
     button.setDefaultTextColor(&white);
-    
     button.setPressedBackgroundColor(&white);
     button.setPressedTextColor(&black);
+    button.setText(L"Click on me");
 	
-    button.pressedChanged += [this]() {
+    button.isPressedChanged += [this]() {
         if (!button.isPressed())
             return;
         
-        clickCount++;
-        updateText();
+        static std::wstringstream stream;
+        stream.str(std::wstring());
+        
+        stream << L"Click count: " << clickCount++;
+        
+        button.setText(stream.str());
     };
     
     // Stack layout
@@ -114,7 +112,7 @@ void loop() {
 }
 ```
 
-# ESP-IDF
+# ESP-IDF example
 
 Same as Arduino, but
 
@@ -125,14 +123,14 @@ void main() {
     // Everything from setup()
     
     while (true) {
-         appplication.tick();
+        // Everything from loop()
     }
 }
 ```
 
 # Platformio
 
-C++17 or greater and RTTI are required, so you'll need to tweak `platformio.ini` like this
+C++17 or greater and RTTI are required, so you'll need to tweak `platformio.ini` like
 
 ```ini
 [env:yobaExample]
@@ -145,6 +143,7 @@ build_type = debug
 monitor_filters = esp32_exception_decoder
 monitor_speed = 115200
 
+; This ↓
 build_unflags =
 	-fno-rtti
 	-std=gnu++11

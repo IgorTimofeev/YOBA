@@ -10,6 +10,9 @@ namespace yoba::ui {
 			}
 
 			void setSpacing(uint16_t value) {
+				if (value == _spacing)
+					return;
+
 				_spacing = value;
 
 				invalidate();

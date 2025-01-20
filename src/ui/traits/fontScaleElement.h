@@ -10,7 +10,12 @@ namespace yoba::ui {
 			}
 
 			void setFontScale(uint8_t value) {
+				if (value == _fontScale)
+					return;
+
 				_fontScale = value;
+
+				invalidate();
 			}
 
 		private:

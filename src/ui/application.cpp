@@ -192,4 +192,11 @@ namespace yoba::ui {
 	uint32_t Application::getFlushDeltaTime() const {
 		return _flushDeltaTime;
 	}
+
+	void Application::onRender(Renderer* renderer) {
+		if (getBackgroundColor())
+			renderer->clear(getBackgroundColor());
+
+		Layout::onRender(renderer);
+	}
 }

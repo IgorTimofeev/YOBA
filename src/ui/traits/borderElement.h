@@ -11,6 +11,9 @@ namespace yoba::ui {
 			}
 
 			void setBorderColor(const Color* value) {
+				if (value == _borderColor)
+					return;
+
 				_borderColor = value;
 
 				invalidate();

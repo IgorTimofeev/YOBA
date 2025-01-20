@@ -11,6 +11,9 @@ namespace yoba::ui {
 			}
 
 			void setPrimaryColor(const Color* value) {
+				if (value == _primaryColor)
+					return;
+
 				_primaryColor = value;
 
 				invalidate();

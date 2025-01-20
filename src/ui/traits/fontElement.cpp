@@ -7,6 +7,9 @@ namespace yoba::ui {
 	}
 
 	void FontElement::setFont(const Font* value) {
+		if (value == _font)
+			return;
+
 		_font = value;
 
 		invalidate();
