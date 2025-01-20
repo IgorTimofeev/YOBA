@@ -1,6 +1,5 @@
 #include "color.h"
-#include "Arduino.h"
-#include "number.h"
+#include "math.h"
 
 namespace yoba {
 	ColorModel Color::getModel() const {

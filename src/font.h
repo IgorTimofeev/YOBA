@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Arduino.h"
+#include <string>
+#include <functional>
 #include "cstdlib"
 #include "size.h"
 #include "glyph.h"

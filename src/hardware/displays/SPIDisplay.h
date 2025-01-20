@@ -1,13 +1,13 @@
 #pragma once
 
 #include <cstdint>
-#include "SPI.h"
 #include "display.h"
 
 namespace yoba::hardware {
 	class SPIDisplay : public virtual Display {
 		public:
 			SPIDisplay(
+				MCUHal* hal,
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
@@ -16,13 +16,9 @@ namespace yoba::hardware {
 
 			void setup() override;
 
+			MCUHal* getHal();
+
 		protected:
-			uint8_t _csPin;
-			uint8_t _dcPin;
-			int8_t _rstPin;
-
-			const SPISettings _spiSettings;
-
 			void onOrientationChanged() override;
 
 			void setChipSelect(uint8_t value) const;
@@ -39,5 +35,12 @@ namespace yoba::hardware {
 			virtual void writeSetupCommands() = 0;
 			virtual void writeOrientationChangeCommands() = 0;
 			virtual void writeColorModeChangeCommands() = 0;
+
+		private:
+			MCUHal* _hal;
+			uint8_t _csPin;
+			uint8_t _dcPin;
+			int8_t _rstPin;
+			const SPIHalSettings _SPIHalSettings;
 	};
 }

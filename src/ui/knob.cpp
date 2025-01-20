@@ -3,7 +3,7 @@
 namespace yoba::ui {
 	void Knob::onRender(Renderer* renderer) {
 		const auto& bounds = getBounds();
-		const uint16_t radius = max(bounds.getWidth(), bounds.getHeight()) / 2;
+		const uint16_t radius = std::max(bounds.getWidth(), bounds.getHeight()) / 2;
 		const auto center = bounds.getCenter();
 
 		// Primary circle
@@ -27,7 +27,7 @@ namespace yoba::ui {
 		// Line
 		if (getLineColor()) {
 			auto centerF = (Vector2F) center;
-			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - (float) radians(90));
+			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - (float) toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 
 			renderer->renderLine(
@@ -54,7 +54,7 @@ namespace yoba::ui {
 		}
 		else {
 			const auto oldAngle = _angle;
-			_angle = ((TouchDragEvent&) event).getPosition().getRotation(getBounds().getCenter()) - (float) radians(90);
+			_angle = ((TouchDragEvent&) event).getPosition().getRotation(getBounds().getCenter()) - (float) toRadians(90);
 
 			rotated(oldAngle, _angle);
 		}

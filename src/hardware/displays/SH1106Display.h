@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "SPIDisplay.h"
+#include "../hal/hal.h"
 #include "rendering/targets/directRenderTarget.h"
 #include "contrastDisplay.h"
 #include "invertibleDisplay.h"
@@ -11,6 +12,7 @@ namespace yoba::hardware {
 	class SH1106Display : public SPIDisplay, public DirectRenderTarget, public ContrastDisplay, public InvertibleDisplay {
 		public:
 			SH1106Display(
+				MCUHal* hal,
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,

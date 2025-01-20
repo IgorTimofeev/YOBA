@@ -3,7 +3,7 @@
 #include "animation.h"
 
 namespace yoba::ui {
-	Application::Application() {
+	Application::Application(hardware::SystemHal* hal) : _hal(hal) {
 		Layout::setApplication(this);
 	}
 
@@ -61,7 +61,7 @@ namespace yoba::ui {
 		// Resetting viewport just in case if some UI element broke it
 		_renderer->resetViewport();
 
-		auto time = millis();
+		auto time = _hal->getTime();
 
 		// Handling input from devices like touchscreens, rotary encoders, etc.
 		inputDevicesTick();
@@ -72,29 +72,29 @@ namespace yoba::ui {
 		// Playing animations
 		animationsTick();
 
-		_tickDeltaTime = millis() - time;
+		_tickDeltaTime = _hal->getTime() - time;
 
 		// Measuring & arranging child elements
 		if (!_isMeasuredAndArranged) {
-			time = millis();
+			time = _hal->getTime();
 
 			measure(getSize());
 			arrange(Bounds(getSize()));
 
-			_layoutDeltaTime = millis() - time;
+			_layoutDeltaTime = _hal->getTime() - time;
 
 			_isMeasuredAndArranged = true;
 		}
 
 		// Rendering
 		if (!_isRendered) {
-			time = millis();
+			time = _hal->getTime();
 			render(_renderer);
-			_renderDeltaTime = millis() - time;
+			_renderDeltaTime = _hal->getTime() - time;
 
-			time = millis();
+			time = _hal->getTime();
 			_renderer->flushBuffer();
-			_flushDeltaTime = millis() - time;
+			_flushDeltaTime = _hal->getTime() - time;
 
 			_isRendered = true;
 		}
@@ -184,5 +184,9 @@ namespace yoba::ui {
 
 	uint32_t Application::getFlushDeltaTime() const {
 		return _flushDeltaTime;
+	}
+
+	hardware::SystemHal* Application::getHal() const {
+		return _hal;
 	}
 }

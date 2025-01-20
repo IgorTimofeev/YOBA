@@ -8,7 +8,6 @@ namespace yoba {
 	class MonochromeRenderer : public Renderer {
 		public:
 			void flushBuffer() override;
-			void printBufferContentsAsBinary();
 
 		protected:
 			size_t getRequiredBufferLength() override;

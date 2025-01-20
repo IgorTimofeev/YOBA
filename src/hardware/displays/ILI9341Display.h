@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "../hal/hal.h"
 #include "rendering/targets/bufferedRenderTarget.h"
 #include "SPIDisplay.h"
 
@@ -8,6 +9,7 @@ namespace yoba::hardware {
 	class ILI9341Display : public virtual SPIDisplay, public virtual BufferedRenderTarget {
 		public:
 			ILI9341Display(
+				MCUHal* hal,
 				ColorModel colorModel,
 				RenderTargetOrientation orientation,
 

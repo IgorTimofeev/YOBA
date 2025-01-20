@@ -128,15 +128,15 @@ namespace yoba {
 			const uint8_t idxG = (index / blues) % greens;
 			const uint8_t idxR = (index / blues / greens) % reds;
 
-			const auto r = (uint8_t) round((float) idxR * 255.0f / ((float) reds - 1.0f));
-			const auto g = (uint8_t) round((float) idxG * 255.0f / ((float) greens - 1.0f));
-			const auto b = (uint8_t) round((float) idxB * 255.0f / ((float) blues - 1.0f));
+			const auto r = (uint8_t) std::round((float) idxR * 255.0f / ((float) reds - 1.0f));
+			const auto g = (uint8_t) std::round((float) idxG * 255.0f / ((float) greens - 1.0f));
+			const auto b = (uint8_t) std::round((float) idxB * 255.0f / ((float) blues - 1.0f));
 
 			setPaletteColor(index, Rgb888Color(r, g, b));
 		}
 
 		for (uint8_t index = 0; index < 16; index++) {
-			const auto shade = (uint8_t) round(255.0f * (float) (index + 1) / 16.0f);
+			const auto shade = (uint8_t) std::round(255.0f * (float) (index + 1) / 16.0f);
 
 			setPaletteColor(240 + index, Rgb888Color(shade, shade, shade));
 		}

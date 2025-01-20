@@ -10,12 +10,12 @@ namespace yoba::ui {
 
 		if (isFocused()) {
 			if (isCaptured()) {
-				if (millis() >= _continuousScrollTime) {
+				if (getApplication()->getHal()->getTime() >= _continuousScrollTime) {
 					applyContinuousScroll();
 				}
 			}
 			else {
-				if (millis() >= _cursorBlinkTime) {
+				if (getApplication()->getHal()->getTime() >= _cursorBlinkTime) {
 					setCursorBlinkStateAndTime(!_cursorBlinkState);
 				}
 			}
@@ -206,7 +206,7 @@ namespace yoba::ui {
 			setCursorPosition(cursorPosition);
 		}
 
-		_continuousScrollTime = millis() + _continuousScrollInterval;
+		_continuousScrollTime = getApplication()->getHal()->getTime() + _continuousScrollInterval;
 	}
 
 	void TextField::insert(const std::wstring_view& value) {
@@ -366,7 +366,7 @@ namespace yoba::ui {
 
 	void TextField::setCursorBlinkStateAndTime(bool value) {
 		_cursorBlinkState = value;
-		_cursorBlinkTime = millis() + _cursorBlinkInterval;
+		_cursorBlinkTime = getApplication()->getHal()->getTime() + _cursorBlinkInterval;
 	}
 
 	const uint16_t& TextField::getTextMargin() const {

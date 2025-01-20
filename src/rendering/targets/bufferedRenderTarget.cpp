@@ -1,5 +1,9 @@
 #include "bufferedRenderTarget.h"
 
+#ifdef ESP32
+	#include <esp_heap_caps.h>
+#endif
+
 namespace yoba::hardware {
 	BufferedRenderTarget::BufferedRenderTarget() { // NOLINT(*-use-equals-default)
 
@@ -43,7 +47,13 @@ namespace yoba::hardware {
 		// Allocating pixel buffer
 		delete _buffer;
 		_bufferLength = Color::getBytesPerType(this->_size.getWidth() * _bufferHeight, _colorModel);
-		_buffer = (uint8_t*) heap_caps_malloc(_bufferLength, MALLOC_CAP_DMA);
+
+		#ifdef ESP32
+			_buffer = (uint8_t*) heap_caps_malloc(_bufferLength, MALLOC_CAP_DMA);
+		#else
+			_buffer = new uint8_t[_bufferLength];
+		#endif
+
 		assert(_buffer != nullptr);
 	}
 }

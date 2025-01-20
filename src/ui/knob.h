@@ -7,7 +7,7 @@
 #include "callback.h"
 #include "ui/traits/backgroundColorElement.h"
 #include "event.h"
-#include "number.h"
+#include "math.h"
 
 namespace yoba::ui {
 	class KnobRotateEvent;
@@ -34,7 +34,7 @@ namespace yoba::ui {
 
 		private:
 			float _angle = 0;
-			float _angleStep = radians(10);
+			float _angleStep = toRadians(10);
 			const Color* _lineColor = nullptr;
 			const Color* _middleColor = nullptr;
 

@@ -6,8 +6,6 @@
 */
 /**************************************************************************/
 
-#include <Wire.h>
-#include "Arduino.h"
 #include "FT6336UTouchPanel.h"
 #include "FunctionalInterrupt.h"
 #include "ui/application.h"
@@ -15,7 +13,8 @@
 namespace yoba::hardware {
 	using namespace yoba::ui;
 
-	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
+	FT6336UTouchPanel::FT6336UTouchPanel(MCUHal* hal, uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
+		_hal(hal),
 		_intPin(intPin),
 		_rstPin(rstPin),
 		_sdaPin(sdaPin),
@@ -26,31 +25,25 @@ namespace yoba::hardware {
 
 	void FT6336UTouchPanel::setup() {
 		// Interrupt
-		pinMode(_intPin, INPUT_PULLUP);
+		_hal->GPIO->setPinInput(_intPin);
 
-		attachInterrupt(
-			digitalPinToInterrupt(_intPin),
-			std::bind(&onInterrupt, this),
-			CHANGE
-		);
+		_hal->GPIO->setOnInterrupt(_intPin, [this]() {
+			_interrupted = true;
+		});
 
 		// I2C
-		Wire.begin(_sdaPin, _sclPin);
+		_hal->I2C->setup(_sdaPin, _sclPin);
 
 		// Toggle reset pin
 		if (_rstPin >= 0) {
-			pinMode(_rstPin, OUTPUT);
-			digitalWrite(_rstPin, LOW);
-			delay(10);
-			digitalWrite(_rstPin, HIGH);
+			_hal->GPIO->setPinOutput(_rstPin);
+			_hal->GPIO->write(_rstPin, false);
+			_hal->sleep(10);
+			_hal->GPIO->write(_rstPin, true);
 		}
 
 		// Do we need some delay? Hmmm
-		//    delay(500);
-	}
-
-	void FT6336UTouchPanel::onInterrupt(FT6336UTouchPanel* driver) {
-		driver->_interrupted = true;
+		//    _hal->delayMilliseconds(500);
 	}
 
 	uint8_t FT6336UTouchPanel::read_device_mode() {
@@ -259,29 +252,11 @@ namespace yoba::hardware {
 	}
 
 	uint8_t FT6336UTouchPanel::readByte(uint8_t addr) {
-		uint8_t result = 0;
-		uint8_t readLength;
-
-		do {
-			Wire.beginTransmission(I2C_ADDR_FT6336U);
-			Wire.write(addr);
-			Wire.endTransmission(false); // Restart
-//        delay(10);
-			readLength = Wire.requestFrom(I2C_ADDR_FT6336U, 1);
-		} while (readLength == 0);
-
-		while (Wire.available()) {
-			result = Wire.read();
-		}
-
-		return result;
+		return _hal->I2C->readByte(I2C_ADDR_FT6336U, addr);
 	}
 
 	void FT6336UTouchPanel::writeByte(uint8_t addr, uint8_t data) {
-		Wire.beginTransmission(I2C_ADDR_FT6336U);
-		Wire.write(addr);
-		Wire.write(data);
-		Wire.endTransmission();
+		_hal->I2C->writeByte(I2C_ADDR_FT6336U, addr, data);
 	}
 
 	// ------------------------------------------------------------------------

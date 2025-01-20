@@ -106,8 +106,8 @@ namespace yoba {
 			)
 			return;
 
-		uint16_t x1 = max(point.getX(), viewport.getX());
-		uint16_t x2 = min(point.getX() + length - 1, viewport.getX2());
+		uint16_t x1 = std::max(point.getX(), viewport.getX());
+		uint16_t x2 = std::min(point.getX() + length - 1, viewport.getX2());
 		length = x2 - x1 + 1;
 
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
@@ -126,8 +126,8 @@ namespace yoba {
 			)
 			return;
 
-		uint16_t y1 = max(point.getY(), viewport.getY());
-		uint16_t y2 = min(point.getY() + length - 1, viewport.getY2());
+		uint16_t y1 = std::max(point.getY(), viewport.getY());
+		uint16_t y2 = std::min(point.getY() + length - 1, viewport.getY2());
 		length = y2 - y1 + 1;
 
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
@@ -301,7 +301,7 @@ namespace yoba {
 		// Vertical line
 		if (from.getX() == to.getX()) {
 			renderVerticalLine(
-				Point(from.getX(), min(from.getY(), to.getY())),
+				Point(from.getX(), std::min(from.getY(), to.getY())),
 				abs(to.getY() - from.getY()) + 1,
 				color
 			);
@@ -309,7 +309,7 @@ namespace yoba {
 		// Horizontal line
 		else if (from.getY() == to.getY()) {
 			renderHorizontalLine(
-				Point(min(from.getX(), to.getX()), from.getY()),
+				Point(std::min(from.getX(), to.getX()), from.getY()),
 				abs(to.getX() - from.getX()) + 1,
 				color
 			);

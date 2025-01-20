@@ -113,7 +113,7 @@ namespace yoba::ui {
 			void onIsCheckedChanged() override {
 				CheckedElement::onIsCheckedChanged();
 
-				startAnimation(new Animation(250, [this](double position) {
+				startAnimation(new Animation(getApplication(), 250, [this](double position) {
 					const auto& bounds = getBounds();
 
 					_handleOffset = (uint16_t) std::round((isChecked() ? position : 1 - position) * (float) (bounds.getWidth() - bounds.getHeight()));

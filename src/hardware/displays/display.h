@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rendering/targets/renderTarget.h"
+#include "../hal/hal.h"
 
 namespace yoba::hardware {
 	class Display : public RenderTarget {
@@ -11,7 +12,9 @@ namespace yoba::hardware {
 				ColorModel colorModel,
 				RenderTargetPixelWriting pixelWriting,
 				RenderTargetPixelOrder pixelOrder
-			) : RenderTarget(resolution, orientation, colorModel, pixelWriting, pixelOrder) {
+			) :
+				RenderTarget(resolution, orientation, colorModel, pixelWriting, pixelOrder)
+			{
 
 			}
 	};

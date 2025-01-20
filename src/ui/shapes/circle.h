@@ -23,7 +23,7 @@ namespace yoba::ui {
 
 				renderer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
-					min(bounds.getWidth(), bounds.getHeight()) / 2,
+					std::min(bounds.getWidth(), bounds.getHeight()) / 2,
 					color
 				);
 			}

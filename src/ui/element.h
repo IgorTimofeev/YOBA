@@ -10,11 +10,12 @@
 #include "rendering/renderers/renderer.h"
 
 namespace yoba {
-	class Animation;
 	class Event;
 }
 
 namespace yoba::ui {
+	class Animation;
+
 	enum class Alignment: uint8_t {
 		start,
 		center,

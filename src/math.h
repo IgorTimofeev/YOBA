@@ -24,6 +24,16 @@ namespace yoba {
 	}
 
 	template<typename T>
+	float toRadians(T degrees) {
+		return (float) degrees * M_PI / 180.f;
+	}
+
+	template<typename T>
+	float toDegrees(T radians) {
+		return (float) radians * 180.f / M_PI;
+	}
+
+	template<typename T>
 	T interpolate(T first, T second, float position) {
 		return (T) ((float) first + (float) (second - first) * position);
 	}

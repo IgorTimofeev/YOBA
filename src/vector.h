@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Arduino.h"
 #include <cstdint>
+#include <math.h>
 
 namespace yoba {
 	template<typename T>
@@ -84,7 +84,7 @@ namespace yoba {
 
 	template<typename T>
 	T Vector2<T>::getLength() const {
-		return (T) sqrt((float) _x * (float) _x + (float) _y * (float) _y);
+		return (T) std::sqrt((float) _x * (float) _x + (float) _y * (float) _y);
 	}
 
 	template<typename T>
@@ -99,7 +99,7 @@ namespace yoba {
 
 	template<typename T>
 	float Vector2<T>::getRotation(const Vector2& point) const {
-		return atan2f((float) (point._y - _y), (float) (point._x - _x));
+		return std::atan2((float) (point._y - _y), (float) (point._x - _x));
 	}
 
 	template<typename T>
@@ -112,7 +112,7 @@ namespace yoba {
 
 	template<typename T>
 	Vector2<T> Vector2<T>::rotate(float angleInRadians) const {
-		return rotate(sin(angleInRadians), cos(angleInRadians));
+		return rotate(std::sin(angleInRadians), std::cos(angleInRadians));
 	}
 
 	template<typename T>

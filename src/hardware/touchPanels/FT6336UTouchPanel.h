@@ -9,7 +9,7 @@
 #pragma once
 
 #include <cstdint>
-#include <Arduino.h>
+#include "../hal/hal.h"
 #include "touchPanel.h"
 #include "touchPoint.h"
 #include "vector.h"
@@ -89,7 +89,7 @@ namespace yoba::hardware {
 	/**************************************************************************/
 	class FT6336UTouchPanel : public TouchPanel {
 		public:
-			explicit FT6336UTouchPanel(uint8_t intPin, int8_t rstPin = -1, uint8_t sdaPin = SDA, uint8_t sclPin = SCL);
+			FT6336UTouchPanel(MCUHal* hal, uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin);
 
 			void setup() override;
 			void tick(ui::Application* application) override;
@@ -147,16 +147,17 @@ namespace yoba::hardware {
 			uint8_t read_state();
 
 		private:
+			MCUHal* _hal;
+
 			uint8_t _sdaPin;
 			uint8_t _sclPin;
 			uint8_t _rstPin;
 			uint8_t _intPin;
 
-			static uint8_t readByte(uint8_t addr);
-			static void writeByte(uint8_t addr, uint8_t data);
+			uint8_t readByte(uint8_t addr);
+			void writeByte(uint8_t addr, uint8_t data);
 
 			volatile bool _interrupted = false;
-			static void onInterrupt(FT6336UTouchPanel* driver);
 
 			TouchPoint _touchPoints[2] {
 				TouchPoint(),

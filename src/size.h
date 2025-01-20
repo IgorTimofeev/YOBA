@@ -1,13 +1,10 @@
 #pragma once
 
-#include "Arduino.h"
-#include "vector.h"
 #include <cstdint>
-#include <climits>
-#include <limits>
+#include "vector.h"
 
 namespace yoba {
-	class Size {
+	struct Size {
 		public:
 			static const uint16_t computed = 0xFFFF;
 			static const uint16_t infinity = 0xFFFE;

@@ -74,22 +74,4 @@ namespace yoba {
 	void MonochromeRenderer::renderImageNative(const Point& point, const Image* image) {
 
 	}
-
-	void MonochromeRenderer::printBufferContentsAsBinary() {
-		Serial.printf("Monochrome screen buffer %d x %d:\n", getTarget()->getSize().getWidth(), getTarget()->getSize().getHeight());
-
-		size_t bufferPtr = 0;
-
-		for (int j = 0; j < getTarget()->getSize().getHeight(); j++) {
-			for (int i = 0; i < getTarget()->getSize().getWidth(); i += 8) {
-				for (int k = 0; k < 8; k++) {
-					Serial.print((((getBuffer()[bufferPtr] >> (7 - k)) & 0b1) == 1) ? "#" : ".");
-				}
-
-				bufferPtr++;
-			}
-
-			Serial.println();
-		}
-	}
 }

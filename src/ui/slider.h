@@ -3,7 +3,7 @@
 #include "element.h"
 #include "traits/focusableElement.h"
 #include "event.h"
-#include "number.h"
+#include "math.h"
 
 namespace yoba::ui {
 	class Slider : public FocusableElement {

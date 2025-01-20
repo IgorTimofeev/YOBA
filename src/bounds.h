@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Arduino.h"
 #include <cstdint>
 #include "vector.h"
 #include "size.h"

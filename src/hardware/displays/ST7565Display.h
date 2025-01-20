@@ -6,11 +6,13 @@
 #include "contrastDisplay.h"
 #include "invertibleDisplay.h"
 #include "size.h"
+#include "../hal/hal.h"
 
 namespace yoba::hardware {
 	class ST7565Display : public SPIDisplay, public DirectRenderTarget, public ContrastDisplay, public InvertibleDisplay {
 		public:
 			ST7565Display(
+				MCUHal* hal,
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
