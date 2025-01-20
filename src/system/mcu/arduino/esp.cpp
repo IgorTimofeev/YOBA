@@ -30,7 +30,7 @@ namespace yoba::system {
 		}
 
 		void write(uint8_t pin, bool value) {
-			return digitalWrite(pin, value);
+			digitalWrite(pin, value);
 		}
 
 		void setOnInterrupt(uint8_t pin, std::function<void()> callback) {
