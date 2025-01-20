@@ -3,11 +3,11 @@
 #include <cstdlib>
 #include <cstdint>
 #include "rendering/targets/renderTarget.h"
-#include "size.h"
-#include "bounds.h"
-#include "color.h"
-#include "image.h"
-#include "font.h"
+#include "main/size.h"
+#include "main/bounds.h"
+#include "main/color.h"
+#include "main/image.h"
+#include "main/font.h"
 
 namespace yoba {
 	class Renderer {

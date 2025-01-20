@@ -1,14 +1,14 @@
 #pragma once
 
 #include "element.h"
-#include "color.h"
+#include "main/color.h"
 #include "rendering/renderers/renderer.h"
 #include "traits/textElement.h"
 #include "traits/fontElement.h"
 #include "traits/cornerRadiusElement.h"
 #include "traits/focusableElement.h"
 #include "traits/fontScaleElement.h"
-#include "event.h"
+#include "main/event.h"
 
 namespace yoba::ui {
 	class Button : public FocusableElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {

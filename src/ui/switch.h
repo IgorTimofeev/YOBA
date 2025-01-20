@@ -4,7 +4,7 @@
 #include "traits/checkedElement.h"
 #include "traits/cornerRadiusElement.h"
 #include "traits/focusableElement.h"
-#include "event.h"
+#include "main/event.h"
 #include "animation.h"
 
 namespace yoba::ui {

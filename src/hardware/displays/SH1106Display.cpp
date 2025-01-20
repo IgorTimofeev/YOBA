@@ -8,7 +8,7 @@ namespace yoba::hardware {
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
-		Display(
+		RenderTarget(
 			Size(128, 64),
 			RenderTargetOrientation::clockwise0,
 			ColorModel::monochrome,

@@ -2,8 +2,8 @@
 
 #include "element.h"
 #include "rendering/renderers/renderer.h"
-#include "bounds.h"
-#include "image.h"
+#include "main/bounds.h"
+#include "main/image.h"
 
 namespace yoba::ui {
 	class ImageView : public Element {

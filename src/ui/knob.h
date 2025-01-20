@@ -1,13 +1,13 @@
 #pragma once
 
 #include "element.h"
-#include "color.h"
+#include "main/color.h"
 #include "rendering/renderers/renderer.h"
 #include "cmath"
-#include "callback.h"
+#include "main/callback.h"
 #include "ui/traits/backgroundColorElement.h"
-#include "event.h"
-#include "math.h"
+#include "main/event.h"
+#include "main/math.h"
 
 namespace yoba::ui {
 	class KnobRotateEvent;

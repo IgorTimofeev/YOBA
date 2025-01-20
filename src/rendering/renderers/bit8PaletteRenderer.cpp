@@ -1,5 +1,5 @@
 #include "bit8PaletteRenderer.h"
-#include "bounds.h"
+#include "main/bounds.h"
 #include "rendering/targets/bufferedRenderTarget.h"
 
 namespace yoba {

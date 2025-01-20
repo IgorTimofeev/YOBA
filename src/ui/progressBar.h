@@ -2,8 +2,8 @@
 
 #include "element.h"
 #include "ui/traits/cornerRadiusElement.h"
-#include "event.h"
-#include "math.h"
+#include "main/event.h"
+#include "main/math.h"
 
 namespace yoba::ui {
 	class ProgressBar : public CornerRadiusElement {

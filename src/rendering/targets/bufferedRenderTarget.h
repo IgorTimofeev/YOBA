@@ -1,10 +1,10 @@
 #pragma once
 
-#include "hardware/displays/display.h"
+#include "renderTarget.h"
 #include <functional>
 
 namespace yoba::hardware {
-	class BufferedRenderTarget : public virtual Display {
+	class BufferedRenderTarget : public virtual RenderTarget {
 		public:
 			BufferedRenderTarget();
 

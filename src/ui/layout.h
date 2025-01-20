@@ -3,9 +3,9 @@
 #include "element.h"
 #include "vector"
 #include "rendering/renderers/renderer.h"
-#include "bounds.h"
-#include "size.h"
-#include "event.h"
+#include "main/bounds.h"
+#include "main/size.h"
+#include "main/event.h"
 #include <iterator>
 
 namespace yoba::ui {

@@ -4,10 +4,10 @@
 #include <limits>
 
 #include "../system.h"
-#include "../callback.h"
-#include "../margin.h"
-#include "../bounds.h"
-#include "../size.h"
+#include "main/callback.h"
+#include "main/margin.h"
+#include "main/bounds.h"
+#include "main/size.h"
 #include "../rendering/renderers/renderer.h"
 
 namespace yoba {

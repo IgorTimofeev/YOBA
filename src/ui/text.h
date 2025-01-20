@@ -6,7 +6,7 @@
 #include "traits/fontElement.h"
 #include "traits/fontScaleElement.h"
 #include "rendering/renderers/renderer.h"
-#include "size.h"
+#include "main/size.h"
 
 namespace yoba::ui {
 	class Text : public TextElement, public FontElement, public FontScaleElement, public TextColorElement {

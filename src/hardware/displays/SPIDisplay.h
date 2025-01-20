@@ -2,10 +2,10 @@
 
 #include "../../system.h"
 #include <cstdint>
-#include "display.h"
+#include "../../rendering/targets/renderTarget.h"
 
 namespace yoba::hardware {
-	class SPIDisplay : public virtual Display {
+	class SPIDisplay : public virtual RenderTarget {
 		public:
 			SPIDisplay(
 				uint8_t csPin,

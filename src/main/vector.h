@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <math.h>
+#include "math.h"
 
 namespace yoba {
 	template<typename T>

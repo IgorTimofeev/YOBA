@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include "color.h"
-#include "vector.h"
-#include "size.h"
+#include "main/color.h"
+#include "main/vector.h"
+#include "main/size.h"
 
 namespace yoba {
 	enum class RenderTargetOrientation : uint8_t {

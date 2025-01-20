@@ -12,8 +12,8 @@
 #include "traits/fontScaleElement.h"
 #include "keyboard.h"
 
-#include "callback.h"
-#include "event.h"
+#include "main/callback.h"
+#include "main/event.h"
 #include "rendering/renderers/renderer.h"
 
 namespace yoba::ui {

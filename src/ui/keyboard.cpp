@@ -2,7 +2,7 @@
 #include "keyboard.h"
 #include "stackLayout.h"
 #include "application.h"
-#include "math.h"
+#include "main/math.h"
 
 namespace yoba::ui {
 	// ----------------------------- KeyboardKey -----------------------------

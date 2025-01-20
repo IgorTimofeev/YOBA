@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include "rendering/targets/bufferedRenderTarget.h"
+#include "../../rendering/targets/bufferedRenderTarget.h"
 #include "SPIDisplay.h"
 
 namespace yoba::hardware {
-	class ILI9341Display : public virtual SPIDisplay, public virtual BufferedRenderTarget {
+	class ILI9341Display : public SPIDisplay, public BufferedRenderTarget {
 		public:
 			ILI9341Display(
 				ColorModel colorModel,

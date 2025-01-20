@@ -2,10 +2,10 @@
 
 #include <cstdint>
 #include "SPIDisplay.h"
-#include "rendering/targets/directRenderTarget.h"
+#include "../../rendering/targets/directRenderTarget.h"
 #include "contrastDisplay.h"
 #include "invertibleDisplay.h"
-#include "size.h"
+#include "main/size.h"
 
 namespace yoba::hardware {
 	class ST7565Display : public SPIDisplay, public DirectRenderTarget, public ContrastDisplay, public InvertibleDisplay {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../element.h"
-#include "../../color.h"
+#include "main/color.h"
 
 namespace yoba::ui {
 	class TextColorElement : public virtual Element {

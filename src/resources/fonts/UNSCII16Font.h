@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "font.h"
+#include "main/font.h"
 
 namespace yoba {
-	class unscii16Font : public Font {
+	class UNSCII16Font : public Font {
 		public:
-			unscii16Font() : Font(
+			UNSCII16Font() : Font(
 				32,
 				126,
 				18,
