@@ -7,14 +7,12 @@
 /**************************************************************************/
 
 #include "FT6336UTouchPanel.h"
-#include "FunctionalInterrupt.h"
 #include "ui/application.h"
 
 namespace yoba::hardware {
 	using namespace yoba::ui;
 
-	FT6336UTouchPanel::FT6336UTouchPanel(MCUHal* hal, uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
-		_hal(hal),
+	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
 		_intPin(intPin),
 		_rstPin(rstPin),
 		_sdaPin(sdaPin),
@@ -25,25 +23,25 @@ namespace yoba::hardware {
 
 	void FT6336UTouchPanel::setup() {
 		// Interrupt
-		_hal->GPIO->setPinInput(_intPin);
+		system::gpio::setPinInput(_intPin);
 
-		_hal->GPIO->setOnInterrupt(_intPin, [this]() {
+		system::gpio::setOnInterrupt(_intPin, [this]() {
 			_interrupted = true;
 		});
 
 		// I2C
-		_hal->I2C->setup(_sdaPin, _sclPin);
+		system::i2c::setup(_sdaPin, _sclPin);
 
 		// Toggle reset pin
 		if (_rstPin >= 0) {
-			_hal->GPIO->setPinOutput(_rstPin);
-			_hal->GPIO->write(_rstPin, false);
-			_hal->sleep(10);
-			_hal->GPIO->write(_rstPin, true);
+			system::gpio::setPinOutput(_rstPin);
+			system::gpio::write(_rstPin, false);
+			system::sleep(10);
+			system::gpio::write(_rstPin, true);
 		}
 
 		// Do we need some delay? Hmmm
-		//    _hal->delayMilliseconds(500);
+		// system::sleep(500);
 	}
 
 	uint8_t FT6336UTouchPanel::read_device_mode() {
@@ -252,11 +250,11 @@ namespace yoba::hardware {
 	}
 
 	uint8_t FT6336UTouchPanel::readByte(uint8_t addr) {
-		return _hal->I2C->readByte(I2C_ADDR_FT6336U, addr);
+		return system::i2c::readByte(I2C_ADDR_FT6336U, addr);
 	}
 
 	void FT6336UTouchPanel::writeByte(uint8_t addr, uint8_t data) {
-		_hal->I2C->writeByte(I2C_ADDR_FT6336U, addr, data);
+		system::i2c::writeByte(I2C_ADDR_FT6336U, addr, data);
 	}
 
 	// ------------------------------------------------------------------------

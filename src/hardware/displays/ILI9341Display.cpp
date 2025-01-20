@@ -2,7 +2,6 @@
 
 namespace yoba::hardware {
 	ILI9341Display::ILI9341Display(
-		MCUHal* hal,
 		ColorModel colorModel,
 		RenderTargetOrientation orientation,
 
@@ -19,7 +18,6 @@ namespace yoba::hardware {
 			RenderTargetPixelOrder::YX
 		),
 		SPIDisplay(
-			hal,
 			csPin,
 			dcPin,
 			rstPin,
@@ -231,11 +229,11 @@ namespace yoba::hardware {
 
 		/* Sleep out */
 		this->writeCommandAndData(0x11, 0x00);
-		getHal()->sleep(100);
+		system::sleep(100);
 
 		/* Display on */
 		this->writeCommandAndData(0x29, 0x00);
-		getHal()->sleep(100);
+		system::sleep(100);
 	}
 
 	void ILI9341Display::flushBuffer(uint16_t y) {

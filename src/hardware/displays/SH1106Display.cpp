@@ -3,7 +3,6 @@
 
 namespace yoba::hardware {
 	SH1106Display::SH1106Display(
-		MCUHal* hal,
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
@@ -17,7 +16,6 @@ namespace yoba::hardware {
 			RenderTargetPixelOrder::XY
 		),
 		SPIDisplay(
-			hal,
 			csPin,
 			dcPin,
 			rstPin,

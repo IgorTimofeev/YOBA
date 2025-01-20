@@ -1,7 +1,6 @@
 #pragma once
 
 #include "rendering/targets/renderTarget.h"
-#include "../hal/hal.h"
 
 namespace yoba::hardware {
 	class Display : public RenderTarget {

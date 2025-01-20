@@ -3,7 +3,6 @@
 
 namespace yoba::hardware {
 	ST7565Display::ST7565Display(
-		MCUHal* hal,
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
@@ -17,7 +16,6 @@ namespace yoba::hardware {
 			RenderTargetPixelOrder::XYReversed
 		),
 		SPIDisplay(
-			hal,
 			csPin,
 			dcPin,
 			rstPin,
@@ -50,17 +48,17 @@ namespace yoba::hardware {
 		// turn on voltage converter (VC=1, VR=0, VF=0)
 		writeCommand((uint8_t) Command::SET_POWER_CONTROL | 0x4);
 		// wait for 50% rising
-		getHal()->sleep(50);
+		system::sleep(50);
 
 		// turn on voltage regulator (VC=1, VR=1, VF=0)
 		writeCommand((uint8_t) Command::SET_POWER_CONTROL | 0x6);
 		// wait >=50ms
-		getHal()->sleep(50);
+		system::sleep(50);
 
 		// turn on voltage follower (VC=1, VR=1, VF=1)
 		writeCommand((uint8_t) Command::SET_POWER_CONTROL | 0x7);
 		// wait
-		getHal()->sleep(10);
+		system::sleep(10);
 
 		// set lcd operating voltage (regulator resistor, ref voltage resistor)
 		writeCommand((uint8_t) Command::SET_RESISTOR_RATIO | 0x6);

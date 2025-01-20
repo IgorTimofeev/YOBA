@@ -2,17 +2,15 @@
 
 namespace yoba::hardware {
 	SPIDisplay::SPIDisplay(
-		MCUHal* hal,
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
-		_hal(hal),
 		_csPin(csPin),
 		_dcPin(dcPin),
 		_rstPin(rstPin),
-		_SPIHalSettings(SPIHalSettings(SPIFrequency))
+		_SPIFrequency(SPIFrequency)
 	{
 
 	}
@@ -21,25 +19,25 @@ namespace yoba::hardware {
 		Display::setup();
 
 		// Resetting CS pin just in case
-		_hal->GPIO->setPinOutput(_csPin);
+		system::gpio::setPinOutput(_csPin);
 		setChipSelect(true);
 
 		// Initialize non-SPI GPIOs
-		_hal->GPIO->setPinOutput(_dcPin);
+		system::gpio::setPinOutput(_dcPin);
 
 		// Toggle reset pin if it was defined
 		if (_rstPin >= 0) {
-			_hal->GPIO->setPinOutput(_rstPin);
+			system::gpio::setPinOutput(_rstPin);
 
-			_hal->GPIO->write(_rstPin, 0);
-			_hal->sleep(100);
+			system::gpio::write(_rstPin, 0);
+			system::sleep(100);
 
-			_hal->GPIO->write(_rstPin, 1);
-			_hal->sleep(100);
+			system::gpio::write(_rstPin, 1);
+			system::sleep(100);
 		}
 
 		// SPI
-		_hal->SPI->setup();
+		system::spi::setup();
 
 		writeSetupCommands();
 	}
@@ -47,7 +45,7 @@ namespace yoba::hardware {
 	void SPIDisplay::writeData(uint8_t data) {
 		setChipSelect(false);
 
-		_hal->SPI->writeByte(_SPIHalSettings, data);
+		system::spi::writeByte(_SPIFrequency, data);
 
 		setChipSelect(true);
 	}
@@ -55,7 +53,7 @@ namespace yoba::hardware {
 	void SPIDisplay::writeData(const uint8_t* data, size_t length) {
 		setChipSelect(false);
 
-		_hal->SPI->writeBytes(_SPIHalSettings, data, length);
+		system::spi::writeBytes(_SPIFrequency, data, length);
 
 		setChipSelect(true);
 	}
@@ -83,14 +81,10 @@ namespace yoba::hardware {
 	}
 
 	void SPIDisplay::setChipSelect(uint8_t value) const {
-		_hal->GPIO->write(_csPin, value);
+		system::gpio::write(_csPin, value);
 	}
 
 	void SPIDisplay::setDataCommand(uint8_t value) const {
-		_hal->GPIO->write(_dcPin, value);
-	}
-
-	MCUHal* SPIDisplay::getHal() {
-		return _hal;
+		system::gpio::write(_dcPin, value);
 	}
 }

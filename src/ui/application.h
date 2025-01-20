@@ -2,7 +2,6 @@
 
 #include "layout.h"
 #include "hardware/inputDevice.h"
-#include "hardware/hal/hal.h"
 
 #include "font.h"
 #include "../resources/fonts/unscii16Font.h"
@@ -11,7 +10,7 @@
 namespace yoba::ui {
 	class Application : public Layout {
 		public:
-			explicit Application(hardware::SystemHal* hal);
+			explicit Application();
 
 			virtual void tick();
 			virtual void setupRenderingHardware(RenderTarget* renderTarget, Renderer* renderer);
@@ -41,11 +40,7 @@ namespace yoba::ui {
 			uint32_t getRenderDeltaTime() const;
 			uint32_t getFlushDeltaTime() const;
 
-			hardware::SystemHal* getHal() const;
-
 		private:
-			hardware::SystemHal* _hal;
-
 			uint32_t _tickDeltaTime = 0;
 			uint32_t _layoutDeltaTime = 0;
 			uint32_t _renderDeltaTime = 0;

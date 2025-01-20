@@ -11,7 +11,7 @@ namespace yoba::ui {
 	}
 
 	void Animation::start() {
-		_start = _application->getHal()->getTime();
+		_start = system::getTime();
 	}
 
 	void Animation::stop() {
@@ -19,7 +19,7 @@ namespace yoba::ui {
 	}
 
 	bool Animation::tick() {
-		double position = (double) (_application->getHal()->getTime() - _start) / (double) _duration;
+		double position = (double) (system::getTime() - _start) / (double) _duration;
 
 		if (position > 1)
 			position = 1;
