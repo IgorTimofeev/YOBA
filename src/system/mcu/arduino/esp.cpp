@@ -1,4 +1,6 @@
-#include "esp32.h"
+#include "../../../system.h"
+
+#ifdef YOBA_SYSTEM_ARDUINO_ESP
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -88,3 +90,5 @@ namespace yoba::system {
 		}
 	}
 }
+
+#endif

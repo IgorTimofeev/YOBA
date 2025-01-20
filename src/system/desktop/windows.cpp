@@ -1,6 +1,8 @@
-#include "windows.h"
+#include "../../system.h"
 
 #ifdef YOBA_SYSTEM_WINDOWS
+
+#include "windows.h"
 
 namespace yoba::system {
 	void sleep(uint32_t milliseconds) {
