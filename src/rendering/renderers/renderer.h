@@ -26,8 +26,6 @@ namespace yoba {
 			size_t getIndex(uint16_t x, uint16_t y) const;
 			size_t getIndex(const Point& point) const;
 
-			// -------------------------------- Native rendering --------------------------------
-
 			void clear(const Color* color);
 			void renderPixel(const Point& point, const Color* color);
 			void renderHorizontalLine(const Point& point, uint16_t length, const Color* color);
@@ -35,12 +33,8 @@ namespace yoba {
 			void renderFilledRectangle(const Bounds& bounds, const Color* color);
 			void renderFilledRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
 			void renderImage(const Point& point, const Image* image);
-
-			// -------------------------------- Non-native rendering --------------------------------
-
 			void renderRectangle(const Bounds& bounds, const Color* color);
 			void renderRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
-
 			// Thanks, AdaFruit!
 			void renderLine(const Point& from, const Point& to, const Color* color);
 			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
