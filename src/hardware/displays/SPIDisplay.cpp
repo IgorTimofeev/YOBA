@@ -19,15 +19,15 @@ namespace yoba::hardware {
 		RenderTarget::setup();
 
 		// Resetting CS pin just in case
-		system::gpio::setPinOutput(_csPin);
+		system::gpio::setOutput(_csPin);
 		setChipSelect(true);
 
 		// Initialize non-SPI GPIOs
-		system::gpio::setPinOutput(_dcPin);
+		system::gpio::setOutput(_dcPin);
 
 		// Toggle reset pin if it was defined
 		if (_rstPin >= 0) {
-			system::gpio::setPinOutput(_rstPin);
+			system::gpio::setOutput(_rstPin);
 
 			system::gpio::write(_rstPin, 0);
 			system::sleep(100);
@@ -77,7 +77,7 @@ namespace yoba::hardware {
 	void SPIDisplay::onOrientationChanged() {
 		RenderTarget::onOrientationChanged();
 
-		writeOrientationChangeCommands();
+		writeOrientationChangeCommand();
 	}
 
 	void SPIDisplay::setChipSelect(uint8_t value) const {

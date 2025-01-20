@@ -31,7 +31,7 @@ namespace yoba::hardware {
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
 			virtual void writeSetupCommands() = 0;
-			virtual void writeOrientationChangeCommands() = 0;
+			virtual void writeOrientationChangeCommand() = 0;
 			virtual void writeColorModeChangeCommands() = 0;
 
 		private:

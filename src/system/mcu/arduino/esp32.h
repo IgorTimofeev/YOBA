@@ -1,9 +1,7 @@
 #pragma once
 
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-#include "FunctionalInterrupt.h"
+#include <cstdint>
+#include <functional>
 
 namespace yoba::system {
 	void sleep(uint32_t milliseconds);
@@ -11,8 +9,8 @@ namespace yoba::system {
 	uint32_t getTime();
 
 	namespace gpio {
-		void setPinInput(uint8_t pin);
-		void setPinOutput(uint8_t pin);
+		void setInput(uint8_t pin);
+		void setOutput(uint8_t pin);
 		bool read(uint8_t pin);
 		void write(uint8_t pin, bool value);
 		void setOnInterrupt(uint8_t pin, std::function<void()> callback);

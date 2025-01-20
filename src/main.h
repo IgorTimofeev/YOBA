@@ -20,5 +20,5 @@
 
 #include "rendering/renderers/renderer.h"
 #include "rendering/renderers/paletteRenderer.h"
-#include "rendering/renderers/bit8PaletteRenderer.h"
+#include "rendering/renderers/eightBitPaletteRenderer.h"
 #include "rendering/renderers/monochromeRenderer.h"

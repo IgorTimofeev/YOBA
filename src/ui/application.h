@@ -12,8 +12,24 @@ namespace yoba::ui {
 		public:
 			explicit Application();
 
+			// Shorthand method for convenient initialization, and it's equivalent to:
+			//
+			// renderTarget.setup();
+			// renderer.setTarget(&renderTarget);
+			// application.setRenderer(&renderer);
+			void setup(RenderTarget* renderTarget, Renderer* renderer);
+
+			// Shorthand method for convenient initialization, and it's equivalent to:
+			//
+			// renderTarget.setup();
+			// renderer.setTarget(&renderTarget);
+			// application.setRenderer(&renderer);
+			//
+			// inputDevice.setup();
+			// application.addInputDevice(&inputDevice);
+			void setup(RenderTarget* renderTarget, Renderer* renderer, hardware::InputDevice* inputDevice);
+
 			virtual void tick();
-			virtual void setupRenderingHardware(RenderTarget* renderTarget, Renderer* renderer);
 
 			void invalidateLayout() override;
 			void invalidateRender() override;

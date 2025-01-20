@@ -3,17 +3,17 @@
 namespace yoba {
 	RenderTarget::RenderTarget(
 		const Size& size,
-		RenderTargetOrientation orientation,
+		PixelWriting pixelWriting,
+		PixelOrder pixelOrder,
 		ColorModel colorModel,
-		RenderTargetPixelWriting pixelWriting,
-		RenderTargetPixelOrder pixelOrder
+		ViewportRotation rotation
 	) :
+		_size(size),
 		_pixelWriting(pixelWriting),
 		_pixelOrder(pixelOrder),
-		_colorModel(colorModel),
 		_defaultSize(size),
-		_size(size),
-		_orientation(orientation)
+		_colorModel(colorModel),
+		_orientation(rotation)
 	{
 
 	}
@@ -22,11 +22,11 @@ namespace yoba {
 		updateFromOrientation();
 	}
 
-	RenderTargetPixelWriting RenderTarget::getPixelWriting() const {
+	PixelWriting RenderTarget::getPixelWriting() const {
 		return _pixelWriting;
 	}
 
-	RenderTargetPixelOrder RenderTarget::getPixelOrder() const {
+	PixelOrder RenderTarget::getPixelOrder() const {
 		return _pixelOrder;
 	}
 
@@ -38,11 +38,11 @@ namespace yoba {
 		return _size;
 	}
 
-	RenderTargetOrientation RenderTarget::getOrientation() const {
+	ViewportRotation RenderTarget::getRotation() const {
 		return _orientation;
 	}
 
-	void RenderTarget::setOrientation(RenderTargetOrientation value) {
+	void RenderTarget::setRotation(ViewportRotation value) {
 		if (value == _orientation)
 			return;
 
@@ -54,21 +54,21 @@ namespace yoba {
 	Point RenderTarget::orientPoint(const Point& point) {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
-		switch (getOrientation()) {
-			case RenderTargetOrientation::clockwise0:
+		switch (getRotation()) {
+			case ViewportRotation::clockwise0:
 				return {
 					point.getX(),
 					point.getY()
 				};
 
-			case RenderTargetOrientation::clockwise90: {
+			case ViewportRotation::clockwise90: {
 				return {
 					_size.getWidth() - point.getY(),
 					point.getX()
 				};
 			}
 
-			case RenderTargetOrientation::clockwise180:
+			case ViewportRotation::clockwise180:
 				return {
 					_size.getWidth() - point.getX(),
 					_size.getHeight() - point.getY()
@@ -85,13 +85,13 @@ namespace yoba {
 
 	void RenderTarget::updateFromOrientation() {
 		switch (_orientation) {
-			case RenderTargetOrientation::clockwise0:
-			case RenderTargetOrientation::clockwise180:
+			case ViewportRotation::clockwise0:
+			case ViewportRotation::clockwise180:
 				_size = _defaultSize;
 				break;
 
-			case RenderTargetOrientation::clockwise90:
-			case RenderTargetOrientation::clockwise270:
+			case ViewportRotation::clockwise90:
+			case ViewportRotation::clockwise270:
 				_size.setWidth(_defaultSize.getHeight());
 				_size.setHeight(_defaultSize.getWidth());
 				break;

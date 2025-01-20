@@ -10,12 +10,13 @@
 namespace yoba::hardware {
 	class SH1106Display : public SPIDisplay, public DirectRenderTarget, public ContrastDisplay, public InvertibleDisplay {
 		public:
+			// Arduino: 80 MHz
+			// ESP-IDF: to be investigated
 			SH1106Display(
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
-
-				uint32_t SPIFrequency = 8000000
+				uint32_t SPIFrequency
 			);
 
 			void writePixels(uint8_t* buffer) override;
@@ -24,7 +25,7 @@ namespace yoba::hardware {
 
 		protected:
 			void writeSetupCommands() override;
-			void writeOrientationChangeCommands() override;
+			void writeOrientationChangeCommand() override;
 			void writeColorModeChangeCommands() override;
 
 		private:

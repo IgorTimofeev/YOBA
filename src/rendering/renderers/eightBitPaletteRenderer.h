@@ -4,9 +4,9 @@
 #include "renderer.h"
 
 namespace yoba {
-	class Bit8PaletteRenderer : public PaletteRenderer {
+	class EightBitPaletteRenderer : public PaletteRenderer {
 		public:
-			explicit Bit8PaletteRenderer(uint16_t paletteLength);
+			explicit EightBitPaletteRenderer(uint16_t paletteLength);
 
 			void flushBuffer() override;
 

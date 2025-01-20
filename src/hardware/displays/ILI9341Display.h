@@ -7,22 +7,22 @@
 namespace yoba::hardware {
 	class ILI9341Display : public SPIDisplay, public BufferedRenderTarget {
 		public:
+			// Recommended SPI frequencies:
+			// Arduino: 40 MHz
+			// ESP-IDF: 26 MHz
 			ILI9341Display(
-				ColorModel colorModel,
-				RenderTargetOrientation orientation,
-
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
+				uint32_t SPIFrequency,
 
-				// Somehow 40 MHz works nice on Arduino SPI, buf ESP-IDF handles only 26 MHz
-				// Hmm...
-				uint32_t SPIFrequency = 40000000
+				ColorModel colorModel = ColorModel::rgb565,
+				ViewportRotation rotation = ViewportRotation::clockwise0
 			);
 
 		protected:
 			void writeSetupCommands() override;
-			void writeOrientationChangeCommands() override;
+			void writeOrientationChangeCommand() override;
 			void writeColorModeChangeCommands() override;
 
 			uint8_t getBufferHeightForOrientation() override;

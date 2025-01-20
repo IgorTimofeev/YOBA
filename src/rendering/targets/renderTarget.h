@@ -6,14 +6,14 @@
 #include "main/size.h"
 
 namespace yoba {
-	enum class RenderTargetOrientation : uint8_t {
+	enum class ViewportRotation : uint8_t {
 		clockwise0,
 		clockwise90,
 		clockwise180,
 		clockwise270
 	};
 
-	enum class RenderTargetPixelOrder : uint8_t {
+	enum class PixelOrder : uint8_t {
 		XY,
 		YX,
 
@@ -27,7 +27,7 @@ namespace yoba {
 		XReversedXReversed
 	};
 
-	enum class RenderTargetPixelWriting : uint8_t {
+	enum class PixelWriting : uint8_t {
 		direct,
 		buffered
 	};
@@ -36,21 +36,21 @@ namespace yoba {
 		public:
 			RenderTarget(
 				const Size& size,
-				RenderTargetOrientation orientation,
+				PixelWriting pixelWriting,
+				PixelOrder pixelOrder,
 				ColorModel colorModel,
-				RenderTargetPixelWriting pixelWriting,
-				RenderTargetPixelOrder pixelOrder
+				ViewportRotation rotation
 			);
 
 			virtual void setup();
 
-			RenderTargetPixelWriting getPixelWriting() const;
-			RenderTargetPixelOrder getPixelOrder() const;
+			PixelWriting getPixelWriting() const;
+			PixelOrder getPixelOrder() const;
 			ColorModel getColorModel() const;
 			const Size& getSize() const;
 
-			RenderTargetOrientation getOrientation() const;
-			void setOrientation(RenderTargetOrientation value);
+			ViewportRotation getRotation() const;
+			void setRotation(ViewportRotation value);
 
 			Point orientPoint(const Point& point);
 
@@ -58,12 +58,12 @@ namespace yoba {
 			bool operator!=(const RenderTarget& rhs) const;
 
 		protected:
-			RenderTargetPixelWriting _pixelWriting;
-			RenderTargetPixelOrder _pixelOrder;
+			PixelWriting _pixelWriting;
+			PixelOrder _pixelOrder;
 			ColorModel _colorModel;
 			const Size _defaultSize;
 			Size _size;
-			RenderTargetOrientation _orientation = RenderTargetOrientation::clockwise270;
+			ViewportRotation _orientation = ViewportRotation::clockwise0;
 
 			virtual void updateFromOrientation();
 			virtual void onOrientationChanged();

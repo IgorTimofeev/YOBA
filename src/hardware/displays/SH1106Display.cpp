@@ -10,10 +10,10 @@ namespace yoba::hardware {
 	) :
 		RenderTarget(
 			Size(128, 64),
-			RenderTargetOrientation::clockwise0,
+			PixelWriting::direct,
+			PixelOrder::XY,
 			ColorModel::monochrome,
-			RenderTargetPixelWriting::direct,
-			RenderTargetPixelOrder::XY
+			ViewportRotation::clockwise0
 		),
 		SPIDisplay(
 			csPin,
@@ -27,7 +27,7 @@ namespace yoba::hardware {
 
 	}
 
-	void SH1106Display::writeOrientationChangeCommands() {
+	void SH1106Display::writeOrientationChangeCommand() {
 
 	}
 

@@ -13,10 +13,17 @@ namespace yoba::ui {
 		 invalidate();
 	}
 
-	void Application::setupRenderingHardware(RenderTarget* renderTarget, Renderer* renderer) {
+	void Application::setup(RenderTarget* renderTarget, Renderer* renderer) {
 		renderTarget->setup();
 		renderer->setTarget(renderTarget);
 		setRenderer(renderer);
+	}
+
+	void Application::setup(RenderTarget* renderTarget, Renderer* renderer, hardware::InputDevice* inputDevice) {
+		setup(renderTarget, renderer);
+
+		inputDevice->setup();
+		addInputDevice(inputDevice);
 	}
 
 	void Application::invalidateLayout() {

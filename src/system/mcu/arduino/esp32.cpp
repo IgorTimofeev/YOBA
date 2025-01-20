@@ -1,5 +1,10 @@
 #include "esp32.h"
 
+#include <Arduino.h>
+#include <SPI.h>
+#include <Wire.h>
+#include "FunctionalInterrupt.h"
+
 namespace yoba::system {
 	void sleep(uint32_t milliseconds) {
 		delay(milliseconds);
@@ -10,11 +15,11 @@ namespace yoba::system {
 	}
 
 	namespace gpio {
-		void setPinInput(uint8_t pin) {
+		void setInput(uint8_t pin) {
 			pinMode(pin, INPUT_PULLUP);
 		}
 
-		void setPinOutput(uint8_t pin) {
+		void setOutput(uint8_t pin) {
 			pinMode(pin, OUTPUT);
 		}
 

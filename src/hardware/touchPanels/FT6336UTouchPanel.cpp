@@ -12,7 +12,7 @@
 namespace yoba::hardware {
 	using namespace yoba::ui;
 
-	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t intPin, int8_t rstPin, uint8_t sdaPin, uint8_t sclPin) :
+	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin) :
 		_intPin(intPin),
 		_rstPin(rstPin),
 		_sdaPin(sdaPin),
@@ -22,19 +22,19 @@ namespace yoba::hardware {
 	}
 
 	void FT6336UTouchPanel::setup() {
+		// I2C
+		system::i2c::setup(_sdaPin, _sclPin);
+
 		// Interrupt
-		system::gpio::setPinInput(_intPin);
+		system::gpio::setInput(_intPin);
 
 		system::gpio::setOnInterrupt(_intPin, [this]() {
 			_interrupted = true;
 		});
 
-		// I2C
-		system::i2c::setup(_sdaPin, _sclPin);
-
-		// Toggle reset pin
+		// Reset
 		if (_rstPin >= 0) {
-			system::gpio::setPinOutput(_rstPin);
+			system::gpio::setOutput(_rstPin);
 			system::gpio::write(_rstPin, false);
 			system::sleep(10);
 			system::gpio::write(_rstPin, true);

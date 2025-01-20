@@ -81,6 +81,7 @@ namespace yoba {
 
 	Rgb565Color Rgb888Color::toRgb565() const {
 		return Rgb565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
+//		return Rgb565Color(((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3));
 	}
 
 	Rgb666Color Rgb888Color::toRgb666() const {

@@ -2,20 +2,20 @@
 
 namespace yoba::hardware {
 	ILI9341Display::ILI9341Display(
-		ColorModel colorModel,
-		RenderTargetOrientation orientation,
-
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
-		uint32_t SPIFrequency
+		uint32_t SPIFrequency,
+
+		ColorModel colorModel,
+		ViewportRotation rotation
 	) :
 		RenderTarget(
 			Size(240, 320),
-			orientation,
+			PixelWriting::buffered,
+			PixelOrder::YX,
 			colorModel,
-			RenderTargetPixelWriting::buffered,
-			RenderTargetPixelOrder::YX
+			rotation
 		),
 		SPIDisplay(
 			csPin,
@@ -28,23 +28,23 @@ namespace yoba::hardware {
 
 	}
 
-	void ILI9341Display::writeOrientationChangeCommands() {
+	void ILI9341Display::writeOrientationChangeCommand() {
 		auto data = (uint8_t) Command::MADCTL_BGR;
 
-		switch (getOrientation()) {
-			case RenderTargetOrientation::clockwise0:
+		switch (getRotation()) {
+			case ViewportRotation::clockwise0:
 				data |= (uint8_t) Command::MADCTL_MX;
 				break;
 
-			case RenderTargetOrientation::clockwise90:
+			case ViewportRotation::clockwise90:
 				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
 				break;
 
-			case RenderTargetOrientation::clockwise180:
+			case ViewportRotation::clockwise180:
 				data |= (uint8_t) Command::MADCTL_MY;
 				break;
 
-			case RenderTargetOrientation::clockwise270:
+			case ViewportRotation::clockwise270:
 				data |= (uint8_t) Command::MADCTL_MV;
 				break;
 
@@ -57,7 +57,7 @@ namespace yoba::hardware {
 
 	uint8_t ILI9341Display::getBufferHeightForOrientation() {
 		return
-			this->_orientation == RenderTargetOrientation::clockwise0 || this->_orientation == RenderTargetOrientation::clockwise180
+			this->_orientation == ViewportRotation::clockwise0 || this->_orientation == ViewportRotation::clockwise180
 			? 64 // 5 transactions
 			: 40; // 6 transactions
 	}
@@ -144,10 +144,10 @@ namespace yoba::hardware {
 		this->writeCommandAndData(0xC7, 0xBE);
 
 		/* Memory access control */
-		writeOrientationChangeCommands();
+		writeOrientationChangeCommand();
 
 		/* Inversion */
-		this->writeCommandAndData(0x21, 0x01);
+		this->writeCommand(0x21);
 
 		// Pixel format
 		writeColorModeChangeCommands();
