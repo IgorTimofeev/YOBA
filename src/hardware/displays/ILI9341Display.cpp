@@ -179,25 +179,25 @@ namespace yoba::hardware {
 		b[12] = 0x00;
 		b[13] = 0x00;
 		b[15] = 0x00;
-		this->writeCommandAndData(0xE0, b, 15);
+		this->writeCommandAndData(0xE0, b, 16);
 
 		/* Negative gamma correction */
-		b[0] =  0x00;
-		b[1] =  0x15;
-		b[2] =  0x17;
-		b[3] =  0x07;
-		b[4] =  0x11;
-		b[5] =  0x06;
-		b[6] =  0x2B;
-		b[7] =  0x56;
-		b[8] =  0x3C;
-		b[9] =  0x05;
+		b[0] = 0x00;
+		b[1] = 0x15;
+		b[2] = 0x17;
+		b[3] = 0x07;
+		b[4] = 0x11;
+		b[5] = 0x06;
+		b[6] = 0x2B;
+		b[7] = 0x56;
+		b[8] = 0x3C;
+		b[9] = 0x05;
 		b[10] = 0x10;
 		b[11] = 0x0F;
 		b[12] = 0x3F;
 		b[13] = 0x3F;
 		b[15] = 0x0F;
-		this->writeCommandAndData(0xE1, b, 15);
+		this->writeCommandAndData(0xE1, b, 16);
 
 		/* Column address set, SC=0, EC=0xEF */
 		b[0] = 0x00;

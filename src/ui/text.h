@@ -45,6 +45,7 @@ namespace yoba::ui {
 
 				if (_wrappingEnabled) {
 					auto result = Size();
+
 					_wrappedLines.clear();
 
 					font->wrap(
