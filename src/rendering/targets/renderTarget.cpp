@@ -8,10 +8,10 @@ namespace yoba {
 		ColorModel colorModel,
 		ViewportRotation rotation
 	) :
+		_defaultSize(size),
 		_size(size),
 		_pixelWriting(pixelWriting),
 		_pixelOrder(pixelOrder),
-		_defaultSize(size),
 		_colorModel(colorModel),
 		_orientation(rotation)
 	{

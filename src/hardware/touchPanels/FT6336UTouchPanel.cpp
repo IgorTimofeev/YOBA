@@ -15,15 +15,15 @@ namespace yoba::hardware {
 	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin) :
 		_sdaPin(sdaPin),
 		_sclPin(sclPin),
-		_intPin(intPin),
-		_rstPin(rstPin)
+		_rstPin(rstPin),
+		_intPin(intPin)
 	{
 
 	}
 
 	void FT6336UTouchPanel::setup() {
 		// I2C
-		system::i2c::setup(_sdaPin, _sclPin);
+		system::i2c::setup(_sdaPin, _sclPin, I2C_ADDR_FT6336U, 10000);
 
 		// Interrupt
 		system::gpio::setInput(_intPin);
@@ -250,11 +250,11 @@ namespace yoba::hardware {
 	}
 
 	uint8_t FT6336UTouchPanel::readByte(uint8_t addr) {
-		return system::i2c::readByte(I2C_ADDR_FT6336U, addr);
+		return system::i2c::readByte(addr);
 	}
 
 	void FT6336UTouchPanel::writeByte(uint8_t addr, uint8_t data) {
-		system::i2c::writeByte(I2C_ADDR_FT6336U, addr, data);
+		system::i2c::writeByte(addr, data);
 	}
 
 	// ------------------------------------------------------------------------

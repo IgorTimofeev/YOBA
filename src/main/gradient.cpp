@@ -21,7 +21,7 @@ namespace yoba {
 	}
 
 	void GradientStop::setColor(const Rgb888Color& value) {
-		_color = value;
+		_color = Rgb888Color(value);
 	}
 
 	Rgb888Color LinearGradient::getRgb888Color(float position) {

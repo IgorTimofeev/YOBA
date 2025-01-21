@@ -233,9 +233,9 @@ namespace yoba::ui {
 
 		private:
 			KeyboardKeyType _type;
-			float _width;
 			KeyCode _code;
 			const std::wstring_view _name;
+			float _width;
 	};
 
 	class TextKeyboardKey : public KeyboardKey {
@@ -360,9 +360,9 @@ namespace yoba::ui {
 			void onPressedChanged() override;
 
 		private:
+			Keyboard* _keyboard;
 			uint8_t _row;
 			uint8_t _column;
-			Keyboard* _keyboard;
 
 			void updateTextFromCase();
 	};

@@ -28,9 +28,10 @@ namespace yoba::ui {
 			void setInterpolator(const std::function<void(const double &)> &interpolator);
 
 		private:
-			std::function<void(const double&)> _interpolator;
 			Application* _application;
-			uint32_t _start = 0;
 			uint32_t _duration = 0;
+			uint32_t _start = 0;
+
+			std::function<void(const double&)> _interpolator;
 	};
 }

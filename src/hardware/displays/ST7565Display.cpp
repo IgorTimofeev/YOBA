@@ -3,6 +3,9 @@
 
 namespace yoba::hardware {
 	ST7565Display::ST7565Display(
+		uint8_t mosiPin,
+		uint8_t misoPin,
+		uint8_t sckPin,
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
@@ -16,6 +19,9 @@ namespace yoba::hardware {
 			ViewportRotation::clockwise0
 		),
 		SPIDisplay(
+			mosiPin,
+			misoPin,
+			sckPin,
 			csPin,
 			dcPin,
 			rstPin,

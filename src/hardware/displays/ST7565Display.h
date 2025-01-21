@@ -13,6 +13,9 @@ namespace yoba::hardware {
 			// Arduino: 80 MHz
 			// ESP-IDF: to be investigated
 			ST7565Display(
+				uint8_t mosiPin,
+				uint8_t misoPin,
+				uint8_t sckPin,
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,

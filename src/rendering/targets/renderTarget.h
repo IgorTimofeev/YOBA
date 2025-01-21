@@ -58,11 +58,11 @@ namespace yoba {
 			bool operator!=(const RenderTarget& rhs) const;
 
 		protected:
+			const Size _defaultSize;
+			Size _size;
 			PixelWriting _pixelWriting;
 			PixelOrder _pixelOrder;
 			ColorModel _colorModel;
-			const Size _defaultSize;
-			Size _size;
 			ViewportRotation _orientation = ViewportRotation::clockwise0;
 
 			virtual void updateFromOrientation();

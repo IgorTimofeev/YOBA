@@ -2,11 +2,17 @@
 
 namespace yoba::hardware {
 	SPIDisplay::SPIDisplay(
+		uint8_t mosiPin,
+		uint8_t misoPin,
+		uint8_t sckPin,
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t SPIFrequency
 	) :
+		_mosiPin(mosiPin),
+		_misoPin(misoPin),
+		_sckPin(sckPin),
 		_csPin(csPin),
 		_dcPin(dcPin),
 		_rstPin(rstPin),
@@ -29,15 +35,15 @@ namespace yoba::hardware {
 		if (_rstPin >= 0) {
 			system::gpio::setOutput(_rstPin);
 
-			system::gpio::write(_rstPin, 0);
+			system::gpio::write(_rstPin, false);
 			system::sleep(100);
 
-			system::gpio::write(_rstPin, 1);
+			system::gpio::write(_rstPin, true);
 			system::sleep(100);
 		}
 
 		// SPI
-		system::spi::setup();
+		system::spi::setup(_mosiPin, _sckPin, _csPin, _SPIFrequency);
 
 		writeSetupCommands();
 	}
@@ -45,7 +51,7 @@ namespace yoba::hardware {
 	void SPIDisplay::writeData(uint8_t data) {
 		setChipSelect(false);
 
-		system::spi::writeByte(_SPIFrequency, data);
+		system::spi::writeByte(data);
 
 		setChipSelect(true);
 	}
@@ -53,7 +59,7 @@ namespace yoba::hardware {
 	void SPIDisplay::writeData(const uint8_t* data, size_t length) {
 		setChipSelect(false);
 
-		system::spi::writeBytes(_SPIFrequency, data, length);
+		system::spi::writeBytes(data, length);
 
 		setChipSelect(true);
 	}

@@ -11,6 +11,9 @@ namespace yoba::hardware {
 			// Arduino: 40 MHz
 			// ESP-IDF: 26 MHz
 			ILI9341Display(
+				uint8_t mosiPin,
+				uint8_t misoPin,
+				uint8_t sckPin,
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,

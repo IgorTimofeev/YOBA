@@ -2,6 +2,9 @@
 
 namespace yoba::hardware {
 	ILI9341Display::ILI9341Display(
+		uint8_t mosiPin,
+		uint8_t misoPin,
+		uint8_t sckPin,
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
@@ -18,6 +21,9 @@ namespace yoba::hardware {
 			rotation
 		),
 		SPIDisplay(
+			mosiPin,
+			misoPin,
+			sckPin,
 			csPin,
 			dcPin,
 			rstPin,

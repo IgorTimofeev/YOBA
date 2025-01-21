@@ -6,7 +6,7 @@ namespace yoba {
 	}
 
 	void Renderer::setTarget(RenderTarget* value) {
-		if (value == _target || _target && *value == *_target)
+		if (value == _target || (_target && *value == *_target))
 			return;
 
 		auto fromTarget = _target;

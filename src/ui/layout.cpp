@@ -1,5 +1,6 @@
 #include "layout.h"
 #include "main/event.h"
+#include <algorithm>
 
 namespace yoba::ui {
 	void Layout::onTick() {
@@ -39,7 +40,7 @@ namespace yoba::ui {
 	}
 
 	int32_t Layout::getIndexOfChild(Element* element) {
-		auto iterator = find(_children.begin(), _children.end(), element);
+		auto iterator = std::find(_children.begin(), _children.end(), element);
 
 		if (iterator == _children.end()) {
 			return -1;

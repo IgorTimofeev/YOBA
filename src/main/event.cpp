@@ -131,8 +131,10 @@ namespace yoba {
 			&& (
 				element->isCaptured()
 				||
-				element->getBounds().intersects(_position1)
-				&& element->getBounds().intersects(_position2)
+				(
+					element->getBounds().intersects(_position1)
+					&& element->getBounds().intersects(_position2)
+				)
 			);
 	}
 

@@ -78,7 +78,7 @@ namespace yoba {
 
 		uint16_t
 			charWidth,
-			spaceWidth,
+			spaceWidth = 0,
 			lineWidth = 0,
 			spaceLineWidth = 0;
 

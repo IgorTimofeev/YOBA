@@ -7,7 +7,7 @@
 		#include "system/mcu/arduino/esp.h"
 	#endif
 
-#elif defined(ESP32) || defined(ESP8266)
+#elif defined(ESP_PLATFORM)
 	#define YOBA_SYSTEM_ESPIDF
 
 	#include "system/mcu/esp-idf.h"

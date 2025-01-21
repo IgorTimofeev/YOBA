@@ -8,6 +8,9 @@ namespace yoba::hardware {
 	class SPIDisplay : public virtual RenderTarget {
 		public:
 			SPIDisplay(
+				uint8_t mosiPin,
+				uint8_t misoPin,
+				uint8_t sckPin,
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
@@ -35,6 +38,9 @@ namespace yoba::hardware {
 			virtual void writeColorModeChangeCommands() = 0;
 
 		private:
+			uint8_t _mosiPin;
+			uint8_t _misoPin;
+			uint8_t _sckPin;
 			uint8_t _csPin;
 			uint8_t _dcPin;
 			int8_t _rstPin;
