@@ -16,15 +16,17 @@ namespace yoba::system {
 		void setOnInterrupt(uint8_t pin, std::function<void()> callback);
 	}
 
-	namespace spi {
-		void setup();
-		void writeByte(uint32_t frequency, uint8_t data);
-		void writeBytes(uint32_t frequency, const uint8_t* data, size_t length);
-	}
+	class spi {
+		public:
+			static void setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency);
+			static void writeByte(uint8_t data);
+			static void writeBytes(const uint8_t* data, size_t length);
+			static uint32_t _frequency;
+	};
 
 	namespace i2c {
-		void setup(uint8_t sdaPin, uint8_t sclPin, uint32_t frequency = 0);
-		uint8_t readByte(uint16_t slaveAddress, uint8_t registerAddress);
-		void writeByte(uint16_t slaveAddress, uint8_t registerAddress, uint8_t data);
+		void setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency);
+		uint8_t readByte(uint8_t registerAddress);
+		void writeByte(uint8_t registerAddress, uint8_t data);
 	}
 }

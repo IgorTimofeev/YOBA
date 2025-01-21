@@ -38,40 +38,46 @@ namespace yoba::system {
 		}
 	}
 
-	namespace spi {
-		void setup() {
-			SPI.begin();
-		}
+	uint32_t spi::_frequency = 0;
 
-		void writeByte(uint32_t frequency, uint8_t data) {
-			SPI.beginTransaction(SPISettings(frequency, SPI_MSBFIRST, SPI_MODE0));
-			SPI.write(data);
-			SPI.endTransaction();
-		}
+	void spi::setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency) {
+		_frequency = frequency;
 
-		void writeBytes(uint32_t frequency, const uint8_t* data, size_t length) {
-			SPI.beginTransaction(SPISettings(frequency, SPI_MSBFIRST, SPI_MODE0));
-			SPI.writeBytes(data, length);
-			SPI.endTransaction();
-		}
+		SPI.begin();
+	}
+
+	void spi::writeByte(uint8_t data) {
+		SPI.beginTransaction(SPISettings(_frequency, SPI_MSBFIRST, SPI_MODE0));
+		SPI.write(data);
+		SPI.endTransaction();
+	}
+
+	void spi::writeBytes(const uint8_t* data, size_t length) {
+		SPI.beginTransaction(SPISettings(_frequency, SPI_MSBFIRST, SPI_MODE0));
+		SPI.writeBytes(data, length);
+		SPI.endTransaction();
 	}
 
 	namespace i2c {
-		void setup(uint8_t sdaPin, uint8_t sclPin, uint32_t frequency) {
+		uint16_t _slaveAddress;
+
+		void setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency) {
+			_slaveAddress = slaveAddress;
+
 			Wire.begin(sdaPin, sclPin, frequency);
 		}
 
-		uint8_t readByte(uint16_t slaveAddress, uint8_t registerAddress) {
+		uint8_t readByte(uint8_t registerAddress) {
 			uint8_t result = 0;
 			uint8_t readLength;
 
 			do {
-				Wire.beginTransmission(slaveAddress);
+				Wire.beginTransmission(_slaveAddress);
 				Wire.write(registerAddress);
 				Wire.endTransmission(false);
 				// Restart
 				// system::sleep(10);
-				readLength = Wire.requestFrom(slaveAddress, (uint8_t) 1);
+				readLength = Wire.requestFrom(_slaveAddress, (uint8_t) 1);
 			}
 			while (readLength == 0);
 
@@ -82,8 +88,8 @@ namespace yoba::system {
 			return result;
 		}
 
-		void writeByte(uint16_t slaveAddress, uint8_t registerAddress, uint8_t data) {
-			Wire.beginTransmission(slaveAddress);
+		void writeByte(uint8_t registerAddress, uint8_t data) {
+			Wire.beginTransmission(_slaveAddress);
 			Wire.write(registerAddress);
 			Wire.write(data);
 			Wire.endTransmission();
