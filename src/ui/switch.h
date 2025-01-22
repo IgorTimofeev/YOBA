@@ -53,11 +53,12 @@ namespace yoba::ui {
 				Element::onRender(renderer);
 
 				const auto& bounds = getBounds();
-				const auto handleHalf = bounds.getHeight() / 2;
-				const auto handleOffsetCenter = _handleOffset + handleHalf;
+				const uint16_t handleHalf = bounds.getHeight() / 2;
+				const uint16_t handleOffset = isChecked() ? bounds.getWidth() - bounds.getHeight() : 0;
+				const uint16_t handleOffsetCenter = handleOffset + handleHalf;
 
 				// Checked
-				if (_handleOffset > 0 && _checkedColor) {
+				if (handleOffset > 0 && _checkedColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX(),
@@ -71,7 +72,7 @@ namespace yoba::ui {
 				}
 
 				// Track
-				if (_handleOffset + bounds.getHeight() < bounds.getX2() && _trackColor) {
+				if (handleOffset + bounds.getHeight() < bounds.getX2() && _trackColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX() + handleOffsetCenter - handleHalf,
@@ -88,7 +89,7 @@ namespace yoba::ui {
 				if (_handleColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
-							bounds.getX() + _handleOffset,
+							bounds.getX() + handleOffset,
 							bounds.getY(),
 							bounds.getHeight(),
 							bounds.getHeight()
@@ -110,23 +111,9 @@ namespace yoba::ui {
 				event.setHandled(true);
 			}
 
-			void onIsCheckedChanged() override {
-				CheckedElement::onIsCheckedChanged();
-
-				startAnimation(new Animation(getApplication(), 250, [this](double position) {
-					const auto& bounds = getBounds();
-
-					_handleOffset = (uint16_t) std::round((isChecked() ? position : 1 - position) * (float) (bounds.getWidth() - bounds.getHeight()));
-
-					invalidateRender();
-				}));
-			}
-
 		private:
 			const Color* _trackColor;
 			const Color* _checkedColor;
 			const Color* _handleColor;
-
-			uint16_t _handleOffset = 0;
 	};
 }
