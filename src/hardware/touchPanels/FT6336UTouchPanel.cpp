@@ -23,21 +23,21 @@ namespace yoba::hardware {
 
 	void FT6336UTouchPanel::setup() {
 		// I2C
-		system::i2c::setup(_sdaPin, _sclPin, I2C_ADDR_FT6336U, 10000);
+		system::I2C::setup(_sdaPin, _sclPin, I2C_ADDR_FT6336U, 400000);
 
 		// Interrupt
-		system::gpio::setInput(_intPin);
+		system::GPIO::setMode(_intPin, system::GPIO::PinMode::Input);
 
-		system::gpio::setOnInterrupt(_intPin, [this]() {
+		system::GPIO::addInterruptHandler(_intPin, [this]() {
 			_interrupted = true;
 		});
 
 		// Reset
 		if (_rstPin >= 0) {
-			system::gpio::setOutput(_rstPin);
-			system::gpio::write(_rstPin, false);
+			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::Output);
+			system::GPIO::write(_rstPin, false);
 			system::sleep(10);
-			system::gpio::write(_rstPin, true);
+			system::GPIO::write(_rstPin, true);
 		}
 
 		// Do we need some delay? Hmmm
@@ -250,11 +250,21 @@ namespace yoba::hardware {
 	}
 
 	uint8_t FT6336UTouchPanel::readByte(uint8_t addr) {
-		return system::i2c::readByte(addr);
+		uint8_t buffer = addr;
+
+		system::I2C::write(&buffer, 1);
+		system::I2C::read(&buffer, 1);
+
+		return buffer;
 	}
 
 	void FT6336UTouchPanel::writeByte(uint8_t addr, uint8_t data) {
-		system::i2c::writeByte(addr, data);
+		uint8_t buffer[2] = {
+			addr,
+			data
+		};
+
+		system::I2C::write(buffer, 2);
 	}
 
 	// ------------------------------------------------------------------------

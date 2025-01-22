@@ -73,6 +73,10 @@ namespace yoba::ui {
 		// Handling input from devices like touchscreens, rotary encoders, etc.
 		inputDevicesTick();
 
+		_peripheralsDeltaTime = system::getTime() - time;
+
+		time = system::getTime();
+
 		// Handling child elements onTick()
 		onTick();
 
@@ -198,5 +202,9 @@ namespace yoba::ui {
 			renderer->clear(getBackgroundColor());
 
 		Layout::onRender(renderer);
+	}
+
+	uint32_t Application::getPeripheralsDeltaTime() const {
+		return _peripheralsDeltaTime;
 	}
 }

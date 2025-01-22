@@ -1,6 +1,6 @@
 #include "bufferedRenderTarget.h"
 
-#ifdef ESP32
+#ifdef ESP_PLATFORM
 	#include <esp_heap_caps.h>
 #endif
 
@@ -48,7 +48,7 @@ namespace yoba::hardware {
 		delete _buffer;
 		_bufferLength = Color::getBytesPerType(this->_size.getWidth() * _bufferHeight, _colorModel);
 
-		#ifdef ESP32
+		#ifdef ESP_PLATFORM
 			_buffer = (uint8_t*) heap_caps_malloc(_bufferLength, MALLOC_CAP_DMA);
 		#else
 			_buffer = new uint8_t[_bufferLength];

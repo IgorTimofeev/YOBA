@@ -56,16 +56,13 @@ namespace yoba::ui {
 			uint32_t getRenderDeltaTime() const;
 			uint32_t getFlushDeltaTime() const;
 
+			uint32_t getPeripheralsDeltaTime() const;
+
 		protected:
 			void onRender(Renderer* renderer) override;
 
 		private:
-			uint32_t _tickDeltaTime = 0;
-			uint32_t _layoutDeltaTime = 0;
-			uint32_t _renderDeltaTime = 0;
-			uint32_t _flushDeltaTime = 0;
-
-			Renderer* _renderer;
+			Renderer* _renderer = nullptr;
 
 			bool _isRendered = false;
 			bool _isMeasuredAndArranged = false;
@@ -75,6 +72,12 @@ namespace yoba::ui {
 			std::vector<Animation*> _animations;
 			std::vector<hardware::InputDevice*> _inputDevices;
 			std::vector<std::function<void()>> _enqueuedTasksOnTick;
+
+			uint32_t _peripheralsDeltaTime = 0;
+			uint32_t _tickDeltaTime = 0;
+			uint32_t _layoutDeltaTime = 0;
+			uint32_t _renderDeltaTime = 0;
+			uint32_t _flushDeltaTime = 0;
 
 			void animationsTick();
 			void inputDevicesTick();

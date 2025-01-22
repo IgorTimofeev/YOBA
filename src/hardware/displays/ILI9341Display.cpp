@@ -223,8 +223,7 @@ namespace yoba::hardware {
 		this->writeCommand(0x2C);
 
 		/* Entry mode set, Low vol detect disabled, normal display */
-		b[0] = 0x07;
-		this->writeCommandAndData(0xB7, b, 1);
+		this->writeCommandAndData(0xB7, 0x07);
 
 		/* Display function control */
 		b[0] = 0x0A;

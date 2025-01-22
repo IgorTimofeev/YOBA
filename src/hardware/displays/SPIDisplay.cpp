@@ -24,44 +24,35 @@ namespace yoba::hardware {
 	void SPIDisplay::setup() {
 		RenderTarget::setup();
 
-		// Resetting CS pin just in case
-		system::gpio::setOutput(_csPin);
-		setChipSelect(true);
+		// Non-SPI pins
 
-		// Initialize non-SPI GPIOs
-		system::gpio::setOutput(_dcPin);
+		// Data command pin
+		system::GPIO::setMode(_dcPin, system::GPIO::PinMode::Output);
+		setDataCommand(true);
 
-		// Toggle reset pin if it was defined
+		// Reset pin
 		if (_rstPin >= 0) {
-			system::gpio::setOutput(_rstPin);
+			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::Output);
 
-			system::gpio::write(_rstPin, false);
+			system::GPIO::write(_rstPin, false);
 			system::sleep(100);
 
-			system::gpio::write(_rstPin, true);
+			system::GPIO::write(_rstPin, true);
 			system::sleep(100);
 		}
 
 		// SPI
-		system::spi::setup(_mosiPin, _sckPin, _csPin, _SPIFrequency);
+		system::SPI::setup(_mosiPin, _sckPin, _csPin, _SPIFrequency);
 
 		writeSetupCommands();
 	}
 
 	void SPIDisplay::writeData(uint8_t data) {
-		setChipSelect(false);
-
-		system::spi::writeByte(data);
-
-		setChipSelect(true);
+		system::SPI::write(data);
 	}
 
 	void SPIDisplay::writeData(const uint8_t* data, size_t length) {
-		setChipSelect(false);
-
-		system::spi::writeBytes(data, length);
-
-		setChipSelect(true);
+		system::SPI::write(data, length);
 	}
 
 	void SPIDisplay::writeCommand(uint8_t data) {
@@ -87,10 +78,10 @@ namespace yoba::hardware {
 	}
 
 	void SPIDisplay::setChipSelect(uint8_t value) const {
-		system::gpio::write(_csPin, value);
+		system::GPIO::write(_csPin, value);
 	}
 
 	void SPIDisplay::setDataCommand(uint8_t value) const {
-		system::gpio::write(_dcPin, value);
+		system::GPIO::write(_dcPin, value);
 	}
 }

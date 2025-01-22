@@ -163,7 +163,7 @@ namespace yoba::ui {
 
 					bar.setVisible(
 						mode == ScrollMode::enabled
-						|| mode == ScrollMode::computed && possible
+						|| (mode == ScrollMode::computed && possible)
 					);
 
 					if (bar.isVisible())

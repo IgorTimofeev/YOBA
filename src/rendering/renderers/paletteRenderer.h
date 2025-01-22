@@ -7,10 +7,11 @@
 namespace yoba {
 	class PaletteRenderer : public Renderer {
 		public:
-			PaletteRenderer(uint16_t paletteLength);
+			explicit PaletteRenderer(uint16_t paletteLength);
 
-			uint32_t getPaletteColor(uint16_t index);
-			void setPaletteColor(uint16_t index, uint32_t value);
+			uint32_t getPaletteValue(uint16_t index);
+			void setPaletteValue(uint16_t index, uint32_t value);
+
 			void setPaletteColor(uint16_t index, const Rgb888Color& color);
 
 			void setPaletteColors(std::initializer_list<uint32_t> colors);

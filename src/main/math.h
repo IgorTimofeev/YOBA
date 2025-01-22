@@ -39,6 +39,11 @@ namespace yoba {
 	}
 
 	template<typename T>
+	T random(T min, T max) {
+		return rand() % (max - min + 1) + min;
+	}
+
+	template<typename T>
 	int getDigitCount(T number) {
 		if (number < 0)
 			number = -number;

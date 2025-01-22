@@ -6,7 +6,7 @@ namespace yoba {
 	}
 
 
-	uint32_t PaletteRenderer::getPaletteColor(uint16_t index) {
+	uint32_t PaletteRenderer::getPaletteValue(uint16_t index) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
 				return ((uint16_t*) _palette)[index];
@@ -19,7 +19,7 @@ namespace yoba {
 		}
 	}
 
-	void PaletteRenderer::setPaletteColor(uint16_t index, uint32_t value) {
+	void PaletteRenderer::setPaletteValue(uint16_t index, uint32_t value) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565: {
 				((uint16_t*) _palette)[index] = (uint16_t) value;
@@ -53,23 +53,19 @@ namespace yoba {
 	}
 
 	void PaletteRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
-		uint32_t tColor;
-
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
-				tColor = color.toRgb565().getValue();
+				setPaletteValue(index, color.toRgb565().getValue());
 				break;
 
 			case ColorModel::rgb666:
-				tColor = color.toRgb666().getValue();
+				setPaletteValue(index, color.toRgb666().getValue());
 				break;
 
 			default:
-				tColor = 0;
+				setPaletteValue(index, 0);
 				break;
 		}
-
-		setPaletteColor(index, tColor);
 	}
 
 	void PaletteRenderer::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
@@ -85,7 +81,7 @@ namespace yoba {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
-			setPaletteColor(index, color);
+			setPaletteColor(index, Rgb888Color(color));
 			index++;
 		}
 	}
