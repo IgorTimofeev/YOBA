@@ -10,11 +10,9 @@
 namespace yoba::ui {
 	class Switch : public CheckedElement, public CornerRadiusElement, public FocusableElement {
 		public:
-			Switch() {
+			Switch() = default;
 
-			}
-
-			Switch(bool checked) {
+			explicit Switch(bool checked) {
 				setChecked(checked);
 			}
 
@@ -109,8 +107,8 @@ namespace yoba::ui {
 			}
 
 		private:
-			const Color* _trackColor;
-			const Color* _checkedColor;
-			const Color* _handleColor;
+			const Color* _trackColor = nullptr;
+			const Color* _checkedColor = nullptr;
+			const Color* _handleColor = nullptr;
 	};
 }

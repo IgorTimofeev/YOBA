@@ -7,15 +7,13 @@
 namespace yoba::ui {
 	class StackLayout : public Layout, public OrientationElement, public SpacingElement {
 		public:
-			StackLayout() {
+			StackLayout() = default;
 
-			}
-
-			StackLayout(Orientation orientation) {
+			explicit StackLayout(Orientation orientation) {
 				setOrientation(orientation);
 			}
 
-			StackLayout(uint16_t spacing) {
+			explicit StackLayout(uint16_t spacing) {
 				setSpacing(spacing);
 			}
 

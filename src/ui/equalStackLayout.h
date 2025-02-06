@@ -11,11 +11,11 @@ namespace yoba::ui {
 
 			}
 
-			EqualStackLayout(Orientation orientation) : StackLayout(orientation) {
+			explicit EqualStackLayout(Orientation orientation) : StackLayout(orientation) {
 
 			}
 
-			EqualStackLayout(uint16_t spacing) : StackLayout(spacing) {
+			explicit EqualStackLayout(uint16_t spacing) : StackLayout(spacing) {
 
 			}
 

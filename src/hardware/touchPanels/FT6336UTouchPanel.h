@@ -149,7 +149,7 @@ namespace yoba::hardware {
 		private:
 			uint8_t _sdaPin;
 			uint8_t _sclPin;
-			uint8_t _rstPin;
+			int8_t _rstPin;
 			uint8_t _intPin;
 
 			uint8_t readByte(uint8_t addr);

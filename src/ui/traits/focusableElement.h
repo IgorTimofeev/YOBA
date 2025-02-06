@@ -5,7 +5,7 @@
 namespace yoba::ui {
 	class FocusableElement : public virtual Element {
 		public:
-			~FocusableElement();
+			~FocusableElement() override;
 
 			bool isFocusable() const;
 			void setFocusable(bool focusable);

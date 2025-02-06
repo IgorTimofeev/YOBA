@@ -547,13 +547,13 @@ namespace yoba::ui {
 	Size KeyboardButtonsLayout::onMeasure(const Size& availableSize) {
 		const auto layout = _keyboard->getLayout();
 
-		if (!layout)
-			return { 0, 0 };
-
-		return Size(
-			availableSize.getWidth(),
-			(_keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing()) * layout->keys.size() - _keyboard->getVerticalKeySpacing()
-		);
+		return
+			layout
+			? Size(
+				availableSize.getWidth(),
+				(_keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing()) * layout->keys.size() - _keyboard->getVerticalKeySpacing()
+			)
+			: Size();
 	}
 
 	void KeyboardButtonsLayout::onRender(Renderer* renderer, const Bounds& bounds) {

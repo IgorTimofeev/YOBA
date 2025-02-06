@@ -12,7 +12,7 @@ namespace yoba::ui {
 				*this += &_title;
 			}
 
-			Titler(const std::wstring_view& title) : Titler()  {
+			explicit Titler(const std::wstring_view& title) : Titler()  {
 				_title.setText(title);
 			}
 

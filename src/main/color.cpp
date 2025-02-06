@@ -1,5 +1,5 @@
 #include "color.h"
-#include "math.h"
+#include "./math.h"
 
 namespace yoba {
 	ColorModel Color::getModel() const {

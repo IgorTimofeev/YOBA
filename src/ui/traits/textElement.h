@@ -5,7 +5,7 @@
 namespace yoba::ui {
 	class TextElement : public virtual Element {
 		public:
-			const std::wstring_view getText() const {
+			std::wstring_view getText() const {
 				return _text;
 			}
 

@@ -64,7 +64,7 @@ namespace yoba::ui {
 		private:
 			Renderer* _renderer = nullptr;
 
-			bool _renderInvalidated = false;
+			bool _renderInvalidated = true;
 			bool _layoutInvalidated = true;
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;

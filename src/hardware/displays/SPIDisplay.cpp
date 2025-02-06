@@ -8,7 +8,7 @@ namespace yoba::hardware {
 		uint8_t csPin,
 		uint8_t dcPin,
 		int8_t rstPin,
-		uint32_t SPIFrequency
+		uint32_t frequency
 	) :
 		_mosiPin(mosiPin),
 		_misoPin(misoPin),
@@ -16,7 +16,7 @@ namespace yoba::hardware {
 		_csPin(csPin),
 		_dcPin(dcPin),
 		_rstPin(rstPin),
-		_SPIFrequency(SPIFrequency)
+		_frequency(frequency)
 	{
 
 	}
@@ -42,7 +42,7 @@ namespace yoba::hardware {
 		}
 
 		// SPI
-		system::SPI::setup(_mosiPin, _sckPin, _csPin, _SPIFrequency);
+		system::SPI::setup(_mosiPin, _sckPin, _csPin, _frequency);
 
 		writeSetupCommands();
 	}

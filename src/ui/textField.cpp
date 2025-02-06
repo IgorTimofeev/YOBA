@@ -216,11 +216,11 @@ namespace yoba::ui {
 
 		// Start
 		if (cursorPosition == 0) {
-			if (text.length() > 0) {
-				setText(std::wstring(value) + std::wstring(text));
+			if (text.empty()) {
+				setText(value);
 			}
 			else {
-				setText(value);
+				setText(std::wstring(value) + std::wstring(text));
 			}
 		}
 		// End
@@ -245,7 +245,7 @@ namespace yoba::ui {
 		}
 		// End
 		else if (cursorPosition == text.length()) {
-			if (text.length() > 0) {
+			if (!text.empty()) {
 				setText(text.substr(0, text.length() - 1));
 			}
 		}
@@ -254,7 +254,7 @@ namespace yoba::ui {
 			if (text.length() > 1) {
 				setText(text.substr(1));
 			}
-			else if (text.length() > 0) {
+			else if (!text.empty()) {
 				setText(std::wstring());
 			}
 		}

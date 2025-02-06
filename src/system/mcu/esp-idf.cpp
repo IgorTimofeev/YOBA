@@ -123,6 +123,9 @@ namespace yoba::system {
 			.scl_io_num = (gpio_num_t) sclPin,
 			.clk_source = I2C_CLK_SRC_DEFAULT,
 			.glitch_ignore_cnt = 7,
+			.flags = {
+				.enable_internal_pullup = true,
+			}
 		};
 
 		i2c_master_bus_handle_t busHandle;

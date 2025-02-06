@@ -14,7 +14,7 @@ namespace yoba::hardware {
 				uint8_t csPin,
 				uint8_t dcPin,
 				int8_t rstPin,
-				uint32_t SPIFrequency
+				uint32_t frequency
 			);
 
 			void setup() override;
@@ -44,6 +44,6 @@ namespace yoba::hardware {
 			uint8_t _csPin;
 			uint8_t _dcPin;
 			int8_t _rstPin;
-			uint32_t _SPIFrequency;
+			uint32_t _frequency;
 	};
 }

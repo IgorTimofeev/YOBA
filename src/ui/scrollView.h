@@ -272,7 +272,7 @@ namespace yoba::ui {
 
 			Point _lastTouchPosition = Point(-1, -1);
 
-			void computeScrollPositionForDelta(uint16_t& position, int32_t delta, int32_t boundsPosition2, int32_t contentPosition2) {
+			static void computeScrollPositionForDelta(uint16_t& position, int32_t delta, int32_t boundsPosition2, int32_t contentPosition2) {
 				if (delta <= 0) {
 					if (-delta > position) {
 						position = 0;

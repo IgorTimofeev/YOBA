@@ -71,7 +71,7 @@ namespace yoba {
 		return _height * scale;
 	}
 
-	void Font::wrap(const std::wstring_view& text, uint8_t scale, uint16_t maxWidth, std::function<void(const std::wstring_view&, uint16_t width)> lineHandler) const {
+	void Font::wrap(const std::wstring_view& text, uint8_t scale, uint16_t maxWidth, const std::function<void(const std::wstring_view&, uint16_t width)>& lineHandler) const {
 		size_t
 			lineFrom = 0,
 			spaceAt = 0;

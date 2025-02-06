@@ -27,11 +27,11 @@ namespace yoba::ui {
 	}
 
 	void Application::invalidateLayout() {
-		_layoutInvalidated = false;
+		_layoutInvalidated = true;
 	}
 
 	void Application::invalidateRender() {
-		_renderInvalidated = false;
+		_renderInvalidated = true;
 	}
 
 	void Application::invalidate() {
@@ -85,8 +85,8 @@ namespace yoba::ui {
 
 		_tickDeltaTime = system::getTime() - time;
 
-		// Measuring size of children
 		if (_layoutInvalidated) {
+			// Measuring size of children
 			time = system::getTime();
 			measure(getSize());
 			_layoutDeltaTime = system::getTime() - time;
