@@ -30,7 +30,7 @@ namespace yoba::ui {
 		public:
 			void onTick() override;
 
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			void onEvent(Event& targetX) override;
 

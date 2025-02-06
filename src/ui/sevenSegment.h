@@ -19,26 +19,28 @@ namespace yoba::ui {
 				};
 			}
 
-			void onRender(Renderer* renderer) override {
-				auto bounds = getBounds();
-				bounds.setX(bounds.getX() + (getDigitWidth() + getSpacing()) * (getDigitCount() - 1));
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
+				auto position = Point(
+					bounds.getX() + (getDigitWidth() + getSpacing()) * (getDigitCount() - 1),
+					bounds.getY()
+				);
 
 				auto value = getValue();
 
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
 					if (value == dashes) {
-						drawDashes(renderer, bounds.getPosition());
+						renderDashes(renderer, position);
 					}
 					else if (value > 0) {
-						drawDigit(renderer, bounds.getPosition(), value % 10);
+						renderDigit(renderer, position, value % 10);
 
 						value /= 10;
 					}
 					else {
-						drawDigit(renderer, bounds.getPosition(), 0);
+						renderDigit(renderer, position, 0);
 					}
 
-					bounds.setX(bounds.getX() - getDigitWidth() - getSpacing());
+					position.setX(position.getX() - getDigitWidth() - getSpacing());
 				}
 			}
 
@@ -109,7 +111,7 @@ namespace yoba::ui {
 			uint8_t _segmentThickness = 3;
 			uint8_t _segmentLength = 9;
 
-			void drawSegments(
+			void renderSegments(
 				Renderer* renderer,
 				const Point& position,
 				bool s0,
@@ -132,10 +134,10 @@ namespace yoba::ui {
 				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getSecondaryColor() : getPrimaryColor());
 			}
 
-			void drawDigit(Renderer* renderer, const Point& position, uint8_t digit) {
+			void renderDigit(Renderer* renderer, const Point& position, uint8_t digit) {
 				switch (digit) {
 					case 0:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -150,7 +152,7 @@ namespace yoba::ui {
 						break;
 
 					case 1:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							false,
@@ -165,7 +167,7 @@ namespace yoba::ui {
 						break;
 
 					case 2:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -180,7 +182,7 @@ namespace yoba::ui {
 						break;
 
 					case 3:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -195,7 +197,7 @@ namespace yoba::ui {
 						break;
 
 					case 4:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							false,
@@ -210,7 +212,7 @@ namespace yoba::ui {
 						break;
 
 					case 5:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -225,7 +227,7 @@ namespace yoba::ui {
 						break;
 
 					case 6:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -240,7 +242,7 @@ namespace yoba::ui {
 						break;
 
 					case 7:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -255,7 +257,7 @@ namespace yoba::ui {
 						break;
 
 					case 8:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -270,7 +272,7 @@ namespace yoba::ui {
 						break;
 
 					default:
-						drawSegments(
+						renderSegments(
 							renderer,
 							position,
 							true,
@@ -286,8 +288,8 @@ namespace yoba::ui {
 				}
 			}
 
-			void drawDashes(Renderer* renderer, const Point& position) {
-				drawSegments(
+			void renderDashes(Renderer* renderer, const Point& position) {
+				renderSegments(
 					renderer,
 					position,
 					false,

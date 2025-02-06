@@ -47,9 +47,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
-
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				// Track
 				if (_trackColor && _value < 1) {
 					renderer->renderFilledRectangle(

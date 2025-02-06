@@ -122,7 +122,7 @@ namespace yoba::ui {
 				return result;
 			}
 
-			void onArrange(const Bounds& bounds) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto& measuredSize = getMeasuredSize();
 
 				_contentBounds.setX(
@@ -153,10 +153,10 @@ namespace yoba::ui {
 					if (!element->isVisible())
 						continue;
 
-					element->arrange(_contentBounds);
+					element->render(renderer, _contentBounds);
 				}
 
-				const auto& arrangeScrollBar = [&bounds](ScrollBar& bar, bool& possible, ScrollMode mode, uint16_t size, uint16_t contentSize) {
+				const auto& processScrollBar = [&bounds, renderer](ScrollBar& bar, bool& possible, ScrollMode mode, uint16_t size, uint16_t contentSize) {
 					bar.setTotalSize(contentSize);
 					bar.setViewportSize(size);
 					possible = mode != ScrollMode::disabled && contentSize > size;
@@ -167,10 +167,10 @@ namespace yoba::ui {
 					);
 
 					if (bar.isVisible())
-						bar.arrange(bounds);
+						bar.render(renderer, bounds);
 				};
 
-				arrangeScrollBar(
+				processScrollBar(
 					_horizontalScrollBar,
 					_horizontalScrollPossible,
 					_horizontalScrollMode,
@@ -178,7 +178,7 @@ namespace yoba::ui {
 					_contentBounds.getWidth()
 				);
 
-				arrangeScrollBar(
+				processScrollBar(
 					_verticalScrollBar,
 					_verticalScrollPossible,
 					_verticalScrollMode,
@@ -187,15 +187,6 @@ namespace yoba::ui {
 				);
 			}
 
-		public:
-			void onRender(Renderer* renderer) override {
-				Layout::onRender(renderer);
-
-				_horizontalScrollBar.render(renderer);
-				_verticalScrollBar.render(renderer);
-			}
-
-		public:
 			void onEvent(Event& event) override {
 				Layout::onEvent(event);
 

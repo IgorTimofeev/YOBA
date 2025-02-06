@@ -27,11 +27,11 @@ namespace yoba::ui {
 	}
 
 	void Application::invalidateLayout() {
-		_isMeasuredAndArranged = false;
+		_layoutInvalidated = false;
 	}
 
 	void Application::invalidateRender() {
-		_isRendered = false;
+		_renderInvalidated = false;
 	}
 
 	void Application::invalidate() {
@@ -85,33 +85,31 @@ namespace yoba::ui {
 
 		_tickDeltaTime = system::getTime() - time;
 
-		// Measuring & arranging child elements
-		if (!_isMeasuredAndArranged) {
+		// Measuring size of children
+		if (_layoutInvalidated) {
 			time = system::getTime();
-
 			measure(getSize());
-			arrange(Bounds(getSize()));
-
 			_layoutDeltaTime = system::getTime() - time;
 
-			_isMeasuredAndArranged = true;
+			_layoutInvalidated = false;
 		}
 
-		// Rendering
-		if (!_isRendered) {
+		if (_renderInvalidated) {
+			// Rendering children
 			time = system::getTime();
-			render(_renderer);
+			render(_renderer, Bounds(getSize()));
 			_renderDeltaTime = system::getTime() - time;
 
+			// Flushing screen buffer
 			time = system::getTime();
 			_renderer->flushBuffer();
 			_flushDeltaTime = system::getTime() - time;
 
-			_isRendered = true;
+			_renderInvalidated = false;
 		}
 
 		// Running enqueued tasks if any
-		if (_enqueuedTasksOnTick.size() > 0) {
+		if (!_enqueuedTasksOnTick.empty()) {
 			for (const auto& task : _enqueuedTasksOnTick)
 				task();
 
@@ -197,11 +195,11 @@ namespace yoba::ui {
 		return _flushDeltaTime;
 	}
 
-	void Application::onRender(Renderer* renderer) {
+	void Application::onRender(Renderer* renderer, const Bounds& bounds) {
 		if (getBackgroundColor())
 			renderer->clear(getBackgroundColor());
 
-		Layout::onRender(renderer);
+		Layout::onRender(renderer, bounds);
 	}
 
 	uint32_t Application::getPeripheralsDeltaTime() const {

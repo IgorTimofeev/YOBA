@@ -14,7 +14,7 @@ namespace yoba::ui {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				auto color = getFillColor();
 
 				if (color)

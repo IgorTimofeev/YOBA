@@ -49,12 +49,11 @@ namespace yoba::ui {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				// Thumb
 				if (!_thumbColor)
 					return;
 
-				const auto& bounds = getBounds();
 				const auto size = (uint16_t) ((uint64_t) _viewportSize * (uint64_t) bounds.getHeight() / (uint64_t) _totalSize);
 				const auto position = (uint16_t) ((uint64_t) _position * (uint64_t) bounds.getHeight() / (uint64_t) _totalSize);
 

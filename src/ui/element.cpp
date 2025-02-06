@@ -157,11 +157,7 @@ namespace yoba::ui {
 		}
 	}
 
-	void Element::onArrange(const Bounds& bounds) {
-
-	}
-
-	void Element::arrange(const Bounds& bounds) {
+	void Element::render(Renderer* renderer, const Bounds& bounds) {
 		auto& margin = getMargin();
 		auto& measuredSize = getMeasuredSize();
 		auto& size = getSize();
@@ -202,9 +198,16 @@ namespace yoba::ui {
 
 		_bounds = newBounds;
 
-		onArrange(newBounds);
-
 		onBoundsChanged();
+
+		if (_clipToBounds) {
+			auto viewport = renderer->pushViewport(_bounds);
+			onRender(renderer, newBounds);
+			renderer->popViewport(viewport);
+		}
+		else {
+			onRender(renderer, newBounds);
+		}
 	}
 
 	void Element::handleEvent(Event& event) {
@@ -318,21 +321,7 @@ namespace yoba::ui {
 			_application->invalidate();
 	}
 
-	void Element::render(Renderer* renderer) {
-		if (!isVisible())
-			return;
-
-		if (_clipToBounds) {
-			auto viewport = renderer->pushViewport(getBounds());
-			onRender(renderer);
-			renderer->popViewport(viewport);
-		}
-		else {
-			onRender(renderer);
-		}
-	}
-
-	void Element::onRender(Renderer* renderer) {
+	void Element::onRender(Renderer* renderer, const Bounds& bounds) {
 
 	}
 

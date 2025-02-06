@@ -49,10 +49,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
-				Element::onRender(renderer);
-
-				const auto& bounds = getBounds();
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const uint16_t handleHalf = bounds.getHeight() / 2;
 				const uint16_t handleOffset = isChecked() ? bounds.getWidth() - bounds.getHeight() : 0;
 				const uint16_t handleOffsetCenter = handleOffset + handleHalf;

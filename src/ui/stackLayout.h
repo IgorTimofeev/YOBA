@@ -89,7 +89,7 @@ namespace yoba::ui {
 				return result;
 			}
 
-			void onArrange(const Bounds& bounds) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				int32_t position;
 
 				switch (getOrientation()) {
@@ -102,7 +102,7 @@ namespace yoba::ui {
 
 							const auto& childSize = child->getMeasuredSize();
 
-							child->arrange(Bounds(
+							child->render(renderer, Bounds(
 								position,
 								bounds.getY(),
 								childSize.getWidth(),
@@ -123,7 +123,7 @@ namespace yoba::ui {
 
 							const auto& childSize = child->getMeasuredSize();
 
-							child->arrange(Bounds(
+							child->render(renderer, Bounds(
 								bounds.getX(),
 								position,
 								bounds.getWidth(),

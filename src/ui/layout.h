@@ -38,8 +38,7 @@ namespace yoba::ui {
 		protected:
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
-			void onArrange(const Bounds& bounds) override;
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 			void onEvent(Event& event) override;
 
 			virtual void onChildAdded(Element* element);

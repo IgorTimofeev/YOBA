@@ -10,10 +10,6 @@ namespace yoba {
 
 	}
 
-	Bounds::Bounds(const Bounds& bounds) : Bounds(bounds._x, bounds._y, bounds._width, bounds._height) {
-
-	}
-
 	Bounds::Bounds() : Bounds(0, 0, 0, 0) {
 
 	}

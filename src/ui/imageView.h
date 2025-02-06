@@ -14,7 +14,7 @@ namespace yoba::ui {
 				setImage(image);
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				if (!getImage())
 					return;
 

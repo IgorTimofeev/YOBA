@@ -98,8 +98,7 @@ namespace yoba::ui {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto handleHalf = _handleSize / 2;
 				const auto trackY = bounds.getY() + handleHalf - _trackSize / 2;
 				const auto handleCenterLocal = handleHalf + (uint16_t) std::round(_value * (float) (bounds.getWidth() - bounds.getHeight()));

@@ -10,12 +10,6 @@ namespace yoba::ui {
 			element->onTick();
 	}
 
-	void Layout::onRender(Renderer* renderer) {
-		for (auto element : _children)
-			element->render(renderer);
-
-		Element::onRender(renderer);
-	}
 
 	void Layout::onEvent(Event& event) {
 		Element::onEvent(event);
@@ -125,10 +119,12 @@ namespace yoba::ui {
 		return result;
 	}
 
-	void Layout::onArrange(const Bounds& bounds) {
+	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
+		Element::onRender(renderer, bounds);
+
 		for (auto child : _children) {
 			if (child->isVisible()) {
-				child->arrange(bounds);
+				child->render(renderer, bounds);
 			}
 		}
 	}

@@ -175,7 +175,7 @@ namespace yoba::ui {
 				return result;
 			}
 
-			void onArrange(const Bounds& bounds) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				size_t
 					visibleCount = 0,
 					fitCount = 0,
@@ -227,7 +227,7 @@ namespace yoba::ui {
 								? child->getMeasuredSize().getWidth()
 								: equalSize;
 
-							child->arrange(Bounds(
+							child->render(renderer, Bounds(
 								position,
 								bounds.getY(),
 								childSize,
@@ -276,7 +276,7 @@ namespace yoba::ui {
 								? child->getMeasuredSize().getHeight()
 								: equalSize;
 
-							child->arrange(Bounds(
+							child->render(renderer, Bounds(
 								bounds.getX(),
 								position,
 								bounds.getWidth(),

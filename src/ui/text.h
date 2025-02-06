@@ -41,7 +41,7 @@ namespace yoba::ui {
 				const auto font = getFont();
 
 				if (!font)
-					return Size();
+					return {};
 
 				if (_wrappingEnabled) {
 					auto result = Size();
@@ -65,14 +65,14 @@ namespace yoba::ui {
 					return result;
 				}
 				else {
-					return Size(
+					return {
 						font->getWidth(getText(), getFontScale()),
 						font->getHeight(getFontScale())
-					);
+					};
 				}
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto font = getFont();
 
 				if (!font)

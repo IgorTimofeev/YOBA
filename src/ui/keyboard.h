@@ -288,7 +288,7 @@ namespace yoba::ui {
 
 	class EnterKeyboardKey : public KeyboardKey {
 		public:
-			EnterKeyboardKey(float width);
+			explicit EnterKeyboardKey(float width);
 	};
 
 	class SpaceKeyboardKey : public KeyboardKey {
@@ -327,7 +327,7 @@ namespace yoba::ui {
 		protected:
 			Size onMeasure(const Size& availableSize) override;
 
-			void onArrange(const Bounds& buttonIndexTo) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
 			Keyboard* _keyboard;
@@ -335,7 +335,7 @@ namespace yoba::ui {
 
 	class KeyboardLayout {
 		public:
-			KeyboardLayout(std::vector<std::vector<KeyboardKey*>> keys) : keys(keys) {
+			explicit KeyboardLayout(const std::vector<std::vector<KeyboardKey*>>& keys) : keys(keys) {
 
 			}
 
@@ -371,7 +371,7 @@ namespace yoba::ui {
 		public:
 			Keyboard();
 		
-			~Keyboard();
+			~Keyboard() override;
 
 			Callback<KeyCode, bool> keyPressedChanged;
 			Callback<KeyCode, const std::wstring_view&> input;
@@ -380,7 +380,7 @@ namespace yoba::ui {
 			KeyboardLayout* getLayout() const;
 
 			uint8_t getCyclicLayoutsCount();
-			int8_t getCyclicLayoutIndex();
+			int8_t getCyclicLayoutIndex() const;
 			void setCyclicLayoutIndex(int8_t value);
 
 			void setNextCyclicLayoutIndex();
@@ -454,13 +454,6 @@ namespace yoba::ui {
 			uint16_t _keyHeight = 25;
 
 			void deleteLayoutAndUIElements();
-	};
-
-	class KeyboardApplicationLayout : public Layout {
-		protected:
-			Size onMeasure(const Size& availableSize) override;
-
-			void onArrange(const Bounds& bounds) override;
 	};
 
 	class ApplicationKeyboardController {

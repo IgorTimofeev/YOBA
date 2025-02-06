@@ -22,9 +22,7 @@ namespace yoba::ui {
 		}
 	}
 
-	void TextField::onRender(Renderer* renderer) {
-		auto& bounds = getBounds();
-
+	void TextField::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto focused = isFocused();
 
 		// Background

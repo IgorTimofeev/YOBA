@@ -16,7 +16,7 @@ namespace yoba::ui {
 		public:
 			Callback<float, float> rotated;
 
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			void onEvent(Event& event) override;
 

@@ -15,7 +15,7 @@ namespace yoba::ui {
 		public:
 			Callback<> pressedChanged;
 
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			void onEvent(Event& event) override;
 

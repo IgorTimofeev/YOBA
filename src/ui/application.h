@@ -59,13 +59,13 @@ namespace yoba::ui {
 			uint32_t getPeripheralsDeltaTime() const;
 
 		protected:
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
 			Renderer* _renderer = nullptr;
 
-			bool _isRendered = false;
-			bool _isMeasuredAndArranged = false;
+			bool _renderInvalidated = false;
+			bool _layoutInvalidated = true;
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;
 
