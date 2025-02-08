@@ -29,7 +29,7 @@ namespace yoba::system {
 	// -------------------------------- GPIO --------------------------------
 
 	void GPIO::setMode(uint8_t pin, PinMode mode) {
-		gpio_config_t conf = {
+		gpio_config_t config = {
 			.pin_bit_mask = 1ULL << pin,
 			.mode = mode == PinMode::Input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT,
 			.pull_up_en = GPIO_PULLUP_ENABLE,
@@ -37,7 +37,7 @@ namespace yoba::system {
 			.intr_type = GPIO_INTR_DISABLE
 		};
 
-		gpio_config(&conf);
+		gpio_config(&config);
 	}
 
 	bool GPIO::read(uint8_t pin) {
@@ -72,22 +72,18 @@ namespace yoba::system {
 		GPIO::setMode(ssPin, system::GPIO::PinMode::Output);
 		GPIO::write(ssPin, true);
 
-		spi_bus_config_t busConfig = {
-			.mosi_io_num = mosiPin,
-			.miso_io_num = -1,
-			.sclk_io_num = sckPin,
-			.quadwp_io_num = -1,
-			.quadhd_io_num = -1,
-			.max_transfer_sz = 0xFFFF,
-		};
+		spi_bus_config_t busConfig {};
+		busConfig.mosi_io_num = mosiPin;
+		busConfig.miso_io_num = -1;
+		busConfig.sclk_io_num = sckPin;
+		busConfig.max_transfer_sz = 0xFFFF;
 
-		spi_device_interface_config_t interfaceConfig = {
-			.mode = 0,
-			.clock_speed_hz = (int) frequency,
-			.spics_io_num = ssPin,
-			.flags = SPI_DEVICE_NO_DUMMY,
-			.queue_size = 1,
-		};
+		spi_device_interface_config_t interfaceConfig {};
+		interfaceConfig.mode = 0;
+		interfaceConfig.clock_speed_hz = (int) frequency;
+		interfaceConfig.spics_io_num = ssPin;
+		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
+		interfaceConfig.queue_size = 1;
 
 		ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO));
 		ESP_ERROR_CHECK(spi_bus_add_device(SPI2_HOST, &interfaceConfig, &_deviceHandle));
@@ -117,26 +113,23 @@ namespace yoba::system {
 	i2c_master_dev_handle_t I2C::_deviceHandle = i2c_master_dev_handle_t();
 
 	void I2C::setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency) {
-		i2c_master_bus_config_t busConfig = {
-			.i2c_port = I2C_NUM_0,
-			.sda_io_num = (gpio_num_t) sdaPin,
-			.scl_io_num = (gpio_num_t) sclPin,
-			.clk_source = I2C_CLK_SRC_DEFAULT,
-			.glitch_ignore_cnt = 7,
-			.flags = {
-				.enable_internal_pullup = true,
-			}
-		};
+		i2c_master_bus_config_t busConfig {};
+		busConfig.i2c_port = I2C_NUM_0;
+		busConfig.sda_io_num = (gpio_num_t) sdaPin;
+		busConfig.scl_io_num = (gpio_num_t) sclPin;
+		busConfig.clk_source = I2C_CLK_SRC_DEFAULT;
+		busConfig.glitch_ignore_cnt = 7;
+		busConfig.flags.enable_internal_pullup = true;
+		busConfig.flags.allow_pd = false;
 
 		i2c_master_bus_handle_t busHandle;
 
 		ESP_ERROR_CHECK(i2c_new_master_bus(&busConfig, &busHandle));
 
-		i2c_device_config_t deviceConfig = {
-			.dev_addr_length = I2C_ADDR_BIT_LEN_7,
-			.device_address = slaveAddress,
-			.scl_speed_hz = frequency,
-		};
+		i2c_device_config_t deviceConfig {};
+		deviceConfig.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+		deviceConfig.device_address = slaveAddress;
+		deviceConfig.scl_speed_hz = frequency;
 
 		ESP_ERROR_CHECK(i2c_master_bus_add_device(busHandle, &deviceConfig, &_deviceHandle));
 	}
