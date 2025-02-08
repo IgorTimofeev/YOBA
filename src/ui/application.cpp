@@ -77,7 +77,7 @@ namespace yoba::ui {
 
 		time = system::getTime();
 
-		// Handling child elements onTick()
+		// Handling tick for children
 		onTick();
 
 		// Playing animations
@@ -97,7 +97,7 @@ namespace yoba::ui {
 		if (_renderInvalidated) {
 			// Rendering children
 			time = system::getTime();
-			render(_renderer, Bounds(getSize()));
+			render(_renderer, getBounds());
 			_renderDeltaTime = system::getTime() - time;
 
 			// Flushing screen buffer
@@ -109,11 +109,11 @@ namespace yoba::ui {
 		}
 
 		// Running enqueued tasks if any
-		if (!_enqueuedTasksOnTick.empty()) {
-			for (const auto& task : _enqueuedTasksOnTick)
+		if (!_enqueuedOnTickCallbacks.empty()) {
+			for (const auto& task : _enqueuedOnTickCallbacks)
 				task();
 
-			_enqueuedTasksOnTick.clear();
+			_enqueuedOnTickCallbacks.clear();
 		}
 	}
 
@@ -171,7 +171,7 @@ namespace yoba::ui {
 	}
 
 	void Application::enqueueOnTick(const std::function<void()>& task) {
-		_enqueuedTasksOnTick.push_back(task);
+		_enqueuedOnTickCallbacks.push_back(task);
 	}
 
 	void Application::inputDevicesTick() {

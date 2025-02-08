@@ -11,7 +11,6 @@ namespace yoba {
 
 			Size();
 			Size(uint16_t width, uint16_t height);
-			Size(const Size& size) = default;
 
 			uint16_t getWidth() const;
 			void setWidth(uint16_t value);

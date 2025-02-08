@@ -62,7 +62,7 @@ namespace yoba::ui {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
 
-		auto desiredSize = onMeasure(Size(
+		_measuredSize = onMeasure(Size(
 			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));
@@ -72,30 +72,28 @@ namespace yoba::ui {
 		// Width
 		computeMeasureShit(
 			size.getWidth(),
-			desiredSize.getWidth(),
+			_measuredSize.getWidth(),
 			margin.getLeft(),
 			margin.getRight(),
 			newSize
 		);
 
-		desiredSize.setWidth(newSize);
+		_measuredSize.setWidth(newSize);
 
 		// Height
 		computeMeasureShit(
 			size.getHeight(),
-			desiredSize.getHeight(),
+			_measuredSize.getHeight(),
 			margin.getTop(),
 			margin.getBottom(),
 			newSize
 		);
 
-		desiredSize.setHeight(newSize);
-
-		_measuredSize = desiredSize;
+		_measuredSize.setHeight(newSize);
 	}
 
 	void Element::computeArrangeShit(
-		const Alignment &alignment,
+		const Alignment& alignment,
 		const int32_t &position,
 		const uint16_t &size,
 
@@ -158,9 +156,9 @@ namespace yoba::ui {
 	}
 
 	void Element::render(Renderer* renderer, const Bounds& bounds) {
-		auto& margin = getMargin();
-		auto& measuredSize = getMeasuredSize();
-		auto& size = getSize();
+		const auto& margin = getMargin();
+		const auto& measuredSize = getMeasuredSize();
+		const auto& size = getSize();
 
 		Bounds newBounds;
 		int32_t newPosition = 0;
@@ -201,12 +199,16 @@ namespace yoba::ui {
 		onBoundsChanged();
 
 		if (_clipToBounds) {
+			// Copying viewport to restore it after render pass
 			auto viewport = renderer->pushViewport(_bounds);
-			onRender(renderer, newBounds);
+
+			onRender(renderer, _bounds);
+
+			// Restoring viewport
 			renderer->popViewport(viewport);
 		}
 		else {
-			onRender(renderer, newBounds);
+			onRender(renderer, _bounds);
 		}
 	}
 

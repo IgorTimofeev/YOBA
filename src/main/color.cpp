@@ -58,15 +58,6 @@ namespace yoba {
 
 	}
 
-	Rgb888Color::Rgb888Color(const Rgb888Color &source) : Rgb888Color(
-		source._r,
-		source._g,
-		source._b
-	)  {
-
-	}
-
-
 	Rgb888Color::Rgb888Color(uint32_t rgb888) : Rgb888Color(
 		rgb888 >> 16 & 0xFF,
 		rgb888 >> 8 & 0xFF,

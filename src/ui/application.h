@@ -71,7 +71,7 @@ namespace yoba::ui {
 
 			std::vector<Animation*> _animations;
 			std::vector<hardware::InputDevice*> _inputDevices;
-			std::vector<std::function<void()>> _enqueuedTasksOnTick;
+			std::vector<std::function<void()>> _enqueuedOnTickCallbacks;
 
 			uint32_t _peripheralsDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;

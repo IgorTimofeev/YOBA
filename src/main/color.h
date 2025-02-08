@@ -134,9 +134,7 @@ namespace yoba {
 	class Rgb888Color : public Color {
 		public:
 			Rgb888Color();
-
 			Rgb888Color(uint8_t r, uint8_t g, uint8_t b);
-			Rgb888Color(const Rgb888Color &source);
 			explicit Rgb888Color(uint32_t rgb888);
 
 			uint8_t getR() const;

@@ -11,7 +11,6 @@ namespace yoba {
 			Bounds();
 			Bounds(const Point& position, const Size& size);
 			explicit Bounds(const Size& size);
-			Bounds(const Bounds& bounds) = default;
 
 			int32_t getX() const;
 			void setX(int32_t value);

@@ -10,7 +10,6 @@ namespace yoba::ui {
 			element->onTick();
 	}
 
-
 	void Layout::onEvent(Event& event) {
 		Element::onEvent(event);
 
