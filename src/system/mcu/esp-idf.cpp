@@ -76,6 +76,8 @@ namespace yoba::system {
 		busConfig.mosi_io_num = mosiPin;
 		busConfig.miso_io_num = -1;
 		busConfig.sclk_io_num = sckPin;
+		busConfig.quadwp_io_num = -1;
+		busConfig.quadhd_io_num = -1;
 		busConfig.max_transfer_sz = 0xFFFF;
 
 		spi_device_interface_config_t interfaceConfig {};
