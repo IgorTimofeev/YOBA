@@ -3,6 +3,10 @@
 namespace yoba::ui {
 	// -------------------------------- Selector --------------------------------
 
+	Selector::Selector() {
+		_itemsLayout = this;
+	}
+
 	SelectorItem* Selector::getItemAt(size_t index) {
 		return
 			_itemsLayout

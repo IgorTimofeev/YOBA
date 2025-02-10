@@ -9,6 +9,8 @@ namespace yoba::ui {
 
 	class Selector : public Layout {
 		public:
+			Selector();
+
 			Callback<> selectionChanged;
 			
 			size_t getItemsCount();
@@ -30,7 +32,7 @@ namespace yoba::ui {
 			virtual void onSelectionChanged();
 
 		private:
-			Layout* _itemsLayout = nullptr;
+			Layout* _itemsLayout;
 			int32_t _selectedIndex = -1;
 	};
 
