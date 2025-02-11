@@ -11,7 +11,7 @@ namespace yoba {
 			Vector2(T x, T y);
 
 			template<class TOther>
-			explicit Vector2(const Vector2<TOther>& point);
+			explicit Vector2(const Vector2<TOther>& other);
 
 			T getX() const;
 			void setX(T value);
@@ -50,7 +50,7 @@ namespace yoba {
 
 	template<typename T>
 	template<typename TOther>
-	Vector2<T>::Vector2(const Vector2<TOther>& point) : Vector2((T) point.getX(), (T) point.getY()) {
+	Vector2<T>::Vector2(const Vector2<TOther>& other) : Vector2((T) other.getX(), (T) other.getY()) {
 
 	}
 

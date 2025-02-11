@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "vector.h"
+#include "vector2.h"
 
 namespace yoba {
 	struct Size {

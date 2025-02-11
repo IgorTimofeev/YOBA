@@ -2,7 +2,7 @@
 
 #include "system.h"
 #include "main/math.h"
-#include "main/vector.h"
+#include "main/vector2.h"
 #include "main/size.h"
 #include "main/bounds.h"
 #include "main/margin.h"

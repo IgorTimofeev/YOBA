@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include "main/color.h"
-#include "main/vector.h"
+#include "main/vector2.h"
 #include "main/size.h"
 
 namespace yoba {

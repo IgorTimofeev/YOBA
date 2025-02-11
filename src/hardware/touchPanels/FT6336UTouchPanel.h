@@ -12,7 +12,7 @@
 #include <cstdint>
 #include "touchPanel.h"
 #include "touchPoint.h"
-#include "main/vector.h"
+#include "main/vector2.h"
 #include "rendering/targets/renderTarget.h"
 
 namespace yoba::ui {
