@@ -305,6 +305,7 @@ namespace yoba::hardware {
 						point1 != _touchPoints[0].getPosition()
 						|| point2 != _touchPoints[1].getPosition()
 					) {
+
 						_touchPoints[0].setPosition(point1);
 						_touchPoints[1].setPosition(point2);
 

@@ -148,15 +148,18 @@ namespace yoba {
 
 	uint16_t PinchDownEvent::typeID = 0;
 
-	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) : PinchEvent(
-		typeID,
-		position1,
-		position2
-	) {
+	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) :
+		PinchEvent(
+			typeID,
+			position1,
+			position2
+		)
+	{
 
 	}
 
 	uint16_t PinchDragEvent::typeID = 0;
+
 
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
 		typeID,
