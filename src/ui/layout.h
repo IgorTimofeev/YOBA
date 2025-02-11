@@ -12,27 +12,20 @@ namespace yoba::ui {
 	class Layout : public virtual Element {
 		public:
 			size_t getChildrenCount();
-
 			int32_t getIndexOfChild(Element* element);
-
-			virtual void removeChildAt(int index);
-
-			virtual void removeChild(Element* child);
-
-			void removeChildren();
-
 			Element* getChildAt(size_t index);
 
 			virtual void addChild(Element* child);
 
-			std::vector<Element*>::iterator begin();
+			virtual void removeChildAt(int index);
+			virtual void removeChild(Element* child);
+			void removeChildren();
 
+			std::vector<Element*>::iterator begin();
 			std::vector<Element*>::iterator end();
 
 			virtual Element* operator[](size_t index);
-
 			virtual void operator+=(Element* child);
-
 			virtual void operator-=(Element* child);
 
 		protected:

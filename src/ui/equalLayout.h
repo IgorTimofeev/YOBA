@@ -5,21 +5,21 @@
 #include "stackLayout.h"
 
 namespace yoba::ui {
-	class EqualStackLayout : public StackLayout {
+	class EqualLayout : public StackLayout {
 		public:
-			EqualStackLayout() : StackLayout() {
+			EqualLayout() : StackLayout() {
 
 			}
 
-			explicit EqualStackLayout(Orientation orientation) : StackLayout(orientation) {
+			explicit EqualLayout(Orientation orientation) : StackLayout(orientation) {
 
 			}
 
-			explicit EqualStackLayout(uint16_t spacing) : StackLayout(spacing) {
+			explicit EqualLayout(uint16_t spacing) : StackLayout(spacing) {
 
 			}
 
-			EqualStackLayout(Orientation orientation, uint16_t spacing) : StackLayout(orientation, spacing) {
+			EqualLayout(Orientation orientation, uint16_t spacing) : StackLayout(orientation, spacing) {
 
 			}
 
@@ -28,7 +28,7 @@ namespace yoba::ui {
 					_fitElements.insert(element);
 				}
 				else {
-					tryRemoveComputedSizeElement(element);
+					tryRemoveFitElement(element);
 				}
 			}
 			
@@ -293,13 +293,13 @@ namespace yoba::ui {
 			void onChildRemoved(Element* element) override {
 				Layout::onChildRemoved(element);
 
-				tryRemoveComputedSizeElement(element);
+				tryRemoveFitElement(element);
 			}
 
 		private:
 			std::unordered_set<Element*> _fitElements;
 
-			void tryRemoveComputedSizeElement(Element* element) {
+			void tryRemoveFitElement(Element* element) {
 				auto it = _fitElements.find(element);
 
 				if (it != _fitElements.end())

@@ -18,7 +18,7 @@
 #include "ui/traits/checkedElement.h"
 
 #include "ui/stackLayout.h"
-#include "ui/equalStackLayout.h"
+#include "ui/equalLayout.h"
 #include "ui/titler.h"
 #include "ui/modal.h"
 #include "ui/keyboard.h"
