@@ -27,9 +27,14 @@ namespace yoba {
 			Vector2 normalize() const;
 
 			Vector2 operator+(const Vector2& right) const;
+			Vector2& operator+=(const Vector2& right);
 			Vector2 operator-(const Vector2& right) const;
+			Vector2 operator-() const;
+			Vector2<T>& operator-=(const Vector2& right);
 			Vector2 operator*(T factor) const;
+			Vector2& operator*=(const Vector2& right);
 			Vector2 operator/(T factor) const;
+			Vector2& operator/=(const Vector2& right);
 			bool operator==(const Vector2 &right) const;
 			bool operator!=(const Vector2 &right) const;
 
@@ -116,11 +121,59 @@ namespace yoba {
 	}
 
 	template<typename T>
+	Vector2<T> Vector2<T>::operator+(const Vector2& right) const {
+		return {
+			_x + right._x,
+			_y + right._y,
+		};
+	}
+
+	template<typename T>
+	Vector2<T>& Vector2<T>::operator+=(const Vector2& right) {
+		_x += right._x;
+		_y += right._y;
+
+		return *this;
+	}
+
+	template<typename T>
+	Vector2<T> Vector2<T>::operator-(const Vector2& right) const {
+		return {
+			_x - right._x,
+			_y - right._y,
+		};
+	}
+
+	template<typename T>
+	Vector2<T> Vector2<T>::operator-() const {
+		return {
+			-_x,
+			-_y
+		};
+	}
+
+	template<typename T>
+	Vector2<T>& Vector2<T>::operator-=(const Vector2& right) {
+		_x -= right._x;
+		_y -= right._y;
+
+		return *this;
+	}
+
+	template<typename T>
 	Vector2<T> Vector2<T>::operator*(T factor) const {
 		return {
 			_x * factor,
 			_y * factor,
 		};
+	}
+
+	template<typename T>
+	Vector2<T>& Vector2<T>::operator*=(const Vector2& right) {
+		_x *= right._x;
+		_y *= right._y;
+
+		return *this;
 	}
 
 	template<typename T>
@@ -132,21 +185,13 @@ namespace yoba {
 	}
 
 	template<typename T>
-	Vector2<T> Vector2<T>::operator+(const Vector2& right) const {
-		return {
-			_x + right._x,
-			_y + right._y,
-		};
-	}
+	Vector2<T>& Vector2<T>::operator/=(const Vector2& right) {
+		_x /= right._x;
+		_y /= right._y;
 
-	template<typename T>
-	Vector2<T> Vector2<T>::operator-(const Vector2& right) const {
-		return {
-			_x - right._x,
-			_y - right._y,
-		};
+		return *this;
 	}
-
+	
 	template<typename T>
 	bool Vector2<T>::operator==(const Vector2& right) const {
 		return _x == right._x && _y == right._y;
