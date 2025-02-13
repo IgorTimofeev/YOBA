@@ -95,15 +95,15 @@ namespace yoba::ui {
 				}
 			}
 
-			void onEvent(Event& event) override {
+			void onEvent(Event* event) override {
 				Element::onEvent(event);
 
-				if (event.getTypeID() != TouchDownEvent::typeID)
+				if (event->getTypeID() != TouchDownEvent::typeID)
 					return;
 
 				setChecked(!isChecked());
 
-				event.setHandled(true);
+				event->setHandled(true);
 			}
 
 		private:

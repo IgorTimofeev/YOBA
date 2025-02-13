@@ -36,22 +36,22 @@ namespace yoba::ui {
 		Element::onRender(renderer, bounds);
 	}
 
-	void Button::onEvent(Event& event) {
-		if (event.getTypeID() == TouchDownEvent::typeID) {
+	void Button::onEvent(Event* event) {
+		if (event->getTypeID() == TouchDownEvent::typeID) {
 			setCaptured(true);
 			setFocused(true);
 
 			setPressed(!isToggle() || !isPressed());
 
-			event.setHandled(true);
+			event->setHandled(true);
 		}
-		else if (event.getTypeID() == TouchUpEvent::typeID) {
+		else if (event->getTypeID() == TouchUpEvent::typeID) {
 			setCaptured(false);
 
 			if (!isToggle())
 				setPressed(false);
 
-			event.setHandled(true);
+			event->setHandled(true);
 		}
 	}
 

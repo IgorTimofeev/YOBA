@@ -153,7 +153,7 @@ namespace yoba::ui {
 		invalidate();
 	}
 
-	void Application::handleEvent(Event& event) {
+	void Application::handleEvent(Event* event) {
 		if (getCapturedElement()) {
 			getCapturedElement()->handleEvent(event);
 		}

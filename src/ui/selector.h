@@ -45,7 +45,7 @@ namespace yoba::ui {
 			void setSelector(Selector *value);
 
 		protected:
-			void onEvent(Event& event) override;
+			void onEvent(Event* event) override;
 
 		private:
 			Selector* _selector = nullptr;

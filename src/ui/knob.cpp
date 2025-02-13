@@ -37,10 +37,10 @@ namespace yoba::ui {
 		}
 	}
 
-	void Knob::onEvent(Event& event) {
-		const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
-		const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
-		const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
+	void Knob::onEvent(Event* event) {
+		const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
+		const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
+		const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
 
 		if (!(isTouchDown || isTouchUp || isTouchDrag))
 			return;
@@ -53,12 +53,12 @@ namespace yoba::ui {
 		}
 		else {
 			const auto oldAngle = _angle;
-			_angle = ((TouchDragEvent&) event).getPosition().getRotation(getBounds().getCenter()) - (float) toRadians(90);
+			_angle = ((TouchDragEvent*) event)->getPosition().getRotation(getBounds().getCenter()) - (float) toRadians(90);
 
 			rotated(oldAngle, _angle);
 		}
 
-		event.setHandled(true);
+		event->setHandled(true);
 	}
 
 	float Knob::getAngle() const {

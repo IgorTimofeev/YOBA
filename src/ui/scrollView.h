@@ -187,20 +187,20 @@ namespace yoba::ui {
 				);
 			}
 
-			void onEvent(Event& event) override {
+			void onEvent(Event* event) override {
 				Layout::onEvent(event);
 
-				if (event.isHandled())
+				if (event->isHandled())
 					return;
 
-				const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
-				const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
-				const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
+				const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
+				const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
+				const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
 
 				if (!(isTouchDown || isTouchUp || isTouchDrag))
 					return;
 
-				const auto& touchPosition = ((TouchEvent&) event).getPosition();
+				const auto& touchPosition = ((TouchEvent*) event)->getPosition();
 
 				if (isTouchDown) {
 					_lastTouchPosition = touchPosition;

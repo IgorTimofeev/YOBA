@@ -123,7 +123,7 @@ namespace yoba {
 
 			|| point.getY() > viewport.getY2()
 			|| point.getY() + length < viewport.getY()
-			)
+		)
 			return;
 
 		uint16_t y1 = std::max(point.getY(), viewport.getY());
@@ -316,6 +316,11 @@ namespace yoba {
 		}
 		// Meh...
 		else {
+			const auto& viewport = getViewport();
+
+			if (!(viewport.intersects(from) || viewport.intersects(to)))
+				return;
+
 			int32_t
 				x1 = from.getX(),
 				y1 = from.getY(),

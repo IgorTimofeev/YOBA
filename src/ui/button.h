@@ -17,7 +17,7 @@ namespace yoba::ui {
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
-			void onEvent(Event& event) override;
+			void onEvent(Event* event) override;
 
 			bool isPressed() const;
 			void setPressed(bool value);

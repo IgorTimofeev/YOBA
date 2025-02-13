@@ -160,7 +160,6 @@ namespace yoba {
 
 	uint16_t PinchDragEvent::typeID = 0;
 
-
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
 		typeID,
 		position1,

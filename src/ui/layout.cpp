@@ -10,7 +10,7 @@ namespace yoba::ui {
 			element->onTick();
 	}
 
-	void Layout::onEvent(Event& event) {
+	void Layout::onEvent(Event* event) {
 		Element::onEvent(event);
 
 		if (getChildrenCount() == 0 || isCaptured())
@@ -21,7 +21,7 @@ namespace yoba::ui {
 		while (true) {
 			_children[i]->handleEvent(event);
 
-			if (event.isHandled() || i == 0)
+			if (event->isHandled() || i == 0)
 				return;
 
 			i--;

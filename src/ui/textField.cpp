@@ -110,10 +110,10 @@ namespace yoba::ui {
 		}
 	}
 
-	void TextField::onEvent(Event& event) {
-		const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
-		const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
-		const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
+	void TextField::onEvent(Event* event) {
+		const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
+		const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
+		const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
 
 		if (!(isTouchDown || isTouchUp || isTouchDrag))
 			return;
@@ -130,12 +130,11 @@ namespace yoba::ui {
 			return;
 		}
 
-		auto touchEvent = (TouchEvent&) event;
-		_lastTouchX = touchEvent.getPosition().getX();
+		_lastTouchX = ((TouchEvent*) event)->getPosition().getX();
 
 		applyContinuousScroll();
 
-		event.setHandled(true);
+		event->setHandled(true);
 	}
 
 	void TextField::applyContinuousScroll() {

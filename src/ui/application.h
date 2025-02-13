@@ -35,7 +35,7 @@ namespace yoba::ui {
 			void invalidateRender() override;
 			void invalidate() override;
 
-			void handleEvent(Event& event) override;
+			void handleEvent(Event* event) override;
 			void startAnimation(Animation* animation) override;
 
 			Renderer* getRenderer() const;

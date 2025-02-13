@@ -44,7 +44,7 @@ namespace yoba::ui {
 			void measure(const Size& availableSize);
 			void render(Renderer* renderer, const Bounds& bounds);
 
-			virtual void handleEvent(Event& event);
+			virtual void handleEvent(Event* event);
 
 			virtual void invalidateRender();
 			virtual void invalidateLayout();
@@ -101,7 +101,7 @@ namespace yoba::ui {
 			virtual Size onMeasure(const Size& availableSize);
 			virtual void onRender(Renderer* renderer, const Bounds& bounds);
 			virtual void onBoundsChanged();
-			virtual void onEvent(Event& event);
+			virtual void onEvent(Event* event);
 
 		private:
 			bool _isVisible = true;

@@ -314,7 +314,7 @@ namespace yoba::hardware {
 							_touchPoints[1].getPosition()
 						);
 
-						application->handleEvent(event);
+						application->handleEvent(&event);
 					}
 				}
 				// Pinch down
@@ -332,7 +332,7 @@ namespace yoba::hardware {
 						_touchPoints[1].getPosition()
 					);
 
-					application->handleEvent(event);
+					application->handleEvent(&event);
 				}
 			}
 			else {
@@ -348,7 +348,7 @@ namespace yoba::hardware {
 						_touchPoints[1].getPosition()
 					);
 
-					application->handleEvent(event);
+					application->handleEvent(&event);
 				}
 				// Touch drag
 				else if (_wasTouched) {
@@ -361,7 +361,7 @@ namespace yoba::hardware {
 							_touchPoints[0].getPosition()
 						);
 
-						application->handleEvent(event);
+						application->handleEvent(&event);
 					}
 				}
 				// Touch down
@@ -375,7 +375,7 @@ namespace yoba::hardware {
 						_touchPoints[0].getPosition()
 					);
 
-					application->handleEvent(event);
+					application->handleEvent(&event);
 				}
 			}
 		}
@@ -392,7 +392,7 @@ namespace yoba::hardware {
 					_touchPoints[1].getPosition()
 				);
 
-				application->handleEvent(event);
+				application->handleEvent(&event);
 			}
 
 			// Touch up
@@ -406,7 +406,7 @@ namespace yoba::hardware {
 					_touchPoints[0].getPosition()
 				);
 
-				application->handleEvent(event);
+				application->handleEvent(&event);
 			}
 		}
 	}

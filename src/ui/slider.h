@@ -158,10 +158,10 @@ namespace yoba::ui {
 				}
 			}
 
-			void onEvent(Event& event) override {
-				const auto isTouchDown = event.getTypeID() == TouchDownEvent::typeID;
-				const auto isTouchUp = event.getTypeID() == TouchUpEvent::typeID;
-				const auto isTouchDrag = event.getTypeID() == TouchDragEvent::typeID;
+			void onEvent(Event* event) override {
+				const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
+				const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
+				const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
 
 				if (!(isTouchDown || isTouchUp || isTouchDrag))
 					return;
@@ -175,11 +175,12 @@ namespace yoba::ui {
 				}
 
 				const auto& bounds = getBounds();
-				const auto part = clamp((float) (((TouchEvent&) event).getPosition().getX() - bounds.getX()) / (float) bounds.getWidth(), 0.0f, 1.0f);
+				const auto deltaX = ((TouchEvent*) event)->getPosition().getX() - bounds.getX();
+				const auto part = clamp((float) deltaX / (float) bounds.getWidth(), 0.0f, 1.0f);
 
 				setValue(part);
 
-				event.setHandled(true);
+				event->setHandled(true);
 			}
 
 			virtual void onValueChanged() {
