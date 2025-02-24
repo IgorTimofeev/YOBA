@@ -68,10 +68,11 @@ namespace yoba::system {
 
 	// Note: SPI instance will manage slave select output by itself
 	void SPI::setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency) {
-		// Slave select
+		// GPIO
 		GPIO::setMode(ssPin, system::GPIO::PinMode::Output);
 		GPIO::write(ssPin, true);
 
+		// Bus (maybe already initialized)
 		spi_bus_config_t busConfig {};
 		busConfig.mosi_io_num = mosiPin;
 		busConfig.miso_io_num = -1;
@@ -80,8 +81,10 @@ namespace yoba::system {
 		busConfig.quadhd_io_num = -1;
 		busConfig.max_transfer_sz = 0xFFFF;
 
-		ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO));
+		const auto result = spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO);
+		assert(result == ESP_OK || result == ESP_ERR_INVALID_STATE);
 
+		// Interface
 		spi_device_interface_config_t interfaceConfig {};
 		interfaceConfig.mode = 0;
 		interfaceConfig.clock_speed_hz = (int) frequency;
