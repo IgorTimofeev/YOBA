@@ -80,6 +80,8 @@ namespace yoba::system {
 		busConfig.quadhd_io_num = -1;
 		busConfig.max_transfer_sz = 0xFFFF;
 
+		ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO));
+
 		spi_device_interface_config_t interfaceConfig {};
 		interfaceConfig.mode = 0;
 		interfaceConfig.clock_speed_hz = (int) frequency;
@@ -87,7 +89,6 @@ namespace yoba::system {
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
 
-		ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO));
 		ESP_ERROR_CHECK(spi_bus_add_device(SPI2_HOST, &interfaceConfig, &_deviceHandle));
 	}
 
