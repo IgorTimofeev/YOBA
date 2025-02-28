@@ -19,8 +19,8 @@ namespace yoba {
 
 	template<typename T>
 	T round(T value, uint8_t decimalPlaces) {
-		const double factor = std::pow(10.0, decimalPlaces);
-		return std::round(value * factor) / factor;
+		const float factor = std::pow(10.0, decimalPlaces);
+		return (T) (std::roundf((float) value * factor) / factor);
 	}
 
 	template<typename T>
