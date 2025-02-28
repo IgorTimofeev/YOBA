@@ -66,7 +66,7 @@ namespace yoba::ui {
 			void setCursorToStart();
 			void setCursorToEnd();
 
-			void insert(const std::wstring_view& value);
+			void insert(std::wstring_view value);
 			void backspace();
 
 			const std::optional<std::function<void(Keyboard*)>>& getKeyboardConfigurator() const;

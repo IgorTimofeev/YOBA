@@ -7,7 +7,7 @@
 namespace yoba::ui {
 	// ----------------------------- KeyboardKey -----------------------------
 
-	KeyboardKey::KeyboardKey(KeyboardKeyType type, KeyCode code, const std::wstring_view& name, float width) :
+	KeyboardKey::KeyboardKey(KeyboardKeyType type, KeyCode code, std::wstring_view name, float width) :
 		_type(type),
 		_code(code),
 		_name(name),
@@ -34,7 +34,7 @@ namespace yoba::ui {
 		return _code;
 	}
 
-	const std::wstring_view& KeyboardKey::getName() const {
+	std::wstring_view KeyboardKey::getName() const {
 		return _name;
 	}
 
@@ -50,7 +50,7 @@ namespace yoba::ui {
 		return getCode();
 	}
 
-	const std::wstring_view& KeyboardKey::getNameFromCase(Keyboard* keyboard) const {
+	std::wstring_view KeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		return getName();
 	}
 
@@ -58,9 +58,9 @@ namespace yoba::ui {
 
 	TextKeyboardKey::TextKeyboardKey(
 		KeyCode code,
-		const std::wstring_view& name,
+		std::wstring_view name,
 		KeyCode uppercaseCode,
-		const std::wstring_view& uppercaseName,
+		std::wstring_view uppercaseName,
 		float width
 	) :
 		KeyboardKey(KeyboardKeyType::normal, code, name, width),
@@ -70,7 +70,7 @@ namespace yoba::ui {
 
 	}
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, const std::wstring_view& name, float width) :
+	TextKeyboardKey::TextKeyboardKey(KeyCode code, std::wstring_view name, float width) :
 		TextKeyboardKey(
 			code,
 			name,
@@ -86,7 +86,7 @@ namespace yoba::ui {
 		return _uppercaseCode;
 	}
 
-	const std::wstring_view& TextKeyboardKey::getUppercaseName() const {
+	std::wstring_view TextKeyboardKey::getUppercaseName() const {
 		return _uppercaseName;
 	}
 
@@ -94,7 +94,7 @@ namespace yoba::ui {
 		return keyboard->getCase() == KeyboardCase::lower ? getCode() : getUppercaseCode();
 	}
 
-	const std::wstring_view& TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
+	std::wstring_view TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		return keyboard->getCase() == KeyboardCase::lower ? getName() : getUppercaseName();
 	}
 
@@ -115,9 +115,9 @@ namespace yoba::ui {
 	// ----------------------------- ActionKeyboardKey -----------------------------
 
 	ShiftKeyboardKey::ShiftKeyboardKey(
-		const std::wstring_view& name,
-		const std::wstring_view& uppercaseName,
-		const std::wstring_view& capsName,
+		std::wstring_view name,
+		std::wstring_view uppercaseName,
+		std::wstring_view capsName,
 		float width
 	) :
 		KeyboardKey(
@@ -153,7 +153,7 @@ namespace yoba::ui {
 		}
 	}
 
-	const std::wstring_view& ShiftKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
+	std::wstring_view ShiftKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		switch (keyboard->getCase()) {
 			case KeyboardCase::lower:
 				return getName();
@@ -166,7 +166,7 @@ namespace yoba::ui {
 
 	// ----------------------------- BackspaceKeyboardKey -----------------------------
 
-	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view& name, float width) :
+	BackspaceKeyboardKey::BackspaceKeyboardKey(std::wstring_view name, float width) :
 		KeyboardKey(KeyboardKeyType::action, KeyCode::backspace, name, width)
 	{
 
@@ -191,7 +191,7 @@ namespace yoba::ui {
 	// ----------------------------- CharactersLayoutKeyboardKey -----------------------------
 
 	CharactersLayoutKeyboardKey::CharactersLayoutKeyboardKey(
-		const std::wstring_view& name,
+		std::wstring_view name,
 		float width
 	) :
 		KeyboardKey(KeyboardKeyType::charactersLayout, KeyCode::none, name, width)
@@ -213,7 +213,7 @@ namespace yoba::ui {
 	// ----------------------------- DefaultLayoutKeyboardKey -----------------------------
 
 	CurrentCyclicLayoutKeyboardKey::CurrentCyclicLayoutKeyboardKey(
-		const std::wstring_view& name,
+		std::wstring_view name,
 		float width
 	) :
 		KeyboardKey(KeyboardKeyType::action, KeyCode::none, name, width)
@@ -235,7 +235,7 @@ namespace yoba::ui {
 	// ----------------------------- CyclicLayoutKeyboardKey -----------------------------
 
 	CyclicLayoutKeyboardKey::CyclicLayoutKeyboardKey(
-		const std::wstring_view& name,
+		std::wstring_view name,
 		float width
 	) :
 		KeyboardKey(KeyboardKeyType::cyclicLayout, KeyCode::none, name, width)

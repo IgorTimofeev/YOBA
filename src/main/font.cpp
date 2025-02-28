@@ -50,7 +50,7 @@ namespace yoba {
 		return getCharWidth(codepoint) * scale;
 	}
 
-	uint16_t Font::getWidth(const std::wstring_view& text) const {
+	uint16_t Font::getWidth(std::wstring_view text) const {
 		uint16_t width = 0;
 
 		for (size_t charIndex = 0; charIndex < text.length(); charIndex++)
@@ -59,7 +59,7 @@ namespace yoba {
 		return width;
 	}
 
-	uint16_t Font::getWidth(const std::wstring_view& text, uint8_t scale) const {
+	uint16_t Font::getWidth(std::wstring_view text, uint8_t scale) const {
 		return getWidth(text) * scale;
 	}
 
@@ -71,7 +71,7 @@ namespace yoba {
 		return _height * scale;
 	}
 
-	void Font::wrap(const std::wstring_view& text, uint8_t scale, uint16_t maxWidth, const std::function<void(const std::wstring_view&, uint16_t width)>& lineHandler) const {
+	void Font::wrap(std::wstring_view text, uint8_t scale, uint16_t maxWidth, const std::function<void(std::wstring_view, uint16_t width)>& lineHandler) const {
 		size_t
 			lineFrom = 0,
 			spaceAt = 0;

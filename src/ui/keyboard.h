@@ -214,7 +214,7 @@ namespace yoba::ui {
 			KeyboardKey(
 				KeyboardKeyType type,
 				KeyCode code,
-				const std::wstring_view& name,
+				std::wstring_view name,
 				float width
 			);
 
@@ -223,13 +223,13 @@ namespace yoba::ui {
 			virtual void tick(KeyboardButton* button);
 			virtual void onPressedChanged(KeyboardButton* button);
 			virtual KeyCode getCodeFromCase(Keyboard* keyboard) const;
-			virtual const std::wstring_view& getNameFromCase(Keyboard* keyboard) const;
+			virtual std::wstring_view getNameFromCase(Keyboard* keyboard) const;
 
 			float getWidth() const;
 			KeyboardKeyType getType() const;
 
 			KeyCode getCode() const;
-			const std::wstring_view& getName() const;
+			std::wstring_view getName() const;
 
 		private:
 			KeyboardKeyType _type;
@@ -242,24 +242,24 @@ namespace yoba::ui {
 		public:
 			TextKeyboardKey(
 				KeyCode code,
-				const std::wstring_view& name,
+				std::wstring_view name,
 				KeyCode uppercaseCode,
-				const std::wstring_view& uppercaseName,
+				std::wstring_view uppercaseName,
 				float width
 			);
 
 			TextKeyboardKey(
 				KeyCode code,
-				const std::wstring_view& name,
+				std::wstring_view name,
 				float width
 			);
 
 			KeyCode getUppercaseCode() const;
-			const std::wstring_view& getUppercaseName() const;
+			std::wstring_view getUppercaseName() const;
 
 			KeyCode getCodeFromCase(Keyboard* keyboard) const override;
 
-			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
+			std::wstring_view getNameFromCase(Keyboard* keyboard) const override;
 
 			void onPressedChanged(KeyboardButton* button) override;
 
@@ -270,11 +270,11 @@ namespace yoba::ui {
 
 	class ShiftKeyboardKey : public KeyboardKey {
 		public:
-			ShiftKeyboardKey(const std::wstring_view& name, const std::wstring_view& uppercaseName, const std::wstring_view& capsName, float width);
+			ShiftKeyboardKey(std::wstring_view name, std::wstring_view uppercaseName, std::wstring_view capsName, float width);
 
 			void onPressedChanged(KeyboardButton* button) override;
 
-			const std::wstring_view& getNameFromCase(Keyboard* keyboard) const override;
+			std::wstring_view getNameFromCase(Keyboard* keyboard) const override;
 
 		private:
 			const std::wstring_view _uppercaseName;
@@ -283,7 +283,7 @@ namespace yoba::ui {
 
 	class BackspaceKeyboardKey : public KeyboardKey {
 		public:
-			BackspaceKeyboardKey(const std::wstring_view& name, float width);
+			BackspaceKeyboardKey(std::wstring_view name, float width);
 	};
 
 	class EnterKeyboardKey : public KeyboardKey {
@@ -298,7 +298,7 @@ namespace yoba::ui {
 
 	class CharactersLayoutKeyboardKey : public KeyboardKey {
 		public:
-			CharactersLayoutKeyboardKey(const std::wstring_view& name, float width);
+			CharactersLayoutKeyboardKey(std::wstring_view name, float width);
 
 			void onPressedChanged(KeyboardButton* button) override;
 
@@ -308,14 +308,14 @@ namespace yoba::ui {
 
 	class CurrentCyclicLayoutKeyboardKey : public KeyboardKey {
 		public:
-			CurrentCyclicLayoutKeyboardKey(const std::wstring_view& name, float width);
+			CurrentCyclicLayoutKeyboardKey(std::wstring_view name, float width);
 
 			void onPressedChanged(KeyboardButton* button) override;
 	};
 
 	class CyclicLayoutKeyboardKey : public KeyboardKey {
 		public:
-			CyclicLayoutKeyboardKey(const std::wstring_view& name, float width);
+			CyclicLayoutKeyboardKey(std::wstring_view name, float width);
 
 			void onPressedChanged(KeyboardButton* button) override;
 	};
@@ -374,7 +374,7 @@ namespace yoba::ui {
 			~Keyboard() override;
 
 			Callback<KeyCode, bool> keyPressedChanged;
-			Callback<KeyCode, const std::wstring_view&> input;
+			Callback<KeyCode, std::wstring_view> input;
 
 			void setLayout(KeyboardLayout* value);
 			KeyboardLayout* getLayout() const;

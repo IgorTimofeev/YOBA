@@ -756,7 +756,7 @@ namespace yoba {
 		}
 	}
 
-	void Renderer::renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& string, uint8_t fontScale) {
+	void Renderer::renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 

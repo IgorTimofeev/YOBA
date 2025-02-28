@@ -29,13 +29,13 @@ namespace yoba {
 			uint8_t getCharWidth(wchar_t codepoint) const;
 			uint8_t getCharWidth(wchar_t codepoint, uint8_t scale) const;
 
-			uint16_t getWidth(const std::wstring_view& text) const;
-			uint16_t getWidth(const std::wstring_view& text, uint8_t scale) const;
+			uint16_t getWidth(std::wstring_view text) const;
+			uint16_t getWidth(std::wstring_view text, uint8_t scale) const;
 
 			uint8_t getHeight() const;
 			uint8_t getHeight(uint8_t scale) const;
 
-			void wrap(const std::wstring_view& text, uint8_t scale, uint16_t maxWidth, const std::function<void(const std::wstring_view&, uint16_t width)>& lineHandler) const;
+			void wrap(std::wstring_view text, uint8_t scale, uint16_t maxWidth, const std::function<void(std::wstring_view, uint16_t width)>& lineHandler) const;
 
 		private:
 			const uint32_t _fromCodepoint;

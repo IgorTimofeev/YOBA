@@ -52,7 +52,7 @@ namespace yoba::ui {
 						getText(),
 						getFontScale(),
 						availableSize.getWidth(),
-						[this, &result, font](const std::wstring_view& line, uint16_t width) {
+						[this, &result, font](std::wstring_view line, uint16_t width) {
 							if (width > result.getWidth())
 								result.setWidth(width);
 

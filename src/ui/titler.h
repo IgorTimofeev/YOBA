@@ -12,11 +12,11 @@ namespace yoba::ui {
 				*this += &_title;
 			}
 
-			explicit Titler(const std::wstring_view& title) : Titler()  {
+			explicit Titler(std::wstring_view title) : Titler()  {
 				_title.setText(title);
 			}
 
-			Titler(const std::wstring_view& title, Element* element) : Titler(title) {
+			Titler(std::wstring_view title, Element* element) : Titler(title) {
 				*this += element;
 			}
 

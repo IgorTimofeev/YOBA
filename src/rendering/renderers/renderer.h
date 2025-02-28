@@ -49,7 +49,7 @@ namespace yoba {
 			* @param color Color with which the text will be rendered
 			* @param string Template-based pointer to first character in text
 			*/
-			void renderString(const Point& point, const Font* font, const Color* color, const std::basic_string_view<wchar_t>& string, uint8_t fontScale = 1);
+			void renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale = 1);
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
 
 			virtual void flushBuffer() = 0;

@@ -1,4 +1,3 @@
-#include <sstream>
 #include <cstdint>
 #include "textField.h"
 
@@ -206,7 +205,7 @@ namespace yoba::ui {
 		_continuousScrollTime = system::getTime() + _continuousScrollInterval;
 	}
 
-	void TextField::insert(const std::wstring_view& value) {
+	void TextField::insert(std::wstring_view value) {
 		const auto text = getText();
 		const auto cursorPosition = getCursorPosition();
 
@@ -356,7 +355,7 @@ namespace yoba::ui {
 			}
 		};
 
-		keyboard->input += [this](KeyCode code, const std::wstring_view& text) {
+		keyboard->input += [this](KeyCode code, std::wstring_view text) {
 			insert(text);
 		};
 	}
