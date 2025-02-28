@@ -10,8 +10,6 @@
 #include "main/math.h"
 
 namespace yoba::ui {
-	class KnobRotateEvent;
-
 	class Knob : public BackgroundColorElement {
 		public:
 			Callback<float, float> rotated;

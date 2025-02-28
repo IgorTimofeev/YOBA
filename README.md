@@ -87,7 +87,7 @@ void setup() {
     button.setText(L"Click on me");
 	
     button.isPressedChanged += [this]() {
-        if (!button.isPressed())
+        if (!button.isDown())
             return;
         
         static std::wstringstream stream;
