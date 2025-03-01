@@ -102,7 +102,7 @@ namespace yoba {
 
 		if (getTarget()) {
 			delete _palette;
-			_palette = (uint8_t*) malloc(_paletteLength * Color::getBytesPerType(getTarget()->getColorModel()));
+			_palette = (uint8_t*) malloc(_paletteLength * Color::getBytesPerModel(getTarget()->getColorModel()));
 			assert(!!_palette);
 		}
 	}

@@ -17,11 +17,14 @@ namespace yoba {
 
 			const Bounds& getViewport();
 			void setViewport(const Bounds& viewport);
-
 			Bounds pushViewport(const Bounds& bounds);
 			void popViewport(const Bounds& bounds);
-
 			void resetViewport();
+
+			const Bounds& getInvalidatedBounds() const;
+			void resetInvalidatedBounds();
+			void updateInvalidatedBounds(const Bounds& bounds);
+			void updateInvalidatedBounds(const Point& point);
 
 			size_t getIndex(uint16_t x, uint16_t y) const;
 			size_t getIndex(const Point& point) const;
@@ -48,6 +51,7 @@ namespace yoba {
 			* @param font Font with which the text will be rendered
 			* @param color Color with which the text will be rendered
 			* @param string Template-based pointer to first character in text
+			* @param fontScale Scale factor of text, defaults to 1
 			*/
 			void renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale = 1);
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
@@ -72,6 +76,7 @@ namespace yoba {
 		private:
 			RenderTarget* _target;
 			Bounds _viewport = Bounds();
+			Bounds _invalidatedBounds = Bounds();
 
 			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;
@@ -80,5 +85,7 @@ namespace yoba {
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
 			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale);
+
+			void resetInvalidatedBoundsToFullArea();
 	};
 }

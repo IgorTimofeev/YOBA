@@ -12,7 +12,7 @@ namespace yoba {
 
 	}
 
-	uint8_t Color::getBytesPerType(ColorModel colorModel) {
+	uint8_t Color::getBytesPerModel(ColorModel colorModel) {
 		switch (colorModel) {
 			case ColorModel::rgb565:
 				return 2;
@@ -26,20 +26,20 @@ namespace yoba {
 		}
 	}
 
-	size_t Color::getBytesPerType(size_t pixelsCount, ColorModel colorModel) {
+	size_t Color::getBytesPerModel(size_t pixelCount, ColorModel colorModel) {
 		switch (colorModel) {
 			case ColorModel::monochrome:
-				return pixelsCount >= 8 ? pixelsCount / 8 : 1;
+				return pixelCount >= 8 ? pixelCount / 8 : 1;
 
 			case ColorModel::rgb565:
-				return pixelsCount * 2;
+				return pixelCount * 2;
 
 			case ColorModel::rgb666:
 			case ColorModel::rgb888:
-				return pixelsCount * 3;
+				return pixelCount * 3;
 
 			default:
-				return pixelsCount;
+				return pixelCount;
 		}
 	}
 

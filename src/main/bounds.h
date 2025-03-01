@@ -27,13 +27,16 @@ namespace yoba {
 			uint16_t getHeight() const;
 			void setHeight(uint16_t value);
 
-			Point getSize() const;
+			Size getSize() const;
 			void setSize(const Size& value);
+
 
 			int32_t getX2() const;
 			int32_t getY2() const;
 			int32_t getXCenter() const;
 			int32_t getYCenter() const;
+			uint32_t getSquare() const;
+
 			Point getCenter() const;
 			Point getTopLeft() const;
 			Point getTopRight() const;
@@ -43,9 +46,11 @@ namespace yoba {
 			bool intersects(const Point& point) const;
 			bool intersects(const Bounds& bounds) const;
 
-			bool isNonZero() const;
+			bool haveZeroSize() const;
 
 			Bounds getIntersection(const Bounds& bounds) const;
+
+			Bounds getExpansion(const Bounds& bounds) const;
 
 		private:
 			int32_t _x = 0;

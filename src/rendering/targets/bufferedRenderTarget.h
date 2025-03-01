@@ -2,6 +2,7 @@
 
 #include "renderTarget.h"
 #include <functional>
+#include "../../main.h"
 
 namespace yoba::hardware {
 	class BufferedRenderTarget : public virtual RenderTarget {
@@ -28,13 +29,15 @@ namespace yoba::hardware {
 			// [Fucking important] Make sure screen height is dividable by this.
 			virtual uint8_t getBufferHeightForOrientation() = 0;
 
-			virtual void flushBuffer(uint16_t y) = 0;
+			virtual void flushBuffer(const Bounds& bounds, size_t length) = 0;
 
-			void flushBuffer(const std::function<void(uint8_t * & destination, size_t & pixelIndex)>& pixelSetter);
+			void flushBuffer(const Size& targetSize, const Bounds& invalidatedBounds, uint32_t pixelBufferIndex, ColorModel colorModel, const std::function<void(uint8_t*& destination, uint32_t& pixelIndex)>& pixelSetter);
+			void flushBuffer(const Bounds& bounds, const std::function<void(uint8_t*&, size_t&)>& pixelSetter);
 
 		protected:
 			uint8_t _bufferHeight = 20;
 			size_t _bufferLength = 0;
 			uint8_t* _buffer = nullptr;
+
 	};
 }

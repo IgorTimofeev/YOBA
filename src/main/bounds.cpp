@@ -71,7 +71,7 @@ namespace yoba {
 		_height = value;
 	}
 
-	Point Bounds::getSize() const {
+	Size Bounds::getSize() const {
 		return {
 			_width,
 			_height
@@ -104,6 +104,10 @@ namespace yoba {
 			getXCenter(),
 			getYCenter()
 		};
+	}
+
+	uint32_t Bounds::getSquare() const {
+		return _width * _height;
 	}
 
 	Point Bounds::getTopLeft() const {
@@ -148,17 +152,28 @@ namespace yoba {
 		);
 	}
 
-	bool Bounds::isNonZero() const {
-		return getWidth() > 0 && getHeight() > 0;
+	bool Bounds::haveZeroSize() const {
+		return getWidth() == 0 || getHeight() == 0;
 	}
 
 	Bounds Bounds::getIntersection(const Bounds& bounds) const {
 		Bounds result = Bounds();
 
-		result.setX(std::max(_x, bounds._x));
-		result.setY(std::max(_y, bounds._y));
-		result.setWidth(std::min(_x + _width, bounds._x + bounds._width) - result._x);
-		result.setHeight(std::min(_y + _height, bounds._y + bounds._height) - result._y);
+		result._x = std::max(_x, bounds._x);
+		result._y = std::max(_y, bounds._y);
+		result._width = std::min(_x + _width, bounds._x + bounds._width) - result._x;
+		result._height = std::min(_y + _height, bounds._y + bounds._height) - result._y;
+
+		return result;
+	}
+
+	Bounds Bounds::getExpansion(const Bounds& bounds) const {
+		Bounds result = Bounds();
+
+		result._x = std::min(_x, bounds._x);
+		result._x = std::min(_y, bounds._y);
+		result._width = std::max(_x + _width, bounds._x + bounds._width) - result._x;
+		result._height = std::max(_y + _height, bounds._y + bounds._height) - result._y;
 
 		return result;
 	}

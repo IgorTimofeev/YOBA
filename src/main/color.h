@@ -20,8 +20,8 @@ namespace yoba {
 
 			ColorModel getModel() const;
 
-			static uint8_t getBytesPerType(ColorModel colorModel);
-			static size_t getBytesPerType(size_t pixelsCount, ColorModel colorModel);
+			static uint8_t getBytesPerModel(ColorModel colorModel);
+			static size_t getBytesPerModel(size_t pixelCount, ColorModel colorModel);
 
 			static const Color* select(
 				bool condition,

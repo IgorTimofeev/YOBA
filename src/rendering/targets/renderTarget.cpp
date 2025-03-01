@@ -1,4 +1,5 @@
 #include "renderTarget.h"
+#include "main/bounds.h"
 
 namespace yoba {
 	RenderTarget::RenderTarget(

@@ -1,3 +1,4 @@
+#include <esp_log.h>
 #include "ILI9341Display.h"
 
 namespace yoba::hardware {
@@ -241,24 +242,26 @@ namespace yoba::hardware {
 		system::sleep(100);
 	}
 
-	void ILI9341Display::flushBuffer(uint16_t y) {
+	void ILI9341Display::flushBuffer(const Bounds& bounds, size_t length) {
 		uint8_t data[4];
 
+//		ESP_LOGI("Pizda ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+
 		// Column Address Set
-		data[0] = 0; //Start Col High
-		data[1] = 0; //Start Col Low
-		data[2] = (this->_size.getWidth() - 1) >> 8; //End Col High
-		data[3] = (this->_size.getWidth() - 1) & 0xff; //End Col Low
+		data[0] = bounds.getX() >> 8; //Start Col High
+		data[1] = bounds.getX() & 0xff; //Start Col Low
+		data[2] = (bounds.getX2()) >> 8; //End Col High
+		data[3] = (bounds.getX2()) & 0xff; //End Col Low
 		writeCommandAndData(0x2A, data, 4);
 
 		//Page address set
-		data[0] = y >> 8; //Start page high
-		data[1] = y & 0xff; // Start page low
-		data[2] = (y + _bufferHeight - 1) >> 8; // End page high
-		data[3] = (y + _bufferHeight - 1) & 0xff; // End page low
+		data[0] = bounds.getY() >> 8; //Start page high
+		data[1] = bounds.getY() & 0xff; // Start page low
+		data[2] = (bounds.getY2()) >> 8; // End page high
+		data[3] = (bounds.getY2()) & 0xff; // End page low
 		writeCommandAndData(0x2B, data, 4);
 
 		// Memory write
-		writeCommandAndData(0x2C, _buffer, _bufferLength);
+		writeCommandAndData(0x2C, _buffer, length);
 	}
 }

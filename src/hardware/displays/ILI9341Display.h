@@ -31,7 +31,7 @@ namespace yoba::hardware {
 			uint8_t getBufferHeightForOrientation() override;
 
 		public:
-			void flushBuffer(uint16_t y) override;
+			void flushBuffer(const Bounds& bounds, size_t length) override;
 
 		private:
 			enum class Command : uint8_t {
