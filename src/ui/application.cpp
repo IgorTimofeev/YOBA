@@ -1,6 +1,7 @@
 #include "application.h"
 #include "element.h"
 #include "animation.h"
+//#include <esp_debug_helpers.h>
 
 namespace yoba::ui {
 	Application::Application(){
@@ -32,6 +33,8 @@ namespace yoba::ui {
 
 	void Application::invalidateRender() {
 		_renderInvalidated = true;
+
+//		esp_backtrace_print(10);
 	}
 
 	void Application::invalidate() {

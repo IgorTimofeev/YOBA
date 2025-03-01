@@ -7,7 +7,8 @@ namespace yoba::ui {
 		Element::onTick();
 
 		for (auto element : _children)
-			element->onTick();
+			if (element->isVisible())
+				element->onTick();
 	}
 
 	void Layout::onEvent(Event* event) {

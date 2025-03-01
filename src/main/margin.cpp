@@ -63,4 +63,12 @@ namespace yoba {
 			(int32_t) (getBottom() + position * (to.getBottom() - getBottom()))
 		};
 	}
+
+	bool Margin::operator==(const Margin& rhs) const {
+		return !(*this != rhs);
+	}
+
+	bool Margin::operator!=(const Margin& rhs) const {
+		return _left != rhs._left || _top != rhs._top || _right != rhs._right || _bottom != rhs._bottom;
+	}
 }

@@ -81,6 +81,7 @@ namespace yoba::system {
 		busConfig.quadhd_io_num = -1;
 		busConfig.max_transfer_sz = 0xFFFF;
 
+		// May be already initialized
 		const auto result = spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO);
 		assert(result == ESP_OK || result == ESP_ERR_INVALID_STATE);
 
@@ -116,7 +117,8 @@ namespace yoba::system {
 
 	// -------------------------------- I2C --------------------------------
 
-	i2c_master_dev_handle_t I2C::_deviceHandle = i2c_master_dev_handle_t();
+	i2c_master_bus_handle_t I2C::_busHandle = {};
+	i2c_master_dev_handle_t I2C::_deviceHandle = {};
 
 	void I2C::setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency) {
 		i2c_master_bus_config_t busConfig {};
@@ -128,16 +130,15 @@ namespace yoba::system {
 		busConfig.flags.enable_internal_pullup = true;
 		busConfig.flags.allow_pd = false;
 
-		i2c_master_bus_handle_t busHandle;
-
-		ESP_ERROR_CHECK(i2c_new_master_bus(&busConfig, &busHandle));
+		// May be already initialized
+		i2c_new_master_bus(&busConfig, &_busHandle);
 
 		i2c_device_config_t deviceConfig {};
 		deviceConfig.dev_addr_length = I2C_ADDR_BIT_LEN_7;
 		deviceConfig.device_address = slaveAddress;
 		deviceConfig.scl_speed_hz = frequency;
 
-		ESP_ERROR_CHECK(i2c_master_bus_add_device(busHandle, &deviceConfig, &_deviceHandle));
+		ESP_ERROR_CHECK(i2c_master_bus_add_device(_busHandle, &deviceConfig, &_deviceHandle));
 	}
 
 	void I2C::read(uint8_t* buffer, size_t length) {

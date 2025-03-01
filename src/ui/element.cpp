@@ -256,6 +256,9 @@ namespace yoba::ui {
 	}
 
 	void Element::setSize(const Size& value) {
+		if (value == _size)
+			return;
+
 		_size = value;
 
 		invalidate();
@@ -265,7 +268,10 @@ namespace yoba::ui {
 		return _size;
 	}
 
-	void Element::setMargin(const Margin &value) {
+	void Element::setMargin(const Margin& value) {
+		if (value == _margin)
+			return;
+
 		_margin = value;
 
 		invalidate();
@@ -275,18 +281,24 @@ namespace yoba::ui {
 		return _margin;
 	}
 
-	void Element::setAlignment(Alignment uniformValue) {
-		setAlignment(uniformValue, uniformValue);
-	}
-
 	void Element::setAlignment(Alignment horizontal, Alignment vertical) {
+		if (horizontal == _horizontalAlignment && vertical == _verticalAlignment)
+			return;
+
 		_horizontalAlignment = horizontal;
 		_verticalAlignment = vertical;
 
 		invalidate();
 	}
 
+	void Element::setAlignment(Alignment uniformValue) {
+		setAlignment(uniformValue, uniformValue);
+	}
+
 	void Element::setVerticalAlignment(Alignment value) {
+		if (value == _verticalAlignment)
+			return;
+
 		_verticalAlignment = value;
 
 		invalidate();
@@ -297,6 +309,9 @@ namespace yoba::ui {
 	}
 
 	void Element::setHorizontalAlignment(Alignment value) {
+		if (value == _horizontalAlignment)
+			return;
+
 		_horizontalAlignment = value;
 
 		invalidate();
@@ -317,8 +332,9 @@ namespace yoba::ui {
 	}
 
 	void Element::invalidate() {
-		if (_application)
+		if (_application) {
 			_application->invalidate();
+		}
 	}
 
 	void Element::onRender(Renderer* renderer, const Bounds& bounds) {

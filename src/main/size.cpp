@@ -64,5 +64,4 @@ namespace yoba {
 	bool Size::operator!=(const Size& rhs) const {
 		return !(rhs == *this);
 	}
-
 }
