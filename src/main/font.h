@@ -17,7 +17,7 @@ namespace yoba {
 				const uint8_t* bitmap
 			);
 
-			static const uint8_t missingGlyphWidth = 10;
+			constexpr static uint8_t missingGlyphWidth = 10;
 
 			uint32_t getFromCodepoint() const;
 			uint32_t getToCodepoint() const;
