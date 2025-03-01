@@ -21,11 +21,6 @@ namespace yoba {
 			void popViewport(const Bounds& bounds);
 			void resetViewport();
 
-			const Bounds& getInvalidatedBounds() const;
-			void resetInvalidatedBounds();
-			void updateInvalidatedBounds(const Bounds& bounds);
-			void updateInvalidatedBounds(const Point& point);
-
 			size_t getIndex(uint16_t x, uint16_t y) const;
 			size_t getIndex(const Point& point) const;
 
@@ -76,7 +71,6 @@ namespace yoba {
 		private:
 			RenderTarget* _target;
 			Bounds _viewport = Bounds();
-			Bounds _invalidatedBounds = Bounds();
 
 			uint8_t* _buffer = nullptr;
 			size_t _bufferLength = 0;
@@ -85,7 +79,5 @@ namespace yoba {
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
 			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale);
-
-			void resetInvalidatedBoundsToFullArea();
 	};
 }

@@ -1,4 +1,3 @@
-#include <esp_log.h>
 #include "ILI9341Display.h"
 
 namespace yoba::hardware {
@@ -245,7 +244,7 @@ namespace yoba::hardware {
 	void ILI9341Display::flushBuffer(const Bounds& bounds, size_t length) {
 		uint8_t data[4];
 
-//		ESP_LOGI("Pizda ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+//		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 
 		// Column Address Set
 		data[0] = bounds.getX() >> 8; //Start Col High

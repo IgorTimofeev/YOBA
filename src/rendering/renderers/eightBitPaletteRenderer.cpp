@@ -14,21 +14,14 @@ namespace yoba {
 	}
 
 	void EightBitPaletteRenderer::flushBuffer() {
-
-
 		switch (getTarget()->getPixelWriting()) {
 			case PixelWriting::buffered: {
 				const auto bufferedRenderTarget = dynamic_cast<BufferedRenderTarget*>(getTarget());
 
 				switch (getTarget()->getColorModel()) {
 					case ColorModel::rgb565: {
-						const auto& govnoBounds = getInvalidatedBounds();
-
 						bufferedRenderTarget->flushBuffer(
-							getTarget()->getSize(),
-							govnoBounds,
-							getIndex(govnoBounds.getTopLeft()),
-							getTarget()->getColorModel(),
+							getTarget()->getSize().getWidth(),
 							[&](uint8_t*& transactionBuffer, uint32_t& pixelBufferIndex) {
 								*((uint16_t*) transactionBuffer) = ((uint16_t*) getPalette())[getBuffer()[pixelBufferIndex]];
 								transactionBuffer += 2;
@@ -36,35 +29,25 @@ namespace yoba {
 							}
 						);
 
-//						bufferedRenderTarget->flushBuffer(
-//							Bounds(getTarget()->getSize()),
-//							[&](uint8_t*& transactionBuffer, size_t& pixelBufferIndex) {
-//								((uint16_t*) transactionBuffer)[0] = ((uint16_t*) getPalette())[getBuffer()[pixelBufferIndex]];
-//								transactionBuffer += 2;
-//								pixelBufferIndex++;
-//							}
-//						);
-
 						break;
 					}
 
 					case ColorModel::rgb666: {
-//						const uint8_t* palettePtr;
+						const uint8_t* palettePtr;
 
-//						bufferedRenderTarget->flushBuffer(
-//							getInvalidatedBounds(),
-//							2,
-//							[&](uint8_t*& destination, size_t& pixelIndex) {
-//								palettePtr = getPalette() + getBuffer()[pixelIndex] * 3;
-//
-//								destination[0] = palettePtr[0];
-//								destination[1] = palettePtr[1];
-//								destination[2] = palettePtr[2];
-//
-//								destination += 3;
-//								pixelIndex++;
-//							}
-//						);
+						bufferedRenderTarget->flushBuffer(
+							getTarget()->getSize().getWidth(),
+							[&](uint8_t*& destination, uint32_t& pixelIndex) {
+								palettePtr = getPalette() + getBuffer()[pixelIndex] * 3;
+
+								destination[0] = palettePtr[0];
+								destination[1] = palettePtr[1];
+								destination[2] = palettePtr[2];
+
+								destination += 3;
+								pixelIndex++;
+							}
+						);
 
 						break;
 					}
@@ -77,8 +60,6 @@ namespace yoba {
 			default:
 				break;
 		}
-
-		resetInvalidatedBounds();
 	}
 
 	void EightBitPaletteRenderer::clearNative(const Color* color) {

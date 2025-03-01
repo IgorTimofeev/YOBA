@@ -16,8 +16,6 @@ namespace yoba {
 		if (!fromTarget) {
 			// Resetting viewport if it was first time when target was set
 			resetViewport();
-
-			resetInvalidatedBoundsToFullArea();
 		}
 
 		onTargetChanged();
@@ -76,31 +74,6 @@ namespace yoba {
 		_viewport.setSize(_target->getSize());
 	}
 
-	const Bounds& Renderer::getInvalidatedBounds() const {
-		return _invalidatedBounds;
-	}
-
-	void Renderer::updateInvalidatedBounds(const Bounds& bounds) {
-		_invalidatedBounds = _invalidatedBounds.getExpansion(bounds);
-	}
-
-	void Renderer::updateInvalidatedBounds(const Point& point) {
-		updateInvalidatedBounds(Bounds(point, Size(1, 1)));
-	}
-
-	void Renderer::resetInvalidatedBounds() {
-		_invalidatedBounds.setX(_target->getSize().getWidth());
-		_invalidatedBounds.setY(_target->getSize().getHeight());
-		_invalidatedBounds.setWidth(0);
-		_invalidatedBounds.setHeight(0);
-	}
-
-	void Renderer::resetInvalidatedBoundsToFullArea() {
-		_invalidatedBounds.setX(0);
-		_invalidatedBounds.setX(0);
-		_invalidatedBounds.setSize(_target->getSize());
-	}
-
 	size_t Renderer::getIndex(uint16_t x, uint16_t y) const {
 		return y * _target->getSize().getWidth() + x;
 	}
@@ -113,7 +86,6 @@ namespace yoba {
 
 	void Renderer::clear(const Color* color) {
 		clearNative(color);
-		updateInvalidatedBounds(Bounds(_target->getSize()));
 	}
 
 	void Renderer::renderPixel(const Point& point, const Color* color) {
@@ -121,7 +93,6 @@ namespace yoba {
 			return;
 
 		renderPixelNative(point, color);
-		updateInvalidatedBounds(point);
 	}
 
 	void Renderer::renderHorizontalLine(const Point& point, uint16_t length, const Color* color) {
@@ -142,7 +113,6 @@ namespace yoba {
 		length = x2 - x1 + 1;
 
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
-		updateInvalidatedBounds(Bounds(x1, point.getY(), length, 1));
 	}
 
 	void Renderer::renderVerticalLine(const Point& point, uint16_t length, const Color* color) {
@@ -163,7 +133,6 @@ namespace yoba {
 		length = y2 - y1 + 1;
 
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
-		updateInvalidatedBounds(Bounds(point.getX(), y1, 1, length));
 	}
 
 	void Renderer::renderFilledRectangle(const Bounds& bounds, const Color* color) {
@@ -176,7 +145,6 @@ namespace yoba {
 
 		if (intersection.getWidth() > 1 || intersection.getHeight() > 1) {
 			renderFilledRectangleNative(intersection, color);
-			updateInvalidatedBounds(intersection);
 		}
 		else if (intersection.getWidth() == 1) {
 			renderVerticalLine(intersection.getPosition(), intersection.getHeight(), color);
@@ -186,7 +154,6 @@ namespace yoba {
 		}
 		else {
 			renderPixelNative(intersection.getPosition(), color);
-			updateInvalidatedBounds(intersection.getPosition());
 		}
 	}
 

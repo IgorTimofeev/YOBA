@@ -30,9 +30,7 @@ namespace yoba::hardware {
 			virtual uint8_t getBufferHeightForOrientation() = 0;
 
 			virtual void flushBuffer(const Bounds& bounds, size_t length) = 0;
-
-			void flushBuffer(const Size& targetSize, const Bounds& invalidatedBounds, uint32_t pixelBufferIndex, ColorModel colorModel, const std::function<void(uint8_t*& destination, uint32_t& pixelIndex)>& pixelSetter);
-			void flushBuffer(const Bounds& bounds, const std::function<void(uint8_t*&, size_t&)>& pixelSetter);
+			void flushBuffer(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter);
 
 		protected:
 			uint8_t _bufferHeight = 20;
