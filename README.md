@@ -54,10 +54,10 @@ Slider button();
 // )))
 uint16_t clickCount = 0;
 
-void setup() {
+void setAxis() {
     // Turning display on and attaching it to screen buffer
     // Then setting up touch panel and adding it as input device
-    application.setup(&display, &renderer, &touchPanel);
+    application.setAxis(&display, &renderer, &touchPanel);
     
     // Filling palette with colors in human-readable RGB format
     renderer.setPaletteColors({
@@ -119,10 +119,10 @@ void loop() {
 Same as Arduino, but
 
 ```cpp
-// Everything before setup()
+// Everything before setAxis()
 
 void main() {
-    // Everything from setup()
+    // Everything from setAxis()
     
     while (true) {
         // Everything from loop()

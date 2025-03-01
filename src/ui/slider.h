@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include "element.h"
 #include "traits/focusableElement.h"
 #include "main/event.h"
@@ -80,16 +81,15 @@ namespace yoba::ui {
 				invalidateRender();
 			}
 
-			float getValue() const {
+			uint16_t getValue() const {
 				return _value;
 			}
 
-			void setValue(float value) {
+			void setValue(uint16_t value) {
 				if (value == _value)
 					return;
 
 				_value = value;
-				clampValue();
 
 				onValueChanged();
 				valueChanged();
@@ -101,7 +101,7 @@ namespace yoba::ui {
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto handleHalf = _handleSize / 2;
 				const auto trackY = bounds.getY() + handleHalf - _trackSize / 2;
-				const auto handleCenterLocal = handleHalf + (uint16_t) std::round(_value * (float) (bounds.getWidth() - bounds.getHeight()));
+				const auto handleCenterLocal = handleHalf + (uint16_t) std::round(_value * (bounds.getWidth() - bounds.getHeight()) / 0xFFFF);
 
 				// Fill
 				if (_value > 0 && _fillColor) {
@@ -118,7 +118,7 @@ namespace yoba::ui {
 				}
 
 				// Track
-				if (_value < 1 && _trackColor) {
+				if (_value < 0xFFFF && _trackColor) {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX() + handleCenterLocal,
@@ -175,10 +175,9 @@ namespace yoba::ui {
 				}
 
 				const auto& bounds = getBounds();
-				const auto deltaX = ((TouchEvent*) event)->getPosition().getX() - bounds.getX();
-				const auto part = clamp((float) deltaX / (float) bounds.getWidth(), 0.0f, 1.0f);
+				const int32_t localX = std::clamp(((TouchEvent*) event)->getPosition().getX() - bounds.getX(), (int32_t) 0, (int32_t) bounds.getWidth());
 
-				setValue(part);
+				setValue(localX * 0xFFFF / bounds.getWidth());
 
 				event->setHandled(true);
 			}
@@ -198,10 +197,6 @@ namespace yoba::ui {
 			const Color* _fillColor;
 			const Color* _handleColor;
 
-			float _value = 1;
-
-			void clampValue() {
-				_value = clamp(_value, 0.0f, 1.0f);
-			}
+			uint16_t _value = 0xFFFF;
 	};
 }

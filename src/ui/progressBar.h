@@ -10,11 +10,11 @@ namespace yoba::ui {
 		public:
 			Callback<> valueChanged;
 
-			float getValue() const {
+			uint16_t getValue() const {
 				return _value;
 			}
 
-			void setValue(float value) {
+			void setValue(uint16_t value) {
 				if (value == _value)
 					return;
 
@@ -49,7 +49,7 @@ namespace yoba::ui {
 		protected:
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				// Track
-				if (_trackColor && _value < 1) {
+				if (_trackColor && _value < 0xFFFF) {
 					renderer->renderFilledRectangle(
 						bounds,
 						getCornerRadius(),
@@ -63,7 +63,7 @@ namespace yoba::ui {
 						Bounds(
 							bounds.getX(),
 							bounds.getY(),
-							(uint16_t) std::round(_value * (float) bounds.getWidth()),
+							_value * bounds.getWidth() / 0xFFFF,
 							bounds.getHeight()
 						),
 						getCornerRadius(),
@@ -80,6 +80,6 @@ namespace yoba::ui {
 			const Color* _trackColor;
 			const Color* _fillColor;
 
-			float _value = 1;
+			uint16_t _value = 0xFFFF;
 	};
 }
