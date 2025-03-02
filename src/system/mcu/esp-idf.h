@@ -23,9 +23,9 @@ namespace yoba::system {
 			static void addInterruptHandler(uint8_t pin, const std::function<void()>& callback);
 
 		private:
-			static void IRAM_ATTR interruptHandler(void *args);
+			static IRAM_ATTR void interruptHandler(void *args);
 
-			static IRAM_ATTR std::unordered_map<uint8_t, std::function<void()>> _interruptHandlers;
+			static DRAM_ATTR std::unordered_map<uint8_t, std::function<void()>> _interruptHandlers;
 	};
 
 	class SPI {
@@ -34,7 +34,7 @@ namespace yoba::system {
 			static void write(uint8_t data);
 			static void write(const uint8_t* data, size_t length);
 
-			static IRAM_ATTR spi_device_handle_t _deviceHandle;
+			static DRAM_ATTR spi_device_handle_t _deviceHandle;
 	};
 
 	class I2C {
@@ -44,7 +44,7 @@ namespace yoba::system {
 			static void write(uint8_t* buffer, size_t length);
 
 		private:
-			static IRAM_ATTR i2c_master_bus_handle_t _busHandle;
-			static IRAM_ATTR i2c_master_dev_handle_t _deviceHandle;
+			static DRAM_ATTR i2c_master_bus_handle_t _busHandle;
+			static DRAM_ATTR i2c_master_dev_handle_t _deviceHandle;
 	};
 }
