@@ -32,7 +32,7 @@ namespace yoba::hardware {
 			void writeColorModeChangeCommands() override;
 
 		private:
-			constexpr static uint8_t pageCount = 8;
+			constexpr static const uint8_t pageCount = 8;
 
 			enum class Command : uint8_t {
 				setContrast = 0x81,
