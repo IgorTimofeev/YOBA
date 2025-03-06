@@ -29,8 +29,11 @@ namespace yoba::ui {
 			}
 
 			void setImage(const Image* value) {
+				if (value == _image)
+					return;
+
 				_image = value;
-				setSize(value->getSize());
+				setSize(_image->getSize());
 
 				invalidateRender();
 			}
