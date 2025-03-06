@@ -57,7 +57,7 @@ namespace yoba::system {
 	void GPIO::addInterruptHandler(uint8_t pin, const std::function<void()>& callback) {
 		_interruptHandlers.insert({pin, callback});
 
-		gpio_install_isr_service((int) ESP_INTR_FLAG_IRAM);
+		gpio_install_isr_service(0);
 		gpio_set_intr_type((gpio_num_t) pin, GPIO_INTR_ANYEDGE);
 		gpio_isr_handler_add((gpio_num_t) pin, interruptHandler, (void*) &_interruptHandlers[pin]);
 	}
