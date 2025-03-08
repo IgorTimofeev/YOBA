@@ -16,6 +16,7 @@
 #include "ui/traits/spacingElement.h"
 #include "ui/traits/orientationElement.h"
 #include "ui/traits/checkedElement.h"
+#include "ui/traits/selectableElement.h"
 
 #include "ui/stackLayout.h"
 #include "ui/equalLayout.h"

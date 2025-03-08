@@ -213,8 +213,10 @@ namespace yoba::ui {
 	}
 
 	void Element::handleEvent(Event* event) {
-		if (event->matches(this))
-			onEvent(event);
+		if (!event->matches(this))
+			return;
+
+		onEvent(event);
 	}
 
 	void Element::onEvent(Event* event) {

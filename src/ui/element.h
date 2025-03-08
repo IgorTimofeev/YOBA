@@ -108,6 +108,7 @@ namespace yoba::ui {
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 
+
 			Size _size = Size(Size::computed, Size::computed);
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
