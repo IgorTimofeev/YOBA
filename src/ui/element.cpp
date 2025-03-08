@@ -235,7 +235,7 @@ namespace yoba::ui {
 			_application->startAnimation(animation);
 	}
 
-	Element* Element::getParent() {
+	Layout* Element::getParent() {
 		return _parent;
 	}
 

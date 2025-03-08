@@ -3,10 +3,11 @@
 #include "shape.h"
 #include "main/color.h"
 #include "rendering/renderers/renderer.h"
+#include "ui/traits/borderElement.h"
 #include "ui/traits/cornerRadiusElement.h"
 
 namespace yoba::ui {
-	class Rectangle : public Shape, public CornerRadiusElement {
+	class Rectangle : public Shape, public BorderElement, public CornerRadiusElement {
 		public:
 			Rectangle() = default;
 
@@ -19,6 +20,11 @@ namespace yoba::ui {
 
 				if (color)
 					renderer->renderFilledRectangle(getBounds(), getCornerRadius(), color);
+
+				color = getBorderColor();
+
+				if (color)
+					renderer->renderRectangle(getBounds(), getCornerRadius(), color);
 			}
 	};
 }

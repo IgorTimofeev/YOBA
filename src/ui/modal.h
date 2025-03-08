@@ -4,17 +4,9 @@
 #include "ui/shapes/rectangle.h"
 
 namespace yoba::ui {
-	class ModalOverlay : public Layout {
+	class ModalLayout : public Layout {
 		public:
-			ModalOverlay() {
-				*this += &_backgroundRectangle;
-			}
-
-			Rectangle& getBackgroundRectangle() {
-				return _backgroundRectangle;
-			}
-
-		private:
-			Rectangle _backgroundRectangle = Rectangle();
+			void show(Application* application);
+			void hide();
 	};
 }

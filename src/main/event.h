@@ -42,6 +42,8 @@ namespace yoba {
 			explicit ScreenEvent(uint16_t& staticTypeID);
 
 			bool matches(ui::Element* element) override;
+
+			static bool IsScreen(Event* event);
 	};
 
 	// -------------------------------- Touch --------------------------------

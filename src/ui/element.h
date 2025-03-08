@@ -53,7 +53,7 @@ namespace yoba::ui {
 			virtual void startAnimation(Animation* animation);
 
 			Application* getApplication();
-			Element* getParent();
+			Layout* getParent();
 
 			bool isVisible() const;
 			void setVisible(bool value);

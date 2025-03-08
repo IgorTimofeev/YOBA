@@ -5,8 +5,13 @@
 
 namespace yoba::ui {
 	class Shape : public FillColorElement {
-		public:
-			Shape() = default;
+		protected:
+			void onEvent(Event* event) override {
+				Element::onEvent(event);
 
+				if (ScreenEvent::IsScreen(event)) {
+					event->setHandled(true);
+				}
+			}
 	};
 }

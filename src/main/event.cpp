@@ -48,6 +48,17 @@ namespace yoba {
 		return element->isVisible() && element->isEnabled();
 	}
 
+	bool ScreenEvent::IsScreen(Event* event) {
+		return
+			event->getTypeID() == TouchDownEvent::typeID
+			|| event->getTypeID() == TouchDragEvent::typeID
+			|| event->getTypeID() == TouchUpEvent::typeID
+
+			|| event->getTypeID() == PinchDownEvent::typeID
+			|| event->getTypeID() == PinchDragEvent::typeID
+			|| event->getTypeID() == PinchUpEvent::typeID;
+	}
+
 	// -------------------------------- Touch --------------------------------
 
 	TouchEvent::TouchEvent(uint16_t& staticTypeID, const Point& position) :
