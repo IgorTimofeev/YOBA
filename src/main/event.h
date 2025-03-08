@@ -43,7 +43,7 @@ namespace yoba {
 
 			bool matches(ui::Element* element) override;
 
-			static bool IsScreen(Event* event);
+			static bool isScreen(Event* event);
 	};
 
 	// -------------------------------- Touch --------------------------------

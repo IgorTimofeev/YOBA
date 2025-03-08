@@ -74,19 +74,27 @@ namespace yoba::ui {
 
 		auto blinkX = textPosition.getX();
 
+		wchar_t ch;
+
+		if (_mask.has_value())
+			ch = _mask.value();
+
 		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
+			if (!_mask.has_value())
+				ch = text[charIndex];
+
 			renderer->renderChar(
 				textPosition,
 				font,
 				secondaryColor,
-				text[charIndex],
+				ch,
 				getFontScale()
 			);
 
 			if (charIndex == _cursorPosition)
 				blinkX = textPosition.getX();
 
-			textPosition.setX(textPosition.getX() + font->getCharWidth(text[charIndex], getFontScale()));
+			textPosition.setX(textPosition.getX() + font->getCharWidth(ch, getFontScale()));
 		}
 
 		renderer->popViewport(oldViewport);
@@ -158,7 +166,7 @@ namespace yoba::ui {
 			for (size_t i = 0; i < text.length(); i++) {
 				if (cursorX < targetX) {
 					cursorPosition++;
-					cursorX += font->getCharWidth(text[i]);
+					cursorX += font->getCharWidth(_mask.value_or(text[i]));
 				}
 				else {
 					break;
@@ -176,7 +184,7 @@ namespace yoba::ui {
 				cursorPosition--;
 
 				if (_scrollPosition > 0) {
-					const auto previousCharWidth = font->getCharWidth(text[cursorPosition], getFontScale());
+					const auto previousCharWidth = font->getCharWidth(_mask.value_or(text[cursorPosition]), getFontScale());
 
 					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
 				}
@@ -188,7 +196,7 @@ namespace yoba::ui {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
 			if (cursorPosition < text.length()) {
-				int32_t pizda = cursorX + font->getCharWidth(text[cursorPosition], getFontScale()) - boundsWidthWithoutMargin;
+				int32_t pizda = cursorX + font->getCharWidth(_mask.value_or(text[cursorPosition]), getFontScale()) - boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 
@@ -405,5 +413,13 @@ namespace yoba::ui {
 
 	void TextField::setFocusedSecondaryColor(const Color* focusedSecondaryColor) {
 		_focusedSecondaryColor = focusedSecondaryColor;
+	}
+
+	const std::optional<wchar_t>& TextField::getMask() const {
+		return _mask;
+	}
+
+	void TextField::setMask(const std::optional<wchar_t>& mask) {
+		_mask = mask;
 	}
 }

@@ -36,6 +36,9 @@ namespace yoba::ui {
 
 			void onFocusChanged() override;
 
+			const std::optional<wchar_t>& getMask() const;
+			void setMask(const std::optional<wchar_t>& mask);
+
 			const uint16_t& getTextMargin() const;
 			void setTextMargin(const uint16_t& textMargin);
 
@@ -73,7 +76,6 @@ namespace yoba::ui {
 			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
 
 
-
 		private:
 			int32_t _lastTouchX = -1;
 			uint16_t _textMargin = 10;
@@ -93,6 +95,7 @@ namespace yoba::ui {
 			const Color* _focusedSecondaryColor = nullptr;
 			const Color* _cursorColor = nullptr;
 
+			std::optional<wchar_t> _mask = std::nullopt;
 			std::optional<std::function<void(Keyboard*)>> _keyboardConfigurator = std::nullopt;
 
 			void setCursorBlinkStateAndTime(bool value);

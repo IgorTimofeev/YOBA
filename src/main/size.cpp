@@ -1,17 +1,18 @@
 #include "size.h"
 
 namespace yoba {
-	Size::Size() :
-		_width(0),
-		_height(0)
-	{
-
-	}
-
 	Size::Size(uint16_t width, uint16_t height) :
 		_width(width),
 		_height(height)
 	{
+
+	}
+
+	Size::Size(uint16_t uniformValue) : Size(uniformValue, uniformValue) {
+
+	}
+
+	Size::Size() : Size(0, 0) {
 
 	}
 
