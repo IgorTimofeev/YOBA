@@ -22,8 +22,8 @@ namespace yoba::ui {
 			if (textColor) {
 				renderer->renderString(
 					Point(
-						bounds.getXCenter() - font->getWidth(getText()) / 2,
-						bounds.getYCenter() - font->getHeight() / 2
+						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2,
+						bounds.getYCenter() - font->getHeight(getFontScale()) / 2
 					),
 					font,
 					textColor,
