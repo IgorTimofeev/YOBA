@@ -148,7 +148,7 @@ namespace yoba::hardware {
 		// Memory access control
 		writeOrientationChangeCommand();
 
-		// Invertion
+		// Inversion
 		setInverted(true);
 
 		// Pixel format
