@@ -72,7 +72,7 @@ namespace yoba::system {
 		GPIO::setMode(ssPin, system::GPIO::PinMode::Output);
 		GPIO::write(ssPin, true);
 
-		// Bus (maybe already initialized)
+		// Bus
 		spi_bus_config_t busConfig {};
 		busConfig.mosi_io_num = mosiPin;
 		busConfig.miso_io_num = -1;
@@ -97,8 +97,7 @@ namespace yoba::system {
 	}
 
 	void SPI::write(uint8_t data) {
-		spi_transaction_t transaction;
-		memset(&transaction, 0, sizeof(transaction));
+		spi_transaction_t transaction {};
 		transaction.tx_data[0] = data;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
 		transaction.length = 8;
@@ -107,8 +106,7 @@ namespace yoba::system {
 	}
 
 	void SPI::write(const uint8_t* data, size_t length) {
-		spi_transaction_t transaction;
-		memset(&transaction, 0, sizeof(transaction));
+		spi_transaction_t transaction {};
 		transaction.length = length * 8;
 		transaction.tx_buffer = data;
 

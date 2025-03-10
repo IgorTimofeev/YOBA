@@ -5,7 +5,7 @@ namespace yoba::hardware {
 		uint8_t mosiPin,
 		uint8_t misoPin,
 		uint8_t sckPin,
-		uint8_t csPin,
+		uint8_t ssPin,
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t SPIFrequency,
@@ -24,7 +24,7 @@ namespace yoba::hardware {
 			mosiPin,
 			misoPin,
 			sckPin,
-			csPin,
+			ssPin,
 			dcPin,
 			rstPin,
 			SPIFrequency
@@ -152,7 +152,7 @@ namespace yoba::hardware {
 		/* Memory access control */
 		writeOrientationChangeCommand();
 
-		/* Inversion */
+		/* Inversion, 0x20 off, 0x21 on */
 		this->writeCommand(0x21);
 
 		// Pixel format
@@ -234,11 +234,10 @@ namespace yoba::hardware {
 
 		/* Sleep out */
 		this->writeCommandAndData(0x11, 0x00);
-		system::sleep(100);
+		system::sleep(5);
 
 		/* Display on */
 		this->writeCommandAndData(0x29, 0x00);
-		system::sleep(100);
 	}
 
 	void ILI9341Display::flushBuffer(const Bounds& bounds, size_t length) {

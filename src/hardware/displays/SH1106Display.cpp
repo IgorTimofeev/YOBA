@@ -6,7 +6,7 @@ namespace yoba::hardware {
 		uint8_t mosiPin,
 		uint8_t misoPin,
 		uint8_t sckPin,
-		uint8_t csPin,
+		uint8_t ssPin,
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t SPIFrequency
@@ -22,7 +22,7 @@ namespace yoba::hardware {
 			mosiPin,
 			misoPin,
 			sckPin,
-			csPin,
+			ssPin,
 			dcPin,
 			rstPin,
 			SPIFrequency
@@ -42,55 +42,65 @@ namespace yoba::hardware {
 	}
 
 	void SH1106Display::writeSetupCommands() {
-		writeCommand((uint8_t) Command::displayOff);
-		writeCommand((uint8_t) Command::setDisplayClockDiv);
-		writeCommand(0xF0); // Suggested ratio = 0xF0
-		writeCommand((uint8_t) Command::setMultiplex);
-		writeCommand(0x3F);
-		writeCommand((uint8_t) Command::outputFollowsRam);
-		writeCommand((uint8_t) Command::setDisplayOffset);
-		writeCommand(0x0); // Without offset
-		writeCommand((uint8_t) Command::setStartLine | 0x0); // Line 0
-		writeCommand((uint8_t) Command::chargePump);
-		writeCommand(0x14);
-		writeCommand((uint8_t) Command::memoryMode);
-		writeCommand(0x0); // 0x0 = horizontal, 0x2 = paged
-		writeCommand((uint8_t) Command::setPageAddress);
-//		writeCommand((uint8_t) Command::segremap | 0x1); // ?????????????
-		writeCommand((uint8_t) Command::comScanDec);
-		writeCommand((uint8_t) Command::setLowColumn);
-		writeCommand((uint8_t) Command::setHighColumn);
-		writeCommand((uint8_t) Command::setComPins);
-		writeCommand(0x12);
+		setCommandPin(false);
+			writeData((uint8_t) Command::displayOff);
+			writeData((uint8_t) Command::setDisplayClockDiv);
+			writeData(0xF0); // Suggested ratio = 0xF0
+			writeData((uint8_t) Command::setMultiplex);
+			writeData(0x3F);
+			writeData((uint8_t) Command::outputFollowsRam);
+			writeData((uint8_t) Command::setDisplayOffset);
+			writeData(0x0); // Without offset
+			writeData((uint8_t) Command::setStartLine); // Start line from 0, like "setStartLine | 0x0"
+			writeData((uint8_t) Command::chargePump);
+			writeData(0x14);
+			writeData((uint8_t) Command::memoryMode);
+			writeData(0x0); // 0x0 = horizontal, 0x2 = paged
+			writeData((uint8_t) Command::setPageAddress);
+	//		writeData((uint8_t) Command::segremap | 0x1); // ?????????????
+			writeData((uint8_t) Command::comScanDec);
+			writeData((uint8_t) Command::setLowColumn);
+			writeData((uint8_t) Command::setHighColumn);
+			writeData((uint8_t) Command::setComPins);
+			writeData(0x12);
+		setCommandPin(true);
 
 		setContrast(0xCF);
 
-		writeCommand((uint8_t) Command::setSegmentRemap);
-		writeCommand((uint8_t) Command::setPrecharge);
-		writeCommand(0xF1);
-		writeCommand((uint8_t) Command::setVComDetect);
-		writeCommand(0x20); // 0.77xVcc
-		writeCommand((uint8_t) Command::displayAllOnResume);
+		setCommandPin(false);
+			writeData((uint8_t) Command::setSegmentRemap);
+			writeData((uint8_t) Command::setPrecharge);
+			writeData(0xF1);
+			writeData((uint8_t) Command::setVComDetect);
+			writeData(0x20); // 0.77xVcc
+			writeData((uint8_t) Command::displayAllOnResume);
+		setCommandPin(true);
 
 		setInverted(false);
 
-		writeCommand((uint8_t) Command::displayOn);
+		setCommandPin(false);
+			writeData((uint8_t) Command::displayOn);
+		setCommandPin(true);
 	}
 
 	void SH1106Display::writePixels(uint8_t* buffer) {
 		for (uint8_t page = 0; page < pageCount; page++) {
-			writeCommand((uint8_t) Command::setPageAddress | page);
-			writeCommand((uint8_t) Command::setColumnAddressLow);
-			writeCommand((uint8_t) Command::setColumnAddressHigh);
+			setCommandPin(false);
+				writeData((uint8_t) Command::setPageAddress | page);
+				writeData((uint8_t) Command::setColumnAddressLow);
+				writeData((uint8_t) Command::setColumnAddressHigh);
+			setCommandPin(true);
 
-			// Page
+			// Pixels
 			writeData(buffer + page * getSize().getWidth(), getSize().getWidth());
 		}
 	}
 
 	void SH1106Display::setContrast(uint8_t value) {
-		writeCommand((uint8_t) Command::setContrast);
-		writeCommand(value);
+		setCommandPin(false);
+			writeData((uint8_t) Command::setContrast);
+			writeData(value);
+		setCommandPin(true);
 	}
 
 	void SH1106Display::setInverted(bool value) {

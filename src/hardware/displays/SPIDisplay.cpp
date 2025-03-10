@@ -5,7 +5,7 @@ namespace yoba::hardware {
 		uint8_t mosiPin,
 		uint8_t misoPin,
 		uint8_t sckPin,
-		uint8_t csPin,
+		uint8_t ssPin,
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t frequency
@@ -13,7 +13,7 @@ namespace yoba::hardware {
 		_mosiPin(mosiPin),
 		_misoPin(misoPin),
 		_sckPin(sckPin),
-		_csPin(csPin),
+		_ssPin(ssPin),
 		_dcPin(dcPin),
 		_rstPin(rstPin),
 		_frequency(frequency)
@@ -28,7 +28,7 @@ namespace yoba::hardware {
 
 		// Data command pin
 		system::GPIO::setMode(_dcPin, system::GPIO::PinMode::Output);
-		setDataCommand(true);
+		setCommandPin(true);
 
 		// Reset pin
 		if (_rstPin >= 0) {
@@ -42,7 +42,7 @@ namespace yoba::hardware {
 		}
 
 		// SPI
-		system::SPI::setup(_mosiPin, _sckPin, _csPin, _frequency);
+		system::SPI::setup(_mosiPin, _sckPin, _ssPin, _frequency);
 
 		writeSetupCommands();
 	}
@@ -55,10 +55,10 @@ namespace yoba::hardware {
 		system::SPI::write(data, length);
 	}
 
-	void SPIDisplay::writeCommand(uint8_t data) {
-		setDataCommand(false);
-		writeData(data);
-		setDataCommand(true);
+	void SPIDisplay::writeCommand(uint8_t command) {
+		setCommandPin(false);
+		writeData(command);
+		setCommandPin(true);
 	}
 
 	void SPIDisplay::writeCommandAndData(uint8_t command, uint8_t data) {
@@ -77,11 +77,11 @@ namespace yoba::hardware {
 		writeOrientationChangeCommand();
 	}
 
-	void SPIDisplay::setChipSelect(uint8_t value) const {
-		system::GPIO::write(_csPin, value);
+	void SPIDisplay::setSlaveSelectPin(uint8_t value) const {
+		system::GPIO::write(_ssPin, value);
 	}
 
-	void SPIDisplay::setDataCommand(uint8_t value) const {
+	void SPIDisplay::setCommandPin(uint8_t value) const {
 		system::GPIO::write(_dcPin, value);
 	}
 }
