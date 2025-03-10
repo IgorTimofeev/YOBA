@@ -24,9 +24,9 @@ namespace yoba::hardware {
 	void SPIDisplay::setup() {
 		RenderTarget::setup();
 
-		// Non-SPI pins
+		// Non-SPI GPIO
 
-		// Data command pin
+		// Data/command pin
 		system::GPIO::setMode(_dcPin, system::GPIO::PinMode::Output);
 		setCommandPin(true);
 
@@ -34,11 +34,7 @@ namespace yoba::hardware {
 		if (_rstPin >= 0) {
 			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::Output);
 
-			system::GPIO::write(_rstPin, false);
-			system::sleep(100);
-
-			system::GPIO::write(_rstPin, true);
-			system::sleep(100);
+			hardReset();
 		}
 
 		// SPI
@@ -83,5 +79,13 @@ namespace yoba::hardware {
 
 	void SPIDisplay::setCommandPin(uint8_t value) const {
 		system::GPIO::write(_dcPin, value);
+	}
+
+	void SPIDisplay::hardReset() {
+		system::GPIO::write(_rstPin, false);
+		system::sleep(100);
+
+		system::GPIO::write(_rstPin, true);
+		system::sleep(100);
 	}
 }

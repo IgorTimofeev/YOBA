@@ -22,6 +22,8 @@ namespace yoba::hardware {
 		protected:
 			void onOrientationChanged() override;
 
+			virtual void hardReset();
+
 			void setSlaveSelectPin(uint8_t value) const;
 			void setCommandPin(uint8_t value) const;
 

@@ -3,9 +3,10 @@
 #include <cstdint>
 #include "../../rendering/targets/bufferedRenderTarget.h"
 #include "SPIDisplay.h"
+#include "invertibleDisplay.h"
 
 namespace yoba::hardware {
-	class ILI9341Display : public SPIDisplay, public BufferedRenderTarget {
+	class ILI9341Display : public SPIDisplay, public BufferedRenderTarget, public InvertibleDisplay {
 		public:
 			// Recommended SPI frequencies:
 			// Arduino: 40 MHz
@@ -22,6 +23,8 @@ namespace yoba::hardware {
 				ColorModel colorModel = ColorModel::rgb565,
 				ViewportRotation rotation = ViewportRotation::clockwise0
 			);
+
+			void setInverted(bool value) override;
 
 		protected:
 			void writeSetupCommands() override;
