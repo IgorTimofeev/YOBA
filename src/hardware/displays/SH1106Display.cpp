@@ -102,4 +102,8 @@ namespace yoba::hardware {
 
 		writeCommand((uint8_t) (value ? Command::invertDisplay : Command::normalDisplay));
 	}
+
+	void SH1106Display::_fuckingPureVirtualFunction() {
+
+	}
 }

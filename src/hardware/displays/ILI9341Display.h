@@ -30,8 +30,9 @@ namespace yoba::hardware {
 
 		protected:
 			uint8_t getBufferHeightForRotation() override;
-
 			void onRotationChanged() override;
+
+			void _fuckingPureVirtualFunction() override;
 
 		private:
 			enum class Command : uint8_t {

@@ -28,8 +28,7 @@ namespace yoba::hardware {
 			dcPin,
 			rstPin,
 			SPIFrequency
-		),
-		BufferedRenderTarget()
+		)
 	{
 
 	}
@@ -261,5 +260,9 @@ namespace yoba::hardware {
 		}
 
 		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
+	}
+
+	void ILI9341Display::_fuckingPureVirtualFunction() {
+
 	}
 }

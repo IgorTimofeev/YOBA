@@ -26,8 +26,10 @@ namespace yoba::hardware {
 
 			void writePixels(uint8_t* buffer) override;
 			void setContrast(uint8_t value) override;
-
 			void setInverted(bool value) override;
+
+		protected:
+			void _fuckingPureVirtualFunction() override;
 
 		private:
 			enum class Command : uint8_t {

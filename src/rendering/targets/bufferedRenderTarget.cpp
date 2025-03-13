@@ -5,10 +5,6 @@
 #endif
 
 namespace yoba::hardware {
-	BufferedRenderTarget::BufferedRenderTarget() { // NOLINT(*-use-equals-default)
-
-	}
-
 	uint8_t BufferedRenderTarget::getBufferHeight() const {
 		return _bufferHeight;
 	}

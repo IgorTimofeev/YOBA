@@ -34,7 +34,7 @@ namespace yoba::hardware {
 			virtual void toggleResetPin();
 
 			// I love C++
-			virtual void _fuckingPureVirtualMethod() = 0;
+			virtual void _fuckingPureVirtualFunction() = 0;
 
 		private:
 			uint8_t _mosiPin;

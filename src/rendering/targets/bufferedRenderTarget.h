@@ -7,8 +7,6 @@
 namespace yoba::hardware {
 	class BufferedRenderTarget : public virtual RenderTarget {
 		public:
-			BufferedRenderTarget();
-
 			void updateFromRotation() override;
 
 			uint8_t* getBuffer() const;
@@ -36,6 +34,5 @@ namespace yoba::hardware {
 			uint8_t _bufferHeight = 20;
 			size_t _bufferLength = 0;
 			uint8_t* _buffer = nullptr;
-
 	};
 }
