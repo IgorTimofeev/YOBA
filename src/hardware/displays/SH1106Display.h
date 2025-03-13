@@ -22,18 +22,13 @@ namespace yoba::hardware {
 				uint32_t SPIFrequency
 			);
 
+			void setup() override;
+
 			void writePixels(uint8_t* buffer) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;
 
-		protected:
-			void writeSetupCommands() override;
-			void writeOrientationChangeCommand() override;
-			void writeColorModeChangeCommands() override;
-
 		private:
-			constexpr static const uint8_t pageCount = 8;
-
 			enum class Command : uint8_t {
 				setContrast = 0x81,
 				displayAllOnResume = 0xA4,
@@ -74,5 +69,7 @@ namespace yoba::hardware {
 
 				chargePump = 0x8D,
 			};
+
+			constexpr static const uint8_t _pageCount = 8;
 	};
 }

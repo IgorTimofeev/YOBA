@@ -63,9 +63,9 @@ namespace yoba {
 			PixelWriting _pixelWriting;
 			PixelOrder _pixelOrder;
 			ColorModel _colorModel;
-			ViewportRotation _orientation = ViewportRotation::clockwise0;
+			ViewportRotation _rotation = ViewportRotation::clockwise0;
 
-			virtual void updateFromOrientation();
-			virtual void onOrientationChanged();
+			virtual void updateFromRotation();
+			virtual void onRotationChanged();
 	};
 }

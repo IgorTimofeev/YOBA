@@ -22,15 +22,12 @@ namespace yoba::hardware {
 				uint32_t SPIFrequency
 			);
 
+			void setup() override;
+
 			void writePixels(uint8_t* buffer) override;
 			void setContrast(uint8_t value) override;
 
 			void setInverted(bool value) override;
-
-		protected:
-			void writeSetupCommands() override;
-			void writeOrientationChangeCommand() override;
-			void writeColorModeChangeCommands() override;
 
 		private:
 			enum class Command : uint8_t {

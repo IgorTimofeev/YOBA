@@ -28,19 +28,17 @@ namespace yoba::hardware {
 
 		// Data/command pin
 		system::GPIO::setMode(_dcPin, system::GPIO::PinMode::Output);
-		setCommandPin(true);
+		setDataCommandPin(true);
 
 		// Reset pin
 		if (_rstPin >= 0) {
 			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::Output);
 
-			hardReset();
+			toggleResetPin();
 		}
 
 		// SPI
 		system::SPI::setup(_mosiPin, _sckPin, _ssPin, _frequency);
-
-		writeSetupCommands();
 	}
 
 	void SPIDisplay::writeData(uint8_t data) {
@@ -52,9 +50,9 @@ namespace yoba::hardware {
 	}
 
 	void SPIDisplay::writeCommand(uint8_t command) {
-		setCommandPin(false);
+		setDataCommandPin(false);
 		writeData(command);
-		setCommandPin(true);
+		setDataCommandPin(true);
 	}
 
 	void SPIDisplay::writeCommandAndData(uint8_t command, uint8_t data) {
@@ -67,25 +65,19 @@ namespace yoba::hardware {
 		writeData(data, length);
 	}
 
-	void SPIDisplay::onOrientationChanged() {
-		RenderTarget::onOrientationChanged();
-
-		writeOrientationChangeCommand();
-	}
-
-	void SPIDisplay::setSlaveSelectPin(uint8_t value) const {
-		system::GPIO::write(_ssPin, value);
-	}
-
-	void SPIDisplay::setCommandPin(uint8_t value) const {
+	void SPIDisplay::setDataCommandPin(bool value) const {
 		system::GPIO::write(_dcPin, value);
 	}
 
-	void SPIDisplay::hardReset() {
-		system::GPIO::write(_rstPin, false);
+	void SPIDisplay::setResetPin(bool value) const {
+		system::GPIO::write(_rstPin, value);
+	}
+
+	void SPIDisplay::toggleResetPin() {
+		setResetPin(false);
 		system::sleep(100);
 
-		system::GPIO::write(_rstPin, true);
+		setResetPin(true);
 		system::sleep(100);
 	}
 }

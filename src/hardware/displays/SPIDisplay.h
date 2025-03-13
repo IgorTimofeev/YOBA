@@ -20,12 +20,8 @@ namespace yoba::hardware {
 			void setup() override;
 
 		protected:
-			void onOrientationChanged() override;
-
-			virtual void hardReset();
-
-			void setSlaveSelectPin(uint8_t value) const;
-			void setCommandPin(uint8_t value) const;
+			void setDataCommandPin(bool value) const;
+			void setResetPin(bool value) const;
 
 			void writeData(uint8_t data);
 			void writeData(const uint8_t *data, size_t length);
@@ -35,9 +31,10 @@ namespace yoba::hardware {
 			void writeCommandAndData(uint8_t command, const uint8_t *data, size_t length);
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
-			virtual void writeSetupCommands() = 0;
-			virtual void writeOrientationChangeCommand() = 0;
-			virtual void writeColorModeChangeCommands() = 0;
+			virtual void toggleResetPin();
+
+			// I love C++
+			virtual void _fuckingPureVirtualMethod() = 0;
 
 		private:
 			uint8_t _mosiPin;
@@ -47,5 +44,6 @@ namespace yoba::hardware {
 			uint8_t _dcPin;
 			int8_t _rstPin;
 			uint32_t _frequency;
+
 	};
 }

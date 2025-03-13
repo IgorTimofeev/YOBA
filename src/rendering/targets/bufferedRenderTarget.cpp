@@ -38,11 +38,11 @@ namespace yoba::hardware {
 		return _bufferLength;
 	}
 
-	void BufferedRenderTarget::updateFromOrientation() {
-		RenderTarget::updateFromOrientation();
+	void BufferedRenderTarget::updateFromRotation() {
+		RenderTarget::updateFromRotation();
 
 		// Updating pixel buffer height
-		_bufferHeight = getBufferHeightForOrientation();
+		_bufferHeight = getBufferHeightForRotation();
 
 		// Reallocating pixel buffer
 		delete _buffer;

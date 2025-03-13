@@ -34,60 +34,9 @@ namespace yoba::hardware {
 
 	}
 
-	void ILI9341Display::writeOrientationChangeCommand() {
-		auto data = (uint8_t) Command::MADCTL_BGR;
+	void ILI9341Display::setup() {
+		SPIDisplay::setup();
 
-		switch (getRotation()) {
-			case ViewportRotation::clockwise0:
-				data |= (uint8_t) Command::MADCTL_MX;
-				break;
-
-			case ViewportRotation::clockwise90:
-				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
-				break;
-
-			case ViewportRotation::clockwise180:
-				data |= (uint8_t) Command::MADCTL_MY;
-				break;
-
-			case ViewportRotation::clockwise270:
-				data |= (uint8_t) Command::MADCTL_MV;
-				break;
-
-			default:
-				break;
-		}
-
-		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
-	}
-
-	uint8_t ILI9341Display::getBufferHeightForOrientation() {
-		return
-			this->_orientation == ViewportRotation::clockwise0 || this->_orientation == ViewportRotation::clockwise180
-			? 64 // 5 transactions
-			: 40; // 6 transactions
-	}
-
-	void ILI9341Display::writeColorModeChangeCommands() {
-		// Pixel format for RGB/MCU interface
-		// 101 - 16 bits per pixel
-		// 110 - 18 bits per pixel
-		uint8_t value;
-
-		switch (_colorModel) {
-			case ColorModel::rgb666:
-				value = 0b01100110;
-				break;
-
-			default:
-				value = 0b01010101;
-				break;
-		}
-
-		this->writeCommandAndData((uint8_t) Command::COLMOD, value);
-	}
-
-	void ILI9341Display::writeSetupCommands() {
 		uint8_t b[16];
 
 		// Power control B, power control = 0, DC_ENA = 1
@@ -146,13 +95,15 @@ namespace yoba::hardware {
 		this->writeCommandAndData(0xC7, 0xBE);
 
 		// Memory access control
-		writeOrientationChangeCommand();
+		writeMADCTLCommand();
 
 		// Inversion
 		setInverted(true);
 
-		// Pixel format
-		writeColorModeChangeCommands();
+		// Color model
+		// 101 - 16 bits per pixel
+		// 110 - 18 bits per pixel
+		this->writeCommandAndData((uint8_t) Command::COLMOD, _colorModel == ColorModel::rgb666 ? 0b01100110 : 0b01010101);
 
 		// Frame rate control, f=fosc, 70Hz fps
 		b[0] = 0x00;
@@ -232,14 +183,34 @@ namespace yoba::hardware {
 		this->writeCommandAndData(0x11, 0x00);
 		system::sleep(5);
 
+		// Clearing
+		{
+			memset(_buffer, 0x00, _bufferLength);
+
+			for (uint16_t y = 0; y < _size.getHeight(); y += _bufferHeight)
+				flushBuffer(Bounds(0, y, _size.getWidth(), _bufferHeight), _bufferLength);
+		}
+
 		// Display on
 		this->writeCommandAndData(0x29, 0x00);
+		system::sleep(100);
+	}
+
+	void ILI9341Display::onRotationChanged() {
+		RenderTarget::onRotationChanged();
+
+		writeMADCTLCommand();
+	}
+
+	uint8_t ILI9341Display::getBufferHeightForRotation() {
+		return
+			this->_rotation == ViewportRotation::clockwise0 || this->_rotation == ViewportRotation::clockwise180
+			? 64 // 5 transactions
+			: 40; // 6 transactions
 	}
 
 	void ILI9341Display::setInverted(bool value) {
-		InvertibleDisplay::setInverted(value);
-
-		this->writeCommand(isInverted() ? 0x21 : 0x20);
+		this->writeCommand(value ? 0x21 : 0x20);
 	}
 	
 	void ILI9341Display::flushBuffer(const Bounds& bounds, size_t length) {
@@ -263,5 +234,32 @@ namespace yoba::hardware {
 
 		// Memory write
 		writeCommandAndData(0x2C, _buffer, length);
+	}
+
+	void ILI9341Display::writeMADCTLCommand() {
+		auto data = (uint8_t) Command::MADCTL_BGR;
+
+		switch (getRotation()) {
+			case ViewportRotation::clockwise0:
+				data |= (uint8_t) Command::MADCTL_MX;
+				break;
+
+			case ViewportRotation::clockwise90:
+				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
+				break;
+
+			case ViewportRotation::clockwise180:
+				data |= (uint8_t) Command::MADCTL_MY;
+				break;
+
+			case ViewportRotation::clockwise270:
+				data |= (uint8_t) Command::MADCTL_MV;
+				break;
+
+			default:
+				break;
+		}
+
+		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 }

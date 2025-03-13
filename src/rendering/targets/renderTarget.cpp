@@ -14,13 +14,13 @@ namespace yoba {
 		_pixelWriting(pixelWriting),
 		_pixelOrder(pixelOrder),
 		_colorModel(colorModel),
-		_orientation(rotation)
+		_rotation(rotation)
 	{
 
 	}
 
 	void RenderTarget::setup() {
-		updateFromOrientation();
+		updateFromRotation();
 	}
 
 	PixelWriting RenderTarget::getPixelWriting() const {
@@ -40,16 +40,16 @@ namespace yoba {
 	}
 
 	ViewportRotation RenderTarget::getRotation() const {
-		return _orientation;
+		return _rotation;
 	}
 
 	void RenderTarget::setRotation(ViewportRotation value) {
-		if (value == _orientation)
+		if (value == _rotation)
 			return;
 
-		_orientation = value;
+		_rotation = value;
 
-		onOrientationChanged();
+		onRotationChanged();
 	}
 
 	Point RenderTarget::orientPoint(const Point& point) {
@@ -84,8 +84,8 @@ namespace yoba {
 		}
 	}
 
-	void RenderTarget::updateFromOrientation() {
-		switch (_orientation) {
+	void RenderTarget::updateFromRotation() {
+		switch (_rotation) {
 			case ViewportRotation::clockwise0:
 			case ViewportRotation::clockwise180:
 				_size = _defaultSize;
@@ -99,13 +99,13 @@ namespace yoba {
 		}
 	}
 
-	void RenderTarget::onOrientationChanged() {
-		updateFromOrientation();
+	void RenderTarget::onRotationChanged() {
+		updateFromRotation();
 	}
 
 	bool RenderTarget::operator==(const RenderTarget& rhs) const {
 		return
-			_orientation == rhs._orientation &&
+			_rotation == rhs._rotation &&
 			_defaultSize == rhs._defaultSize &&
 			_colorModel == rhs._colorModel &&
 			_pixelOrder == rhs._pixelOrder &&

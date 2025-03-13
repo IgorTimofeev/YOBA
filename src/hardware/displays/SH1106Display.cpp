@@ -33,16 +33,10 @@ namespace yoba::hardware {
 
 	}
 
-	void SH1106Display::writeOrientationChangeCommand() {
+	void SH1106Display::setup() {
+		SPIDisplay::setup();
 
-	}
-
-	void SH1106Display::writeColorModeChangeCommands() {
-
-	}
-
-	void SH1106Display::writeSetupCommands() {
-		setCommandPin(false);
+		setDataCommandPin(false);
 			writeData((uint8_t) Command::displayOff);
 			writeData((uint8_t) Command::setDisplayClockDiv);
 			writeData(0xF0); // Suggested ratio = 0xF0
@@ -57,39 +51,39 @@ namespace yoba::hardware {
 			writeData((uint8_t) Command::memoryMode);
 			writeData(0x0); // 0x0 = horizontal, 0x2 = paged
 			writeData((uint8_t) Command::setPageAddress);
-	//		writeData((uint8_t) Command::segremap | 0x1); // ?????????????
+			//		writeData((uint8_t) Command::segremap | 0x1); // ?????????????
 			writeData((uint8_t) Command::comScanDec);
 			writeData((uint8_t) Command::setLowColumn);
 			writeData((uint8_t) Command::setHighColumn);
 			writeData((uint8_t) Command::setComPins);
 			writeData(0x12);
-		setCommandPin(true);
+		setDataCommandPin(true);
 
 		setContrast(0xCF);
 
-		setCommandPin(false);
+		setDataCommandPin(false);
 			writeData((uint8_t) Command::setSegmentRemap);
 			writeData((uint8_t) Command::setPrecharge);
 			writeData(0xF1);
 			writeData((uint8_t) Command::setVComDetect);
 			writeData(0x20); // 0.77xVcc
 			writeData((uint8_t) Command::displayAllOnResume);
-		setCommandPin(true);
+		setDataCommandPin(true);
 
 		setInverted(false);
 
-		setCommandPin(false);
+		setDataCommandPin(false);
 			writeData((uint8_t) Command::displayOn);
-		setCommandPin(true);
+		setDataCommandPin(true);
 	}
 
 	void SH1106Display::writePixels(uint8_t* buffer) {
-		for (uint8_t page = 0; page < pageCount; page++) {
-			setCommandPin(false);
+		for (uint8_t page = 0; page < _pageCount; page++) {
+			setDataCommandPin(false);
 				writeData((uint8_t) Command::setPageAddress | page);
 				writeData((uint8_t) Command::setColumnAddressLow);
 				writeData((uint8_t) Command::setColumnAddressHigh);
-			setCommandPin(true);
+			setDataCommandPin(true);
 
 			// Pixels
 			writeData(buffer + page * getSize().getWidth(), getSize().getWidth());
@@ -97,10 +91,10 @@ namespace yoba::hardware {
 	}
 
 	void SH1106Display::setContrast(uint8_t value) {
-		setCommandPin(false);
+		setDataCommandPin(false);
 			writeData((uint8_t) Command::setContrast);
 			writeData(value);
-		setCommandPin(true);
+		setDataCommandPin(true);
 	}
 
 	void SH1106Display::setInverted(bool value) {

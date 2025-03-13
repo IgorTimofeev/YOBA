@@ -24,17 +24,14 @@ namespace yoba::hardware {
 				ViewportRotation rotation = ViewportRotation::clockwise0
 			);
 
+			void setup() override;
 			void setInverted(bool value) override;
+			void flushBuffer(const Bounds& bounds, size_t length) override;
 
 		protected:
-			void writeSetupCommands() override;
-			void writeOrientationChangeCommand() override;
-			void writeColorModeChangeCommands() override;
+			uint8_t getBufferHeightForRotation() override;
 
-			uint8_t getBufferHeightForOrientation() override;
-
-		public:
-			void flushBuffer(const Bounds& bounds, size_t length) override;
+			void onRotationChanged() override;
 
 		private:
 			enum class Command : uint8_t {
@@ -49,5 +46,7 @@ namespace yoba::hardware {
 				MADCTL_BGR = 0x08,
 				MADCTL_MH = 0x04,
 			};
+
+			void writeMADCTLCommand();
 	};
 }

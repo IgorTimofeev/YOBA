@@ -33,15 +33,9 @@ namespace yoba::hardware {
 
 	}
 
-	void ST7565Display::writeOrientationChangeCommand() {
+	void ST7565Display::setup() {
+		SPIDisplay::setup();
 
-	}
-
-	void ST7565Display::writeColorModeChangeCommands() {
-
-	}
-
-	void ST7565Display::writeSetupCommands() {
 		// LCD bias select
 		writeCommand((uint8_t) Command::SET_BIAS_7);
 		// ADC select

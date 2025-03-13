@@ -9,7 +9,7 @@ namespace yoba::hardware {
 		public:
 			BufferedRenderTarget();
 
-			void updateFromOrientation() override;
+			void updateFromRotation() override;
 
 			uint8_t* getBuffer() const;
 			size_t getBufferLength() const;
@@ -27,7 +27,7 @@ namespace yoba::hardware {
 			// but will eat RAM like a bulimic bitch.
 			//
 			// [Fucking important] Make sure screen height is dividable by this.
-			virtual uint8_t getBufferHeightForOrientation() = 0;
+			virtual uint8_t getBufferHeightForRotation() = 0;
 
 			virtual void flushBuffer(const Bounds& bounds, size_t length) = 0;
 			void flushBuffer(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter);
