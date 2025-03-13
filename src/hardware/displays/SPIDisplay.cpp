@@ -21,6 +21,10 @@ namespace yoba::hardware {
 
 	}
 
+	SPIDisplay::~SPIDisplay() {
+
+	}
+
 	void SPIDisplay::setup() {
 		RenderTarget::setup();
 

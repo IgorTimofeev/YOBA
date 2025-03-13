@@ -41,7 +41,7 @@ namespace yoba::hardware {
 		_bufferHeight = getBufferHeightForRotation();
 
 		// Reallocating pixel buffer
-		delete _buffer;
+		heap_caps_free(_buffer);
 
 		_bufferLength = Color::getBytesPerModel(this->_size.getWidth() * _bufferHeight, _colorModel);
 

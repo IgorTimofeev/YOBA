@@ -104,8 +104,4 @@ namespace yoba::hardware {
 
 		writeCommand((uint8_t) (value ? Command::SET_DISP_REVERSE : Command::SET_DISP_NORMAL));
 	}
-
-	void ST7565Display::_fuckingPureVirtualFunction() {
-
-	}
 }

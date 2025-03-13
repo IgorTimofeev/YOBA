@@ -32,8 +32,6 @@ namespace yoba::hardware {
 			uint8_t getBufferHeightForRotation() override;
 			void onRotationChanged() override;
 
-			void _fuckingPureVirtualFunction() override;
-
 		private:
 			enum class Command : uint8_t {
 				COLMOD = 0x3A,

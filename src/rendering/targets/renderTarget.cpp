@@ -19,6 +19,10 @@ namespace yoba {
 
 	}
 
+	RenderTarget::~RenderTarget() {
+
+	}
+
 	void RenderTarget::setup() {
 		updateFromRotation();
 	}

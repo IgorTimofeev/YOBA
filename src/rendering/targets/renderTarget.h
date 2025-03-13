@@ -42,6 +42,8 @@ namespace yoba {
 				ViewportRotation rotation
 			);
 
+			virtual ~RenderTarget();
+
 			virtual void setup();
 
 			PixelWriting getPixelWriting() const;

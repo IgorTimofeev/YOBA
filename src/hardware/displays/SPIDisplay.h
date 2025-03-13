@@ -17,6 +17,8 @@ namespace yoba::hardware {
 				uint32_t frequency
 			);
 
+			virtual ~SPIDisplay() = 0;
+
 			void setup() override;
 
 		protected:
@@ -32,9 +34,6 @@ namespace yoba::hardware {
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
 			virtual void toggleResetPin();
-
-			// I love C++
-			virtual void _fuckingPureVirtualFunction() = 0;
 
 		private:
 			uint8_t _mosiPin;

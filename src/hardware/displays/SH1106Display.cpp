@@ -81,8 +81,8 @@ namespace yoba::hardware {
 		for (uint8_t page = 0; page < _pageCount; page++) {
 			setDataCommandPin(false);
 				writeData((uint8_t) Command::setPageAddress | page);
-				writeData((uint8_t) Command::setColumnAddressLow);
-				writeData((uint8_t) Command::setColumnAddressHigh);
+				writeData((uint8_t) Command::setColumnAddressLow | 0);
+				writeData((uint8_t) Command::setColumnAddressHigh | 0);
 			setDataCommandPin(true);
 
 			// Pixels
@@ -101,9 +101,5 @@ namespace yoba::hardware {
 		InvertibleDisplay::setInverted(value);
 
 		writeCommand((uint8_t) (value ? Command::invertDisplay : Command::normalDisplay));
-	}
-
-	void SH1106Display::_fuckingPureVirtualFunction() {
-
 	}
 }
