@@ -1,13 +1,14 @@
 ﻿#pragma once
 
-#include "main/font.h"
+#include "../../main/font.h"
 
 namespace yoba {
-	class UNSCII16Font : public Font {
+	class unscii16Font : public Font {
 		public:
-			UNSCII16Font() : Font(
+			unscii16Font() : Font(
 				32,
 				126,
+				8,
 				18,
 				_glyphs,
 				_bitmap
@@ -16,105 +17,105 @@ namespace yoba {
 			}
 
 		private:
-			const Glyph _glyphs[95] = {
-				Glyph(0, 8), //
-				Glyph(144, 8), // !
-				Glyph(288, 8), // "
-				Glyph(432, 8), // #
-				Glyph(576, 8), // $
-				Glyph(720, 8), // %
-				Glyph(864, 8), // &
-				Glyph(1008, 8), // '
-				Glyph(1152, 8), // (
-				Glyph(1296, 8), // )
-				Glyph(1440, 8), // *
-				Glyph(1584, 8), // +
-				Glyph(1728, 8), // ,
-				Glyph(1872, 8), // -
-				Glyph(2016, 8), // .
-				Glyph(2160, 8), // /
-				Glyph(2304, 8), // 0
-				Glyph(2448, 8), // 1
-				Glyph(2592, 8), // 2
-				Glyph(2736, 8), // 3
-				Glyph(2880, 8), // 4
-				Glyph(3024, 8), // 5
-				Glyph(3168, 8), // 6
-				Glyph(3312, 8), // 7
-				Glyph(3456, 8), // 8
-				Glyph(3600, 8), // 9
-				Glyph(3744, 8), // :
-				Glyph(3888, 8), // ;
-				Glyph(4032, 8), // <
-				Glyph(4176, 8), // =
-				Glyph(4320, 8), // >
-				Glyph(4464, 8), // ?
-				Glyph(4608, 8), // @
-				Glyph(4752, 8), // A
-				Glyph(4896, 8), // B
-				Glyph(5040, 8), // C
-				Glyph(5184, 8), // D
-				Glyph(5328, 8), // E
-				Glyph(5472, 8), // F
-				Glyph(5616, 8), // G
-				Glyph(5760, 8), // H
-				Glyph(5904, 8), // I
-				Glyph(6048, 8), // J
-				Glyph(6192, 8), // K
-				Glyph(6336, 8), // L
-				Glyph(6480, 8), // M
-				Glyph(6624, 8), // N
-				Glyph(6768, 8), // O
-				Glyph(6912, 8), // P
-				Glyph(7056, 8), // Q
-				Glyph(7200, 8), // R
-				Glyph(7344, 8), // S
-				Glyph(7488, 8), // T
-				Glyph(7632, 8), // U
-				Glyph(7776, 8), // V
-				Glyph(7920, 8), // W
-				Glyph(8064, 8), // X
-				Glyph(8208, 8), // Y
-				Glyph(8352, 8), // Z
-				Glyph(8496, 8), // [
-				Glyph(8640, 8), // backslash
-				Glyph(8784, 8), // ]
-				Glyph(8928, 8), // ^
-				Glyph(9072, 8), // _
-				Glyph(9216, 8), // `
-				Glyph(9360, 8), // a
-				Glyph(9504, 8), // b
-				Glyph(9648, 8), // c
-				Glyph(9792, 8), // d
-				Glyph(9936, 8), // e
-				Glyph(10080, 8), // f
-				Glyph(10224, 8), // g
-				Glyph(10368, 8), // h
-				Glyph(10512, 8), // i
-				Glyph(10656, 8), // j
-				Glyph(10800, 8), // k
-				Glyph(10944, 8), // l
-				Glyph(11088, 8), // m
-				Glyph(11232, 8), // n
-				Glyph(11376, 8), // o
-				Glyph(11520, 8), // p
-				Glyph(11664, 8), // q
-				Glyph(11808, 8), // r
-				Glyph(11952, 8), // s
-				Glyph(12096, 8), // t
-				Glyph(12240, 8), // u
-				Glyph(12384, 8), // v
-				Glyph(12528, 8), // w
-				Glyph(12672, 8), // x
-				Glyph(12816, 8), // y
-				Glyph(12960, 8), // z
-				Glyph(13104, 8), // {
-				Glyph(13248, 8), // |
-				Glyph(13392, 8), // }
-				Glyph(13536, 8) // ~
+			constexpr static const Glyph _glyphs[95] = {
+				Glyph(0), //
+				Glyph(144), // !
+				Glyph(288), // "
+				Glyph(432), // #
+				Glyph(576), // $
+				Glyph(720), // %
+				Glyph(864), // &
+				Glyph(1008), // '
+				Glyph(1152), // (
+				Glyph(1296), // )
+				Glyph(1440), // *
+				Glyph(1584), // +
+				Glyph(1728), // ,
+				Glyph(1872), // -
+				Glyph(2016), // .
+				Glyph(2160), // /
+				Glyph(2304), // 0
+				Glyph(2448), // 1
+				Glyph(2592), // 2
+				Glyph(2736), // 3
+				Glyph(2880), // 4
+				Glyph(3024), // 5
+				Glyph(3168), // 6
+				Glyph(3312), // 7
+				Glyph(3456), // 8
+				Glyph(3600), // 9
+				Glyph(3744), // :
+				Glyph(3888), // ;
+				Glyph(4032), // <
+				Glyph(4176), // =
+				Glyph(4320), // >
+				Glyph(4464), // ?
+				Glyph(4608), // @
+				Glyph(4752), // A
+				Glyph(4896), // B
+				Glyph(5040), // C
+				Glyph(5184), // D
+				Glyph(5328), // E
+				Glyph(5472), // F
+				Glyph(5616), // G
+				Glyph(5760), // H
+				Glyph(5904), // I
+				Glyph(6048), // J
+				Glyph(6192), // K
+				Glyph(6336), // L
+				Glyph(6480), // M
+				Glyph(6624), // N
+				Glyph(6768), // O
+				Glyph(6912), // P
+				Glyph(7056), // Q
+				Glyph(7200), // R
+				Glyph(7344), // S
+				Glyph(7488), // T
+				Glyph(7632), // U
+				Glyph(7776), // V
+				Glyph(7920), // W
+				Glyph(8064), // X
+				Glyph(8208), // Y
+				Glyph(8352), // Z
+				Glyph(8496), // [
+				Glyph(8640), // Backslash
+				Glyph(8784), // ]
+				Glyph(8928), // ^
+				Glyph(9072), // _
+				Glyph(9216), // `
+				Glyph(9360), // a
+				Glyph(9504), // b
+				Glyph(9648), // c
+				Glyph(9792), // d
+				Glyph(9936), // e
+				Glyph(10080), // f
+				Glyph(10224), // g
+				Glyph(10368), // h
+				Glyph(10512), // i
+				Glyph(10656), // j
+				Glyph(10800), // k
+				Glyph(10944), // l
+				Glyph(11088), // m
+				Glyph(11232), // n
+				Glyph(11376), // o
+				Glyph(11520), // p
+				Glyph(11664), // q
+				Glyph(11808), // r
+				Glyph(11952), // s
+				Glyph(12096), // t
+				Glyph(12240), // u
+				Glyph(12384), // v
+				Glyph(12528), // w
+				Glyph(12672), // x
+				Glyph(12816), // y
+				Glyph(12960), // z
+				Glyph(13104), // {
+				Glyph(13248), // |
+				Glyph(13392), // }
+				Glyph(13536) // ~
 			};
 
-			const uint8_t _bitmap[1710] = {
+			constexpr static const uint8_t _bitmap[1710] = {
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 				0x00, 0x00, 0x00, 0x00, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x00, 0x00, 0x18, 0x18,
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x66, 0x66, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

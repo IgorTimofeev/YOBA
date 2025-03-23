@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "main/font.h"
+#include "../../main/font.h"
 
 namespace yoba {
 	class Vaticanus8Font : public Font {
@@ -8,6 +8,7 @@ namespace yoba {
 			Vaticanus8Font() : Font(
 				32,
 				126,
+				0,
 				8,
 				_glyphs,
 				_bitmap
@@ -16,105 +17,105 @@ namespace yoba {
 			}
 
 		private:
-			const Glyph _glyphs[95] = {
-				Glyph(0, 4), //
-				Glyph(32, 2), // !
-				Glyph(48, 4), // "
-				Glyph(80, 6), // #
-				Glyph(128, 4), // $
-				Glyph(160, 6), // %
-				Glyph(208, 5), // &
-				Glyph(248, 2), // '
-				Glyph(264, 3), // (
-				Glyph(288, 3), // )
-				Glyph(312, 4), // *
-				Glyph(344, 4), // +
-				Glyph(376, 3), // ,
-				Glyph(400, 4), // -
-				Glyph(432, 2), // .
-				Glyph(448, 6), // /
-				Glyph(496, 4), // 0
-				Glyph(528, 4), // 1
-				Glyph(560, 4), // 2
-				Glyph(592, 4), // 3
-				Glyph(624, 4), // 4
-				Glyph(656, 4), // 5
-				Glyph(688, 4), // 6
-				Glyph(720, 4), // 7
-				Glyph(752, 4), // 8
-				Glyph(784, 4), // 9
-				Glyph(816, 2), // :
-				Glyph(832, 3), // ;
-				Glyph(856, 4), // <
-				Glyph(888, 4), // =
-				Glyph(920, 4), // >
-				Glyph(952, 4), // ?
-				Glyph(984, 5), // @
-				Glyph(1024, 4), // A
-				Glyph(1056, 4), // B
-				Glyph(1088, 4), // C
-				Glyph(1120, 4), // D
-				Glyph(1152, 4), // E
-				Glyph(1184, 4), // F
-				Glyph(1216, 5), // G
-				Glyph(1256, 4), // H
-				Glyph(1288, 4), // I
-				Glyph(1320, 4), // J
-				Glyph(1352, 4), // K
-				Glyph(1384, 4), // L
-				Glyph(1416, 6), // M
-				Glyph(1464, 5), // N
-				Glyph(1504, 4), // O
-				Glyph(1536, 4), // P
-				Glyph(1568, 4), // Q
-				Glyph(1600, 4), // R
-				Glyph(1632, 4), // S
-				Glyph(1664, 4), // T
-				Glyph(1696, 4), // U
-				Glyph(1728, 4), // V
-				Glyph(1760, 6), // W
-				Glyph(1808, 4), // X
-				Glyph(1840, 4), // Y
-				Glyph(1872, 4), // Z
-				Glyph(1904, 3), // [
-				Glyph(1928, 6), // backslash
-				Glyph(1976, 3), // ]
-				Glyph(2000, 4), // ^
-				Glyph(2032, 4), // _
-				Glyph(2064, 3), // `
-				Glyph(2088, 4), // a
-				Glyph(2120, 4), // b
-				Glyph(2152, 4), // c
-				Glyph(2184, 4), // d
-				Glyph(2216, 4), // e
-				Glyph(2248, 4), // f
-				Glyph(2280, 4), // g
-				Glyph(2312, 4), // h
-				Glyph(2344, 2), // i
-				Glyph(2360, 3), // j
-				Glyph(2384, 4), // k
-				Glyph(2416, 2), // l
-				Glyph(2432, 6), // m
-				Glyph(2480, 4), // n
-				Glyph(2512, 4), // o
-				Glyph(2544, 4), // p
-				Glyph(2576, 4), // q
-				Glyph(2608, 4), // r
-				Glyph(2640, 4), // s
-				Glyph(2672, 4), // t
-				Glyph(2704, 4), // u
-				Glyph(2736, 4), // v
-				Glyph(2768, 6), // w
-				Glyph(2816, 4), // x
-				Glyph(2848, 4), // y
-				Glyph(2880, 4), // z
-				Glyph(2912, 4), // {
-				Glyph(2944, 2), // |
-				Glyph(2960, 4), // }
-				Glyph(2992, 5) // ~
+			constexpr static const VariableWidthGlyph _glyphs[95] = {
+				VariableWidthGlyph(0, 4), //
+				VariableWidthGlyph(32, 2), // !
+				VariableWidthGlyph(48, 4), // "
+				VariableWidthGlyph(80, 6), // #
+				VariableWidthGlyph(128, 4), // $
+				VariableWidthGlyph(160, 6), // %
+				VariableWidthGlyph(208, 5), // &
+				VariableWidthGlyph(248, 2), // '
+				VariableWidthGlyph(264, 3), // (
+				VariableWidthGlyph(288, 3), // )
+				VariableWidthGlyph(312, 4), // *
+				VariableWidthGlyph(344, 4), // +
+				VariableWidthGlyph(376, 3), // ,
+				VariableWidthGlyph(400, 4), // -
+				VariableWidthGlyph(432, 2), // .
+				VariableWidthGlyph(448, 6), // /
+				VariableWidthGlyph(496, 4), // 0
+				VariableWidthGlyph(528, 4), // 1
+				VariableWidthGlyph(560, 4), // 2
+				VariableWidthGlyph(592, 4), // 3
+				VariableWidthGlyph(624, 4), // 4
+				VariableWidthGlyph(656, 4), // 5
+				VariableWidthGlyph(688, 4), // 6
+				VariableWidthGlyph(720, 4), // 7
+				VariableWidthGlyph(752, 4), // 8
+				VariableWidthGlyph(784, 4), // 9
+				VariableWidthGlyph(816, 2), // :
+				VariableWidthGlyph(832, 3), // ;
+				VariableWidthGlyph(856, 4), // <
+				VariableWidthGlyph(888, 4), // =
+				VariableWidthGlyph(920, 4), // >
+				VariableWidthGlyph(952, 4), // ?
+				VariableWidthGlyph(984, 5), // @
+				VariableWidthGlyph(1024, 4), // A
+				VariableWidthGlyph(1056, 4), // B
+				VariableWidthGlyph(1088, 4), // C
+				VariableWidthGlyph(1120, 4), // D
+				VariableWidthGlyph(1152, 4), // E
+				VariableWidthGlyph(1184, 4), // F
+				VariableWidthGlyph(1216, 5), // G
+				VariableWidthGlyph(1256, 4), // H
+				VariableWidthGlyph(1288, 4), // I
+				VariableWidthGlyph(1320, 4), // J
+				VariableWidthGlyph(1352, 4), // K
+				VariableWidthGlyph(1384, 4), // L
+				VariableWidthGlyph(1416, 6), // M
+				VariableWidthGlyph(1464, 5), // N
+				VariableWidthGlyph(1504, 4), // O
+				VariableWidthGlyph(1536, 4), // P
+				VariableWidthGlyph(1568, 4), // Q
+				VariableWidthGlyph(1600, 4), // R
+				VariableWidthGlyph(1632, 4), // S
+				VariableWidthGlyph(1664, 4), // T
+				VariableWidthGlyph(1696, 4), // U
+				VariableWidthGlyph(1728, 4), // V
+				VariableWidthGlyph(1760, 6), // W
+				VariableWidthGlyph(1808, 4), // X
+				VariableWidthGlyph(1840, 4), // Y
+				VariableWidthGlyph(1872, 4), // Z
+				VariableWidthGlyph(1904, 3), // [
+				VariableWidthGlyph(1928, 6), // Backslash
+				VariableWidthGlyph(1976, 3), // ]
+				VariableWidthGlyph(2000, 4), // ^
+				VariableWidthGlyph(2032, 4), // _
+				VariableWidthGlyph(2064, 3), // `
+				VariableWidthGlyph(2088, 4), // a
+				VariableWidthGlyph(2120, 4), // b
+				VariableWidthGlyph(2152, 4), // c
+				VariableWidthGlyph(2184, 4), // d
+				VariableWidthGlyph(2216, 4), // e
+				VariableWidthGlyph(2248, 4), // f
+				VariableWidthGlyph(2280, 4), // g
+				VariableWidthGlyph(2312, 4), // h
+				VariableWidthGlyph(2344, 2), // i
+				VariableWidthGlyph(2360, 3), // j
+				VariableWidthGlyph(2384, 4), // k
+				VariableWidthGlyph(2416, 2), // l
+				VariableWidthGlyph(2432, 6), // m
+				VariableWidthGlyph(2480, 4), // n
+				VariableWidthGlyph(2512, 4), // o
+				VariableWidthGlyph(2544, 4), // p
+				VariableWidthGlyph(2576, 4), // q
+				VariableWidthGlyph(2608, 4), // r
+				VariableWidthGlyph(2640, 4), // s
+				VariableWidthGlyph(2672, 4), // t
+				VariableWidthGlyph(2704, 4), // u
+				VariableWidthGlyph(2736, 4), // v
+				VariableWidthGlyph(2768, 6), // w
+				VariableWidthGlyph(2816, 4), // x
+				VariableWidthGlyph(2848, 4), // y
+				VariableWidthGlyph(2880, 4), // z
+				VariableWidthGlyph(2912, 4), // {
+				VariableWidthGlyph(2944, 2), // |
+				VariableWidthGlyph(2960, 4), // }
+				VariableWidthGlyph(2992, 5) // ~
 			};
 
-			const uint8_t _bitmap[379] = {
+			constexpr static const uint8_t _bitmap[379] = {
 				0x00, 0x00, 0x00, 0x00, 0x54, 0x04, 0x55, 0x00, 0x00, 0x00, 0x80, 0xF2, 0x29, 0x9F, 0x02, 0x00,
 				0x62, 0x71, 0x34, 0x02, 0x40, 0x84, 0x10, 0x42, 0x04, 0x00, 0xE0, 0x14, 0x51, 0x16, 0x00, 0x05,
 				0x00, 0x50, 0x12, 0x01, 0x88, 0xA4, 0x00, 0x20, 0x27, 0x05, 0x00, 0x00, 0x72, 0x02, 0x00, 0x00,

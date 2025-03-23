@@ -726,13 +726,13 @@ namespace yoba {
 	}
 
 	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale) {
-		auto bitIndex = glyph->getBitmapBitIndex();
+		auto bitIndex = glyph->getBitmapIndex();
 		uint8_t bitmapByte;
 
 		// Non-scaled fonts can be drawn a little bit faster
 		if (fontScale == 1) {
 			for (uint8_t j = 0; j < font->getHeight(); j++) {
-				for (uint8_t i = 0; i < glyph->getWidth(); i++) {
+				for (uint8_t i = 0; i < font->getGlyphWidth(glyph); i++) {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
@@ -748,7 +748,7 @@ namespace yoba {
 				y = point.getY();
 
 			for (uint8_t j = 0; j < font->getHeight(); j++) {
-				for (uint8_t i = 0; i < glyph->getWidth(); i++) {
+				for (uint8_t i = 0; i < font->getGlyphWidth(glyph); i++) {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
@@ -789,8 +789,8 @@ namespace yoba {
 
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example,U+007F "DEL" symbol often has zero width in some fonts
-			if (glyph && glyph->getWidth() > 0) {
-				x2 = x + glyph->getWidth() * fontScale;
+			if (glyph && font->getGlyphWidth(glyph) > 0) {
+				x2 = x + font->getGlyphWidth(glyph, fontScale);
 
 				// Rendering current glyph only if it's in viewport
 				if (x2 > viewport.getX()) {
@@ -835,7 +835,7 @@ namespace yoba {
 		const auto glyph = font->getGlyph(ch);
 
 		if (glyph) {
-			if (point.getX() + glyph->getWidth() * fontScale < viewport.getX())
+			if (point.getX() + font->getGlyphWidth(glyph, fontScale) < viewport.getX())
 				return;
 
 			renderGlyph(

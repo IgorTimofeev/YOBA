@@ -4,12 +4,14 @@ namespace yoba {
 	Font::Font(
 		uint32_t fromCodepoint,
 		uint32_t toCodepoint,
+		uint8_t width,
 		uint8_t height,
 		const Glyph *glyphs,
 		const uint8_t *bitmap
 	) :
 		_fromCodepoint(fromCodepoint),
 		_toCodepoint(toCodepoint),
+		_width(height),
 		_height(height),
 		_glyphs(glyphs),
 		_bitmap(bitmap)
@@ -40,10 +42,25 @@ namespace yoba {
 			: &_glyphs[codepoint - _fromCodepoint];
 	}
 
-	uint8_t Font::getCharWidth(wchar_t codepoint) const {
-		const auto glyph = getGlyph(codepoint);
+	uint8_t Font::getGlyphWidth(const Glyph* glyph) const {
+		// Fixed
+		if (_width > 0) {
+			return _width;
+		}
+		// Variable
+		else {
+			const auto variableWidthGlyph = reinterpret_cast<const VariableWidthGlyph*>(glyph);
 
-		return glyph ? glyph->getWidth() : missingGlyphWidth;
+			return variableWidthGlyph ? variableWidthGlyph->getWidth() : missingGlyphWidth;
+		}
+	}
+
+	uint8_t Font::getGlyphWidth(const Glyph* glyph, uint8_t scale) const {
+		return getGlyphWidth(glyph) * scale;
+	}
+
+	uint8_t Font::getCharWidth(wchar_t codepoint) const {
+		return getGlyphWidth(getGlyph(codepoint));
 	}
 
 	uint8_t Font::getCharWidth(wchar_t codepoint, uint8_t scale) const {
