@@ -12,26 +12,23 @@ namespace yoba {
 			Font(
 				uint32_t fromCodepoint,
 				uint32_t toCodepoint,
-				uint8_t width,
-				uint8_t height,
+				uint8_t glyphWidth,
+				uint8_t glyphHeight,
 				const Glyph* glyphs,
 				const uint8_t* bitmap
 			);
 
 			constexpr static const uint8_t missingGlyphWidth = 10;
 
-			uint32_t getFromCodepoint() const;
-			uint32_t getToCodepoint() const;
-			const Glyph* getGlyphs() const;
+			bool isVariableWidth() const;
 			const uint8_t* getBitmap() const;
-
 			const Glyph* getGlyph(wchar_t codepoint) const;
 
-			uint8_t getCharWidth(wchar_t codepoint) const;
-			uint8_t getCharWidth(wchar_t codepoint, uint8_t scale) const;
+			uint8_t getWidth(wchar_t codepoint) const;
+			uint8_t getWidth(wchar_t codepoint, uint8_t scale) const;
 
-			uint8_t getGlyphWidth(const Glyph* glyph) const;
-			uint8_t getGlyphWidth(const Glyph* glyph, uint8_t scale) const;
+			uint8_t getWidth(const Glyph* glyph) const;
+			uint8_t getWidth(const Glyph* glyph, uint8_t scale) const;
 
 			uint16_t getWidth(std::wstring_view text) const;
 			uint16_t getWidth(std::wstring_view text, uint8_t scale) const;
@@ -44,8 +41,8 @@ namespace yoba {
 		private:
 			const uint32_t _fromCodepoint;
 			const uint32_t _toCodepoint;
-			const uint8_t _width;
-			const uint8_t _height;
+			const uint8_t _glyphWidth;
+			const uint8_t _glyphHeight;
 			const Glyph* _glyphs;
 			const uint8_t* _bitmap;
 	};

@@ -1,4 +1,3 @@
-#include <esp_log.h>
 #include "renderer.h"
 
 namespace yoba {
@@ -733,7 +732,7 @@ namespace yoba {
 		// Non-scaled fonts can be drawn a little bit faster
 		if (fontScale == 1) {
 			for (uint8_t j = 0; j < font->getHeight(); j++) {
-				for (uint8_t i = 0; i < font->getGlyphWidth(glyph); i++) {
+				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
@@ -749,7 +748,7 @@ namespace yoba {
 				y = point.getY();
 
 			for (uint8_t j = 0; j < font->getHeight(); j++) {
-				for (uint8_t i = 0; i < font->getGlyphWidth(glyph); i++) {
+				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
@@ -784,26 +783,14 @@ namespace yoba {
 			x = point.getX(),
 			x2;
 
-		ESP_LOGI("renderString", "Length: %zu, val: ", string.length());
-
-		for (int i = 0; i < string.length(); ++i) {
-			ESP_LOGI("renderString", "%c", (char)string[i]);
-		}
-
-		printf("\n");
-
 		for (size_t charIndex = 0; charIndex < string.length(); charIndex++) {
-			ESP_LOGI("renderString", "%c", (char)string[charIndex]);
-
 			// Trying to find glyph matched to char
 			glyph = font->getGlyph(string[charIndex]);
 
-			ESP_LOGI("renderString", "scale: %d, glyphWidth: %d, glyphWidthScaled: %d", fontScale, font->getGlyphWidth(glyph), font->getGlyphWidth(glyph, fontScale));
-
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example,U+007F "DEL" symbol often has zero width in some fonts
-			if (glyph && font->getGlyphWidth(glyph) > 0) {
-				x2 = x + font->getGlyphWidth(glyph, fontScale);
+			if (glyph && font->getWidth(glyph) > 0) {
+				x2 = x + font->getWidth(glyph, fontScale);
 
 				// Rendering current glyph only if it's in viewport
 				if (x2 > viewport.getX()) {
@@ -831,8 +818,6 @@ namespace yoba {
 			if (x > viewportX2)
 				break;
 		}
-
-		printf("\n");
 	}
 
 	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale) {
@@ -850,7 +835,7 @@ namespace yoba {
 		const auto glyph = font->getGlyph(ch);
 
 		if (glyph) {
-			if (point.getX() + font->getGlyphWidth(glyph, fontScale) < viewport.getX())
+			if (point.getX() + font->getWidth(glyph, fontScale) < viewport.getX())
 				return;
 
 			renderGlyph(

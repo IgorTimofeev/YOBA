@@ -94,7 +94,7 @@ namespace yoba::ui {
 			if (charIndex == _cursorPosition)
 				blinkX = textPosition.getX();
 
-			textPosition.setX(textPosition.getX() + font->getCharWidth(ch, getFontScale()));
+			textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
 		}
 
 		renderer->popViewport(oldViewport);
@@ -166,7 +166,7 @@ namespace yoba::ui {
 			for (size_t i = 0; i < text.length(); i++) {
 				if (cursorX < targetX) {
 					cursorPosition++;
-					cursorX += font->getCharWidth(_mask.value_or(text[i]));
+					cursorX += font->getWidth(_mask.value_or(text[i]));
 				}
 				else {
 					break;
@@ -184,7 +184,7 @@ namespace yoba::ui {
 				cursorPosition--;
 
 				if (_scrollPosition > 0) {
-					const auto previousCharWidth = font->getCharWidth(_mask.value_or(text[cursorPosition]), getFontScale());
+					const auto previousCharWidth = font->getWidth(_mask.value_or(text[cursorPosition]), getFontScale());
 
 					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
 				}
@@ -196,7 +196,7 @@ namespace yoba::ui {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
 			if (cursorPosition < text.length()) {
-				int32_t pizda = cursorX + font->getCharWidth(_mask.value_or(text[cursorPosition]), getFontScale()) - boundsWidthWithoutMargin;
+				int32_t pizda = cursorX + font->getWidth(_mask.value_or(text[cursorPosition]), getFontScale()) - boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 
