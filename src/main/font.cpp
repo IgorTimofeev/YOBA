@@ -11,7 +11,7 @@ namespace yoba {
 	) :
 		_fromCodepoint(fromCodepoint),
 		_toCodepoint(toCodepoint),
-		_width(height),
+		_width(width),
 		_height(height),
 		_glyphs(glyphs),
 		_bitmap(bitmap)
@@ -39,20 +39,22 @@ namespace yoba {
 		return
 			codepoint < _fromCodepoint || codepoint > _toCodepoint
 			? nullptr
-			: &_glyphs[codepoint - _fromCodepoint];
+			: (
+				_width > 0
+				? _glyphs + codepoint - _fromCodepoint
+				: reinterpret_cast<const VariableWidthGlyph*>(_glyphs) + codepoint - _fromCodepoint
+			);
 	}
 
 	uint8_t Font::getGlyphWidth(const Glyph* glyph) const {
-		// Fixed
-		if (_width > 0) {
-			return _width;
-		}
-		// Variable
-		else {
-			const auto variableWidthGlyph = reinterpret_cast<const VariableWidthGlyph*>(glyph);
-
-			return variableWidthGlyph ? variableWidthGlyph->getWidth() : missingGlyphWidth;
-		}
+		return
+			glyph
+			? (
+				_width > 0
+				? _width
+				: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getWidth()
+			)
+			: missingGlyphWidth;
 	}
 
 	uint8_t Font::getGlyphWidth(const Glyph* glyph, uint8_t scale) const {
