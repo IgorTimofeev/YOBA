@@ -88,6 +88,15 @@ namespace yoba::ui {
 		invalidate();
 	}
 
+	void Layout::insertChild(size_t index, Element* child) {
+		_children.insert(_children.begin() + index, child);
+
+		onChildAdded(child);
+		child->onAddedToParent(this);
+
+		invalidate();
+	}
+
 	Element* Layout::operator[](size_t index) {
 		return getChildAt(index);
 	}

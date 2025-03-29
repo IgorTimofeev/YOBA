@@ -15,7 +15,8 @@ namespace yoba::ui {
 			int32_t getIndexOfChild(Element* element);
 			Element* getChildAt(size_t index);
 
-			virtual void addChild(Element* child);
+			void addChild(Element* child);
+			void insertChild(size_t index, Element* element);
 
 			virtual void removeChildAt(int index);
 			virtual void removeChild(Element* child);

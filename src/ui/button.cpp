@@ -3,7 +3,7 @@
 namespace yoba::ui {
 	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
 		// Primary color
-		auto backgroundColor = Color::select(isPressed(), _defaultBackgroundColor, _pressedBackgroundColor);
+		auto backgroundColor = Color::select(isChecked(), _defaultBackgroundColor, _pressedBackgroundColor);
 
 		if (backgroundColor) {
 			renderer->renderFilledRectangle(
@@ -17,7 +17,7 @@ namespace yoba::ui {
 		const auto font = getFont();
 
 		if (font) {
-			auto textColor = Color::select(isPressed(), _defaultTextColor, _pressedTextColor);
+			auto textColor = Color::select(isChecked(), _defaultTextColor, _pressedTextColor);
 
 			if (textColor) {
 				renderer->renderString(
@@ -41,7 +41,21 @@ namespace yoba::ui {
 			setCaptured(true);
 			setFocused(true);
 
-			setPressed(!isToggle() || !isPressed());
+			if (isToggle()) {
+				if (isChecked()) {
+					setChecked(false);
+				}
+				else {
+					setChecked(true);
+
+					callOnClick();
+				}
+			}
+			else {
+				setChecked(true);
+
+				callOnClick();
+			}
 
 			event->setHandled(true);
 		}
@@ -49,26 +63,10 @@ namespace yoba::ui {
 			setCaptured(false);
 
 			if (!isToggle())
-				setPressed(false);
+				setChecked(false);
 
 			event->setHandled(true);
 		}
-	}
-
-	bool Button::isPressed() const {
-		return _pressed;
-	}
-
-	void Button::setPressed(bool value) {
-		if (value == _pressed)
-			return;
-
-		_pressed = value;
-
-		invalidate();
-
-		onPressedChanged();
-		pressedChanged();
 	}
 
 	bool Button::isToggle() const {
@@ -95,10 +93,6 @@ namespace yoba::ui {
 		_pressedTextColor = value;
 	}
 
-	void Button::onPressedChanged() {
-
-	}
-
 	const Color* Button::getDefaultBackgroundColor() const {
 		return _defaultBackgroundColor;
 	}
@@ -113,5 +107,15 @@ namespace yoba::ui {
 
 	void Button::setDefaultTextColor(const Color* value) {
 		_defaultTextColor = value;
+	}
+
+	void Button::onClick() {
+
+	}
+
+	void Button::callOnClick() {
+		onClick();
+
+		click();
 	}
 }

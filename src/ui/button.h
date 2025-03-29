@@ -8,19 +8,17 @@
 #include "traits/cornerRadiusElement.h"
 #include "traits/focusableElement.h"
 #include "traits/fontScaleElement.h"
+#include "traits/checkedElement.h"
 #include "main/event.h"
 
 namespace yoba::ui {
-	class Button : public FocusableElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
+	class Button : public CheckedElement, public FocusableElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
 		public:
-			Callback<> pressedChanged;
+			Callback<> click {};
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			void onEvent(Event* event) override;
-
-			bool isPressed() const;
-			void setPressed(bool value);
 
 			bool isToggle() const;
 			void setToggle(bool value);
@@ -38,10 +36,9 @@ namespace yoba::ui {
 			void setPressedTextColor(const Color* value);
 
 		protected:
-			virtual void onPressedChanged();
+			virtual void onClick();
 
 		private:
-			bool _pressed = false;
 			bool _toggle = false;
 
 			const Color* _defaultBackgroundColor = nullptr;
@@ -49,5 +46,7 @@ namespace yoba::ui {
 
 			const Color* _pressedBackgroundColor = nullptr;
 			const Color* _pressedTextColor = nullptr;
+
+			void callOnClick();
 	};
 }
