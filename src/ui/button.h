@@ -9,6 +9,7 @@
 #include "traits/focusableElement.h"
 #include "traits/fontScaleElement.h"
 #include "traits/checkedElement.h"
+#include "traits/borderElement.h"
 #include "main/event.h"
 
 namespace yoba::ui {
@@ -35,6 +36,14 @@ namespace yoba::ui {
 			const Color* getPressedTextColor() const;
 			void setPressedTextColor(const Color* value);
 
+			const Color* getDefaultBorderColor() const;
+
+			void setDefaultBorderColor(const Color* defaultBorderColor);
+
+			const Color* getPressedBorderColor() const;
+
+			void setPressedBorderColor(const Color* pressedBorderColor);
+
 		protected:
 			virtual void onClick();
 
@@ -42,9 +51,11 @@ namespace yoba::ui {
 			bool _toggle = false;
 
 			const Color* _defaultBackgroundColor = nullptr;
+			const Color* _defaultBorderColor = nullptr;
 			const Color* _defaultTextColor = nullptr;
 
 			const Color* _pressedBackgroundColor = nullptr;
+			const Color* _pressedBorderColor = nullptr;
 			const Color* _pressedTextColor = nullptr;
 
 			void callOnClick();

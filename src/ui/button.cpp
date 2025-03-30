@@ -3,13 +3,24 @@
 namespace yoba::ui {
 	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
 		// Primary color
-		auto backgroundColor = Color::select(isChecked(), _defaultBackgroundColor, _pressedBackgroundColor);
+		auto color = Color::select(isChecked(), _defaultBackgroundColor, _pressedBackgroundColor);
 
-		if (backgroundColor) {
+		if (color) {
 			renderer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				backgroundColor
+				color
+			);
+		}
+
+		// Border
+		color = Color::select(isChecked(), _defaultBorderColor, _pressedBorderColor);
+
+		if (color) {
+			renderer->renderRectangle(
+				bounds,
+				getCornerRadius(),
+				color
 			);
 		}
 
@@ -17,16 +28,16 @@ namespace yoba::ui {
 		const auto font = getFont();
 
 		if (font) {
-			auto textColor = Color::select(isChecked(), _defaultTextColor, _pressedTextColor);
+			color = Color::select(isChecked(), _defaultTextColor, _pressedTextColor);
 
-			if (textColor) {
+			if (color) {
 				renderer->renderString(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2,
 						bounds.getYCenter() - font->getHeight(getFontScale()) / 2
 					),
 					font,
-					textColor,
+					color,
 					getText(),
 					getFontScale()
 				);
@@ -42,20 +53,13 @@ namespace yoba::ui {
 			setFocused(true);
 
 			if (isToggle()) {
-				if (isChecked()) {
-					setChecked(false);
-				}
-				else {
-					setChecked(true);
-
-					callOnClick();
-				}
+				setChecked(!isChecked());
 			}
 			else {
 				setChecked(true);
-
-				callOnClick();
 			}
+
+			callOnClick();
 
 			event->setHandled(true);
 		}
@@ -107,6 +111,22 @@ namespace yoba::ui {
 
 	void Button::setDefaultTextColor(const Color* value) {
 		_defaultTextColor = value;
+	}
+
+	const Color* Button::getDefaultBorderColor() const {
+		return _defaultBorderColor;
+	}
+
+	void Button::setDefaultBorderColor(const Color* defaultBorderColor) {
+		_defaultBorderColor = defaultBorderColor;
+	}
+
+	const Color* Button::getPressedBorderColor() const {
+		return _pressedBorderColor;
+	}
+
+	void Button::setPressedBorderColor(const Color* pressedBorderColor) {
+		_pressedBorderColor = pressedBorderColor;
 	}
 
 	void Button::onClick() {
