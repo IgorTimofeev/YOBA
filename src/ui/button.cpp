@@ -33,8 +33,8 @@ namespace yoba::ui {
 			if (color) {
 				renderer->renderString(
 					Point(
-						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2,
-						bounds.getYCenter() - font->getHeight(getFontScale()) / 2
+						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + getContentMargin().getLeft() - getContentMargin().getRight(),
+						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()
 					),
 					font,
 					color,
@@ -137,5 +137,15 @@ namespace yoba::ui {
 		onClick();
 
 		click();
+	}
+
+	const Margin& Button::getContentMargin() const {
+		return _contentMargin;
+	}
+
+	void Button::setContentMargin(const Margin& contentMargin) {
+		_contentMargin = contentMargin;
+
+		invalidate();
 	}
 }

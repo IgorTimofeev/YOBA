@@ -41,14 +41,18 @@ namespace yoba::ui {
 			void setDefaultBorderColor(const Color* defaultBorderColor);
 
 			const Color* getPressedBorderColor() const;
-
 			void setPressedBorderColor(const Color* pressedBorderColor);
+
+			const Margin& getContentMargin() const;
+			void setContentMargin(const Margin& contentMargin);
 
 		protected:
 			virtual void onClick();
 
 		private:
 			bool _toggle = false;
+
+			Margin _contentMargin = Margin(0);
 
 			const Color* _defaultBackgroundColor = nullptr;
 			const Color* _defaultBorderColor = nullptr;

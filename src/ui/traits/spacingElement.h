@@ -5,11 +5,11 @@
 namespace yoba::ui {
 	class SpacingElement : public virtual Element {
 		public:
-			uint16_t getSpacing() const {
+			int32_t getSpacing() const {
 				return _spacing;
 			}
 
-			void setSpacing(uint16_t value) {
+			void setSpacing(int32_t value) {
 				if (value == _spacing)
 					return;
 
@@ -19,6 +19,6 @@ namespace yoba::ui {
 			}
 
 		private:
-			uint16_t _spacing = 0;
+			int32_t _spacing = 0;
 	};
 }
