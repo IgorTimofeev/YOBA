@@ -310,7 +310,7 @@ namespace yoba {
 		if (from.getX() == to.getX()) {
 			renderVerticalLine(
 				Point(from.getX(), std::min(from.getY(), to.getY())),
-				abs(to.getY() - from.getY()) + 1,
+				std::abs(to.getY() - from.getY()) + 1,
 				color
 			);
 		}
@@ -318,15 +318,23 @@ namespace yoba {
 		else if (from.getY() == to.getY()) {
 			renderHorizontalLine(
 				Point(std::min(from.getX(), to.getX()), from.getY()),
-				abs(to.getX() - from.getX()) + 1,
+				std::abs(to.getX() - from.getX()) + 1,
 				color
 			);
 		}
 		// Meh...
 		else {
 			const auto& viewport = getViewport();
+			const auto viewportX2 = viewport.getX2();
+			const auto viewportY2 = viewport.getY2();
 
-			if (!(viewport.intersects(from) || viewport.intersects(to)))
+			if (
+				(from.getX() < viewport.getX() && to.getX() < viewport.getX())
+				|| (from.getX() > viewportX2 && to.getX() > viewportX2)
+
+				|| (from.getY() < viewport.getY() && to.getY() < viewport.getY())
+				|| (from.getY() > viewportY2 && to.getY() > viewportY2)
+			)
 				return;
 
 			int32_t
@@ -336,7 +344,7 @@ namespace yoba {
 				x2 = to.getX(),
 				y2 = to.getY();
 
-			bool deltaYGreater = abs(y2 - y1) > abs(x2 - x1);
+			const bool deltaYGreater = std::abs(y2 - y1) > std::abs(x2 - x1);
 
 			if (deltaYGreater) {
 				std::swap(x1, y1);
@@ -350,7 +358,7 @@ namespace yoba {
 
 			int32_t
 				deltaX = x2 - x1,
-				deltaY = abs(y2 - y1),
+				deltaY = std::abs(y2 - y1),
 
 				partRemaining = deltaX >> 1,
 				yStep = y1 > y2 ? -1 : 1,
