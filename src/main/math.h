@@ -2,6 +2,7 @@
 
 #include "cstdlib"
 #include <limits>
+#include <numbers>
 #include <cmath>
 
 namespace yoba {
@@ -25,12 +26,12 @@ namespace yoba {
 
 	template<typename T>
 	float toRadians(T degrees) {
-		return (float) degrees * M_PI / 180.f;
+		return (float) degrees * std::numbers::pi_v<float> / 180.f;
 	}
 
 	template<typename T>
 	float toDegrees(T radians) {
-		return (float) radians * 180.f / M_PI;
+		return (float) radians * 180.f / std::numbers::pi_v<float>;
 	}
 
 	template<typename T>

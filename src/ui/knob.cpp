@@ -53,7 +53,7 @@ namespace yoba::ui {
 		}
 		else {
 			const auto oldAngle = _angle;
-			_angle = ((TouchDragEvent*) event)->getPosition().getRotation(getBounds().getCenter()) - (float) toRadians(90);
+			_angle = ((TouchDragEvent*) event)->getPosition().getRotationFloat(getBounds().getCenter()) - (float) toRadians(90);
 
 			rotated(oldAngle, _angle);
 		}

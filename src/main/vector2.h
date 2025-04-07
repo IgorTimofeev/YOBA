@@ -19,9 +19,9 @@ namespace yoba {
 			T getY() const;
 			void setY(T value);
 
-			T getLength() const;
+			float getLength() const;
 			Vector2 perpendicular() const;
-			float getRotation(const Vector2& point) const;
+			float getRotationFloat(const Vector2& point) const;
 			Vector2 rotate(float angleSin, float angleCos) const;
 			Vector2 rotate(float angleInRadians) const;
 			Vector2 normalize() const;
@@ -88,22 +88,22 @@ namespace yoba {
 	}
 
 	template<typename T>
-	T Vector2<T>::getLength() const {
-		return (T) std::sqrt((float) _x * (float) _x + (float) _y * (float) _y);
+	float Vector2<T>::getLength() const {
+		return std::sqrt((float) _x * (float) _x + (float) _y * (float) _y);
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::normalize() const {
-		auto length = getLength();
+		const auto length = getLength();
 
 		return {
-			_x / length,
-			_y / length
+			(T) ((float) _x / length),
+			(T) ((float) _y / length)
 		};
 	}
 
 	template<typename T>
-	float Vector2<T>::getRotation(const Vector2& point) const {
+	float Vector2<T>::getRotationFloat(const Vector2& point) const {
 		return std::atan2((float) (point._y - _y), (float) (point._x - _x));
 	}
 
