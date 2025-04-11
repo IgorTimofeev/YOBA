@@ -20,7 +20,8 @@ namespace yoba {
 			void setY(T value);
 
 			float getLength() const;
-			Vector2 perpendicular() const;
+			Vector2 <T> clockwisePerpendicular() const;
+			Vector2 counterClockwisePerpendicular() const;
 			float getRotationFloat(const Vector2& point) const;
 			Vector2 rotate(float angleSin, float angleCos) const;
 			Vector2 rotate(float angleInRadians) const;
@@ -80,7 +81,15 @@ namespace yoba {
 	}
 
 	template<typename T>
-	Vector2<T> Vector2<T>::perpendicular() const {
+	Vector2<T> Vector2<T>::clockwisePerpendicular() const {
+		return {
+			_y,
+			-_x,
+		};
+	}
+
+	template<typename T>
+	Vector2<T> Vector2<T>::counterClockwisePerpendicular() const {
 		return {
 			-_y,
 			_x,
