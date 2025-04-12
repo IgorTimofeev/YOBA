@@ -94,6 +94,8 @@ namespace yoba {
 			const Point& getPosition2() const;
 			void setPosition2(const Point& position2);
 
+			float getLength() const;
+
 		private:
 			Point _position1, _position2;
 	};

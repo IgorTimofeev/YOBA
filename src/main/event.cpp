@@ -132,6 +132,10 @@ namespace yoba {
 		return _position2;
 	}
 
+	float PinchEvent::getLength() const {
+		return (_position2 - _position1).getLength();
+	}
+
 	void PinchEvent::setPosition2(const Point& position2) {
 		_position2 = position2;
 	}
