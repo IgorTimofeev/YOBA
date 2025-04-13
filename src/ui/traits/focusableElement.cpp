@@ -1,10 +1,14 @@
 #include "focusableElement.h"
 #include "ui/application.h"
+#include <esp_log.h>
 
 namespace yoba::ui {
-	FocusableElement::~FocusableElement() {
-		if (_focusable && isFocused())
-			setFocused(false);
+	void FocusableElement::setApplication(Application* value) {
+		ESP_LOGI("FocusableElement", "setApplication(), isFocused: %d", isFocused());
+
+		setFocused(false);
+
+		Element::setApplication(value);
 	}
 
 	bool FocusableElement::isFocusable() const {
@@ -16,13 +20,17 @@ namespace yoba::ui {
 	}
 
 	void FocusableElement::setFocused(bool value) {
-		if (!_focusable)
+		ESP_LOGI("FocusableElement", "setFocused(%d)", value);
+
+		if (!_focusable || isFocused() == value)
 			return;
 
 		const auto app = getApplication();
 
-		if (app)
-			app->setFocusedElement(value ? this : nullptr);
+		if (app == nullptr || app->getFocusedElement() == this)
+			return;
+
+		app->setFocusedElement(value ? this : nullptr);
 	}
 
 	bool FocusableElement::isFocused() {

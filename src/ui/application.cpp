@@ -1,3 +1,4 @@
+#include <esp_log.h>
 #include "application.h"
 #include "element.h"
 #include "animation.h"
@@ -143,6 +144,8 @@ namespace yoba::ui {
 	}
 
 	void Application::setFocusedElement(Element* element) {
+		ESP_LOGI("Application", "setFocusedElement(%p), old: %p", element, _focusedElement);
+
 		const auto oldFocusedElement = _focusedElement;
 
 		_focusedElement = element;
