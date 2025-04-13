@@ -52,12 +52,17 @@ namespace yoba::ui {
 				auto result = Size();
 
 				size_t
-					visibleCount = 0;
+					visibleCount = 0,
+					relativeIndex = 0,
+					relativeCount = 0;
 
 				uint16_t
 					autoSizeSum = 0,
 					availableSizeWithoutSpacing,
-					availableSizeForRelativeElements;
+					availableSizeForRelativeElements,
+					childSize;
+
+				uint32_t usedRelativeSize = 0;
 
 				float
 					childRelativeSize,
@@ -77,6 +82,7 @@ namespace yoba::ui {
 							// Non-auto
 							if (childRelativeSize >= 0) {
 								relativeSizesSum += childRelativeSize;
+								relativeCount++;
 							}
 							// Auto
 							else {
@@ -110,11 +116,21 @@ namespace yoba::ui {
 
 							childRelativeSize = getRelativeSize(child);
 
-							// Non-auto
+							// Relative
 							if (childRelativeSize >= 0) {
+								relativeIndex++;
+
+								if (relativeIndex < relativeCount) {
+									childSize = availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum);
+									usedRelativeSize += childSize;
+								}
+								else {
+									childSize = availableSizeForRelativeElements - usedRelativeSize;
+								}
+
 								child->measure(
 									Size(
-										availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum),
+										childSize,
 										availableSize.getHeight()
 									)
 								);
@@ -146,6 +162,7 @@ namespace yoba::ui {
 
 							if (childRelativeSize >= 0) {
 								relativeSizesSum += childRelativeSize;
+								relativeCount++;
 							}
 							else {
 								child->measure(
@@ -178,12 +195,22 @@ namespace yoba::ui {
 
 							childRelativeSize = getRelativeSize(child);
 
-							// Non-auto
+							// Relative
 							if (childRelativeSize >= 0) {
+								relativeIndex++;
+
+								if (relativeIndex < relativeCount) {
+									childSize = availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum);
+									usedRelativeSize += childSize;
+								}
+								else {
+									childSize = availableSizeForRelativeElements - usedRelativeSize;
+								}
+
 								child->measure(
 									Size(
 										availableSize.getWidth(),
-										availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum)
+										childSize
 									)
 								);
 							}
@@ -212,7 +239,9 @@ namespace yoba::ui {
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				size_t
-					visibleCount = 0;
+					visibleCount = 0,
+					relativeCount = 0,
+					relativeIndex = 0;
 
 				uint16_t
 					autoSizeSum = 0,
@@ -220,24 +249,26 @@ namespace yoba::ui {
 					availableSizeForRelativeElements,
 					childSize;
 
+				uint32_t
+					usedRelativeSize = 0;
+
 				float
 					childRelativeSize,
 					relativeSizesSum = 0;
 
-				Size measuredSize;
-				
 				int32_t position;
 
 				switch (getOrientation()) {
-					case Orientation::horizontal:
+					case Orientation::horizontal: {
 						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
 							childRelativeSize = getRelativeSize(child);
 
-							// Non-auto
+							// Relative
 							if (childRelativeSize >= 0) {
+								relativeCount++;
 								relativeSizesSum += childRelativeSize;
 							}
 							// Auto
@@ -260,16 +291,25 @@ namespace yoba::ui {
 
 						position = bounds.getX();
 
-						for (auto child : *this) {
+						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
 							childRelativeSize = getRelativeSize(child);
 
-							childSize =
-								childRelativeSize >= 0
-								? availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum)
-								: child->getMeasuredSize().getWidth();
+							if (childRelativeSize >= 0) {
+								if (relativeIndex < relativeCount) {
+									childSize = availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum);
+									usedRelativeSize += childSize;
+									relativeIndex++;
+								}
+								else {
+									childSize = availableSizeForRelativeElements - usedRelativeSize;
+								}
+							}
+							else {
+								childSize = child->getMeasuredSize().getWidth();
+							}
 
 							child->render(renderer, Bounds(
 								position,
@@ -282,16 +322,17 @@ namespace yoba::ui {
 						}
 
 						break;
-
-					case Orientation::vertical:
+					}
+					case Orientation::vertical: {
 						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
 							childRelativeSize = getRelativeSize(child);
 
-							// Non-auto
+							// Relative
 							if (childRelativeSize >= 0) {
+								relativeCount++;
 								relativeSizesSum += childRelativeSize;
 							}
 							// Auto
@@ -312,18 +353,28 @@ namespace yoba::ui {
 							? availableSizeWithoutSpacing
 							: availableSizeWithoutSpacing - autoSizeSum;
 
-						position = bounds.getX();
+						position = bounds.getY();
 
-						for (auto child : *this) {
+						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
 							childRelativeSize = getRelativeSize(child);
 
-							childSize =
-								childRelativeSize >= 0
-								? availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum)
-								: child->getMeasuredSize().getHeight();
+							if (childRelativeSize >= 0) {
+								relativeIndex++;
+
+								if (relativeIndex < relativeCount) {
+									childSize = availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum);
+									usedRelativeSize += childSize;
+								}
+								else {
+									childSize = availableSizeForRelativeElements - usedRelativeSize;
+								}
+							}
+							else {
+								childSize = child->getMeasuredSize().getHeight();
+							}
 
 							child->render(renderer, Bounds(
 								bounds.getX(),
@@ -336,6 +387,7 @@ namespace yoba::ui {
 						}
 
 						break;
+					}
 				}
 			}
 

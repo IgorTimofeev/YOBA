@@ -237,15 +237,8 @@ namespace yoba::ui {
 	}
 
 	void Element::setFocused(bool value) {
-		if (!_focusable || isFocused() == value)
-			return;
-
-		const auto app = getApplication();
-
-		if (app == nullptr || (app->getFocusedElement() == this) == value)
-			return;
-
-		app->setFocusedElement(value ? this : nullptr);
+		if (_application && (_application->getFocusedElement() == this) != value)
+			_application->setFocusedElement(value ? this : nullptr);
 	}
 
 	bool Element::isCaptured() {
@@ -267,8 +260,10 @@ namespace yoba::ui {
 	}
 
 	void Element::setApplication(Application* value) {
-		setFocused(false);
-		setCaptured(false);
+		if (value == nullptr) {
+			setFocused(false);
+			setCaptured(false);
+		}
 
 		_application = value;
 	}

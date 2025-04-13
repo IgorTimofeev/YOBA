@@ -45,7 +45,12 @@ namespace yoba::ui {
 	}
 
 	void Layout::removeChildAt(int index) {
+		auto child = _children[index];
+
 		_children.erase(_children.begin() + index);
+
+		onChildRemoved(child);
+		child->onRemovedFromParent(this);
 
 		invalidate();
 	}
