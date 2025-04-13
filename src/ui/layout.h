@@ -17,6 +17,7 @@ namespace yoba::ui {
 
 			void addChild(Element* child);
 			void insertChild(size_t index, Element* element);
+			void insertChildFromEnd(size_t offset, Element* child);
 
 			virtual void removeChildAt(int index);
 			virtual void removeChild(Element* child);
@@ -35,8 +36,8 @@ namespace yoba::ui {
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 			void onEvent(Event* event) override;
 
-			virtual void onChildAdded(Element* element);
-			virtual void onChildRemoved(Element* element);
+			virtual void onChildAdded(Element* child);
+			virtual void onChildRemoved(Element* child);
 
 			void setApplication(Application* value) override;
 

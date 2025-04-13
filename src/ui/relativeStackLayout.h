@@ -32,7 +32,7 @@ namespace yoba::ui {
 
 			void setRelativeSize(Element* child, float value) {
 				if (value == 1) {
-					tryRemoveFitElement(child);
+					tryRemoveRelativeSize(child);
 				}
 				else {
 					_elementSizes.insert(std::pair(child, value));
@@ -339,18 +339,20 @@ namespace yoba::ui {
 				}
 			}
 
-			void onChildRemoved(Element* element) override {
-				Layout::onChildRemoved(element);
+			void onChildRemoved(Element* child) override {
+				Layout::onChildRemoved(child);
 
-				tryRemoveFitElement(element);
+				tryRemoveRelativeSize(child);
 			}
 
 		private:
-			std::unordered_map<Element*, float> _elementSizes;
+			std::unordered_map<Element*, float> _elementSizes {};
 
-			void tryRemoveFitElement(Element* element) {
-				if (_elementSizes.contains(element))
-					_elementSizes.erase(element);
+			void tryRemoveRelativeSize(Element* child) {
+				auto iterator = _elementSizes.find(child);
+
+				if (iterator != _elementSizes.end())
+					_elementSizes.erase(iterator);
 			}
 	};
 }

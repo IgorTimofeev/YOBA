@@ -97,6 +97,11 @@ namespace yoba::ui {
 		invalidate();
 	}
 
+	void Layout::insertChildFromEnd(size_t offset, Element* child) {
+		const ssize_t index = _children.size() - offset;
+		insertChild(index >= 0 ? index : 0, child);
+	}
+
 	Element* Layout::operator[](size_t index) {
 		return getChildAt(index);
 	}
@@ -153,11 +158,11 @@ namespace yoba::ui {
 			child->setApplication(value);
 	}
 
-	void Layout::onChildAdded(Element* element) {
+	void Layout::onChildAdded(Element* child) {
 
 	}
 
-	void Layout::onChildRemoved(Element* element) {
+	void Layout::onChildRemoved(Element* child) {
 
 	}
 }
