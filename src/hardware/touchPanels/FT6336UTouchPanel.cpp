@@ -298,8 +298,8 @@ namespace yoba::hardware {
 			if (isDown2) {
 				// Pinch drag
 				if (_wasPinched) {
-					const auto point1 = readOrientedPoint1(renderTarget);
-					const auto point2 = readOrientedPoint2(renderTarget);
+					const auto& point1 = readOrientedPoint1(renderTarget);
+					const auto& point2 = readOrientedPoint2(renderTarget);
 
 					if (
 						point1 != _touchPoints[0].getPosition()
@@ -352,7 +352,7 @@ namespace yoba::hardware {
 				}
 				// Touch drag
 				else if (_wasTouched) {
-					auto point1 = readOrientedPoint1(renderTarget);
+					const auto& point1 = readOrientedPoint1(renderTarget);
 
 					if (point1 != _touchPoints[0].getPosition()) {
 						_touchPoints[0].setPosition(point1);
