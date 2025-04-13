@@ -19,7 +19,7 @@
 #include "ui/traits/selectableElement.h"
 
 #include "ui/stackLayout.h"
-#include "ui/equalLayout.h"
+#include "ui/relativeStackLayout.h"
 #include "ui/modal.h"
 #include "ui/keyboard.h"
 #include "ui/selector.h"

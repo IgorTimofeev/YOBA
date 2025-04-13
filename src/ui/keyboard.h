@@ -6,7 +6,7 @@
 #include "ui/traits/fontElement.h"
 #include "button.h"
 #include "ui/shapes/rectangle.h"
-#include "equalLayout.h"
+#include "relativeStackLayout.h"
 
 namespace yoba::ui {
 	enum class KeyCode : uint16_t {
@@ -464,7 +464,7 @@ namespace yoba::ui {
 		private:
 			static Keyboard* _keyboard;
 			static Layout* _applicationChildrenLayout;
-			static EqualLayout* _keyboardAndApplicationChildrenLayout;
+			static RelativeStackLayout* _keyboardAndApplicationChildrenLayout;
 	};
 
 	// ----------------------------- Layouts -----------------------------

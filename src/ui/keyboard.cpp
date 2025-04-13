@@ -666,13 +666,13 @@ namespace yoba::ui {
 
 	Keyboard* ApplicationKeyboardController::_keyboard = nullptr;
 	Layout* ApplicationKeyboardController::_applicationChildrenLayout = nullptr;
-	EqualLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
+	RelativeStackLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
 
 	Keyboard* ApplicationKeyboardController::show(Application* application) {
 		if (_keyboard)
 			return _keyboard;
 
-		_keyboardAndApplicationChildrenLayout = new EqualLayout();
+		_keyboardAndApplicationChildrenLayout = new RelativeStackLayout();
 		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getTarget()->getSize());
 
 		// Moving children from root to temporary layout
@@ -687,7 +687,7 @@ namespace yoba::ui {
 
 		// Creating keyboard
 		_keyboard = new Keyboard();
-		_keyboardAndApplicationChildrenLayout->setFit(_keyboard);
+		_keyboardAndApplicationChildrenLayout->setAutoSize(_keyboard);
 		*_keyboardAndApplicationChildrenLayout += _keyboard;
 
 		*application += _keyboardAndApplicationChildrenLayout;
