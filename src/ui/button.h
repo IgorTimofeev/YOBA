@@ -6,14 +6,13 @@
 #include "traits/textElement.h"
 #include "traits/fontElement.h"
 #include "traits/cornerRadiusElement.h"
-#include "traits/focusableElement.h"
 #include "traits/fontScaleElement.h"
 #include "traits/checkedElement.h"
 #include "traits/borderElement.h"
 #include "main/event.h"
 
 namespace yoba::ui {
-	class Button : public CheckedElement, public FocusableElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
+	class Button : public CheckedElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
 		public:
 			Callback<> click {};
 

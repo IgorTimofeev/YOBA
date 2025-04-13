@@ -3,12 +3,11 @@
 #include "element.h"
 #include "traits/checkedElement.h"
 #include "traits/cornerRadiusElement.h"
-#include "traits/focusableElement.h"
 #include "main/event.h"
 #include "animation.h"
 
 namespace yoba::ui {
-	class Switch : public CheckedElement, public CornerRadiusElement, public FocusableElement {
+	class Switch : public CheckedElement, public CornerRadiusElement {
 		public:
 			Switch() = default;
 

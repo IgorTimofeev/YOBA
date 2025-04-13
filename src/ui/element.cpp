@@ -6,8 +6,7 @@
 
 namespace yoba::ui {
 	Element::~Element() {
-		if (isCaptured())
-			setCaptured(false);
+
 	}
 
 	bool Element::isVisible() const {
@@ -223,12 +222,38 @@ namespace yoba::ui {
 
 	}
 
+	bool Element::isFocusable() const {
+		return _focusable;
+	}
+
+	void Element::setFocusable(bool focusable) {
+		_focusable = focusable;
+	}
+
+	bool Element::isFocused() {
+		const auto app = getApplication();
+
+		return app && app->getFocusedElement() == this;
+	}
+
+	void Element::setFocused(bool value) {
+		if (!_focusable || isFocused() == value)
+			return;
+
+		const auto app = getApplication();
+
+		if (app == nullptr || (app->getFocusedElement() == this) == value)
+			return;
+
+		app->setFocusedElement(value ? this : nullptr);
+	}
+
 	bool Element::isCaptured() {
 		return _application && _application->getCapturedElement() == this;
 	}
 
 	void Element::setCaptured(bool value) {
-		if (_application)
+		if (_application && (_application->getCapturedElement() == this) != value)
 			_application->setCapturedElement(value ? this : nullptr);
 	}
 
@@ -242,6 +267,9 @@ namespace yoba::ui {
 	}
 
 	void Element::setApplication(Application* value) {
+		setFocused(false);
+		setCaptured(false);
+
 		_application = value;
 	}
 

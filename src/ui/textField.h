@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include "element.h"
-#include "traits/focusableElement.h"
 #include "traits/cornerRadiusElement.h"
 #include "traits/primaryColorElement.h"
 #include "traits/secondaryColorElement.h"
@@ -18,7 +17,6 @@
 
 namespace yoba::ui {
 	class TextField :
-		public FocusableElement,
 		public PrimaryColorElement,
 		public SecondaryColorElement,
 		public CornerRadiusElement,

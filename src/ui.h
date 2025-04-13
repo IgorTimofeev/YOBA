@@ -7,7 +7,6 @@
 
 #include "ui/traits/borderElement.h"
 #include "ui/traits/cornerRadiusElement.h"
-#include "ui/traits/focusableElement.h"
 #include "ui/traits/primaryColorElement.h"
 #include "ui/traits/secondaryColorElement.h"
 #include "ui/traits/textElement.h"

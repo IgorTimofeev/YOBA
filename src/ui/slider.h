@@ -2,12 +2,11 @@
 
 #include <algorithm>
 #include "element.h"
-#include "traits/focusableElement.h"
 #include "main/event.h"
 #include "main/math.h"
 
 namespace yoba::ui {
-	class Slider : public FocusableElement {
+	class Slider : public Element {
 		public:
 			Callback<> valueChanged;
 

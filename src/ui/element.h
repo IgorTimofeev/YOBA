@@ -61,6 +61,12 @@ namespace yoba::ui {
 			bool isEnabled() const;
 			void setEnabled(bool value);
 
+			bool isFocusable() const;
+			void setFocusable(bool focusable);
+
+			bool isFocused();
+			void setFocused(bool value);
+
 			bool isCaptured();
 			void setCaptured(bool value);
 
@@ -107,7 +113,7 @@ namespace yoba::ui {
 			bool _isVisible = true;
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
-
+			bool _focusable = true;
 
 			Size _size = Size(Size::computed, Size::computed);
 			Alignment _horizontalAlignment = Alignment::stretch;
