@@ -87,4 +87,9 @@ namespace yoba {
 
 		return value;
 	}
+
+	template<typename T>
+	T divideCeiling(T a, T b) {
+		return 1 + ((a - 1) / b);
+	}
 }

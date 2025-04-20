@@ -1,38 +1,10 @@
 #pragma once
 
-#include <unordered_set>
-#include <optional>
 #include "layout.h"
+#include "traits/horizontalAndVerticalSpacingElement.h"
 
 namespace yoba::ui {
-	class WrapLayout : public Layout {
-		public:
-			uint16_t getHorizontalSpacing() const {
-				return _horizontalSpacing;
-			}
-
-			void setHorizontalSpacing(uint16_t value) {
-				if (value == _horizontalSpacing)
-					return;
-
-				_horizontalSpacing = value;
-
-				invalidate();
-			}
-
-			uint16_t getVerticalSpacing() const {
-				return _verticalSpacing;
-			}
-
-			void setVerticalSpacing(uint16_t value) {
-				if (value == _verticalSpacing)
-					return;
-
-				_verticalSpacing = value;
-
-				invalidate();
-			}
-
+	class WrapLayout : public Layout, public HorizontalAndVerticalSpacingElement {
 		protected:
 			Size onMeasure(const Size& availableSize) override {
 				uint16_t
@@ -50,10 +22,10 @@ namespace yoba::ui {
 					const auto& childSize = child->getMeasuredSize();
 
 					// Overflow
-					if (lineWidthWithSpacing + childSize.getWidth() >= availableSize.getWidth()) {
+					if (lineWidthWithSpacing + childSize.getWidth() > availableSize.getWidth()) {
 						if (lineWidthWithSpacing > 0) {
-							width = std::max(width, (uint16_t) (lineWidthWithSpacing - _horizontalSpacing));
-							height += height > 0 ? _verticalSpacing + lineHeight : lineHeight;
+							width = std::max(width, (uint16_t) (lineWidthWithSpacing - getHorizontalSpacing()));
+							height += height > 0 ? getVerticalSpacing() + lineHeight : lineHeight;
 						}
 
 						lineWidthWithSpacing = childSize.getWidth();
@@ -61,7 +33,7 @@ namespace yoba::ui {
 					}
 					// Normal
 					else {
-						lineWidthWithSpacing += childSize.getWidth() + _horizontalSpacing;
+						lineWidthWithSpacing += childSize.getWidth() + getHorizontalSpacing();
 
 						if (childSize.getHeight() > lineHeight)
 							lineHeight = childSize.getHeight();
@@ -70,8 +42,8 @@ namespace yoba::ui {
 
 				// Handling unprocessed line
 				if (lineWidthWithSpacing > 0) {
-					width = std::max(width, (uint16_t) (lineWidthWithSpacing - _horizontalSpacing));
-					height += height > 0 ? _verticalSpacing + lineHeight : lineHeight;
+					width = std::max(width, (uint16_t) (lineWidthWithSpacing - getHorizontalSpacing()));
+					height += height > 0 ? getVerticalSpacing() + lineHeight : lineHeight;
 				}
 
 				return { width, height };
@@ -89,9 +61,9 @@ namespace yoba::ui {
 					const auto& childSize = child->getMeasuredSize();
 
 					// Overflow
-					if (x + childSize.getWidth() >= bounds.getWidth()) {
+					if (x + childSize.getWidth() > bounds.getWidth()) {
 						if (lineHeight > 0)
-							y += y > 0 ? _verticalSpacing + lineHeight : lineHeight;
+							y += getVerticalSpacing() + lineHeight;
 
 						child->render(renderer, Bounds(
 							bounds.getX(),
@@ -100,7 +72,7 @@ namespace yoba::ui {
 							childSize.getHeight()
 						));
 
-						x = childSize.getWidth() + _horizontalSpacing;
+						x = childSize.getWidth() + getHorizontalSpacing();
 						lineHeight = childSize.getHeight();
 					}
 					// Normal
@@ -112,16 +84,12 @@ namespace yoba::ui {
 							childSize.getHeight()
 						));
 
-						x += childSize.getWidth() + _horizontalSpacing;
+						x += childSize.getWidth() + getHorizontalSpacing();
 
 						if (childSize.getHeight() > lineHeight)
 							lineHeight = childSize.getHeight();
 					}
 				}
 			}
-
-		private:
-			uint16_t _horizontalSpacing = 0;
-			uint16_t _verticalSpacing = 0;
 	};
 }

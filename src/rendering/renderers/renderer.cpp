@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "../../main/math.h"
 
 namespace yoba {
 	RenderTarget* Renderer::getTarget() const {
@@ -158,14 +159,12 @@ namespace yoba {
 	}
 
 	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color* color, uint8_t dotSize, uint8_t transparencySize) {
-		const uint8_t totalSize = dotSize + transparencySize;
-		const uint16_t countX = std::max(bounds.getWidth() / totalSize, 1);
-		const uint16_t countY = std::max(bounds.getHeight() / totalSize, 1);
+		uint16_t totalSize = dotSize + transparencySize;
+		const uint16_t countX = std::max(divideCeiling(bounds.getWidth(), totalSize), (uint16_t) 1);
+		const uint16_t countY = std::max(divideCeiling(bounds.getHeight(), totalSize), (uint16_t) 1);
 
 		int32_t x = 0;
 		int32_t y = 0;
-
-		const bool stepOnEOL = countX % 2 == 0;
 
 		for (int32_t j = 0; j < countY; j++) {
 			for (int32_t i = 0; i < countX; i++) {
@@ -176,9 +175,6 @@ namespace yoba {
 
 			x = 0;
 			y += totalSize;
-
-			if (stepOnEOL)
-				x += totalSize;
 		}
 	}
 

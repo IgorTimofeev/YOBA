@@ -18,6 +18,10 @@ namespace yoba::ui {
 				setTextColor(foreground);
 			}
 
+			explicit Text(const std::wstring_view& text) {
+				setText(text);
+			}
+
 			explicit Text(const Color* foreground) {
 				setTextColor(foreground);
 			}
