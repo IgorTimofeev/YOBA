@@ -19,6 +19,7 @@
 
 #include "ui/stackLayout.h"
 #include "ui/relativeStackLayout.h"
+#include "ui/wrapLayout.h"
 #include "ui/modal.h"
 #include "ui/keyboard.h"
 #include "ui/selector.h"
@@ -36,3 +37,4 @@
 #include "ui/shapes/shape.h"
 #include "ui/shapes/circle.h"
 #include "ui/shapes/rectangle.h"
+#include "ui/shapes/ditheredRectangle.h"

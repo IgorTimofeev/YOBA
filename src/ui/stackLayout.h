@@ -36,7 +36,7 @@ namespace yoba::ui {
 
 							child->measure(
 								Size(
-									Size::infinity,
+									Size::unlimited,
 									availableSize.getHeight()
 								)
 							);
@@ -64,7 +64,7 @@ namespace yoba::ui {
 							child->measure(
 								Size(
 									availableSize.getWidth(),
-									Size::infinity
+									Size::unlimited
 								)
 							);
 

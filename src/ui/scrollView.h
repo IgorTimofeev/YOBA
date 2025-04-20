@@ -92,11 +92,11 @@ namespace yoba::ui {
 				const auto& contentSize = Size(
 					_horizontalScrollMode == ScrollMode::disabled
 					? availableSize.getWidth()
-					: Size::infinity,
+					: Size::unlimited,
 
 					_verticalScrollMode == ScrollMode::disabled
 					? availableSize.getHeight()
-					: Size::infinity
+					: Size::unlimited
 				);
 
 				Size result = Size();
