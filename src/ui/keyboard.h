@@ -357,7 +357,7 @@ namespace yoba::ui {
 			void updateFromCase();
 
 		protected:
-			void onClick() override;
+			void onIsCheckedChanged() override;
 
 		private:
 			Keyboard* _keyboard;
@@ -460,6 +460,7 @@ namespace yoba::ui {
 		public:
 			static Keyboard* show(Application* application);
 			static void hide();
+			static bool isVisible();
 
 		private:
 			static Keyboard* _keyboard;

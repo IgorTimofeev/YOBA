@@ -55,8 +55,6 @@ namespace yoba::ui {
 			virtual void onClick();
 
 		private:
-			bool _toggle = false;
-
 			Margin _contentMargin = Margin(0);
 
 			const Color* _defaultBackgroundColor = nullptr;

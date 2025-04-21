@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <esp_log.h>
 #include "textField.h"
 
 #include "application.h"
@@ -16,6 +17,7 @@ namespace yoba::ui {
 			else {
 				if (system::getTime() >= _cursorBlinkTime) {
 					setCursorBlinkStateAndTime(!_cursorBlinkState);
+					invalidateRender();
 				}
 			}
 		}
@@ -127,10 +129,7 @@ namespace yoba::ui {
 
 		if (isTouchDown) {
 			setCaptured(true);
-
-			if (!isFocused()) {
-				setFocused(true);
-			}
+			setFocused(true);
 		}
 		else if (isTouchUp) {
 			setCaptured(false);
@@ -327,6 +326,8 @@ namespace yoba::ui {
 	void TextField::onFocusChanged() {
 		Element::onFocusChanged();
 
+		ESP_LOGI("TexField", "onFocusChanged(): %d", isFocused());
+
 		setCursorBlinkStateAndTime(isFocused());
 
 		if (isFocused()) {
@@ -341,6 +342,9 @@ namespace yoba::ui {
 
 	void TextField::showKeyboard() {
 		auto keyboard = ApplicationKeyboardController::show(getApplication());
+
+		if (!keyboard)
+			return;
 
 		if (_keyboardConfigurator.has_value())
 			_keyboardConfigurator.value()(keyboard);

@@ -82,6 +82,14 @@ namespace yoba::ui {
 		// Handling tick for children
 		onTick();
 
+		// Running enqueued callbacks if any
+		if (!_enqueuedOnTickCallbacks.empty()) {
+			for (const auto& callback : _enqueuedOnTickCallbacks)
+				callback();
+
+			_enqueuedOnTickCallbacks.clear();
+		}
+
 		// Playing animations
 		animationsTick();
 
@@ -108,14 +116,6 @@ namespace yoba::ui {
 			_flushDeltaTime = system::getTime() - time;
 
 			_renderInvalidated = false;
-		}
-
-		// Running enqueued callbacks if any
-		if (!_enqueuedOnTickCallbacks.empty()) {
-			for (const auto& callback : _enqueuedOnTickCallbacks)
-				callback();
-
-			_enqueuedOnTickCallbacks.clear();
 		}
 	}
 

@@ -6,7 +6,8 @@
 
 namespace yoba::ui {
 	Element::~Element() {
-
+		setFocused(false);
+		setCaptured(false);
 	}
 
 	bool Element::isVisible() const {
@@ -242,11 +243,10 @@ namespace yoba::ui {
 
 		_application->setFocusedElement(value ? this : nullptr);
 
-		if (previousFocusedElement)
+		if (previousFocusedElement && previousFocusedElement != this)
 			previousFocusedElement->onFocusChanged();
 
-		if (value)
-			onFocusChanged();
+		onFocusChanged();
 
 		_application->invalidate();
 	}
@@ -263,11 +263,10 @@ namespace yoba::ui {
 
 		_application->setCapturedElement(value ? this : nullptr);
 
-		if (previousCapturedElement)
+		if (previousCapturedElement && previousCapturedElement != this)
 			previousCapturedElement->onCaptureChanged();
 
-		if (value)
-			onCaptureChanged();
+		onCaptureChanged();
 
 		_application->invalidate();
 	}
@@ -282,11 +281,6 @@ namespace yoba::ui {
 	}
 
 	void Element::setApplication(Application* value) {
-		if (value == nullptr) {
-			setFocused(false);
-			setCaptured(false);
-		}
-
 		_application = value;
 	}
 
@@ -415,7 +409,6 @@ namespace yoba::ui {
 
 	void Element::onRemovedFromParent(Layout* parent) {
 		_parent = nullptr;
-		setApplication(nullptr);
 	}
 
 	void Element::onFocusChanged() {

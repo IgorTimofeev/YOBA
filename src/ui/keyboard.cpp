@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <esp_log.h>
 #include "keyboard.h"
 #include "stackLayout.h"
 #include "application.h"
@@ -291,8 +292,8 @@ namespace yoba::ui {
 		getKey()->tick(this);
 	}
 
-	void KeyboardButton::onClick() {
-		Button::onClick();
+	void KeyboardButton::onIsCheckedChanged() {
+		Button::onIsCheckedChanged();
 
 		getApplication()->enqueueOnTick([this]() {
 			getKey()->onKeyPressedChanged(this);
@@ -670,7 +671,7 @@ namespace yoba::ui {
 
 	Keyboard* ApplicationKeyboardController::show(Application* application) {
 		if (_keyboard)
-			return _keyboard;
+			return nullptr;
 
 		_keyboardAndApplicationChildrenLayout = new RelativeStackLayout();
 		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getTarget()->getSize());
@@ -715,6 +716,10 @@ namespace yoba::ui {
 
 		delete _keyboardAndApplicationChildrenLayout;
 		_keyboardAndApplicationChildrenLayout = nullptr;
+	}
+
+	bool ApplicationKeyboardController::isVisible() {
+		return _keyboard != nullptr;
 	}
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------
