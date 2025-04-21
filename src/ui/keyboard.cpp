@@ -22,12 +22,12 @@ namespace yoba::ui {
 
 	}
 
-	void KeyboardKey::onIsCheckedChanged(KeyboardButton* button) {
+	void KeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		const auto keyboard = button->getKeyboard();
 		const auto code = getCodeFromCase(keyboard);
 
 		if (code != KeyCode::none)
-			keyboard->keyIsCheckedChanged(code, button->isChecked());
+			keyboard->keyPressedChanged(code, button->isChecked());
 	}
 
 	KeyCode KeyboardKey::getCode() const {
@@ -98,8 +98,8 @@ namespace yoba::ui {
 		return keyboard->getCase() == KeyboardCase::lower ? getName() : getUppercaseName();
 	}
 
-	void TextKeyboardKey::onIsCheckedChanged(KeyboardButton* button) {
-		KeyboardKey::onIsCheckedChanged(button);
+	void TextKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onKeyPressedChanged(button);
 
 		if (button->isChecked())
 			return;
@@ -132,8 +132,8 @@ namespace yoba::ui {
 
 	}
 
-	void ShiftKeyboardKey::onIsCheckedChanged(KeyboardButton* button) {
-		KeyboardKey::onIsCheckedChanged(button);
+	void ShiftKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onKeyPressedChanged(button);
 
 		if (button->isChecked())
 			return;
@@ -199,8 +199,8 @@ namespace yoba::ui {
 
 	}
 
-	void CharactersLayoutKeyboardKey::onIsCheckedChanged(KeyboardButton* button) {
-		KeyboardKey::onIsCheckedChanged(button);
+	void CharactersLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onKeyPressedChanged(button);
 
 		if (button->isChecked())
 			return;
@@ -221,8 +221,8 @@ namespace yoba::ui {
 
 	}
 
-	void CurrentCyclicLayoutKeyboardKey::onIsCheckedChanged(KeyboardButton* button) {
-		KeyboardKey::onIsCheckedChanged(button);
+	void CurrentCyclicLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onKeyPressedChanged(button);
 
 		if (button->isChecked())
 			return;
@@ -243,8 +243,8 @@ namespace yoba::ui {
 
 	}
 
-	void CyclicLayoutKeyboardKey::onIsCheckedChanged(KeyboardButton* button) {
-		KeyboardKey::onIsCheckedChanged(button);
+	void CyclicLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
+		KeyboardKey::onKeyPressedChanged(button);
 
 		if (!button->isChecked()) {
 			button->getKeyboard()->setNextCyclicLayoutIndex();
@@ -291,11 +291,11 @@ namespace yoba::ui {
 		getKey()->tick(this);
 	}
 
-	void KeyboardButton::onIsCheckedChanged() {
-		Button::onIsCheckedChanged();
+	void KeyboardButton::onClick() {
+		Button::onClick();
 
 		getApplication()->enqueueOnTick([this]() {
-			getKey()->onIsCheckedChanged(this);
+			getKey()->onKeyPressedChanged(this);
 		});
 	}
 

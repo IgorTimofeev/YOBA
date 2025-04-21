@@ -52,33 +52,52 @@ namespace yoba::ui {
 			setCaptured(true);
 			setFocused(true);
 
-			if (isToggle()) {
-				setChecked(!isChecked());
-			}
-			else {
-				setChecked(true);
-			}
+			switch (_checkMode) {
+				case ButtonCheckMode::normal: {
+					setChecked(true);
 
-			callOnClick();
+					break;
+				}
+				default: {
+					break;
+				}
+			}
 
 			event->setHandled(true);
 		}
 		else if (event->getTypeID() == TouchUpEvent::typeID) {
-			setCaptured(false);
+			const auto touchUpEvent = (TouchUpEvent*) event;
+			const auto intersects = getBounds().intersects(touchUpEvent->getPosition());
 
-			if (!isToggle())
-				setChecked(false);
+			switch (_checkMode) {
+				case ButtonCheckMode::normal: {
+					setChecked(false);
+
+					if (intersects)
+						callOnClick();
+
+					break;
+				}
+				case ButtonCheckMode::toggle: {
+					if (intersects) {
+						setChecked(!isChecked());
+						callOnClick();
+					}
+
+					break;
+				}
+				default: {
+					if (intersects)
+						callOnClick();
+
+					break;
+				}
+			}
+
+			setCaptured(false);
 
 			event->setHandled(true);
 		}
-	}
-
-	bool Button::isToggle() const {
-		return _toggle;
-	}
-
-	void Button::setToggle(bool value) {
-		_toggle = value;
 	}
 
 	const Color* Button::getPressedBackgroundColor() const {
@@ -147,5 +166,13 @@ namespace yoba::ui {
 		_contentMargin = contentMargin;
 
 		invalidate();
+	}
+
+	ButtonCheckMode Button::getCheckMode() const {
+		return _checkMode;
+	}
+
+	void Button::setCheckMode(ButtonCheckMode value) {
+		_checkMode = value;
 	}
 }

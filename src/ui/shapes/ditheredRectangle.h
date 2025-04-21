@@ -17,18 +17,7 @@ namespace yoba::ui {
 				const auto color = getFillColor();
 
 				if (color)
-					renderer->renderDitheredRectangle(getBounds(), color, _transparencySize);
+					renderer->renderDitheredRectangle(getBounds(), color);
 			}
-
-			uint8_t getTransparencySize() const {
-				return _transparencySize;
-			}
-
-			void setTransparencySize(uint8_t transparencySize) {
-				_transparencySize = transparencySize;
-			}
-
-		protected:
-			uint8_t _transparencySize = 1;
 	};
 }

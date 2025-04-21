@@ -345,7 +345,7 @@ namespace yoba::ui {
 		if (_keyboardConfigurator.has_value())
 			_keyboardConfigurator.value()(keyboard);
 
-		keyboard->keyIsCheckedChanged += [this](KeyCode code, bool pressed) {
+		keyboard->keyPressedChanged += [this](KeyCode code, bool pressed) {
 			if (pressed)
 				return;
 

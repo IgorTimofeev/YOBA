@@ -12,6 +12,12 @@
 #include "main/event.h"
 
 namespace yoba::ui {
+	enum class ButtonCheckMode : uint8_t {
+		normal,
+		toggle,
+		manual
+	};
+
 	class Button : public CheckedElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
 		public:
 			Callback<> click {};
@@ -20,8 +26,8 @@ namespace yoba::ui {
 
 			void onEvent(Event* event) override;
 
-			bool isToggle() const;
-			void setToggle(bool value);
+			ButtonCheckMode getCheckMode() const;
+			void setCheckMode(ButtonCheckMode value);
 
 			const Color* getDefaultBackgroundColor() const;
 			void setDefaultBackgroundColor(const Color* value);
@@ -60,6 +66,8 @@ namespace yoba::ui {
 			const Color* _pressedBackgroundColor = nullptr;
 			const Color* _pressedBorderColor = nullptr;
 			const Color* _pressedTextColor = nullptr;
+
+			ButtonCheckMode _checkMode = ButtonCheckMode::normal;
 
 			void callOnClick();
 	};

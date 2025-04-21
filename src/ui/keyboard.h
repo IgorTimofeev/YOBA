@@ -221,7 +221,7 @@ namespace yoba::ui {
 			static float stretched;
 
 			virtual void tick(KeyboardButton* button);
-			virtual void onIsCheckedChanged(KeyboardButton* button);
+			virtual void onKeyPressedChanged(KeyboardButton* button);
 			virtual KeyCode getCodeFromCase(Keyboard* keyboard) const;
 			virtual std::wstring_view getNameFromCase(Keyboard* keyboard) const;
 
@@ -261,7 +261,7 @@ namespace yoba::ui {
 
 			std::wstring_view getNameFromCase(Keyboard* keyboard) const override;
 
-			void onIsCheckedChanged(KeyboardButton* button) override;
+			void onKeyPressedChanged(KeyboardButton* button) override;
 
 		private:
 			KeyCode _uppercaseCode;
@@ -272,7 +272,7 @@ namespace yoba::ui {
 		public:
 			ShiftKeyboardKey(std::wstring_view name, std::wstring_view uppercaseName, std::wstring_view capsName, float width);
 
-			void onIsCheckedChanged(KeyboardButton* button) override;
+			void onKeyPressedChanged(KeyboardButton* button) override;
 
 			std::wstring_view getNameFromCase(Keyboard* keyboard) const override;
 
@@ -300,7 +300,7 @@ namespace yoba::ui {
 		public:
 			CharactersLayoutKeyboardKey(std::wstring_view name, float width);
 
-			void onIsCheckedChanged(KeyboardButton* button) override;
+			void onKeyPressedChanged(KeyboardButton* button) override;
 
 		private:
 			std::function<KeyboardLayout*()> _layoutBuilder;
@@ -310,14 +310,14 @@ namespace yoba::ui {
 		public:
 			CurrentCyclicLayoutKeyboardKey(std::wstring_view name, float width);
 
-			void onIsCheckedChanged(KeyboardButton* button) override;
+			void onKeyPressedChanged(KeyboardButton* button) override;
 	};
 
 	class CyclicLayoutKeyboardKey : public KeyboardKey {
 		public:
 			CyclicLayoutKeyboardKey(std::wstring_view name, float width);
 
-			void onIsCheckedChanged(KeyboardButton* button) override;
+			void onKeyPressedChanged(KeyboardButton* button) override;
 	};
 
 	class KeyboardButtonsLayout : public Layout {
@@ -357,7 +357,7 @@ namespace yoba::ui {
 			void updateFromCase();
 
 		protected:
-			void onIsCheckedChanged() override;
+			void onClick() override;
 
 		private:
 			Keyboard* _keyboard;
@@ -373,8 +373,8 @@ namespace yoba::ui {
 		
 			~Keyboard() override;
 
-			Callback<KeyCode, bool> keyIsCheckedChanged;
-			Callback<KeyCode, std::wstring_view> input;
+			Callback<KeyCode, bool> keyPressedChanged {};
+			Callback<KeyCode, std::wstring_view> input {};
 
 			void setLayout(KeyboardLayout* value);
 			KeyboardLayout* getLayout() const;

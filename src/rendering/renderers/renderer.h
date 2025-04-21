@@ -30,7 +30,7 @@ namespace yoba {
 			void renderVerticalLine(const Point& point, uint16_t length, const Color* color);
 			void renderFilledRectangle(const Bounds& bounds, const Color* color);
 			void renderFilledRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
-			void renderDitheredRectangle(const Bounds& bounds, const Color* color, uint8_t transparencySize = 1);
+			void renderDitheredRectangle(const Bounds& bounds, const Color* color);
 
 			void renderImage(const Point& point, const Image* image);
 			void renderRectangle(const Bounds& bounds, const Color* color);

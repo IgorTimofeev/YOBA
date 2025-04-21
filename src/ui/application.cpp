@@ -85,10 +85,18 @@ namespace yoba::ui {
 		// Playing animations
 		animationsTick();
 
+		// Running enqueued callbacks if any
+		if (!_enqueuedOnTickCallbacks.empty()) {
+			for (const auto& callback : _enqueuedOnTickCallbacks)
+				callback();
+
+			_enqueuedOnTickCallbacks.clear();
+		}
+
 		_tickDeltaTime = system::getTime() - time;
 
+		// Measuring children size
 		if (_layoutInvalidated) {
-			// Measuring size of children
 			time = system::getTime();
 			measure(getSize());
 			_layoutDeltaTime = system::getTime() - time;
@@ -96,8 +104,8 @@ namespace yoba::ui {
 			_layoutInvalidated = false;
 		}
 
+		// Rendering
 		if (_renderInvalidated) {
-			// Rendering children
 			time = system::getTime();
 			render(_renderer, getBounds());
 			_renderDeltaTime = system::getTime() - time;
@@ -108,14 +116,6 @@ namespace yoba::ui {
 			_flushDeltaTime = system::getTime() - time;
 
 			_renderInvalidated = false;
-		}
-
-		// Running enqueued tasks if any
-		if (!_enqueuedOnTickCallbacks.empty()) {
-			for (const auto& task : _enqueuedOnTickCallbacks)
-				task();
-
-			_enqueuedOnTickCallbacks.clear();
 		}
 	}
 

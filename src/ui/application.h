@@ -69,9 +69,9 @@ namespace yoba::ui {
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;
 
-			std::vector<Animation*> _animations;
-			std::vector<hardware::InputDevice*> _inputDevices;
-			std::vector<std::function<void()>> _enqueuedOnTickCallbacks;
+			std::vector<Animation*> _animations {};
+			std::vector<hardware::InputDevice*> _inputDevices {};
+			std::vector<std::function<void()>> _enqueuedOnTickCallbacks {};
 
 			uint32_t _peripheralsDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;
