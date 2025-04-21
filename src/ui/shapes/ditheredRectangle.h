@@ -17,15 +17,7 @@ namespace yoba::ui {
 				const auto color = getFillColor();
 
 				if (color)
-					renderer->renderDitheredRectangle(getBounds(), color, _dotSize, _transparencySize);
-			}
-
-			uint8_t getDotSize() const {
-				return _dotSize;
-			}
-
-			void setDotSize(uint8_t dotSize) {
-				_dotSize = dotSize;
+					renderer->renderDitheredRectangle(getBounds(), color, _transparencySize);
 			}
 
 			uint8_t getTransparencySize() const {
@@ -37,7 +29,6 @@ namespace yoba::ui {
 			}
 
 		protected:
-			uint8_t _dotSize = 1;
 			uint8_t _transparencySize = 1;
 	};
 }

@@ -158,22 +158,25 @@ namespace yoba {
 		}
 	}
 
-	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color* color, uint8_t dotSize, uint8_t transparencySize) {
-		uint16_t totalSize = dotSize + transparencySize;
+	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color* color, uint8_t transparencySize) {
+		uint16_t totalSize = 1 + transparencySize;
 		const uint16_t countX = std::max(divideCeiling(bounds.getWidth(), totalSize), (uint16_t) 1);
 		const uint16_t countY = std::max(divideCeiling(bounds.getHeight(), totalSize), (uint16_t) 1);
 
 		int32_t x = 0;
 		int32_t y = 0;
+		bool step = false;
 
 		for (int32_t j = 0; j < countY; j++) {
 			for (int32_t i = 0; i < countX; i++) {
-				renderFilledRectangle(Bounds(x, y, dotSize, dotSize), color);
+				renderPixel(Point(x, y), color);
 
 				x += totalSize;
 			}
 
-			x = 0;
+			x = step ? totalSize : 0;
+			step = !step;
+
 			y += totalSize;
 		}
 	}
