@@ -85,14 +85,6 @@ namespace yoba::ui {
 		// Playing animations
 		animationsTick();
 
-		// Running enqueued callbacks if any
-		if (!_enqueuedOnTickCallbacks.empty()) {
-			for (const auto& callback : _enqueuedOnTickCallbacks)
-				callback();
-
-			_enqueuedOnTickCallbacks.clear();
-		}
-
 		_tickDeltaTime = system::getTime() - time;
 
 		// Measuring children size
@@ -117,6 +109,14 @@ namespace yoba::ui {
 
 			_renderInvalidated = false;
 		}
+
+		// Running enqueued callbacks if any
+		if (!_enqueuedOnTickCallbacks.empty()) {
+			for (const auto& callback : _enqueuedOnTickCallbacks)
+				callback();
+
+			_enqueuedOnTickCallbacks.clear();
+		}
 	}
 
 	Element* Application::getCapturedElement() const {
@@ -124,17 +124,7 @@ namespace yoba::ui {
 	}
 
 	void Application::setCapturedElement(Element* element) {
-		const auto oldCapturedElement = _capturedElement;
-
 		_capturedElement = element;
-
-		if (oldCapturedElement && oldCapturedElement != _capturedElement)
-			oldCapturedElement->onCaptureChanged();
-
-		if (_capturedElement && _capturedElement != oldCapturedElement)
-			_capturedElement->onCaptureChanged();
-
-		invalidate();
 	}
 
 	Element* Application::getFocusedElement() const {
@@ -142,17 +132,7 @@ namespace yoba::ui {
 	}
 
 	void Application::setFocusedElement(Element* element) {
-		const auto oldFocusedElement = _focusedElement;
-
 		_focusedElement = element;
-
-		if (oldFocusedElement && oldFocusedElement != _focusedElement)
-			oldFocusedElement->onFocusChanged();
-
-		if (_focusedElement && _focusedElement != oldFocusedElement)
-			_focusedElement->onFocusChanged();
-
-		invalidate();
 	}
 
 	void Application::handleEvent(Event* event) {

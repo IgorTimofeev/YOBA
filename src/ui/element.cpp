@@ -231,14 +231,24 @@ namespace yoba::ui {
 	}
 
 	bool Element::isFocused() {
-		const auto app = getApplication();
-
-		return app && app->getFocusedElement() == this;
+		return _application && _application->getFocusedElement() == this;
 	}
 
 	void Element::setFocused(bool value) {
-		if (_application && (_application->getFocusedElement() == this) != value)
-			_application->setFocusedElement(value ? this : nullptr);
+		if (!_application || !_focusable || (_application->getFocusedElement() == this) == value)
+			return;
+
+		const auto previousFocusedElement = _application->getFocusedElement();
+
+		_application->setFocusedElement(value ? this : nullptr);
+
+		if (previousFocusedElement)
+			previousFocusedElement->onFocusChanged();
+
+		if (value)
+			onFocusChanged();
+
+		_application->invalidate();
 	}
 
 	bool Element::isCaptured() {
@@ -246,8 +256,20 @@ namespace yoba::ui {
 	}
 
 	void Element::setCaptured(bool value) {
-		if (_application && (_application->getCapturedElement() == this) != value)
-			_application->setCapturedElement(value ? this : nullptr);
+		if (!_application || (_application->getCapturedElement() == this) == value)
+			return;
+
+		const auto previousCapturedElement = _application->getCapturedElement();
+
+		_application->setCapturedElement(value ? this : nullptr);
+
+		if (previousCapturedElement)
+			previousCapturedElement->onCaptureChanged();
+
+		if (value)
+			onCaptureChanged();
+
+		_application->invalidate();
 	}
 
 	void Element::startAnimation(Animation* animation) {

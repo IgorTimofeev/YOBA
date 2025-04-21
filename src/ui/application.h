@@ -9,6 +9,8 @@
 
 namespace yoba::ui {
 	class Application : public Layout, public BackgroundColorElement {
+		friend class Element;
+
 		public:
 			explicit Application();
 
@@ -44,10 +46,7 @@ namespace yoba::ui {
 			void addInputDevice(hardware::InputDevice* inputDevice);
 
 			Element* getCapturedElement() const;
-			void setCapturedElement(Element* element);
-
 			Element* getFocusedElement() const;
-			void setFocusedElement(Element* element);
 
 			void enqueueOnTick(const std::function<void()>& task);
 
@@ -81,5 +80,9 @@ namespace yoba::ui {
 
 			void animationsTick();
 			void inputDevicesTick();
+
+			// Will be only called from Element
+			void setFocusedElement(Element* element);
+			void setCapturedElement(Element* element);
 	};
 }
