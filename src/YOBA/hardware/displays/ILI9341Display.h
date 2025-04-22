@@ -20,6 +20,7 @@ namespace YOBA {
 				int8_t rstPin,
 				uint32_t SPIFrequency,
 
+				const Size& size = Size(240, 320),
 				ColorModel colorModel = ColorModel::rgb565,
 				ViewportRotation rotation = ViewportRotation::clockwise0
 			);

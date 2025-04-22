@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cstdint>
-#include "YOBA/main/rendering/renderTarget.h"
+#include "YOBA/hardware/displays/display.h"
 
 namespace YOBA {
-	class SPIDisplay : public virtual RenderTarget {
+	class SPIDisplay : public virtual Display {
 		public:
 			SPIDisplay(
 				uint8_t mosiPin,

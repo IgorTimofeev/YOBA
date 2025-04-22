@@ -18,6 +18,7 @@
 #include "YOBA/main/image.h"
 #include "YOBA/main/callback.h"
 #include "YOBA/main/event.h"
+#include "YOBA/main/inputDevice.h"
 
 // Render targets
 #include "YOBA/main/rendering/renderTarget.h"

@@ -12,11 +12,12 @@ namespace YOBA {
 		int8_t rstPin,
 		uint32_t SPIFrequency,
 
+		const Size& size,
 		ColorModel colorModel,
 		ViewportRotation rotation
 	) :
 		RenderTarget(
-			Size(240, 320),
+			size,
 			PixelWriting::buffered,
 			PixelOrder::YX,
 			colorModel,

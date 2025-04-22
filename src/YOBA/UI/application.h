@@ -3,7 +3,7 @@
 #include "layout.h"
 #include "YOBA/main/font.h"
 #include "YOBA/main/rendering/renderer.h"
-#include "YOBA/hardware/inputDevice.h"
+#include "YOBA/main/inputDevice.h"
 #include "YOBA/UI/traits/backgroundColorElement.h"
 
 namespace YOBA {

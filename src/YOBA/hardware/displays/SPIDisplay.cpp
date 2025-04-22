@@ -1,6 +1,5 @@
 #include "SPIDisplay.h"
 #include "YOBA/system.h"
-#include "YOBA/system.h"
 
 namespace YOBA {
 	SPIDisplay::SPIDisplay(
