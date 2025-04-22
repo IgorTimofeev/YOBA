@@ -7,7 +7,7 @@
 #include "YOBA/UI/spatial/element.h"
 #include "YOBA/UI/spatial/camera.h"
 
-namespace YOBA::spatial {
+namespace YOBA {
 	class SpatialView : public virtual Element {
 		public:
 			Camera& getCamera();

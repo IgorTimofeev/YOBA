@@ -7,6 +7,7 @@
 #include "YOBA/main/sinAndCos.h"
 #include "YOBA/main/vector2.h"
 #include "YOBA/main/vector3.h"
+#include "YOBA/main/geographicCoordinates.h"
 #include "YOBA/main/size.h"
 #include "YOBA/main/bounds.h"
 #include "YOBA/main/margin.h"

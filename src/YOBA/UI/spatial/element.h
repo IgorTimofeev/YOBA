@@ -3,7 +3,7 @@
 #include "YOBA/main/vector3.h"
 #include "YOBA/UI/spatial/camera.h"
 
-namespace YOBA::spatial {
+namespace YOBA {
 	class SpatialElement {
 		public:
 			virtual const Vector3F* getVertices() = 0;
@@ -11,9 +11,9 @@ namespace YOBA::spatial {
 			virtual void onRender(Renderer* renderer, const Bounds& bounds, Camera* camera, const Vector3F* vertices) = 0;
 	};
 
-	class Line : public SpatialElement {
+	class SpatialLine : public SpatialElement {
 		public:
-			Line(const Vector3F& from, const Vector3F& to, const Color* color) : _color(color) {
+			SpatialLine(const Vector3F& from, const Vector3F& to, const Color* color) : _color(color) {
 				_vertices[0] = from;
 				_vertices[0] = to;
 			}
@@ -77,9 +77,9 @@ namespace YOBA::spatial {
 			const Color* _color = nullptr;
 	};
 
-	class Label : public SpatialElement {
+	class SpatialLabel : public SpatialElement {
 		public:
-			Label(const Vector3F& position, const Font* font, const Color* color, std::wstring_view text) : _position(position), _font(font), _color(color), _text(text) {
+			SpatialLabel(const Vector3F& position, const Font* font, const Color* color, std::wstring_view text) : _position(position), _font(font), _color(color), _text(text) {
 
 			}
 
@@ -146,7 +146,7 @@ namespace YOBA::spatial {
 			std::wstring_view _text;
 	};
 
-	class Mesh : public SpatialElement {
+	class SpatialMesh : public SpatialElement {
 		public:
 			const Vector3F* getVertices() override {
 				return _vertices;
@@ -169,7 +169,7 @@ namespace YOBA::spatial {
 			uint16_t _vertexCount = 0;
 	};
 
-	class LinearMesh : public Mesh {
+	class LinearSpatialMesh : public SpatialMesh {
 		public:
 			void onRender(Renderer* renderer, const Bounds& bounds, Camera* camera, const Vector3F* vertices) override {
 				const auto nearPlane = camera->getNearPlaneDistance();
@@ -235,9 +235,9 @@ namespace YOBA::spatial {
 	// 1######2  2######5  5######6  6######1  6######5  7######4
 	// ########  ########  ########  ########  ########  ########
 	// 0######3  3######4  4######7  7######0  1######2  0######3
-	class CubeLinearMesh : public LinearMesh {
+	class CubeLinearSpatialMesh : public LinearSpatialMesh {
 		public:
-			CubeLinearMesh(const Vector3F& center, float size, const Color* color) {
+			CubeLinearSpatialMesh(const Vector3F& center, float size, const Color* color) {
 				const auto sizeHalf = size / 2.f;
 
 				_vertices[0] = center + Vector3F(-sizeHalf, -sizeHalf, -sizeHalf);
@@ -285,9 +285,9 @@ namespace YOBA::spatial {
 			};
 	};
 
-	class SphereLinearMesh : public LinearMesh {
+	class SphereLinearSpatialMesh : public LinearSpatialMesh {
 		public:
-			SphereLinearMesh(const Vector3F& center, float radius, const uint16_t latitudeSegments, uint16_t longitudeSegments, const Color* color) {
+			SphereLinearSpatialMesh(const Vector3F& center, float radius, const uint16_t latitudeSegments, uint16_t longitudeSegments, const Color* color) {
 				const uint16_t verticesCount = 1 + latitudeSegments * longitudeSegments + 1;
 				const uint16_t latitudeLinesCount = (1 + (latitudeSegments - 1) + 1) * longitudeSegments;
 				const uint16_t longitudeLinesCount = latitudeSegments * longitudeSegments;

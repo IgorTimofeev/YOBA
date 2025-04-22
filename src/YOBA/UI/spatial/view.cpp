@@ -1,7 +1,7 @@
 #include "view.h"
 #include <esp_log.h>
 
-namespace YOBA::spatial {
+namespace YOBA {
 	void SpatialView::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto projectionPlaneDistance = (float) bounds.getWidth() / 2.f / std::tanf(_camera.getFOV() / 2.f);
 

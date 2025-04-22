@@ -3,7 +3,7 @@
 #include <numbers>
 #include "YOBA/main/vector3.h"
 
-namespace YOBA::spatial {
+namespace YOBA {
 	class Camera {
 		public:
 			const Vector3F& getPosition() const {
