@@ -79,7 +79,7 @@ namespace YOBA::spatial {
 				// screenZ = (screenWidth / 2) / tan(FOV / 2)
 				//
 				// So the final formula will be
-				// x' = x * screenZ / 2 / tan(FOV / 2) / z
+				// x' = x * screenWidth / 2 / tan(FOV / 2) / z
 				//
 				_screenSpaceVertices.push_back(Vector3F(
 					(float) bounds.getXCenter() + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
