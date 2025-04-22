@@ -30,12 +30,9 @@ namespace YOBA::spatial {
 				if (_camera.getRotation().getY() != 0)
 					vertex = vertex.rotateAroundYAxis(-_camera.getRotation().getY());
 
-				// 1) Moving from world space coordinates to screen space. Since our world coordinate system is Z-up,
-				// and the screen coordinate system is Y-up, we simply need to swap them to display the pixels correctly.
-				//
-				// 2) Applying perspective projection. The basic concept is very simple: the farther an object is from the
-				// camera, the smaller it will be on the screen. For example, if a 3D penis 0.3 m high is located 2 meters
-				// away from the camera, its projected height will be only 0.15 cm, i.e. 2 times smaller:
+				// First, we need to apply perspective projection. The basic concept is simple: the farther an object
+				// is from the camera, the smaller it will be on the screen. For example, if a 3D penis 0.3 m high is
+				// located 2 meters away from the camera, its projected height will be only 0.15 cm, i.e. 2 times smaller:
 				//
 				// x' = x / z
 				//
@@ -80,7 +77,14 @@ namespace YOBA::spatial {
 				//
 				// So the final formula will be
 				// x' = x * screenWidth / 2 / tan(FOV / 2) / z
+				// y' = y * screenHeight / 2 / tan(FOV / 2) / z
 				//
+				// In the final we need to move from world space to screen space. Since our world coordinate system is Z-up,
+				// but the screen coordinate system is Y-up, they can be simply swapped:
+				//
+				// screenX = x * screenWidth / 2 / tan(FOV / 2) / y
+				// screenY = z * screenHeight / 2 / tan(FOV / 2) / y
+
 				_screenSpaceVertices.push_back(Vector3F(
 					(float) bounds.getXCenter() + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
 					(float) bounds.getYCenter() - (vertex.getZ() * projectionPlaneDistance / vertex.getY()),
