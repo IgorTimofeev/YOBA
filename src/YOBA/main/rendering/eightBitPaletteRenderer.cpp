@@ -106,20 +106,78 @@ namespace YOBA {
 	}
 
 	void EightBitPaletteRenderer::renderImageNative(const Point& point, const Image* image) {
+		if (!(image->getFlags() & ImageFlags::palette8))
+			return;
+
 		size_t
 			bufferIndex = getIndex(point),
 			scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth(),
-			imageIndex = 0;
+			bitmapByteIndex = 0;
 
-		for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
-			for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
-				getBuffer()[bufferIndex] = image->getBitmap()[imageIndex];
+		uint8_t bitmapByte;
 
-				bufferIndex++;
-				imageIndex++;
+		// With alpha
+		if (image->getFlags() & ImageFlags::alpha) {
+			uint8_t bitmapBitIndex = 0;
+			uint8_t part1;
+
+			// 0000 0000
+			// ---- -2--
+			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
+				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+					bitmapByte = image->getBitmap()[bitmapByteIndex];
+
+					// Non-transparent
+					if (bitmapByte & (1 << bitmapBitIndex)) {
+						bitmapBitIndex++;
+
+						// Easy
+						if (bitmapBitIndex > 7) {
+							bitmapBitIndex = 0;
+							bitmapByteIndex++;
+
+							getBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
+
+							bitmapByteIndex++;
+						}
+						// Dark souls
+						else {
+							part1 = bitmapByte >> bitmapBitIndex;
+							bitmapByteIndex++;
+
+							bitmapByte = image->getBitmap()[bitmapByteIndex];
+
+							getBuffer()[bufferIndex] = part1 | (bitmapByte << (8 - bitmapBitIndex));
+						}
+					}
+					// Transparent
+					else {
+						bitmapBitIndex++;
+
+						if (bitmapBitIndex > 7) {
+							bitmapBitIndex = 0;
+							bitmapByteIndex++;
+						}
+					}
+
+					bufferIndex++;
+				}
+
+				bufferIndex += scanlineLength;
 			}
+		}
+		// Without
+		else {
+			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
+				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+					getBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
 
-			bufferIndex += scanlineLength;
+					bufferIndex++;
+					bitmapByteIndex++;
+				}
+
+				bufferIndex += scanlineLength;
+			}
 		}
 	}
 
