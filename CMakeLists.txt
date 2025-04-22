@@ -7,7 +7,7 @@ if(ESP_PLATFORM)
 
     idf_component_register(
         SRCS ${YOBA_SOURCES}
-        INCLUDE_DIRS . src
+        INCLUDE_DIRS src
         REQUIRES esp_timer driver
     )
 
