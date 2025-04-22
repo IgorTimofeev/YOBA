@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cmath>
+#include "sinAndCos.h"
 
 namespace YOBA {
 	template<typename T>
