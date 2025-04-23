@@ -1,17 +1,17 @@
-#include "eightBitPaletteRenderer.h"
+#include "bit8PaletteRenderer.h"
 #include "YOBA/main/bounds.h"
 #include "bufferedRenderTarget.h"
 
 namespace YOBA {
-	EightBitPaletteRenderer::EightBitPaletteRenderer(uint16_t paletteLength) : PaletteRenderer(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteRenderer(paletteLength) {
 
 	}
 
-	size_t EightBitPaletteRenderer::getRequiredBufferLength() {
+	size_t Bit8PaletteRenderer::getRequiredBufferLength() {
 		return getTarget()->getSize().getSquare();
 	}
 
-	void EightBitPaletteRenderer::flushBuffer() {
+	void Bit8PaletteRenderer::flushBuffer() {
 		switch (getTarget()->getPixelWriting()) {
 			case PixelWriting::buffered: {
 				const auto bufferedRenderTarget = dynamic_cast<BufferedRenderTarget*>(getTarget());
@@ -20,7 +20,7 @@ namespace YOBA {
 					case ColorModel::rgb565: {
 						bufferedRenderTarget->flushBuffer(
 							getTarget()->getSize().getWidth(),
-							[&](uint8_t*& transactionBuffer, uint32_t& pixelBufferIndex) {
+							[this](uint8_t*& transactionBuffer, uint32_t& pixelBufferIndex) {
 								*((uint16_t*) transactionBuffer) = ((uint16_t*) getPalette())[getBuffer()[pixelBufferIndex]];
 								transactionBuffer += 2;
 								pixelBufferIndex++;
@@ -60,11 +60,11 @@ namespace YOBA {
 		}
 	}
 
-	void EightBitPaletteRenderer::clearNative(const Color* color) {
+	void Bit8PaletteRenderer::clearNative(const Color* color) {
 		memset(getBuffer(), (int) getPaletteIndex(color), getBufferLength());
 	}
 
-	void EightBitPaletteRenderer::renderPixelNative(const Point& point, const Color* color) {
+	void Bit8PaletteRenderer::renderPixelNative(const Point& point, const Color* color) {
 //		if (point.getX() < 0 || point.getX() >= 320 || point.getY() < 0 || point.getY() >= 240) {
 //			Serial.printf("CYKA?? %d, %d\f", point.getX(), point.getY());
 //			return;
@@ -79,11 +79,11 @@ namespace YOBA {
 		getBuffer()[getIndex(point)] = getPaletteIndex(color);
 	}
 
-	void EightBitPaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
+	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
 		memset(getBuffer() + getIndex(point), getPaletteIndex(color), width);
 	}
 
-	void EightBitPaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
+	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = getBuffer() + getIndex(point);
 		uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		auto paletteIndex = getPaletteIndex(color);
@@ -94,7 +94,7 @@ namespace YOBA {
 		}
 	}
 
-	void EightBitPaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = getBuffer() + getIndex(bounds.getPosition());
 		uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		auto paletteIndex = getPaletteIndex(color);
@@ -105,8 +105,8 @@ namespace YOBA {
 		}
 	}
 
-	void EightBitPaletteRenderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getFlags() & ImageFlags::palette8))
+	void Bit8PaletteRenderer::renderImageNative(const Point& point, const Image* image) {
+		if (!(image->getFlags() & ImageFlags::palette8Bit))
 			return;
 
 		size_t
@@ -117,7 +117,7 @@ namespace YOBA {
 		uint8_t bitmapByte;
 
 		// With alpha
-		if (image->getFlags() & ImageFlags::alpha) {
+		if (image->getFlags() & ImageFlags::alpha1Bit) {
 			uint8_t bitmapBitIndex = 0;
 			uint8_t part1;
 
@@ -181,7 +181,7 @@ namespace YOBA {
 		}
 	}
 
-	void EightBitPaletteRenderer::setOpenComputersPaletteColors() {
+	void Bit8PaletteRenderer::setOpenComputersPaletteColors() {
 		const uint8_t reds = 6;
 		const uint8_t greens = 8;
 		const uint8_t blues = 5;

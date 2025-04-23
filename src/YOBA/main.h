@@ -28,5 +28,5 @@
 // Renderers
 #include "YOBA/main/rendering/renderer.h"
 #include "YOBA/main/rendering/paletteRenderer.h"
-#include "YOBA/main/rendering/eightBitPaletteRenderer.h"
+#include "YOBA/main/rendering/bit8PaletteRenderer.h"
 #include "YOBA/main/rendering/monochromeRenderer.h"

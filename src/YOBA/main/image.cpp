@@ -2,9 +2,9 @@
 
 namespace YOBA {
 	Image::Image(
+		uint8_t flags,
 		const Size& size,
-		const uint8_t* bitmap,
-		uint8_t flags
+		const uint8_t* bitmap
 	) :
 		_flags(flags),
 		_size(size),
