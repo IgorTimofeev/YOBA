@@ -28,12 +28,16 @@ namespace YOBA {
 			Vector2 normalize() const;
 
 			Vector2 operator+(const Vector2& right) const;
+			Vector2 operator+(T value) const;
 			Vector2& operator+=(const Vector2& right);
 			Vector2 operator-(const Vector2& right) const;
+			Vector2 operator-(T value) const;
 			Vector2 operator-() const;
 			Vector2<T>& operator-=(const Vector2& right);
+			Vector2 operator*(const Vector2& right) const;
 			Vector2 operator*(T factor) const;
 			Vector2& operator*=(const Vector2& right);
+			Vector2 operator/(const Vector2& right) const;
 			Vector2 operator/(T factor) const;
 			Vector2& operator/=(const Vector2& right);
 			bool operator==(const Vector2 &right) const;
@@ -138,6 +142,14 @@ namespace YOBA {
 	}
 
 	template<typename T>
+	Vector2<T> Vector2<T>::operator+(T value) const {
+		return {
+			_x + value,
+			_y + value,
+		};
+	}
+
+	template<typename T>
 	Vector2<T>& Vector2<T>::operator+=(const Vector2& right) {
 		_x += right._x;
 		_y += right._y;
@@ -150,6 +162,14 @@ namespace YOBA {
 		return {
 			_x - right._x,
 			_y - right._y,
+		};
+	}
+
+	template<typename T>
+	Vector2<T> Vector2<T>::operator-(T value) const {
+		return {
+			_x - value,
+			_y - value,
 		};
 	}
 
@@ -170,6 +190,14 @@ namespace YOBA {
 	}
 
 	template<typename T>
+	Vector2<T> Vector2<T>::operator*(const Vector2<T>& right) const {
+		return {
+			_x * right._x,
+			_y * right._y,
+		};
+	}
+
+	template<typename T>
 	Vector2<T> Vector2<T>::operator*(T factor) const {
 		return {
 			_x * factor,
@@ -183,6 +211,14 @@ namespace YOBA {
 		_y *= right._y;
 
 		return *this;
+	}
+
+	template<typename T>
+	Vector2<T> Vector2<T>::operator/(const Vector2<T>& right) const {
+		return {
+			_x / right._x,
+			_y / right._y,
+		};
 	}
 
 	template<typename T>
