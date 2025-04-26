@@ -47,7 +47,7 @@ namespace YOBA {
 	}
 
 	void RGB565PixelBufferRenderer::renderPixelNative(const Point& point, const Color* color) {
-		getPixelBuffer()[PixelBufferRenderer::getPixelBufferIndex(point)] = static_cast<const Rgb565Color*>(color)->getValue();
+		*reinterpret_cast<uint16_t*>(getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point)) = static_cast<const Rgb565Color*>(color)->getValue();
 	}
 
 	void RGB565PixelBufferRenderer::renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) {
