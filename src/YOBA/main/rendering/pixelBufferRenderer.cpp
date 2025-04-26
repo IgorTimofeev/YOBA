@@ -32,4 +32,8 @@ namespace YOBA {
 	size_t PixelBufferRenderer::getPixelBufferLength() const {
 		return _pixelBufferLength;
 	}
+
+	size_t PixelBufferRenderer::getPixelBufferIndex(const Point& point) const {
+		return getPixelBufferIndex(point.getX(), point.getY());
+	}
 }

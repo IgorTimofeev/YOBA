@@ -95,8 +95,8 @@ namespace YOBA {
 
 	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
 		uint8_t* bufferPtr = getPaletteBuffer() + getPaletteBufferIndex(point);
-		uint16_t scanlineLength = getTarget()->getSize().getWidth();
-		auto paletteIndex = getPaletteIndex(color);
+		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		const auto paletteIndex = getPaletteIndex(color);
 
 		for (size_t i = 0; i < height; i++) {
 			memset(bufferPtr, paletteIndex, 1);
@@ -106,8 +106,8 @@ namespace YOBA {
 
 	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* bufferPtr = getPaletteBuffer() + getPaletteBufferIndex(bounds.getPosition());
-		uint16_t scanlineLength = getTarget()->getSize().getWidth();
-		auto paletteIndex = getPaletteIndex(color);
+		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		const auto paletteIndex = getPaletteIndex(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
 			memset(bufferPtr, paletteIndex, bounds.getWidth());

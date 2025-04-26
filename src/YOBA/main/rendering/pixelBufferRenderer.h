@@ -10,6 +10,9 @@ namespace YOBA {
 			uint8_t* getPixelBuffer() const;
 			size_t getPixelBufferLength() const;
 
+			virtual size_t getPixelBufferIndex(uint16_t x, uint16_t y) const = 0;
+			size_t getPixelBufferIndex(const Point& point) const;
+
 		protected:
 			virtual size_t computePixelBufferLengthForTarget() = 0;
 			void updateFromTarget() override;
