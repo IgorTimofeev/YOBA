@@ -6,7 +6,7 @@ namespace YOBA {
 
 	}
 
-	size_t Bit8PaletteRenderer::computePaletteBufferLengthForTarget() {
+	size_t Bit8PaletteRenderer::computePaletteBufferLength() {
 		return getTarget()->getSize().getSquare();
 	}
 

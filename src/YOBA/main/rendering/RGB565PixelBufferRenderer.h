@@ -9,7 +9,7 @@ namespace YOBA {
 			size_t getPixelBufferIndex(uint16_t x, uint16_t y) const override;
 
 		protected:
-			size_t computePixelBufferLengthForTarget() override;
+			size_t computePixelBufferLength() const override;
 			void updateFromTarget() override;
 			void clearNative(const Color* color) override;
 			void renderPixelNative(const Point& point, const Color* color) override;

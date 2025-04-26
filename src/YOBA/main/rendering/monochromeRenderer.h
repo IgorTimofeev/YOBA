@@ -10,7 +10,7 @@ namespace YOBA {
 			void flush() override;
 
 		protected:
-			size_t computePixelBufferLengthForTarget() override;
+			size_t computePixelBufferLength() const override;
 			inline void clearNative(const Color* color) override;
 			inline void renderPixelNative(const Point& point, const Color* color) override;
 			inline void renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) override;

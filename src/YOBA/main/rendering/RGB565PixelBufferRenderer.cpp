@@ -3,7 +3,7 @@
 #include <string.h>
 
 namespace YOBA {
-	size_t RGB565PixelBufferRenderer::computePixelBufferLengthForTarget() {
+	size_t RGB565PixelBufferRenderer::computePixelBufferLength() const {
 		return getTarget()->getSize().getSquare() * 2;
 	}
 
@@ -14,19 +14,19 @@ namespace YOBA {
 	void RGB565PixelBufferRenderer::flush() {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565: {
-				auto bufferPtr = getPixelBuffer();
+				auto pixelBufferPtr = getPixelBuffer();
+				const auto& size = getTarget()->getSize();
+				const auto transactionWindowHeight = computeTransactionWindowHeight();
+				const size_t transactionLength = size.getWidth() * transactionWindowHeight * 2;
 
-				const uint16_t transactionHeight = 80;
-				size_t transactionLength = getTarget()->getSize().getWidth() * transactionHeight * 2;
-
-				for (uint16_t y = 0; y < getTarget()->getSize().getHeight(); y += transactionHeight) {
+				for (uint16_t y = 0; y < size.getHeight(); y += transactionWindowHeight) {
 					getTarget()->writePixels(
-						Bounds(0, y, getTarget()->getSize().getWidth(), transactionHeight),
-						bufferPtr,
+						Bounds(0, y, size.getWidth(), transactionWindowHeight),
+						pixelBufferPtr,
 						transactionLength
 					);
 
-					bufferPtr += transactionLength;
+					pixelBufferPtr += transactionLength;
 				}
 
 				break;
@@ -41,9 +41,9 @@ namespace YOBA {
 	}
 
 	void RGB565PixelBufferRenderer::clearNative(const Color* color) {
-		const auto ptr = reinterpret_cast<uint16_t*>(getPixelBuffer());
+		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer());
 
-		std::fill(ptr, ptr + getPixelBufferLength() / 2, static_cast<const Rgb565Color*>(color)->getValue());
+		std::fill(pixelBufferPtr, pixelBufferPtr + getPixelBufferLength() / 2, static_cast<const Rgb565Color*>(color)->getValue());
 	}
 
 	void RGB565PixelBufferRenderer::renderPixelNative(const Point& point, const Color* color) {
@@ -51,28 +51,30 @@ namespace YOBA {
 	}
 
 	void RGB565PixelBufferRenderer::renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) {
-		memset(getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point), static_cast<const Rgb565Color*>(color)->getValue(), length);
+		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point));
+
+		std::fill(pixelBufferPtr, pixelBufferPtr + length, static_cast<const Rgb565Color*>(color)->getValue());
 	}
 
 	void RGB565PixelBufferRenderer::renderVerticalLineNative(const Point& point, uint16_t length, const Color* color) {
-		uint8_t* bufferPtr = getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point);
-		uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point));
+		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const Rgb565Color*>(color)->getValue();
 
 		for (size_t i = 0; i < length; i++) {
-			memset(bufferPtr, value, 1);
-			bufferPtr += scanlineLength;
+			std::fill(pixelBufferPtr, pixelBufferPtr + 1, value);
+			pixelBufferPtr += scanlineLength;
 		}
 	}
 
 	void RGB565PixelBufferRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
-		auto ptr = reinterpret_cast<uint16_t*>(getPixelBuffer() + getPixelBufferIndex(bounds.getX(), bounds.getY()));
+		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + getPixelBufferIndex(bounds.getX(), bounds.getY()));
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const Rgb565Color*>(color)->getValue();
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
-			std::fill(ptr, ptr + bounds.getWidth(), value);
-			ptr += scanlineLength;
+			std::fill(pixelBufferPtr, pixelBufferPtr + bounds.getWidth(), value);
+			pixelBufferPtr += scanlineLength;
 		}
 	}
 

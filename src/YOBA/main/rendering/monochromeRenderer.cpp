@@ -1,7 +1,7 @@
 #include "monochromeRenderer.h"
 
 namespace YOBA {
-	size_t MonochromeRenderer::computePixelBufferLengthForTarget() {
+	size_t MonochromeRenderer::computePixelBufferLength() const {
 		return getTarget()->getSize().getSquare() / 8;
 	}
 

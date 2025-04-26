@@ -12,7 +12,7 @@ namespace YOBA {
 			uint16_t getTransactionBufferHeight() const;
 
 		protected:
-			virtual uint16_t computeTransactionBufferHeightForTarget();
+			virtual uint16_t computeTransactionBufferHeight();
 
 			void updateFromTarget() override;
 			void reallocateTransactionBuffer();

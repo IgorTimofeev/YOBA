@@ -27,7 +27,7 @@ namespace YOBA {
 		protected:
 			void updateFromTarget() override;
 
-			virtual size_t computePaletteBufferLengthForTarget() = 0;
+			virtual size_t computePaletteBufferLength() = 0;
 
 			void reallocatePaletteBuffer();
 			void reallocatePalette();

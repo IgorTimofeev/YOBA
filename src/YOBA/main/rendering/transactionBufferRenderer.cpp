@@ -5,7 +5,7 @@
 #endif
 
 namespace YOBA {
-	uint16_t TransactionBufferRenderer::computeTransactionBufferHeightForTarget() {
+	uint16_t TransactionBufferRenderer::computeTransactionBufferHeight() {
 		return getTarget()->getSize().getHeight() / 4;
 	}
 
@@ -16,7 +16,7 @@ namespace YOBA {
 		if (_transactionBuffer)
 			heap_caps_free(_transactionBuffer);
 
-		_transactionBufferHeight = computeTransactionBufferHeightForTarget();
+		_transactionBufferHeight = computeTransactionBufferHeight();
 		_transactionBufferLength = Color::getBytesPerModel(getTarget()->getSize().getWidth() * _transactionBufferHeight, getTarget()->getColorModel());
 
 		#ifdef ESP_PLATFORM

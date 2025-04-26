@@ -9,7 +9,7 @@ namespace YOBA {
 		if (_pixelBuffer)
 			heap_caps_free(_pixelBuffer);
 
-		_pixelBufferLength = computePixelBufferLengthForTarget();
+		_pixelBufferLength = computePixelBufferLength();
 
 #ifdef ESP_PLATFORM
 		_pixelBuffer = (uint8_t*) heap_caps_malloc(_pixelBufferLength, MALLOC_CAP_DMA);
@@ -35,5 +35,9 @@ namespace YOBA {
 
 	size_t PixelBufferRenderer::getPixelBufferIndex(const Point& point) const {
 		return getPixelBufferIndex(point.getX(), point.getY());
+	}
+
+	uint16_t PixelBufferRenderer::computeTransactionWindowHeight() const {
+		return getTarget()->getSize().getHeight() / 4;
 	}
 }

@@ -18,7 +18,7 @@ namespace YOBA {
 
 		delete _paletteBuffer;
 
-		_paletteBufferLength = computePaletteBufferLengthForTarget();
+		_paletteBufferLength = computePaletteBufferLength();
 		_paletteBuffer = new uint8_t[_paletteBufferLength];
 	}
 
