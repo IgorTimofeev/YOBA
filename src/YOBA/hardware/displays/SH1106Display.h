@@ -2,13 +2,13 @@
 
 #include <cstdint>
 #include "SPIDisplay.h"
-#include "YOBA/hardware/displays/traits/contrastDisplay.h"
-#include "YOBA/hardware/displays/traits/invertibleDisplay.h"
+#include "YOBA/hardware/displays/contrastDisplay.h"
+#include "YOBA/hardware/displays/invertibleDisplay.h"
 #include "YOBA/main/size.h"
-#include "YOBA/main/rendering/directRenderTarget.h"
+#include "YOBA/main/bounds.h"
 
 namespace YOBA {
-	class SH1106Display : public SPIDisplay, public DirectRenderTarget, public ContrastDisplay, public InvertibleDisplay {
+	class SH1106Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
 		public:
 			// Arduino: 80 MHz
 			// ESP-IDF: to be investigated
@@ -23,7 +23,7 @@ namespace YOBA {
 			);
 
 			void setup() override;
-			void writePixels(uint8_t* buffer) override;
+			void writePixels(const Bounds& bounds, uint8_t* source, size_t count) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;
 

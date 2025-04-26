@@ -1,5 +1,4 @@
 #include "view.h"
-#include <esp_log.h>
 
 namespace YOBA {
 	void SpatialView::onRender(Renderer* renderer, const Bounds& bounds) {

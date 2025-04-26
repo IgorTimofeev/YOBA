@@ -14,10 +14,9 @@ namespace YOBA {
 	) :
 		RenderTarget(
 			Size(128, 64),
-			PixelWriting::direct,
+			ViewportRotation::clockwise0,
 			PixelOrder::XYReversed,
-			ColorModel::monochrome,
-			ViewportRotation::clockwise0
+			ColorModel::monochrome
 		),
 		SPIDisplay(
 			mosiPin,
@@ -28,7 +27,6 @@ namespace YOBA {
 			rstPin,
 			SPIFrequency
 		),
-		DirectRenderTarget(),
 		ContrastDisplay()
 	{
 
@@ -69,7 +67,7 @@ namespace YOBA {
 		setContrast(0x9);
 	}
 
-	void ST7565Display::writePixels(uint8_t* buffer) {
+	void ST7565Display::writePixels(const Bounds& bounds, uint8_t* source, size_t count) {
 //		for (uint8_t page = 0; page < pageCount; page++) {
 //			writeCommand((uint8_t) Command::SetPageAddress | page);
 //			writeCommand((uint8_t) Command::SetColumnAddressLow);
@@ -90,7 +88,7 @@ namespace YOBA {
 			writeCommand((uint8_t) Command::RMW);
 
 			for (; col < (uint8_t) getSize().getWidth(); col++) {
-				writeData(buffer[(getSize().getWidth() * p) + col]);
+				writeData(source[(getSize().getWidth() * p) + col]);
 			}
 		}
 	}

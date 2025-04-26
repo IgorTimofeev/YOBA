@@ -13,15 +13,14 @@ namespace YOBA {
 		uint32_t SPIFrequency,
 
 		const Size& size,
-		ColorModel colorModel,
-		ViewportRotation rotation
+		ViewportRotation rotation,
+		ColorModel colorModel
 	) :
 		RenderTarget(
 			size,
-			PixelWriting::buffered,
+			rotation,
 			PixelOrder::YX,
-			colorModel,
-			rotation
+			colorModel
 		),
 		SPIDisplay(
 			mosiPin,
@@ -105,7 +104,7 @@ namespace YOBA {
 		// Color model
 		// 101 - 16 bits per pixel
 		// 110 - 18 bits per pixel
-		this->writeCommandAndData((uint8_t) Command::COLMOD, _colorModel == ColorModel::rgb666 ? 0b01100110 : 0b01010101);
+		this->writeCommandAndData((uint8_t) Command::COLMOD, getColorModel() == ColorModel::rgb666 ? 0b01100110 : 0b01010101);
 
 		// Frame rate control, f=fosc, 70Hz fps
 		b[0] = 0x00;
@@ -185,13 +184,7 @@ namespace YOBA {
 		this->writeCommandAndData(0x11, 0x00);
 		system::sleep(5);
 
-		// Clearing
-		{
-			memset(_buffer, 0x00, _bufferLength);
-
-			for (uint16_t y = 0; y < _size.getHeight(); y += _bufferHeight)
-				flushBuffer(Bounds(0, y, _size.getWidth(), _bufferHeight), _bufferLength);
-		}
+		// TODO: add internal buffer clearing somehow
 
 		// Display on
 		this->writeCommandAndData(0x29, 0x00);
@@ -204,38 +197,8 @@ namespace YOBA {
 		writeMADCTLCommand();
 	}
 
-	uint8_t ILI9341Display::getBufferHeightForRotation() {
-		return
-			this->_rotation == ViewportRotation::clockwise0 || this->_rotation == ViewportRotation::clockwise180
-			? 64 // 5 transactions
-			: 40; // 6 transactions
-	}
-
 	void ILI9341Display::setInverted(bool value) {
 		this->writeCommand(value ? 0x21 : 0x20);
-	}
-	
-	void ILI9341Display::flushBuffer(const Bounds& bounds, size_t length) {
-		uint8_t data[4];
-
-//		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
-
-		// Column Address Set
-		data[0] = bounds.getX() >> 8; //Start Col High
-		data[1] = bounds.getX() & 0xff; //Start Col Low
-		data[2] = (bounds.getX2()) >> 8; //End Col High
-		data[3] = (bounds.getX2()) & 0xff; //End Col Low
-		writeCommandAndData(0x2A, data, 4);
-
-		//Page address set
-		data[0] = bounds.getY() >> 8; //Start page high
-		data[1] = bounds.getY() & 0xff; // Start page low
-		data[2] = (bounds.getY2()) >> 8; // End page high
-		data[3] = (bounds.getY2()) & 0xff; // End page low
-		writeCommandAndData(0x2B, data, 4);
-
-		// Memory write
-		writeCommandAndData(0x2C, _buffer, length);
 	}
 
 	void ILI9341Display::writeMADCTLCommand() {
@@ -263,5 +226,28 @@ namespace YOBA {
 		}
 
 		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
+	}
+
+	void ILI9341Display::writePixels(const Bounds& bounds, uint8_t* source, size_t count) {
+		uint8_t data[4];
+
+//		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+
+		// Column Address Set
+		data[0] = bounds.getX() >> 8; //Start Col High
+		data[1] = bounds.getX() & 0xff; //Start Col Low
+		data[2] = (bounds.getX2()) >> 8; //End Col High
+		data[3] = (bounds.getX2()) & 0xff; //End Col Low
+		writeCommandAndData(0x2A, data, 4);
+
+		//Page address set
+		data[0] = bounds.getY() >> 8; //Start page high
+		data[1] = bounds.getY() & 0xff; // Start page low
+		data[2] = (bounds.getY2()) >> 8; // End page high
+		data[3] = (bounds.getY2()) & 0xff; // End page low
+		writeCommandAndData(0x2B, data, 4);
+
+		// Memory write
+		writeCommandAndData(0x2C, source, count);
 	}
 }

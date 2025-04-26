@@ -1,9 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include "YOBA/main/color.h"
+#include "YOBA/main/bounds.h"
 #include "YOBA/main/vector2.h"
 #include "YOBA/main/size.h"
+#include "YOBA/main/callback.h"
+
+#include <cstdint>
 
 namespace YOBA {
 	enum class ViewportRotation : uint8_t {
@@ -27,26 +30,24 @@ namespace YOBA {
 		XReversedXReversed
 	};
 
-	enum class PixelWriting : uint8_t {
-		direct,
-		buffered
-	};
+	class Renderer;
 
 	class RenderTarget {
+		friend class Renderer;
+
 		public:
 			RenderTarget(
 				const Size& size,
-				PixelWriting pixelWriting,
+				ViewportRotation rotation,
 				PixelOrder pixelOrder,
-				ColorModel colorModel,
-				ViewportRotation rotation
+				ColorModel colorModel
 			);
 
 			virtual ~RenderTarget();
 
 			virtual void setup();
+			virtual void writePixels(const Bounds& bounds, uint8_t* source, size_t length) = 0;
 
-			PixelWriting getPixelWriting() const;
 			PixelOrder getPixelOrder() const;
 			ColorModel getColorModel() const;
 			const Size& getSize() const;
@@ -54,20 +55,23 @@ namespace YOBA {
 			ViewportRotation getRotation() const;
 			void setRotation(ViewportRotation value);
 
+			Renderer* getRenderer() const;
 			Point orientPoint(const Point& point);
 
 			bool operator==(const RenderTarget& rhs) const;
 			bool operator!=(const RenderTarget& rhs) const;
 
 		protected:
+			virtual void onRotationChanged();
+
+		private:
 			const Size _defaultSize;
 			Size _size;
-			PixelWriting _pixelWriting;
+			ViewportRotation _rotation = ViewportRotation::clockwise0;
 			PixelOrder _pixelOrder;
 			ColorModel _colorModel;
-			ViewportRotation _rotation = ViewportRotation::clockwise0;
+			Renderer* _renderer = nullptr;
 
-			virtual void updateFromRotation();
-			virtual void onRotationChanged();
+			void updateSizeFromRotation();
 	};
 }

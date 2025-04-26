@@ -1,20 +1,20 @@
 #pragma once
 
-#include "paletteRenderer.h"
+#include "YOBA/main/rendering/paletteBufferRenderer.h"
 
 namespace YOBA {
-	class Bit8PaletteRenderer : public PaletteRenderer {
+	class Bit8PaletteRenderer : public PaletteBufferRenderer {
 		public:
 			explicit Bit8PaletteRenderer(uint16_t paletteLength);
 
-			void flushBuffer() override;
+			void flush() override;
 
 			// Original generation algo can be found here:
 			// https://github.com/MightyPirates/OpenComputers/blob/49ae4fe850e25e8eb98e62b2ac0abefaf8893102/src/main/scala/li/cil/oc/util/PackedColor.scala#L124-L141
 			void setOpenComputersPaletteColors();
 
 		protected:
-			size_t getRequiredBufferLength() override;
+			size_t computePaletteBufferLengthForTarget() override;
 
 			inline void clearNative(const Color* color) override;
 			inline void renderPixelNative(const Point& point, const Color* color) override;
@@ -22,5 +22,7 @@ namespace YOBA {
 			inline void renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) override;
 			inline void renderFilledRectangleNative(const Bounds& bounds, const Color* color) override;
 			inline void renderImageNative(const Point& point, const Image* image) override;
+
+			void flush(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter);
 	};
 }

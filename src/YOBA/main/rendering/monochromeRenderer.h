@@ -2,15 +2,15 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "renderer.h"
+#include "YOBA/main/rendering/pixelBufferRenderer.h"
 
 namespace YOBA {
-	class MonochromeRenderer : public Renderer {
+	class MonochromeRenderer : public PixelBufferRenderer {
 		public:
-			void flushBuffer() override;
+			void flush() override;
 
 		protected:
-			size_t getRequiredBufferLength() override;
+			size_t computePixelBufferLengthForTarget() override;
 			inline void clearNative(const Color* color) override;
 			inline void renderPixelNative(const Point& point, const Color* color) override;
 			inline void renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) override;

@@ -14,10 +14,9 @@ namespace YOBA {
 	) :
 		RenderTarget(
 			Size(128, 64),
-			PixelWriting::direct,
+			ViewportRotation::clockwise0,
 			PixelOrder::XY,
-			ColorModel::monochrome,
-			ViewportRotation::clockwise0
+			ColorModel::monochrome
 		),
 		SPIDisplay(
 			mosiPin,
@@ -28,7 +27,6 @@ namespace YOBA {
 			rstPin,
 			SPIFrequency
 		),
-		DirectRenderTarget(),
 		ContrastDisplay()
 	{
 
@@ -78,7 +76,7 @@ namespace YOBA {
 		setDataCommandPin(true);
 	}
 
-	void SH1106Display::writePixels(uint8_t* buffer) {
+	void SH1106Display::writePixels(const Bounds& bounds, uint8_t* source, size_t count) {
 		for (uint8_t page = 0; page < _pageCount; page++) {
 			setDataCommandPin(false);
 				writeData((uint8_t) Command::setPageAddress | page);
@@ -87,7 +85,7 @@ namespace YOBA {
 			setDataCommandPin(true);
 
 			// Pixels
-			writeData(buffer + page * getSize().getWidth(), getSize().getWidth());
+			writeData(source + page * getSize().getWidth(), getSize().getWidth());
 		}
 	}
 

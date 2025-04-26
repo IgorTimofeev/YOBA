@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <cstdint>
-#include "renderTarget.h"
+#include "YOBA/main/rendering/renderTarget.h"
 #include "YOBA/main/size.h"
 #include "YOBA/main/bounds.h"
 #include "YOBA/main/color.h"
@@ -11,6 +11,8 @@
 
 namespace YOBA {
 	class Renderer {
+		friend class RenderTarget;
+
 		public:
 			RenderTarget* getTarget() const;
 			void setTarget(RenderTarget* value);
@@ -20,9 +22,6 @@ namespace YOBA {
 			Bounds pushViewport(const Bounds& bounds);
 			void popViewport(const Bounds& bounds);
 			void resetViewport();
-
-			size_t getIndex(uint16_t x, uint16_t y) const;
-			size_t getIndex(const Point& point) const;
 
 			void clear(const Color* color);
 			void renderPixel(const Point& point, const Color* color);
@@ -53,13 +52,10 @@ namespace YOBA {
 			void renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale = 1);
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
 
-			virtual void flushBuffer() = 0;
+			virtual void flush() = 0;
 
 		protected:
-			virtual size_t getRequiredBufferLength() = 0;
-
-			virtual void onTargetChanged();
-
+			virtual void updateFromTarget();
 			virtual void clearNative(const Color* color) = 0;
 			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
 			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
@@ -67,15 +63,9 @@ namespace YOBA {
 			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color* color) = 0;
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
-			uint8_t* getBuffer() const;
-			size_t getBufferLength() const;
-
 		private:
-			RenderTarget* _target;
-			Bounds _viewport = Bounds();
-
-			uint8_t* _buffer = nullptr;
-			size_t _bufferLength = 0;
+			RenderTarget* _target = nullptr;
+			Bounds _viewport {};
 
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);

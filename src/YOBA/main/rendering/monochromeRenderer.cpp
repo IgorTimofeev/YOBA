@@ -1,45 +1,36 @@
 #include "monochromeRenderer.h"
-#include "directRenderTarget.h"
 
 namespace YOBA {
-	size_t MonochromeRenderer::getRequiredBufferLength() {
+	size_t MonochromeRenderer::computePixelBufferLengthForTarget() {
 		return getTarget()->getSize().getSquare() / 8;
 	}
 
-	void MonochromeRenderer::flushBuffer() {
-		switch (getTarget()->getPixelWriting()) {
-			case PixelWriting::direct: {
-				(dynamic_cast<DirectRenderTarget*>(getTarget()))->writePixels(getBuffer());
-
-				break;
-			}
-			default:
-				break;
-		}
+	void MonochromeRenderer::flush() {
+		getTarget()->writePixels(Bounds(getTarget()->getSize()), getPixelBuffer(), getPixelBufferLength());
 	}
 
 	void MonochromeRenderer::clearNative(const Color* color) {
-		memset(getBuffer(), ((MonochromeColor*) color)->getValue() ? 0xFF : 0x00, getBufferLength());
+		memset(getPixelBuffer(), ((MonochromeColor*) color)->getValue() ? 0xFF : 0x00, getPixelBufferLength());
 	}
 
 	void MonochromeRenderer::renderPixelNative(const Point& point, const Color* color) {
 		switch (getTarget()->getPixelOrder()) {
 			case PixelOrder::XY: {
 				if (((MonochromeColor*) color)->getValue()) {
-					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (point.getY() & 7));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}
 				else {
-					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (point.getY() & 7));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (point.getY() & 7));
 				}
 
 				break;
 			}
 			case PixelOrder::XYReversed: {
 				if (((MonochromeColor*) color)->getValue()) {
-					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
 				}
 				else {
-					getBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
 				}
 
 				break;

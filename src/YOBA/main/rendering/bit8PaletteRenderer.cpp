@@ -1,57 +1,67 @@
 #include "bit8PaletteRenderer.h"
 #include "YOBA/main/bounds.h"
-#include "bufferedRenderTarget.h"
 
 namespace YOBA {
-	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteRenderer(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteBufferRenderer(paletteLength) {
 
 	}
 
-	size_t Bit8PaletteRenderer::getRequiredBufferLength() {
+	size_t Bit8PaletteRenderer::computePaletteBufferLengthForTarget() {
 		return getTarget()->getSize().getSquare();
 	}
 
-	void Bit8PaletteRenderer::flushBuffer() {
-		switch (getTarget()->getPixelWriting()) {
-			case PixelWriting::buffered: {
-				const auto bufferedRenderTarget = dynamic_cast<BufferedRenderTarget*>(getTarget());
+	void Bit8PaletteRenderer::flush(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter) {
+		uint32_t pixelIndex = 0;
+		uint16_t y;
+		uint8_t* transactionBufferStart;
+		uint8_t* transactionBufferEnd = getTransactionBuffer() + getTransactionBufferLength();
 
-				switch (getTarget()->getColorModel()) {
-					case ColorModel::rgb565: {
-						bufferedRenderTarget->flushBuffer(
-							getTarget()->getSize().getWidth(),
-							[this](uint8_t*& transactionBuffer, uint32_t& pixelBufferIndex) {
-								*((uint16_t*) transactionBuffer) = ((uint16_t*) getPalette())[getBuffer()[pixelBufferIndex]];
-								transactionBuffer += 2;
-								pixelBufferIndex++;
-							}
-						);
+		for (y = 0; y < getTarget()->getSize().getHeight(); y += getTransactionBufferHeight()) {
+			transactionBufferStart = getTransactionBuffer();
 
-						break;
+			while (transactionBufferStart < transactionBufferEnd) {
+				pixelSetter(transactionBufferStart, pixelIndex);
+			}
+
+			getTarget()->writePixels(
+				Bounds(0, y, width, getTransactionBufferHeight()),
+				getTransactionBuffer(),
+				getTransactionBufferLength()
+			);
+		}
+	}
+
+	void Bit8PaletteRenderer::flush() {
+		switch (getTarget()->getColorModel()) {
+			case ColorModel::rgb565: {
+				flush(
+					getTarget()->getSize().getWidth(),
+					[this](uint8_t*& transactionBuffer, uint32_t& pixelIndex) {
+						*((uint16_t*) transactionBuffer) = ((uint16_t*) getPalette())[getPaletteBuffer()[pixelIndex]];
+						transactionBuffer += 2;
+						pixelIndex++;
 					}
+				);
 
-					case ColorModel::rgb666: {
-						const uint8_t* palettePtr;
+				break;
+			}
 
-						bufferedRenderTarget->flushBuffer(
-							getTarget()->getSize().getWidth(),
-							[&](uint8_t*& destination, uint32_t& pixelIndex) {
-								palettePtr = getPalette() + getBuffer()[pixelIndex] * 3;
+			case ColorModel::rgb666: {
+				const uint8_t* palettePtr;
 
-								destination[0] = palettePtr[0];
-								destination[1] = palettePtr[1];
-								destination[2] = palettePtr[2];
+				flush(
+					getTarget()->getSize().getWidth(),
+					[&](uint8_t*& transactionBuffer, uint32_t& pixelIndex) {
+						palettePtr = getPalette() + getPaletteBuffer()[pixelIndex] * 3;
 
-								destination += 3;
-								pixelIndex++;
-							}
-						);
+						transactionBuffer[0] = palettePtr[0];
+						transactionBuffer[1] = palettePtr[1];
+						transactionBuffer[2] = palettePtr[2];
 
-						break;
+						transactionBuffer += 3;
+						pixelIndex++;
 					}
-					default:
-						break;
-				}
+				);
 
 				break;
 			}
@@ -61,7 +71,7 @@ namespace YOBA {
 	}
 
 	void Bit8PaletteRenderer::clearNative(const Color* color) {
-		memset(getBuffer(), (int) getPaletteIndex(color), getBufferLength());
+		memset(getPaletteBuffer(), (int) getPaletteIndex(color), getPaletteBufferLength());
 	}
 
 	void Bit8PaletteRenderer::renderPixelNative(const Point& point, const Color* color) {
@@ -76,15 +86,15 @@ namespace YOBA {
 //			return;
 //		}
 
-		getBuffer()[getIndex(point)] = getPaletteIndex(color);
+		getPaletteBuffer()[getPaletteBufferIndex(point)] = getPaletteIndex(color);
 	}
 
 	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
-		memset(getBuffer() + getIndex(point), getPaletteIndex(color), width);
+		memset(getPaletteBuffer() + getPaletteBufferIndex(point), getPaletteIndex(color), width);
 	}
 
 	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
-		uint8_t* bufferPtr = getBuffer() + getIndex(point);
+		uint8_t* bufferPtr = getPaletteBuffer() + getPaletteBufferIndex(point);
 		uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		auto paletteIndex = getPaletteIndex(color);
 
@@ -95,7 +105,7 @@ namespace YOBA {
 	}
 
 	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
-		uint8_t* bufferPtr = getBuffer() + getIndex(bounds.getPosition());
+		uint8_t* bufferPtr = getPaletteBuffer() + getPaletteBufferIndex(bounds.getPosition());
 		uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		auto paletteIndex = getPaletteIndex(color);
 
@@ -110,7 +120,7 @@ namespace YOBA {
 			return;
 
 		size_t
-			bufferIndex = getIndex(point),
+			bufferIndex = getPaletteBufferIndex(point),
 			scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth(),
 			bitmapByteIndex = 0;
 
@@ -136,7 +146,7 @@ namespace YOBA {
 							bitmapBitIndex = 0;
 							bitmapByteIndex++;
 
-							getBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
+							getPaletteBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
 
 							bitmapByteIndex++;
 						}
@@ -147,7 +157,7 @@ namespace YOBA {
 
 							bitmapByte = image->getBitmap()[bitmapByteIndex];
 
-							getBuffer()[bufferIndex] = part1 | (bitmapByte << (8 - bitmapBitIndex));
+							getPaletteBuffer()[bufferIndex] = part1 | (bitmapByte << (8 - bitmapBitIndex));
 						}
 					}
 					// Transparent
@@ -170,7 +180,7 @@ namespace YOBA {
 		else {
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
-					getBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
+					getPaletteBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
 
 					bufferIndex++;
 					bitmapByteIndex++;
@@ -204,4 +214,5 @@ namespace YOBA {
 			setPaletteColor(240 + index, Rgb888Color(shade, shade, shade));
 		}
 	}
+
 }

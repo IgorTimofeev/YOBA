@@ -112,7 +112,7 @@ namespace YOBA {
 
 			// Flushing screen buffer
 			time = system::getTime();
-			_renderer->flushBuffer();
+			_renderer->flush();
 			_flushDeltaTime = system::getTime() - time;
 
 			_renderInvalidated = false;

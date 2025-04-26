@@ -1,16 +1,16 @@
 #pragma once
 
 #include <cstdint>
-#include "SPIDisplay.h"
-#include "YOBA/hardware/displays/traits/invertibleDisplay.h"
-#include "YOBA/main/rendering/bufferedRenderTarget.h"
+#include "YOBA/hardware/displays/SPIDisplay.h"
+#include "YOBA/hardware/displays/invertibleDisplay.h"
+#include "YOBA/main/bounds.h"
 
 namespace YOBA {
-	class ILI9341Display : public SPIDisplay, public InvertibleDisplay, public BufferedRenderTarget {
+	class ILI9341Display : public SPIDisplay, public InvertibleDisplay {
 		public:
 			// Recommended SPI frequencies:
 			// Arduino: 40 MHz
-			// ESP-IDF: 26 MHz
+			// ESP-IDF: 60 MHz
 			ILI9341Display(
 				uint8_t mosiPin,
 				uint8_t misoPin,
@@ -21,16 +21,15 @@ namespace YOBA {
 				uint32_t SPIFrequency,
 
 				const Size& size = Size(240, 320),
-				ColorModel colorModel = ColorModel::rgb565,
-				ViewportRotation rotation = ViewportRotation::clockwise0
+				ViewportRotation rotation = ViewportRotation::clockwise0,
+				ColorModel colorModel = ColorModel::rgb565
 			);
 
 			void setup() override;
 			void setInverted(bool value) override;
-			void flushBuffer(const Bounds& bounds, size_t length) override;
+			void writePixels(const Bounds& bounds, uint8_t* source, size_t count) override;
 
 		protected:
-			uint8_t getBufferHeightForRotation() override;
 			void onRotationChanged() override;
 
 		private:

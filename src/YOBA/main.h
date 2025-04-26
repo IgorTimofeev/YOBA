@@ -22,11 +22,10 @@
 
 // Render targets
 #include "YOBA/main/rendering/renderTarget.h"
-#include "YOBA/main/rendering/bufferedRenderTarget.h"
-#include "YOBA/main/rendering/directRenderTarget.h"
 
 // Renderers
 #include "YOBA/main/rendering/renderer.h"
-#include "YOBA/main/rendering/paletteRenderer.h"
+#include "YOBA/main/rendering/transactionBufferRenderer.h"
+#include "YOBA/main/rendering/paletteBufferRenderer.h"
 #include "YOBA/main/rendering/bit8PaletteRenderer.h"
 #include "YOBA/main/rendering/monochromeRenderer.h"

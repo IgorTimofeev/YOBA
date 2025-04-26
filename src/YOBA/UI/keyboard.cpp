@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <esp_log.h>
 #include "keyboard.h"
 #include "stackLayout.h"
 #include "application.h"

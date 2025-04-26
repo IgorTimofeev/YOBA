@@ -1,22 +1,21 @@
 #include "renderTarget.h"
 #include "YOBA/main/bounds.h"
+#include "YOBA/main/rendering/renderer.h"
 
 namespace YOBA {
 	RenderTarget::RenderTarget(
 		const Size& size,
-		PixelWriting pixelWriting,
+		ViewportRotation rotation,
 		PixelOrder pixelOrder,
-		ColorModel colorModel,
-		ViewportRotation rotation
+		ColorModel colorModel
 	) :
 		_defaultSize(size),
 		_size(size),
-		_pixelWriting(pixelWriting),
+		_rotation(rotation),
 		_pixelOrder(pixelOrder),
-		_colorModel(colorModel),
-		_rotation(rotation)
+		_colorModel(colorModel)
 	{
-
+		updateSizeFromRotation();
 	}
 
 	RenderTarget::~RenderTarget() {
@@ -24,11 +23,7 @@ namespace YOBA {
 	}
 
 	void RenderTarget::setup() {
-		updateFromRotation();
-	}
 
-	PixelWriting RenderTarget::getPixelWriting() const {
-		return _pixelWriting;
 	}
 
 	PixelOrder RenderTarget::getPixelOrder() const {
@@ -88,7 +83,7 @@ namespace YOBA {
 		}
 	}
 
-	void RenderTarget::updateFromRotation() {
+	void RenderTarget::updateSizeFromRotation() {
 		switch (_rotation) {
 			case ViewportRotation::clockwise0:
 			case ViewportRotation::clockwise180:
@@ -104,7 +99,10 @@ namespace YOBA {
 	}
 
 	void RenderTarget::onRotationChanged() {
-		updateFromRotation();
+		updateSizeFromRotation();
+
+		if (_renderer)
+			_renderer->updateFromTarget();
 	}
 
 	bool RenderTarget::operator==(const RenderTarget& rhs) const {
@@ -112,11 +110,14 @@ namespace YOBA {
 			_rotation == rhs._rotation &&
 			_defaultSize == rhs._defaultSize &&
 			_colorModel == rhs._colorModel &&
-			_pixelOrder == rhs._pixelOrder &&
-			_pixelWriting == rhs._pixelWriting;
+			_pixelOrder == rhs._pixelOrder;
 	}
 
 	bool RenderTarget::operator!=(const RenderTarget& rhs) const {
 		return !(rhs == *this);
+	}
+
+	Renderer* RenderTarget::getRenderer() const {
+		return _renderer;
 	}
 }

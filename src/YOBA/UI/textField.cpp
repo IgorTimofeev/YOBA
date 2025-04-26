@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <esp_log.h>
 #include "textField.h"
 
 #include "application.h"
@@ -325,8 +324,6 @@ namespace YOBA {
 
 	void TextField::onFocusChanged() {
 		Element::onFocusChanged();
-
-		ESP_LOGI("TexField", "onFocusChanged(): %d", isFocused());
 
 		setCursorBlinkStateAndTime(isFocused());
 

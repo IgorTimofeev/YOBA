@@ -10,38 +10,22 @@ namespace YOBA {
 		if (value == _target || (_target && *value == *_target))
 			return;
 
-		auto fromTarget = _target;
+		auto previousTarget = _target;
+
+		if (previousTarget) {
+			previousTarget->_renderer = nullptr;
+		}
 
 		_target = value;
+		_target->_renderer = this;
 
-		if (!fromTarget) {
-			// Resetting viewport if it was first time when target was set
-			resetViewport();
-		}
+		resetViewport();
 
-		onTargetChanged();
+		updateFromTarget();
 	}
 
-	void Renderer::onTargetChanged() {
-		// (Re)allocating pixel buffer
-		delete _buffer;
+	void Renderer::updateFromTarget() {
 
-		if (getTarget()) {
-			_bufferLength = getRequiredBufferLength();
-			_buffer = new uint8_t[_bufferLength];
-			assert(!!_buffer);
-		}
-		else {
-			_bufferLength = 0;
-		}
-	}
-
-	uint8_t* Renderer::getBuffer() const {
-		return _buffer;
-	}
-
-	size_t Renderer::getBufferLength() const {
-		return _bufferLength;
 	}
 
 	const Bounds& Renderer::getViewport() {
@@ -73,14 +57,6 @@ namespace YOBA {
 		_viewport.setX(0);
 		_viewport.setX(0);
 		_viewport.setSize(_target->getSize());
-	}
-
-	size_t Renderer::getIndex(uint16_t x, uint16_t y) const {
-		return y * _target->getSize().getWidth() + x;
-	}
-
-	size_t Renderer::getIndex(const Point& point) const {
-		return getIndex(point.getX(), point.getY());
 	}
 
 	// -------------------------------- Native rendering --------------------------------
