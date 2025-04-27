@@ -7,24 +7,24 @@
 namespace YOBA {
 	class GradientStop {
 		public:
-			GradientStop(float position, const Rgb888Color& color);
+			GradientStop(float position, const RGB888Color& color);
 
 			float getPosition() const;
 
 			void setPosition(float value);
 
-			const Rgb888Color& getColor() const;
+			const RGB888Color& getColor() const;
 
-			void setColor(const Rgb888Color& value);
+			void setColor(const RGB888Color& value);
 
 		private:
 			float _position;
-			Rgb888Color _color;
+			RGB888Color _color;
 	};
 
 	class LinearGradient {
 		public:
-			Rgb888Color getRgb888Color(float position);
+			RGB888Color getRgb888Color(float position);
 
 			std::vector<GradientStop>& getStops();
 

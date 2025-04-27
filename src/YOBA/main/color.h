@@ -4,15 +4,15 @@
 
 namespace YOBA {
 	enum class ColorModel : uint8_t {
-		palette,
-		hsb,
+		RGB565,
+		RGB666,
+		RGB888,
 		monochrome,
-		rgb666,
-		rgb565,
-		rgb888
+		HSB,
+		palette8Bit
 	};
 
-	class Rgb888Color;
+	class RGB888Color;
 
 	class Color {
 		public:
@@ -48,13 +48,13 @@ namespace YOBA {
 			ColorModel _type;
 	};
 
-	// -------------------------------- HsbColor --------------------------------
+	// -------------------------------- HSB --------------------------------
 
-	class HsbColor : Color {
+	class HSBColor : Color {
 		public:
-			HsbColor(float h, float s, float b);
+			HSBColor(float h, float s, float b);
 
-			Rgb888Color toRgb888() const;
+			RGB888Color toRgb888() const;
 
 			float getH() const;
 			void setH(float h);
@@ -81,7 +81,7 @@ namespace YOBA {
 			TValue getValue() const;
 			void setValue(TValue value);
 
-			virtual Rgb888Color toRgb888() const = 0;
+			virtual RGB888Color toRgb888() const = 0;
 
 		protected:
 			TValue _value;
@@ -102,40 +102,40 @@ namespace YOBA {
 		_value = value;
 	}
 
-	// -------------------------------- Rgb565Color --------------------------------
+	// -------------------------------- Monochrome --------------------------------
 
 	class MonochromeColor : public ValueColor<bool> {
 		public:
 			explicit MonochromeColor(bool value);
 
-			Rgb888Color toRgb888() const override;
+			RGB888Color toRgb888() const override;
 	};
 
-	// -------------------------------- Rgb565Color --------------------------------
+	// -------------------------------- RGB565 --------------------------------
 
-	class Rgb565Color : public ValueColor<uint16_t> {
+	class RGB565Color : public ValueColor<uint16_t> {
 		public:
-			explicit Rgb565Color(uint16_t value);
+			explicit RGB565Color(uint16_t value);
 
-			Rgb888Color toRgb888() const override;
+			RGB888Color toRgb888() const override;
 	};
 
-	// -------------------------------- Rgb666Color --------------------------------
+	// -------------------------------- RGB666 --------------------------------
 
-	class Rgb666Color : public ValueColor<uint32_t> {
+	class RGB666Color : public ValueColor<uint32_t> {
 		public:
-			explicit Rgb666Color(uint32_t value);
+			explicit RGB666Color(uint32_t value);
 
-			Rgb888Color toRgb888() const override;
+			RGB888Color toRgb888() const override;
 	};
 
-	// -------------------------------- Rgb888Color --------------------------------
+	// -------------------------------- RGB888 --------------------------------
 
-	class Rgb888Color : public Color {
+	class RGB888Color : public Color {
 		public:
-			Rgb888Color();
-			Rgb888Color(uint8_t r, uint8_t g, uint8_t b);
-			explicit Rgb888Color(uint32_t rgb888);
+			RGB888Color();
+			RGB888Color(uint8_t r, uint8_t g, uint8_t b);
+			explicit RGB888Color(uint32_t rgb888);
 
 			uint8_t getR() const;
 			void setR(uint8_t r);
@@ -147,11 +147,11 @@ namespace YOBA {
 			void setB(uint8_t b);
 
 			uint32_t toUint32() const;
-			Rgb565Color toRgb565() const;
-			Rgb666Color toRgb666() const;
+			RGB565Color toRGB565() const;
+			RGB666Color toRGB666() const;
 			MonochromeColor toMonochrome() const;
 
-			void interpolateTo(const Rgb888Color& second, float position);
+			void interpolateTo(const RGB888Color& second, float position);
 
 		private:
 			uint8_t _r = 0;
@@ -161,16 +161,44 @@ namespace YOBA {
 
 	// -------------------------------- PaletteColor --------------------------------
 
+	template<typename TIndex>
 	class PaletteColor : public Color {
 		public:
-			explicit PaletteColor(uint16_t index);
-
+			explicit PaletteColor(TIndex index);
 			PaletteColor();
-
-			uint16_t getIndex() const;
-			void setIndex(uint16_t index);
+			TIndex getIndex() const;
+			void setIndex(TIndex value);
 
 		private:
-			uint16_t _index;
+			TIndex _index;
+	};
+
+	template<typename TIndex>
+	PaletteColor<TIndex>::PaletteColor(TIndex index) : Color(ColorModel::palette8Bit), _index(index) {
+
+	}
+
+	template<typename TIndex>
+	PaletteColor<TIndex>::PaletteColor() : PaletteColor(0) {
+
+	}
+
+	template<typename TIndex>
+	TIndex PaletteColor<TIndex>::getIndex() const {
+		return _index;
+	}
+
+	template<typename TIndex>
+	void PaletteColor<TIndex>::setIndex(TIndex value) {
+		_index = value;
+	}
+
+	// -------------------------------- Bit8PaletteColor --------------------------------
+
+	class Bit8PaletteColor : public PaletteColor<uint16_t>{
+		public:
+			explicit Bit8PaletteColor(uint16_t index);
+
+			Bit8PaletteColor();
 	};
 }

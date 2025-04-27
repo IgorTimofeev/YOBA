@@ -104,7 +104,7 @@ namespace YOBA {
 		// Color model
 		// 101 - 16 bits per pixel
 		// 110 - 18 bits per pixel
-		this->writeCommandAndData((uint8_t) Command::COLMOD, getColorModel() == ColorModel::rgb666 ? 0b01100110 : 0b01010101);
+		this->writeCommandAndData((uint8_t) Command::COLMOD, getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
 
 		// Frame rate control, f=fosc, 70Hz fps
 		b[0] = 0x00;

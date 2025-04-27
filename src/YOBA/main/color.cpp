@@ -14,11 +14,11 @@ namespace YOBA {
 
 	uint8_t Color::getBytesPerModel(ColorModel colorModel) {
 		switch (colorModel) {
-			case ColorModel::rgb565:
+			case ColorModel::RGB565:
 				return 2;
 
-			case ColorModel::rgb666:
-			case ColorModel::rgb888:
+			case ColorModel::RGB666:
+			case ColorModel::RGB888:
 				return 3;
 
 			default:
@@ -31,11 +31,11 @@ namespace YOBA {
 			case ColorModel::monochrome:
 				return pixelCount >= 8 ? pixelCount / 8 : 1;
 
-			case ColorModel::rgb565:
+			case ColorModel::RGB565:
 				return pixelCount * 2;
 
-			case ColorModel::rgb666:
-			case ColorModel::rgb888:
+			case ColorModel::RGB666:
+			case ColorModel::RGB888:
 				return pixelCount * 3;
 
 			default:
@@ -45,8 +45,8 @@ namespace YOBA {
 
 	// -------------------------------- Rgb888Color --------------------------------
 
-	Rgb888Color::Rgb888Color(uint8_t r, uint8_t g, uint8_t b) :
-		Color(ColorModel::rgb888),
+	RGB888Color::RGB888Color(uint8_t r, uint8_t g, uint8_t b) :
+		Color(ColorModel::RGB888),
 		_r(r),
 		_g(g),
 		_b(b)
@@ -54,11 +54,11 @@ namespace YOBA {
 
 	}
 
-	Rgb888Color::Rgb888Color() : Rgb888Color(0, 0, 0) {
+	RGB888Color::RGB888Color() : RGB888Color(0, 0, 0) {
 
 	}
 
-	Rgb888Color::Rgb888Color(uint32_t rgb888) : Rgb888Color(
+	RGB888Color::RGB888Color(uint32_t rgb888) : RGB888Color(
 		rgb888 >> 16 & 0xFF,
 		rgb888 >> 8 & 0xFF,
 		rgb888 & 0xFF
@@ -66,85 +66,85 @@ namespace YOBA {
 
 	}
 
-	uint32_t Rgb888Color::toUint32() const {
+	uint32_t RGB888Color::toUint32() const {
 		return _r << 16 | _g << 8 | _b;
 	}
 
-	Rgb565Color Rgb888Color::toRgb565() const {
-		return Rgb565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
+	RGB565Color RGB888Color::toRGB565() const {
+		return RGB565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
 //		return Rgb565Color(((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3));
 	}
 
-	Rgb666Color Rgb888Color::toRgb666() const {
-		return Rgb666Color((_r << 16) | (_g << 8) | _b);
+	RGB666Color RGB888Color::toRGB666() const {
+		return RGB666Color((_r << 16) | (_g << 8) | _b);
 	}
 
-	MonochromeColor Rgb888Color::toMonochrome() const {
+	MonochromeColor RGB888Color::toMonochrome() const {
 		return MonochromeColor(_r > 0 || _g > 0 || _b > 0);
 	}
 
-	void Rgb888Color::interpolateTo(const Rgb888Color &second, float position) {
+	void RGB888Color::interpolateTo(const RGB888Color &second, float position) {
 		_r = interpolate(_r, second._r, position);
 		_g = interpolate(_g, second._g, position);
 		_b = interpolate(_b, second._b, position);
 	}
 
-	uint8_t Rgb888Color::getR() const {
+	uint8_t RGB888Color::getR() const {
 		return _r;
 	}
 
-	void Rgb888Color::setR(uint8_t r) {
+	void RGB888Color::setR(uint8_t r) {
 		_r = r;
 	}
 
-	uint8_t Rgb888Color::getG() const {
+	uint8_t RGB888Color::getG() const {
 		return _g;
 	}
 
-	void Rgb888Color::setG(uint8_t g) {
+	void RGB888Color::setG(uint8_t g) {
 		_g = g;
 	}
 
-	uint8_t Rgb888Color::getB() const {
+	uint8_t RGB888Color::getB() const {
 		return _b;
 	}
 
-	void Rgb888Color::setB(uint8_t b) {
+	void RGB888Color::setB(uint8_t b) {
 		_b = b;
 	}
 
 	// -------------------------------- HsbColor --------------------------------
 
-	HsbColor::HsbColor(float h, float s, float b) :  Color(ColorModel::hsb), _h(h), _s(s), _b(b) {
+	HSBColor::HSBColor(float h, float s, float b) :  Color(ColorModel::HSB), _h(h), _s(s), _b(b) {
 
 	}
 
-	float HsbColor::getH() const {
+	float HSBColor::getH() const {
 		return _h;
 	}
 
-	void HsbColor::setH(float h) {
+	void HSBColor::setH(float h) {
 		_h = h;
 	}
 
-	float HsbColor::getS() const {
+	float HSBColor::getS() const {
 		return _s;
 	}
 
-	void HsbColor::setS(float s) {
+	void HSBColor::setS(float s) {
 		_s = s;
 	}
 
-	float HsbColor::getB() const {
+	float HSBColor::getB() const {
 		return _b;
 	}
 
-	void HsbColor::setB(float b) {
+	void HSBColor::setB(float b) {
 		_b = b;
 	}
 
-	Rgb888Color HsbColor::toRgb888() const {
-		Rgb888Color result;
+	RGB888Color HSBColor::toRgb888() const {
+		RGB888Color result;
 
 		auto hueSector = _h * 6.0f;
 		auto hueSectorIntegerPart = (uint8_t) hueSector;
@@ -203,20 +203,20 @@ namespace YOBA {
 
 	}
 
-	Rgb888Color MonochromeColor::toRgb888() const {
+	RGB888Color MonochromeColor::toRgb888() const {
 		return
 			_value > 0
-			? Rgb888Color(0xFf, 0xFF, 0xFF)
-			: Rgb888Color(0x00, 0x00, 0x00);
+			? RGB888Color(0xFf, 0xFF, 0xFF)
+			: RGB888Color(0x00, 0x00, 0x00);
 	}
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	Rgb565Color::Rgb565Color(uint16_t value) : ValueColor<uint16_t>(ColorModel::rgb565, value) {
+	RGB565Color::RGB565Color(uint16_t value) : ValueColor<uint16_t>(ColorModel::RGB565, value) {
 
 	}
 
-	Rgb888Color Rgb565Color::toRgb888() const {
+	RGB888Color RGB565Color::toRgb888() const {
 		return {
 			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
 			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),
@@ -226,11 +226,11 @@ namespace YOBA {
 
 	// -------------------------------- Rgb666Color --------------------------------
 
-	Rgb666Color::Rgb666Color(uint32_t value) : ValueColor<uint32_t>(ColorModel::rgb666, value) {
+	RGB666Color::RGB666Color(uint32_t value) : ValueColor<uint32_t>(ColorModel::RGB666, value) {
 
 	}
 
-	Rgb888Color Rgb666Color::toRgb888() const {
+	RGB888Color RGB666Color::toRgb888() const {
 		return {
 			(uint8_t) (((_value >> 12) & 0b111111) * 255 / 0b111111),
 			(uint8_t) (((_value >> 6) & 0b111111) * 255 / 0b111111),
@@ -240,19 +240,11 @@ namespace YOBA {
 
 	// -------------------------------- PaletteColor --------------------------------
 
-	PaletteColor::PaletteColor(uint16_t index) : Color(ColorModel::palette), _index(index) {
+	Bit8PaletteColor::Bit8PaletteColor(uint16_t index) : PaletteColor<uint16_t>(index) {
 
 	}
 
-	PaletteColor::PaletteColor() : PaletteColor(0) {
+	Bit8PaletteColor::Bit8PaletteColor() : Bit8PaletteColor(0) {
 
-	}
-
-	uint16_t PaletteColor::getIndex() const {
-		return _index;
-	}
-
-	void PaletteColor::setIndex(uint16_t index) {
-		_index = index;
 	}
 }

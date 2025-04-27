@@ -14,34 +14,33 @@ namespace YOBA {
 		public:
 			explicit PaletteRenderer(TIndex paletteColorCount);
 
-			uint8_t* getPaletteBuffer() const;
-			size_t getPaletteBufferLength() const;
+			uint8_t* getPaletteIndicesBuffer() const;
+			size_t getPaletteIndicesBufferLength() const;
 
 			virtual TIndex getPaletteIndex(const Color* color);
 
 			TValue getPaletteValue(TIndex index);
 			void setPaletteValue(TIndex index, TValue value);
 
-			void setPaletteColor(TIndex index, const Rgb888Color& color);
+			void setPaletteColor(TIndex index, const RGB888Color& color);
 			void setPaletteColors(std::initializer_list<uint32_t> colors);
-			void setPaletteColors(std::initializer_list<Rgb888Color> colors);
+			void setPaletteColors(std::initializer_list<RGB888Color> colors);
 
 			TIndex getPaletteColorCount() const;
 			uint8_t* getPalette() const;
 
 		protected:
-			void updateFromTarget() override;
-
-			virtual size_t computePaletteBufferLength() const = 0;
-
-		private:
-			uint8_t* _paletteBuffer = nullptr;
-			size_t _paletteBufferLength;
+			uint8_t* _paletteIndicesBuffer = nullptr;
+			size_t _paletteIndicesBufferLength;
 
 			uint8_t* _palette = nullptr;
 			TIndex _paletteColorCount;
 
-			void reallocatePaletteBuffer();
+			void updateFromTarget() override;
+			virtual size_t computePaletteIndicesBufferLength() const = 0;
+
+		private:
+			void reallocatePaletteIndicesBuffer();
 			void reallocatePalette();
 	};
 
@@ -54,26 +53,26 @@ namespace YOBA {
 	void PaletteRenderer<TIndex, TValue>::updateFromTarget() {
 		TransactionalPixelBufferRenderer::updateFromTarget();
 
-		reallocatePaletteBuffer();
+		reallocatePaletteIndicesBuffer();
 		reallocatePalette();
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::reallocatePaletteBuffer() {
+	void PaletteRenderer<TIndex, TValue>::reallocatePaletteIndicesBuffer() {
 		if (!getTarget())
 			return;
 
-		_paletteBufferLength = computePaletteBufferLength();
+		_paletteIndicesBufferLength = computePaletteIndicesBufferLength();
 
 		#ifdef ESP_PLATFORM
-			if (_paletteBuffer)
-				heap_caps_free(_paletteBuffer);
+			if (_paletteIndicesBuffer)
+				heap_caps_free(_paletteIndicesBuffer);
 
-			_paletteBuffer = reinterpret_cast<uint8_t*>(heap_caps_malloc(_paletteBufferLength, MALLOC_CAP_DMA));
-			assert(_paletteBuffer != nullptr);
+			_paletteIndicesBuffer = reinterpret_cast<uint8_t*>(heap_caps_malloc(_paletteIndicesBufferLength, MALLOC_CAP_DMA));
+			assert(_paletteIndicesBuffer != nullptr);
 		#else
-			delete _paletteBuffer;
-			_paletteBuffer = new uint8_t[_paletteBufferLength];
+			delete _paletteIndicesBuffer;
+			_paletteIndicesBuffer = new uint8_t[_paletteIndicesBufferLength];
 		#endif
 	}
 
@@ -99,11 +98,8 @@ namespace YOBA {
 	template<typename TIndex, typename TValue>
 	TValue PaletteRenderer<TIndex, TValue>::getPaletteValue(TIndex index) {
 		switch (getTarget()->getColorModel()) {
-			case ColorModel::rgb565:
+			case ColorModel::RGB565:
 				return *(reinterpret_cast<TValue*>(_palette) + index);
-
-			case ColorModel::rgb666:
-				return ((uint32_t*) (_palette + index * 3))[0];
 
 			default:
 				return 0;
@@ -113,21 +109,10 @@ namespace YOBA {
 	template<typename TIndex, typename TValue>
 	void PaletteRenderer<TIndex, TValue>::setPaletteValue(TIndex index, TValue value) {
 		switch (getTarget()->getColorModel()) {
-			case ColorModel::rgb565: {
-				*(reinterpret_cast<TValue*>(_palette) + index) = value;
+			case ColorModel::RGB565: {
+				reinterpret_cast<TValue*>(_palette)[index] = value;
 				break;
 			}
-
-			case ColorModel::rgb666: {
-				const auto palettePtr = _palette + index * 3;
-				const auto valuePtr = (uint8_t*) &value;
-				palettePtr[0] = valuePtr[2];
-				palettePtr[1] = valuePtr[1];
-				palettePtr[2] = valuePtr[0];
-
-				break;
-			}
-
 			default:
 				_palette[index] = 0;
 				break;
@@ -137,8 +122,8 @@ namespace YOBA {
 	template<typename TIndex, typename TValue>
 	TIndex PaletteRenderer<TIndex, TValue>::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
-			case ColorModel::palette:
-				return reinterpret_cast<const PaletteColor*>(color)->getIndex();
+			case ColorModel::palette8Bit:
+				return reinterpret_cast<const Bit8PaletteColor*>(color)->getIndex();
 
 			default:
 				return 0;
@@ -146,14 +131,14 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const Rgb888Color& color) {
+	void PaletteRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const RGB888Color& color) {
 		switch (getTarget()->getColorModel()) {
-			case ColorModel::rgb565:
-				setPaletteValue(index, color.toRgb565().getValue());
+			case ColorModel::RGB565:
+				setPaletteValue(index, color.toRGB565().getValue());
 				break;
 
-			case ColorModel::rgb666:
-				setPaletteValue(index, color.toRgb666().getValue());
+			case ColorModel::RGB666:
+				setPaletteValue(index, color.toRGB666().getValue());
 				break;
 
 			default:
@@ -163,7 +148,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
+	void PaletteRenderer<TIndex, TValue>::setPaletteColors(std::initializer_list<RGB888Color> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -177,7 +162,7 @@ namespace YOBA {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
-			setPaletteColor(index, Rgb888Color(color));
+			setPaletteColor(index, RGB888Color(color));
 			index++;
 		}
 	}
@@ -193,12 +178,12 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	uint8_t* PaletteRenderer<TIndex, TValue>::getPaletteBuffer() const {
-		return _paletteBuffer;
+	uint8_t* PaletteRenderer<TIndex, TValue>::getPaletteIndicesBuffer() const {
+		return _paletteIndicesBuffer;
 	}
 
 	template<typename TIndex, typename TValue>
-	size_t PaletteRenderer<TIndex, TValue>::getPaletteBufferLength() const {
-		return _paletteBufferLength;
+	size_t PaletteRenderer<TIndex, TValue>::getPaletteIndicesBufferLength() const {
+		return _paletteIndicesBufferLength;
 	}
 }

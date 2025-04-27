@@ -1,7 +1,7 @@
 #include "gradient.h"
 
 namespace YOBA {
-	GradientStop::GradientStop(float position, const Rgb888Color& color) :
+	GradientStop::GradientStop(float position, const RGB888Color& color) :
 		_position(position),
 		_color(color)
 	{
@@ -16,15 +16,15 @@ namespace YOBA {
 		_position = value;
 	}
 
-	const Rgb888Color& GradientStop::getColor() const {
+	const RGB888Color& GradientStop::getColor() const {
 		return _color;
 	}
 
-	void GradientStop::setColor(const Rgb888Color& value) {
-		_color = Rgb888Color(value);
+	void GradientStop::setColor(const RGB888Color& value) {
+		_color = RGB888Color(value);
 	}
 
-	Rgb888Color LinearGradient::getRgb888Color(float position) {
+	RGB888Color LinearGradient::getRgb888Color(float position) {
 		if (_stops.size() < 2)
 			return {0, 0, 0};
 
@@ -92,17 +92,17 @@ namespace YOBA {
 	}
 
 	void LinearGradient::addRainbowStops() {
-		_stops.emplace_back(0, Rgb888Color(0xFF, 0x00, 0xFF));
-		_stops.emplace_back(0.2, Rgb888Color(0x00, 0x00, 0xff));
-		_stops.emplace_back(0.4, Rgb888Color(0x00, 0xff, 0xff));
-		_stops.emplace_back(0.6, Rgb888Color(0x00, 0xFF, 0x00));
-		_stops.emplace_back(0.8, Rgb888Color(0xFF, 0xFF, 0x00));
-		_stops.emplace_back(1, Rgb888Color(0xFF, 0x00, 0x00));
+		_stops.emplace_back(0, RGB888Color(0xFF, 0x00, 0xFF));
+		_stops.emplace_back(0.2, RGB888Color(0x00, 0x00, 0xff));
+		_stops.emplace_back(0.4, RGB888Color(0x00, 0xff, 0xff));
+		_stops.emplace_back(0.6, RGB888Color(0x00, 0xFF, 0x00));
+		_stops.emplace_back(0.8, RGB888Color(0xFF, 0xFF, 0x00));
+		_stops.emplace_back(1, RGB888Color(0xFF, 0x00, 0x00));
 	}
 
 	void LinearGradient::addRGBStops() {
-		_stops.emplace_back(0, Rgb888Color(0xFF, 0x00, 0x00));
-		_stops.emplace_back(0.5, Rgb888Color(0x00, 0xff, 0x00));
-		_stops.emplace_back(1, Rgb888Color(0x00, 0x00, 0xFF));
+		_stops.emplace_back(0, RGB888Color(0xFF, 0x00, 0x00));
+		_stops.emplace_back(0.5, RGB888Color(0x00, 0xff, 0x00));
+		_stops.emplace_back(1, RGB888Color(0x00, 0x00, 0xFF));
 	}
 }

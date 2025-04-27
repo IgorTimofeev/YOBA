@@ -10,36 +10,36 @@ namespace YOBA {
 		return getTarget()->getSize().getWidth() * getTransactionBufferHeight() * 2;
 	}
 
-	size_t Bit8PaletteRenderer::computePaletteBufferLength() const {
+	size_t Bit8PaletteRenderer::computePaletteIndicesBufferLength() const {
 		return getTarget()->getSize().getSquare();
 	}
 
 	void Bit8PaletteRenderer::flush() {
 		switch (getTarget()->getColorModel()) {
-			case ColorModel::rgb565: {
+			case ColorModel::RGB565: {
 				const auto& size = getTarget()->getSize();
 
 				uint16_t* pixelBufferPtr;
-				uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + getPixelBufferLength());
+				uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(_pixelBuffer + _pixelBufferLength);
 
 				uint16_t* palettePtr = reinterpret_cast<uint16_t*>(getPalette());
-				uint8_t* paletteBufferPtr = getPaletteBuffer();
+				uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
 
 				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionBufferHeight()) {
-					pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer());
+					pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
 
 					// Taking indices from palette, converting them to color & copying to pixel buffer
 					while (pixelBufferPtr < pixelBufferEndPtr) {
-						*pixelBufferPtr = *(palettePtr + *paletteBufferPtr);
+						*pixelBufferPtr = palettePtr[*paletteIndicesBufferPtr];
 						pixelBufferPtr++;
-						paletteBufferPtr++;
+						paletteIndicesBufferPtr++;
 					}
 
 					// Writing pixel buffer on target
 					getTarget()->writePixels(
 						Bounds(0, y, size.getWidth(), getTransactionBufferHeight()),
-						getPixelBuffer(),
-						getPixelBufferLength()
+						_pixelBuffer,
+						_pixelBufferLength
 					);
 				}
 
@@ -51,36 +51,36 @@ namespace YOBA {
 	}
 
 	void Bit8PaletteRenderer::clearNative(const Color* color) {
-		std::memset(getPaletteBuffer(), getPaletteIndex(color), getPaletteBufferLength());
+		std::memset(_paletteIndicesBuffer, getPaletteIndex(color), _paletteIndicesBufferLength);
 	}
 
 	void Bit8PaletteRenderer::renderPixelNative(const Point& point, const Color* color) {
-		getPaletteBuffer()[getPixelIndex(point)] = getPaletteIndex(color);
+		_paletteIndicesBuffer[getPixelIndex(point)] = getPaletteIndex(color);
 	}
 
 	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
-		std::memset(getPaletteBuffer() + getPixelIndex(point), getPaletteIndex(color), width);
+		std::memset(_paletteIndicesBuffer + getPixelIndex(point), getPaletteIndex(color), width);
 	}
 
 	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
-		uint8_t* bufferPtr = getPaletteBuffer() + getPixelIndex(point);
+		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
 
 		for (uint16_t i = 0; i < height; i++) {
-			*bufferPtr = paletteIndex;
-			bufferPtr += scanlineLength;
+			*paletteIndicesBufferPtr = paletteIndex;
+			paletteIndicesBufferPtr += scanlineLength;
 		}
 	}
 
 	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
-		uint8_t* bufferPtr = getPaletteBuffer() + getPixelIndex(bounds.getPosition());
+		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(bounds.getPosition());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
-			std::memset(bufferPtr, paletteIndex, bounds.getWidth());
-			bufferPtr += scanlineLength;
+			std::memset(paletteIndicesBufferPtr, paletteIndex, bounds.getWidth());
+			paletteIndicesBufferPtr += scanlineLength;
 		}
 	}
 
@@ -88,7 +88,7 @@ namespace YOBA {
 		if (!(image->getFlags() & ImageFlags::palette8Bit))
 			return;
 
-		auto paletteBufferPtr = getPaletteBuffer() + getPixelIndex(point);
+		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
 		auto bitmapPtr = image->getBitmap();
 
 		const auto scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
@@ -110,16 +110,16 @@ namespace YOBA {
 							bitmapBitIndex = 0;
 							bitmapPtr++;
 
-							*paletteBufferPtr = *bitmapPtr;
+							*paletteIndicesBufferPtr = *bitmapPtr;
 
-							paletteBufferPtr++;
+							paletteIndicesBufferPtr++;
 							bitmapPtr++;
 						}
 						// Dark souls
 						else {
-							*paletteBufferPtr = static_cast<uint8_t>((*reinterpret_cast<const uint16_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFF);
+							*paletteIndicesBufferPtr = static_cast<uint8_t>((*reinterpret_cast<const uint16_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFF);
 
-							paletteBufferPtr++;
+							paletteIndicesBufferPtr++;
 							bitmapPtr++;
 						}
 					}
@@ -132,24 +132,24 @@ namespace YOBA {
 							bitmapPtr++;
 						}
 
-						paletteBufferPtr++;
+						paletteIndicesBufferPtr++;
 					}
 				}
 
-				paletteBufferPtr += scanlineLength;
+				paletteIndicesBufferPtr += scanlineLength;
 			}
 		}
 		// Without
 		else {
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
-					*paletteBufferPtr = *bitmapPtr;
+					*paletteIndicesBufferPtr = *bitmapPtr;
 
-					paletteBufferPtr++;
+					paletteIndicesBufferPtr++;
 					bitmapPtr++;
 				}
 
-				paletteBufferPtr += scanlineLength;
+				paletteIndicesBufferPtr += scanlineLength;
 			}
 		}
 	}
@@ -168,13 +168,13 @@ namespace YOBA {
 			const auto g = (uint8_t) std::round((float) idxG * 255.0f / ((float) greens - 1.0f));
 			const auto b = (uint8_t) std::round((float) idxB * 255.0f / ((float) blues - 1.0f));
 
-			setPaletteColor(index, Rgb888Color(r, g, b));
+			setPaletteColor(index, RGB888Color(r, g, b));
 		}
 
 		for (uint8_t index = 0; index < 16; index++) {
 			const auto shade = (uint8_t) std::round(255.0f * (float) (index + 1) / 16.0f);
 
-			setPaletteColor(240 + index, Rgb888Color(shade, shade, shade));
+			setPaletteColor(240 + index, RGB888Color(shade, shade, shade));
 		}
 	}
 }

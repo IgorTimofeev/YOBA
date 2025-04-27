@@ -9,9 +9,8 @@ namespace YOBA {
 			uint16_t getTransactionBufferHeight() const;
 
 		protected:
-			void updateFromTarget() override;
-
-		private:
 			uint16_t _transactionBufferHeight = 0;
+
+			void updateFromTarget() override;
 	};
 }

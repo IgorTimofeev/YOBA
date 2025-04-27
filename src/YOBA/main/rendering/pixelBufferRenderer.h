@@ -14,12 +14,11 @@ namespace YOBA {
 			size_t getPixelIndex(const Point& point) const;
 
 		protected:
+			uint8_t* _pixelBuffer = nullptr;
+			size_t _pixelBufferLength = 0;
+
 			virtual size_t computePixelBufferLength() const = 0;
 			void updateFromTarget() override;
 			void reallocatePixelBuffer();
-
-		private:
-			uint8_t* _pixelBuffer = nullptr;
-			size_t _pixelBufferLength = 0;
 	};
 }

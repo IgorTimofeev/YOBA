@@ -22,7 +22,7 @@ namespace YOBA {
 
 				const Size& size = Size(240, 320),
 				ViewportRotation rotation = ViewportRotation::clockwise0,
-				ColorModel colorModel = ColorModel::rgb565
+				ColorModel colorModel = ColorModel::RGB565
 			);
 
 			void setup() override;
