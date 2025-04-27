@@ -2,10 +2,10 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "YOBA/main/rendering/transactionBufferRenderer.h"
+#include "YOBA/main/rendering/transactionalPixelBufferRenderer.h"
 
 namespace YOBA {
-	class PaletteRenderer : public TransactionBufferRenderer {
+	class PaletteRenderer : public TransactionalPixelBufferRenderer {
 		public:
 			explicit PaletteRenderer(uint16_t paletteColorCount);
 
@@ -27,7 +27,7 @@ namespace YOBA {
 		protected:
 			void updateFromTarget() override;
 
-			virtual size_t computePaletteBufferLength() = 0;
+			virtual size_t computePaletteBufferLength() const = 0;
 
 			void reallocatePaletteBuffer();
 			void reallocatePalette();

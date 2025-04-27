@@ -6,7 +6,7 @@ namespace YOBA {
 	}
 
 	void PaletteRenderer::updateFromTarget() {
-		TransactionBufferRenderer::updateFromTarget();
+		TransactionalPixelBufferRenderer::updateFromTarget();
 
 		reallocatePaletteBuffer();
 		reallocatePalette();

@@ -25,7 +25,7 @@
 
 // Renderers
 #include "YOBA/main/rendering/renderer.h"
-#include "YOBA/main/rendering/transactionBufferRenderer.h"
+#include "YOBA/main/rendering/transactionalPixelBufferRenderer.h"
 #include "YOBA/main/rendering/paletteRenderer.h"
 #include "YOBA/main/rendering/bit8PaletteRenderer.h"
 #include "YOBA/main/rendering/RGB565PixelBufferRenderer.h"

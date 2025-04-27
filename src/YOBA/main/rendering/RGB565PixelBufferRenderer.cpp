@@ -12,12 +12,12 @@ namespace YOBA {
 			case ColorModel::rgb565: {
 				auto pixelBufferPtr = getPixelBuffer();
 				const auto& size = getTarget()->getSize();
-				const auto transactionWindowHeight = computeTransactionWindowHeight();
-				const size_t transactionLength = size.getWidth() * transactionWindowHeight * 2;
+				const auto transactionPixelHeight = getTransactionBufferHeight();
+				const size_t transactionLength = size.getWidth() * transactionPixelHeight * 2;
 
-				for (uint16_t y = 0; y < size.getHeight(); y += transactionWindowHeight) {
+				for (uint16_t y = 0; y < size.getHeight(); y += transactionPixelHeight) {
 					getTarget()->writePixels(
-						Bounds(0, y, size.getWidth(), transactionWindowHeight),
+						Bounds(0, y, size.getWidth(), transactionPixelHeight),
 						pixelBufferPtr
 					);
 
@@ -29,10 +29,6 @@ namespace YOBA {
 			default:
 				break;
 		}
-	}
-
-	void RGB565PixelBufferRenderer::updateFromTarget() {
-		PixelBufferRenderer::updateFromTarget();
 	}
 
 	void RGB565PixelBufferRenderer::clearNative(const Color* color) {
@@ -142,9 +138,5 @@ namespace YOBA {
 				pixelBufferPtr += pixelBufferScanlineLength;
 			}
 		}
-	}
-
-	uint16_t RGB565PixelBufferRenderer::computeTransactionWindowHeight() const {
-		return getTarget()->getSize().getHeight() / 4;
 	}
 }

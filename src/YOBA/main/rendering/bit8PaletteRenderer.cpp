@@ -6,26 +6,30 @@ namespace YOBA {
 
 	}
 
-	size_t Bit8PaletteRenderer::computePaletteBufferLength() {
+	size_t Bit8PaletteRenderer::computePixelBufferLength() const {
+		return getTarget()->getSize().getWidth() * getTransactionBufferHeight();
+	}
+
+	size_t Bit8PaletteRenderer::computePaletteBufferLength() const {
 		return getTarget()->getSize().getSquare();
 	}
 
 	void Bit8PaletteRenderer::flush(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter) {
 		uint32_t pixelIndex = 0;
 		uint16_t y;
-		uint8_t* transactionBufferStart;
-		uint8_t* transactionBufferEnd = getTransactionBuffer() + getTransactionBufferLength();
+		uint8_t* pixelBufferStart;
+		uint8_t* pixelBufferEnd = getPixelBuffer() + getPixelBufferLength();
 
 		for (y = 0; y < getTarget()->getSize().getHeight(); y += getTransactionBufferHeight()) {
-			transactionBufferStart = getTransactionBuffer();
+			pixelBufferStart = getPixelBuffer();
 
-			while (transactionBufferStart < transactionBufferEnd) {
-				pixelSetter(transactionBufferStart, pixelIndex);
+			while (pixelBufferStart < pixelBufferEnd) {
+				pixelSetter(pixelBufferStart, pixelIndex);
 			}
 
 			getTarget()->writePixels(
 				Bounds(0, y, width, getTransactionBufferHeight()),
-				getTransactionBuffer()
+				getPixelBuffer()
 			);
 		}
 	}
@@ -35,9 +39,9 @@ namespace YOBA {
 			case ColorModel::rgb565: {
 				flush(
 					getTarget()->getSize().getWidth(),
-					[this](uint8_t*& transactionBuffer, uint32_t& pixelIndex) {
-						*((uint16_t*) transactionBuffer) = ((uint16_t*) getPalette())[getPaletteBuffer()[pixelIndex]];
-						transactionBuffer += 2;
+					[this](uint8_t*& pixelBuffer, uint32_t& pixelIndex) {
+						*((uint16_t*) pixelBuffer) = ((uint16_t*) getPalette())[getPaletteBuffer()[pixelIndex]];
+						pixelBuffer += 2;
 						pixelIndex++;
 					}
 				);
@@ -50,14 +54,14 @@ namespace YOBA {
 
 				flush(
 					getTarget()->getSize().getWidth(),
-					[&](uint8_t*& transactionBuffer, uint32_t& pixelIndex) {
+					[&](uint8_t*& pixelBuffer, uint32_t& pixelIndex) {
 						palettePtr = getPalette() + getPaletteBuffer()[pixelIndex] * 3;
 
-						transactionBuffer[0] = palettePtr[0];
-						transactionBuffer[1] = palettePtr[1];
-						transactionBuffer[2] = palettePtr[2];
+						pixelBuffer[0] = palettePtr[0];
+						pixelBuffer[1] = palettePtr[1];
+						pixelBuffer[2] = palettePtr[2];
 
-						transactionBuffer += 3;
+						pixelBuffer += 3;
 						pixelIndex++;
 					}
 				);
@@ -213,5 +217,4 @@ namespace YOBA {
 			setPaletteColor(240 + index, Rgb888Color(shade, shade, shade));
 		}
 	}
-
 }
