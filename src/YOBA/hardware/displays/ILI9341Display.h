@@ -27,7 +27,7 @@ namespace YOBA {
 
 			void setup() override;
 			void setInverted(bool value) override;
-			void writePixels(const Bounds& bounds, uint8_t* source) override;
+			void writePixels(const Bounds& bounds, uint8_t* source, size_t length) override;
 
 		protected:
 			void onRotationChanged() override;

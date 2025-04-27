@@ -7,64 +7,41 @@ namespace YOBA {
 	}
 
 	size_t Bit8PaletteRenderer::computePixelBufferLength() const {
-		return getTarget()->getSize().getWidth() * getTransactionBufferHeight();
+		return getTarget()->getSize().getWidth() * getTransactionBufferHeight() * 2;
 	}
 
 	size_t Bit8PaletteRenderer::computePaletteBufferLength() const {
 		return getTarget()->getSize().getSquare();
 	}
 
-	void Bit8PaletteRenderer::flush(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter) {
-		uint32_t pixelIndex = 0;
-		uint16_t y;
-		uint8_t* pixelBufferStart;
-		uint8_t* pixelBufferEnd = getPixelBuffer() + getPixelBufferLength();
-
-		for (y = 0; y < getTarget()->getSize().getHeight(); y += getTransactionBufferHeight()) {
-			pixelBufferStart = getPixelBuffer();
-
-			while (pixelBufferStart < pixelBufferEnd) {
-				pixelSetter(pixelBufferStart, pixelIndex);
-			}
-
-			getTarget()->writePixels(
-				Bounds(0, y, width, getTransactionBufferHeight()),
-				getPixelBuffer()
-			);
-		}
-	}
-
 	void Bit8PaletteRenderer::flush() {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565: {
-				flush(
-					getTarget()->getSize().getWidth(),
-					[this](uint8_t*& pixelBuffer, uint32_t& pixelIndex) {
-						*((uint16_t*) pixelBuffer) = ((uint16_t*) getPalette())[getPaletteBuffer()[pixelIndex]];
-						pixelBuffer += 2;
-						pixelIndex++;
+				const auto& size = getTarget()->getSize();
+
+				uint16_t* pixelBufferPtr;
+				uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + getPixelBufferLength());
+
+				uint16_t* palettePtr = reinterpret_cast<uint16_t*>(getPalette());
+				uint8_t* paletteBufferPtr = getPaletteBuffer();
+
+				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionBufferHeight()) {
+					pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer());
+
+					// Taking indices from palette, converting them to color & copying to pixel buffer
+					while (pixelBufferPtr < pixelBufferEndPtr) {
+						*pixelBufferPtr = *(palettePtr + *paletteBufferPtr);
+						pixelBufferPtr++;
+						paletteBufferPtr++;
 					}
-				);
 
-				break;
-			}
-
-			case ColorModel::rgb666: {
-				const uint8_t* palettePtr;
-
-				flush(
-					getTarget()->getSize().getWidth(),
-					[&](uint8_t*& pixelBuffer, uint32_t& pixelIndex) {
-						palettePtr = getPalette() + getPaletteBuffer()[pixelIndex] * 3;
-
-						pixelBuffer[0] = palettePtr[0];
-						pixelBuffer[1] = palettePtr[1];
-						pixelBuffer[2] = palettePtr[2];
-
-						pixelBuffer += 3;
-						pixelIndex++;
-					}
-				);
+					// Writing pixel buffer on target
+					getTarget()->writePixels(
+						Bounds(0, y, size.getWidth(), getTransactionBufferHeight()),
+						getPixelBuffer(),
+						getPixelBufferLength()
+					);
+				}
 
 				break;
 			}
@@ -74,46 +51,35 @@ namespace YOBA {
 	}
 
 	void Bit8PaletteRenderer::clearNative(const Color* color) {
-		memset(getPaletteBuffer(), (int) getPaletteIndex(color), getPaletteBufferLength());
+		std::memset(getPaletteBuffer(), getPaletteIndex(color), getPaletteBufferLength());
 	}
 
 	void Bit8PaletteRenderer::renderPixelNative(const Point& point, const Color* color) {
-//		if (point.getX() < 0 || point.getX() >= 320 || point.getY() < 0 || point.getY() >= 240) {
-//			Serial.printf("CYKA?? %d, %d\f", point.getX(), point.getY());
-//			return;
-//		}
-//
-//		if (getIndex(point) >= getBufferLength()) {
-//			Serial.printf("getIndex POINT %d, %d\f", point.getX(), point.getY());
-//			Serial.printf("getIndex INDEX %d, %d\f", getIndex(point), getBufferLength());
-//			return;
-//		}
-
-		getPaletteBuffer()[getPaletteBufferIndex(point)] = getPaletteIndex(color);
+		getPaletteBuffer()[getPixelIndex(point)] = getPaletteIndex(color);
 	}
 
 	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
-		memset(getPaletteBuffer() + getPaletteBufferIndex(point), getPaletteIndex(color), width);
+		std::memset(getPaletteBuffer() + getPixelIndex(point), getPaletteIndex(color), width);
 	}
 
 	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
-		uint8_t* bufferPtr = getPaletteBuffer() + getPaletteBufferIndex(point);
+		uint8_t* bufferPtr = getPaletteBuffer() + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
 
-		for (size_t i = 0; i < height; i++) {
-			memset(bufferPtr, paletteIndex, 1);
+		for (uint16_t i = 0; i < height; i++) {
+			*bufferPtr = paletteIndex;
 			bufferPtr += scanlineLength;
 		}
 	}
 
 	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
-		uint8_t* bufferPtr = getPaletteBuffer() + getPaletteBufferIndex(bounds.getPosition());
+		uint8_t* bufferPtr = getPaletteBuffer() + getPixelIndex(bounds.getPosition());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
-			memset(bufferPtr, paletteIndex, bounds.getWidth());
+			std::memset(bufferPtr, paletteIndex, bounds.getWidth());
 			bufferPtr += scanlineLength;
 		}
 	}
@@ -122,45 +88,39 @@ namespace YOBA {
 		if (!(image->getFlags() & ImageFlags::palette8Bit))
 			return;
 
-		size_t
-			bufferIndex = getPaletteBufferIndex(point),
-			scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth(),
-			bitmapByteIndex = 0;
+		auto paletteBufferPtr = getPaletteBuffer() + getPixelIndex(point);
+		auto bitmapPtr = image->getBitmap();
 
-		uint8_t bitmapByte;
+		const auto scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
 		if (image->getFlags() & ImageFlags::alpha1Bit) {
 			uint8_t bitmapBitIndex = 0;
-			uint8_t part1;
 
-			// 0000 0000
-			// ---- -2--
+			// 0000 0000|0000 0000
+			// ---- -+--|---- -2--
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
-					bitmapByte = image->getBitmap()[bitmapByteIndex];
-
 					// Non-transparent
-					if (bitmapByte & (1 << bitmapBitIndex)) {
+					if (*bitmapPtr & (1 << bitmapBitIndex)) {
 						bitmapBitIndex++;
 
 						// Easy
 						if (bitmapBitIndex > 7) {
 							bitmapBitIndex = 0;
-							bitmapByteIndex++;
+							bitmapPtr++;
 
-							getPaletteBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
+							*paletteBufferPtr = *bitmapPtr;
 
-							bitmapByteIndex++;
+							paletteBufferPtr++;
+							bitmapPtr++;
 						}
 						// Dark souls
 						else {
-							part1 = bitmapByte >> bitmapBitIndex;
-							bitmapByteIndex++;
+							*paletteBufferPtr = static_cast<uint8_t>((*reinterpret_cast<const uint16_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFF);
 
-							bitmapByte = image->getBitmap()[bitmapByteIndex];
-
-							getPaletteBuffer()[bufferIndex] = part1 | (bitmapByte << (8 - bitmapBitIndex));
+							paletteBufferPtr++;
+							bitmapPtr++;
 						}
 					}
 					// Transparent
@@ -169,27 +129,27 @@ namespace YOBA {
 
 						if (bitmapBitIndex > 7) {
 							bitmapBitIndex = 0;
-							bitmapByteIndex++;
+							bitmapPtr++;
 						}
-					}
 
-					bufferIndex++;
+						paletteBufferPtr++;
+					}
 				}
 
-				bufferIndex += scanlineLength;
+				paletteBufferPtr += scanlineLength;
 			}
 		}
 		// Without
 		else {
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
-					getPaletteBuffer()[bufferIndex] = image->getBitmap()[bitmapByteIndex];
+					*paletteBufferPtr = *bitmapPtr;
 
-					bufferIndex++;
-					bitmapByteIndex++;
+					paletteBufferPtr++;
+					bitmapPtr++;
 				}
 
-				bufferIndex += scanlineLength;
+				paletteBufferPtr += scanlineLength;
 			}
 		}
 	}

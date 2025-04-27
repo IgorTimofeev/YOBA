@@ -23,7 +23,5 @@ namespace YOBA {
 			inline void renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) override;
 			inline void renderFilledRectangleNative(const Bounds& bounds, const Color* color) override;
 			inline void renderImageNative(const Point& point, const Image* image) override;
-
-			void flush(uint16_t width, const std::function<void(uint8_t*&, uint32_t&)>& pixelSetter);
 	};
 }

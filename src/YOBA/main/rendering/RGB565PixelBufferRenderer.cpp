@@ -12,7 +12,8 @@ namespace YOBA {
 			case ColorModel::rgb565: {
 				getTarget()->writePixels(
 					Bounds(getTarget()->getSize()),
-					getPixelBuffer()
+					getPixelBuffer(),
+					getPixelBufferLength()
 				);
 
 				break;
@@ -43,8 +44,8 @@ namespace YOBA {
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const Rgb565Color*>(color)->getValue();
 
-		for (size_t i = 0; i < length; i++) {
-			std::fill(pixelBufferPtr, pixelBufferPtr + 1, value);
+		for (uint16_t i = 0; i < length; i++) {
+			*pixelBufferPtr = value;
 			pixelBufferPtr += scanlineLength;
 		}
 	}
@@ -78,7 +79,7 @@ namespace YOBA {
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
 					// Non-transparent
-					if ((*bitmapPtr) & (1 << bitmapBitIndex)) {
+					if (*bitmapPtr & (1 << bitmapBitIndex)) {
 						bitmapBitIndex++;
 
 						// Easy
@@ -94,7 +95,7 @@ namespace YOBA {
 						else {
 							*pixelBufferPtr = static_cast<uint16_t>((*reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFFFF);
 
-							pixelBufferPtr += 1;
+							pixelBufferPtr++;
 							bitmapPtr += 2;
 						}
 					}
@@ -104,7 +105,7 @@ namespace YOBA {
 
 						if (bitmapBitIndex > 7) {
 							bitmapBitIndex = 0;
-							bitmapPtr += 1;
+							bitmapPtr++;
 						}
 
 						pixelBufferPtr++;

@@ -46,7 +46,7 @@ namespace YOBA {
 			virtual ~RenderTarget();
 
 			virtual void setup();
-			virtual void writePixels(const Bounds& bounds, uint8_t* source) = 0;
+			virtual void writePixels(const Bounds& bounds, uint8_t* source, size_t length) = 0;
 
 			PixelOrder getPixelOrder() const;
 			ColorModel getColorModel() const;

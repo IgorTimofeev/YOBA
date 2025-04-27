@@ -228,7 +228,7 @@ namespace YOBA {
 		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
 	}
 
-	void ILI9341Display::writePixels(const Bounds& bounds, uint8_t* source) {
+	void ILI9341Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {
 		uint8_t data[4];
 
 //		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
@@ -248,6 +248,6 @@ namespace YOBA {
 		writeCommandAndData(0x2B, data, 4);
 
 		// Memory write
-		writeCommandAndData(0x2C, source, Color::getBytesPerModel(bounds.getSquare(), getColorModel()));
+		writeCommandAndData(0x2C, source, length);
 	}
 }

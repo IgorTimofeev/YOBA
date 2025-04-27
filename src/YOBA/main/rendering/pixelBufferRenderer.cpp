@@ -11,12 +11,12 @@ namespace YOBA {
 
 		_pixelBufferLength = computePixelBufferLength();
 
-#ifdef ESP_PLATFORM
-		_pixelBuffer = (uint8_t*) heap_caps_malloc(_pixelBufferLength, MALLOC_CAP_DMA);
-		assert(_pixelBuffer != nullptr);
-#else
-		_pixelBuffer = new uint8_t[_pixelBufferLength];
-#endif
+		#ifdef ESP_PLATFORM
+			_pixelBuffer = reinterpret_cast<uint8_t*>(heap_caps_malloc(_pixelBufferLength, MALLOC_CAP_DMA));
+			assert(_pixelBuffer != nullptr);
+		#else
+			_pixelBuffer = new uint8_t[_pixelBufferLength];
+		#endif
 	}
 
 	void PixelBufferRenderer::updateFromTarget() {

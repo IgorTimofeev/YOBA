@@ -6,7 +6,7 @@ namespace YOBA {
 	}
 
 	void MonochromeRenderer::flush() {
-		getTarget()->writePixels(Bounds(getTarget()->getSize()), getPixelBuffer());
+		getTarget()->writePixels(Bounds(getTarget()->getSize()), getPixelBuffer(), getPixelBufferLength());
 	}
 
 	void MonochromeRenderer::clearNative(const Color* color) {
