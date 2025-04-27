@@ -5,9 +5,9 @@
 #include "YOBA/main/rendering/transactionBufferRenderer.h"
 
 namespace YOBA {
-	class PaletteBufferRenderer : public TransactionBufferRenderer {
+	class PaletteRenderer : public TransactionBufferRenderer {
 		public:
-			explicit PaletteBufferRenderer(uint16_t paletteColorCount);
+			explicit PaletteRenderer(uint16_t paletteColorCount);
 
 			uint8_t* getPaletteBuffer() const;
 			size_t getPaletteBufferLength() const;

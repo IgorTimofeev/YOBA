@@ -2,7 +2,7 @@
 #include "YOBA/main/bounds.h"
 
 namespace YOBA {
-	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteBufferRenderer(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteRenderer(paletteLength) {
 
 	}
 
@@ -25,8 +25,7 @@ namespace YOBA {
 
 			getTarget()->writePixels(
 				Bounds(0, y, width, getTransactionBufferHeight()),
-				getTransactionBuffer(),
-				getTransactionBufferLength()
+				getTransactionBuffer()
 			);
 		}
 	}

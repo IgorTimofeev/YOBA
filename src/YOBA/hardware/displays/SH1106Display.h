@@ -23,7 +23,7 @@ namespace YOBA {
 			);
 
 			void setup() override;
-			void writePixels(const Bounds& bounds, uint8_t* source, size_t count) override;
+			void writePixels(const Bounds& bounds, uint8_t* source) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;
 

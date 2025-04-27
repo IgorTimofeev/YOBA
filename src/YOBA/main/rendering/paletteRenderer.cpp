@@ -1,18 +1,18 @@
-#include "paletteBufferRenderer.h"
+#include "paletteRenderer.h"
 
 namespace YOBA {
-	PaletteBufferRenderer::PaletteBufferRenderer(uint16_t paletteColorCount) : _paletteColorCount(paletteColorCount) {
+	PaletteRenderer::PaletteRenderer(uint16_t paletteColorCount) : _paletteColorCount(paletteColorCount) {
 
 	}
 
-	void PaletteBufferRenderer::updateFromTarget() {
+	void PaletteRenderer::updateFromTarget() {
 		TransactionBufferRenderer::updateFromTarget();
 
 		reallocatePaletteBuffer();
 		reallocatePalette();
 	}
 
-	void PaletteBufferRenderer::reallocatePaletteBuffer() {
+	void PaletteRenderer::reallocatePaletteBuffer() {
 		if (!getTarget())
 			return;
 
@@ -22,7 +22,7 @@ namespace YOBA {
 		_paletteBuffer = new uint8_t[_paletteBufferLength];
 	}
 
-	void PaletteBufferRenderer::reallocatePalette() {
+	void PaletteRenderer::reallocatePalette() {
 		if (!getTarget())
 			return;
 
@@ -30,7 +30,7 @@ namespace YOBA {
 		_palette = new uint8_t[_paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel())];
 	}
 
-	uint32_t PaletteBufferRenderer::getPaletteValue(uint16_t index) {
+	uint32_t PaletteRenderer::getPaletteValue(uint16_t index) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
 				return ((uint16_t*) _palette)[index];
@@ -43,7 +43,7 @@ namespace YOBA {
 		}
 	}
 
-	void PaletteBufferRenderer::setPaletteValue(uint16_t index, uint32_t value) {
+	void PaletteRenderer::setPaletteValue(uint16_t index, uint32_t value) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565: {
 				((uint16_t*) _palette)[index] = (uint16_t) value;
@@ -66,7 +66,7 @@ namespace YOBA {
 		}
 	}
 
-	uint16_t PaletteBufferRenderer::getPaletteIndex(const Color* color) {
+	uint16_t PaletteRenderer::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
 			case ColorModel::palette:
 				return ((PaletteColor*) color)->getIndex();
@@ -76,7 +76,7 @@ namespace YOBA {
 		}
 	}
 
-	void PaletteBufferRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
+	void PaletteRenderer::setPaletteColor(uint16_t index, const Rgb888Color& color) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::rgb565:
 				setPaletteValue(index, color.toRgb565().getValue());
@@ -92,7 +92,7 @@ namespace YOBA {
 		}
 	}
 
-	void PaletteBufferRenderer::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
+	void PaletteRenderer::setPaletteColors(std::initializer_list<Rgb888Color> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -101,7 +101,7 @@ namespace YOBA {
 		}
 	}
 
-	void PaletteBufferRenderer::setPaletteColors(std::initializer_list<uint32_t> colors) {
+	void PaletteRenderer::setPaletteColors(std::initializer_list<uint32_t> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -110,27 +110,27 @@ namespace YOBA {
 		}
 	}
 
-	uint16_t PaletteBufferRenderer::getPaletteColorCount() const {
+	uint16_t PaletteRenderer::getPaletteColorCount() const {
 		return _paletteColorCount;
 	}
 
-	uint8_t* PaletteBufferRenderer::getPalette() const {
+	uint8_t* PaletteRenderer::getPalette() const {
 		return _palette;
 	}
 
-	uint8_t* PaletteBufferRenderer::getPaletteBuffer() const {
+	uint8_t* PaletteRenderer::getPaletteBuffer() const {
 		return _paletteBuffer;
 	}
 
-	size_t PaletteBufferRenderer::getPaletteBufferLength() const {
+	size_t PaletteRenderer::getPaletteBufferLength() const {
 		return _paletteBufferLength;
 	}
 
-	size_t PaletteBufferRenderer::getPaletteBufferIndex(uint16_t x, uint16_t y) const {
+	size_t PaletteRenderer::getPaletteBufferIndex(uint16_t x, uint16_t y) const {
 		return y * getTarget()->getSize().getWidth() + x;
 	}
 
-	size_t PaletteBufferRenderer::getPaletteBufferIndex(const Point& point) const {
+	size_t PaletteRenderer::getPaletteBufferIndex(const Point& point) const {
 		return getPaletteBufferIndex(point.getX(), point.getY());
 	}
 }

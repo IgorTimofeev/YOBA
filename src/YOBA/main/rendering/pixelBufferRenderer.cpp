@@ -33,11 +33,11 @@ namespace YOBA {
 		return _pixelBufferLength;
 	}
 
-	size_t PixelBufferRenderer::getPixelBufferIndex(const Point& point) const {
-		return getPixelBufferIndex(point.getX(), point.getY());
+	size_t PixelBufferRenderer::getPixelIndex(uint16_t x, uint16_t y) const {
+		return y * getTarget()->getSize().getWidth() + x;
 	}
 
-	uint16_t PixelBufferRenderer::computeTransactionWindowHeight() const {
-		return getTarget()->getSize().getHeight() / 4;
+	size_t PixelBufferRenderer::getPixelIndex(const Point& point) const {
+		return getPixelIndex(point.getX(), point.getY());
 	}
 }

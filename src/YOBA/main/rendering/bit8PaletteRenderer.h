@@ -1,9 +1,9 @@
 #pragma once
 
-#include "YOBA/main/rendering/paletteBufferRenderer.h"
+#include "YOBA/main/rendering/paletteRenderer.h"
 
 namespace YOBA {
-	class Bit8PaletteRenderer : public PaletteBufferRenderer {
+	class Bit8PaletteRenderer : public PaletteRenderer {
 		public:
 			explicit Bit8PaletteRenderer(uint16_t paletteLength);
 
