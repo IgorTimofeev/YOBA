@@ -79,6 +79,87 @@ namespace YOBA {
 	}
 
 	void RGB565PixelBufferRenderer::renderImageNative(const Point& point, const Image* image) {
+		if (!(image->getFlags() & ImageFlags::RGB565))
+			return;
 
+		auto bitmapPtr = image->getBitmap();
+
+		// With alpha
+		if (image->getFlags() & ImageFlags::alpha1Bit) {
+			auto pixelBufferPtr = getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point);
+			const size_t scanlineLength = (getTarget()->getSize().getWidth() - image->getSize().getWidth()) * 2;
+
+			uint8_t bitmapBitIndex = 0;
+
+			// 0000 0000 | 0000 0000 | 0000 0000
+			// ---- -+-- | ---- -+-- | ---- -2--
+			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
+				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+					// Non-transparent
+					if ((*bitmapPtr) & (1 << bitmapBitIndex)) {
+						bitmapBitIndex++;
+
+						// Easy
+						if (bitmapBitIndex > 7) {
+							bitmapBitIndex = 0;
+							bitmapPtr++;
+
+							// 1
+							*pixelBufferPtr = *bitmapPtr;
+							pixelBufferPtr++;
+							bitmapPtr++;
+
+							// 2
+							*pixelBufferPtr = *bitmapPtr;
+							pixelBufferPtr++;
+							bitmapPtr++;
+						}
+						// Dark souls
+						else {
+							uint8_t part1 = ((*bitmapPtr) >> bitmapBitIndex);
+							bitmapPtr++;
+
+							uint8_t part2 = *bitmapPtr;
+							bitmapPtr++;
+
+							uint8_t part3 = ((*bitmapPtr) << (8 - bitmapBitIndex));
+
+							// 1
+							*pixelBufferPtr = (part1 << 8) | part2 | part3;
+							pixelBufferPtr += 2;
+						}
+					}
+					// Transparent
+					else {
+						bitmapBitIndex++;
+
+						if (bitmapBitIndex > 7) {
+							bitmapBitIndex = 0;
+							bitmapPtr += 1;
+						}
+
+						pixelBufferPtr += 2;
+					}
+				}
+
+				pixelBufferPtr += scanlineLength;
+			}
+		}
+		// Without
+		else {
+			auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point));
+			const size_t scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
+
+			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
+				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+					*pixelBufferPtr = *bitmapPtr;
+
+					pixelBufferPtr++;
+					bitmapPtr += 2;
+				}
+
+				pixelBufferPtr += scanlineLength;
+			}
+		}
 	}
 }

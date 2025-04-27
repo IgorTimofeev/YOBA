@@ -7,9 +7,9 @@ namespace YOBA {
 	// I love C++
 	namespace ImageFlags {
 		enum : uint8_t {
-			RGB565 = 0b0000'0000,
-			palette8Bit = 0b0000'0001,
-			alpha1Bit = 0b0000'0010,
+			RGB565 = 0b0000'0001,
+			palette8Bit = 0b0000'0010,
+			alpha1Bit = 0b0000'0100,
 		};
 	}
 
