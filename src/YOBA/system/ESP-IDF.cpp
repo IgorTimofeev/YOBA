@@ -80,7 +80,7 @@ namespace YOBA::system {
 		busConfig.sclk_io_num = sckPin;
 		busConfig.quadwp_io_num = -1;
 		busConfig.quadhd_io_num = -1;
-		busConfig.max_transfer_sz = 0xFFFF;
+		busConfig.max_transfer_sz = 320 * 240 * 2;
 
 		// May be already initialized
 		const auto result = spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO);

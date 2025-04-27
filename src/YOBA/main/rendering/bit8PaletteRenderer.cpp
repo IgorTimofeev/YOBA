@@ -2,7 +2,7 @@
 #include "YOBA/main/bounds.h"
 
 namespace YOBA {
-	Bit8PaletteRenderer::Bit8PaletteRenderer(uint16_t paletteLength) : PaletteRenderer(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(uint8_t paletteLength) : PaletteRenderer<uint8_t, uint16_t>(paletteLength) {
 
 	}
 

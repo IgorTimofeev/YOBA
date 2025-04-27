@@ -3,7 +3,7 @@
 #include "YOBA/main/rendering/transactionalPixelBufferRenderer.h"
 
 namespace YOBA {
-	class RGB565PixelBufferRenderer : public TransactionalPixelBufferRenderer {
+	class RGB565PixelBufferRenderer : public PixelBufferRenderer {
 		public:
 			void flush() override;
 

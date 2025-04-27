@@ -3,9 +3,9 @@
 #include "YOBA/main/rendering/paletteRenderer.h"
 
 namespace YOBA {
-	class Bit8PaletteRenderer : public PaletteRenderer {
+	class Bit8PaletteRenderer : public PaletteRenderer<uint8_t, uint16_t> {
 		public:
-			explicit Bit8PaletteRenderer(uint16_t paletteLength);
+			explicit Bit8PaletteRenderer(uint8_t paletteLength);
 
 			void flush() override;
 
