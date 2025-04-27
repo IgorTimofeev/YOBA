@@ -82,17 +82,16 @@ namespace YOBA {
 		if (!(image->getFlags() & ImageFlags::RGB565))
 			return;
 
-		auto bitmapPtr = image->getBitmap();
-
 		// With alpha
 		if (image->getFlags() & ImageFlags::alpha1Bit) {
 			auto pixelBufferPtr = getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point);
+			auto bitmapPtr = image->getBitmap();
 			const size_t scanlineLength = (getTarget()->getSize().getWidth() - image->getSize().getWidth()) * 2;
 
 			uint8_t bitmapBitIndex = 0;
 
-			// 0000 0000 | 0000 0000 | 0000 0000
-			// ---- -+-- | ---- -+-- | ---- -2--
+			// 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
+			// ---- ---- | ---- -+-- | ---- ---- | ---- -2--
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
 					// Non-transparent
@@ -116,16 +115,9 @@ namespace YOBA {
 						}
 						// Dark souls
 						else {
-							uint8_t part1 = ((*bitmapPtr) >> bitmapBitIndex);
-							bitmapPtr++;
+							*reinterpret_cast<uint16_t*>(pixelBufferPtr) = static_cast<uint16_t>((*reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFFFF);
 
-							uint8_t part2 = *bitmapPtr;
-							bitmapPtr++;
-
-							uint8_t part3 = ((*bitmapPtr) << (8 - bitmapBitIndex));
-
-							// 1
-							*pixelBufferPtr = (part1 << 8) | part2 | part3;
+							bitmapPtr += 2;
 							pixelBufferPtr += 2;
 						}
 					}
@@ -148,6 +140,7 @@ namespace YOBA {
 		// Without
 		else {
 			auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer() + PixelBufferRenderer::getPixelBufferIndex(point));
+			auto bitmapPtr = reinterpret_cast<const uint16_t*>(image->getBitmap());
 			const size_t scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
 
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
@@ -155,7 +148,7 @@ namespace YOBA {
 					*pixelBufferPtr = *bitmapPtr;
 
 					pixelBufferPtr++;
-					bitmapPtr += 2;
+					bitmapPtr++;
 				}
 
 				pixelBufferPtr += scanlineLength;
