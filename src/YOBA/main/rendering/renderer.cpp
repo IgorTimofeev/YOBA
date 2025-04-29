@@ -204,33 +204,33 @@ namespace YOBA {
 			return;
 
 		if (bounds.getWidth() > 1 || bounds.getHeight() > 1) {
-			renderVerticalLine(
-				bounds.getPosition(),
-				bounds.getHeight(),
-				color
-			);
-
-			renderVerticalLine(
-				bounds.getTopRight(),
-				bounds.getHeight(),
+			renderHorizontalLine(
+				bounds.getTopLeft(),
+				bounds.getWidth(),
 				color
 			);
 
 			renderHorizontalLine(
-				Point(
-					bounds.getX() + 1,
-					bounds.getY()
-				),
-				bounds.getWidth() - 2,
+				bounds.getBottomLeft(),
+				bounds.getWidth(),
 				color
 			);
 
-			renderHorizontalLine(
+			renderVerticalLine(
 				Point(
-					bounds.getX() + 1,
-					bounds.getY2()
+					bounds.getX(),
+					bounds.getY() + 1
 				),
-				bounds.getWidth() - 2,
+				bounds.getHeight() - 2,
+				color
+			);
+
+			renderVerticalLine(
+				Point(
+					bounds.getX2(),
+					bounds.getY() + 1
+				),
+				bounds.getHeight() - 2,
 				color
 			);
 		}
