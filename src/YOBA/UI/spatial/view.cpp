@@ -6,7 +6,7 @@ namespace YOBA {
 
 		std::vector<Vector3F> _screenSpaceVertices {};
 
-		for (auto object : _objects) {
+		for (auto object : _elements) {
 			const auto vertices = object->getVertices();
 			const auto verticesCount = object->getVertexCount();
 
@@ -19,15 +19,22 @@ namespace YOBA {
 				// Translating vertex to camera
 				vertex -= _camera.getPosition();
 
-				// Rotating vertex around camera
-				if (_camera.getRotation().getZ() != 0)
-					vertex = vertex.rotateAroundZAxis(-_camera.getRotation().getZ());
+				for (auto rotation : _camera.getRotations()) {
+					if (rotation.getAngle() == 0)
+						continue;
 
-				if (_camera.getRotation().getX() != 0)
-					vertex = vertex.rotateAroundXAxis(-_camera.getRotation().getX());
-
-				if (_camera.getRotation().getY() != 0)
-					vertex = vertex.rotateAroundYAxis(-_camera.getRotation().getY());
+					switch (rotation.getAxis()) {
+						case CameraAxis::x:
+							vertex = vertex.rotateAroundXAxis(-rotation.getAngle());
+							break;
+						case CameraAxis::y:
+							vertex = vertex.rotateAroundYAxis(-rotation.getAngle());
+							break;
+						case CameraAxis::z:
+							vertex = vertex.rotateAroundZAxis(-rotation.getAngle());
+							break;
+					}
+				}
 
 				// First, we need to apply perspective projection. The basic concept is simple: the farther an object
 				// is from the camera, the smaller it will be on the screen. For example, if a 3D penis 0.3 m high is
@@ -76,13 +83,11 @@ namespace YOBA {
 				//
 				// So the final formula will be
 				// x' = x * screenWidth / 2 / tan(FOV / 2) / z
-				// y' = y * screenHeight / 2 / tan(FOV / 2) / z
 				//
 				// In the final we need to move from world space to screen space. Since our world coordinate system is Z-up,
 				// but the screen coordinate system is Y-up, they can be simply swapped:
 				//
 				// screenX = x * screenWidth / 2 / tan(FOV / 2) / y
-				// screenY = z * screenHeight / 2 / tan(FOV / 2) / y
 
 				_screenSpaceVertices.push_back(Vector3F(
 					(float) bounds.getXCenter() + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
@@ -100,10 +105,14 @@ namespace YOBA {
 	}
 
 	void SpatialView::addElement(SpatialElement* element) {
-		_objects.push_back(element);
+		_elements.push_back(element);
 	}
 
 	void SpatialView::operator+=(SpatialElement* element) {
 		addElement(element);
+	}
+
+	const std::vector<SpatialElement*>& SpatialView::getSpatialElements() {
+		return _elements;
 	}
 }

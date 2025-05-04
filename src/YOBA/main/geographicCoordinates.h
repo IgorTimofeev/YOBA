@@ -12,6 +12,10 @@ namespace YOBA {
 
 			}
 
+			GeographicCoordinates() : GeographicCoordinates(0, 0, 0) {
+
+			}
+
 			explicit GeographicCoordinates(const Vector3F& cartesian, float radius) {
 				const float length = cartesian.getLength();
 

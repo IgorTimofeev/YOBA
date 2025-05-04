@@ -6,6 +6,8 @@
 namespace YOBA {
 	class SpatialElement {
 		public:
+			virtual ~SpatialElement() = default;
+
 			virtual const Vector3F* getVertices() = 0;
 			virtual uint16_t getVertexCount() = 0;
 			virtual void onRender(Renderer* renderer, const Bounds& bounds, Camera* camera, const Vector3F* vertices) = 0;

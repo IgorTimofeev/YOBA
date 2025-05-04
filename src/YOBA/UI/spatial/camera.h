@@ -4,6 +4,39 @@
 #include "YOBA/main/vector3.h"
 
 namespace YOBA {
+	enum class CameraAxis : uint8_t {
+		x,
+		y,
+		z
+	};
+
+	class CameraRotation {
+		public:
+			CameraRotation(CameraAxis axis, float angle) : _axis(axis), _angle(angle) {
+
+			}
+
+			CameraAxis getAxis() const {
+				return _axis;
+			}
+
+			void setAxis(CameraAxis axis) {
+				_axis = axis;
+			}
+
+			float getAngle() const {
+				return _angle;
+			}
+
+			void setAngle(float value) {
+				_angle = value;
+			}
+
+		private:
+			CameraAxis _axis;
+			float _angle;
+	};
+
 	class Camera {
 		public:
 			const Vector3F& getPosition() const {
@@ -14,12 +47,8 @@ namespace YOBA {
 				_position = position;
 			}
 
-			const Vector3F& getRotation() const {
-				return _rotation;
-			}
-
-			void setRotation(const Vector3F& rotation) {
-				_rotation = rotation;
+			std::array<CameraRotation, 5>& getRotations() {
+				return _rotations;
 			}
 
 			float getNearPlaneDistance() const {
@@ -48,7 +77,14 @@ namespace YOBA {
 
 		private:
 			Vector3F _position {};
-			Vector3F _rotation {};
+
+			std::array<CameraRotation, 5> _rotations{
+				CameraRotation(CameraAxis::z, 0),
+				CameraRotation(CameraAxis::y, 0),
+				CameraRotation(CameraAxis::y, 0),
+				CameraRotation(CameraAxis::z, 0),
+				CameraRotation(CameraAxis::z, 0)
+			};
 
 			// 90 deg by default
 			float _FOV = std::numbers::pi_v<float> / 2.f;

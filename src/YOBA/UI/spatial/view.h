@@ -11,6 +11,7 @@ namespace YOBA {
 	class SpatialView : public virtual Element {
 		public:
 			Camera& getCamera();
+			const std::vector<SpatialElement*>& getSpatialElements();
 			void addElement(SpatialElement* element);
 			void operator+=(SpatialElement* element);
 
@@ -19,6 +20,6 @@ namespace YOBA {
 
 		private:
 			Camera _camera {};
-			std::vector<SpatialElement*> _objects {};
+			std::vector<SpatialElement*> _elements {};
 	};
 }
