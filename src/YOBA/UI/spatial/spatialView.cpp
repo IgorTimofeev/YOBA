@@ -1,10 +1,22 @@
-#include "view.h"
+#include "spatialView.h"
 
 namespace YOBA {
 	void SpatialView::onRender(Renderer* renderer, const Bounds& bounds) {
-		const auto projectionPlaneDistance = (float) bounds.getWidth() / 2.f / std::tanf(_camera.getFOV() / 2.f);
+		const auto projectionPlaneDistance = getProjectionPlaneDistance();
 
 		std::vector<Vector3F> _screenSpaceVertices {};
+
+		const SinAndCos worldRotationSinAndCos[3] = {
+			SinAndCos(-_worldRotation.getX()),
+			SinAndCos(-_worldRotation.getY()),
+			SinAndCos(-_worldRotation.getZ())
+		};
+
+		const SinAndCos cameraRotationSinAndCos[3] = {
+			SinAndCos(-_cameraRotation.getX()),
+			SinAndCos(-_cameraRotation.getY()),
+			SinAndCos(-_cameraRotation.getZ())
+		};
 
 		for (auto object : _elements) {
 			const auto vertices = object->getVertices();
@@ -17,24 +29,27 @@ namespace YOBA {
 				auto vertex = vertices[i];
 
 				// Translating vertex to camera
-				vertex -= _camera.getPosition();
+				vertex -= _cameraPosition;
 
-				for (auto rotation : _camera.getRotations()) {
-					if (rotation.getAngle() == 0)
-						continue;
+				// World rotation
+				if (_worldRotation.getZ() != 0)
+					vertex = vertex.rotateAroundZAxis(worldRotationSinAndCos[2]);
 
-					switch (rotation.getAxis()) {
-						case CameraAxis::x:
-							vertex = vertex.rotateAroundXAxis(-rotation.getAngle());
-							break;
-						case CameraAxis::y:
-							vertex = vertex.rotateAroundYAxis(-rotation.getAngle());
-							break;
-						case CameraAxis::z:
-							vertex = vertex.rotateAroundZAxis(-rotation.getAngle());
-							break;
-					}
-				}
+				if (_worldRotation.getX() != 0)
+					vertex = vertex.rotateAroundXAxis(worldRotationSinAndCos[0]);
+
+				if (_worldRotation.getY() != 0)
+					vertex = vertex.rotateAroundYAxis(worldRotationSinAndCos[1]);
+
+				// Camera rotation
+				if (_cameraRotation.getZ() != 0)
+					vertex = vertex.rotateAroundZAxis(cameraRotationSinAndCos[2]);
+
+				if (_cameraRotation.getX() != 0)
+					vertex = vertex.rotateAroundXAxis(cameraRotationSinAndCos[0]);
+
+				if (_cameraRotation.getY() != 0)
+					vertex = vertex.rotateAroundYAxis(cameraRotationSinAndCos[1]);
 
 				// First, we need to apply perspective projection. The basic concept is simple: the farther an object
 				// is from the camera, the smaller it will be on the screen. For example, if a 3D penis 0.3 m high is
@@ -57,7 +72,7 @@ namespace YOBA {
 				// are displayed. But the basic principle remains the same: the further the object is from the projection
 				// plane, the smaller it will be when projected. That's it, no magic.
 				//
-				// x' = x * projectionPlaneZ / z
+				// x' = x * screenZ / z
 				//
 				// The only thing we need to do is determine where the projection plane itself is located relative to the
 				// camera. Trigonometry will help us:
@@ -65,7 +80,7 @@ namespace YOBA {
 				// X
 				// │         ╱│ } screenWidth - projection plane width
 				// │       ╱  │
-				// │     ╱    │        * x - original x
+				// │     ╱    │      * x - original x
 				// │   ╱      * x' - projected x
 				// │ ╱ )      │
 				// ├ ─ ) ──── screenZ ───────────────────────── Z
@@ -96,12 +111,8 @@ namespace YOBA {
 				));
 			}
 
-			object->onRender(renderer, bounds, &_camera, _screenSpaceVertices.data());
+			object->onRender(renderer, *this, _screenSpaceVertices.data());
 		}
-	}
-
-	Camera& SpatialView::getCamera() {
-		return _camera;
 	}
 
 	void SpatialView::addElement(SpatialElement* element) {
@@ -114,5 +125,67 @@ namespace YOBA {
 
 	const std::vector<SpatialElement*>& SpatialView::getSpatialElements() {
 		return _elements;
+	}
+
+	const Vector3F& SpatialView::getWorldRotation() const {
+		return _worldRotation;
+	}
+
+	void SpatialView::setWorldRotation(const Vector3F& value) {
+		_worldRotation = value;
+	}
+
+	const Vector3F& SpatialView::getCameraPosition() const {
+		return _cameraPosition;
+	}
+
+	void SpatialView::setCameraPosition(const Vector3F& value) {
+		_cameraPosition = value;
+	}
+
+	const Vector3F& SpatialView::getCameraRotation() const {
+		return _cameraRotation;
+	}
+
+	void SpatialView::setCameraRotation(const Vector3F& value) {
+		_cameraRotation = value;
+	}
+
+	float SpatialView::getFOV() const {
+		return _FOV;
+	}
+
+	void SpatialView::setFOV(float value) {
+		_FOV = value;
+	}
+
+	float SpatialView::getNearPlaneDistance() const {
+		return _nearPlaneDistance;
+	}
+
+	void SpatialView::setNearPlaneDistance(float value) {
+		_nearPlaneDistance = value;
+	}
+
+	float SpatialView::getFarPlaneDistance() const {
+		return _farPlaneDistance;
+	}
+
+	void SpatialView::setFarPlaneDistance(float value) {
+		_farPlaneDistance = value;
+	}
+
+	bool SpatialView::isFOVVertical() const {
+		return _FOVVertical;
+	}
+
+	void SpatialView::setFOVVertical(bool fovVertical) {
+		_FOVVertical = fovVertical;
+	}
+
+	float SpatialView::getProjectionPlaneDistance() {
+		return _FOVVertical
+			? (float) getBounds().getHeight() / 2.f / std::tanf(_FOV / 2.f)
+			: (float) getBounds().getWidth() / 2.f / std::tanf(_FOV / 2.f);
 	}
 }

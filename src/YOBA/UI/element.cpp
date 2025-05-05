@@ -288,7 +288,7 @@ namespace YOBA {
 		return _application;
 	}
 
-	const Bounds &Element::getBounds() {
+	const Bounds& Element::getBounds() const {
 		return _bounds;
 	}
 

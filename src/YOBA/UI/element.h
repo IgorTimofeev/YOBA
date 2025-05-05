@@ -92,7 +92,7 @@ namespace YOBA {
 			void setHeight(uint16_t value);
 
 			const Size& getMeasuredSize();
-			const Bounds& getBounds();
+			const Bounds& getBounds() const;
 
 		protected:
 			virtual void setApplication(Application* value);

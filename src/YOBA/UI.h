@@ -46,6 +46,11 @@
 #include "YOBA/UI/shapes/ditheredRectangle.h"
 
 // Spatial
-#include "YOBA/UI/spatial/element.h"
-#include "YOBA/UI/spatial/view.h"
-#include "YOBA/UI/spatial/camera.h"
+#include "YOBA/UI/spatial/spatialView.h"
+#include "YOBA/UI/spatial/spatialElement.h"
+#include "YOBA/UI/spatial/spatialLine.h"
+#include "YOBA/UI/spatial/spatialMesh.h"
+
+#include "YOBA/UI/spatial/linearSpatialMesh.h"
+#include "YOBA/UI/spatial/cubeLinearSpatialMesh.h"
+#include "YOBA/UI/spatial/sphereLinearSpatialMesh.h"
