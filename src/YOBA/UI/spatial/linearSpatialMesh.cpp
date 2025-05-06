@@ -14,7 +14,7 @@ namespace YOBA {
 			if (
 				vertex0->getZ() < nearPlane
 				|| vertex1->getZ() < nearPlane
-				)
+			)
 				continue;
 
 			renderer->renderLine(
