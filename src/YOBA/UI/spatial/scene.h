@@ -4,14 +4,14 @@
 #include "YOBA/main/rendering/renderer.h"
 #include "YOBA/UI/element.h"
 
-#include "YOBA/UI/spatial/spatialElement.h"
+#include "YOBA/UI/spatial/sceneElement.h"
 
-namespace YOBA {
-	class SpatialView : public virtual Element {
+namespace YOBA::spatial {
+	class Scene : public virtual Element {
 		public:
-			const std::vector<SpatialElement*>& getSpatialElements();
-			void addElement(SpatialElement* element);
-			void operator+=(SpatialElement* element);
+			const std::vector<SceneElement*>& getSceneElements();
+			void addElement(SceneElement* element);
+			void operator+=(SceneElement* element);
 
 			const Vector3F& getWorldRotation() const;
 
@@ -41,7 +41,7 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
-			std::vector<SpatialElement*> _elements {};
+			std::vector<SceneElement*> _elements {};
 
 			Vector3F _worldRotation {};
 
@@ -54,6 +54,5 @@ namespace YOBA {
 
 			float _nearPlaneDistance = 0.1f;
 			float _farPlaneDistance = 1000.f;
-
 	};
 }

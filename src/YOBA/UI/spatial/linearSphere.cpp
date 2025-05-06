@@ -1,8 +1,8 @@
-#include "sphereLinearSpatialMesh.h"
-#include "spatialView.h"
+#include "linearSphere.h"
+#include "scene.h"
 
-namespace YOBA {
-	SphereLinearSpatialMesh::SphereLinearSpatialMesh(const Vector3F& center, float radius, const uint16_t latitudeSegments, uint16_t longitudeSegments, const Color* color) {
+namespace YOBA::spatial {
+	LinearSphere::LinearSphere(const Vector3F& center, float radius, const uint16_t latitudeSegments, uint16_t longitudeSegments, const Color* color) {
 		const uint16_t verticesCount = 1 + latitudeSegments * longitudeSegments + 1;
 		const uint16_t latitudeLinesCount = (1 + (latitudeSegments - 1) + 1) * longitudeSegments;
 		const uint16_t longitudeLinesCount = latitudeSegments * longitudeSegments;

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "spatialMesh.h"
+#include "mesh.h"
 
 #include "YOBA/main/color.h"
 
-namespace YOBA {
-	class LinearSpatialMesh : public SpatialMesh {
+namespace YOBA::spatial {
+	class LinearMesh : public Mesh {
 		public:
-			void onRender(Renderer* renderer, const SpatialView& spatialView, const Vector3F* vertices) override;
+			void onRender(Renderer* renderer, const Scene& scene, const Vector3F* vertices) override;
 
 			const uint16_t* getLineVertexIndices() const;
 

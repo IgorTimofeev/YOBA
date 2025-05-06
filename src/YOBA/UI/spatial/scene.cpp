@@ -1,7 +1,7 @@
-#include "spatialView.h"
+#include "scene.h"
 
-namespace YOBA {
-	void SpatialView::onRender(Renderer* renderer, const Bounds& bounds) {
+namespace YOBA::spatial {
+	void Scene::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto projectionPlaneDistance = getProjectionPlaneDistance();
 
 		std::vector<Vector3F> _screenSpaceVertices {};
@@ -18,15 +18,19 @@ namespace YOBA {
 			SinAndCos(-_cameraRotation.getZ())
 		};
 
-		for (auto object : _elements) {
-			const auto vertices = object->getVertices();
-			const auto verticesCount = object->getVertexCount();
+		const Vector3F* vertices;
+		uint16_t verticesCount;
+		Vector3F vertex;
+
+		for (auto element : _elements) {
+			vertices = element->getVertices();
+			verticesCount = element->getVertexCount();
 
 			_screenSpaceVertices.reserve(verticesCount);
 			_screenSpaceVertices.clear();
 
 			for (uint32_t i = 0; i < verticesCount; i++) {
-				auto vertex = vertices[i];
+				vertex = vertices[i];
 
 				// Translating vertex to camera
 				vertex -= _cameraPosition;
@@ -111,79 +115,79 @@ namespace YOBA {
 				));
 			}
 
-			object->onRender(renderer, *this, _screenSpaceVertices.data());
+			element->onRender(renderer, *this, _screenSpaceVertices.data());
 		}
 	}
 
-	void SpatialView::addElement(SpatialElement* element) {
+	void Scene::addElement(SceneElement* element) {
 		_elements.push_back(element);
 	}
 
-	void SpatialView::operator+=(SpatialElement* element) {
+	void Scene::operator+=(SceneElement* element) {
 		addElement(element);
 	}
 
-	const std::vector<SpatialElement*>& SpatialView::getSpatialElements() {
+	const std::vector<SceneElement*>& Scene::getSceneElements() {
 		return _elements;
 	}
 
-	const Vector3F& SpatialView::getWorldRotation() const {
+	const Vector3F& Scene::getWorldRotation() const {
 		return _worldRotation;
 	}
 
-	void SpatialView::setWorldRotation(const Vector3F& value) {
+	void Scene::setWorldRotation(const Vector3F& value) {
 		_worldRotation = value;
 	}
 
-	const Vector3F& SpatialView::getCameraPosition() const {
+	const Vector3F& Scene::getCameraPosition() const {
 		return _cameraPosition;
 	}
 
-	void SpatialView::setCameraPosition(const Vector3F& value) {
+	void Scene::setCameraPosition(const Vector3F& value) {
 		_cameraPosition = value;
 	}
 
-	const Vector3F& SpatialView::getCameraRotation() const {
+	const Vector3F& Scene::getCameraRotation() const {
 		return _cameraRotation;
 	}
 
-	void SpatialView::setCameraRotation(const Vector3F& value) {
+	void Scene::setCameraRotation(const Vector3F& value) {
 		_cameraRotation = value;
 	}
 
-	float SpatialView::getFOV() const {
+	float Scene::getFOV() const {
 		return _FOV;
 	}
 
-	void SpatialView::setFOV(float value) {
+	void Scene::setFOV(float value) {
 		_FOV = value;
 	}
 
-	float SpatialView::getNearPlaneDistance() const {
+	float Scene::getNearPlaneDistance() const {
 		return _nearPlaneDistance;
 	}
 
-	void SpatialView::setNearPlaneDistance(float value) {
+	void Scene::setNearPlaneDistance(float value) {
 		_nearPlaneDistance = value;
 	}
 
-	float SpatialView::getFarPlaneDistance() const {
+	float Scene::getFarPlaneDistance() const {
 		return _farPlaneDistance;
 	}
 
-	void SpatialView::setFarPlaneDistance(float value) {
+	void Scene::setFarPlaneDistance(float value) {
 		_farPlaneDistance = value;
 	}
 
-	bool SpatialView::isFOVVertical() const {
+	bool Scene::isFOVVertical() const {
 		return _FOVVertical;
 	}
 
-	void SpatialView::setFOVVertical(bool fovVertical) {
+	void Scene::setFOVVertical(bool fovVertical) {
 		_FOVVertical = fovVertical;
 	}
 
-	float SpatialView::getProjectionPlaneDistance() {
+	float Scene::getProjectionPlaneDistance() {
 		return _FOVVertical
 			? (float) getBounds().getHeight() / 2.f / std::tanf(_FOV / 2.f)
 			: (float) getBounds().getWidth() / 2.f / std::tanf(_FOV / 2.f);

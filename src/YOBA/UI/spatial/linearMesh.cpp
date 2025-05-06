@@ -1,9 +1,9 @@
-#include "linearSpatialMesh.h"
-#include "spatialView.h"
+#include "linearMesh.h"
+#include "scene.h"
 
-namespace YOBA {
-	void LinearSpatialMesh::onRender(Renderer* renderer, const SpatialView& spatialView, const Vector3F* vertices) {
-		const auto nearPlane = spatialView.getNearPlaneDistance();
+namespace YOBA::spatial {
+	void LinearMesh::onRender(Renderer* renderer, const Scene& scene, const Vector3F* vertices) {
+		const auto nearPlane = scene.getNearPlaneDistance();
 		const Vector3F* vertex0;
 		const Vector3F* vertex1;
 
@@ -31,27 +31,27 @@ namespace YOBA {
 		}
 	}
 
-	const uint16_t* LinearSpatialMesh::getLineVertexIndices() const {
+	const uint16_t* LinearMesh::getLineVertexIndices() const {
 		return _lineVertexIndices;
 	}
 
-	void LinearSpatialMesh::setLineVertexIndices(const uint16_t* lineVertexIndices) {
+	void LinearMesh::setLineVertexIndices(const uint16_t* lineVertexIndices) {
 		_lineVertexIndices = lineVertexIndices;
 	}
 
-	uint16_t LinearSpatialMesh::getLineVertexIndicesCount() const {
+	uint16_t LinearMesh::getLineVertexIndicesCount() const {
 		return _lineVertexIndicesCount;
 	}
 
-	void LinearSpatialMesh::setLineVertexIndicesCount(uint16_t lineVertexIndicesCount) {
+	void LinearMesh::setLineVertexIndicesCount(uint16_t lineVertexIndicesCount) {
 		_lineVertexIndicesCount = lineVertexIndicesCount;
 	}
 
-	const Color* LinearSpatialMesh::getColor() const {
+	const Color* LinearMesh::getColor() const {
 		return _color;
 	}
 
-	void LinearSpatialMesh::setColor(const Color* color) {
+	void LinearMesh::setColor(const Color* color) {
 		_color = color;
 	}
 }

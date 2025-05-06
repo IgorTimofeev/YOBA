@@ -1,15 +1,15 @@
 #pragma once
 
-#include "linearSpatialMesh.h"
+#include "linearMesh.h"
 
-namespace YOBA {
+namespace YOBA::spatial {
 	// FRONT     LEFT      BACK      RIGHT     TOP       BOTTOM
 	// 1######2  2######5  5######6  6######1  6######5  7######4
 	// ########  ########  ########  ########  ########  ########
 	// 0######3  3######4  4######7  7######0  1######2  0######3
-	class CubeLinearSpatialMesh : public LinearSpatialMesh {
+	class LinearCube : public LinearMesh {
 		public:
-			CubeLinearSpatialMesh(const Vector3F& center, float size, const Color* color);
+			LinearCube(const Vector3F& center, float size, const Color* color);
 
 		private:
 			Vector3F _vertices[8] {};

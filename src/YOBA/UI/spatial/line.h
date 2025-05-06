@@ -1,18 +1,18 @@
 #pragma once
 
-#include "spatialElement.h"
+#include "sceneElement.h"
 
 #include "YOBA/main/color.h"
 
-namespace YOBA {
-	class SpatialLine : public SpatialElement {
+namespace YOBA::spatial {
+	class Line : public SceneElement {
 		public:
-			SpatialLine(const Vector3F& from, const Vector3F& to, const Color* color);
+			Line(const Vector3F& from, const Vector3F& to, const Color* color);
 
 			Vector3F* getVertices() override;
 			uint16_t getVertexCount() override;
 
-			void onRender(Renderer* renderer, const SpatialView& spatialView, const Vector3F* vertices) override;
+			void onRender(Renderer* renderer, const Scene& scene, const Vector3F* vertices) override;
 
 			Vector3F getFrom() const;
 			void setFrom(const Vector3F& from);

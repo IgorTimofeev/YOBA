@@ -1,9 +1,9 @@
 #pragma once
 
-#include "spatialElement.h"
+#include "sceneElement.h"
 
-namespace YOBA {
-	class SpatialMesh : public SpatialElement {
+namespace YOBA::spatial {
+	class Mesh : public SceneElement {
 		public:
 			const Vector3F* getVertices() override;
 
