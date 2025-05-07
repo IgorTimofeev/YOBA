@@ -29,8 +29,8 @@ namespace YOBA {
 				size_t visibleChildrenCount = 0;
 
 				switch (getOrientation()) {
-					case Orientation::horizontal:
-						for (auto child : *this) {
+					case Orientation::horizontal: {
+						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -51,13 +51,13 @@ namespace YOBA {
 							visibleChildrenCount++;
 						}
 
-						if (visibleChildrenCount > 1)
+						if (visibleChildrenCount > 0)
 							result.setWidth(result.getWidth() - getSpacing());
 
 						break;
-
-					case Orientation::vertical:
-						for (auto child : *this) {
+					}
+					case Orientation::vertical: {
+						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -78,10 +78,11 @@ namespace YOBA {
 							visibleChildrenCount++;
 						}
 
-						if (visibleChildrenCount > 1)
+						if (visibleChildrenCount > 0)
 							result.setHeight(result.getHeight() - getSpacing());
 
 						break;
+					}
 				}
 
 				return result;
@@ -91,10 +92,10 @@ namespace YOBA {
 				int32_t position;
 
 				switch (getOrientation()) {
-					case Orientation::horizontal:
+					case Orientation::horizontal: {
 						position = bounds.getX();
 
-						for (auto child : *this) {
+						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -111,11 +112,11 @@ namespace YOBA {
 						}
 
 						break;
-
-					case Orientation::vertical:
+					}
+					case Orientation::vertical: {
 						position = bounds.getY();
 
-						for (auto child : *this) {
+						for (auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -132,6 +133,7 @@ namespace YOBA {
 						}
 
 						break;
+					}
 				}
 			}
 	};
