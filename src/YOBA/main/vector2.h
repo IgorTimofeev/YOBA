@@ -60,7 +60,7 @@ namespace YOBA {
 
 	template<typename T>
 	template<typename TOther>
-	Vector2<T>::Vector2(const Vector2<TOther>& other) : Vector2((T) other.getX(), (T) other.getY()) {
+	Vector2<T>::Vector2(const Vector2<TOther>& other) : Vector2(static_cast<T>(other.getX()), static_cast<T>(other.getY())) {
 
 	}
 
@@ -102,7 +102,7 @@ namespace YOBA {
 
 	template<typename T>
 	float Vector2<T>::getLength() const {
-		return std::sqrt((float) _x * (float) _x + (float) _y * (float) _y);
+		return std::sqrt(static_cast<float>(_x) * static_cast<float>(_x) + static_cast<float>(_y) * static_cast<float>(_y));
 	}
 
 	template<typename T>
@@ -110,21 +110,21 @@ namespace YOBA {
 		const auto length = getLength();
 
 		return {
-			(T) ((float) _x / length),
-			(T) ((float) _y / length)
+			static_cast<T>(static_cast<float>(_x) / length),
+			static_cast<T>(static_cast<float>(_y) / length)
 		};
 	}
 
 	template<typename T>
 	float Vector2<T>::getRotationFloat(const Vector2& point) const {
-		return std::atan2((float) (point._y - _y), (float) (point._x - _x));
+		return std::atan2(static_cast<float>(point._y - _y), static_cast<float>(point._x - _x));
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::rotate(float angleSin, float angleCos) const {
 		return {
-			(T) ((float) _x * angleCos - (float) _y * angleSin),
-			(T) ((float) _x * angleSin + (float) _y * angleCos)
+			static_cast<T>(static_cast<float>(_x) * angleCos - static_cast<float>(_y) * angleSin),
+			static_cast<T>(static_cast<float>(_x) * angleSin + static_cast<float>(_y) * angleCos)
 		};
 	}
 

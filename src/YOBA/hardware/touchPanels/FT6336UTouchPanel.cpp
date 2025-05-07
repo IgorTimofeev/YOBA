@@ -27,7 +27,7 @@ namespace YOBA {
 		// Interrupt
 		system::GPIO::setMode(_intPin, system::GPIO::PinMode::Input);
 
-		system::GPIO::addInterruptHandler(_intPin, [this]() {
+		system::GPIO::addInterruptHandler(_intPin, [this] {
 			_interrupted = true;
 		});
 

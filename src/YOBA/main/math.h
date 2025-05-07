@@ -21,22 +21,22 @@ namespace YOBA {
 	template<typename T>
 	T round(T value, uint8_t decimalPlaces) {
 		const float factor = std::pow(10.0, decimalPlaces);
-		return (T) (std::roundf((float) value * factor) / factor);
+		return static_cast<T>(std::roundf(static_cast<float>(value) * factor) / factor);
 	}
 
 	template<typename T>
 	float toRadians(T degrees) {
-		return (float) degrees * std::numbers::pi_v<float> / 180.f;
+		return static_cast<float>(degrees) * std::numbers::pi_v<float> / 180.f;
 	}
 
 	template<typename T>
 	float toDegrees(T radians) {
-		return (float) radians * 180.f / std::numbers::pi_v<float>;
+		return static_cast<float>(radians) * 180.f / std::numbers::pi_v<float>;
 	}
 
 	template<typename T>
 	T interpolate(T first, T second, float position) {
-		return (T) ((float) first + (float) (second - first) * position);
+		return static_cast<T>(static_cast<float>(first) + static_cast<float>(second - first) * position);
 	}
 
 	template<typename T>
@@ -67,7 +67,7 @@ namespace YOBA {
 		if (addend >= 0) {
 			const auto limit = std::numeric_limits<TValue>::max();
 
-			if ((limit - value) > addend) {
+			if (limit - value > addend) {
 				value += addend;
 			}
 			else {
@@ -77,7 +77,7 @@ namespace YOBA {
 		else {
 			const auto limit = std::numeric_limits<TValue>::min();
 
-			if ((value - limit) > -addend) {
+			if (value - limit > -addend) {
 				value += addend;
 			}
 			else {
@@ -90,6 +90,6 @@ namespace YOBA {
 
 	template<typename T>
 	T divideCeiling(T a, T b) {
-		return 1 + ((a - 1) / b);
+		return 1 + (a - 1) / b;
 	}
 }

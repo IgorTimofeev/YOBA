@@ -100,7 +100,7 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto handleHalf = _handleSize / 2;
 				const auto trackY = bounds.getY() + handleHalf - _trackSize / 2;
-				const auto handleCenterLocal = handleHalf + (uint16_t) std::round(_value * (bounds.getWidth() - bounds.getHeight()) / 0xFFFF);
+				const auto handleCenterLocal = handleHalf + static_cast<uint16_t>(std::round(_value * (bounds.getWidth() - bounds.getHeight()) / 0xFFFF));
 
 				// Fill
 				if (_value > 0 && _fillColor) {
@@ -174,7 +174,7 @@ namespace YOBA {
 				}
 
 				const auto& bounds = getBounds();
-				const int32_t localX = std::clamp(((TouchEvent*) event)->getPosition().getX() - bounds.getX(), (int32_t) 0, (int32_t) bounds.getWidth());
+				const int32_t localX = std::clamp(static_cast<TouchEvent*>(event)->getPosition().getX() - bounds.getX(), static_cast<int32_t>(0), static_cast<int32_t>(bounds.getWidth()));
 
 				setValue(localX * 0xFFFF / bounds.getWidth());
 

@@ -77,7 +77,7 @@ namespace YOBA::system {
 				Wire.endTransmission(false);
 				// Restart
 				// system::sleep(10);
-				readLength = Wire.requestFrom(_slaveAddress, (uint8_t) 1);
+				readLength = Wire.requestFrom(_slaveAddress, static_cast<uint8_t>(1));
 			}
 			while (readLength == 0);
 

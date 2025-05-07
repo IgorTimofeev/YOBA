@@ -14,7 +14,7 @@ namespace YOBA {
 
 			Size onMeasure(const Size& availableSize) override {
 				return {
-					(uint16_t) (((getDigitWidth() + getSpacing()) * getDigitCount()) - getSpacing()),
+					static_cast<uint16_t>((getDigitWidth() + getSpacing()) * getDigitCount() - getSpacing()),
 					getDigitHeight()
 				};
 			}
@@ -97,11 +97,11 @@ namespace YOBA {
 			}
 
 			uint16_t getDigitWidth() const {
-				return (uint16_t) (getSegmentThickness() * 2 + getSegmentLength());
+				return static_cast<uint16_t>(getSegmentThickness() * 2 + getSegmentLength());
 			}
 
 			uint16_t getDigitHeight() const {
-				return (uint16_t) (getSegmentThickness() * 3 + getSegmentLength() * 2);
+				return static_cast<uint16_t>(getSegmentThickness() * 3 + getSegmentLength() * 2);
 			}
 
 		private:

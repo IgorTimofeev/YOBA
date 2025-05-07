@@ -112,8 +112,8 @@ namespace YOBA::spatial {
 				// screenX = x * screenWidth / 2 / tan(FOV / 2) / y
 
 				_screenSpaceVertices.push_back(Vector3F(
-					(float) bounds.getXCenter() + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
-					(float) bounds.getYCenter() - (vertex.getZ() * projectionPlaneDistance / vertex.getY()),
+					static_cast<float>(bounds.getXCenter()) + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
+					static_cast<float>(bounds.getYCenter()) - (vertex.getZ() * projectionPlaneDistance / vertex.getY()),
 					vertex.getY()
 				));
 			}
@@ -192,7 +192,7 @@ namespace YOBA::spatial {
 
 	float Scene::getProjectionPlaneDistance() {
 		return _FOVVertical
-			? (float) getBounds().getHeight() / 2.f / std::tanf(_FOV / 2.f)
-			: (float) getBounds().getWidth() / 2.f / std::tanf(_FOV / 2.f);
+			? static_cast<float>(getBounds().getHeight()) / 2.f / std::tanf(_FOV / 2.f)
+			: static_cast<float>(getBounds().getWidth()) / 2.f / std::tanf(_FOV / 2.f);
 	}
 }

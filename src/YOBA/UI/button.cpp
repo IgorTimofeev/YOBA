@@ -66,7 +66,7 @@ namespace YOBA {
 			event->setHandled(true);
 		}
 		else if (event->getTypeID() == TouchUpEvent::typeID) {
-			const auto touchUpEvent = (TouchUpEvent*) event;
+			const auto touchUpEvent = static_cast<TouchUpEvent*>(event);
 			const auto intersects = getBounds().intersects(touchUpEvent->getPosition());
 
 			switch (_checkMode) {

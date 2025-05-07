@@ -26,12 +26,12 @@ namespace YOBA::spatial {
 
 		renderer->renderLine(
 			Point(
-				(int32_t) vertices[0].getX(),
-				(int32_t) vertices[0].getY()
+				static_cast<int32_t>(vertices[0].getX()),
+				static_cast<int32_t>(vertices[0].getY())
 			),
 			Point(
-				(int32_t) vertices[1].getX(),
-				(int32_t) vertices[1].getY()
+				static_cast<int32_t>(vertices[1].getX()),
+				static_cast<int32_t>(vertices[1].getY())
 			),
 			_color
 		);

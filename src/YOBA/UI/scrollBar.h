@@ -54,8 +54,8 @@ namespace YOBA {
 				if (!_thumbColor)
 					return;
 
-				const auto size = (uint16_t) ((uint64_t) _viewportSize * (uint64_t) bounds.getHeight() / (uint64_t) _totalSize);
-				const auto position = (uint16_t) ((uint64_t) _position * (uint64_t) bounds.getHeight() / (uint64_t) _totalSize);
+				const auto size = static_cast<uint16_t>(static_cast<uint64_t>(_viewportSize) * static_cast<uint64_t>(bounds.getHeight()) / static_cast<uint64_t>(_totalSize));
+				const auto position = static_cast<uint16_t>(static_cast<uint64_t>(_position) * static_cast<uint64_t>(bounds.getHeight()) / static_cast<uint64_t>(_totalSize));
 
 				if (getOrientation() == Orientation::horizontal) {
 					renderer->renderFilledRectangle(

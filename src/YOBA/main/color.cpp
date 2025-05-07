@@ -147,14 +147,14 @@ namespace YOBA {
 		RGB888Color result;
 
 		auto hueSector = _h * 6.0f;
-		auto hueSectorIntegerPart = (uint8_t) hueSector;
-		auto hueSectorFractionalPart = hueSector - (float) hueSectorIntegerPart;
+		auto hueSectorIntegerPart = static_cast<uint8_t>(hueSector);
+		auto hueSectorFractionalPart = hueSector - static_cast<float>(hueSectorIntegerPart);
 
 		auto
-			p = (uint8_t) (255.0f * _b * (1 - _s)),
-			q = (uint8_t) (255.0f * _b * (1 - hueSectorFractionalPart * _s)),
-			t = (uint8_t) (255.0f * _b * (1 - (1 - hueSectorFractionalPart) * _s)),
-			v = (uint8_t) (255.0f * _b);
+			p = static_cast<uint8_t>(255.0f * _b * (1 - _s)),
+			q = static_cast<uint8_t>(255.0f * _b * (1 - hueSectorFractionalPart * _s)),
+			t = static_cast<uint8_t>(255.0f * _b * (1 - (1 - hueSectorFractionalPart) * _s)),
+			v = static_cast<uint8_t>(255.0f * _b);
 
 		switch (hueSectorIntegerPart) {
 			case 1:
@@ -218,9 +218,9 @@ namespace YOBA {
 
 	RGB888Color RGB565Color::toRgb888() const {
 		return {
-			(uint8_t) ((((_value >> 11) & 0x1F) * 255 + 15) / 31),
-			(uint8_t) ((((_value >> 5) & 0x3F) * 255 + 31) / 63),
-			(uint8_t) (((_value & 0x1F) * 255 + 15) / 31)
+			static_cast<uint8_t>((((_value >> 11) & 0x1F) * 255 + 15) / 31),
+			static_cast<uint8_t>((((_value >> 5) & 0x3F) * 255 + 31) / 63),
+			static_cast<uint8_t>(((_value & 0x1F) * 255 + 15) / 31)
 		};
 	}
 
@@ -232,9 +232,9 @@ namespace YOBA {
 
 	RGB888Color RGB666Color::toRgb888() const {
 		return {
-			(uint8_t) (((_value >> 12) & 0b111111) * 255 / 0b111111),
-			(uint8_t) (((_value >> 6) & 0b111111) * 255 / 0b111111),
-			(uint8_t) ((_value & 0b111111) * 255 / 0b111111)
+			static_cast<uint8_t>(((_value >> 12) & 0b111111) * 255 / 0b111111),
+			static_cast<uint8_t>(((_value >> 6) & 0b111111) * 255 / 0b111111),
+			static_cast<uint8_t>((_value & 0b111111) * 255 / 0b111111)
 		};
 	}
 

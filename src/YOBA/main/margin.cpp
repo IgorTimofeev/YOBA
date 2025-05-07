@@ -57,10 +57,10 @@ namespace YOBA {
 
 	Margin Margin::interpolate(const Margin &to, const double &position) const {
 		return {
-			(int32_t) (getLeft() + position * (to.getLeft() - getLeft())),
-			(int32_t) (getTop() + position * (to.getTop() - getTop())),
-			(int32_t) (getRight() + position * (to.getRight() - getRight())),
-			(int32_t) (getBottom() + position * (to.getBottom() - getBottom()))
+			static_cast<int32_t>(getLeft() + position * (to.getLeft() - getLeft())),
+			static_cast<int32_t>(getTop() + position * (to.getTop() - getTop())),
+			static_cast<int32_t>(getRight() + position * (to.getRight() - getRight())),
+			static_cast<int32_t>(getBottom() + position * (to.getBottom() - getBottom()))
 		};
 	}
 

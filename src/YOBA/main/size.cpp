@@ -53,8 +53,8 @@ namespace YOBA {
 
 	Size Size::interpolate(const Size& to, const double& position) const {
 		return {
-			(uint16_t) (getWidth() + position * (to.getWidth() - getWidth())),
-			(uint16_t) (getHeight() + position * (to.getHeight() - getHeight()))
+			static_cast<uint16_t>(getWidth() + position * (to.getWidth() - getWidth())),
+			static_cast<uint16_t>(getHeight() + position * (to.getHeight() - getHeight()))
 		};
 	}
 

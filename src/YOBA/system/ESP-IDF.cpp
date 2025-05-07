@@ -22,7 +22,7 @@ namespace YOBA::system {
 	}
 
 	uint32_t getTime() {
-		return (uint32_t) (esp_timer_get_time() / 1000ULL);
+		return static_cast<uint32_t>(esp_timer_get_time() / 1000ULL);
 	}
 
 	std::unordered_map<uint8_t, std::function<void()>> GPIO::_interruptHandlers = {};
@@ -42,15 +42,15 @@ namespace YOBA::system {
 	}
 
 	bool GPIO::read(uint8_t pin) {
-		return gpio_get_level((gpio_num_t) pin);
+		return gpio_get_level(static_cast<gpio_num_t>(pin));
 	}
 
 	void GPIO::write(uint8_t pin, bool value) {
-		gpio_set_level((gpio_num_t) pin, value);
+		gpio_set_level(static_cast<gpio_num_t>(pin), value);
 	}
 
 	void GPIO::interruptHandler(void *args) {
-		auto funcPtr = (std::function<void()>*) args;
+		auto funcPtr = static_cast<std::function<void()>*>(args);
 
 		(*funcPtr)();
 	}
@@ -59,8 +59,8 @@ namespace YOBA::system {
 		_interruptHandlers.insert({pin, callback});
 
 		gpio_install_isr_service(0);
-		gpio_set_intr_type((gpio_num_t) pin, GPIO_INTR_ANYEDGE);
-		gpio_isr_handler_add((gpio_num_t) pin, interruptHandler, (void*) &_interruptHandlers[pin]);
+		gpio_set_intr_type(static_cast<gpio_num_t>(pin), GPIO_INTR_ANYEDGE);
+		gpio_isr_handler_add(static_cast<gpio_num_t>(pin), interruptHandler, &_interruptHandlers[pin]);
 	}
 
 	// -------------------------------- SPI --------------------------------
@@ -89,7 +89,7 @@ namespace YOBA::system {
 		// Interface
 		spi_device_interface_config_t interfaceConfig {};
 		interfaceConfig.mode = 0;
-		interfaceConfig.clock_speed_hz = (int) frequency;
+		interfaceConfig.clock_speed_hz = static_cast<int>(frequency);
 		interfaceConfig.spics_io_num = ssPin;
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
@@ -122,8 +122,8 @@ namespace YOBA::system {
 	void I2C::setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency) {
 		i2c_master_bus_config_t busConfig {};
 		busConfig.i2c_port = I2C_NUM_0;
-		busConfig.sda_io_num = (gpio_num_t) sdaPin;
-		busConfig.scl_io_num = (gpio_num_t) sclPin;
+		busConfig.sda_io_num = static_cast<gpio_num_t>(sdaPin);
+		busConfig.scl_io_num = static_cast<gpio_num_t>(sclPin);
 		busConfig.clk_source = I2C_CLK_SRC_DEFAULT;
 		busConfig.glitch_ignore_cnt = 7;
 		busConfig.flags.enable_internal_pullup = true;

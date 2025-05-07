@@ -75,14 +75,8 @@ namespace YOBA {
 
 		auto blinkX = textPosition.getX();
 
-		wchar_t ch;
-
-		if (_mask.has_value())
-			ch = _mask.value();
-
 		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-			if (!_mask.has_value())
-				ch = text[charIndex];
+			const wchar_t ch = _mask.has_value() ? _mask.value() : text[charIndex];
 
 			renderer->renderChar(
 				textPosition,
@@ -135,7 +129,7 @@ namespace YOBA {
 			return;
 		}
 
-		_lastTouchX = ((TouchEvent*) event)->getPosition().getX();
+		_lastTouchX = static_cast<TouchEvent*>(event)->getPosition().getX();
 
 		applyContinuousScroll();
 

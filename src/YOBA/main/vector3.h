@@ -62,7 +62,7 @@ namespace YOBA {
 
 	template<typename T>
 	template<typename TOther>
-	Vector3<T>::Vector3(const Vector3<TOther>& other) : Vector3((T) other.getX(), (T) other.getY(), (T) other.getZ()) {
+	Vector3<T>::Vector3(const Vector3<TOther>& other) : Vector3(static_cast<T>(other.getX()), static_cast<T>(other.getY()), static_cast<T>(other.getZ())) {
 
 	}
 
@@ -98,11 +98,11 @@ namespace YOBA {
 
 	template<typename T>
 	T Vector3<T>::getLength() const {
-		return (T) std::sqrt(
-			(float) _x * (float) _x
-			+ (float) _y * (float) _y
-			+ (float) _z * (float) _z
-		);
+		return static_cast<T>(std::sqrt(
+			static_cast<float>(_x) * static_cast<float>(_x)
+			+ static_cast<float>(_y) * static_cast<float>(_y)
+			+ static_cast<float>(_z) * static_cast<float>(_z)
+		));
 	}
 
 	template<typename T>
@@ -119,9 +119,9 @@ namespace YOBA {
 	template<typename T>
 	Vector3<T> Vector3<T>::rotateAroundXAxis(const SinAndCos& sinAndCos) const {
 		return {
-			(T) _x,
-			(T) (sinAndCos.getCos() * (float) _y - sinAndCos.getSin() * (float) _z),
-			(T) (sinAndCos.getSin() * (float) _y + sinAndCos.getCos() * (float) _z)
+			static_cast<T>(_x),
+			static_cast<T>(sinAndCos.getCos() * static_cast<float>(_y) - sinAndCos.getSin() * static_cast<float>(_z)),
+			static_cast<T>(sinAndCos.getSin() * static_cast<float>(_y) + sinAndCos.getCos() * static_cast<float>(_z))
 		};
 	}
 
@@ -133,9 +133,9 @@ namespace YOBA {
 	template<typename T>
 	Vector3<T> Vector3<T>::rotateAroundYAxis(const SinAndCos& sinAndCos) const {
 		return {
-			(T) (sinAndCos.getCos() * (float) _x + sinAndCos.getSin() * (float) _z),
-			(T) _y,
-			(T) (-sinAndCos.getSin() * (float) _x + sinAndCos.getCos() * (float) _z)
+			static_cast<T>(sinAndCos.getCos() * static_cast<float>(_x) + sinAndCos.getSin() * static_cast<float>(_z)),
+			static_cast<T>(_y),
+			static_cast<T>(-sinAndCos.getSin() * static_cast<float>(_x) + sinAndCos.getCos() * static_cast<float>(_z))
 		};
 	}
 
@@ -147,8 +147,8 @@ namespace YOBA {
 	template<typename T>
 	Vector3<T> Vector3<T>::rotateAroundZAxis(const SinAndCos& sinAndCos) const {
 		return {
-			(T) (sinAndCos.getCos() * (float) _x - sinAndCos.getSin() * (float) _y),
-			(T) (sinAndCos.getSin() * (float) _x + sinAndCos.getCos() * (float) _y),
+			static_cast<T>(sinAndCos.getCos() * static_cast<float>(_x) - sinAndCos.getSin() * static_cast<float>(_y)),
+			static_cast<T>(sinAndCos.getSin() * static_cast<float>(_x) + sinAndCos.getCos() * static_cast<float>(_y)),
 			_z
 		};
 	}

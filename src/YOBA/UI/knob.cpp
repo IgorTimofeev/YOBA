@@ -18,20 +18,20 @@ namespace YOBA {
 		if (getMiddleColor()) {
 			renderer->renderFilledCircle(
 				center,
-				(uint16_t) ((float) radius * 0.5f),
+				static_cast<uint16_t>(static_cast<float>(radius) * 0.5f),
 				getMiddleColor()
 			);
 		}
 
 		// Line
 		if (getLineColor()) {
-			auto centerF = (Vector2F) center;
-			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - (float) toRadians(90));
+			auto centerF = static_cast<Vector2F>(center);
+			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 
 			renderer->renderLine(
-				(Point) lineStart,
-				(Point) lineEnd,
+				static_cast<Point>(lineStart),
+				static_cast<Point>(lineEnd),
 				getLineColor()
 			);
 		}
@@ -53,7 +53,7 @@ namespace YOBA {
 		}
 		else {
 			const auto oldAngle = _angle;
-			_angle = ((TouchDragEvent*) event)->getPosition().getRotationFloat(getBounds().getCenter()) - (float) toRadians(90);
+			_angle = static_cast<TouchDragEvent*>(event)->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
 
 			rotated(oldAngle, _angle);
 		}

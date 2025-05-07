@@ -19,7 +19,7 @@ namespace YOBA {
 	}
 
 	bool Animation::tick() {
-		double position = (double) (system::getTime() - _start) / (double) _duration;
+		double position = static_cast<double>(system::getTime() - _start) / static_cast<double>(_duration);
 
 		if (position > 1)
 			position = 1;

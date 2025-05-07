@@ -294,7 +294,7 @@ namespace YOBA {
 	void KeyboardButton::onIsCheckedChanged() {
 		Button::onIsCheckedChanged();
 
-		getApplication()->enqueueOnTick([this]() {
+		getApplication()->enqueueOnTick([this] {
 			getKey()->onKeyPressedChanged(this);
 		});
 	}
@@ -506,7 +506,7 @@ namespace YOBA {
 	}
 
 	void Keyboard::setNextCyclicLayoutIndex() {
-		auto index = (int8_t) (_cyclicLayoutIndex + 1);
+		auto index = static_cast<int8_t>(_cyclicLayoutIndex + 1);
 
 		if (index >= getCyclicLayoutsCount())
 			index = 0;
@@ -587,25 +587,25 @@ namespace YOBA {
 					stretchedCount++;
 				}
 				else {
-					defaultWidthWithoutSpacing += buttonWidth * (float) availableWidthWithoutSpacing;
+					defaultWidthWithoutSpacing += buttonWidth * static_cast<float>(availableWidthWithoutSpacing);
 				}
 			}
 
 			float stretchedWidth;
 			int32_t localX;
 
-			const float defaultWidthWithSpacing = defaultWidthWithoutSpacing + (float) totalSpacing;
+			const float defaultWidthWithSpacing = defaultWidthWithoutSpacing + static_cast<float>(totalSpacing);
 
 			// 1 is for float rounding correction
-			const auto rowIsFullOfDefaultKeys = defaultWidthWithSpacing >= (float) (bounds.getWidth() - 1);
+			const auto rowIsFullOfDefaultKeys = defaultWidthWithSpacing >= static_cast<float>(bounds.getWidth() - 1);
 
 			if (stretchedCount > 0) {
-				stretchedWidth = ((float) availableWidthWithoutSpacing - defaultWidthWithoutSpacing) / (float) stretchedCount;
+				stretchedWidth = (static_cast<float>(availableWidthWithoutSpacing) - defaultWidthWithoutSpacing) / static_cast<float>(stretchedCount);
 				localX = bounds.getX();
 			}
 			else {
 				stretchedWidth = 0;
-				localX = bounds.getXCenter() - (int32_t) (defaultWidthWithSpacing / 2);
+				localX = bounds.getXCenter() - static_cast<int32_t>(defaultWidthWithSpacing / 2);
 			}
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
@@ -619,25 +619,25 @@ namespace YOBA {
 					? (
 						buttonWidth == KeyboardKey::stretched
 						? std::round(stretchedWidth)
-						: std::round(buttonWidth * (float) availableWidthWithoutSpacing)
+						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
 					)
 					// Last
 					: (
 						stretchedCount > 0 || rowIsFullOfDefaultKeys
 						// Stretching to end
-						? (float) (bounds.getWidth() - localX)
+						? static_cast<float>(bounds.getWidth() - localX)
 						// Using desired key size
-						: std::round(buttonWidth * (float) availableWidthWithoutSpacing)
+						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
 					);
 
 				button->render(renderer, Bounds(
 					bounds.getX() + localX,
 					y,
-					(uint16_t) buttonWidth,
+					static_cast<uint16_t>(buttonWidth),
 					_keyboard->getKeyHeight()
 				));
 
-				localX += (uint16_t) buttonWidth + _keyboard->getHorizontalKeySpacing();
+				localX += static_cast<uint16_t>(buttonWidth) + _keyboard->getHorizontalKeySpacing();
 			}
 		};
 

@@ -13,7 +13,7 @@ namespace YOBA {
 					lineWidthWithSpacing = 0,
 					lineHeight = 0;
 
-				for (auto child : *this) {
+				for (const auto child : *this) {
 					child->measure(Size(
 						availableSize.getWidth(),
 						Size::unlimited
@@ -24,7 +24,7 @@ namespace YOBA {
 					// Overflow
 					if (lineWidthWithSpacing + childSize.getWidth() > availableSize.getWidth()) {
 						if (lineWidthWithSpacing > 0) {
-							width = std::max(width, (uint16_t) (lineWidthWithSpacing - getHorizontalSpacing()));
+							width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalSpacing()));
 							height += height > 0 ? getVerticalSpacing() + lineHeight : lineHeight;
 						}
 
@@ -42,7 +42,7 @@ namespace YOBA {
 
 				// Handling unprocessed line
 				if (lineWidthWithSpacing > 0) {
-					width = std::max(width, (uint16_t) (lineWidthWithSpacing - getHorizontalSpacing()));
+					width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalSpacing()));
 					height += height > 0 ? getVerticalSpacing() + lineHeight : lineHeight;
 				}
 
@@ -54,7 +54,7 @@ namespace YOBA {
 				int32_t y = 0;
 				uint16_t lineHeight = 0;
 
-				for (auto child : *this) {
+				for (const auto child : *this) {
 					if (!child->isVisible())
 						continue;
 

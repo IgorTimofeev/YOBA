@@ -104,7 +104,7 @@ namespace YOBA {
 		// Color model
 		// 101 - 16 bits per pixel
 		// 110 - 18 bits per pixel
-		this->writeCommandAndData((uint8_t) Command::COLMOD, getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
+		this->writeCommandAndData(static_cast<uint8_t>(Command::COLMOD), getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
 
 		// Frame rate control, f=fosc, 70Hz fps
 		b[0] = 0x00;
@@ -202,30 +202,30 @@ namespace YOBA {
 	}
 
 	void ILI9341Display::writeMADCTLCommand() {
-		auto data = (uint8_t) Command::MADCTL_BGR;
+		auto data = static_cast<uint8_t>(Command::MADCTL_BGR);
 
 		switch (getRotation()) {
 			case ViewportRotation::clockwise0:
-				data |= (uint8_t) Command::MADCTL_MX;
+				data |= static_cast<uint8_t>(Command::MADCTL_MX);
 				break;
 
 			case ViewportRotation::clockwise90:
-				data |= (uint8_t) Command::MADCTL_MX | (uint8_t) Command::MADCTL_MY | (uint8_t) Command::MADCTL_MV;
+				data |= static_cast<uint8_t>(Command::MADCTL_MX) | static_cast<uint8_t>(Command::MADCTL_MY) | static_cast<uint8_t>(Command::MADCTL_MV);
 				break;
 
 			case ViewportRotation::clockwise180:
-				data |= (uint8_t) Command::MADCTL_MY;
+				data |= static_cast<uint8_t>(Command::MADCTL_MY);
 				break;
 
 			case ViewportRotation::clockwise270:
-				data |= (uint8_t) Command::MADCTL_MV;
+				data |= static_cast<uint8_t>(Command::MADCTL_MV);
 				break;
 
 			default:
 				break;
 		}
 
-		this->writeCommandAndData((uint8_t) Command::MADCTL, data);
+		this->writeCommandAndData(static_cast<uint8_t>(Command::MADCTL), data);
 	}
 
 	void ILI9341Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {

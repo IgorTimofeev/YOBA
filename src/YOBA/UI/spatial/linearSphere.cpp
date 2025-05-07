@@ -15,10 +15,10 @@ namespace YOBA::spatial {
 
 		// Middle vertices
 		for (uint16_t latitudeSegment = 0; latitudeSegment < latitudeSegments; latitudeSegment++) {
-			const auto latitude = (float) latitudeSegment / (float) latitudeSegments * std::numbers::pi_v<float>;
+			const auto latitude = static_cast<float>(latitudeSegment) / static_cast<float>(latitudeSegments) * std::numbers::pi_v<float>;
 
 			for (uint16_t longitudeSegment = 0; longitudeSegment < longitudeSegments; longitudeSegment++) {
-				const auto longitude = (float) longitudeSegment / (float) longitudeSegments * std::numbers::pi_v<float> * 2.f;
+				const auto longitude = static_cast<float>(longitudeSegment) / static_cast<float>(longitudeSegments) * std::numbers::pi_v<float> * 2.f;
 
 				_vertices.push_back(center + Vector3F(
 					radius * std::sin(latitude) * std::cos(longitude),
