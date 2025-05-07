@@ -88,17 +88,14 @@ namespace YOBA {
 			spaceAt = 0;
 
 		uint16_t
-			charWidth,
 			spaceWidth = 0,
 			lineWidth = 0,
 			spaceLineWidth = 0;
 
-		wchar_t ch;
-
 		// 01234567
 		// He pizd
 		for (size_t i = 0; i < text.length(); i++) {
-			ch = text[i];
+			const wchar_t ch = text[i];
 
 			switch (ch) {
 				// Retarded char, should skip
@@ -122,7 +119,7 @@ namespace YOBA {
 				}
 				// Any char
 				default: {
-					charWidth = getWidth(ch, scale);
+					const auto charWidth = getWidth(ch, scale);
 
 					// Line doesn't fit, should wrap
 					if (lineWidth + charWidth > maxWidth) {

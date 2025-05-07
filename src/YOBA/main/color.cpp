@@ -71,12 +71,12 @@ namespace YOBA {
 	}
 
 	RGB565Color RGB888Color::toRGB565() const {
-		return RGB565Color(((_r >> 3) << 3) | (_g >> 5) | ((_g >> 2) << 13) | ((_b >> 3) << 8));
+		return RGB565Color(_r >> 3 << 3 | _g >> 5 | _g >> 2 << 13 | _b >> 3 << 8);
 //		return Rgb565Color(((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3));
 	}
 
 	RGB666Color RGB888Color::toRGB666() const {
-		return RGB666Color((_r << 16) | (_g << 8) | _b);
+		return RGB666Color(_r << 16 | _g << 8 | _b);
 	}
 
 	MonochromeColor RGB888Color::toMonochrome() const {
@@ -199,7 +199,7 @@ namespace YOBA {
 
 	// -------------------------------- MonochromeColor --------------------------------
 
-	MonochromeColor::MonochromeColor(bool value) : ValueColor<bool>(ColorModel::monochrome, value) {
+	MonochromeColor::MonochromeColor(bool value) : ValueColor(ColorModel::monochrome, value) {
 
 	}
 
@@ -212,35 +212,35 @@ namespace YOBA {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	RGB565Color::RGB565Color(uint16_t value) : ValueColor<uint16_t>(ColorModel::RGB565, value) {
+	RGB565Color::RGB565Color(uint16_t value) : ValueColor(ColorModel::RGB565, value) {
 
 	}
 
 	RGB888Color RGB565Color::toRgb888() const {
 		return {
-			static_cast<uint8_t>((((_value >> 11) & 0x1F) * 255 + 15) / 31),
-			static_cast<uint8_t>((((_value >> 5) & 0x3F) * 255 + 31) / 63),
+			static_cast<uint8_t>(((_value >> 11 & 0x1F) * 255 + 15) / 31),
+			static_cast<uint8_t>(((_value >> 5 & 0x3F) * 255 + 31) / 63),
 			static_cast<uint8_t>(((_value & 0x1F) * 255 + 15) / 31)
 		};
 	}
 
 	// -------------------------------- Rgb666Color --------------------------------
 
-	RGB666Color::RGB666Color(uint32_t value) : ValueColor<uint32_t>(ColorModel::RGB666, value) {
+	RGB666Color::RGB666Color(uint32_t value) : ValueColor(ColorModel::RGB666, value) {
 
 	}
 
 	RGB888Color RGB666Color::toRgb888() const {
 		return {
-			static_cast<uint8_t>(((_value >> 12) & 0b111111) * 255 / 0b111111),
-			static_cast<uint8_t>(((_value >> 6) & 0b111111) * 255 / 0b111111),
+			static_cast<uint8_t>((_value >> 12 & 0b111111) * 255 / 0b111111),
+			static_cast<uint8_t>((_value >> 6 & 0b111111) * 255 / 0b111111),
 			static_cast<uint8_t>((_value & 0b111111) * 255 / 0b111111)
 		};
 	}
 
 	// -------------------------------- PaletteColor --------------------------------
 
-	Bit8PaletteColor::Bit8PaletteColor(uint16_t index) : PaletteColor<uint16_t>(index) {
+	Bit8PaletteColor::Bit8PaletteColor(uint16_t index) : PaletteColor(index) {
 
 	}
 

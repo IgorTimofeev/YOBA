@@ -14,6 +14,8 @@ namespace YOBA {
 		friend class RenderTarget;
 
 		public:
+			virtual ~Renderer() = default;
+
 			RenderTarget* getTarget() const;
 			void setTarget(RenderTarget* value);
 

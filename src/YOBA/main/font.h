@@ -18,7 +18,7 @@ namespace YOBA {
 				const uint8_t* bitmap
 			);
 
-			constexpr static const uint8_t missingGlyphWidth = 10;
+			constexpr static uint8_t missingGlyphWidth = 10;
 
 			bool isVariableWidth() const;
 			const uint8_t* getBitmap() const;

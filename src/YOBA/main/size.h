@@ -10,8 +10,8 @@ namespace YOBA {
 			Size(uint16_t uniformValue);
 			Size();
 
-			constexpr static const uint16_t computed = 0xFFFF;
-			constexpr static const uint16_t unlimited = 0xFFFE;
+			constexpr static uint16_t computed = 0xFFFF;
+			constexpr static uint16_t unlimited = 0xFFFE;
 
 			uint16_t getWidth() const;
 			void setWidth(uint16_t value);

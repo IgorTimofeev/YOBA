@@ -69,6 +69,6 @@ namespace YOBA {
 				chargePump = 0x8D,
 			};
 
-			constexpr static const uint8_t _pageCount = 8;
+			constexpr static uint8_t _pageCount = 8;
 	};
 }

@@ -236,15 +236,15 @@ namespace YOBA {
 		// Column Address Set
 		data[0] = bounds.getX() >> 8; //Start Col High
 		data[1] = bounds.getX() & 0xff; //Start Col Low
-		data[2] = (bounds.getX2()) >> 8; //End Col High
-		data[3] = (bounds.getX2()) & 0xff; //End Col Low
+		data[2] = bounds.getX2() >> 8; //End Col High
+		data[3] = bounds.getX2() & 0xff; //End Col Low
 		writeCommandAndData(0x2A, data, 4);
 
 		//Page address set
 		data[0] = bounds.getY() >> 8; //Start page high
 		data[1] = bounds.getY() & 0xff; // Start page low
-		data[2] = (bounds.getY2()) >> 8; // End page high
-		data[3] = (bounds.getY2()) & 0xff; // End page low
+		data[2] = bounds.getY2() >> 8; // End page high
+		data[3] = bounds.getY2() & 0xff; // End page low
 		writeCommandAndData(0x2B, data, 4);
 
 		// Memory write

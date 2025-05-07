@@ -157,7 +157,7 @@ namespace YOBA {
 	}
 
 	void Application::inputDevicesTick() {
-		for (auto inputDevice : _inputDevices)
+		for (const auto inputDevice : _inputDevices)
 			inputDevice->tick(this);
 	}
 

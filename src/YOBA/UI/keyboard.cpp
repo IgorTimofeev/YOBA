@@ -641,10 +641,8 @@ namespace YOBA {
 			}
 		};
 
-		KeyboardButton* button;
-
 		for (size_t i = 0; i < getChildrenCount(); i++) {
-			button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+			const auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
 
 			if (button->getRow() > rowIndex) {
 				arrangeRow(i);
@@ -678,7 +676,7 @@ namespace YOBA {
 		// Moving children from root to temporary layout
 		_applicationChildrenLayout = new Layout();
 
-		for (auto child : *application)
+		for (const auto child : *application)
 			*_applicationChildrenLayout += child;
 
 		application->removeChildren();
@@ -704,7 +702,7 @@ namespace YOBA {
 		application->removeChildren();
 
 		// Moving children back to root
-		for (auto child : *_applicationChildrenLayout)
+		for (const auto child : *_applicationChildrenLayout)
 			*application += child;
 
 		delete _keyboard;

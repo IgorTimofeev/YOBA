@@ -28,10 +28,10 @@ namespace YOBA {
 
 			}
 
-			constexpr static const float equatorialRadiusMeters = 6378137.f;
-			constexpr static const float equatorialLengthMeters = 2.f * std::numbers::pi_v<float> * equatorialRadiusMeters;
-			constexpr static const float equatorialRadiansPerMeter = 2.f * std::numbers::pi_v<float> / equatorialLengthMeters;
-			constexpr static const float equatorialMetersPerRadian = equatorialLengthMeters / (2.f * std::numbers::pi_v<float>);
+			constexpr static float equatorialRadiusMeters = 6378137.f;
+			constexpr static float equatorialLengthMeters = 2.f * std::numbers::pi_v<float> * equatorialRadiusMeters;
+			constexpr static float equatorialRadiansPerMeter = 2.f * std::numbers::pi_v<float> / equatorialLengthMeters;
+			constexpr static float equatorialMetersPerRadian = equatorialLengthMeters / (2.f * std::numbers::pi_v<float>);
 
 			Vector3F toCartesian(float radius) const {
 				radius += _altitude;

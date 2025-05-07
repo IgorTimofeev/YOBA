@@ -2,7 +2,7 @@
 #include "YOBA/main/bounds.h"
 
 namespace YOBA {
-	Bit8PaletteRenderer::Bit8PaletteRenderer(uint8_t paletteLength) : PaletteRenderer<uint8_t, uint16_t>(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(uint8_t paletteLength) : PaletteRenderer(paletteLength) {
 
 	}
 
@@ -19,14 +19,13 @@ namespace YOBA {
 			case ColorModel::RGB565: {
 				const auto& size = getTarget()->getSize();
 
-				uint16_t* pixelBufferPtr;
-				uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(_pixelBuffer + _pixelBufferLength);
+				const uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(_pixelBuffer + _pixelBufferLength);
 
-				uint16_t* palettePtr = reinterpret_cast<uint16_t*>(getPalette());
-				uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
+				const uint16_t* palettePtr = reinterpret_cast<uint16_t*>(getPalette());
+				const uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
 
 				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionBufferHeight()) {
-					pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
+					auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
 
 					// Taking indices from palette, converting them to color & copying to pixel buffer
 					while (pixelBufferPtr < pixelBufferEndPtr) {
@@ -102,7 +101,7 @@ namespace YOBA {
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
 					// Non-transparent
-					if (*bitmapPtr & (1 << bitmapBitIndex)) {
+					if (*bitmapPtr & 1 << bitmapBitIndex) {
 						bitmapBitIndex++;
 
 						// Easy
@@ -117,7 +116,7 @@ namespace YOBA {
 						}
 						// Dark souls
 						else {
-							*paletteIndicesBufferPtr = static_cast<uint8_t>((*reinterpret_cast<const uint16_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFF);
+							*paletteIndicesBufferPtr = static_cast<uint8_t>(*reinterpret_cast<const uint16_t*>(bitmapPtr) >> bitmapBitIndex & 0xFF);
 
 							paletteIndicesBufferPtr++;
 							bitmapPtr++;
@@ -161,8 +160,8 @@ namespace YOBA {
 
 		for (uint8_t index = 0; index < 240; index++) {
 			const uint8_t idxB = index % blues;
-			const uint8_t idxG = (index / blues) % greens;
-			const uint8_t idxR = (index / blues / greens) % reds;
+			const uint8_t idxG = index / blues % greens;
+			const uint8_t idxR = index / blues / greens % reds;
 
 			const auto r = static_cast<uint8_t>(std::round(static_cast<float>(idxR) * 255.0f / (static_cast<float>(reds) - 1.0f)));
 			const auto g = static_cast<uint8_t>(std::round(static_cast<float>(idxG) * 255.0f / (static_cast<float>(greens) - 1.0f)));

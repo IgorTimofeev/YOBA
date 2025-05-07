@@ -135,12 +135,12 @@ namespace YOBA {
 	}
 
 	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color* color) {
-		const uint8_t step = 1;
-		const uint16_t totalSize = step + step;
+		constexpr uint8_t step = 1;
+		constexpr uint16_t totalSize = step + step;
 		bool odd = true;
 
-		int32_t x2 = bounds.getX2();
-		int32_t y2 = bounds.getY2();
+		const auto x2 = bounds.getX2();
+		const auto y2 = bounds.getY2();
 
 		for (int32_t j = bounds.getY(); j <= y2; j++) {
 			for (int32_t i = odd ? bounds.getX() + step : bounds.getX(); i <= x2; i += totalSize)

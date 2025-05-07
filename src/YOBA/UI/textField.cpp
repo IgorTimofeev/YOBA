@@ -238,11 +238,11 @@ namespace YOBA {
 		const auto cursorPosition = getCursorPosition();
 
 		// Start
-		if (cursorPosition == 0) {
+		if (cursorPosition == 0)
 			return;
-		}
+
 		// End
-		else if (cursorPosition == text.length()) {
+		if (cursorPosition == text.length()) {
 			if (!text.empty()) {
 				setText(text.substr(0, text.length() - 1));
 			}
@@ -358,7 +358,7 @@ namespace YOBA {
 			}
 		};
 
-		keyboard->input += [this](KeyCode code, std::wstring_view text) {
+		keyboard->input += [this](KeyCode, std::wstring_view text) {
 			insert(text);
 		};
 	}

@@ -6,7 +6,7 @@ namespace YOBA {
 	void Layout::onTick() {
 		Element::onTick();
 
-		for (auto element : _children)
+		for (const auto element : _children)
 			if (element->isVisible())
 				element->onTick();
 	}
@@ -29,23 +29,21 @@ namespace YOBA {
 		}
 	}
 
-	size_t Layout::getChildrenCount() {
+	size_t Layout::getChildrenCount() const {
 		return _children.size();
 	}
 
 	int32_t Layout::getIndexOfChild(Element* element) {
-		auto iterator = std::find(_children.begin(), _children.end(), element);
+		const auto iterator = std::ranges::find(_children, element);
 
-		if (iterator == _children.end()) {
+		if (iterator == _children.end())
 			return -1;
-		}
-		else {
-			return iterator - _children.begin();
-		}
+
+		return iterator - _children.begin();
 	}
 
 	void Layout::removeChildAt(int index) {
-		auto child = _children[index];
+		const auto child = _children[index];
 
 		_children.erase(_children.begin() + index);
 
@@ -56,7 +54,7 @@ namespace YOBA {
 	}
 
 	void Layout::removeChild(Element* child) {
-		auto iterator = std::find(_children.begin(), _children.end(), child);
+		const auto iterator = std::ranges::find(_children, child);
 
 		if (iterator == _children.end())
 			return;
@@ -70,7 +68,7 @@ namespace YOBA {
 	}
 
 	void Layout::removeChildren() {
-		for (auto child : _children) {
+		for (const auto child : _children) {
 			onChildRemoved(child);
 			child->onRemovedFromParent(this);
 		}
@@ -80,7 +78,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	Element* Layout::getChildAt(size_t index) {
+	Element* Layout::getChildAt(size_t index) const {
 		return _children[index];
 	}
 

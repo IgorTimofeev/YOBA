@@ -14,7 +14,7 @@ namespace YOBA::spatial {
 		private:
 			Vector3F _vertices[8] {};
 
-			constexpr static const uint16_t _lineVertexIndices[] {
+			constexpr static uint16_t _lineVertexIndices[] {
 				// Front
 				0, 1,
 				1, 2,

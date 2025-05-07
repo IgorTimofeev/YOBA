@@ -11,12 +11,12 @@
 namespace YOBA {
 	class Layout : public virtual Element {
 		public:
-			size_t getChildrenCount();
+			size_t getChildrenCount() const;
 			int32_t getIndexOfChild(Element* element);
-			Element* getChildAt(size_t index);
+			Element* getChildAt(size_t index) const;
 
 			void addChild(Element* child);
-			void insertChild(size_t index, Element* element);
+			void insertChild(size_t index, Element* child);
 			void insertChildFromEnd(size_t offset, Element* child);
 
 			virtual void removeChildAt(int index);

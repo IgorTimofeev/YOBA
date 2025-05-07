@@ -10,7 +10,7 @@
 namespace YOBA {
 	class SevenSegment : public PrimaryColorElement, public SecondaryColorElement {
 		public:
-			constexpr static const uint32_t dashes = 0xFFFFFFFF;
+			constexpr static uint32_t dashes = 0xFFFFFFFF;
 
 			Size onMeasure(const Size& availableSize) override {
 				return {

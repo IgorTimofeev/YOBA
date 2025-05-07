@@ -23,7 +23,7 @@ namespace YOBA {
 
 			}
 
-			constexpr static const float autoSize = -1;
+			constexpr static float autoSize = -1;
 
 			float getRelativeSize(Element* child) {
 				return _elementSizes.contains(child) ? _elementSizes[child] : 1;

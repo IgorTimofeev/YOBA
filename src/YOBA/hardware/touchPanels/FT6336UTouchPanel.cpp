@@ -69,7 +69,7 @@ namespace YOBA {
 		buffer[0] = readByte(FT6336U_ADDR_TOUCH1_X);
 		buffer[1] = readByte(FT6336U_ADDR_TOUCH1_X + 1);
 
-		return ((buffer[0] & 0x0f) << 8) | buffer[1];
+		return (buffer[0] & 0x0f) << 8 | buffer[1];
 	}
 
 	uint16_t FT6336UTouchPanel::read_touch1_y() {
@@ -77,7 +77,7 @@ namespace YOBA {
 		buffer[0] = readByte(FT6336U_ADDR_TOUCH1_Y);
 		buffer[1] = readByte(FT6336U_ADDR_TOUCH1_Y + 1);
 
-		return ((buffer[0] & 0x0f) << 8) | buffer[1];
+		return (buffer[0] & 0x0f) << 8 | buffer[1];
 	}
 
 	uint8_t FT6336UTouchPanel::read_touch1_event() {
@@ -102,7 +102,7 @@ namespace YOBA {
 		buffer[0] = readByte(FT6336U_ADDR_TOUCH2_X);
 		buffer[1] = readByte(FT6336U_ADDR_TOUCH2_X + 1);
 
-		return ((buffer[0] & 0x0f) << 8) | buffer[1];
+		return (buffer[0] & 0x0f) << 8 | buffer[1];
 	}
 
 	uint16_t FT6336UTouchPanel::read_touch2_y() {
@@ -110,7 +110,7 @@ namespace YOBA {
 		buffer[0] = readByte(FT6336U_ADDR_TOUCH2_Y);
 		buffer[1] = readByte(FT6336U_ADDR_TOUCH2_Y + 1);
 
-		return ((buffer[0] & 0x0f) << 8) | buffer[1];
+		return (buffer[0] & 0x0f) << 8 | buffer[1];
 	}
 
 	uint8_t FT6336UTouchPanel::read_touch2_event() {

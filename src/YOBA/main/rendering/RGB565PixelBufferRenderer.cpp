@@ -26,7 +26,7 @@ namespace YOBA {
 	void RGB565PixelBufferRenderer::clearNative(const Color* color) {
 		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer());
 
-		std::fill(pixelBufferPtr, pixelBufferPtr + getPixelBufferLength() / 2, static_cast<const RGB565Color*>(color)->getValue());
+		std::fill_n(pixelBufferPtr, getPixelBufferLength() / 2, static_cast<const RGB565Color*>(color)->getValue());
 	}
 
 	void RGB565PixelBufferRenderer::renderPixelNative(const Point& point, const Color* color) {
@@ -36,7 +36,7 @@ namespace YOBA {
 	void RGB565PixelBufferRenderer::renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) {
 		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
 
-		std::fill(pixelBufferPtr, pixelBufferPtr + length, static_cast<const RGB565Color*>(color)->getValue());
+		std::fill_n(pixelBufferPtr, length, static_cast<const RGB565Color*>(color)->getValue());
 	}
 
 	void RGB565PixelBufferRenderer::renderVerticalLineNative(const Point& point, uint16_t length, const Color* color) {
@@ -56,7 +56,7 @@ namespace YOBA {
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
-			std::fill(pixelBufferPtr, pixelBufferPtr + bounds.getWidth(), value);
+			std::fill_n(pixelBufferPtr, bounds.getWidth(), value);
 			pixelBufferPtr += scanlineLength;
 		}
 	}
