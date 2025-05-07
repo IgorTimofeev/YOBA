@@ -4,8 +4,6 @@ namespace YOBA::spatial {
 	void Scene::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto projectionPlaneDistance = getProjectionPlaneDistance();
 
-		std::vector<Vector3F> _screenSpaceVertices {};
-
 		const SinAndCos worldRotationSinAndCos[3] = {
 			SinAndCos(-_worldRotation.getX()),
 			SinAndCos(-_worldRotation.getY()),
@@ -22,7 +20,12 @@ namespace YOBA::spatial {
 		uint16_t verticesCount;
 		Vector3F vertex;
 
+		std::vector<Vector3F> _screenSpaceVertices {};
+
 		for (auto element : _elements) {
+			if (!element->isVisible())
+				continue;
+
 			vertices = element->getVertices();
 			verticesCount = element->getVertexCount();
 
