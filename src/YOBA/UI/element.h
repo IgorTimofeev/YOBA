@@ -52,8 +52,8 @@ namespace YOBA {
 
 			virtual void startAnimation(Animation* animation);
 
-			Application* getApplication();
-			Layout* getParent();
+			Application* getApplication() const;
+			Layout* getParent() const;
 
 			bool isVisible() const;
 			void setVisible(bool value);
@@ -64,10 +64,10 @@ namespace YOBA {
 			bool isFocusable() const;
 			void setFocusable(bool focusable);
 
-			bool isFocused();
+			bool isFocused() const;
 			void setFocused(bool value);
 
-			bool isCaptured();
+			bool isCaptured() const;
 			void setCaptured(bool value);
 
 			Alignment getHorizontalAlignment() const;
@@ -82,16 +82,16 @@ namespace YOBA {
 			bool getClipToBounds() const;
 			void setClipToBounds(bool value);
 
-			const Margin& getMargin();
+			const Margin& getMargin() const;
 			void setMargin(const Margin& value);
 
-			const Size& getSize();
+			const Size& getSize() const;
 			void setSize(const Size& value);
 
 			void setWidth(uint16_t value);
 			void setHeight(uint16_t value);
 
-			const Size& getMeasuredSize();
+			const Size& getMeasuredSize() const;
 			const Bounds& getBounds() const;
 
 		protected:
@@ -122,8 +122,8 @@ namespace YOBA {
 			Application* _application = nullptr;
 			Layout* _parent = nullptr;
 
-			Bounds _bounds;
-			Size _measuredSize = Size();
+			Bounds _bounds {};
+			Size _measuredSize {};
 
 			static void computeMeasureShit(
 				const uint16_t &size,

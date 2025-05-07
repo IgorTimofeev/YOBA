@@ -200,7 +200,7 @@ namespace YOBA {
 
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
-			auto viewport = renderer->pushViewport(_bounds);
+			const auto viewport = renderer->pushViewport(_bounds);
 
 			onRender(renderer, _bounds);
 
@@ -231,7 +231,7 @@ namespace YOBA {
 		_focusable = focusable;
 	}
 
-	bool Element::isFocused() {
+	bool Element::isFocused() const {
 		return _application && _application->getFocusedElement() == this;
 	}
 
@@ -251,7 +251,7 @@ namespace YOBA {
 		_application->invalidate();
 	}
 
-	bool Element::isCaptured() {
+	bool Element::isCaptured() const {
 		return _application && _application->getCapturedElement() == this;
 	}
 
@@ -276,7 +276,7 @@ namespace YOBA {
 			_application->startAnimation(animation);
 	}
 
-	Layout* Element::getParent() {
+	Layout* Element::getParent() const {
 		return _parent;
 	}
 
@@ -284,7 +284,7 @@ namespace YOBA {
 		_application = value;
 	}
 
-	Application *Element::getApplication() {
+	Application *Element::getApplication() const {
 		return _application;
 	}
 
@@ -292,7 +292,7 @@ namespace YOBA {
 		return _bounds;
 	}
 
-	const Size& Element::getMeasuredSize() {
+	const Size& Element::getMeasuredSize() const {
 		return _measuredSize;
 	}
 
@@ -305,7 +305,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	const Size& Element::getSize() {
+	const Size& Element::getSize() const {
 		return _size;
 	}
 
@@ -318,7 +318,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	const Margin &Element::getMargin() {
+	const Margin& Element::getMargin() const {
 		return _margin;
 	}
 

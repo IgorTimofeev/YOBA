@@ -30,7 +30,7 @@ namespace YOBA {
 
 				switch (getOrientation()) {
 					case Orientation::horizontal: {
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -57,7 +57,7 @@ namespace YOBA {
 						break;
 					}
 					case Orientation::vertical: {
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -95,7 +95,7 @@ namespace YOBA {
 					case Orientation::horizontal: {
 						position = bounds.getX();
 
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -116,7 +116,7 @@ namespace YOBA {
 					case Orientation::vertical: {
 						position = bounds.getY();
 
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
