@@ -49,11 +49,12 @@ namespace YOBA {
 			}
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
 				// Thumb
 				if (!_thumbColor)
 					return;
 
+				const auto& bounds = getBounds();
 				const auto size = static_cast<uint16_t>(static_cast<uint64_t>(_viewportSize) * static_cast<uint64_t>(bounds.getHeight()) / static_cast<uint64_t>(_totalSize));
 				const auto position = static_cast<uint16_t>(static_cast<uint64_t>(_position) * static_cast<uint64_t>(bounds.getHeight()) / static_cast<uint64_t>(_totalSize));
 

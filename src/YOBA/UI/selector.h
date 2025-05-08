@@ -13,16 +13,16 @@ namespace YOBA {
 
 			Callback<> selectionChanged;
 			
-			size_t getItemsCount();
+			size_t getItemsCount() const;
 
-			SelectorItem* getItemAt(size_t index);
+			SelectorItem* getItemAt(size_t index) const;
 
-			int32_t getIndexOfItem(SelectorItem* item);
+			int32_t getIndexOfItem(SelectorItem* item) const;
 
 			void addItem(SelectorItem* item);
 
 			int32_t getSelectedIndex() const;
-			SelectorItem* getSelectedItem();
+			SelectorItem* getSelectedItem() const;
 
 			void setSelectedIndex(int32_t index);
 

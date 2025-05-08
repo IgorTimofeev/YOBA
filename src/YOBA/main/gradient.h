@@ -24,7 +24,7 @@ namespace YOBA {
 
 	class LinearGradient {
 		public:
-			RGB888Color getRgb888Color(float position);
+			RGB888Color getRgb888Color(float position) const;
 
 			std::vector<GradientStop>& getStops();
 

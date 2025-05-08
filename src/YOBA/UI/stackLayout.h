@@ -88,7 +88,9 @@ namespace YOBA {
 				return result;
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
+
 				int32_t position;
 
 				switch (getOrientation()) {

@@ -47,7 +47,9 @@ namespace YOBA {
 			}
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
+
 				// Track
 				if (_trackColor && _value < 0xFFFF) {
 					renderer->renderFilledRectangle(

@@ -157,7 +157,7 @@ namespace YOBA {
 	}
 
 	Bounds Bounds::getIntersection(const Bounds& bounds) const {
-		Bounds result = Bounds();
+		auto result = Bounds();
 
 		result._x = std::max(_x, bounds._x);
 		result._y = std::max(_y, bounds._y);
@@ -168,7 +168,7 @@ namespace YOBA {
 	}
 
 	Bounds Bounds::getExpansion(const Bounds& bounds) const {
-		Bounds result = Bounds();
+		auto result = Bounds();
 
 		result._x = std::min(_x, bounds._x);
 		result._x = std::min(_y, bounds._y);

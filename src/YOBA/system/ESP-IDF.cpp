@@ -30,7 +30,7 @@ namespace YOBA::system {
 	// -------------------------------- GPIO --------------------------------
 
 	void GPIO::setMode(uint8_t pin, PinMode mode) {
-		gpio_config_t config = {
+		const gpio_config_t config = {
 			.pin_bit_mask = 1ULL << pin,
 			.mode = mode == PinMode::Input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT,
 			.pull_up_en = GPIO_PULLUP_ENABLE,
@@ -50,7 +50,7 @@ namespace YOBA::system {
 	}
 
 	void GPIO::interruptHandler(void *args) {
-		auto funcPtr = static_cast<std::function<void()>*>(args);
+		const auto funcPtr = static_cast<std::function<void()>*>(args);
 
 		(*funcPtr)();
 	}
@@ -70,7 +70,7 @@ namespace YOBA::system {
 	// Note: SPI instance will manage slave select output by itself
 	void SPI::setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency) {
 		// GPIO
-		GPIO::setMode(ssPin, system::GPIO::PinMode::Output);
+		GPIO::setMode(ssPin, GPIO::PinMode::Output);
 		GPIO::write(ssPin, true);
 
 		// Bus
@@ -144,7 +144,7 @@ namespace YOBA::system {
 		ESP_ERROR_CHECK(i2c_master_receive(_deviceHandle, buffer, length, -1));
 	}
 
-	void I2C::write(uint8_t* buffer, size_t length) {
+	void I2C::write(const uint8_t* buffer, size_t length) {
 		ESP_ERROR_CHECK(i2c_master_transmit(_deviceHandle, buffer, length, -1));
 	}
 }

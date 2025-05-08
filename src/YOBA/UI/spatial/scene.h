@@ -32,13 +32,13 @@ namespace YOBA::spatial {
 			float getFarPlaneDistance() const;
 			void setFarPlaneDistance(float value);
 
-			float getProjectionPlaneDistance();
+			float getProjectionPlaneDistance() const;
 
 			bool isFOVVertical() const;
 			void setFOVVertical(bool fovVertical);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer) override;
 
 		private:
 			std::vector<SceneElement*> _elements {};

@@ -24,7 +24,7 @@ namespace YOBA {
 		_color = RGB888Color(value);
 	}
 
-	RGB888Color LinearGradient::getRgb888Color(float position) {
+	RGB888Color LinearGradient::getRgb888Color(float position) const {
 		if (_stops.size() < 2)
 			return {0, 0, 0};
 
@@ -75,11 +75,11 @@ namespace YOBA {
 		if (position > _stops[sideIndex].getPosition())
 			return _stops[sideIndex].getColor();
 
-		auto& fromStep = _stops[fromIndex];
-		auto& toStep = _stops[toIndex];
+		const auto& fromStep = _stops[fromIndex];
+		const auto& toStep = _stops[toIndex];
 
-		auto spaceBetweenSteps = toStep.getPosition() - fromStep.getPosition();
-		auto positionBetweenSteps = position - fromStep.getPosition();
+		const auto spaceBetweenSteps = toStep.getPosition() - fromStep.getPosition();
+		const auto positionBetweenSteps = position - fromStep.getPosition();
 
 		auto result = fromStep.getColor();
 		result.interpolateTo(toStep.getColor(), positionBetweenSteps / spaceBetweenSteps);

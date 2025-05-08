@@ -46,7 +46,7 @@ namespace YOBA {
 		return element->isVisible() && element->isEnabled();
 	}
 
-	bool ScreenEvent::isScreen(Event* event) {
+	bool ScreenEvent::isScreen(const Event* event) {
 		return
 			event->getTypeID() == TouchDownEvent::typeID
 			|| event->getTypeID() == TouchDragEvent::typeID

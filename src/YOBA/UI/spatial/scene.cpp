@@ -1,7 +1,8 @@
 #include "scene.h"
 
 namespace YOBA::spatial {
-	void Scene::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Scene::onRender(Renderer* renderer) {
+		const auto& bounds = getBounds();
 		const auto projectionPlaneDistance = getProjectionPlaneDistance();
 
 		const SinAndCos worldRotationSinAndCos[3] = {
@@ -16,24 +17,20 @@ namespace YOBA::spatial {
 			SinAndCos(-_cameraRotation.getZ())
 		};
 
-		const Vector3F* vertices;
-		uint16_t verticesCount;
-		Vector3F vertex;
-
 		std::vector<Vector3F> _screenSpaceVertices {};
 
-		for (auto element : _elements) {
+		for (const auto element : _elements) {
 			if (!element->isVisible())
 				continue;
 
-			vertices = element->getVertices();
-			verticesCount = element->getVertexCount();
+			const auto vertices = element->getVertices();
+			const auto verticesCount = element->getVertexCount();
 
 			_screenSpaceVertices.reserve(verticesCount);
 			_screenSpaceVertices.clear();
 
 			for (uint32_t i = 0; i < verticesCount; i++) {
-				vertex = vertices[i];
+				auto vertex = vertices[i];
 
 				// Translating vertex to camera
 				vertex -= _cameraPosition;
@@ -190,7 +187,7 @@ namespace YOBA::spatial {
 		_FOVVertical = fovVertical;
 	}
 
-	float Scene::getProjectionPlaneDistance() {
+	float Scene::getProjectionPlaneDistance() const {
 		return _FOVVertical
 			? static_cast<float>(getBounds().getHeight()) / 2.f / std::tanf(_FOV / 2.f)
 			: static_cast<float>(getBounds().getWidth()) / 2.f / std::tanf(_FOV / 2.f);

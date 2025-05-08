@@ -41,7 +41,7 @@ namespace YOBA::system {
 		public:
 			static void setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency);
 			static void read(uint8_t* buffer, size_t length);
-			static void write(uint8_t* buffer, size_t length);
+			static void write(const uint8_t* buffer, size_t length);
 
 		private:
 			static DRAM_ATTR i2c_master_bus_handle_t _busHandle;

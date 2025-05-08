@@ -15,16 +15,17 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
 				auto color = getFillColor();
 
 				if (color)
-					renderer->renderFilledRectangle(getBounds(), getCornerRadius(), color);
+					renderer->renderFilledRectangle(bounds, getCornerRadius(), color);
 
 				color = getBorderColor();
 
 				if (color)
-					renderer->renderRectangle(getBounds(), getCornerRadius(), color);
+					renderer->renderRectangle(bounds, getCornerRadius(), color);
 			}
 	};
 }

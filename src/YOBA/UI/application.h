@@ -16,14 +16,14 @@ namespace YOBA {
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
 			// renderTarget.setup();
-			// renderer.setTarget(&renderTarget);
-			// application.setRenderer(&renderer);
+			// renderer->setTarget(&renderTarget);
+			// application->setRenderer(&renderer);
 			void setup(RenderTarget* renderTarget, Renderer* renderer);
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
 			// renderTarget.setup();
-			// renderer.setTarget(&renderTarget);
+			// renderer->setTarget(&renderTarget);
 			// application.setRenderer(&renderer);
 			//
 			// inputDevice.setup();
@@ -57,7 +57,7 @@ namespace YOBA {
 			uint32_t getPeripheralsDeltaTime() const;
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer) override;
 
 		private:
 			Renderer* _renderer = nullptr;

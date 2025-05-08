@@ -236,7 +236,9 @@ namespace YOBA {
 				return result;
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
+
 				size_t
 					visibleCount = 0,
 					relativeCount = 0,
@@ -290,7 +292,7 @@ namespace YOBA {
 
 						position = bounds.getX();
 
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -323,7 +325,7 @@ namespace YOBA {
 						break;
 					}
 					case Orientation::vertical: {
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -354,7 +356,7 @@ namespace YOBA {
 
 						position = bounds.getY();
 
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -400,7 +402,7 @@ namespace YOBA {
 			std::unordered_map<Element*, float> _elementSizes {};
 
 			void tryRemoveRelativeSize(Element* child) {
-				auto iterator = _elementSizes.find(child);
+				const auto iterator = _elementSizes.find(child);
 
 				if (iterator != _elementSizes.end())
 					_elementSizes.erase(iterator);

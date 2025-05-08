@@ -13,11 +13,13 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
-				auto color = getFillColor();
+			void onRender(Renderer* renderer) override {
+				const auto color = getFillColor();
 
 				if (!color)
 					return;
+
+				const auto& bounds = getBounds();
 
 				renderer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),

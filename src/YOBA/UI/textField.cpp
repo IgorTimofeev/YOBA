@@ -22,7 +22,8 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onRender(Renderer* renderer, const Bounds& bounds) {
+	void TextField::onRender(Renderer* renderer) {
+		const auto& bounds = getBounds();
 		const auto focused = isFocused();
 
 		// Background
@@ -188,7 +189,7 @@ namespace YOBA {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
 			if (cursorPosition < text.length()) {
-				int32_t pizda = cursorX + font->getWidth(_mask.value_or(text[cursorPosition]), getFontScale()) - boundsWidthWithoutMargin;
+				const int32_t pizda = cursorX + font->getWidth(_mask.value_or(text[cursorPosition]), getFontScale()) - boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 
@@ -332,7 +333,7 @@ namespace YOBA {
 	}
 
 	void TextField::showKeyboard() {
-		auto keyboard = ApplicationKeyboardController::show(getApplication());
+		const auto keyboard = ApplicationKeyboardController::show(getApplication());
 
 		if (!keyboard)
 			return;

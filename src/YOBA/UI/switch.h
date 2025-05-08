@@ -46,7 +46,9 @@ namespace YOBA {
 			}
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
+
 				const uint16_t handleHalf = bounds.getHeight() / 2;
 				const uint16_t handleOffset = isChecked() ? bounds.getWidth() - bounds.getHeight() : 0;
 				const uint16_t handleOffsetCenter = handleOffset + handleHalf;

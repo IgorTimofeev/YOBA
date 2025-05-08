@@ -202,13 +202,13 @@ namespace YOBA {
 			// Copying viewport to restore it after render pass
 			const auto viewport = renderer->pushViewport(_bounds);
 
-			onRender(renderer, _bounds);
+			onRender(renderer);
 
 			// Restoring viewport
 			renderer->popViewport(viewport);
 		}
 		else {
-			onRender(renderer, _bounds);
+			onRender(renderer);
 		}
 	}
 
@@ -284,7 +284,7 @@ namespace YOBA {
 		_application = value;
 	}
 
-	Application *Element::getApplication() const {
+	Application* Element::getApplication() const {
 		return _application;
 	}
 
@@ -378,7 +378,7 @@ namespace YOBA {
 		}
 	}
 
-	void Element::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Element::onRender(Renderer* renderer) {
 
 	}
 

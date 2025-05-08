@@ -51,7 +51,7 @@ namespace YOBA {
 		onRotationChanged();
 	}
 
-	Point RenderTarget::orientPoint(const Point& point) {
+	Point RenderTarget::orientPoint(const Point& point) const {
 //		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
 
 		switch (getRotation()) {

@@ -122,7 +122,8 @@ namespace YOBA {
 				return result;
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
 				const auto& measuredSize = getMeasuredSize();
 
 				_contentBounds.setX(
@@ -149,14 +150,14 @@ namespace YOBA {
 					: measuredSize.getHeight()
 				);
 
-				for (auto element : *this) {
+				for (const auto element : *this) {
 					if (!element->isVisible())
 						continue;
 
 					element->render(renderer, _contentBounds);
 				}
 
-				const auto& processScrollBar = [&bounds, renderer](ScrollBar& bar, bool& possible, ScrollMode mode, uint16_t size, uint16_t contentSize) {
+				const auto& processScrollBar = [&bounds, &renderer](ScrollBar& bar, bool& possible, ScrollMode mode, uint16_t size, uint16_t contentSize) {
 					bar.setTotalSize(contentSize);
 					bar.setViewportSize(size);
 					possible = mode != ScrollMode::disabled && contentSize > size;

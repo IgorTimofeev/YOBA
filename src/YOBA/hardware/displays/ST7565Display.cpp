@@ -77,11 +77,10 @@ namespace YOBA {
 //			writeData(buffer + page * getResolution().getWidth(), getResolution().getWidth());
 //		}
 
-		uint8_t col;
-
 		for (uint8_t p = 0; p <= 7; p++) {
+			uint8_t col = 0;
+
 			writeCommand(static_cast<uint8_t>(Command::SET_PAGE) | (7 - p));
-			col = 0;
 
 			writeCommand(static_cast<uint8_t>(Command::SET_COLUMN_LOWER) | ((col) & 0xf));
 			writeCommand(static_cast<uint8_t>(Command::SET_COLUMN_UPPER) | (((col) >> 4) & 0x0F));

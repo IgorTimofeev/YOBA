@@ -19,7 +19,9 @@ namespace YOBA {
 				};
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
+				const auto& bounds = getBounds();
+
 				auto position = Point(
 					bounds.getX() + (getDigitWidth() + getSpacing()) * (getDigitCount() - 1),
 					bounds.getY()

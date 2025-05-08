@@ -1,7 +1,9 @@
 #include "button.h"
 
 namespace YOBA {
-	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Button::onRender(Renderer* renderer) {
+		const auto& bounds = getBounds();
+
 		// Primary color
 		auto color = Color::select(isChecked(), _defaultBackgroundColor, _pressedBackgroundColor);
 
@@ -44,7 +46,7 @@ namespace YOBA {
 			}
 		}
 
-		Element::onRender(renderer, bounds);
+		Element::onRender(renderer);
 	}
 
 	void Button::onEvent(Event* event) {

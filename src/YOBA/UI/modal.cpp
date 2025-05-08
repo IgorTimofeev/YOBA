@@ -8,7 +8,7 @@ namespace YOBA {
 	}
 
 	void ModalLayout::hide() {
-		auto parent = getParent();
+		const auto parent = getParent();
 
 		if (!parent)
 			return;

@@ -164,7 +164,7 @@ namespace YOBA {
 			bool _wasTouched = false;
 			bool _wasPinched = false;
 
-			Point readOrientedPoint1(RenderTarget* renderTarget);
-			Point readOrientedPoint2(RenderTarget* renderTarget);
+			Point readOrientedPoint1(const RenderTarget* renderTarget);
+			Point readOrientedPoint2(const RenderTarget* renderTarget);
 	};
 }

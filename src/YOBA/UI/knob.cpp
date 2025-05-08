@@ -1,7 +1,8 @@
 #include "knob.h"
 
 namespace YOBA {
-	void Knob::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Knob::onRender(Renderer* renderer) {
+		const auto& bounds = getBounds();
 		const uint16_t radius = std::max(bounds.getWidth(), bounds.getHeight()) / 2;
 		const auto center = bounds.getCenter();
 
@@ -25,7 +26,7 @@ namespace YOBA {
 
 		// Line
 		if (getLineColor()) {
-			auto centerF = static_cast<Vector2F>(center);
+			const auto centerF = static_cast<Vector2F>(center);
 			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 

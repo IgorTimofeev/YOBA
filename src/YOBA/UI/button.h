@@ -22,7 +22,7 @@ namespace YOBA {
 		public:
 			Callback<> click {};
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer) override;
 
 			void onEvent(Event* event) override;
 

@@ -7,14 +7,14 @@ namespace YOBA {
 		_itemsLayout = this;
 	}
 
-	SelectorItem* Selector::getItemAt(size_t index) {
+	SelectorItem* Selector::getItemAt(size_t index) const {
 		return
 			_itemsLayout
 			? dynamic_cast<SelectorItem*>((*_itemsLayout)[index])
 			: nullptr;
 	}
 
-	int32_t Selector::getIndexOfItem(SelectorItem* item) {
+	int32_t Selector::getIndexOfItem(SelectorItem* item) const {
 		return
 			_itemsLayout
 			? _itemsLayout->getIndexOfChild(item)
@@ -33,7 +33,7 @@ namespace YOBA {
 		return _selectedIndex;
 	}
 
-	SelectorItem* Selector::getSelectedItem() {
+	SelectorItem* Selector::getSelectedItem() const {
 		return
 			_selectedIndex >= 0
 			? getItemAt(_selectedIndex)
@@ -59,7 +59,7 @@ namespace YOBA {
 
 	}
 
-	size_t Selector::getItemsCount() {
+	size_t Selector::getItemsCount() const {
 		return _itemsLayout ? _itemsLayout->getChildrenCount() : 0;
 	}
 

@@ -327,7 +327,7 @@ namespace YOBA {
 		protected:
 			Size onMeasure(const Size& availableSize) override;
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer) override;
 
 		private:
 			Keyboard* _keyboard;
@@ -348,8 +348,8 @@ namespace YOBA {
 
 			void onTick() override;
 
-			Keyboard* getKeyboard();
-			KeyboardKey* getKey();
+			Keyboard* getKeyboard() const;
+			KeyboardKey* getKey() const;
 
 			uint8_t getRow() const;
 			uint8_t getColumn() const;
@@ -379,7 +379,7 @@ namespace YOBA {
 			void setLayout(KeyboardLayout* value);
 			KeyboardLayout* getLayout() const;
 
-			uint8_t getCyclicLayoutsCount();
+			uint8_t getCyclicLayoutsCount() const;
 			int8_t getCyclicLayoutIndex() const;
 			void setCyclicLayoutIndex(int8_t value);
 

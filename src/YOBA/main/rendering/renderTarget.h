@@ -56,7 +56,7 @@ namespace YOBA {
 			void setRotation(ViewportRotation value);
 
 			Renderer* getRenderer() const;
-			Point orientPoint(const Point& point);
+			Point orientPoint(const Point& point) const;
 
 			bool operator==(const RenderTarget& rhs) const;
 			bool operator!=(const RenderTarget& rhs) const;

@@ -105,7 +105,7 @@ namespace YOBA {
 
 			virtual void onTick();
 			virtual Size onMeasure(const Size& availableSize);
-			virtual void onRender(Renderer* renderer, const Bounds& bounds);
+			virtual void onRender(Renderer* renderer);
 			virtual void onBoundsChanged();
 			virtual void onEvent(Event* event);
 

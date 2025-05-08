@@ -14,7 +14,7 @@ namespace YOBA {
 				setImage(image);
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
 				if (!getImage())
 					return;
 

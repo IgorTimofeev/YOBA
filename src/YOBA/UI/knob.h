@@ -14,7 +14,7 @@ namespace YOBA {
 		public:
 			Callback<float, float> rotated;
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer) override;
 
 			void onEvent(Event* event) override;
 

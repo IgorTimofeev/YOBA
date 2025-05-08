@@ -183,7 +183,7 @@ namespace YOBA {
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
 	SpaceKeyboardKey::SpaceKeyboardKey() :
-		KeyboardKey(KeyboardKeyType::normal, KeyCode::space, L" ", KeyboardKey::stretched)
+		KeyboardKey(KeyboardKeyType::normal, KeyCode::space, L" ", stretched)
 	{
 
 	}
@@ -205,7 +205,7 @@ namespace YOBA {
 		if (button->isChecked())
 			return;
 
-		auto keyboard = button->getKeyboard();
+		const auto keyboard = button->getKeyboard();
 
 		keyboard->setLayout(keyboard->getCharactersLayoutBuilder().value()());
 	}
@@ -307,11 +307,11 @@ namespace YOBA {
 		updateTextFromCase();
 	}
 
-	Keyboard* KeyboardButton::getKeyboard() {
+	Keyboard* KeyboardButton::getKeyboard() const {
 		return _keyboard;
 	}
 
-	KeyboardKey* KeyboardButton::getKey() {
+	KeyboardKey* KeyboardButton::getKey() const {
 		return _keyboard->getLayout()->keys[_row][_column];
 	}
 
@@ -348,7 +348,7 @@ namespace YOBA {
 
 		_buttonsLayout.removeChildren();
 
-		for (auto element : elementsToDelete) {
+		for (const auto element : elementsToDelete) {
 			delete element;
 		}
 
@@ -412,7 +412,7 @@ namespace YOBA {
 			auto layoutRow = _layout->keys[rowIndex];
 
 			for (int columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
-				auto key = layoutRow[columnIndex];
+				const auto key = layoutRow[columnIndex];
 
 				switch (key->getType()) {
 					case KeyboardKeyType::charactersLayout: {
@@ -480,7 +480,7 @@ namespace YOBA {
 		if (!_layout)
 			return;
 
-		for (auto element : _buttonsLayout) {
+		for (const auto element : _buttonsLayout) {
 			dynamic_cast<KeyboardButton*>(element)->updateFromCase();
 		}
 	}
@@ -501,7 +501,7 @@ namespace YOBA {
 		_continuousTypingInterval = value;
 	}
 
-	uint8_t Keyboard::getCyclicLayoutsCount() {
+	uint8_t Keyboard::getCyclicLayoutsCount() const {
 		return _cyclicLayoutBuilders.size();
 	}
 
@@ -556,18 +556,20 @@ namespace YOBA {
 			: Size();
 	}
 
-	void KeyboardButtonsLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void KeyboardButtonsLayout::onRender(Renderer* renderer) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
 			return;
+
+		const auto& bounds = getBounds();
 
 		uint8_t buttonIndexFrom = 0;
 		uint8_t rowIndex = 0;
 		uint8_t rowButtonCount = 0;
 		uint16_t y = bounds.getY();
 
-		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom, renderer](size_t buttonIndexTo) {
+		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom, &renderer](size_t buttonIndexTo) {
 			if (rowButtonCount == 0)
 				return;
 
@@ -697,7 +699,7 @@ namespace YOBA {
 		if (!_keyboard)
 			return;
 
-		auto application = _keyboardAndApplicationChildrenLayout->getApplication();
+		const auto application = _keyboardAndApplicationChildrenLayout->getApplication();
 
 		application->removeChildren();
 

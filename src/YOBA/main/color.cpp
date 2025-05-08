@@ -146,15 +146,14 @@ namespace YOBA {
 	RGB888Color HSBColor::toRgb888() const {
 		RGB888Color result;
 
-		auto hueSector = _h * 6.0f;
-		auto hueSectorIntegerPart = static_cast<uint8_t>(hueSector);
-		auto hueSectorFractionalPart = hueSector - static_cast<float>(hueSectorIntegerPart);
+		const auto hueSector = _h * 6.0f;
+		const auto hueSectorIntegerPart = static_cast<uint8_t>(hueSector);
+		const auto hueSectorFractionalPart = hueSector - static_cast<float>(hueSectorIntegerPart);
 
-		auto
-			p = static_cast<uint8_t>(255.0f * _b * (1 - _s)),
-			q = static_cast<uint8_t>(255.0f * _b * (1 - hueSectorFractionalPart * _s)),
-			t = static_cast<uint8_t>(255.0f * _b * (1 - (1 - hueSectorFractionalPart) * _s)),
-			v = static_cast<uint8_t>(255.0f * _b);
+		const auto p = static_cast<uint8_t>(255.0f * _b * (1 - _s));
+		const auto q = static_cast<uint8_t>(255.0f * _b * (1 - hueSectorFractionalPart * _s));
+		const auto t = static_cast<uint8_t>(255.0f * _b * (1 - (1 - hueSectorFractionalPart) * _s));
+		const auto v = static_cast<uint8_t>(255.0f * _b);
 
 		switch (hueSectorIntegerPart) {
 			case 1:

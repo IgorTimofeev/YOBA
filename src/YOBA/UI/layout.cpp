@@ -120,7 +120,7 @@ namespace YOBA {
 	Size Layout::onMeasure(const Size& availableSize) {
 		auto result = Size();
 
-		for (auto child : _children) {
+		for (const auto child : _children) {
 			if (!child->isVisible())
 				continue;
 
@@ -136,10 +136,12 @@ namespace YOBA {
 		return result;
 	}
 
-	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
-		Element::onRender(renderer, bounds);
+	void Layout::onRender(Renderer* renderer) {
+		Element::onRender(renderer);
 
-		for (auto child : _children) {
+		const auto& bounds = getBounds();
+
+		for (const auto child : _children) {
 			if (child->isVisible()) {
 				child->render(renderer, bounds);
 			}
@@ -157,7 +159,7 @@ namespace YOBA {
 	void Layout::setApplication(Application* value) {
 		Element::setApplication(value);
 
-		for (auto child : _children)
+		for (const auto child : _children)
 			child->setApplication(value);
 	}
 

@@ -44,7 +44,7 @@ namespace YOBA {
 
 			bool matches(Element* element) override;
 
-			static bool isScreen(Event* event);
+			static bool isScreen(const Event* event);
 	};
 
 	// -------------------------------- Touch --------------------------------

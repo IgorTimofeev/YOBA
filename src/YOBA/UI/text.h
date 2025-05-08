@@ -18,7 +18,7 @@ namespace YOBA {
 				setTextColor(foreground);
 			}
 
-			explicit Text(const std::wstring_view& text) {
+			explicit Text(std::wstring_view text) {
 				setText(text);
 			}
 
@@ -76,13 +76,13 @@ namespace YOBA {
 				}
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer) override {
 				const auto font = getFont();
 
 				if (!font)
 					return;
 
-				auto color = getTextColor();
+				const auto color = getTextColor();
 
 				if (!color)
 					return;
@@ -90,7 +90,7 @@ namespace YOBA {
 				if (_wrappingEnabled) {
 					auto position = getBounds().getPosition();
 
-					for (auto& line : _wrappedLines) {
+					for (const auto& line : _wrappedLines) {
 						renderer->renderString(
 							position,
 							font,

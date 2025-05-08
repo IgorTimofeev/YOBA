@@ -258,7 +258,7 @@ namespace YOBA {
 	}
 
 	void FT6336UTouchPanel::writeByte(uint8_t addr, uint8_t data) {
-		uint8_t buffer[2] = {
+		const uint8_t buffer[2] = {
 			addr,
 			data
 		};
@@ -268,14 +268,14 @@ namespace YOBA {
 
 	// ------------------------------------------------------------------------
 
-	Point FT6336UTouchPanel::readOrientedPoint1(RenderTarget* renderTarget) {
+	Point FT6336UTouchPanel::readOrientedPoint1(const RenderTarget* renderTarget) {
 		return renderTarget->orientPoint(Point(
 			read_touch1_x(),
 			read_touch1_y()
 		));
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint2(RenderTarget* renderTarget) {
+	Point FT6336UTouchPanel::readOrientedPoint2(const RenderTarget* renderTarget) {
 		return renderTarget->orientPoint(Point(
 			read_touch2_x(),
 			read_touch2_y()
@@ -291,7 +291,7 @@ namespace YOBA {
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;
 
-		auto renderTarget = application->getRenderer()->getTarget();
+		const auto renderTarget = application->getRenderer()->getTarget();
 
 		if (isDown1) {
 			if (isDown2) {

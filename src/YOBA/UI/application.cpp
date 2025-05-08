@@ -104,8 +104,9 @@ namespace YOBA {
 			_layoutInvalidated = false;
 		}
 
-		// Rendering
+		// Render pass
 		if (_renderInvalidated) {
+			// Rendering
 			time = system::getTime();
 			render(_renderer, getBounds());
 			_renderDeltaTime = system::getTime() - time;
@@ -177,11 +178,11 @@ namespace YOBA {
 		return _flushDeltaTime;
 	}
 
-	void Application::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Application::onRender(Renderer* renderer) {
 		if (getBackgroundColor())
 			renderer->clear(getBackgroundColor());
 
-		Layout::onRender(renderer, bounds);
+		Layout::onRender(renderer);
 	}
 
 	uint32_t Application::getPeripheralsDeltaTime() const {

@@ -10,7 +10,7 @@ namespace YOBA {
 		if (value == _target || (_target && *value == *_target))
 			return;
 
-		auto previousTarget = _target;
+		const auto previousTarget = _target;
 
 		if (previousTarget) {
 			previousTarget->_renderer = nullptr;
@@ -28,7 +28,7 @@ namespace YOBA {
 
 	}
 
-	const Bounds& Renderer::getViewport() {
+	const Bounds& Renderer::getViewport() const {
 		return _viewport;
 	}
 
@@ -37,7 +37,7 @@ namespace YOBA {
 	}
 
 	Bounds Renderer::pushViewport(const Bounds& bounds) {
-		auto oldViewport = _viewport;
+		const auto oldViewport = _viewport;
 
 		if (_viewport.intersects(bounds)) {
 			_viewport = _viewport.getIntersection(bounds);
@@ -85,8 +85,8 @@ namespace YOBA {
 			)
 			return;
 
-		uint16_t x1 = std::max(point.getX(), viewport.getX());
-		uint16_t x2 = std::min(point.getX() + length - 1, viewport.getX2());
+		const uint16_t x1 = std::max(point.getX(), viewport.getX());
+		const uint16_t x2 = std::min(point.getX() + length - 1, viewport.getX2());
 		length = x2 - x1 + 1;
 
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
@@ -105,8 +105,8 @@ namespace YOBA {
 		)
 			return;
 
-		uint16_t y1 = std::max(point.getY(), viewport.getY());
-		uint16_t y2 = std::min(point.getY() + length - 1, viewport.getY2());
+		const uint16_t y1 = std::max(point.getY(), viewport.getY());
+		const uint16_t y2 = std::min(point.getY() + length - 1, viewport.getY2());
 		length = y2 - y1 + 1;
 
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
@@ -349,13 +349,11 @@ namespace YOBA {
 				std::swap(y1, y2);
 			}
 
-			int32_t
-				deltaX = x2 - x1,
-				deltaY = std::abs(y2 - y1),
-
-				partRemaining = deltaX >> 1,
-				yStep = y1 > y2 ? -1 : 1,
-				partVarFrom = x1;
+			const int32_t deltaX = x2 - x1;
+			const int32_t deltaY = std::abs(y2 - y1);
+			const int32_t yStep = y1 > y2 ? -1 : 1;
+			int32_t partRemaining = deltaX >> 1;
+			int32_t partVarFrom = x1;
 
 			uint16_t partLength = 0;
 
@@ -471,17 +469,16 @@ namespace YOBA {
 			return;
 		}
 
-		int32_t
-			dx12 = x2 - x1,
-			dy12 = y2 - y1,
-			dx13 = x3 - x1,
-			dy13 = y3 - y1,
-			dx23 = x3 - x2,
-			dy23 = y3 - y2,
-			sa = 0,
-			sb = 0,
-			last,
-			y;
+		const int32_t dx12 = x2 - x1;
+		const int32_t dy12 = y2 - y1;
+		const int32_t dx13 = x3 - x1;
+		const int32_t dy13 = y3 - y1;
+		const int32_t dx23 = x3 - x2;
+		const int32_t dy23 = y3 - y2;
+		int32_t sa = 0;
+		int32_t sb = 0;
+		int32_t last;
+		int32_t y;
 
 		// For upper part of triangle, find scanline crossings for segments
 		// 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
@@ -778,20 +775,16 @@ namespace YOBA {
 		)
 			return;
 
-		const Glyph* glyph;
-
-		int32_t
-			x = point.getX(),
-			x2;
+		int32_t x = point.getX();
 
 		for (size_t charIndex = 0; charIndex < string.length(); charIndex++) {
 			// Trying to find glyph matched to char
-			glyph = font->getGlyph(string[charIndex]);
+			const auto glyph = font->getGlyph(string[charIndex]);
 
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example,U+007F "DEL" symbol often has zero width in some fonts
 			if (glyph && font->getWidth(glyph) > 0) {
-				x2 = x + font->getWidth(glyph, fontScale);
+				const int32_t x2 = x + font->getWidth(glyph, fontScale);
 
 				// Rendering current glyph only if it's in viewport
 				if (x2 > viewport.getX()) {
