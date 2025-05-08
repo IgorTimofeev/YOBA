@@ -109,8 +109,8 @@ namespace YOBA::spatial {
 				// screenX = x * screenWidth / 2 / tan(FOV / 2) / y
 
 				_screenSpaceVertices.push_back(Vector3F(
-					static_cast<float>(bounds.getXCenter()) + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
-					static_cast<float>(bounds.getYCenter()) - (vertex.getZ() * projectionPlaneDistance / vertex.getY()),
+					static_cast<float>(bounds.getXCenter()) + _pivotOffset.getX() + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
+					static_cast<float>(bounds.getYCenter()) + _pivotOffset.getY() - (vertex.getZ() * projectionPlaneDistance / vertex.getY()),
 					vertex.getY()
 				));
 			}
@@ -125,6 +125,14 @@ namespace YOBA::spatial {
 
 	void Scene::operator+=(SceneElement* element) {
 		addElement(element);
+	}
+
+	const Point& Scene::getPivotOffset() const {
+		return _pivotOffset;
+	}
+
+	void Scene::setPivotOffset(const Point& value) {
+		_pivotOffset = value;
 	}
 
 	const std::vector<SceneElement*>& Scene::getSceneElements() {

@@ -583,7 +583,8 @@ namespace YOBA {
 			}
 
 			xs = xe;
-		} while (xe < --radius);
+		}
+		while (xe < --radius);
 	}
 
 	void Renderer::renderFilledCircle(const Point& center, uint16_t radius, const Color* color) {
@@ -613,6 +614,68 @@ namespace YOBA {
 
 			renderHorizontalLine(Point(center.getX() - radius, center.getY() + x), dy + 1, color);
 			renderHorizontalLine(Point(center.getX() - radius, center.getY() - x), dy + 1, color);
+		}
+	}
+
+	void Renderer::renderArc(const Point& center, int16_t radius, int16_t start, int16_t end, const Color* color) {
+		if (start == end) {
+			renderCircle(center, radius, color);
+			return;
+		}
+		
+		const uint8_t inverted = (start > end);
+		const uint8_t a_start = inverted ? end : start;
+		const uint8_t a_end = inverted ? start : end;
+
+		int32_t x = 0;
+		int32_t y = radius;
+		int32_t d = radius - 1;
+
+		// Trace arc radius with the Andres circle algorithm (process each pixel of a 1/8th circle of radius rad)
+		while (y >= x) {
+			// Get the percentage of 1/8th circle drawn with a fast approximation of arctan(x/y)
+			uint32_t ratio = x * 255 / y; // x/y [0..255]
+			ratio = ratio * (770195 - (ratio - 255) * (ratio + 941)) / 6137491; // arctan(x/y) [0..32]
+
+			// Fill the pixels with the 8 sections of the circle, but only on the arc defined by the angles (start and end)
+			if ((ratio >= a_start && ratio < a_end) ^ inverted)
+				renderPixel(Point(center.getX() + y, center.getY() - x), color);
+			
+			if (((ratio + a_end) > 63 && (ratio + a_start) <= 63) ^ inverted)
+				renderPixel(Point(center.getX() + x, center.getY() - y), color);
+			
+			if (((ratio + 64) >= a_start && (ratio + 64) < a_end) ^ inverted)
+				renderPixel(Point(center.getX() - x, center.getY() - y), color);
+			
+			if (((ratio + a_end) > 127 && (ratio + a_start) <= 127) ^ inverted)
+				renderPixel(Point(center.getX() - y, center.getY() - x), color);
+			
+			if (((ratio + 128) >= a_start && (ratio + 128) < a_end) ^ inverted)
+				renderPixel(Point(center.getX() - y, center.getY() + x), color);
+			
+			if (((ratio + a_end) > 191 && (ratio + a_start) <= 191) ^ inverted)
+				renderPixel(Point(center.getX() - x, center.getY() + y), color);
+			
+			if (((ratio + 192) >= a_start && (ratio + 192) < a_end) ^ inverted)
+				renderPixel(Point(center.getX() + x, center.getY() + y), color);
+			
+			if (((ratio + a_end) > 255 && (ratio + a_start) <= 255) ^ inverted)
+				renderPixel(Point(center.getX() + y, center.getY() + x), color);
+			
+			// Run Andres circle algorithm to get to the next pixel
+			if (d >= 2 * x) {
+				d = d - 2 * x - 1;
+				x = x + 1;
+			}
+			else if (d < 2 * (radius - y)) {
+				d = d + 2 * y - 1;
+				y = y - 1;
+			}
+			else {
+				d = d + 2 * (y - x - 1);
+				y = y - 1;
+				x = x + 1;
+			}
 		}
 	}
 

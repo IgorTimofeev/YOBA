@@ -42,6 +42,8 @@ namespace YOBA {
 			void renderCircle(const Point& center, uint16_t radius, const Color* color);
 			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
 			void renderFilledCircle(const Point& center, uint16_t radius, const Color* color);
+			// Thanks, u8g2!
+			void renderArc(const Point& center, int16_t radius, int16_t start, int16_t end, const Color* color);
 
 			/**
 			* @brief Renders single line of text

@@ -13,8 +13,10 @@ namespace YOBA::spatial {
 			void addElement(SceneElement* element);
 			void operator+=(SceneElement* element);
 
-			const Vector3F& getWorldRotation() const;
+			const Point& getPivotOffset() const;
+			void setPivotOffset(const Point& value);
 
+			const Vector3F& getWorldRotation() const;
 			void setWorldRotation(const Vector3F& value);
 
 			const Vector3F& getCameraPosition() const;
@@ -43,6 +45,7 @@ namespace YOBA::spatial {
 		private:
 			std::vector<SceneElement*> _elements {};
 
+			Point _pivotOffset {};
 			Vector3F _worldRotation {};
 
 			Vector3F _cameraPosition {};
