@@ -47,6 +47,7 @@ namespace YOBA {
 			bool intersects(const Bounds& bounds) const;
 
 			bool haveZeroSize() const;
+			bool isLandscape() const;
 
 			Bounds getIntersection(const Bounds& bounds) const;
 

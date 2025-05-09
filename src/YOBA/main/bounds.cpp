@@ -156,6 +156,10 @@ namespace YOBA {
 		return getWidth() == 0 || getHeight() == 0;
 	}
 
+	bool Bounds::isLandscape() const {
+		return getWidth() > getHeight();
+	}
+
 	Bounds Bounds::getIntersection(const Bounds& bounds) const {
 		auto result = Bounds();
 

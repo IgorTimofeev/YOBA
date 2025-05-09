@@ -42,6 +42,6 @@ namespace YOBA {
 			void setApplication(Application* value) override;
 
 		private:
-			std::vector<Element*> _children;
+			std::vector<Element*> _children {};
 	};
 }
