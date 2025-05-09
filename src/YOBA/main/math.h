@@ -35,6 +35,26 @@ namespace YOBA {
 	}
 
 	template<typename T>
+	T normalizeAngle360(T x) {
+		x = std::fmod(x, 360);
+
+		if (x < 0)
+			x += 360;
+
+		return x;
+	}
+
+	template<typename T>
+	T normalizeAngle180(T x) {
+		x = std::fmod(x + 180, 360);
+
+		if (x < 0)
+			x += 360;
+
+		return x - 180;
+	}
+
+	template<typename T>
 	T interpolate(T first, T second, float position) {
 		return static_cast<T>(static_cast<float>(first) + static_cast<float>(second - first) * position);
 	}
