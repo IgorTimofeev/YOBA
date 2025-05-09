@@ -54,6 +54,10 @@ namespace YOBA {
 			newSize = 0;
 	}
 
+	void Element::onBoundsChanged() {
+
+	}
+
 	void Element::onTick() {
 
 	}
@@ -416,10 +420,6 @@ namespace YOBA {
 	}
 
 	void Element::onCaptureChanged() {
-
-	}
-
-	void Element::onBoundsChanged() {
 
 	}
 }
