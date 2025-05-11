@@ -183,12 +183,6 @@ namespace YOBA {
 		// Sleep out
 		this->writeCommandAndData(0x11, 0x00);
 		system::sleep(5);
-
-		// TODO: add internal buffer clearing somehow
-
-		// Display on
-		this->writeCommandAndData(0x29, 0x00);
-		system::sleep(100);
 	}
 
 	void ILI9341Display::onRotationChanged() {
@@ -249,5 +243,13 @@ namespace YOBA {
 
 		// Memory write
 		writeCommandAndData(0x2C, source, length);
+	}
+
+	void ILI9341Display::turnOff() {
+		this->writeCommand(0x28);
+	}
+
+	void ILI9341Display::turnOn() {
+		this->writeCommand(0x29);
 	}
 }
