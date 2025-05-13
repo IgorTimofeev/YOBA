@@ -51,8 +51,8 @@ namespace YOBA {
 
 	void Button::onEvent(Event* event) {
 		if (event->getTypeID() == TouchDownEvent::typeID) {
-			setCaptured(true);
-			setFocused(true);
+			capture();
+			focus();
 
 			switch (_checkMode) {
 				case ButtonCheckMode::normal: {
@@ -96,7 +96,7 @@ namespace YOBA {
 				}
 			}
 
-			setCaptured(false);
+			removeCapture();
 
 			event->setHandled(true);
 		}

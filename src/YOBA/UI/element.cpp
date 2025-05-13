@@ -1,4 +1,7 @@
 #include "YOBA/UI/element.h"
+
+#include <esp_log.h>
+
 #include "layout.h"
 #include "application.h"
 #include "animation.h"
@@ -6,8 +9,8 @@
 
 namespace YOBA {
 	Element::~Element() {
-		setFocused(false);
-		setCaptured(false);
+		removeFocus();
+		removeCapture();
 	}
 
 	bool Element::isVisible() const {
@@ -241,22 +244,22 @@ namespace YOBA {
 		return application && application->getFocusedElement() == this;
 	}
 
-	void Element::setFocused(bool value) {
+	void Element::removeFocus() const {
 		const auto application = Application::getCurrent();
 
-		if (!application || !_focusable || (application->getFocusedElement() == this) == value)
+		if (!application || !_focusable || application->getFocusedElement() != this)
 			return;
 
-		const auto previousFocusedElement = application->getFocusedElement();
+		application->setFocusedElement(nullptr);
+	}
 
-		application->setFocusedElement(value ? this : nullptr);
+	void Element::focus() {
+		const auto application = Application::getCurrent();
 
-		if (previousFocusedElement && previousFocusedElement != this)
-			previousFocusedElement->onFocusChanged();
+		if (!application || !_focusable || application->getFocusedElement() == this)
+			return;
 
-		onFocusChanged();
-
-		application->invalidate();
+		application->setFocusedElement(this);
 	}
 
 	bool Element::isCaptured() const {
@@ -265,22 +268,22 @@ namespace YOBA {
 		return application && application->getCapturedElement() == this;
 	}
 
-	void Element::setCaptured(bool value) {
+	void Element::removeCapture() const {
 		const auto application = Application::getCurrent();
 
-		if (!application || (application->getCapturedElement() == this) == value)
+		if (!application || application->getCapturedElement() != this)
 			return;
 
-		const auto previousCapturedElement = application->getCapturedElement();
+		application->setCapturedElement(nullptr);
+	}
 
-		application->setCapturedElement(value ? this : nullptr);
+	void Element::capture() {
+		const auto application = Application::getCurrent();
 
-		if (previousCapturedElement && previousCapturedElement != this)
-			previousCapturedElement->onCaptureChanged();
+		if (!application || application->getCapturedElement() == this)
+			return;
 
-		onCaptureChanged();
-
-		application->invalidate();
+		application->setCapturedElement(this);
 	}
 
 	void Element::startAnimation(Animation* animation) {

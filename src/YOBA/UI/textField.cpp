@@ -122,11 +122,11 @@ namespace YOBA {
 			return;
 
 		if (isTouchDown) {
-			setCaptured(true);
-			setFocused(true);
+			capture();
+			focus();
 		}
 		else if (isTouchUp) {
-			setCaptured(false);
+			removeCapture();
 			return;
 		}
 
@@ -347,7 +347,7 @@ namespace YOBA {
 
 			switch (code) {
 				case KeyCode::enter: {
-					setFocused(false);
+					removeFocus();
 					break;
 				}
 				case KeyCode::backspace: {

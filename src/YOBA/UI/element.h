@@ -64,10 +64,12 @@ namespace YOBA {
 			void setFocusable(bool focusable);
 
 			bool isFocused() const;
-			void setFocused(bool value);
+			void removeFocus() const;
+			void focus();
 
 			bool isCaptured() const;
-			void setCaptured(bool value);
+			void removeCapture() const;
+			void capture();
 
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);

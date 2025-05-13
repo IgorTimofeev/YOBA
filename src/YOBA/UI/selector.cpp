@@ -73,7 +73,7 @@ namespace YOBA {
 		if (!(event->getTypeID() == TouchDownEvent::typeID || event->getTypeID() == TouchDragEvent::typeID))
 			return;
 
-		setFocused(true);
+		focus();
 
 		if (getSelector())
 			getSelector()->setSelectedIndex(getSelector()->getIndexOfItem(this));

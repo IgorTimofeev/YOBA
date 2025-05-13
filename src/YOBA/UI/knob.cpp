@@ -47,10 +47,10 @@ namespace YOBA {
 			return;
 
 		if (isTouchDown) {
-			setCaptured(true);
+			capture();
 		}
 		else if (isTouchUp) {
-			setCaptured(false);
+			removeCapture();
 		}
 		else {
 			const auto oldAngle = _angle;

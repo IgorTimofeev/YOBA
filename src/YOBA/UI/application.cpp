@@ -1,5 +1,7 @@
 #include "application.h"
 
+#include <esp_log.h>
+
 #include "YOBA/UI/element.h"
 #include "animation.h"
 
@@ -134,7 +136,16 @@ namespace YOBA {
 	}
 
 	void Application::setCapturedElement(Element* element) {
+		const auto previouslyCapturedElement = _capturedElement;
 		_capturedElement = element;
+
+		if (previouslyCapturedElement && previouslyCapturedElement != element)
+			previouslyCapturedElement->onCaptureChanged();
+
+		if (_capturedElement)
+			_capturedElement->onCaptureChanged();
+
+		invalidate();
 	}
 
 	Element* Application::getFocusedElement() const {
@@ -142,7 +153,16 @@ namespace YOBA {
 	}
 
 	void Application::setFocusedElement(Element* element) {
+		const auto previouslyFocusedElement = _focusedElement;
 		_focusedElement = element;
+
+		if (previouslyFocusedElement && previouslyFocusedElement != _focusedElement)
+			previouslyFocusedElement->onFocusChanged();
+
+		if (_focusedElement)
+			_focusedElement->onFocusChanged();
+
+		invalidate();
 	}
 
 	void Application::handleEvent(Event* event) {

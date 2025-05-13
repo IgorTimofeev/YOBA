@@ -201,12 +201,12 @@ namespace YOBA {
 				if (!(isTouchDown || isTouchUp || isTouchDrag))
 					return;
 
-				const auto& touchPosition = ((TouchEvent*) event)->getPosition();
+				const auto& touchPosition = static_cast<TouchEvent*>(event)->getPosition();
 
 				if (isTouchDown) {
 					_lastTouchPosition = touchPosition;
 
-					setCaptured(true);
+					capture();
 				}
 				else if (isTouchDrag) {
 					if (_lastTouchPosition.getX() >= 0) {
@@ -223,7 +223,7 @@ namespace YOBA {
 				else {
 					_lastTouchPosition.setX(-1);
 
-					setCaptured(false);
+					removeCapture();
 				}
 			}
 
