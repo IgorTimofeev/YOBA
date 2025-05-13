@@ -9,7 +9,7 @@ namespace YOBA::spatial {
 		public:
 			Line(const Vector3F& from, const Vector3F& to, const Color* color);
 
-			Vector3F* getVertices() override;
+			const Vector3F* getVertices() override;
 			uint16_t getVertexCount() override;
 
 			void onRender(Renderer* renderer, const Scene& scene, const Vector3F* vertices) override;
@@ -25,6 +25,7 @@ namespace YOBA::spatial {
 
 		private:
 			Vector3F _vertices[2];
+
 			const Color* _color = nullptr;
 	};
 }

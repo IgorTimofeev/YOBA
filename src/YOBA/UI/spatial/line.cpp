@@ -4,10 +4,10 @@
 namespace YOBA::spatial {
 	Line::Line(const Vector3F& from, const Vector3F& to, const Color* color) : _color(color) {
 		_vertices[0] = from;
-		_vertices[0] = to;
+		_vertices[1] = to;
 	}
 
-	Vector3F* Line::getVertices() {
+	const Vector3F* Line::getVertices() {
 		return _vertices;
 	}
 
