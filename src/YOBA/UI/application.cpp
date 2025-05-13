@@ -1,10 +1,17 @@
 #include "application.h"
+
 #include "YOBA/UI/element.h"
 #include "animation.h"
 
 namespace YOBA {
-	Application::Application(){
-		Layout::setApplication(this);
+	Application* Application::_current = nullptr;
+
+	Application* Application::getCurrent() {
+		return _current;
+	}
+
+	Application::Application() {
+
 	}
 
 	void Application::setRenderer(Renderer* value) {
@@ -64,6 +71,8 @@ namespace YOBA {
 	}
 
 	void Application::tick() {
+		_current = this;
+
 		// Root element size should match render target size
 		setSize(_renderer->getTarget()->getSize());
 
@@ -82,12 +91,12 @@ namespace YOBA {
 		// Handling tick for children
 		onTick();
 
-		// Running enqueued callbacks if any
-		if (!_enqueuedOnTickCallbacks.empty()) {
-			for (const auto& callback : _enqueuedOnTickCallbacks)
+		// Running enqueued tasks
+		if (!_scheduledTasks.empty()) {
+			for (const auto& callback : _scheduledTasks)
 				callback();
 
-			_enqueuedOnTickCallbacks.clear();
+			_scheduledTasks.clear();
 		}
 
 		// Playing animations
@@ -153,8 +162,8 @@ namespace YOBA {
 		_inputDevices.push_back(inputDevice);
 	}
 
-	void Application::enqueueOnTick(const std::function<void()>& task) {
-		_enqueuedOnTickCallbacks.push_back(task);
+	void Application::scheduleTask(const std::function<void()>& task) {
+		_scheduledTasks.push_back(task);
 	}
 
 	void Application::inputDevicesTick() {

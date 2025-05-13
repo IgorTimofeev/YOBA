@@ -156,13 +156,6 @@ namespace YOBA {
 		return _children.end();
 	}
 
-	void Layout::setApplication(Application* value) {
-		Element::setApplication(value);
-
-		for (const auto child : _children)
-			child->setApplication(value);
-	}
-
 	void Layout::onChildAdded(Element* child) {
 
 	}

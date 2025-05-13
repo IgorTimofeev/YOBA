@@ -294,7 +294,7 @@ namespace YOBA {
 	void KeyboardButton::onIsCheckedChanged() {
 		Button::onIsCheckedChanged();
 
-		getApplication()->enqueueOnTick([this] {
+		Application::getCurrent()->scheduleTask([this] {
 			getKey()->onKeyPressedChanged(this);
 		});
 	}
@@ -668,9 +668,11 @@ namespace YOBA {
 	Layout* ApplicationKeyboardController::_applicationChildrenLayout = nullptr;
 	RelativeStackLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
 
-	Keyboard* ApplicationKeyboardController::show(Application* application) {
+	Keyboard* ApplicationKeyboardController::show() {
 		if (_keyboard)
 			return nullptr;
+
+		const auto application = Application::getCurrent();
 
 		_keyboardAndApplicationChildrenLayout = new RelativeStackLayout();
 		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getTarget()->getSize());
@@ -699,7 +701,7 @@ namespace YOBA {
 		if (!_keyboard)
 			return;
 
-		const auto application = _keyboardAndApplicationChildrenLayout->getApplication();
+		const auto application = Application::getCurrent();
 
 		application->removeChildren();
 

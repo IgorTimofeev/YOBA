@@ -52,7 +52,6 @@ namespace YOBA {
 
 			virtual void startAnimation(Animation* animation);
 
-			Application* getApplication() const;
 			Layout* getParent() const;
 
 			bool isVisible() const;
@@ -95,8 +94,6 @@ namespace YOBA {
 			const Bounds& getBounds() const;
 
 		protected:
-			virtual void setApplication(Application* value);
-
 			virtual void onAddedToParent(Layout* parent);
 			virtual void onRemovedFromParent(Layout* parent);
 
@@ -119,7 +116,6 @@ namespace YOBA {
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
 			Margin _margin = Margin::zero;
-			Application* _application = nullptr;
 			Layout* _parent = nullptr;
 
 			Bounds _bounds {};

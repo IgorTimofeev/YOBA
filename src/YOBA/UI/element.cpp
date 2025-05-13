@@ -236,60 +236,62 @@ namespace YOBA {
 	}
 
 	bool Element::isFocused() const {
-		return _application && _application->getFocusedElement() == this;
+		const auto application = Application::getCurrent();
+
+		return application && application->getFocusedElement() == this;
 	}
 
 	void Element::setFocused(bool value) {
-		if (!_application || !_focusable || (_application->getFocusedElement() == this) == value)
+		const auto application = Application::getCurrent();
+
+		if (!application || !_focusable || (application->getFocusedElement() == this) == value)
 			return;
 
-		const auto previousFocusedElement = _application->getFocusedElement();
+		const auto previousFocusedElement = application->getFocusedElement();
 
-		_application->setFocusedElement(value ? this : nullptr);
+		application->setFocusedElement(value ? this : nullptr);
 
 		if (previousFocusedElement && previousFocusedElement != this)
 			previousFocusedElement->onFocusChanged();
 
 		onFocusChanged();
 
-		_application->invalidate();
+		application->invalidate();
 	}
 
 	bool Element::isCaptured() const {
-		return _application && _application->getCapturedElement() == this;
+		const auto application = Application::getCurrent();
+
+		return application && application->getCapturedElement() == this;
 	}
 
 	void Element::setCaptured(bool value) {
-		if (!_application || (_application->getCapturedElement() == this) == value)
+		const auto application = Application::getCurrent();
+
+		if (!application || (application->getCapturedElement() == this) == value)
 			return;
 
-		const auto previousCapturedElement = _application->getCapturedElement();
+		const auto previousCapturedElement = application->getCapturedElement();
 
-		_application->setCapturedElement(value ? this : nullptr);
+		application->setCapturedElement(value ? this : nullptr);
 
 		if (previousCapturedElement && previousCapturedElement != this)
 			previousCapturedElement->onCaptureChanged();
 
 		onCaptureChanged();
 
-		_application->invalidate();
+		application->invalidate();
 	}
 
 	void Element::startAnimation(Animation* animation) {
-		if (_application)
-			_application->startAnimation(animation);
+		const auto application = Application::getCurrent();
+
+		if (application)
+			application->startAnimation(animation);
 	}
 
 	Layout* Element::getParent() const {
 		return _parent;
-	}
-
-	void Element::setApplication(Application* value) {
-		_application = value;
-	}
-
-	Application* Element::getApplication() const {
-		return _application;
 	}
 
 	const Bounds& Element::getBounds() const {
@@ -367,19 +369,24 @@ namespace YOBA {
 	}
 
 	void Element::invalidateRender() {
-		if (_application)
-			_application->invalidateRender();
+		const auto application = Application::getCurrent();
+
+		if (application)
+			application->invalidateRender();
 	}
 
 	void Element::invalidateLayout() {
-		if (_application)
-			_application->invalidateLayout();
+		const auto application = Application::getCurrent();
+
+		if (application)
+			application->invalidateLayout();
 	}
 
 	void Element::invalidate() {
-		if (_application) {
-			_application->invalidate();
-		}
+		const auto application = Application::getCurrent();
+
+		if (application)
+			application->invalidate();
 	}
 
 	void Element::onRender(Renderer* renderer) {
@@ -408,7 +415,6 @@ namespace YOBA {
 
 	void Element::onAddedToParent(Layout* parent) {
 		_parent = parent;
-		setApplication(_parent->getApplication());
 	}
 
 	void Element::onRemovedFromParent(Layout* parent) {

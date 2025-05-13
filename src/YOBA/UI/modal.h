@@ -5,7 +5,7 @@
 namespace YOBA {
 	class ModalElement : public virtual Element {
 		public:
-			void show(Application* application);
+			void show();
 			void hide();
 	};
 }

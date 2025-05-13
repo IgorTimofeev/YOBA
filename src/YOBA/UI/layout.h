@@ -39,8 +39,6 @@ namespace YOBA {
 			virtual void onChildAdded(Element* child);
 			virtual void onChildRemoved(Element* child);
 
-			void setApplication(Application* value) override;
-
 		private:
 			std::vector<Element*> _children {};
 	};

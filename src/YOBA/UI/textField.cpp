@@ -333,7 +333,7 @@ namespace YOBA {
 	}
 
 	void TextField::showKeyboard() {
-		const auto keyboard = ApplicationKeyboardController::show(getApplication());
+		const auto keyboard = ApplicationKeyboardController::show();
 
 		if (!keyboard)
 			return;

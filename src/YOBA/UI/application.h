@@ -11,6 +11,8 @@ namespace YOBA {
 		friend class Element;
 
 		public:
+			static Application* getCurrent();
+
 			explicit Application();
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
@@ -47,19 +49,19 @@ namespace YOBA {
 			Element* getCapturedElement() const;
 			Element* getFocusedElement() const;
 
-			void enqueueOnTick(const std::function<void()>& task);
+			void scheduleTask(const std::function<void()>& task);
 
 			uint32_t getTickDeltaTime() const;
 			uint32_t getLayoutDeltaTime() const;
 			uint32_t getRenderDeltaTime() const;
 			uint32_t getFlushDeltaTime() const;
-
 			uint32_t getPeripheralsDeltaTime() const;
 
 		protected:
 			void onRender(Renderer* renderer) override;
 
 		private:
+			static Application* _current;
 			Renderer* _renderer = nullptr;
 
 			bool _renderInvalidated = true;
@@ -69,7 +71,7 @@ namespace YOBA {
 
 			std::vector<Animation*> _animations {};
 			std::vector<InputDevice*> _inputDevices {};
-			std::vector<std::function<void()>> _enqueuedOnTickCallbacks {};
+			std::vector<std::function<void()>> _scheduledTasks {};
 
 			uint32_t _peripheralsDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;

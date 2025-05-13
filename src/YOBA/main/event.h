@@ -15,6 +15,7 @@ namespace YOBA {
 	class Event {
 		public:
 			explicit Event(uint16_t& staticTypeID);
+			virtual ~Event() = default;
 
 			virtual bool matches(Element* element);
 

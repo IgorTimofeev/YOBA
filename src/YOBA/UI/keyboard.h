@@ -458,7 +458,7 @@ namespace YOBA {
 
 	class ApplicationKeyboardController {
 		public:
-			static Keyboard* show(Application* application);
+			static Keyboard* show();
 			static void hide();
 			static bool isVisible();
 
