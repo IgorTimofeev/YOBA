@@ -183,7 +183,7 @@ namespace YOBA {
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
 	SpaceKeyboardKey::SpaceKeyboardKey() :
-		KeyboardKey(KeyboardKeyType::normal, KeyCode::space, L" ", stretched)
+		TextKeyboardKey(KeyCode::space, L" ", KeyCode::space, L" ", stretched)
 	{
 
 	}

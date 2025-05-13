@@ -218,6 +218,8 @@ namespace YOBA {
 				float width
 			);
 
+			virtual ~KeyboardKey() = default;
+
 			static float stretched;
 
 			virtual void tick(KeyboardButton* button);
@@ -291,7 +293,7 @@ namespace YOBA {
 			explicit EnterKeyboardKey(float width);
 	};
 
-	class SpaceKeyboardKey : public KeyboardKey {
+	class SpaceKeyboardKey : public TextKeyboardKey {
 		public:
 			SpaceKeyboardKey();
 	};
