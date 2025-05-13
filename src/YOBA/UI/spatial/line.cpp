@@ -21,7 +21,7 @@ namespace YOBA::spatial {
 		if (
 			vertices[0].getZ() < nearPlane
 			|| vertices[1].getZ() < nearPlane
-			)
+		)
 			return;
 
 		renderer->renderLine(
