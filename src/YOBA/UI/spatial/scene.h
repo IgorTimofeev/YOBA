@@ -9,7 +9,7 @@
 namespace YOBA::spatial {
 	class Scene : public virtual Element {
 		public:
-			const std::vector<SceneElement*>& getSceneElements();
+			std::vector<SceneElement*>& getSceneElements();
 			void addElement(SceneElement* element);
 			void operator+=(SceneElement* element);
 

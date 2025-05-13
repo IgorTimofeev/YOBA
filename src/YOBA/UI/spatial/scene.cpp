@@ -137,7 +137,7 @@ namespace YOBA::spatial {
 		_pivotOffset = value;
 	}
 
-	const std::vector<SceneElement*>& Scene::getSceneElements() {
+	std::vector<SceneElement*>& Scene::getSceneElements() {
 		return _elements;
 	}
 
