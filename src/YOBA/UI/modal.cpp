@@ -3,11 +3,11 @@
 #include "application.h"
 
 namespace YOBA {
-	void ModalLayout::show(Application* application) {
+	void ModalElement::show(Application* application) {
 		*application += this;
 	}
 
-	void ModalLayout::hide() {
+	void ModalElement::hide() {
 		const auto parent = getParent();
 
 		if (!parent)

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "layout.h"
-#include "YOBA/UI/shapes/rectangle.h"
+#include "element.h"
 
 namespace YOBA {
-	class ModalLayout : public Layout {
+	class ModalElement : public virtual Element {
 		public:
 			void show(Application* application);
 			void hide();
