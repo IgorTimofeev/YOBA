@@ -1,18 +1,18 @@
 #pragma once
 
 #include "YOBA/UI/element.h"
-#include "YOBA/UI/traits/checkedElement.h"
+#include "YOBA/UI/traits/activeElement.h"
 #include "YOBA/UI/traits/cornerRadiusElement.h"
 #include "YOBA/main/event.h"
 #include "animation.h"
 
 namespace YOBA {
-	class Switch : public CheckedElement, public CornerRadiusElement {
+	class Switch : public ActiveElement, public CornerRadiusElement {
 		public:
 			Switch() = default;
 
 			explicit Switch(bool checked) {
-				setChecked(checked);
+				setActive(checked);
 			}
 
 			const Color* getTrackColor() const {
@@ -50,7 +50,7 @@ namespace YOBA {
 				const auto& bounds = getBounds();
 
 				const uint16_t handleHalf = bounds.getHeight() / 2;
-				const uint16_t handleOffset = isChecked() ? bounds.getWidth() - bounds.getHeight() : 0;
+				const uint16_t handleOffset = isActive() ? bounds.getWidth() - bounds.getHeight() : 0;
 				const uint16_t handleOffsetCenter = handleOffset + handleHalf;
 
 				// Checked
@@ -102,7 +102,7 @@ namespace YOBA {
 				if (event->getTypeID() != TouchDownEvent::typeID)
 					return;
 
-				setChecked(!isChecked());
+				setActive(!isActive());
 
 				event->setHandled(true);
 			}

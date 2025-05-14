@@ -27,7 +27,7 @@ namespace YOBA {
 		const auto code = getCodeFromCase(keyboard);
 
 		if (code != KeyCode::none)
-			keyboard->keyPressedChanged(code, button->isChecked());
+			keyboard->keyPressedChanged(code, button->isActive());
 	}
 
 	KeyCode KeyboardKey::getCode() const {
@@ -101,7 +101,7 @@ namespace YOBA {
 	void TextKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onKeyPressedChanged(button);
 
-		if (button->isChecked())
+		if (button->isActive())
 			return;
 
 		const auto keyboard = button->getKeyboard();
@@ -135,7 +135,7 @@ namespace YOBA {
 	void ShiftKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onKeyPressedChanged(button);
 
-		if (button->isChecked())
+		if (button->isActive())
 			return;
 
 		const auto keyboard = button->getKeyboard();
@@ -202,7 +202,7 @@ namespace YOBA {
 	void CharactersLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onKeyPressedChanged(button);
 
-		if (button->isChecked())
+		if (button->isActive())
 			return;
 
 		const auto keyboard = button->getKeyboard();
@@ -224,7 +224,7 @@ namespace YOBA {
 	void CurrentCyclicLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onKeyPressedChanged(button);
 
-		if (button->isChecked())
+		if (button->isActive())
 			return;
 
 		const auto keyboard = button->getKeyboard();
@@ -246,7 +246,7 @@ namespace YOBA {
 	void CyclicLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		KeyboardKey::onKeyPressedChanged(button);
 
-		if (!button->isChecked()) {
+		if (!button->isActive()) {
 			button->getKeyboard()->setNextCyclicLayoutIndex();
 		}
 	}
@@ -268,8 +268,8 @@ namespace YOBA {
 				setDefaultBackgroundColor(_keyboard->getDefaultKeyBackgroundColor());
 				setDefaultTextColor(_keyboard->getDefaultKeyTextColor());
 
-				setPressedBackgroundColor(_keyboard->getDefaultKeyTextColor());
-				setPressedTextColor(_keyboard->getDefaultKeyBackgroundColor());
+				setActiveBackgroundColor(_keyboard->getDefaultKeyTextColor());
+				setActiveTextColor(_keyboard->getDefaultKeyBackgroundColor());
 
 				break;
 			}
@@ -277,8 +277,8 @@ namespace YOBA {
 				setDefaultBackgroundColor(_keyboard->getActionKeyBackgroundColor());
 				setDefaultTextColor(_keyboard->getActionKeyTextColor());
 
-				setPressedBackgroundColor(_keyboard->getActionKeyTextColor());
-				setPressedTextColor(_keyboard->getActionKeyBackgroundColor());
+				setActiveBackgroundColor(_keyboard->getActionKeyTextColor());
+				setActiveTextColor(_keyboard->getActionKeyBackgroundColor());
 
 				break;
 			}
@@ -291,8 +291,8 @@ namespace YOBA {
 		getKey()->tick(this);
 	}
 
-	void KeyboardButton::onIsCheckedChanged() {
-		Button::onIsCheckedChanged();
+	void KeyboardButton::onIsActiveChanged() {
+		Button::onIsActiveChanged();
 
 		Application::getCurrent()->scheduleTask([this] {
 			getKey()->onKeyPressedChanged(this);

@@ -359,7 +359,7 @@ namespace YOBA {
 			void updateFromCase();
 
 		protected:
-			void onIsCheckedChanged() override;
+			void onIsActiveChanged() override;
 
 		private:
 			Keyboard* _keyboard;

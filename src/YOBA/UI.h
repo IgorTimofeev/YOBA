@@ -16,7 +16,7 @@
 #include "YOBA/UI/traits/fontScaleElement.h"
 #include "YOBA/UI/traits/spacingElement.h"
 #include "YOBA/UI/traits/orientationElement.h"
-#include "YOBA/UI/traits/checkedElement.h"
+#include "YOBA/UI/traits/activeElement.h"
 #include "YOBA/UI/traits/selectableElement.h"
 
 // Elements

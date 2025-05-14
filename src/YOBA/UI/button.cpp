@@ -5,7 +5,7 @@ namespace YOBA {
 		const auto& bounds = getBounds();
 
 		// Primary color
-		auto color = Color::select(isChecked(), _defaultBackgroundColor, _pressedBackgroundColor);
+		auto color = Color::select(isActive(), _defaultBackgroundColor, _activeBackgroundColor);
 
 		if (color) {
 			renderer->renderFilledRectangle(
@@ -16,7 +16,7 @@ namespace YOBA {
 		}
 
 		// Border
-		color = Color::select(isChecked(), _defaultBorderColor, _pressedBorderColor);
+		color = Color::select(isActive(), _defaultBorderColor, _activeBorderColor);
 
 		if (color) {
 			renderer->renderRectangle(
@@ -30,7 +30,7 @@ namespace YOBA {
 		const auto font = getFont();
 
 		if (font) {
-			color = Color::select(isChecked(), _defaultTextColor, _pressedTextColor);
+			color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
 
 			if (color) {
 				renderer->renderString(
@@ -54,46 +54,29 @@ namespace YOBA {
 			capture();
 			focus();
 
-			switch (_checkMode) {
-				case ButtonCheckMode::normal: {
-					setChecked(true);
-
-					break;
-				}
-				default: {
-					break;
-				}
-			}
+			_previousIsActive = isActive();
+			setActive(true);
 
 			event->setHandled(true);
 		}
 		else if (event->getTypeID() == TouchUpEvent::typeID) {
 			const auto touchUpEvent = static_cast<TouchUpEvent*>(event);
-			const auto intersects = getBounds().intersects(touchUpEvent->getPosition());
+			const auto inBounds = getBounds().intersects(touchUpEvent->getPosition());
 
-			switch (_checkMode) {
-				case ButtonCheckMode::normal: {
-					setChecked(false);
-
-					if (intersects)
-						callOnClick();
-
-					break;
+			if (isToggle()) {
+				if (inBounds) {
+					setActive(!isActive());
+					callOnClick();
 				}
-				case ButtonCheckMode::toggle: {
-					if (intersects) {
-						setChecked(!isChecked());
-						callOnClick();
-					}
-
-					break;
+				else {
+					setActive(_previousIsActive);
 				}
-				default: {
-					if (intersects)
-						callOnClick();
+			}
+			else {
+				setActive(false);
 
-					break;
-				}
+				if (inBounds)
+					callOnClick();
 			}
 
 			removeCapture();
@@ -102,20 +85,28 @@ namespace YOBA {
 		}
 	}
 
-	const Color* Button::getPressedBackgroundColor() const {
-		return _pressedBackgroundColor;
+	bool Button::isToggle() const {
+		return _isToggle;
 	}
 
-	void Button::setPressedBackgroundColor(const Color* value) {
-		_pressedBackgroundColor = value;
+	void Button::setToggle(bool value) {
+		_isToggle = value;
 	}
 
-	const Color* Button::getPressedTextColor() const {
-		return _pressedTextColor;
+	const Color* Button::getActiveBackgroundColor() const {
+		return _activeBackgroundColor;
 	}
 
-	void Button::setPressedTextColor(const Color* value) {
-		_pressedTextColor = value;
+	void Button::setActiveBackgroundColor(const Color* value) {
+		_activeBackgroundColor = value;
+	}
+
+	const Color* Button::getActiveTextColor() const {
+		return _activeTextColor;
+	}
+
+	void Button::setActiveTextColor(const Color* value) {
+		_activeTextColor = value;
 	}
 
 	const Color* Button::getDefaultBackgroundColor() const {
@@ -142,12 +133,12 @@ namespace YOBA {
 		_defaultBorderColor = defaultBorderColor;
 	}
 
-	const Color* Button::getPressedBorderColor() const {
-		return _pressedBorderColor;
+	const Color* Button::getActiveBorderColor() const {
+		return _activeBorderColor;
 	}
 
-	void Button::setPressedBorderColor(const Color* pressedBorderColor) {
-		_pressedBorderColor = pressedBorderColor;
+	void Button::setActiveBorderColor(const Color* pressedBorderColor) {
+		_activeBorderColor = pressedBorderColor;
 	}
 
 	void Button::onClick() {
@@ -168,13 +159,5 @@ namespace YOBA {
 		_contentMargin = contentMargin;
 
 		invalidate();
-	}
-
-	ButtonCheckMode Button::getCheckMode() const {
-		return _checkMode;
-	}
-
-	void Button::setCheckMode(ButtonCheckMode value) {
-		_checkMode = value;
 	}
 }

@@ -8,17 +8,10 @@
 #include "YOBA/UI/traits/fontElement.h"
 #include "YOBA/UI/traits/cornerRadiusElement.h"
 #include "YOBA/UI/traits/fontScaleElement.h"
-#include "YOBA/UI/traits/checkedElement.h"
-#include "YOBA/UI/traits/borderElement.h"
+#include "YOBA/UI/traits/activeElement.h"
 
 namespace YOBA {
-	enum class ButtonCheckMode : uint8_t {
-		normal,
-		toggle,
-		manual
-	};
-
-	class Button : public CheckedElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
+	class Button : public ActiveElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
 		public:
 			Callback<> click {};
 
@@ -26,8 +19,9 @@ namespace YOBA {
 
 			void onEvent(Event* event) override;
 
-			ButtonCheckMode getCheckMode() const;
-			void setCheckMode(ButtonCheckMode value);
+			bool isToggle() const;
+
+			void setToggle(bool value);
 
 			const Color* getDefaultBackgroundColor() const;
 			void setDefaultBackgroundColor(const Color* value);
@@ -35,18 +29,18 @@ namespace YOBA {
 			const Color* getDefaultTextColor() const;
 			void setDefaultTextColor(const Color* value);
 
-			const Color* getPressedBackgroundColor() const;
-			void setPressedBackgroundColor(const Color* value);
+			const Color* getActiveBackgroundColor() const;
+			void setActiveBackgroundColor(const Color* value);
 
-			const Color* getPressedTextColor() const;
-			void setPressedTextColor(const Color* value);
+			const Color* getActiveTextColor() const;
+			void setActiveTextColor(const Color* value);
 
 			const Color* getDefaultBorderColor() const;
 
 			void setDefaultBorderColor(const Color* defaultBorderColor);
 
-			const Color* getPressedBorderColor() const;
-			void setPressedBorderColor(const Color* pressedBorderColor);
+			const Color* getActiveBorderColor() const;
+			void setActiveBorderColor(const Color* pressedBorderColor);
 
 			const Margin& getContentMargin() const;
 			void setContentMargin(const Margin& contentMargin);
@@ -61,11 +55,12 @@ namespace YOBA {
 			const Color* _defaultBorderColor = nullptr;
 			const Color* _defaultTextColor = nullptr;
 
-			const Color* _pressedBackgroundColor = nullptr;
-			const Color* _pressedBorderColor = nullptr;
-			const Color* _pressedTextColor = nullptr;
+			const Color* _activeBackgroundColor = nullptr;
+			const Color* _activeBorderColor = nullptr;
+			const Color* _activeTextColor = nullptr;
 
-			ButtonCheckMode _checkMode = ButtonCheckMode::normal;
+			bool _isToggle = false;
+			bool _previousIsActive = false;
 
 			void callOnClick();
 	};
