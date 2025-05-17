@@ -25,11 +25,11 @@ namespace YOBA {
 
 			constexpr static float autoSize = -1;
 
-			float getRelativeSize(Element* child) {
+			float getRelativeSize(const Element* child) {
 				return _elementSizes.contains(child) ? _elementSizes[child] : 1;
 			}
 
-			void setRelativeSize(Element* child, float value) {
+			void setRelativeSize(const Element* child, float value) {
 				if (value == 1) {
 					tryRemoveRelativeSize(child);
 				}
@@ -38,11 +38,11 @@ namespace YOBA {
 				}
 			}
 
-			bool isAutoSize(Element* child) {
+			bool isAutoSize(const Element* child) {
 				return getRelativeSize(child) == autoSize;
 			}
 
-			void setAutoSize(Element* child, bool value = true) {
+			void setAutoSize(const Element* child, bool value = true) {
 				setRelativeSize(child, value ? autoSize : 1);
 			}
 
@@ -72,7 +72,7 @@ namespace YOBA {
 				switch (getOrientation()) {
 					case Orientation::horizontal: {
 						// 1st loop, computing sum of relative sizes & sum of auto sizes
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -109,7 +109,7 @@ namespace YOBA {
 							: availableSizeWithoutSpacing - autoSizeSum;
 
 						// 2nd loop, measuring relative-sized children & computing total layout size
-						for (auto child: *this) {
+						for (const auto child : *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -153,7 +153,7 @@ namespace YOBA {
 						break;
 					}
 					case Orientation::vertical: {
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -188,7 +188,7 @@ namespace YOBA {
 							: availableSizeWithoutSpacing - autoSizeSum;
 
 						// 2nd loop, measuring relative-sized children & computing total layout size
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -261,7 +261,7 @@ namespace YOBA {
 
 				switch (getOrientation()) {
 					case Orientation::horizontal: {
-						for (auto child: *this) {
+						for (const auto child: *this) {
 							if (!child->isVisible())
 								continue;
 
@@ -399,13 +399,10 @@ namespace YOBA {
 			}
 
 		private:
-			std::unordered_map<Element*, float> _elementSizes {};
+			std::unordered_map<const Element*, float> _elementSizes {};
 
-			void tryRemoveRelativeSize(Element* child) {
-				const auto iterator = _elementSizes.find(child);
-
-				if (iterator != _elementSizes.end())
-					_elementSizes.erase(iterator);
+			void tryRemoveRelativeSize(const Element* child) {
+				_elementSizes.erase(child);
 			}
 	};
 }

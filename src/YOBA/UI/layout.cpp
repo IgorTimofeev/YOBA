@@ -33,7 +33,7 @@ namespace YOBA {
 		return _children.size();
 	}
 
-	int32_t Layout::getIndexOfChild(Element* element) {
+	size_t Layout::getIndexOfChild(Element* element) {
 		const auto iterator = std::ranges::find(_children, element);
 
 		if (iterator == _children.end())
