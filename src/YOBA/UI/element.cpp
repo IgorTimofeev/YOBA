@@ -9,8 +9,8 @@
 
 namespace YOBA {
 	Element::~Element() {
-		removeFocus();
-		removeCapture();
+		setFocused(false);
+		setCaptured(false);
 	}
 
 	bool Element::isVisible() const {
@@ -244,22 +244,13 @@ namespace YOBA {
 		return application && application->getFocusedElement() == this;
 	}
 
-	void Element::removeFocus() const {
+	void Element::setFocused(bool state) {
 		const auto application = Application::getCurrent();
 
-		if (!application || !_focusable || application->getFocusedElement() != this)
+		if (!application || !_focusable)
 			return;
 
-		application->setFocusedElement(nullptr);
-	}
-
-	void Element::focus() {
-		const auto application = Application::getCurrent();
-
-		if (!application || !_focusable || application->getFocusedElement() == this)
-			return;
-
-		application->setFocusedElement(this);
+		application->setFocusedElement(state ? this : nullptr);
 	}
 
 	bool Element::isCaptured() const {
@@ -268,22 +259,12 @@ namespace YOBA {
 		return application && application->getCapturedElement() == this;
 	}
 
-	void Element::removeCapture() const {
+
+	void Element::setCaptured(bool state) {
 		const auto application = Application::getCurrent();
 
-		if (!application || application->getCapturedElement() != this)
-			return;
-
-		application->setCapturedElement(nullptr);
-	}
-
-	void Element::capture() {
-		const auto application = Application::getCurrent();
-
-		if (!application || application->getCapturedElement() == this)
-			return;
-
-		application->setCapturedElement(this);
+		if (application)
+			application->setCapturedElement(state ? this : nullptr);
 	}
 
 	void Element::startAnimation(Animation* animation) {

@@ -206,7 +206,7 @@ namespace YOBA {
 				if (isTouchDown) {
 					_lastTouchPosition = touchPosition;
 
-					capture();
+					setCaptured(true);
 				}
 				else if (isTouchDrag) {
 					if (_lastTouchPosition.getX() >= 0) {
@@ -223,7 +223,7 @@ namespace YOBA {
 				else {
 					_lastTouchPosition.setX(-1);
 
-					removeCapture();
+					setCaptured(false);
 				}
 			}
 

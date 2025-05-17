@@ -136,10 +136,13 @@ namespace YOBA {
 	}
 
 	void Application::setCapturedElement(Element* element) {
+		if (element == _capturedElement)
+			return;
+
 		const auto previouslyCapturedElement = _capturedElement;
 		_capturedElement = element;
 
-		if (previouslyCapturedElement && previouslyCapturedElement != element)
+		if (previouslyCapturedElement)
 			previouslyCapturedElement->onCaptureChanged();
 
 		if (_capturedElement)
@@ -153,10 +156,13 @@ namespace YOBA {
 	}
 
 	void Application::setFocusedElement(Element* element) {
+		if (element == _focusedElement)
+			return;
+
 		const auto previouslyFocusedElement = _focusedElement;
 		_focusedElement = element;
 
-		if (previouslyFocusedElement && previouslyFocusedElement != _focusedElement)
+		if (previouslyFocusedElement)
 			previouslyFocusedElement->onFocusChanged();
 
 		if (_focusedElement)

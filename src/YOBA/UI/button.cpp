@@ -51,8 +51,8 @@ namespace YOBA {
 
 	void Button::onEvent(Event* event) {
 		if (event->getTypeID() == TouchDownEvent::typeID) {
-			capture();
-			focus();
+			setCaptured(true);
+			setFocused(true);
 
 			_previousIsActive = isActive();
 			setActive(true);
@@ -79,7 +79,7 @@ namespace YOBA {
 					callOnClick();
 			}
 
-			removeCapture();
+			setCaptured(false);
 
 			event->setHandled(true);
 		}

@@ -167,11 +167,11 @@ namespace YOBA {
 					return;
 
 				if (isTouchDown) {
-					capture();
-					focus();
+					setCaptured(true);
+					setFocused(true);
 				}
 				else if (isTouchUp) {
-					removeCapture();
+					setCaptured(false);
 				}
 
 				const auto& bounds = getBounds();

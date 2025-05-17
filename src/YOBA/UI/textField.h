@@ -26,6 +26,8 @@ namespace YOBA {
 		public FontScaleElement
 	{
 		public:
+			Callback<KeyCode, std::wstring_view> input {};
+
 			void onTick() override;
 
 			void onRender(Renderer* renderer) override;
@@ -73,6 +75,8 @@ namespace YOBA {
 			const std::optional<std::function<void(Keyboard*)>>& getKeyboardConfigurator() const;
 			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
 
+		protected:
+			virtual void onInput(KeyCode keyCode, std::wstring_view text);
 
 		private:
 			int32_t _lastTouchX = -1;

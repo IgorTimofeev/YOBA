@@ -122,11 +122,11 @@ namespace YOBA {
 			return;
 
 		if (isTouchDown) {
-			capture();
-			focus();
+			setCaptured(true);
+			setFocused(true);
 		}
 		else if (isTouchUp) {
-			removeCapture();
+			setCaptured(false);
 			return;
 		}
 
@@ -347,7 +347,7 @@ namespace YOBA {
 
 			switch (code) {
 				case KeyCode::enter: {
-					removeFocus();
+					setFocused(false);
 					break;
 				}
 				case KeyCode::backspace: {
@@ -359,8 +359,11 @@ namespace YOBA {
 			}
 		};
 
-		keyboard->input += [this](KeyCode, std::wstring_view text) {
+		keyboard->input += [this](KeyCode keyCode, std::wstring_view text) {
 			insert(text);
+
+			onInput(keyCode, text);
+			input(keyCode, text);
 		};
 	}
 
@@ -385,6 +388,10 @@ namespace YOBA {
 
 	void TextField::setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator) {
 		_keyboardConfigurator = keyboardConfigurator;
+	}
+
+	void TextField::onInput(KeyCode keyCode, std::wstring_view text) {
+
 	}
 
 	const Color* TextField::getFocusedBorderColor() const {
