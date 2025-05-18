@@ -54,12 +54,16 @@ namespace YOBA {
 			setCaptured(true);
 			setFocused(true);
 
+			_wasDown = true;
 			_previousIsActive = isActive();
 			setActive(true);
 
 			event->setHandled(true);
 		}
 		else if (event->getTypeID() == TouchUpEvent::typeID) {
+			if (!_wasDown)
+				return;
+
 			const auto touchUpEvent = static_cast<TouchUpEvent*>(event);
 			const auto inBounds = getBounds().intersects(touchUpEvent->getPosition());
 
@@ -80,6 +84,7 @@ namespace YOBA {
 			}
 
 			setCaptured(false);
+			_wasDown = false;
 
 			event->setHandled(true);
 		}
