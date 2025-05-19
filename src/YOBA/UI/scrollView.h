@@ -99,9 +99,9 @@ namespace YOBA {
 					: Size::unlimited
 				);
 
-				Size result = Size();
+				auto result = Size();
 
-				for (auto element : *this) {
+				for (const auto element : *this) {
 					if (!element->isVisible())
 						continue;
 
@@ -283,7 +283,7 @@ namespace YOBA {
 					}
 				}
 				else {
-					auto position2Delta = contentPosition2 - boundsPosition2;
+					const auto position2Delta = contentPosition2 - boundsPosition2;
 
 					if (position2Delta > 0) {
 						position += (delta > position2Delta ? position2Delta : delta);

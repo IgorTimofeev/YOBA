@@ -47,7 +47,7 @@ namespace YOBA {
 			virtual void handleEvent(Event* event);
 
 			virtual void invalidateRender();
-			virtual void invalidateLayout();
+			virtual void invalidateMeasure();
 			virtual void invalidate();
 
 			virtual void startAnimation(Animation* animation);
@@ -86,9 +86,18 @@ namespace YOBA {
 
 			const Size& getSize() const;
 			void setSize(const Size& value);
-
 			void setWidth(uint16_t value);
 			void setHeight(uint16_t value);
+
+			const Size& getMaxSize() const;
+			void setMaxSize(const Size& value);
+			void setMaxWidth(uint16_t value);
+			void setMaxHeight(uint16_t value);
+
+			const Size& getMinSize() const;
+			void setMinSize(const Size& value);
+			void setMinWidth(uint16_t value);
+			void setMinHeight(uint16_t value);
 
 			const Size& getMeasuredSize() const;
 			const Bounds& getBounds() const;
@@ -113,6 +122,8 @@ namespace YOBA {
 			bool _focusable = true;
 
 			Size _size = Size(Size::computed, Size::computed);
+			Size _minSize = Size(0, 0);
+			Size _maxSize = Size(0xFFFF, 0xFFFF);
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
 			Margin _margin = Margin::zero;
@@ -121,22 +132,24 @@ namespace YOBA {
 			Bounds _bounds {};
 			Size _measuredSize {};
 
-			static void computeMeasureShit(
-				const uint16_t &size,
-				const uint16_t &desiredSize,
-				const int32_t &marginStart,
-				const int32_t &marginEnd,
-				int32_t &newSize
+			static uint16_t computeMeasureShit(
+				uint16_t size,
+				uint16_t desiredSize,
+				int32_t marginStart,
+				int32_t marginEnd,
+				uint16_t min,
+				uint16_t max
 			);
 
 			static void computeArrangeShit(
-				const Alignment& alignment,
-				const int32_t& position,
-				const uint16_t& size,
-				const uint16_t& measuredSize,
-				const int32_t& marginStart,
-				const int32_t& marginEnd,
-				const uint16_t& limit,
+				Alignment alignment,
+				int32_t position,
+				uint16_t size,
+				uint16_t desiredSize,
+				int32_t marginStart,
+				int32_t marginEnd,
+				uint16_t bounds,
+
 				int32_t& newPosition,
 				int32_t& newSize
 			);

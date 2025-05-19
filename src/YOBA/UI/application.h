@@ -33,8 +33,9 @@ namespace YOBA {
 			void setup(RenderTarget* renderTarget, Renderer* renderer, InputDevice* inputDevice);
 
 			virtual void tick();
+			virtual void render();
 
-			void invalidateLayout() override;
+			void invalidateMeasure() override;
 			void invalidateRender() override;
 			void invalidate() override;
 
@@ -49,7 +50,7 @@ namespace YOBA {
 			Element* getCapturedElement() const;
 			Element* getFocusedElement() const;
 
-			void scheduleTask(const std::function<void()>& task);
+			void scheduleOnTick(const std::function<void()>& task);
 
 			uint32_t getTickDeltaTime() const;
 			uint32_t getLayoutDeltaTime() const;
@@ -65,13 +66,13 @@ namespace YOBA {
 			Renderer* _renderer = nullptr;
 
 			bool _renderInvalidated = true;
-			bool _layoutInvalidated = true;
+			bool _measureInvalidated = true;
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;
 
 			std::vector<Animation*> _animations {};
 			std::vector<InputDevice*> _inputDevices {};
-			std::vector<std::function<void()>> _scheduledTasks {};
+			std::vector<std::function<void()>> _scheduledOnTickTasks {};
 
 			uint32_t _peripheralsDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;
@@ -80,7 +81,6 @@ namespace YOBA {
 			uint32_t _flushDeltaTime = 0;
 
 			void animationsTick();
-			void inputDevicesTick();
 
 			// Will be only called from Element
 			void setFocusedElement(Element* element);

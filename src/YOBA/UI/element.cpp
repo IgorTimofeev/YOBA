@@ -1,5 +1,6 @@
 #include "YOBA/UI/element.h"
 
+#include <algorithm>
 #include <esp_log.h>
 
 #include "layout.h"
@@ -37,13 +38,16 @@ namespace YOBA {
 		return { 0, 0 };
 	}
 
-	void Element::computeMeasureShit(
-		const uint16_t &size,
-		const uint16_t &desiredSize,
-		const int32_t &marginStart,
-		const int32_t &marginEnd,
-		int32_t &newSize
+	uint16_t Element::computeMeasureShit(
+		uint16_t size,
+		uint16_t desiredSize,
+		int32_t marginStart,
+		int32_t marginEnd,
+		uint16_t min,
+		uint16_t max
 	) {
+		int32_t newSize = 0;
+
 		if (size == Size::computed) {
 			newSize = desiredSize;
 		}
@@ -53,8 +57,14 @@ namespace YOBA {
 
 		newSize = newSize + marginStart + marginEnd;
 
-		if (newSize < 0)
-			newSize = 0;
+		if (newSize < min) {
+			newSize = min;
+		}
+		else if (newSize > max) {
+			newSize = max;
+		}
+
+		return newSize;
 	}
 
 	void Element::onBoundsChanged() {
@@ -74,47 +84,43 @@ namespace YOBA {
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));
 
-		int32_t newSize = 0;
-
 		// Width
-		computeMeasureShit(
+		_measuredSize.setWidth(computeMeasureShit(
 			size.getWidth(),
 			_measuredSize.getWidth(),
 			margin.getLeft(),
 			margin.getRight(),
-			newSize
-		);
-
-		_measuredSize.setWidth(newSize);
+			_minSize.getWidth(),
+			_maxSize.getWidth()
+		));
 
 		// Height
-		computeMeasureShit(
+		_measuredSize.setHeight(computeMeasureShit(
 			size.getHeight(),
 			_measuredSize.getHeight(),
 			margin.getTop(),
 			margin.getBottom(),
-			newSize
-		);
-
-		_measuredSize.setHeight(newSize);
+			_minSize.getHeight(),
+			_maxSize.getHeight()
+		));
 	}
 
 	void Element::computeArrangeShit(
-		const Alignment& alignment,
-		const int32_t &position,
-		const uint16_t &size,
+		Alignment alignment,
+		int32_t position,
+		uint16_t size,
 
-		const uint16_t &measuredSize,
-		const int32_t &marginStart,
-		const int32_t &marginEnd,
+		uint16_t desiredSize,
+		int32_t marginStart,
+		int32_t marginEnd,
 
-		const uint16_t &limit,
-		int32_t &newPosition,
-		int32_t &newSize
+		uint16_t bounds,
+		int32_t& newPosition,
+		int32_t& newSize
 	) {
 		switch (alignment) {
 			case Alignment::start:
-				newSize = measuredSize - marginStart - marginEnd;
+				newSize = desiredSize - marginStart - marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
@@ -124,31 +130,31 @@ namespace YOBA {
 				break;
 
 			case Alignment::center:
-				newSize = measuredSize - marginStart - marginEnd;
+				newSize = desiredSize - marginStart - marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
 
-				newPosition = position + marginStart - marginEnd + limit / 2 - newSize / 2;
+				newPosition = position + marginStart - marginEnd + bounds / 2 - newSize / 2;
 
 				break;
 
 			case Alignment::end:
-				newSize = measuredSize - marginStart - marginEnd;
+				newSize = desiredSize - marginStart - marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
 
-				newPosition = position + limit - marginEnd - newSize;
+				newPosition = position + bounds - marginEnd - newSize;
 
 				break;
 
 			case Alignment::stretch:
 				if (size == Size::computed) {
-					newSize = limit;
+					newSize = bounds;
 				}
 				else {
-					newSize = measuredSize;
+					newSize = desiredSize;
 				}
 
 				newSize = newSize - marginStart - marginEnd;
@@ -164,7 +170,7 @@ namespace YOBA {
 
 	void Element::render(Renderer* renderer, const Bounds& bounds) {
 		const auto& margin = getMargin();
-		const auto& measuredSize = getMeasuredSize();
+		const auto& measuredSIze = getMeasuredSize();
 		const auto& size = getSize();
 
 		Bounds newBounds;
@@ -175,7 +181,7 @@ namespace YOBA {
 			getHorizontalAlignment(),
 			bounds.getX(),
 			size.getWidth(),
-			measuredSize.getWidth(),
+			measuredSIze.getWidth(),
 			margin.getLeft(),
 			margin.getRight(),
 			bounds.getWidth(),
@@ -190,7 +196,7 @@ namespace YOBA {
 			getVerticalAlignment(),
 			bounds.getY(),
 			size.getHeight(),
-			measuredSize.getHeight(),
+			measuredSIze.getHeight(),
 			margin.getTop(),
 			margin.getBottom(),
 			bounds.getHeight(),
@@ -247,7 +253,7 @@ namespace YOBA {
 	void Element::setFocused(bool state) {
 		const auto application = Application::getCurrent();
 
-		if (!application || !_focusable)
+		if (!application || !_focusable || (application->getFocusedElement() == this) == state)
 			return;
 
 		application->setFocusedElement(state ? this : nullptr);
@@ -259,12 +265,13 @@ namespace YOBA {
 		return application && application->getCapturedElement() == this;
 	}
 
-
 	void Element::setCaptured(bool state) {
 		const auto application = Application::getCurrent();
 
-		if (application)
-			application->setCapturedElement(state ? this : nullptr);
+		if (!application || (application->getCapturedElement() == this) == state)
+			return;
+
+		application->setCapturedElement(state ? this : nullptr);
 	}
 
 	void Element::startAnimation(Animation* animation) {
@@ -286,6 +293,10 @@ namespace YOBA {
 		return _measuredSize;
 	}
 
+	const Size& Element::getSize() const {
+		return _size;
+	}
+
 	void Element::setSize(const Size& value) {
 		if (value == _size)
 			return;
@@ -295,8 +306,66 @@ namespace YOBA {
 		invalidate();
 	}
 
-	const Size& Element::getSize() const {
-		return _size;
+	void Element::setWidth(uint16_t value) {
+		_size.setWidth(value);
+
+		invalidate();
+	}
+
+	void Element::setHeight(uint16_t value) {
+		_size.setHeight(value);
+
+		invalidate();
+	}
+
+	const Size& Element::getMaxSize() const {
+		return _maxSize;
+	}
+
+	void Element::setMaxSize(const Size& value) {
+		if (value == _maxSize)
+			return;
+
+		_maxSize = value;
+
+		invalidate();
+	}
+
+	void Element::setMaxWidth(uint16_t value) {
+		_maxSize.setWidth(value);
+
+		invalidate();
+	}
+
+	void Element::setMaxHeight(uint16_t value) {
+		_maxSize.setHeight(value);
+
+		invalidate();
+	}
+
+	const Size& Element::getMinSize() const {
+		return _minSize;
+	}
+
+	void Element::setMinSize(const Size& value) {
+		if (value == _minSize)
+			return;
+
+		_minSize = value;
+
+		invalidate();
+	}
+
+	void Element::setMinWidth(uint16_t value) {
+		_minSize.setWidth(value);
+
+		invalidate();
+	}
+
+	void Element::setMinHeight(uint16_t value) {
+		_minSize.setHeight(value);
+
+		invalidate();
 	}
 
 	void Element::setMargin(const Margin& value) {
@@ -359,11 +428,11 @@ namespace YOBA {
 			application->invalidateRender();
 	}
 
-	void Element::invalidateLayout() {
+	void Element::invalidateMeasure() {
 		const auto application = Application::getCurrent();
 
 		if (application)
-			application->invalidateLayout();
+			application->invalidateMeasure();
 	}
 
 	void Element::invalidate() {
@@ -383,18 +452,6 @@ namespace YOBA {
 
 	void Element::setClipToBounds(bool value) {
 		_clipToBounds = value;
-	}
-
-	void Element::setWidth(uint16_t value) {
-		_size.setWidth(value);
-
-		invalidate();
-	}
-
-	void Element::setHeight(uint16_t value) {
-		_size.setHeight(value);
-
-		invalidate();
 	}
 
 	void Element::onAddedToParent(Layout* parent) {

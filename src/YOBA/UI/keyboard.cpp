@@ -294,7 +294,7 @@ namespace YOBA {
 	void KeyboardButton::onIsActiveChanged() {
 		Button::onIsActiveChanged();
 
-		Application::getCurrent()->scheduleTask([this] {
+		Application::getCurrent()->scheduleOnTick([this] {
 			getKey()->onKeyPressedChanged(this);
 		});
 	}

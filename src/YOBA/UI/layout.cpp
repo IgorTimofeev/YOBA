@@ -68,6 +68,9 @@ namespace YOBA {
 	}
 
 	void Layout::removeChildren() {
+		if (_children.size() == 0)
+			return;
+
 		for (const auto child : _children) {
 			onChildRemoved(child);
 			child->onRemovedFromParent(this);
@@ -79,6 +82,9 @@ namespace YOBA {
 	}
 
 	void Layout::removeAndDeleteChildren() {
+		if (_children.size() == 0)
+			return;
+
 		for (const auto child : _children) {
 			onChildRemoved(child);
 			child->onRemovedFromParent(this);

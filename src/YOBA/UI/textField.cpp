@@ -360,10 +360,10 @@ namespace YOBA {
 		};
 
 		keyboard->input += [this](KeyCode keyCode, std::wstring_view text) {
-			insert(text);
-
 			onInput(keyCode, text);
 			input(keyCode, text);
+
+			insert(text);
 		};
 	}
 

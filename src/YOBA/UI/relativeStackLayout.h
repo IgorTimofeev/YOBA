@@ -1,5 +1,6 @@
 #pragma once
 
+#include <esp_log.h>
 #include <unordered_map>
 #include "layout.h"
 #include "stackLayout.h"
@@ -85,12 +86,7 @@ namespace YOBA {
 							}
 							// Auto
 							else {
-								child->measure(
-									Size(
-										Size::unlimited,
-										availableSize.getHeight()
-									)
-								);
+								child->measure(availableSize);
 
 								autoSizeSum += child->getMeasuredSize().getWidth();
 							}
@@ -99,14 +95,14 @@ namespace YOBA {
 						}
 
 						availableSizeWithoutSpacing =
-							visibleCount == 1
+							visibleCount < 2
 							? availableSize.getWidth()
 							: availableSize.getWidth() - (visibleCount - 1) * getSpacing();
 
 						availableSizeForRelativeElements =
-							autoSizeSum > availableSizeWithoutSpacing
-							? availableSizeWithoutSpacing
-							: availableSizeWithoutSpacing - autoSizeSum;
+							availableSizeWithoutSpacing >= autoSizeSum
+							? availableSizeWithoutSpacing - autoSizeSum
+							: 0;
 
 						// 2nd loop, measuring relative-sized children & computing total layout size
 						for (const auto child : *this) {
@@ -124,7 +120,10 @@ namespace YOBA {
 									usedRelativeSize += childSize;
 								}
 								else {
-									childSize = availableSizeForRelativeElements - usedRelativeSize;
+									childSize =
+										availableSizeForRelativeElements >= usedRelativeSize
+										? availableSizeForRelativeElements - usedRelativeSize
+										: 0;
 								}
 
 								child->measure(
@@ -164,12 +163,7 @@ namespace YOBA {
 								relativeCount++;
 							}
 							else {
-								child->measure(
-									Size(
-										availableSize.getWidth(),
-										Size::unlimited
-									)
-								);
+								child->measure(availableSize);
 
 								autoSizeSum += child->getMeasuredSize().getHeight();
 							}
@@ -178,14 +172,14 @@ namespace YOBA {
 						}
 
 						availableSizeWithoutSpacing =
-							visibleCount == 1
+							visibleCount < 2
 							? availableSize.getHeight()
 							: availableSize.getHeight() - (visibleCount - 1) * getSpacing();
 
 						availableSizeForRelativeElements =
-							autoSizeSum > availableSizeWithoutSpacing
-							? availableSizeWithoutSpacing
-							: availableSizeWithoutSpacing - autoSizeSum;
+							availableSizeWithoutSpacing >= autoSizeSum
+							? availableSizeWithoutSpacing - autoSizeSum
+							: 0;
 
 						// 2nd loop, measuring relative-sized children & computing total layout size
 						for (const auto child: *this) {
@@ -203,7 +197,10 @@ namespace YOBA {
 									usedRelativeSize += childSize;
 								}
 								else {
-									childSize = availableSizeForRelativeElements - usedRelativeSize;
+									childSize =
+										availableSizeForRelativeElements >= usedRelativeSize
+										? availableSizeForRelativeElements - usedRelativeSize
+										: 0;
 								}
 
 								child->measure(
@@ -281,14 +278,14 @@ namespace YOBA {
 						}
 
 						availableSizeWithoutSpacing =
-							visibleCount == 1
+							visibleCount < 2
 							? bounds.getWidth()
 							: bounds.getWidth() - (visibleCount - 1) * getSpacing();
 
 						availableSizeForRelativeElements =
-							autoSizeSum > availableSizeWithoutSpacing
-							? availableSizeWithoutSpacing
-							: availableSizeWithoutSpacing - autoSizeSum;
+							availableSizeWithoutSpacing >= autoSizeSum
+							? availableSizeWithoutSpacing - autoSizeSum
+							: 0;
 
 						position = bounds.getX();
 
@@ -305,12 +302,18 @@ namespace YOBA {
 									relativeIndex++;
 								}
 								else {
-									childSize = availableSizeForRelativeElements - usedRelativeSize;
+									childSize =
+										availableSizeForRelativeElements >= usedRelativeSize
+										? availableSizeForRelativeElements - usedRelativeSize
+										: 0;
 								}
 							}
 							else {
 								childSize = child->getMeasuredSize().getWidth();
 							}
+
+							if (childSize > bounds.getWidth())
+								childSize = bounds.getWidth();
 
 							child->render(renderer, Bounds(
 								position,
@@ -345,14 +348,14 @@ namespace YOBA {
 						}
 
 						availableSizeWithoutSpacing =
-							visibleCount == 1
+							visibleCount < 2
 							? bounds.getHeight()
 							: bounds.getHeight() - (visibleCount - 1) * getSpacing();
 
 						availableSizeForRelativeElements =
-							autoSizeSum > availableSizeWithoutSpacing
-							? availableSizeWithoutSpacing
-							: availableSizeWithoutSpacing - autoSizeSum;
+							availableSizeWithoutSpacing >= autoSizeSum
+							? availableSizeWithoutSpacing - autoSizeSum
+							: 0;
 
 						position = bounds.getY();
 
@@ -370,12 +373,18 @@ namespace YOBA {
 									usedRelativeSize += childSize;
 								}
 								else {
-									childSize = availableSizeForRelativeElements - usedRelativeSize;
+									childSize =
+										availableSizeForRelativeElements >= usedRelativeSize
+										? availableSizeForRelativeElements - usedRelativeSize
+										: 0;
 								}
 							}
 							else {
 								childSize = child->getMeasuredSize().getHeight();
 							}
+
+							if (childSize > bounds.getHeight())
+								childSize = bounds.getHeight();
 
 							child->render(renderer, Bounds(
 								bounds.getX(),

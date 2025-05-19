@@ -35,8 +35,8 @@ namespace YOBA {
 		addInputDevice(inputDevice);
 	}
 
-	void Application::invalidateLayout() {
-		_layoutInvalidated = true;
+	void Application::invalidateMeasure() {
+		_measureInvalidated = true;
 	}
 
 	void Application::invalidateRender() {
@@ -46,7 +46,7 @@ namespace YOBA {
 	}
 
 	void Application::invalidate() {
-		invalidateLayout();
+		invalidateMeasure();
 		invalidateRender();
 	}
 
@@ -81,50 +81,61 @@ namespace YOBA {
 		// Resetting viewport just in case if some UI element broke it
 		_renderer->resetViewport();
 
+		// Handling input from devices like touchscreens, rotary encoders, etc.
 		auto time = system::getTime();
 
-		// Handling input from devices like touchscreens, rotary encoders, etc.
-		inputDevicesTick();
+		for (const auto inputDevice : _inputDevices)
+			inputDevice->tick(this);
 
 		_peripheralsDeltaTime = system::getTime() - time;
 
+		// Handling tick for children
 		time = system::getTime();
 
-		// Handling tick for children
 		onTick();
 
-		// Running enqueued tasks
-		if (!_scheduledTasks.empty()) {
-			for (const auto& callback : _scheduledTasks)
-				callback();
+		// Running scheduled tasks
+		if (!_scheduledOnTickTasks.empty()) {
+			for (size_t i = 0; i < _scheduledOnTickTasks.size(); i++)
+				_scheduledOnTickTasks[i]();
 
-			_scheduledTasks.clear();
+			_scheduledOnTickTasks.clear();
 		}
 
 		// Playing animations
 		animationsTick();
 
 		_tickDeltaTime = system::getTime() - time;
+	}
+
+	void Application::render() {
+		uint32_t time;
 
 		// Measuring children size
-		if (_layoutInvalidated) {
+		if (_measureInvalidated) {
 			time = system::getTime();
+
 			measure(getSize());
+
 			_layoutDeltaTime = system::getTime() - time;
 
-			_layoutInvalidated = false;
+			_measureInvalidated = false;
 		}
 
 		// Render pass
 		if (_renderInvalidated) {
-			// Rendering
 			time = system::getTime();
-			render(_renderer, getBounds());
+
+			// Rendering children
+			Layout::render(_renderer, getBounds());
+
 			_renderDeltaTime = system::getTime() - time;
 
 			// Flushing screen buffer
 			time = system::getTime();
+
 			_renderer->flush();
+
 			_flushDeltaTime = system::getTime() - time;
 
 			_renderInvalidated = false;
@@ -188,13 +199,8 @@ namespace YOBA {
 		_inputDevices.push_back(inputDevice);
 	}
 
-	void Application::scheduleTask(const std::function<void()>& task) {
-		_scheduledTasks.push_back(task);
-	}
-
-	void Application::inputDevicesTick() {
-		for (const auto inputDevice : _inputDevices)
-			inputDevice->tick(this);
+	void Application::scheduleOnTick(const std::function<void()>& task) {
+		_scheduledOnTickTasks.push_back(task);
 	}
 
 	uint32_t Application::getTickDeltaTime() const {
