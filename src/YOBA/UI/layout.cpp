@@ -78,6 +78,19 @@ namespace YOBA {
 		invalidate();
 	}
 
+	void Layout::removeAndDeleteChildren() {
+		for (const auto child : _children) {
+			onChildRemoved(child);
+			child->onRemovedFromParent(this);
+
+			delete child;
+		}
+
+		_children.clear();
+
+		invalidate();
+	}
+
 	Element* Layout::getChildAt(size_t index) const {
 		return _children[index];
 	}

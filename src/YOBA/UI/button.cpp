@@ -67,9 +67,9 @@ namespace YOBA {
 			const auto touchUpEvent = static_cast<TouchUpEvent*>(event);
 			const auto inBounds = getBounds().intersects(touchUpEvent->getPosition());
 
-			if (isToggle()) {
+			if (_isToggle) {
 				if (inBounds) {
-					setActive(!isActive());
+					setActive(!_previousIsActive);
 					callOnClick();
 				}
 				else {

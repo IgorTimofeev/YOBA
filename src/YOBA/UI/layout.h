@@ -22,6 +22,7 @@ namespace YOBA {
 			virtual void removeChildAt(int index);
 			virtual void removeChild(Element* child);
 			void removeChildren();
+			void removeAndDeleteChildren();
 
 			std::vector<Element*>::iterator begin();
 			std::vector<Element*>::iterator end();
