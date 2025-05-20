@@ -47,9 +47,6 @@ namespace YOBA {
 
 			void addInputDevice(InputDevice* inputDevice);
 
-			Element* getCapturedElement() const;
-			Element* getFocusedElement() const;
-
 			void scheduleOnTick(const std::function<void()>& task);
 
 			uint32_t getTickDeltaTime() const;
@@ -83,7 +80,10 @@ namespace YOBA {
 			void animationsTick();
 
 			// Will be only called from Element
+			Element* getFocusedElement() const;
 			void setFocusedElement(Element* element);
+
+			Element* getCapturedElement() const;
 			void setCapturedElement(Element* element);
 	};
 }

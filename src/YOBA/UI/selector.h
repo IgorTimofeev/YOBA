@@ -2,7 +2,7 @@
 
 #include "layout.h"
 #include "vector"
-#include "YOBA/UI/traits/selectableElement.h"
+#include "YOBA/UI/traits/activeElement.h"
 
 namespace YOBA {
 	class SelectorItem;
@@ -25,7 +25,6 @@ namespace YOBA {
 			SelectorItem* getSelectedItem() const;
 
 			void setSelectedIndex(int32_t index);
-
 			void setItemsLayout(Layout* layout);
 
 		protected:
@@ -36,7 +35,7 @@ namespace YOBA {
 			int32_t _selectedIndex = -1;
 	};
 
-	class SelectorItem : public Layout, public SelectableElement {
+	class SelectorItem : public Layout, public ActiveElement {
 		public:
 			Selector* getSelector() const;
 			void setSelector(Selector *value);

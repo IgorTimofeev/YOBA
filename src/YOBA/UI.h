@@ -17,7 +17,6 @@
 #include "YOBA/UI/traits/spacingElement.h"
 #include "YOBA/UI/traits/orientationElement.h"
 #include "YOBA/UI/traits/activeElement.h"
-#include "YOBA/UI/traits/selectableElement.h"
 
 // Elements
 #include "YOBA/UI/modal.h"

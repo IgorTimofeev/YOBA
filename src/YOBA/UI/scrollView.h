@@ -22,8 +22,7 @@ namespace YOBA {
 				_verticalScrollBar.setOrientation(Orientation::vertical);
 				_verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
 
-				setScrollBarSize(2);
-				setScrollBarSize(1);
+				setScrollBarSize(3);
 				setScrollBarOffset(3);
 			}
 
@@ -126,11 +125,23 @@ namespace YOBA {
 				const auto& bounds = getBounds();
 				const auto& measuredSize = getMeasuredSize();
 
+				if (_horizontalScrollBar.getPosition() > 0) {
+					if (_contentBounds.getX2() < bounds.getX2()) {
+						_horizontalScrollBar.setPosition(_contentBounds.getWidth() > bounds.getWidth() ? _contentBounds.getWidth() - bounds.getWidth() : 0);
+					}
+				}
+
 				_contentBounds.setX(
 					_horizontalScrollMode == ScrollMode::disabled
 					? bounds.getX()
 					: bounds.getX() - _horizontalScrollBar.getPosition()
 				);
+
+				if (_verticalScrollBar.getPosition() > 0) {
+					if (_contentBounds.getY2() < bounds.getY2()) {
+						_verticalScrollBar.setPosition(_contentBounds.getHeight() > bounds.getHeight() ? _contentBounds.getHeight() - bounds.getHeight() : 0);
+					}
+				}
 
 				_contentBounds.setY(
 					_verticalScrollMode == ScrollMode::disabled
