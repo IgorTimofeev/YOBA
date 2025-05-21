@@ -1,6 +1,5 @@
 #include <cstdint>
 #include "textField.h"
-
 #include "application.h"
 
 namespace YOBA {
@@ -27,18 +26,18 @@ namespace YOBA {
 		const auto focused = isFocused();
 
 		// Background
-		const auto primaryColor = Color::select(focused, getPrimaryColor(), _focusedPrimaryColor);
+		const auto backgroundColor = Color::select(focused, _defaultBackgroundColor, _focusedBackgroundColor);
 
-		if (primaryColor) {
+		if (backgroundColor) {
 			renderer->renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				primaryColor
+				backgroundColor
 			);
 		}
 
 		// Border
-		const auto borderColor = Color::select(focused, getBorderColor(), _focusedBorderColor);
+		const auto borderColor = Color::select(focused, _defaultBorderColor, _focusedBorderColor);
 
 		if (borderColor) {
 			renderer->renderRectangle(
@@ -54,62 +53,87 @@ namespace YOBA {
 		if (!font)
 			return;
 
-		const auto secondaryColor = Color::select(focused, getSecondaryColor(), _focusedSecondaryColor);
-
-		if (!secondaryColor)
-			return;
-
-		const auto oldViewport = renderer->pushViewport(Bounds(
-			bounds.getX() + _textMargin,
-			bounds.getY(),
-			bounds.getWidth() - _textMargin * 2,
-			bounds.getHeight()
-		));
-
-		const auto& text = getText();
 		const auto fontHeight = font->getHeight(getFontScale());
+		const auto& text = getText();
 
-		auto textPosition = Point(
-			bounds.getX() + _textMargin - _scrollPosition,
-			bounds.getYCenter() - fontHeight / 2
-		);
+		// Placeholder
+		if (text.empty() && !isFocused()) {
+			if (_placeholderColor) {
+				const auto& placeholder = getPlaceholder();
 
-		auto blinkX = textPosition.getX();
-
-		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-			const wchar_t ch = _mask.has_value() ? _mask.value() : text[charIndex];
-
-			renderer->renderChar(
-				textPosition,
-				font,
-				secondaryColor,
-				ch,
-				getFontScale()
-			);
-
-			if (charIndex == _cursorPosition)
-				blinkX = textPosition.getX();
-
-			textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
+				if (!placeholder.empty()) {
+					renderer->renderString(
+						Point(
+							bounds.getX() + _textMargin,
+							bounds.getYCenter() - fontHeight / 2
+						),
+						font,
+						_placeholderColor,
+						placeholder,
+						getFontScale()
+					);
+				}
+			}
 		}
-
-		renderer->popViewport(oldViewport);
-
-		// Cursor
-		if (_cursorBlinkState && _cursorColor) {
-			// End of text
-			if (_cursorPosition == text.length())
-				blinkX = textPosition.getX();
-
-			renderer->renderFilledRectangle(
-				Bounds(
-					blinkX,
-					textPosition.getY() + fontHeight / 2 - _cursorSize.getHeight() / 2,
-					_cursorSize.getWidth(),
-					_cursorSize.getHeight()
-				),
-				_cursorColor
+		// Text & cursor
+		else {
+			auto textPosition = Point(
+				bounds.getX() + _textMargin - _scrollPosition,
+				bounds.getYCenter() - fontHeight / 2
 			);
+
+			auto blinkX = textPosition.getX();
+
+			// Text
+			if (!text.empty()) {
+				const auto textColor = Color::select(focused, _defaultTextColor, _focusedTextColor);
+
+				if (!textColor)
+					return;
+
+				const auto oldViewport = renderer->pushViewport(Bounds(
+					bounds.getX() + _textMargin,
+					bounds.getY(),
+					bounds.getWidth() - _textMargin * 2,
+					bounds.getHeight()
+				));
+
+				for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
+					const wchar_t ch = _mask ? _mask : text[charIndex];
+
+					renderer->renderChar(
+						textPosition,
+						font,
+						textColor,
+						ch,
+						getFontScale()
+					);
+
+					if (charIndex == _cursorPosition)
+						blinkX = textPosition.getX();
+
+					textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
+				}
+
+				renderer->popViewport(oldViewport);
+			}
+
+			// Cursor
+			if (_cursorBlinkState && _cursorColor) {
+				// End of text
+				if (_cursorPosition == text.length())
+					blinkX = textPosition.getX();
+
+				renderer->renderFilledRectangle(
+					Bounds(
+						blinkX,
+						textPosition.getY() + fontHeight / 2 - _cursorSize.getHeight() / 2,
+						_cursorSize.getWidth(),
+						_cursorSize.getHeight()
+					),
+					_cursorColor
+				);
+			}
 		}
 	}
 
@@ -159,7 +183,7 @@ namespace YOBA {
 			for (size_t i = 0; i < text.length(); i++) {
 				if (cursorX < targetX) {
 					cursorPosition++;
-					cursorX += font->getWidth(_mask.value_or(text[i]));
+					cursorX += font->getWidth(_mask ? _mask : text[i]);
 				}
 				else {
 					break;
@@ -177,7 +201,7 @@ namespace YOBA {
 				cursorPosition--;
 
 				if (_scrollPosition > 0) {
-					const auto previousCharWidth = font->getWidth(_mask.value_or(text[cursorPosition]), getFontScale());
+					const auto previousCharWidth = font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale());
 
 					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
 				}
@@ -189,7 +213,7 @@ namespace YOBA {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
 			if (cursorPosition < text.length()) {
-				const int32_t pizda = cursorX + font->getWidth(_mask.value_or(text[cursorPosition]), getFontScale()) - boundsWidthWithoutMargin;
+				const int32_t pizda = cursorX + font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale()) - boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 
@@ -269,8 +293,8 @@ namespace YOBA {
 		return _cursorPosition;
 	}
 
-	void TextField::setCursorPosition(size_t cursorPosition) {
-		_cursorPosition = cursorPosition;
+	void TextField::setCursorPosition(size_t value) {
+		_cursorPosition = value;
 
 		const auto textLength = getText().length();
 
@@ -287,8 +311,8 @@ namespace YOBA {
 		return _cursorBlinkInterval;
 	}
 
-	void TextField::setCursorBlinkInterval(uint32_t cursorBlinkInterval) {
-		_cursorBlinkInterval = cursorBlinkInterval;
+	void TextField::setCursorBlinkInterval(uint32_t value) {
+		_cursorBlinkInterval = value;
 	}
 
 	const Color* TextField::getCursorColor() const {
@@ -297,6 +321,30 @@ namespace YOBA {
 
 	void TextField::setCursorColor(const Color* cursorColor) {
 		_cursorColor = cursorColor;
+	}
+
+	const Color* TextField::getDefaultBorderColor() const {
+		return _defaultBorderColor;
+	}
+
+	void TextField::setDefaultBorderColor(const Color* value) {
+		_defaultBorderColor = value;
+	}
+
+	const Color* TextField::getDefaultBackgroundColor() const {
+		return _defaultBackgroundColor;
+	}
+
+	void TextField::setDefaultBackgroundColor(const Color* value) {
+		_defaultBackgroundColor = value;
+	}
+
+	const Color* TextField::getDefaultTextColor() const {
+		return _defaultTextColor;
+	}
+
+	void TextField::setDefaultTextColor(const Color* value) {
+		_defaultTextColor = value;
 	}
 
 	const Size& TextField::getCursorSize() const {
@@ -398,31 +446,49 @@ namespace YOBA {
 		return _focusedBorderColor;
 	}
 
-	void TextField::setFocusedBorderColor(const Color* focusedBorderColor) {
-		_focusedBorderColor = focusedBorderColor;
+	void TextField::setFocusedBorderColor(const Color* value) {
+		_focusedBorderColor = value;
 	}
 
-	const Color* TextField::getFocusedPrimaryColor() const {
-		return _focusedPrimaryColor;
+	const Color* TextField::getFocusedBackgroundColor() const {
+		return _focusedBackgroundColor;
 	}
 
-	void TextField::setFocusedPrimaryColor(const Color* focusedPrimaryColor) {
-		_focusedPrimaryColor = focusedPrimaryColor;
+	void TextField::setFocusedBackgroundColor(const Color* value) {
+		_focusedBackgroundColor = value;
 	}
 
-	const Color* TextField::getFocusedSecondaryColor() const {
-		return _focusedSecondaryColor;
+	const Color* TextField::getFocusedTextColor() const {
+		return _focusedTextColor;
 	}
 
-	void TextField::setFocusedSecondaryColor(const Color* focusedSecondaryColor) {
-		_focusedSecondaryColor = focusedSecondaryColor;
+	void TextField::setFocusedTextColor(const Color* value) {
+		_focusedTextColor = value;
 	}
 
-	const std::optional<wchar_t>& TextField::getMask() const {
+	const Color* TextField::getPlaceholderColor() const {
+		return _placeholderColor;
+	}
+
+	void TextField::setPlaceholderColor(const Color* value) {
+		_placeholderColor = value;
+	}
+
+	wchar_t TextField::getMask() const {
 		return _mask;
 	}
 
-	void TextField::setMask(const std::optional<wchar_t>& mask) {
+	void TextField::setMask(wchar_t mask) {
 		_mask = mask;
+	}
+
+	std::wstring_view TextField::getPlaceholder() const {
+		return _placeholder;
+	}
+
+	void TextField::setPlaceholder(const std::wstring_view& value) {
+		_placeholder = value;
+
+		invalidate();
 	}
 }

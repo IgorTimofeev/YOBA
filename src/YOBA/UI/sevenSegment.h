@@ -4,11 +4,10 @@
 #include "YOBA/main/color.h"
 #include "YOBA/main/rendering/renderer.h"
 #include "cmath"
-#include "YOBA/UI/traits/primaryColorElement.h"
-#include "YOBA/UI/traits/secondaryColorElement.h"
+#include "YOBA/UI/element.h"
 
 namespace YOBA {
-	class SevenSegment : public PrimaryColorElement, public SecondaryColorElement {
+	class SevenSegment : public Element {
 		public:
 			constexpr static uint32_t dashes = 0xFFFFFFFF;
 
@@ -46,12 +45,9 @@ namespace YOBA {
 				}
 			}
 
-			// -------------------------------- Getters & setters --------------------------------
-
 			uint8_t getSegmentThickness() const {
 				return _segmentThickness;
 			}
-
 			void setSegmentThickness(uint8_t value) {
 				_segmentThickness = value;
 
@@ -61,7 +57,6 @@ namespace YOBA {
 			uint8_t getSegmentLength() const {
 				return _segmentLength;
 			}
-
 			void setSegmentLength(uint8_t value) {
 				_segmentLength = value;
 
@@ -71,7 +66,6 @@ namespace YOBA {
 			uint32_t getValue() const {
 				return _value;
 			}
-
 			void setValue(uint32_t value) {
 				_value = value;
 
@@ -81,7 +75,6 @@ namespace YOBA {
 			uint8_t getDigitCount() const {
 				return _digitCount;
 			}
-
 			void setDigitCount(uint8_t value) {
 				_digitCount = value;
 
@@ -91,7 +84,6 @@ namespace YOBA {
 			uint8_t getSpacing() const {
 				return _spacing;
 			}
-
 			void setSpacing(uint8_t value) {
 				_spacing = value;
 
@@ -101,9 +93,22 @@ namespace YOBA {
 			uint16_t getDigitWidth() const {
 				return static_cast<uint16_t>(getSegmentThickness() * 2 + getSegmentLength());
 			}
-
 			uint16_t getDigitHeight() const {
 				return static_cast<uint16_t>(getSegmentThickness() * 3 + getSegmentLength() * 2);
+			}
+
+			const Color* getInactiveColor() const {
+				return _inactiveColor;
+			}
+			void setInactiveColor(const Color* value) {
+				_inactiveColor = value;
+			}
+
+			const Color* getActiveColor() const {
+				return _activeColor;
+			}
+			void setActiveColor(const Color* value) {
+				_activeColor = value;
 			}
 
 		private:
@@ -112,6 +117,9 @@ namespace YOBA {
 			uint8_t _spacing = 3;
 			uint8_t _segmentThickness = 3;
 			uint8_t _segmentLength = 9;
+
+			const Color* _inactiveColor = nullptr;
+			const Color* _activeColor = nullptr;
 
 			void renderSegments(
 				Renderer* renderer,
@@ -127,16 +135,16 @@ namespace YOBA {
 				const uint8_t t = getSegmentThickness();
 				const uint8_t l = getSegmentLength();
 
-				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? getSecondaryColor() : getPrimaryColor());
-				renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? getSecondaryColor() : getPrimaryColor());
-				renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? getSecondaryColor() : getPrimaryColor());
-				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? getSecondaryColor() : getPrimaryColor());
-				renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? getSecondaryColor() : getPrimaryColor());
-				renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? getSecondaryColor() : getPrimaryColor());
-				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? getSecondaryColor() : getPrimaryColor());
+				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? _activeColor : _inactiveColor);
+				renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? _activeColor : _inactiveColor);
+				renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? _activeColor : _inactiveColor);
+				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? _activeColor : _inactiveColor);
+				renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? _activeColor : _inactiveColor);
+				renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? _activeColor : _inactiveColor);
+				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? _activeColor : _inactiveColor);
 			}
 
-			void renderDigit(Renderer* renderer, const Point& position, uint8_t digit) {
+			void renderDigit(Renderer* renderer, const Point& position, uint8_t digit) const {
 				switch (digit) {
 					case 0:
 						renderSegments(
@@ -290,7 +298,7 @@ namespace YOBA {
 				}
 			}
 
-			void renderDashes(Renderer* renderer, const Point& position) {
+			void renderDashes(Renderer* renderer, const Point& position) const {
 				renderSegments(
 					renderer,
 					position,

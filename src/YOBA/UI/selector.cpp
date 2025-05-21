@@ -29,6 +29,22 @@ namespace YOBA {
 		*_itemsLayout += item;
 	}
 
+	void Selector::removeItems() {
+		if (!_itemsLayout)
+			return;
+
+		_itemsLayout->removeChildren();
+		setSelectedIndex(-1);
+	}
+
+	void Selector::removeAndDeleteItems() {
+		if (!_itemsLayout)
+			return;
+
+		_itemsLayout->removeAndDeleteChildren();
+		setSelectedIndex(-1);
+	}
+
 	int32_t Selector::getSelectedIndex() const {
 		return _selectedIndex;
 	}
@@ -53,6 +69,8 @@ namespace YOBA {
 		onSelectionChanged();
 
 		selectionChanged();
+
+		invalidate();
 	}
 
 	void Selector::onSelectionChanged() {

@@ -1,6 +1,9 @@
 #include "layout.h"
 #include "YOBA/main/event.h"
 #include <algorithm>
+#include <esp_log.h>
+
+#include "application.h"
 
 namespace YOBA {
 	void Layout::onTick() {

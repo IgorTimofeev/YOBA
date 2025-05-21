@@ -9,8 +9,6 @@
 // Traits
 #include "YOBA/UI/traits/borderElement.h"
 #include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/UI/traits/primaryColorElement.h"
-#include "YOBA/UI/traits/secondaryColorElement.h"
 #include "YOBA/UI/traits/textElement.h"
 #include "YOBA/UI/traits/fontElement.h"
 #include "YOBA/UI/traits/fontScaleElement.h"

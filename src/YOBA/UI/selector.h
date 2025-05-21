@@ -20,6 +20,8 @@ namespace YOBA {
 			int32_t getIndexOfItem(SelectorItem* item) const;
 
 			void addItem(SelectorItem* item);
+			void removeItems();
+			void removeAndDeleteItems();
 
 			int32_t getSelectedIndex() const;
 			SelectorItem* getSelectedItem() const;

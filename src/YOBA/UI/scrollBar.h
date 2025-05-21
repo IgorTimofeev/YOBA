@@ -2,7 +2,6 @@
 
 #include "YOBA/UI/element.h"
 #include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/UI/traits/primaryColorElement.h"
 #include "YOBA/UI/traits/orientationElement.h"
 
 namespace YOBA {

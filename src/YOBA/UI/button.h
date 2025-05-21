@@ -11,7 +11,13 @@
 #include "YOBA/UI/traits/activeElement.h"
 
 namespace YOBA {
-	class Button : public ActiveElement, public TextElement, public FontElement, public FontScaleElement, public CornerRadiusElement {
+	class Button :
+		public ActiveElement,
+		public TextElement,
+		public FontElement,
+		public FontScaleElement,
+		public CornerRadiusElement
+	{
 		public:
 			Callback<> click {};
 
@@ -20,7 +26,6 @@ namespace YOBA {
 			void onEvent(Event* event) override;
 
 			bool isToggle() const;
-
 			void setToggle(bool value);
 
 			const Color* getDefaultBackgroundColor() const;

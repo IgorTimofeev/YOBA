@@ -193,9 +193,9 @@ namespace YOBA {
 			uint8_t _handleSize = 8;
 			uint8_t _handleCornerRadius = 4;
 
-			const Color* _trackColor;
-			const Color* _fillColor;
-			const Color* _handleColor;
+			const Color* _trackColor = nullptr;
+			const Color* _fillColor = nullptr;
+			const Color* _handleColor = nullptr;
 
 			uint16_t _value = 0xFFFF;
 	};

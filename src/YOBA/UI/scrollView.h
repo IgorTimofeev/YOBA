@@ -2,6 +2,7 @@
 
 #include "scrollBar.h"
 #include "layout.h"
+#include <esp_log.h>
 
 namespace YOBA {
 	enum class ScrollMode : uint8_t {
@@ -125,41 +126,49 @@ namespace YOBA {
 				const auto& bounds = getBounds();
 				const auto& measuredSize = getMeasuredSize();
 
-				if (_horizontalScrollBar.getPosition() > 0) {
-					if (_contentBounds.getX2() < bounds.getX2()) {
-						_horizontalScrollBar.setPosition(_contentBounds.getWidth() > bounds.getWidth() ? _contentBounds.getWidth() - bounds.getWidth() : 0);
+				if (_horizontalScrollMode == ScrollMode::disabled) {
+					_contentBounds.setX(bounds.getX());
+					_contentBounds.setWidth(bounds.getWidth());
+				}
+				else {
+					if (_horizontalScrollBar.getPosition() > 0) {
+						if (measuredSize.getWidth() > bounds.getWidth()) {
+							const int32_t contentBoundsX2 = bounds.getX() - _horizontalScrollBar.getPosition() + measuredSize.getWidth() - 1;
+
+							if (contentBoundsX2 < bounds.getX2()) {
+								_horizontalScrollBar.setPosition(measuredSize.getWidth() - bounds.getWidth());
+							}
+						}
+						else {
+							_horizontalScrollBar.setPosition(0);
+						}
 					}
+
+					_contentBounds.setX(bounds.getX() - _horizontalScrollBar.getPosition());
+					_contentBounds.setWidth(measuredSize.getWidth());
 				}
 
-				_contentBounds.setX(
-					_horizontalScrollMode == ScrollMode::disabled
-					? bounds.getX()
-					: bounds.getX() - _horizontalScrollBar.getPosition()
-				);
-
-				if (_verticalScrollBar.getPosition() > 0) {
-					if (_contentBounds.getY2() < bounds.getY2()) {
-						_verticalScrollBar.setPosition(_contentBounds.getHeight() > bounds.getHeight() ? _contentBounds.getHeight() - bounds.getHeight() : 0);
-					}
+				if (_verticalScrollMode == ScrollMode::disabled) {
+					_contentBounds.setY(bounds.getY());
+					_contentBounds.setHeight(bounds.getHeight());
 				}
+				else {
+					if (_verticalScrollBar.getPosition() > 0) {
+						if (measuredSize.getHeight() > bounds.getHeight()) {
+							const int32_t contentBoundsY2 = bounds.getY() - _verticalScrollBar.getPosition() + measuredSize.getHeight() - 1;
 
-				_contentBounds.setY(
-					_verticalScrollMode == ScrollMode::disabled
-					? bounds.getY()
-					: bounds.getY() - _verticalScrollBar.getPosition()
-				);
+							if (contentBoundsY2 < bounds.getY2()) {
+								_verticalScrollBar.setPosition(measuredSize.getHeight() - bounds.getHeight());
+							}
+						}
+						else {
+							_verticalScrollBar.setPosition(0);
+						}
+					}
 
-				_contentBounds.setWidth(
-					_horizontalScrollMode == ScrollMode::disabled
-					? bounds.getWidth()
-					: measuredSize.getWidth()
-				);
-
-				_contentBounds.setHeight(
-					_verticalScrollMode == ScrollMode::disabled
-					? bounds.getHeight()
-					: measuredSize.getHeight()
-				);
+					_contentBounds.setY(bounds.getY() - _verticalScrollBar.getPosition());
+					_contentBounds.setHeight(measuredSize.getHeight());
+				}
 
 				for (const auto element : *this) {
 					if (!element->isVisible())

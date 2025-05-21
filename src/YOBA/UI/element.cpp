@@ -55,16 +55,14 @@ namespace YOBA {
 			newSize = size;
 		}
 
-		newSize = newSize + marginStart + marginEnd;
-
 		if (newSize < min) {
 			newSize = min;
 		}
 		else if (newSize > max) {
 			newSize = max;
 		}
-
-		return newSize;
+				
+		return newSize + marginStart + marginEnd;
 	}
 
 	void Element::onBoundsChanged() {
@@ -84,7 +82,7 @@ namespace YOBA {
 			availableSize.getHeight() - margin.getTop() - margin.getBottom()
 		));
 
-		// Width
+		// Horizontal
 		_measuredSize.setWidth(computeMeasureShit(
 			size.getWidth(),
 			_measuredSize.getWidth(),
@@ -94,7 +92,7 @@ namespace YOBA {
 			_maxSize.getWidth()
 		));
 
-		// Height
+		// Vertical
 		_measuredSize.setHeight(computeMeasureShit(
 			size.getHeight(),
 			_measuredSize.getHeight(),
@@ -105,7 +103,7 @@ namespace YOBA {
 		));
 	}
 
-	void Element::computeArrangeShit(
+	void Element::computeBoundsShit(
 		Alignment alignment,
 		int32_t position,
 		uint16_t size,
@@ -170,18 +168,19 @@ namespace YOBA {
 
 	void Element::render(Renderer* renderer, const Bounds& bounds) {
 		const auto& margin = getMargin();
-		const auto& measuredSIze = getMeasuredSize();
+		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
 
 		Bounds newBounds;
 		int32_t newPosition = 0;
 		int32_t newSize = 0;
 
-		computeArrangeShit(
+		// Horizontal
+		computeBoundsShit(
 			getHorizontalAlignment(),
 			bounds.getX(),
 			size.getWidth(),
-			measuredSIze.getWidth(),
+			measuredSize.getWidth(),
 			margin.getLeft(),
 			margin.getRight(),
 			bounds.getWidth(),
@@ -192,11 +191,12 @@ namespace YOBA {
 		newBounds.setX(newPosition);
 		newBounds.setWidth(newSize);
 
-		computeArrangeShit(
+		// Vertical
+		computeBoundsShit(
 			getVerticalAlignment(),
 			bounds.getY(),
 			size.getHeight(),
-			measuredSIze.getHeight(),
+			measuredSize.getHeight(),
 			margin.getTop(),
 			margin.getBottom(),
 			bounds.getHeight(),

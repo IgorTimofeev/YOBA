@@ -1,13 +1,9 @@
 #pragma once
 
-#include <cstdint>
 #include "YOBA/UI/element.h"
 #include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/UI/traits/primaryColorElement.h"
-#include "YOBA/UI/traits/secondaryColorElement.h"
 #include "YOBA/UI/traits/textElement.h"
 #include "YOBA/UI/traits/fontElement.h"
-#include "YOBA/UI/traits/borderElement.h"
 #include "YOBA/UI/traits/fontScaleElement.h"
 #include "keyboard.h"
 
@@ -17,10 +13,7 @@
 
 namespace YOBA {
 	class TextField :
-		public PrimaryColorElement,
-		public SecondaryColorElement,
 		public CornerRadiusElement,
-		public BorderElement,
 		public TextElement,
 		public FontElement,
 		public FontScaleElement
@@ -29,15 +22,15 @@ namespace YOBA {
 			Callback<KeyCode, std::wstring_view> input {};
 
 			void onTick() override;
-
 			void onRender(Renderer* renderer) override;
-
 			void onEvent(Event* event) override;
-
 			void onFocusChanged() override;
 
-			const std::optional<wchar_t>& getMask() const;
-			void setMask(const std::optional<wchar_t>& mask);
+			wchar_t getMask() const;
+			void setMask(wchar_t mask);
+
+			std::wstring_view getPlaceholder() const;
+			void setPlaceholder(const std::wstring_view& value);
 
 			const uint16_t& getTextMargin() const;
 			void setTextMargin(const uint16_t& textMargin);
@@ -48,23 +41,32 @@ namespace YOBA {
 			const Color* getCursorColor() const;
 			void setCursorColor(const Color* cursorColor);
 
+			const Color* getDefaultBorderColor() const;
+			void setDefaultBorderColor(const Color* value);
+
+			const Color* getDefaultBackgroundColor() const;
+			void setDefaultBackgroundColor(const Color* value);
+
+			const Color* getDefaultTextColor() const;
+			void setDefaultTextColor(const Color* value);
+
 			const Color* getFocusedBorderColor() const;
+			void setFocusedBorderColor(const Color* value);
 
-			void setFocusedBorderColor(const Color* focusedBorderColor);
+			const Color* getFocusedBackgroundColor() const;
+			void setFocusedBackgroundColor(const Color* value);
 
-			const Color* getFocusedPrimaryColor() const;
+			const Color* getFocusedTextColor() const;
+			void setFocusedTextColor(const Color* value);
 
-			void setFocusedPrimaryColor(const Color* focusedPrimaryColor);
-
-			const Color* getFocusedSecondaryColor() const;
-
-			void setFocusedSecondaryColor(const Color* focusedSecondaryColor);
+			const Color* getPlaceholderColor() const;
+			void setPlaceholderColor(const Color* value);
 
 			uint32_t getCursorBlinkInterval() const;
-			void setCursorBlinkInterval(uint32_t cursorBlinkInterval);
+			void setCursorBlinkInterval(uint32_t value);
 
 			size_t getCursorPosition() const;
-			void setCursorPosition(size_t cursorPosition);
+			void setCursorPosition(size_t value);
 
 			void setCursorToStart();
 			void setCursorToEnd();
@@ -92,17 +94,23 @@ namespace YOBA {
 			uint32_t _continuousScrollTime = 0;
 			uint32_t _continuousScrollInterval = 50;
 
+			const Color* _defaultBackgroundColor = nullptr;
+			const Color* _defaultTextColor = nullptr;
+			const Color* _defaultBorderColor = nullptr;
+
 			const Color* _focusedBorderColor = nullptr;
-			const Color* _focusedPrimaryColor = nullptr;
-			const Color* _focusedSecondaryColor = nullptr;
+			const Color* _focusedBackgroundColor = nullptr;
+			const Color* _focusedTextColor = nullptr;
+
+			const Color* _placeholderColor = nullptr;
 			const Color* _cursorColor = nullptr;
 
-			std::optional<wchar_t> _mask = std::nullopt;
+			std::wstring _placeholder = std::wstring();
+			wchar_t _mask = 0;
 			std::optional<std::function<void(Keyboard*)>> _keyboardConfigurator = std::nullopt;
 
 			void setCursorBlinkStateAndTime(bool value);
 			void showKeyboard();
-
 			void applyContinuousScroll();
 	};
 }

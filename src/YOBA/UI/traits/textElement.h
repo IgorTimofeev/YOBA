@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fontElement.h"
+#include <YOBA/UI/element.h>
 
 namespace YOBA {
 	class TextElement : public virtual Element {
