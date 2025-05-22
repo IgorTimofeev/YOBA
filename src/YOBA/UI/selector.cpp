@@ -62,7 +62,7 @@ namespace YOBA {
 
 		_selectedIndex = index;
 
-		for (size_t i = 0; i < _itemsLayout->getChildrenCount(); i++) {
+		for (size_t i = 0; i < getItemsCount(); i++) {
 			getItemAt(i)->setActive(i == _selectedIndex);
 		}
 
