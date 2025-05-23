@@ -30,7 +30,7 @@ namespace YOBA {
 		private:
 			Application* _application;
 			uint32_t _duration = 0;
-			uint32_t _start = 0;
+			uint64_t _start = 0;
 
 			std::function<void(const double&)> _interpolator;
 	};

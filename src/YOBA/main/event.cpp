@@ -1,5 +1,7 @@
 #include <cstdint>
 #include "event.h"
+
+#include <esp_log.h>
 #include <YOBA/UI/element.h>
 
 namespace YOBA {
@@ -20,6 +22,9 @@ namespace YOBA {
 
 	void Event::setHandled(bool handled) {
 		_handled = handled;
+
+		// ESP_LOGI("SerHANDLED", "event");
+		// esp_backtrace_print(10);
 	}
 
 	bool Event::matches(Element* element) {

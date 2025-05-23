@@ -21,8 +21,8 @@ namespace YOBA::system {
 		vTaskDelay(pdMS_TO_TICKS(interval / 1000));
 	}
 
-	uint32_t getTime() {
-		return static_cast<uint32_t>(esp_timer_get_time());
+	uint64_t getTime() {
+		return static_cast<uint64_t>(esp_timer_get_time());
 	}
 
 	// -------------------------------- GPIO --------------------------------

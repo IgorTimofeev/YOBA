@@ -226,10 +226,8 @@ namespace YOBA {
 	}
 
 	void Element::handleEvent(Event* event) {
-		if (!event->matches(this))
-			return;
-
-		onEvent(event);
+		if (event->matches(this))
+			onEvent(event);
 	}
 
 	void Element::onEvent(Event* event) {

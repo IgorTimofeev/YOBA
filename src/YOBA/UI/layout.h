@@ -35,7 +35,7 @@ namespace YOBA {
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
-			void onEvent(Event* event) override;
+			void handleEvent(Event* event) override;
 
 			virtual void onChildAdded(Element* child);
 			virtual void onChildRemoved(Element* child);

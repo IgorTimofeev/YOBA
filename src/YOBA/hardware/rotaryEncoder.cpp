@@ -42,6 +42,7 @@ namespace YOBA {
 		system::GPIO::setMode(_bPin, system::GPIO::PinMode::input);
 		system::GPIO::setMode(_swPin, system::GPIO::PinMode::input);
 
+		// Interrupts
 		system::GPIO::addInterruptHandler(_aPin, abInterruptHandler, this);
 		system::GPIO::addInterruptHandler(_bPin, abInterruptHandler, this);
 		system::GPIO::addInterruptHandler(_swPin, swInterruptHandler, this);
@@ -58,7 +59,7 @@ namespace YOBA {
 		// Rotation
 		if (std::abs(_rotation) > 2) {
 			const auto time = system::getTime();
-			const auto deltaTime = time - _previousRotationTime;
+			const uint32_t deltaTime = time - _previousRotationTime;
 			_previousRotationTime = time;
 
 			const int32_t rps = _rotation * static_cast<int32_t>(1'000'000) / static_cast<int32_t>(deltaTime);

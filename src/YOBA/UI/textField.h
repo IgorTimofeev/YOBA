@@ -86,14 +86,14 @@ namespace YOBA {
 			int32_t _lastTouchX = -1;
 			uint16_t _textMargin = 10;
 
-			uint32_t _cursorBlinkTime = 0;
+			uint64_t _cursorBlinkTime = 0;
 			uint32_t _cursorBlinkInterval = 500'000;
 			bool _cursorBlinkState = false;
 			size_t _cursorPosition = 0;
 			Size _cursorSize = Size(2, 14);
 
 			uint16_t _scrollPosition = 0;
-			uint32_t _continuousScrollTime = 0;
+			uint64_t _continuousScrollTime = 0;
 			uint32_t _continuousScrollInterval = 50'000;
 
 			const Color* _defaultBackgroundColor = nullptr;

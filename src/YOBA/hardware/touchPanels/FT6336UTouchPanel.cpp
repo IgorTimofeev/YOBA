@@ -266,9 +266,7 @@ namespace YOBA {
 	// ------------------------------------------------------------------------
 
 	void FT6336UTouchPanel::interruptHandler(void* args) {
-		const auto instance = static_cast<FT6336UTouchPanel*>(args);
-
-		instance->_interrupted = true;
+		static_cast<FT6336UTouchPanel*>(args)->_interrupted = true;
 	}
 
 	Point FT6336UTouchPanel::readOrientedPoint1(const RenderTarget* renderTarget) {

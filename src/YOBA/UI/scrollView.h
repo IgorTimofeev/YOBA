@@ -209,7 +209,7 @@ namespace YOBA {
 
 			void onEvent(Event* event) override {
 				Layout::onEvent(event);
-
+				
 				if (event->isHandled())
 					return;
 

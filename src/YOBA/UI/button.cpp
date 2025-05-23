@@ -1,5 +1,7 @@
 #include "button.h"
 
+#include <esp_log.h>
+
 namespace YOBA {
 	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
 		// Primary color
@@ -49,6 +51,8 @@ namespace YOBA {
 
 	void Button::onEvent(Event* event) {
 		if (event->getTypeID() == TouchDownEvent::typeID) {
+			ESP_LOGI("BUTTON", "down");
+
 			setCaptured(true);
 			setFocused(true);
 

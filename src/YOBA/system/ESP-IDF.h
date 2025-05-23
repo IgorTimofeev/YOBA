@@ -10,7 +10,7 @@
 namespace YOBA::system {
 	void sleep(uint32_t interval);
 
-	uint32_t getTime();
+	uint64_t getTime();
 
 	class GPIO {
 		public:

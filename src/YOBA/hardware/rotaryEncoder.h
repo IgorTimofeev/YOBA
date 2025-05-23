@@ -77,7 +77,7 @@ namespace YOBA {
 		public:
 			RotaryEncoder(uint8_t aPin, uint8_t bPin, uint8_t swPin);
 
-			void setup() override;
+			void setup();
 			void tick() override;
 
 		private:
@@ -88,7 +88,7 @@ namespace YOBA {
 			bool _interrupted = false;
 			uint8_t _oldAB = 0;
 
-			uint32_t _previousRotationTime = 0;
+			uint64_t _previousRotationTime = 0;
 			int32_t _rotation = 0;
 
 			bool _previousPressed = false;

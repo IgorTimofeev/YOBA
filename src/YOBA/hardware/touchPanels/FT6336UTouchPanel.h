@@ -90,7 +90,7 @@ namespace YOBA {
 		public:
 			FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin);
 
-			void setup() override;
+			void setup();
 			void tick() override;
 
 			uint8_t read_device_mode();

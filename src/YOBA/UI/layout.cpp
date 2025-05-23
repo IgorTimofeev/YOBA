@@ -14,22 +14,24 @@ namespace YOBA {
 				element->onTick();
 	}
 
-	void Layout::onEvent(Event* event) {
-		Element::onEvent(event);
+	void Layout::handleEvent(Event* event) {
+		if (getChildrenCount() > 0) {
+			size_t i = getChildrenCount() - 1;
 
-		if (getChildrenCount() == 0 || isCaptured())
+			while (true) {
+				_children[i]->handleEvent(event);
+
+				if (event->isHandled() || i == 0)
+					break;
+
+				i--;
+			}
+		}
+
+		if (event->isHandled() || isCaptured())
 			return;
 
-		size_t i = getChildrenCount() - 1;
-
-		while (true) {
-			_children[i]->handleEvent(event);
-
-			if (event->isHandled() || i == 0)
-				return;
-
-			i--;
-		}
+		Element::handleEvent(event);
 	}
 
 	size_t Layout::getChildrenCount() const {

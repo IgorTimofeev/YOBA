@@ -31,7 +31,6 @@ namespace YOBA {
 	void Application::setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid) {
 		setup(renderTarget, renderer);
 
-		hid->setup();
 		addHID(hid);
 	}
 
@@ -109,7 +108,7 @@ namespace YOBA {
 	}
 
 	void Application::render() {
-		uint32_t time;
+		uint64_t time;
 
 		// Measuring children size
 		if (_measureInvalidated) {
@@ -187,7 +186,7 @@ namespace YOBA {
 			getCapturedElement()->handleEvent(event);
 		}
 		else {
-			Element::handleEvent(event);
+			Layout::handleEvent(event);
 		}
 	}
 
