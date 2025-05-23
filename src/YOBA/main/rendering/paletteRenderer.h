@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "YOBA/main/rendering/transactionalPixelBufferRenderer.h"
+#include <YOBA/main/rendering/transactionalPixelBufferRenderer.h>
 
 #ifdef ESP_PLATFORM
 	#include <esp_heap_caps.h>

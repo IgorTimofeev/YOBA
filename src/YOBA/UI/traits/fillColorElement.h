@@ -1,7 +1,7 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/main/color.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/main/color.h>
 
 namespace YOBA {
 	class FillColorElement : public virtual Element {

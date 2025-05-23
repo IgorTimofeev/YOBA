@@ -1,9 +1,7 @@
 #include "button.h"
 
 namespace YOBA {
-	void Button::onRender(Renderer* renderer) {
-		const auto& bounds = getBounds();
-
+	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
 		// Primary color
 		auto color = Color::select(isActive(), _defaultBackgroundColor, _activeBackgroundColor);
 
@@ -46,7 +44,7 @@ namespace YOBA {
 			}
 		}
 
-		Element::onRender(renderer);
+		Element::onRender(renderer, bounds);
 	}
 
 	void Button::onEvent(Event* event) {
@@ -88,6 +86,12 @@ namespace YOBA {
 
 			event->setHandled(true);
 		}
+	}
+
+	void Button::onIsActiveChanged() {
+		ActiveElement::onIsActiveChanged();
+
+		isActiveChanged();
 	}
 
 	bool Button::isToggle() const {

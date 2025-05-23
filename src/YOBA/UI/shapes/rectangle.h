@@ -1,10 +1,10 @@
 #pragma once
 
 #include "shape.h"
-#include "YOBA/main/color.h"
-#include "YOBA/main/rendering/renderer.h"
-#include "YOBA/UI/traits/borderElement.h"
-#include "YOBA/UI/traits/cornerRadiusElement.h"
+#include <YOBA/main/color.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/UI/traits/borderElement.h>
+#include <YOBA/UI/traits/cornerRadiusElement.h>
 
 namespace YOBA {
 	class Rectangle : public Shape, public BorderElement, public CornerRadiusElement {
@@ -15,8 +15,7 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				auto color = getFillColor();
 
 				if (color)

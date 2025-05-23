@@ -1,5 +1,5 @@
 #include "renderer.h"
-#include "YOBA/main/math.h"
+#include <YOBA/main/math.h>
 
 namespace YOBA {
 	RenderTarget* Renderer::getTarget() const {

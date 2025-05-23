@@ -1,5 +1,5 @@
 #include "RGB565PixelBufferRenderer.h"
-#include "YOBA/main/bounds.h"
+#include <YOBA/main/bounds.h>
 #include <string.h>
 
 namespace YOBA {

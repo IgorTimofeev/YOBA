@@ -2,7 +2,7 @@
 
 #include <esp_log.h>
 
-#include "YOBA/UI/element.h"
+#include <YOBA/UI/element.h>
 #include "animation.h"
 
 namespace YOBA {
@@ -28,11 +28,11 @@ namespace YOBA {
 		setRenderer(renderer);
 	}
 
-	void Application::setup(RenderTarget* renderTarget, Renderer* renderer, InputDevice* inputDevice) {
+	void Application::setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid) {
 		setup(renderTarget, renderer);
 
-		inputDevice->setup();
-		addInputDevice(inputDevice);
+		hid->setup();
+		addHID(hid);
 	}
 
 	void Application::invalidateMeasure() {
@@ -81,11 +81,11 @@ namespace YOBA {
 		// Resetting viewport just in case if some UI element broke it
 		_renderer->resetViewport();
 
-		// Handling input from devices like touchscreens, rotary encoders, etc.
+		// Handling input from HIDs like touchscreens, rotary encoders, etc.
 		auto time = system::getTime();
 
-		for (const auto inputDevice : _inputDevices)
-			inputDevice->tick(this);
+		for (const auto hid : _HIDs)
+			hid->tick();
 
 		_peripheralsDeltaTime = system::getTime() - time;
 
@@ -195,8 +195,8 @@ namespace YOBA {
 		return _renderer;
 	}
 
-	void Application::addInputDevice(InputDevice* inputDevice) {
-		_inputDevices.push_back(inputDevice);
+	void Application::addHID(HID* hid) {
+		_HIDs.push_back(hid);
 	}
 
 	void Application::scheduleOnTick(const std::function<void()>& task) {
@@ -219,11 +219,11 @@ namespace YOBA {
 		return _flushDeltaTime;
 	}
 
-	void Application::onRender(Renderer* renderer) {
+	void Application::onRender(Renderer* renderer, const Bounds& bounds) {
 		if (getBackgroundColor())
 			renderer->clear(getBackgroundColor());
 
-		Layout::onRender(renderer);
+		Layout::onRender(renderer, bounds);
 	}
 
 	uint32_t Application::getPeripheralsDeltaTime() const {

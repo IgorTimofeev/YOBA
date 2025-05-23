@@ -1,6 +1,6 @@
 #pragma once
 
-#include "YOBA/main/rendering/paletteRenderer.h"
+#include <YOBA/main/rendering/paletteRenderer.h>
 
 namespace YOBA {
 	class Bit8PaletteRenderer : public PaletteRenderer<uint8_t, uint16_t> {

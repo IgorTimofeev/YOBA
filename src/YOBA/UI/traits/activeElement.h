@@ -1,13 +1,11 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/main/callback.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/main/callback.h>
 
 namespace YOBA {
 	class ActiveElement : public virtual Element {
 		public:
-			Callback<> isActiveChanged;
-
 			bool isActive() const {
 				return _active;
 			}
@@ -19,7 +17,6 @@ namespace YOBA {
 				_active = value;
 
 				onIsActiveChanged();
-				isActiveChanged();
 
 				invalidate();
 			}

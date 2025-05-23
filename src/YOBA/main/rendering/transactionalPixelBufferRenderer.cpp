@@ -1,4 +1,4 @@
-#include "YOBA/main/rendering/transactionalPixelBufferRenderer.h"
+#include <YOBA/main/rendering/transactionalPixelBufferRenderer.h>
 
 namespace YOBA {
 	uint16_t TransactionalPixelBufferRenderer::computeTransactionBufferHeight() const {

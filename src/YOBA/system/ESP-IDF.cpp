@@ -1,4 +1,4 @@
-#include "YOBA/system.h"
+#include <YOBA/system.h>
 
 #ifdef YOBA_SYSTEM_ESPIDF
 
@@ -17,22 +17,20 @@
 namespace YOBA::system {
 	// -------------------------------- System --------------------------------
 
-	void sleep(uint32_t milliseconds) {
-		vTaskDelay(milliseconds / portTICK_PERIOD_MS);
+	void sleep(uint32_t interval) {
+		vTaskDelay(pdMS_TO_TICKS(interval / 1000));
 	}
 
 	uint32_t getTime() {
-		return static_cast<uint32_t>(esp_timer_get_time() / 1000ULL);
+		return static_cast<uint32_t>(esp_timer_get_time());
 	}
-
-	std::unordered_map<uint8_t, std::function<void()>> GPIO::_interruptHandlers = {};
 
 	// -------------------------------- GPIO --------------------------------
 
 	void GPIO::setMode(uint8_t pin, PinMode mode) {
 		const gpio_config_t config = {
 			.pin_bit_mask = 1ULL << pin,
-			.mode = mode == PinMode::Input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT,
+			.mode = mode == PinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT,
 			.pull_up_en = GPIO_PULLUP_ENABLE,
 			.pull_down_en = GPIO_PULLDOWN_DISABLE,
 			.intr_type = GPIO_INTR_DISABLE
@@ -49,18 +47,10 @@ namespace YOBA::system {
 		gpio_set_level(static_cast<gpio_num_t>(pin), value);
 	}
 
-	void GPIO::interruptHandler(void *args) {
-		const auto funcPtr = static_cast<std::function<void()>*>(args);
-
-		(*funcPtr)();
-	}
-
-	void GPIO::addInterruptHandler(uint8_t pin, const std::function<void()>& callback) {
-		_interruptHandlers.insert({pin, callback});
-
+	void GPIO::addInterruptHandler(uint8_t pin, const gpio_isr_t& callback, void* args) {
 		gpio_install_isr_service(0);
 		gpio_set_intr_type(static_cast<gpio_num_t>(pin), GPIO_INTR_ANYEDGE);
-		gpio_isr_handler_add(static_cast<gpio_num_t>(pin), interruptHandler, &_interruptHandlers[pin]);
+		gpio_isr_handler_add(static_cast<gpio_num_t>(pin), callback, args);
 	}
 
 	// -------------------------------- SPI --------------------------------
@@ -70,7 +60,7 @@ namespace YOBA::system {
 	// Note: SPI instance will manage slave select output by itself
 	void SPI::setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency) {
 		// GPIO
-		GPIO::setMode(ssPin, GPIO::PinMode::Output);
+		GPIO::setMode(ssPin, GPIO::PinMode::output);
 		GPIO::write(ssPin, true);
 
 		// Bus

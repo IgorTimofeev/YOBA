@@ -3,8 +3,7 @@
 #include <esp_log.h>
 
 namespace YOBA::spatial {
-	void Scene::onRender(Renderer* renderer) {
-		const auto& bounds = getBounds();
+	void Scene::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto projectionPlaneDistance = getProjectionPlaneDistance();
 
 		const SinAndCos worldRotationSinAndCos[3] = {

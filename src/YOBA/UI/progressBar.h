@@ -1,9 +1,9 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/main/event.h"
-#include "YOBA/main/math.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/UI/traits/cornerRadiusElement.h>
+#include <YOBA/main/event.h>
+#include <YOBA/main/math.h>
 
 namespace YOBA {
 	class ProgressBar : public CornerRadiusElement {
@@ -47,9 +47,7 @@ namespace YOBA {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
-
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				// Track
 				if (_trackColor && _value < 0xFFFF) {
 					renderer->renderFilledRectangle(
@@ -79,8 +77,8 @@ namespace YOBA {
 			}
 
 		private:
-			const Color* _trackColor;
-			const Color* _fillColor;
+			const Color* _trackColor = nullptr;
+			const Color* _fillColor = nullptr;
 
 			uint16_t _value = 0xFFFF;
 	};

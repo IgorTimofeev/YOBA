@@ -7,8 +7,8 @@
 /**************************************************************************/
 
 #include "FT6336UTouchPanel.h"
-#include "YOBA/system.h"
-#include "YOBA/UI/application.h"
+#include <YOBA/system.h>
+#include <YOBA/UI/application.h>
 
 namespace YOBA {
 	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin) :
@@ -25,17 +25,14 @@ namespace YOBA {
 		system::I2C::setup(_sdaPin, _sclPin, I2C_ADDR_FT6336U, 400000);
 
 		// Interrupt
-		system::GPIO::setMode(_intPin, system::GPIO::PinMode::Input);
-
-		system::GPIO::addInterruptHandler(_intPin, [this] {
-			_interrupted = true;
-		});
+		system::GPIO::setMode(_intPin, system::GPIO::PinMode::input);
+		system::GPIO::addInterruptHandler(_intPin, interruptHandler, this);
 
 		// Reset
 		if (_rstPin >= 0) {
-			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::Output);
+			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::output);
 			system::GPIO::write(_rstPin, false);
-			system::sleep(10);
+			system::sleep(10'000);
 			system::GPIO::write(_rstPin, true);
 		}
 
@@ -268,6 +265,12 @@ namespace YOBA {
 
 	// ------------------------------------------------------------------------
 
+	void FT6336UTouchPanel::interruptHandler(void* args) {
+		const auto instance = static_cast<FT6336UTouchPanel*>(args);
+
+		instance->_interrupted = true;
+	}
+
 	Point FT6336UTouchPanel::readOrientedPoint1(const RenderTarget* renderTarget) {
 		return renderTarget->orientPoint(Point(
 			read_touch1_x(),
@@ -282,11 +285,13 @@ namespace YOBA {
 		));
 	}
 
-	void FT6336UTouchPanel::tick(Application* application) {
+	void FT6336UTouchPanel::tick() {
 		if (!_interrupted)
 			return;
 
 		_interrupted = false;
+
+		const auto application = Application::getCurrent();
 
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;

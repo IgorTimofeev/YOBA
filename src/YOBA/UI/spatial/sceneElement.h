@@ -1,7 +1,7 @@
 #pragma once
 
-#include "YOBA/main/vector3.h"
-#include "YOBA/main/rendering/renderer.h"
+#include <YOBA/main/vector3.h>
+#include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA::spatial {
 	class Scene;

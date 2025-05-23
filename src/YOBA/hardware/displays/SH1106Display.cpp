@@ -1,5 +1,5 @@
 #include <cstdint>
-#include "YOBA/system.h"
+#include <YOBA/system.h>
 #include "SH1106Display.h"
 
 namespace YOBA {

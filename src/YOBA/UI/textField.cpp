@@ -21,8 +21,7 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onRender(Renderer* renderer) {
-		const auto& bounds = getBounds();
+	void TextField::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto focused = isFocused();
 
 		// Background
@@ -378,6 +377,12 @@ namespace YOBA {
 		}
 
 		invalidateRender();
+	}
+
+	void TextField::onTextChanged() {
+		TextElement::onTextChanged();
+
+		textChanged();
 	}
 
 	void TextField::showKeyboard() {

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/main/color.h"
-#include "YOBA/main/rendering/renderer.h"
-#include "YOBA/main/event.h"
-#include "YOBA/UI/traits/textElement.h"
-#include "YOBA/UI/traits/fontElement.h"
-#include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/UI/traits/fontScaleElement.h"
-#include "YOBA/UI/traits/activeElement.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/main/color.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/main/event.h>
+#include <YOBA/UI/traits/textElement.h>
+#include <YOBA/UI/traits/fontElement.h>
+#include <YOBA/UI/traits/cornerRadiusElement.h>
+#include <YOBA/UI/traits/fontScaleElement.h>
+#include <YOBA/UI/traits/activeElement.h>
 
 namespace YOBA {
 	class Button :
@@ -20,10 +20,7 @@ namespace YOBA {
 	{
 		public:
 			Callback<> click {};
-
-			void onRender(Renderer* renderer) override;
-
-			void onEvent(Event* event) override;
+			Callback<> isActiveChanged {};
 
 			bool isToggle() const;
 			void setToggle(bool value);
@@ -51,6 +48,12 @@ namespace YOBA {
 			void setContentMargin(const Margin& contentMargin);
 
 		protected:
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
+
+			void onEvent(Event* event) override;
+
+			void onIsActiveChanged() override;
+
 			virtual void onClick();
 
 		private:

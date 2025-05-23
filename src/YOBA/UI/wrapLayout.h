@@ -1,7 +1,7 @@
 #pragma once
 
 #include "layout.h"
-#include "YOBA/UI/traits/horizontalAndVerticalSpacingElement.h"
+#include <YOBA/UI/traits/horizontalAndVerticalSpacingElement.h>
 
 namespace YOBA {
 	class WrapLayout : public Layout, public HorizontalAndVerticalSpacingElement {
@@ -49,9 +49,7 @@ namespace YOBA {
 				return { width, height };
 			}
 
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
-
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				int32_t x = 0;
 				int32_t y = 0;
 				uint16_t lineHeight = 0;

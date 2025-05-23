@@ -1,9 +1,9 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/main/rendering/renderer.h"
-#include "YOBA/main/bounds.h"
-#include "YOBA/main/image.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/main/bounds.h>
+#include <YOBA/main/image.h>
 
 namespace YOBA {
 	class ImageView : public Element {
@@ -14,7 +14,7 @@ namespace YOBA {
 				setImage(image);
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				if (!getImage())
 					return;
 

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/UI/traits/textElement.h"
-#include "YOBA/UI/traits/fontElement.h"
-#include "YOBA/UI/traits/fontScaleElement.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/UI/traits/cornerRadiusElement.h>
+#include <YOBA/UI/traits/textElement.h>
+#include <YOBA/UI/traits/fontElement.h>
+#include <YOBA/UI/traits/fontScaleElement.h>
 #include "keyboard.h"
 
-#include "YOBA/main/callback.h"
-#include "YOBA/main/event.h"
-#include "YOBA/main/rendering/renderer.h"
+#include <YOBA/main/callback.h>
+#include <YOBA/main/event.h>
+#include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA {
 	class TextField :
@@ -20,11 +20,7 @@ namespace YOBA {
 	{
 		public:
 			Callback<KeyCode, std::wstring_view> input {};
-
-			void onTick() override;
-			void onRender(Renderer* renderer) override;
-			void onEvent(Event* event) override;
-			void onFocusChanged() override;
+			Callback<> textChanged {};
 
 			wchar_t getMask() const;
 			void setMask(wchar_t mask);
@@ -78,6 +74,12 @@ namespace YOBA {
 			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
 
 		protected:
+			void onTick() override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onEvent(Event* event) override;
+			void onFocusChanged() override;
+			void onTextChanged() override;
+
 			virtual void onInput(KeyCode keyCode, std::wstring_view text);
 
 		private:
@@ -85,14 +87,14 @@ namespace YOBA {
 			uint16_t _textMargin = 10;
 
 			uint32_t _cursorBlinkTime = 0;
-			uint32_t _cursorBlinkInterval = 500;
+			uint32_t _cursorBlinkInterval = 500'000;
 			bool _cursorBlinkState = false;
 			size_t _cursorPosition = 0;
 			Size _cursorSize = Size(2, 14);
 
 			uint16_t _scrollPosition = 0;
 			uint32_t _continuousScrollTime = 0;
-			uint32_t _continuousScrollInterval = 50;
+			uint32_t _continuousScrollInterval = 50'000;
 
 			const Color* _defaultBackgroundColor = nullptr;
 			const Color* _defaultTextColor = nullptr;

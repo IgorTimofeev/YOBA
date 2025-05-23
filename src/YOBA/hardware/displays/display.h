@@ -1,6 +1,6 @@
 #pragma once
 
-#include "YOBA/main/rendering/renderTarget.h"
+#include <YOBA/main/rendering/renderTarget.h>
 
 namespace YOBA {
 	// Maybe will be used in future

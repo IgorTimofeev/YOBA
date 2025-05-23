@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include "YOBA/hardware/displays/SPIDisplay.h"
-#include "YOBA/hardware/displays/invertibleDisplay.h"
-#include "YOBA/main/bounds.h"
+#include <YOBA/hardware/displays/SPIDisplay.h>
+#include <YOBA/hardware/displays/invertibleDisplay.h>
+#include <YOBA/main/bounds.h>
 
 namespace YOBA {
 	class ILI9341Display : public SPIDisplay, public InvertibleDisplay {

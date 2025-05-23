@@ -1,4 +1,4 @@
-#include "YOBA/UI/element.h"
+#include <YOBA/UI/element.h>
 
 #include <algorithm>
 #include <esp_log.h>
@@ -6,7 +6,7 @@
 #include "layout.h"
 #include "application.h"
 #include "animation.h"
-#include "YOBA/main/event.h"
+#include <YOBA/main/event.h>
 
 namespace YOBA {
 	Element::~Element() {
@@ -78,8 +78,8 @@ namespace YOBA {
 		const auto& margin = getMargin();
 
 		_measuredSize = onMeasure(Size(
-			availableSize.getWidth() - margin.getLeft() - margin.getRight(),
-			availableSize.getHeight() - margin.getTop() - margin.getBottom()
+			static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(availableSize.getWidth()) - margin.getLeft() - margin.getRight(), 0)),
+			static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(availableSize.getHeight()) - margin.getTop() - margin.getBottom(), 0))
 		));
 
 		// Horizontal
@@ -118,7 +118,7 @@ namespace YOBA {
 	) {
 		switch (alignment) {
 			case Alignment::start:
-				newSize = desiredSize - marginStart - marginEnd;
+				newSize = static_cast<int32_t>(desiredSize) - marginStart - marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
@@ -128,7 +128,7 @@ namespace YOBA {
 				break;
 
 			case Alignment::center:
-				newSize = desiredSize - marginStart - marginEnd;
+				newSize = static_cast<int32_t>(desiredSize) - marginStart - marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
@@ -138,7 +138,7 @@ namespace YOBA {
 				break;
 
 			case Alignment::end:
-				newSize = desiredSize - marginStart - marginEnd;
+				newSize = static_cast<int32_t>(desiredSize) - marginStart - marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
@@ -152,7 +152,7 @@ namespace YOBA {
 					newSize = bounds;
 				}
 				else {
-					newSize = desiredSize;
+					newSize = static_cast<int32_t>(desiredSize);
 				}
 
 				newSize = newSize - marginStart - marginEnd;
@@ -215,13 +215,13 @@ namespace YOBA {
 			// Copying viewport to restore it after render pass
 			const auto viewport = renderer->pushViewport(_bounds);
 
-			onRender(renderer);
+			onRender(renderer, _bounds);
 
 			// Restoring viewport
 			renderer->popViewport(viewport);
 		}
 		else {
-			onRender(renderer);
+			onRender(renderer, _bounds);
 		}
 	}
 
@@ -442,7 +442,7 @@ namespace YOBA {
 			application->invalidate();
 	}
 
-	void Element::onRender(Renderer* renderer) {
+	void Element::onRender(Renderer* renderer, const Bounds& bounds) {
 
 	}
 

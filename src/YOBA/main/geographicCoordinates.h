@@ -1,6 +1,6 @@
 #pragma once
 
-#include "YOBA/main/vector3.h"
+#include <YOBA/main/vector3.h>
 #include <cstdint>
 #include <cmath>
 #include <numbers>

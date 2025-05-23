@@ -1,9 +1,9 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/UI/traits/activeElement.h"
-#include "YOBA/UI/traits/cornerRadiusElement.h"
-#include "YOBA/main/event.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/UI/traits/activeElement.h>
+#include <YOBA/UI/traits/cornerRadiusElement.h>
+#include <YOBA/main/event.h>
 #include "animation.h"
 
 namespace YOBA {
@@ -14,6 +14,8 @@ namespace YOBA {
 			explicit Switch(bool checked) {
 				setActive(checked);
 			}
+
+			Callback<> isActiveChanged {};
 
 			const Color* getTrackColor() const {
 				return _trackColor;
@@ -46,9 +48,7 @@ namespace YOBA {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
-
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const uint16_t handleHalf = bounds.getHeight() / 2;
 				const uint16_t handleOffset = isActive() ? bounds.getWidth() - bounds.getHeight() : 0;
 				const uint16_t handleOffsetCenter = handleOffset + handleHalf;
@@ -105,6 +105,12 @@ namespace YOBA {
 				setActive(!isActive());
 
 				event->setHandled(true);
+			}
+
+			void onIsActiveChanged() override {
+				ActiveElement::onIsActiveChanged();
+
+				isActiveChanged();
 			}
 
 		private:

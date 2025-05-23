@@ -1,5 +1,5 @@
 #include "layout.h"
-#include "YOBA/main/event.h"
+#include <YOBA/main/event.h>
 #include <algorithm>
 #include <esp_log.h>
 
@@ -127,16 +127,20 @@ namespace YOBA {
 		insertChild(index >= 0 ? index : 0, child);
 	}
 
-	Element* Layout::operator[](size_t index) {
+	Element* Layout::operator[](size_t index) const {
 		return getChildAt(index);
 	}
 
-	void Layout::operator+=(Element* child) {
+	Layout& Layout::operator+=(Element* child) {
 		addChild(child);
+
+		return *this;
 	}
 
-	void Layout::operator-=(Element* child) {
+	Layout& Layout::operator-=(Element* child) {
 		removeChild(child);
+
+		return *this;
 	}
 
 	Size Layout::onMeasure(const Size& availableSize) {
@@ -158,10 +162,8 @@ namespace YOBA {
 		return result;
 	}
 
-	void Layout::onRender(Renderer* renderer) {
-		Element::onRender(renderer);
-
-		const auto& bounds = getBounds();
+	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
+		Element::onRender(renderer, bounds);
 
 		for (const auto child : _children) {
 			if (child->isVisible()) {

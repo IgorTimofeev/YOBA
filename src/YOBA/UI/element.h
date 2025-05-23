@@ -3,12 +3,12 @@
 #include <cstdint>
 #include <limits>
 
-#include "YOBA/system.h"
-#include "YOBA/main/callback.h"
-#include "YOBA/main/margin.h"
-#include "YOBA/main/bounds.h"
-#include "YOBA/main/size.h"
-#include "YOBA/main/rendering/renderer.h"
+#include <YOBA/system.h>
+#include <YOBA/main/callback.h>
+#include <YOBA/main/margin.h>
+#include <YOBA/main/bounds.h>
+#include <YOBA/main/size.h>
+#include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA {
 	class Event;
@@ -111,7 +111,7 @@ namespace YOBA {
 
 			virtual void onTick();
 			virtual Size onMeasure(const Size& availableSize);
-			virtual void onRender(Renderer* renderer);
+			virtual void onRender(Renderer* renderer, const Bounds& bounds);
 			virtual void onBoundsChanged();
 			virtual void onEvent(Event* event);
 

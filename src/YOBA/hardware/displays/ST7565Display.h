@@ -2,10 +2,10 @@
 
 #include <cstdint>
 #include "SPIDisplay.h"
-#include "YOBA/hardware/displays/contrastDisplay.h"
-#include "YOBA/hardware/displays/invertibleDisplay.h"
-#include "YOBA/main/size.h"
-#include "YOBA/main/bounds.h"
+#include <YOBA/hardware/displays/contrastDisplay.h>
+#include <YOBA/hardware/displays/invertibleDisplay.h>
+#include <YOBA/main/size.h>
+#include <YOBA/main/bounds.h>
 
 namespace YOBA {
 	class ST7565Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {

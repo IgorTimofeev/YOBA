@@ -1,6 +1,6 @@
 #pragma once
 
-#include "YOBA/main/rendering/pixelBufferRenderer.h"
+#include <YOBA/main/rendering/pixelBufferRenderer.h>
 
 namespace YOBA {
 	class TransactionalPixelBufferRenderer : public virtual PixelBufferRenderer {

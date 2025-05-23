@@ -11,8 +11,8 @@
 #include <cstdint>
 #include "touchPanel.h"
 #include "touchPoint.h"
-#include "YOBA/main/vector2.h"
-#include "YOBA/main/rendering/renderTarget.h"
+#include <YOBA/main/vector2.h>
+#include <YOBA/main/rendering/renderTarget.h>
 
 namespace YOBA {
 	class Application;
@@ -91,7 +91,7 @@ namespace YOBA {
 			FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin);
 
 			void setup() override;
-			void tick(Application* application) override;
+			void tick() override;
 
 			uint8_t read_device_mode();
 			void write_device_mode(DEVICE_MODE_Enum);
@@ -163,6 +163,8 @@ namespace YOBA {
 
 			bool _wasTouched = false;
 			bool _wasPinched = false;
+
+			static void interruptHandler(void* args);
 
 			Point readOrientedPoint1(const RenderTarget* renderTarget);
 			Point readOrientedPoint2(const RenderTarget* renderTarget);

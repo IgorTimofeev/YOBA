@@ -1,10 +1,10 @@
 #pragma once
 
-#include "YOBA/main/bounds.h"
-#include "YOBA/main/rendering/renderer.h"
-#include "YOBA/UI/element.h"
+#include <YOBA/main/bounds.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/UI/element.h>
 
-#include "YOBA/UI/spatial/sceneElement.h"
+#include <YOBA/UI/spatial/sceneElement.h>
 
 namespace YOBA::spatial {
 	class Scene : public virtual Element {
@@ -40,7 +40,7 @@ namespace YOBA::spatial {
 			void setFOVVertical(bool fovVertical);
 
 		protected:
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
 			std::vector<SceneElement*> _elements {};

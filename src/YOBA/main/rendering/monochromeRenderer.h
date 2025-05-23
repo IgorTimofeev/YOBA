@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include "YOBA/main/rendering/pixelBufferRenderer.h"
+#include <YOBA/main/rendering/pixelBufferRenderer.h>
 
 namespace YOBA {
 	class MonochromeRenderer : public PixelBufferRenderer {

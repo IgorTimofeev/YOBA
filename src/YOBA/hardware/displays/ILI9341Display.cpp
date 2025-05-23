@@ -1,5 +1,5 @@
 #include "ILI9341Display.h"
-#include "YOBA/system.h"
+#include <YOBA/system.h>
 #include <cstring>
 
 namespace YOBA {
@@ -182,7 +182,7 @@ namespace YOBA {
 
 		// Sleep out
 		this->writeCommandAndData(0x11, 0x00);
-		system::sleep(5);
+		system::sleep(5'000);
 	}
 
 	void ILI9341Display::onRotationChanged() {

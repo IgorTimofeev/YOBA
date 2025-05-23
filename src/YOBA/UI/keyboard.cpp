@@ -2,7 +2,7 @@
 #include "keyboard.h"
 #include "stackLayout.h"
 #include "application.h"
-#include "YOBA/main/math.h"
+#include <YOBA/main/math.h>
 
 namespace YOBA {
 	// ----------------------------- KeyboardKey -----------------------------
@@ -556,13 +556,11 @@ namespace YOBA {
 			: Size();
 	}
 
-	void KeyboardButtonsLayout::onRender(Renderer* renderer) {
+	void KeyboardButtonsLayout::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
 			return;
-
-		const auto& bounds = getBounds();
 
 		uint8_t buttonIndexFrom = 0;
 		uint8_t rowIndex = 0;

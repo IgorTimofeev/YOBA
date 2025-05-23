@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 #include "cstdlib"
-#include "YOBA/main/size.h"
+#include <YOBA/main/size.h>
 #include "glyph.h"
 
 namespace YOBA {

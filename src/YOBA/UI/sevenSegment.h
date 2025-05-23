@@ -1,10 +1,10 @@
 #pragma once
 
 #include "stackLayout.h"
-#include "YOBA/main/color.h"
-#include "YOBA/main/rendering/renderer.h"
+#include <YOBA/main/color.h>
+#include <YOBA/main/rendering/renderer.h>
 #include "cmath"
-#include "YOBA/UI/element.h"
+#include <YOBA/UI/element.h>
 
 namespace YOBA {
 	class SevenSegment : public Element {
@@ -18,9 +18,7 @@ namespace YOBA {
 				};
 			}
 
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
-
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				auto position = Point(
 					bounds.getX() + (getDigitWidth() + getSpacing()) * (getDigitCount() - 1),
 					bounds.getY()

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "YOBA/main/color.h"
-#include "YOBA/main/rendering/renderer.h"
+#include <YOBA/main/color.h>
+#include <YOBA/main/rendering/renderer.h>
 #include "shape.h"
 
 namespace YOBA {
@@ -13,13 +13,11 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto color = getFillColor();
 
 				if (!color)
 					return;
-
-				const auto& bounds = getBounds();
 
 				renderer->renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),

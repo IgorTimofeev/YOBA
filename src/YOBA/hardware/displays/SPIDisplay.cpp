@@ -1,5 +1,5 @@
 #include "SPIDisplay.h"
-#include "YOBA/system.h"
+#include <YOBA/system.h>
 
 namespace YOBA {
 	SPIDisplay::SPIDisplay(
@@ -32,12 +32,12 @@ namespace YOBA {
 		// Non-SPI GPIO
 
 		// Data/command pin
-		system::GPIO::setMode(_dcPin, system::GPIO::PinMode::Output);
+		system::GPIO::setMode(_dcPin, system::GPIO::PinMode::output);
 		setDataCommandPin(true);
 
 		// Reset pin
 		if (_rstPin >= 0) {
-			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::Output);
+			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::output);
 
 			toggleResetPin();
 		}
@@ -80,9 +80,9 @@ namespace YOBA {
 
 	void SPIDisplay::toggleResetPin() {
 		setResetPin(false);
-		system::sleep(100);
+		system::sleep(100'000);
 
 		setResetPin(true);
-		system::sleep(100);
+		system::sleep(100'000);
 	}
 }

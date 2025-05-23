@@ -122,8 +122,7 @@ namespace YOBA {
 				return result;
 			}
 
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto& measuredSize = getMeasuredSize();
 
 				if (_horizontalScrollMode == ScrollMode::disabled) {

@@ -1,10 +1,10 @@
 #pragma once
 
 #include "layout.h"
-#include "YOBA/main/font.h"
-#include "YOBA/main/rendering/renderer.h"
-#include "YOBA/main/inputDevice.h"
-#include "YOBA/UI/traits/backgroundColorElement.h"
+#include <YOBA/main/font.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/UI/traits/backgroundColorElement.h>
+#include <YOBA/hardware/HID.h>
 
 namespace YOBA {
 	class Application : public Layout, public BackgroundColorElement {
@@ -28,9 +28,9 @@ namespace YOBA {
 			// renderer->setTarget(&renderTarget);
 			// application.setRenderer(&renderer);
 			//
-			// inputDevice.setup();
-			// application.addInputDevice(&inputDevice);
-			void setup(RenderTarget* renderTarget, Renderer* renderer, InputDevice* inputDevice);
+			// hid.setup();
+			// application.addHID(&hid);
+			void setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid);
 
 			virtual void tick();
 			virtual void render();
@@ -45,7 +45,7 @@ namespace YOBA {
 			Renderer* getRenderer() const;
 			void setRenderer(Renderer* value);
 
-			void addInputDevice(InputDevice* inputDevice);
+			void addHID(HID* hid);
 
 			void scheduleOnTick(const std::function<void()>& task);
 
@@ -56,7 +56,7 @@ namespace YOBA {
 			uint32_t getPeripheralsDeltaTime() const;
 
 		protected:
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
 			static Application* _current;
@@ -68,7 +68,7 @@ namespace YOBA {
 			Element* _focusedElement = nullptr;
 
 			std::vector<Animation*> _animations {};
-			std::vector<InputDevice*> _inputDevices {};
+			std::vector<HID*> _HIDs {};
 			std::vector<std::function<void()>> _scheduledOnTickTasks {};
 
 			uint32_t _peripheralsDeltaTime = 0;

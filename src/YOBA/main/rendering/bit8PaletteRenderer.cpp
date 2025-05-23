@@ -1,5 +1,5 @@
 #include "bit8PaletteRenderer.h"
-#include "YOBA/main/bounds.h"
+#include <YOBA/main/bounds.h>
 
 namespace YOBA {
 	Bit8PaletteRenderer::Bit8PaletteRenderer(uint8_t paletteLength) : PaletteRenderer(paletteLength) {

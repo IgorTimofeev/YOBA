@@ -3,9 +3,9 @@
 #include <optional>
 #include <cstdint>
 #include "layout.h"
-#include "YOBA/UI/traits/fontElement.h"
+#include <YOBA/UI/traits/fontElement.h>
 #include "button.h"
-#include "YOBA/UI/shapes/rectangle.h"
+#include <YOBA/UI/shapes/rectangle.h>
 #include "relativeStackLayout.h"
 
 namespace YOBA {
@@ -329,7 +329,7 @@ namespace YOBA {
 		protected:
 			Size onMeasure(const Size& availableSize) override;
 
-			void onRender(Renderer* renderer) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
 			Keyboard* _keyboard;
@@ -440,8 +440,8 @@ namespace YOBA {
 			KeyboardCase _case = KeyboardCase::lower;
 
 			uint8_t _keyCornerRadius = 0;
-			uint16_t _continuousTypingDelay = 500;
-			uint16_t _continuousTypingInterval = 50;
+			uint32_t _continuousTypingDelay = 500'000;
+			uint32_t _continuousTypingInterval = 50'000;
 
 			int8_t _cyclicLayoutIndex = -1;
 			KeyboardLayout* _layout = nullptr;

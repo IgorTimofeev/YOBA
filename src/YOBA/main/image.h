@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "YOBA/main/size.h"
+#include <YOBA/main/size.h>
 
 namespace YOBA {
 	// I love C++

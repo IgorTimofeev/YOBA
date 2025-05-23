@@ -5,8 +5,6 @@
 namespace YOBA {
 	class TextElement : public virtual Element {
 		public:
-			Callback<> textChanged {};
-
 			std::wstring_view getText() const {
 				return _text;
 			}
@@ -15,7 +13,6 @@ namespace YOBA {
 				_text = value;
 
 				onTextChanged();
-				textChanged();
 
 				invalidate();
 			}

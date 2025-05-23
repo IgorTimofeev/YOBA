@@ -1,9 +1,9 @@
 #pragma once
 
-#include "YOBA/main/inputDevice.h"
+#include <YOBA/hardware/HID.h>
 
 namespace YOBA {
-	class TouchPanel : public InputDevice {
+	class TouchPanel : public HID {
 
 	};
 }

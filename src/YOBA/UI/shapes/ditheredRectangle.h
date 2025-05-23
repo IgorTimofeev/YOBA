@@ -1,8 +1,8 @@
 #pragma once
 
 #include "shape.h"
-#include "YOBA/main/color.h"
-#include "YOBA/main/rendering/renderer.h"
+#include <YOBA/main/color.h>
+#include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA {
 	class DitheredRectangle : public Shape {
@@ -13,7 +13,7 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto color = getFillColor();
 
 				if (color)

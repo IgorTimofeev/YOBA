@@ -2,30 +2,27 @@
 
 #include <cstdint>
 #include <functional>
+#include <driver/gpio.h>
+
 #include "driver/spi_master.h"
 #include "driver/i2c_master.h"
 
 namespace YOBA::system {
-	void sleep(uint32_t milliseconds);
+	void sleep(uint32_t interval);
 
 	uint32_t getTime();
 
 	class GPIO {
 		public:
 			enum class PinMode : uint8_t {
-				Input,
-				Output
+				input,
+				output
 			};
 
 			static void setMode(uint8_t pin, PinMode mode);
 			static bool read(uint8_t pin);
 			static void write(uint8_t pin, bool value);
-			static void addInterruptHandler(uint8_t pin, const std::function<void()>& callback);
-
-		private:
-			static IRAM_ATTR void interruptHandler(void *args);
-
-			static DRAM_ATTR std::unordered_map<uint8_t, std::function<void()>> _interruptHandlers;
+			static void addInterruptHandler(uint8_t pin, const gpio_isr_t& callback, void* args);
 	};
 
 	class SPI {

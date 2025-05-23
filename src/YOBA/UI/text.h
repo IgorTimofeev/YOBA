@@ -1,12 +1,12 @@
 #pragma once
 
-#include "YOBA/UI/element.h"
-#include "YOBA/UI/traits/textElement.h"
-#include "YOBA/UI/traits/textColorElement.h"
-#include "YOBA/UI/traits/fontElement.h"
-#include "YOBA/UI/traits/fontScaleElement.h"
-#include "YOBA/main/rendering/renderer.h"
-#include "YOBA/main/size.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/UI/traits/textElement.h>
+#include <YOBA/UI/traits/textColorElement.h>
+#include <YOBA/UI/traits/fontElement.h>
+#include <YOBA/UI/traits/fontScaleElement.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/main/size.h>
 
 namespace YOBA {
 	class Text : public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
@@ -76,7 +76,7 @@ namespace YOBA {
 				}
 			}
 
-			void onRender(Renderer* renderer) override {
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto font = getFont();
 
 				if (!font)

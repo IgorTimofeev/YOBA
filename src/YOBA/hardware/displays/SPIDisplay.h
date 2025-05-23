@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "YOBA/hardware/displays/display.h"
+#include <YOBA/hardware/displays/display.h>
 
 namespace YOBA {
 	class SPIDisplay : public virtual Display {

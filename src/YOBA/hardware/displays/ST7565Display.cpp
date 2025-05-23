@@ -1,5 +1,5 @@
 #include "ST7565Display.h"
-#include "YOBA/system.h"
+#include <YOBA/system.h>
 #include <cstdint>
 
 namespace YOBA {
@@ -47,17 +47,17 @@ namespace YOBA {
 		// turn on voltage converter (VC=1, VR=0, VF=0)
 		writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x4);
 		// wait for 50% rising
-		system::sleep(50);
+		system::sleep(50'000);
 
 		// turn on voltage regulator (VC=1, VR=1, VF=0)
 		writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x6);
 		// wait >=50ms
-		system::sleep(50);
+		system::sleep(50'000);
 
 		// turn on voltage follower (VC=1, VR=1, VF=1)
 		writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x7);
 		// wait
-		system::sleep(10);
+		system::sleep(10'000);
 
 		// set lcd operating voltage (regulator resistor, ref voltage resistor)
 		writeCommand(static_cast<uint8_t>(Command::SET_RESISTOR_RATIO) | 0x6);

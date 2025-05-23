@@ -1,8 +1,8 @@
 #pragma once
 
 #include "layout.h"
-#include "YOBA/UI/traits/orientationElement.h"
-#include "YOBA/UI/traits/spacingElement.h"
+#include <YOBA/UI/traits/orientationElement.h>
+#include <YOBA/UI/traits/spacingElement.h>
 
 namespace YOBA {
 	class StackLayout : public Layout, public OrientationElement, public SpacingElement {
@@ -88,9 +88,7 @@ namespace YOBA {
 				return result;
 			}
 
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
-
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				int32_t position;
 
 				switch (getOrientation()) {

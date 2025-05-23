@@ -1,9 +1,9 @@
 #pragma once
 
 #include <algorithm>
-#include "YOBA/UI/element.h"
-#include "YOBA/main/event.h"
-#include "YOBA/main/math.h"
+#include <YOBA/UI/element.h>
+#include <YOBA/main/event.h>
+#include <YOBA/main/math.h>
 
 namespace YOBA {
 	class Slider : public Element {
@@ -97,8 +97,7 @@ namespace YOBA {
 			}
 
 		protected:
-			void onRender(Renderer* renderer) override {
-				const auto& bounds = getBounds();
+			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				const auto handleHalf = _handleSize / 2;
 				const auto trackY = bounds.getY() + handleHalf - _trackSize / 2;
 				const auto handleCenterLocal = handleHalf + static_cast<uint16_t>(std::round(_value * (bounds.getWidth() - bounds.getHeight()) / 0xFFFF));
