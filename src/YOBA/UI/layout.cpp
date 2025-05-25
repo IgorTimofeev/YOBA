@@ -15,23 +15,27 @@ namespace YOBA {
 	}
 
 	void Layout::handleEvent(Event* event) {
+		Element::handleEvent(event);
+
+		// Event was handled or layout got capture
+		if (event->isHandled() || isCaptured())
+			return;
+
 		if (getChildrenCount() > 0) {
 			size_t i = getChildrenCount() - 1;
 
 			while (true) {
-				_children[i]->handleEvent(event);
+				const auto child = _children[i];
 
-				if (event->isHandled() || i == 0)
+				child->handleEvent(event);
+
+				// Event was handled, element got capture or end of elements reached
+				if (event->isHandled() || child->isCaptured() || i == 0)
 					break;
 
 				i--;
 			}
 		}
-
-		if (event->isHandled() || isCaptured())
-			return;
-
-		Element::handleEvent(event);
 	}
 
 	size_t Layout::getChildrenCount() const {

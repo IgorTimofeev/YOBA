@@ -207,11 +207,15 @@ namespace YOBA {
 				);
 			}
 
+			void onCaptureChanged() override {
+				Layout::onCaptureChanged();
+
+				if (!isCaptured())
+					_lastTouchPosition.setX(-1);
+			}
+
 			void onEvent(Event* event) override {
 				Layout::onEvent(event);
-				
-				if (event->isHandled())
-					return;
 
 				const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
 				const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
@@ -224,11 +228,11 @@ namespace YOBA {
 
 				if (isTouchDown) {
 					_lastTouchPosition = touchPosition;
-
-					setCaptured(true);
 				}
 				else if (isTouchDrag) {
 					if (_lastTouchPosition.getX() >= 0) {
+						setCaptured(true);
+
 						const auto touchDelta = touchPosition - _lastTouchPosition;
 						_lastTouchPosition = touchPosition;
 
@@ -240,8 +244,6 @@ namespace YOBA {
 					}
 				}
 				else {
-					_lastTouchPosition.setX(-1);
-
 					setCaptured(false);
 				}
 			}

@@ -51,8 +51,6 @@ namespace YOBA {
 
 	void Button::onEvent(Event* event) {
 		if (event->getTypeID() == TouchDownEvent::typeID) {
-			ESP_LOGI("BUTTON", "down");
-
 			setCaptured(true);
 			setFocused(true);
 
