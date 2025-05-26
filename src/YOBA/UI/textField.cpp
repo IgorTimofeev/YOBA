@@ -136,26 +136,27 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onEvent(Event* event) {
-		const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
-		const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
-		const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
+	void TextField::onTouchDown(TouchDownEvent* event) {
+		setCaptured(true);
+		setFocused(true);
 
-		if (!(isTouchDown || isTouchUp || isTouchDrag))
-			return;
-
-		if (isTouchDown) {
-			setCaptured(true);
-			setFocused(true);
-		}
-		else if (isTouchUp) {
-			setCaptured(false);
-			return;
-		}
-
-		_lastTouchX = static_cast<TouchEvent*>(event)->getPosition().getX();
+		_lastTouchX = event->getPosition().getX();
 
 		applyContinuousScroll();
+
+		event->setHandled(true);
+	}
+
+	void TextField::onTouchDrag(TouchDragEvent* event) {
+		_lastTouchX = event->getPosition().getX();
+
+		applyContinuousScroll();
+
+		event->setHandled(true);
+	}
+
+	void TextField::onTouchUp(TouchUpEvent* event) {
+		setCaptured(false);
 
 		event->setHandled(true);
 	}

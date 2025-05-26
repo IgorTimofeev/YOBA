@@ -181,12 +181,12 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Application::handleEvent(Event* event) {
+	void Application::pushEvent(Event* event) {
 		if (getCapturedElement()) {
-			getCapturedElement()->handleEvent(event);
+			getCapturedElement()->pushEvent(event);
 		}
 		else {
-			Layout::handleEvent(event);
+			Layout::pushEvent(event);
 		}
 	}
 

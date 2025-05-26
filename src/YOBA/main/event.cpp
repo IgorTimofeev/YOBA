@@ -22,13 +22,6 @@ namespace YOBA {
 
 	void Event::setHandled(bool handled) {
 		_handled = handled;
-
-		// ESP_LOGI("SerHANDLED", "event");
-		// esp_backtrace_print(10);
-	}
-
-	bool Event::matches(Element* element) {
-		return true;
 	}
 
 	uint16_t Event::getTypeID() const {
@@ -45,10 +38,6 @@ namespace YOBA {
 
 	ScreenEvent::ScreenEvent(uint16_t& staticTypeID) : InputEvent(staticTypeID) {
 
-	}
-
-	bool ScreenEvent::matches(Element* element) {
-		return element->isVisible() && element->isEnabled();
 	}
 
 	bool ScreenEvent::isScreen(const Event* event) {
@@ -71,21 +60,19 @@ namespace YOBA {
 
 	}
 
-	bool TouchEvent::matches(Element* element) {
-		return
-			ScreenEvent::matches(element)
-			&& (
-				element->isCaptured()
-				|| element->getBounds().intersects(_position)
-			);
-	}
-
 	const Point& TouchEvent::getPosition() const {
 		return _position;
 	}
 
 	void TouchEvent::setPosition(const Point& position) {
 		_position = position;
+	}
+
+	bool TouchEvent::isTouch(const Event* event) {
+		return
+			event->getTypeID() == TouchDownEvent::typeID
+			|| event->getTypeID() == TouchDragEvent::typeID
+			|| event->getTypeID() == TouchUpEvent::typeID;
 	}
 
 	TouchDownEvent::TouchDownEvent(const Point& position) : TouchEvent(
@@ -139,21 +126,15 @@ namespace YOBA {
 		return (_position2 - _position1).getLength();
 	}
 
-	void PinchEvent::setPosition2(const Point& position2) {
-		_position2 = position2;
+	bool PinchEvent::isPinch(const Event* event) {
+		return
+			event->getTypeID() == PinchDownEvent::typeID
+			|| event->getTypeID() == PinchDragEvent::typeID
+			|| event->getTypeID() == PinchUpEvent::typeID;
 	}
 
-	bool PinchEvent::matches(Element* element) {
-		return
-			ScreenEvent::matches(element)
-			&& (
-				element->isCaptured()
-				||
-				(
-					element->getBounds().intersects(_position1)
-					&& element->getBounds().intersects(_position2)
-				)
-			);
+	void PinchEvent::setPosition2(const Point& position2) {
+		_position2 = position2;
 	}
 
 	PinchDownEvent::PinchDownEvent(const Point& position1, const Point& position2) : PinchEvent(

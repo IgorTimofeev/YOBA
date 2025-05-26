@@ -96,12 +96,7 @@ namespace YOBA {
 				}
 			}
 
-			void onEvent(Event* event) override {
-				Element::onEvent(event);
-
-				if (event->getTypeID() != TouchDownEvent::typeID)
-					return;
-
+			void onTouchUp(TouchUpEvent* event) override {
 				setActive(!isActive());
 
 				event->setHandled(true);

@@ -65,7 +65,7 @@ namespace YOBA {
 			const int32_t rps = _rotation * static_cast<int32_t>(1'000'000) / static_cast<int32_t>(deltaTime);
 
 			auto event = RotaryEncoderRotationEvent(rps);
-			application->handleEvent(&event);
+			application->pushEvent(&event);
 
 			_rotation = 0;
 		}
@@ -73,7 +73,7 @@ namespace YOBA {
 		// Push
 		if (_pressed != _previousPressed) {
 			auto event = RotaryEncoderSwitchEvent(_pressed);
-			application->handleEvent(&event);
+			application->pushEvent(&event);
 
 			_previousPressed = _pressed;
 		}

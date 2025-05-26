@@ -43,7 +43,7 @@ namespace YOBA {
 			void setSelector(Selector *value);
 
 		protected:
-			void onEvent(Event* event) override;
+			void onTouchUp(TouchUpEvent* event) override;
 
 		private:
 			Selector* _selector = nullptr;

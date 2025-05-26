@@ -214,38 +214,28 @@ namespace YOBA {
 					_lastTouchPosition.setX(-1);
 			}
 
-			void onEvent(Event* event) override {
-				Layout::onEvent(event);
+			void onTouchDown(TouchDownEvent* event) override {
+				_lastTouchPosition = static_cast<TouchDownEvent*>(event)->getPosition();
+			}
 
-				const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
-				const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
-				const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
+			void onTouchDrag(TouchDragEvent* event) override {
+				if (_lastTouchPosition.getX() >= 0) {
+					setCaptured(true);
 
-				if (!(isTouchDown || isTouchUp || isTouchDrag))
-					return;
+					const auto position = static_cast<TouchDragEvent*>(event)->getPosition();
+					const auto touchDelta = position - _lastTouchPosition;
+					_lastTouchPosition = position;
 
-				const auto& touchPosition = static_cast<TouchEvent*>(event)->getPosition();
+					if (_horizontalScrollPossible)
+						scrollHorizontallyBy(-touchDelta.getX());
 
-				if (isTouchDown) {
-					_lastTouchPosition = touchPosition;
+					if (_verticalScrollPossible)
+						scrollVerticallyBy(-touchDelta.getY());
 				}
-				else if (isTouchDrag) {
-					if (_lastTouchPosition.getX() >= 0) {
-						setCaptured(true);
+			}
 
-						const auto touchDelta = touchPosition - _lastTouchPosition;
-						_lastTouchPosition = touchPosition;
-
-						if (_horizontalScrollPossible)
-							scrollHorizontallyBy(-touchDelta.getX());
-
-						if (_verticalScrollPossible)
-							scrollVerticallyBy(-touchDelta.getY());
-					}
-				}
-				else {
-					setCaptured(false);
-				}
+			void onTouchUp(TouchUpEvent* event) override {
+				setCaptured(false);
 			}
 
 			void scrollHorizontallyBy(int32_t delta) {

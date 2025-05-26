@@ -3,6 +3,46 @@
 #include <esp_log.h>
 
 namespace YOBA {
+	void Button::onTouchDown(TouchDownEvent* event) {
+		_wasDown = true;
+		_previousIsActive = isActive();
+		setActive(true);
+
+		event->setHandled(true);
+	}
+
+	void Button::onTouchUp(TouchUpEvent* event) {
+		if (!_wasDown)
+			return;
+
+		if (_isToggle) {
+			setActive(!isActive());
+		}
+		else {
+			setActive(false);
+		}
+
+		callOnClick();
+
+		_wasDown = false;
+
+		event->setHandled(true);
+	}
+
+	void Button::onTouchOverChanged() {
+		if (!_wasDown || isTouchOver())
+			return;
+
+		if (_isToggle) {
+			setActive(!_previousIsActive);
+		}
+		else {
+			setActive(false);
+		}
+
+		_wasDown = false;
+	}
+
 	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
 		// Primary color
 		auto color = Color::select(isActive(), _defaultBackgroundColor, _activeBackgroundColor);
@@ -47,47 +87,6 @@ namespace YOBA {
 		}
 
 		Element::onRender(renderer, bounds);
-	}
-
-	void Button::onEvent(Event* event) {
-		if (event->getTypeID() == TouchDownEvent::typeID) {
-			setCaptured(true);
-			setFocused(true);
-
-			_wasDown = true;
-			_previousIsActive = isActive();
-			setActive(true);
-
-			event->setHandled(true);
-		}
-		else if (event->getTypeID() == TouchUpEvent::typeID) {
-			if (!_wasDown)
-				return;
-
-			const auto touchUpEvent = static_cast<TouchUpEvent*>(event);
-			const auto inBounds = getBounds().intersects(touchUpEvent->getPosition());
-
-			if (_isToggle) {
-				if (inBounds) {
-					setActive(!_previousIsActive);
-					callOnClick();
-				}
-				else {
-					setActive(_previousIsActive);
-				}
-			}
-			else {
-				setActive(false);
-
-				if (inBounds)
-					callOnClick();
-			}
-
-			setCaptured(false);
-			_wasDown = false;
-
-			event->setHandled(true);
-		}
 	}
 
 	void Button::onIsActiveChanged() {

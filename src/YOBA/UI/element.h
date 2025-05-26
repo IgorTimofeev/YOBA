@@ -7,6 +7,7 @@
 #include <YOBA/main/callback.h>
 #include <YOBA/main/margin.h>
 #include <YOBA/main/bounds.h>
+#include <YOBA/main/event.h>
 #include <YOBA/main/size.h>
 #include <YOBA/main/rendering/renderer.h>
 
@@ -44,8 +45,8 @@ namespace YOBA {
 			void measure(const Size& availableSize);
 			void render(Renderer* renderer, const Bounds& bounds);
 
-			virtual void handleEvent(Event* event);
-
+			virtual void pushEvent(Event* event);
+			bool isTouchOver() const;
 			virtual void invalidateRender();
 			virtual void invalidateMeasure();
 			virtual void invalidate();
@@ -115,6 +116,16 @@ namespace YOBA {
 			virtual void onBoundsChanged();
 			virtual void onEvent(Event* event);
 
+			virtual void onTouchDown(TouchDownEvent* event);
+			virtual void onTouchDrag(TouchDragEvent* event);
+			virtual void onTouchUp(TouchUpEvent* event);
+
+			virtual void onPinchDown(PinchDownEvent* event);
+			virtual void onPinchDrag(PinchDragEvent* event);
+			virtual void onPinchUp(PinchUpEvent* event);
+
+			virtual void onTouchOverChanged();
+
 		private:
 			bool _isVisible = true;
 			bool _isEnabled = true;
@@ -131,6 +142,8 @@ namespace YOBA {
 
 			Bounds _bounds {};
 			Size _measuredSize {};
+
+			void setTouchOver(bool state);
 
 			static uint16_t computeMeasureShit(
 				uint16_t size,

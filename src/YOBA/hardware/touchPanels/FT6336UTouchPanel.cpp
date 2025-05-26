@@ -316,7 +316,7 @@ namespace YOBA {
 							_touchPoints[1].getPosition()
 						);
 
-						application->handleEvent(&event);
+						application->pushEvent(&event);
 					}
 				}
 				// Pinch down
@@ -334,7 +334,7 @@ namespace YOBA {
 						_touchPoints[1].getPosition()
 					);
 
-					application->handleEvent(&event);
+					application->pushEvent(&event);
 				}
 			}
 			else {
@@ -350,7 +350,7 @@ namespace YOBA {
 						_touchPoints[1].getPosition()
 					);
 
-					application->handleEvent(&event);
+					application->pushEvent(&event);
 				}
 				// Touch drag
 				else if (_wasTouched) {
@@ -363,7 +363,7 @@ namespace YOBA {
 							_touchPoints[0].getPosition()
 						);
 
-						application->handleEvent(&event);
+						application->pushEvent(&event);
 					}
 				}
 				// Touch down
@@ -377,7 +377,7 @@ namespace YOBA {
 						_touchPoints[0].getPosition()
 					);
 
-					application->handleEvent(&event);
+					application->pushEvent(&event);
 				}
 			}
 		}
@@ -394,7 +394,7 @@ namespace YOBA {
 					_touchPoints[1].getPosition()
 				);
 
-				application->handleEvent(&event);
+				application->pushEvent(&event);
 			}
 
 			// Touch up
@@ -408,7 +408,7 @@ namespace YOBA {
 					_touchPoints[0].getPosition()
 				);
 
-				application->handleEvent(&event);
+				application->pushEvent(&event);
 			}
 		}
 	}

@@ -157,27 +157,24 @@ namespace YOBA {
 				}
 			}
 
-			void onEvent(Event* event) override {
-				const auto isTouchDown = event->getTypeID() == TouchDownEvent::typeID;
-				const auto isTouchUp = event->getTypeID() == TouchUpEvent::typeID;
-				const auto isTouchDrag = event->getTypeID() == TouchDragEvent::typeID;
+			void onTouchDown(TouchDownEvent* event) override {
+				setCaptured(true);
+				setFocused(true);
 
-				if (!(isTouchDown || isTouchUp || isTouchDrag))
-					return;
+				event->setHandled(true);
+			}
 
-				if (isTouchDown) {
-					setCaptured(true);
-					setFocused(true);
-				}
-				else if (isTouchUp) {
-					setCaptured(false);
-				}
-
+			void onTouchDrag(TouchDragEvent* event) override {
 				const auto& bounds = getBounds();
-				const int32_t localX = std::clamp(static_cast<TouchEvent*>(event)->getPosition().getX() - bounds.getX(), static_cast<int32_t>(0), static_cast<int32_t>(bounds.getWidth()));
+				const int32_t localX = std::clamp(event->getPosition().getX() - bounds.getX(), static_cast<int32_t>(0), static_cast<int32_t>(bounds.getWidth()));
 
 				setValue(localX * 0xFFFF / bounds.getWidth());
 
+				event->setHandled(true);
+			}
+
+			void onTouchUp(TouchUpEvent* event) override {
+				setCaptured(false);
 				event->setHandled(true);
 			}
 

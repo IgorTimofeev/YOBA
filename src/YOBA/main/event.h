@@ -17,8 +17,6 @@ namespace YOBA {
 			explicit Event(uint16_t& staticTypeID);
 			virtual ~Event() = default;
 
-			virtual bool matches(Element* element);
-
 			bool isHandled() const;
 			void setHandled(bool handled);
 			uint16_t getTypeID() const;
@@ -43,8 +41,6 @@ namespace YOBA {
 		public:
 			explicit ScreenEvent(uint16_t& staticTypeID);
 
-			bool matches(Element* element) override;
-
 			static bool isScreen(const Event* event);
 	};
 
@@ -54,10 +50,10 @@ namespace YOBA {
 		public:
 			TouchEvent(uint16_t& staticTypeID, const Point& position);
 
-			bool matches(Element* element) override;
-
 			const Point& getPosition() const;
 			void setPosition(const Point& position);
+
+			static bool isTouch(const Event* event);
 
 		private:
 			Point _position;
@@ -88,8 +84,6 @@ namespace YOBA {
 		public:
 			PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2);
 
-			bool matches(Element* element) override;
-
 			const Point& getPosition1() const;
 			void setPosition1(const Point& position1);
 
@@ -97,6 +91,8 @@ namespace YOBA {
 			void setPosition2(const Point& position2);
 
 			float getLength() const;
+
+			static bool isPinch(const Event* event);
 
 		private:
 			Point _position1, _position2;

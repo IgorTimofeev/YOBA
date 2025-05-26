@@ -9,6 +9,7 @@
 namespace YOBA {
 	class Application : public Layout, public BackgroundColorElement {
 		friend class Element;
+		friend class Layout;
 
 		public:
 			static Application* getCurrent();
@@ -39,7 +40,7 @@ namespace YOBA {
 			void invalidateRender() override;
 			void invalidate() override;
 
-			void handleEvent(Event* event) override;
+			void pushEvent(Event* event) override;
 			void startAnimation(Animation* animation) override;
 
 			Renderer* getRenderer() const;
@@ -66,6 +67,7 @@ namespace YOBA {
 			bool _measureInvalidated = true;
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;
+			Element* _touchOverElement = nullptr;
 
 			std::vector<Animation*> _animations {};
 			std::vector<HID*> _HIDs {};

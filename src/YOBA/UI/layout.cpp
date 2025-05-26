@@ -10,32 +10,51 @@ namespace YOBA {
 		Element::onTick();
 
 		for (const auto element : _children)
-			if (element->isVisible())
-				element->onTick();
+			element->onTick();
 	}
 
-	void Layout::handleEvent(Event* event) {
-		Element::handleEvent(event);
+	void Layout::pushEvent(Event* event) {
+		Element::pushEvent(event);
 
-		// Event was handled or layout got capture
-		if (event->isHandled() || isCaptured())
+		if (!isVisible())
 			return;
 
-		if (getChildrenCount() > 0) {
+		onEventBeforeChildren(event);
+
+		if (!event->isHandled() && getChildrenCount() > 0) {
 			size_t i = getChildrenCount() - 1;
 
 			while (true) {
-				const auto child = _children[i];
+				_children[i]->pushEvent(event);
 
-				child->handleEvent(event);
-
-				// Event was handled, element got capture or end of elements reached
-				if (event->isHandled() || child->isCaptured() || i == 0)
+				if (event->isHandled() || i == 0)
 					break;
 
 				i--;
 			}
 		}
+
+		onEventAfterChildren(event);
+	}
+
+	void Layout::onTouchDown(TouchDownEvent* event) {
+
+	}
+
+	void Layout::onTouchDrag(TouchDragEvent* event) {
+
+	}
+
+	void Layout::onTouchUp(TouchUpEvent* event) {
+
+	}
+
+	void Layout::onEventBeforeChildren(Event* event) {
+
+	}
+
+	void Layout::onEventAfterChildren(Event* event) {
+
 	}
 
 	size_t Layout::getChildrenCount() const {

@@ -35,7 +35,14 @@ namespace YOBA {
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
-			void handleEvent(Event* event) override;
+
+			void pushEvent(Event* event) override;
+			void onTouchDown(TouchDownEvent* event) override;
+			void onTouchDrag(TouchDragEvent* event) override;
+			void onTouchUp(TouchUpEvent* event) override;
+
+			virtual void onEventBeforeChildren(Event* event);
+			virtual void onEventAfterChildren(Event* event);
 
 			virtual void onChildAdded(Element* child);
 			virtual void onChildRemoved(Element* child);

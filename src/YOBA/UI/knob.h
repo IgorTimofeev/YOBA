@@ -14,10 +14,6 @@ namespace YOBA {
 		public:
 			Callback<float, float> rotated;
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
-
-			void onEvent(Event* event) override;
-
 			float getAngle() const;
 			void setAngle(float angle);
 
@@ -30,15 +26,17 @@ namespace YOBA {
 			const Color* getMiddleColor() const;
 			void setMiddleColor(const Color* value);
 
+		protected:
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
+
+			void onTouchDown(TouchDownEvent* event) override;
+			void onTouchDrag(TouchDragEvent* event) override;
+			void onTouchUp(TouchUpEvent* event) override;
+
 		private:
 			float _angle = 0;
 			float _angleStep = toRadians(10);
 			const Color* _lineColor = nullptr;
 			const Color* _middleColor = nullptr;
-
-			template<typename Base, typename T>
-			inline bool instanceof(const T*) {
-				return std::is_base_of<Base, T>::value;
-			}
 	};
 }

@@ -87,10 +87,7 @@ namespace YOBA {
 
 	// -------------------------------- SelectorItem --------------------------------
 
-	void SelectorItem::onEvent(Event* event) {
-		if (!(event->getTypeID() == TouchDownEvent::typeID || event->getTypeID() == TouchDragEvent::typeID))
-			return;
-
+	void SelectorItem::onTouchUp(TouchUpEvent* event) {
 		setFocused(true);
 
 		if (getSelector())
