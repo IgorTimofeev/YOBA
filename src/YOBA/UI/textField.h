@@ -1,6 +1,6 @@
 #pragma once
 
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/UI/traits/textElement.h>
 #include <YOBA/UI/traits/fontElement.h>
@@ -13,6 +13,7 @@
 
 namespace YOBA {
 	class TextField :
+		public Control,
 		public CornerRadiusElement,
 		public TextElement,
 		public FontElement,

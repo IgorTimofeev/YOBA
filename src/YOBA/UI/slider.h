@@ -1,12 +1,12 @@
 #pragma once
 
 #include <algorithm>
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/main/event.h>
 #include <YOBA/main/math.h>
 
 namespace YOBA {
-	class Slider : public Element {
+	class Slider : public Control {
 		public:
 			Callback<> valueChanged;
 

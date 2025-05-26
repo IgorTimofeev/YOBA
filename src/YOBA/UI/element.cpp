@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <esp_log.h>
 
-#include "layout.h"
-#include "application.h"
-#include "animation.h"
+#include <YOBA/UI/animation.h>
+#include <YOBA/UI/layout.h>
+#include <YOBA/UI/application.h>
 #include <YOBA/main/event.h>
 
 namespace YOBA {
@@ -479,85 +479,11 @@ namespace YOBA {
 			application->_touchOverElement->onTouchOverChanged();
 	}
 
-	void Element::pushEvent(Event* event) {
-		if (!isVisible())
-			return;
-
-		onEvent(event);
-
-		if (TouchEvent::isTouch(event)) {
-			if (isCaptured() || getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition())) {
-				if (event->getTypeID() == TouchDownEvent::typeID) {
-					onTouchDown(reinterpret_cast<TouchDownEvent*>(event));
-				}
-				else if (event->getTypeID() == TouchDragEvent::typeID) {
-					onTouchDrag(reinterpret_cast<TouchDragEvent*>(event));
-				}
-				else if (event->getTypeID() == TouchUpEvent::typeID) {
-					onTouchUp(reinterpret_cast<TouchUpEvent*>(event));
-				}
-
-				if (event->isHandled()) {
-					setTouchOver(true);
-				}
-			}
-		}
-		else if (PinchEvent::isPinch(event)) {
-			const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-			const auto& bounds = getBounds();
-
-			if (isCaptured() || (bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2()))) {
-				if (event->getTypeID() == PinchDownEvent::typeID) {
-					onPinchDown(reinterpret_cast<PinchDownEvent*>(event));
-				}
-				else if (event->getTypeID() == PinchDragEvent::typeID) {
-					onPinchDrag(reinterpret_cast<PinchDragEvent*>(event));
-				}
-				else if (event->getTypeID() == PinchUpEvent::typeID) {
-					onPinchUp(reinterpret_cast<PinchUpEvent*>(event));
-				}
-
-				if (event->isHandled()) {
-					setTouchOver(true);
-				}
-			}
-
-		}
-	}
-
-	void Element::onEvent(Event* event) {
-
-	}
-
 	bool Element::isTouchOver() const {
 		return Application::getCurrent() ? Application::getCurrent()->_touchOverElement == this : false;
 	}
 
 	void Element::onTouchOverChanged() {
 
-	}
-
-	void Element::onTouchDown(TouchDownEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Element::onTouchDrag(TouchDragEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Element::onTouchUp(TouchUpEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Element::onPinchDown(PinchDownEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Element::onPinchDrag(PinchDragEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Element::onPinchUp(PinchUpEvent* event) {
-		event->setHandled(true);
 	}
 }

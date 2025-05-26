@@ -2,8 +2,6 @@
 #include "event.h"
 
 #include <esp_log.h>
-#include <YOBA/UI/element.h>
-
 namespace YOBA {
 	// -------------------------------- Event --------------------------------
 

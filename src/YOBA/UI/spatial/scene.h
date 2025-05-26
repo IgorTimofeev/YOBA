@@ -1,13 +1,13 @@
 #pragma once
 
+#include <YOBA/UI/control.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/rendering/renderer.h>
-#include <YOBA/UI/element.h>
 
 #include <YOBA/UI/spatial/sceneElement.h>
 
 namespace YOBA::spatial {
-	class Scene : public virtual Element {
+	class Scene : public Control {
 		public:
 			std::vector<SceneElement*>& getSceneElements();
 			void addElement(SceneElement* element);

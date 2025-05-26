@@ -1,7 +1,7 @@
 #pragma once
 
+#include <vector>
 #include <YOBA/UI/element.h>
-#include "vector"
 #include <YOBA/main/rendering/renderer.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/size.h>
@@ -37,12 +37,27 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			void pushEvent(Event* event) override;
-			void onTouchDown(TouchDownEvent* event) override;
-			void onTouchDrag(TouchDragEvent* event) override;
-			void onTouchUp(TouchUpEvent* event) override;
 
 			virtual void onEventBeforeChildren(Event* event);
 			virtual void onEventAfterChildren(Event* event);
+
+			virtual void onTouchDownBeforeChildren(TouchDownEvent* event);
+			virtual void onTouchDownAfterChildren(TouchDownEvent* event);
+
+			virtual void onTouchDragBeforeChildren(TouchDragEvent* event);
+			virtual void onTouchDragAfterChildren(TouchDragEvent* event);
+
+			virtual void onTouchUpBeforeChildren(TouchUpEvent* event);
+			virtual void onTouchUpAfterChildren(TouchUpEvent* event);
+
+			virtual void onPinchDownBeforeChildren(PinchDownEvent* event);
+			virtual void onPinchDownAfterChildren(PinchDownEvent* event);
+
+			virtual void onPinchDragBeforeChildren(PinchDragEvent* event);
+			virtual void onPinchDragAfterChildren(PinchDragEvent* event);
+
+			virtual void onPinchUpBeforeChildren(PinchUpEvent* event);
+			virtual void onPinchUpAfterChildren(PinchUpEvent* event);
 
 			virtual void onChildAdded(Element* child);
 			virtual void onChildRemoved(Element* child);

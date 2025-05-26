@@ -1,6 +1,6 @@
 #pragma once
 
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/textElement.h>
 #include <YOBA/UI/traits/textColorElement.h>
 #include <YOBA/UI/traits/fontElement.h>
@@ -9,7 +9,7 @@
 #include <YOBA/main/size.h>
 
 namespace YOBA {
-	class Text : public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
+	class Text : public Control, public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
 		public:
 			Text() = default;
 

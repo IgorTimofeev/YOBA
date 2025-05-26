@@ -1,6 +1,6 @@
 #pragma once
 
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/main/color.h>
 #include <YOBA/main/rendering/renderer.h>
 #include <YOBA/main/event.h>
@@ -12,6 +12,7 @@
 
 namespace YOBA {
 	class Button :
+		public Control,
 		public ActiveElement,
 		public TextElement,
 		public FontElement,

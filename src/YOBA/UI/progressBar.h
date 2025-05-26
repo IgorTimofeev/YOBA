@@ -1,12 +1,12 @@
 #pragma once
 
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/main/event.h>
 #include <YOBA/main/math.h>
 
 namespace YOBA {
-	class ProgressBar : public CornerRadiusElement {
+	class ProgressBar : public Control, public CornerRadiusElement {
 		public:
 			Callback<> valueChanged;
 

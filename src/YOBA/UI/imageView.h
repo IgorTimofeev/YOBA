@@ -6,7 +6,7 @@
 #include <YOBA/main/image.h>
 
 namespace YOBA {
-	class ImageView : public Element {
+	class ImageView : public Control {
 		public:
 			ImageView() = default;
 

@@ -1,11 +1,12 @@
 #pragma once
 
 #include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/UI/traits/orientationElement.h>
 
 namespace YOBA {
-	class ScrollBar : public OrientationElement, public CornerRadiusElement {
+	class ScrollBar : public Control, public OrientationElement, public CornerRadiusElement {
 		public:
 			uint16_t getPosition() const {
 				return _position;

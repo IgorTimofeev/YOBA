@@ -1,7 +1,8 @@
 #pragma once
 
 #include "scrollBar.h"
-#include "layout.h"
+
+#include <YOBA/UI/layout.h>
 #include <esp_log.h>
 
 namespace YOBA {
@@ -214,15 +215,15 @@ namespace YOBA {
 					_lastTouchPosition.setX(-1);
 			}
 
-			void onTouchDown(TouchDownEvent* event) override {
-				_lastTouchPosition = static_cast<TouchDownEvent*>(event)->getPosition();
+			void onTouchDownBeforeChildren(TouchDownEvent* event) override {
+				_lastTouchPosition = event->getPosition();
 			}
 
-			void onTouchDrag(TouchDragEvent* event) override {
+			void onTouchDragBeforeChildren(TouchDragEvent* event) override {
 				if (_lastTouchPosition.getX() >= 0) {
 					setCaptured(true);
 
-					const auto position = static_cast<TouchDragEvent*>(event)->getPosition();
+					const auto position = event->getPosition();
 					const auto touchDelta = position - _lastTouchPosition;
 					_lastTouchPosition = position;
 
@@ -234,7 +235,7 @@ namespace YOBA {
 				}
 			}
 
-			void onTouchUp(TouchUpEvent* event) override {
+			void onTouchUpBeforeChildren(TouchUpEvent* event) override {
 				setCaptured(false);
 			}
 

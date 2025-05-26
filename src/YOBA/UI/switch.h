@@ -1,13 +1,12 @@
 #pragma once
 
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/activeElement.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/main/event.h>
-#include "animation.h"
 
 namespace YOBA {
-	class Switch : public ActiveElement, public CornerRadiusElement {
+	class Switch : public Control, public ActiveElement, public CornerRadiusElement {
 		public:
 			Switch() = default;
 

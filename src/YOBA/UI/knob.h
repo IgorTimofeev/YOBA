@@ -1,6 +1,6 @@
 #pragma once
 
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/main/color.h>
 #include <YOBA/main/rendering/renderer.h>
 #include "cmath"
@@ -10,7 +10,7 @@
 #include <YOBA/main/math.h>
 
 namespace YOBA {
-	class Knob : public BackgroundColorElement {
+	class Knob : public Control, public BackgroundColorElement {
 		public:
 			Callback<float, float> rotated;
 

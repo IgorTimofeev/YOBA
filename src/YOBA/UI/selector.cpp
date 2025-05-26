@@ -87,7 +87,7 @@ namespace YOBA {
 
 	// -------------------------------- SelectorItem --------------------------------
 
-	void SelectorItem::onTouchUp(TouchUpEvent* event) {
+	void SelectorItem::onTouchUpBeforeChildren(TouchUpEvent* event) {
 		setFocused(true);
 
 		if (getSelector())

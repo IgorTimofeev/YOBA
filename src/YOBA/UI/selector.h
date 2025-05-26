@@ -1,7 +1,6 @@
 #pragma once
 
-#include "layout.h"
-#include "vector"
+#include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/activeElement.h>
 
 namespace YOBA {
@@ -43,7 +42,7 @@ namespace YOBA {
 			void setSelector(Selector *value);
 
 		protected:
-			void onTouchUp(TouchUpEvent* event) override;
+			void onTouchUpBeforeChildren(TouchUpEvent* event) override;
 
 		private:
 			Selector* _selector = nullptr;

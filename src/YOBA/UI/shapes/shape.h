@@ -1,10 +1,11 @@
 #pragma once
 
+#include <YOBA/UI/control.h>
 #include <YOBA/main/rendering/renderer.h>
 #include <YOBA/UI/traits/fillColorElement.h>
 
 namespace YOBA {
-	class Shape : public FillColorElement {
+	class Shape : public Control, public FillColorElement {
 
 	};
 }

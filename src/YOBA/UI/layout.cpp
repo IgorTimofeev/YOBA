@@ -14,10 +14,22 @@ namespace YOBA {
 	}
 
 	void Layout::pushEvent(Event* event) {
-		Element::pushEvent(event);
-
 		if (!isVisible())
 			return;
+
+		callEventSpecificFunctions(
+			this,
+
+			Layout::onTouchDownBeforeChildren,
+			Layout::onTouchDragBeforeChildren,
+			Layout::onTouchUpBeforeChildren,
+
+			Layout::onPinchDownBeforeChildren,
+			Layout::onPinchDragBeforeChildren,
+			Layout::onPinchUpBeforeChildren,
+
+			event
+		);
 
 		onEventBeforeChildren(event);
 
@@ -25,9 +37,16 @@ namespace YOBA {
 			size_t i = getChildrenCount() - 1;
 
 			while (true) {
-				_children[i]->pushEvent(event);
+				const auto child = _children[i];
 
-				if (event->isHandled() || i == 0)
+				if (child->isVisible()) {
+					child->pushEvent(event);
+
+					if (event->isHandled())
+						break;
+				}
+
+				if (i == 0)
 					break;
 
 				i--;
@@ -35,18 +54,20 @@ namespace YOBA {
 		}
 
 		onEventAfterChildren(event);
-	}
 
-	void Layout::onTouchDown(TouchDownEvent* event) {
+		callEventSpecificFunctions(
+			this,
 
-	}
+			Layout::onTouchDownAfterChildren,
+			Layout::onTouchDragAfterChildren,
+			Layout::onTouchUpAfterChildren,
 
-	void Layout::onTouchDrag(TouchDragEvent* event) {
+			Layout::onPinchDownAfterChildren,
+			Layout::onPinchDragAfterChildren,
+			Layout::onPinchUpAfterChildren,
 
-	}
-
-	void Layout::onTouchUp(TouchUpEvent* event) {
-
+			event
+		);
 	}
 
 	void Layout::onEventBeforeChildren(Event* event) {
@@ -54,6 +75,54 @@ namespace YOBA {
 	}
 
 	void Layout::onEventAfterChildren(Event* event) {
+
+	}
+
+	void Layout::onTouchDownBeforeChildren(TouchDownEvent* event) {
+
+	}
+
+	void Layout::onTouchDownAfterChildren(TouchDownEvent* event) {
+
+	}
+
+	void Layout::onTouchDragBeforeChildren(TouchDragEvent* event) {
+
+	}
+
+	void Layout::onTouchDragAfterChildren(TouchDragEvent* event) {
+
+	}
+
+	void Layout::onTouchUpBeforeChildren(TouchUpEvent* event) {
+
+	}
+
+	void Layout::onTouchUpAfterChildren(TouchUpEvent* event) {
+
+	}
+
+	void Layout::onPinchDownBeforeChildren(PinchDownEvent* event) {
+
+	}
+
+	void Layout::onPinchDownAfterChildren(PinchDownEvent* event) {
+
+	}
+
+	void Layout::onPinchDragBeforeChildren(PinchDragEvent* event) {
+
+	}
+
+	void Layout::onPinchDragAfterChildren(PinchDragEvent* event) {
+
+	}
+
+	void Layout::onPinchUpBeforeChildren(PinchUpEvent* event) {
+
+	}
+
+	void Layout::onPinchUpAfterChildren(PinchUpEvent* event) {
 
 	}
 

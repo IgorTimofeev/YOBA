@@ -31,11 +31,13 @@ namespace YOBA {
 	};
 
 	class Application;
+	class Control;
 	class Layout;
 
 	class Element {
 		friend Application;
 		friend Layout;
+		friend Control;
 
 		public:
 			Element() = default;
@@ -45,7 +47,8 @@ namespace YOBA {
 			void measure(const Size& availableSize);
 			void render(Renderer* renderer, const Bounds& bounds);
 
-			virtual void pushEvent(Event* event);
+			virtual void pushEvent(Event* event) = 0;
+
 			bool isTouchOver() const;
 			virtual void invalidateRender();
 			virtual void invalidateMeasure();
@@ -114,15 +117,6 @@ namespace YOBA {
 			virtual Size onMeasure(const Size& availableSize);
 			virtual void onRender(Renderer* renderer, const Bounds& bounds);
 			virtual void onBoundsChanged();
-			virtual void onEvent(Event* event);
-
-			virtual void onTouchDown(TouchDownEvent* event);
-			virtual void onTouchDrag(TouchDragEvent* event);
-			virtual void onTouchUp(TouchUpEvent* event);
-
-			virtual void onPinchDown(PinchDownEvent* event);
-			virtual void onPinchDrag(PinchDragEvent* event);
-			virtual void onPinchUp(PinchUpEvent* event);
 
 			virtual void onTouchOverChanged();
 
@@ -144,6 +138,21 @@ namespace YOBA {
 			Size _measuredSize {};
 
 			void setTouchOver(bool state);
+
+			template<typename TClass>
+			void callEventSpecificFunctions(
+				TClass* instance,
+
+				void(TClass::*onTouchDown)(TouchDownEvent* event),
+				void(TClass::*onTouchDrag)(TouchDragEvent* event),
+				void(TClass::*onTouchUp)(TouchUpEvent* event),
+
+				void(TClass::*onPinchDown)(PinchDownEvent* event),
+				void(TClass::*onPinchDrag)(PinchDragEvent* event),
+				void(TClass::*onPinchUp)(PinchUpEvent* event),
+
+				Event* event
+			);
 
 			static uint16_t computeMeasureShit(
 				uint16_t size,
@@ -167,4 +176,57 @@ namespace YOBA {
 				int32_t& newSize
 			);
 	};
+
+	template<typename TClass>
+	void Element::callEventSpecificFunctions(
+		TClass* instance,
+
+		void(TClass::*onTouchDown)(TouchDownEvent* event),
+		void(TClass::*onTouchDrag)(TouchDragEvent* event),
+		void(TClass::*onTouchUp)(TouchUpEvent* event),
+
+		void(TClass::*onPinchDown)(PinchDownEvent* event),
+		void(TClass::*onPinchDrag)(PinchDragEvent* event),
+		void(TClass::*onPinchUp)(PinchUpEvent* event),
+
+		Event* event
+	) {
+		if (TouchEvent::isTouch(event)) {
+			if (isCaptured() || getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition())) {
+				if (event->getTypeID() == TouchDownEvent::typeID) {
+					(instance->*onTouchDown)(reinterpret_cast<TouchDownEvent*>(event));
+				}
+				else if (event->getTypeID() == TouchDragEvent::typeID) {
+					(instance->*onTouchDrag)(reinterpret_cast<TouchDragEvent*>(event));
+				}
+				else if (event->getTypeID() == TouchUpEvent::typeID) {
+					(instance->*onTouchUp)(reinterpret_cast<TouchUpEvent*>(event));
+				}
+
+				if (event->isHandled()) {
+					setTouchOver(true);
+				}
+			}
+		}
+		else if (PinchEvent::isPinch(event)) {
+			const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
+			const auto& bounds = getBounds();
+
+			if (isCaptured() || (bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2()))) {
+				if (event->getTypeID() == PinchDownEvent::typeID) {
+					(instance->*onPinchDown)(reinterpret_cast<PinchDownEvent*>(event));
+				}
+				else if (event->getTypeID() == PinchDragEvent::typeID) {
+					(instance->*onPinchDrag)(reinterpret_cast<PinchDragEvent*>(event));
+				}
+				else if (event->getTypeID() == PinchUpEvent::typeID) {
+					(instance->*onPinchUp)(reinterpret_cast<PinchUpEvent*>(event));
+				}
+
+				if (event->isHandled()) {
+					setTouchOver(true);
+				}
+			}
+		}
+	}
 }

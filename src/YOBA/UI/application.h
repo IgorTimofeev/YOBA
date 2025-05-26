@@ -1,14 +1,14 @@
 #pragma once
 
-#include "layout.h"
-#include <YOBA/main/font.h>
 #include <YOBA/main/rendering/renderer.h>
+#include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/backgroundColorElement.h>
 #include <YOBA/hardware/HID.h>
 
 namespace YOBA {
 	class Application : public Layout, public BackgroundColorElement {
 		friend class Element;
+		friend class Control;
 		friend class Layout;
 
 		public:

@@ -4,10 +4,10 @@
 #include <YOBA/main/color.h>
 #include <YOBA/main/rendering/renderer.h>
 #include "cmath"
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 
 namespace YOBA {
-	class SevenSegment : public Element {
+	class SevenSegment : public Control {
 		public:
 			constexpr static uint32_t dashes = 0xFFFFFFFF;
 

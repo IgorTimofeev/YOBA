@@ -2,6 +2,7 @@
 
 // Main
 #include <YOBA/UI/element.h>
+#include <YOBA/UI/control.h>
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/application.h>
 #include <YOBA/UI/animation.h>
