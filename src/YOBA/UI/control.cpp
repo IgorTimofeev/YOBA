@@ -2,24 +2,29 @@
 
 namespace YOBA {
 	void Control::pushEvent(Event* event) {
-		if (!isVisible() || (checkForTouchEventAndUpdateIsTouchOver(event) && !isTouchOver() && !isCaptured()))
+		if (!isVisible() || !updateIsTouchOverAndCheckIfShouldHandleEvent(event))
 			return;
 
 		onEvent(event);
 
-		callScreenEventFunctions(
-			this,
-
-			&Control::onTouchDown,
-			&Control::onTouchDrag,
-			&Control::onTouchUp,
-
-			&Control::onPinchDown,
-			&Control::onPinchDrag,
-			&Control::onPinchUp,
-
-			event
-		);
+		if (event->getTypeID() == TouchDownEvent::typeID) {
+			onTouchDown(reinterpret_cast<TouchDownEvent*>(event));
+		}
+		else if (event->getTypeID() == TouchDragEvent::typeID) {
+			onTouchDrag(reinterpret_cast<TouchDragEvent*>(event));
+		}
+		else if (event->getTypeID() == TouchUpEvent::typeID) {
+			onTouchUp(reinterpret_cast<TouchUpEvent*>(event));
+		}
+		else if (event->getTypeID() == PinchDownEvent::typeID) {
+			onPinchDown(reinterpret_cast<PinchDownEvent*>(event));
+		}
+		else if (event->getTypeID() == PinchDragEvent::typeID) {
+			onPinchDrag(reinterpret_cast<PinchDragEvent*>(event));
+		}
+		else if (event->getTypeID() == PinchUpEvent::typeID) {
+			onPinchUp(reinterpret_cast<PinchUpEvent*>(event));
+		}
 	}
 
 	void Control::onEvent(Event* event) {

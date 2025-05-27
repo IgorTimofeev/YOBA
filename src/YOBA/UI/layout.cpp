@@ -17,24 +17,29 @@ namespace YOBA {
 		if (!isVisible())
 			return;
 
-		const auto callOnEvent = !checkForTouchEventAndUpdateIsTouchOver(event) || isTouchOver() || isCaptured();
+		const auto shouldHandle = updateIsTouchOverAndCheckIfShouldHandleEvent(event);
 
-		if (callOnEvent) {
+		if (shouldHandle) {
 			onEventBeforeChildren(event);
 
-			callScreenEventFunctions(
-				this,
-
-				&Layout::onTouchDownBeforeChildren,
-				&Layout::onTouchDragBeforeChildren,
-				&Layout::onTouchUpBeforeChildren,
-
-				&Layout::onPinchDownBeforeChildren,
-				&Layout::onPinchDragBeforeChildren,
-				&Layout::onPinchUpBeforeChildren,
-
-				event
-			);
+			if (event->getTypeID() == TouchDownEvent::typeID) {
+				onTouchDownBeforeChildren(reinterpret_cast<TouchDownEvent*>(event));
+			}
+			else if (event->getTypeID() == TouchDragEvent::typeID) {
+				onTouchDragBeforeChildren(reinterpret_cast<TouchDragEvent*>(event));
+			}
+			else if (event->getTypeID() == TouchUpEvent::typeID) {
+				onTouchUpBeforeChildren(reinterpret_cast<TouchUpEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchDownEvent::typeID) {
+				onPinchDownBeforeChildren(reinterpret_cast<PinchDownEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchDragEvent::typeID) {
+				onPinchDragBeforeChildren(reinterpret_cast<PinchDragEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchUpEvent::typeID) {
+				onPinchUpBeforeChildren(reinterpret_cast<PinchUpEvent*>(event));
+			}
 
 			if (event->isHandled())
 				return;
@@ -60,22 +65,27 @@ namespace YOBA {
 			}
 		}
 
-		if (callOnEvent) {
+		if (shouldHandle) {
 			onEventAfterChildren(event);
 
-			callScreenEventFunctions(
-				this,
-
-				&Layout::onTouchDownAfterChildren,
-				&Layout::onTouchDragAfterChildren,
-				&Layout::onTouchUpAfterChildren,
-
-				&Layout::onPinchDownAfterChildren,
-				&Layout::onPinchDragAfterChildren,
-				&Layout::onPinchUpAfterChildren,
-
-				event
-			);
+			if (event->getTypeID() == TouchDownEvent::typeID) {
+				onTouchDownAfterChildren(reinterpret_cast<TouchDownEvent*>(event));
+			}
+			else if (event->getTypeID() == TouchDragEvent::typeID) {
+				onTouchDragAfterChildren(reinterpret_cast<TouchDragEvent*>(event));
+			}
+			else if (event->getTypeID() == TouchUpEvent::typeID) {
+				onTouchUpAfterChildren(reinterpret_cast<TouchUpEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchDownEvent::typeID) {
+				onPinchDownAfterChildren(reinterpret_cast<PinchDownEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchDragEvent::typeID) {
+				onPinchDragAfterChildren(reinterpret_cast<PinchDragEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchUpEvent::typeID) {
+				onPinchUpAfterChildren(reinterpret_cast<PinchUpEvent*>(event));
+			}
 		}
 	}
 

@@ -71,7 +71,6 @@ namespace YOBA {
 			void setFocused(bool state);
 
 			bool isCaptured() const;
-			bool isCapturedOrApplicationHasNoCapture() const;
 			void setCaptured(bool state);
 
 			Alignment getHorizontalAlignment() const;
@@ -141,22 +140,8 @@ namespace YOBA {
 
 			void setTouchOver(bool value);
 
-			bool checkForTouchEventAndUpdateIsTouchOver(Event* event);
-
-			template<std::derived_from<Element> TClass>
-			static void callScreenEventFunctions(
-				TClass* instance,
-
-				void(TClass::*onTouchDown)(TouchDownEvent* event),
-				void(TClass::*onTouchDrag)(TouchDragEvent* event),
-				void(TClass::*onTouchUp)(TouchUpEvent* event),
-
-				void(TClass::*onPinchDown)(PinchDownEvent* event),
-				void(TClass::*onPinchDrag)(PinchDragEvent* event),
-				void(TClass::*onPinchUp)(PinchUpEvent* event),
-
-				Event* event
-			);
+			bool updateIsTouchOverAndCheckIfShouldHandleEvent(Event* event);
+			bool isCapturedOrApplicationHasNoCapture() const;
 
 			static uint16_t computeMeasureShit(
 				uint16_t size,
@@ -180,42 +165,4 @@ namespace YOBA {
 				int32_t& newSize
 			);
 	};
-
-	template<std::derived_from<Element> TClass>
-	void Element::callScreenEventFunctions(
-		TClass* instance,
-
-		void(TClass::*onTouchDown)(TouchDownEvent* event),
-		void(TClass::*onTouchDrag)(TouchDragEvent* event),
-		void(TClass::*onTouchUp)(TouchUpEvent* event),
-
-		void(TClass::*onPinchDown)(PinchDownEvent* event),
-		void(TClass::*onPinchDrag)(PinchDragEvent* event),
-		void(TClass::*onPinchUp)(PinchUpEvent* event),
-
-		Event* event
-	) {
-		if (TouchEvent::isTouch(event)) {
-			if (event->getTypeID() == TouchDownEvent::typeID) {
-				(instance->*onTouchDown)(reinterpret_cast<TouchDownEvent*>(event));
-			}
-			else if (event->getTypeID() == TouchDragEvent::typeID) {
-				(instance->*onTouchDrag)(reinterpret_cast<TouchDragEvent*>(event));
-			}
-			else if (event->getTypeID() == TouchUpEvent::typeID) {
-				(instance->*onTouchUp)(reinterpret_cast<TouchUpEvent*>(event));
-			}
-		}
-		else if (PinchEvent::isPinch(event)) {
-			if (event->getTypeID() == PinchDownEvent::typeID) {
-				(instance->*onPinchDown)(reinterpret_cast<PinchDownEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchDragEvent::typeID) {
-				(instance->*onPinchDrag)(reinterpret_cast<PinchDragEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchUpEvent::typeID) {
-				(instance->*onPinchUp)(reinterpret_cast<PinchUpEvent*>(event));
-			}
-		}
-	}
 }
