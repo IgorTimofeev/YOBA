@@ -17,7 +17,7 @@ namespace YOBA {
 		if (!isVisible())
 			return;
 
-		const auto callOnEvent = !updateTouchOver(event) || isTouchOver() || isCaptured();
+		const auto callOnEvent = !checkForTouchEventAndUpdateIsTouchOver(event) || isTouchOver() || isCaptured();
 
 		if (callOnEvent) {
 			onEventBeforeChildren(event);

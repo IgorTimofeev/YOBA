@@ -141,7 +141,7 @@ namespace YOBA {
 
 			void setTouchOver(bool value);
 
-			bool updateTouchOver(Event* event);
+			bool checkForTouchEventAndUpdateIsTouchOver(Event* event);
 
 			template<std::derived_from<Element> TClass>
 			static void callScreenEventFunctions(

@@ -476,31 +476,31 @@ namespace YOBA {
 		onTouchOverChanged();
 	}
 
-	bool Element::updateTouchOver(Event* event) {
-		auto screen = false;
-		auto over = false;
+	bool Element::checkForTouchEventAndUpdateIsTouchOver(Event* event) {
+		auto isScreen = false;
+		auto isTouch = false;
 
 		if (TouchEvent::isTouch(event)) {
-			screen = true;
+			isScreen = true;
 
 			if (isCapturedOrApplicationHasNoCapture()) {
-				over = getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition());
+				isTouch = getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition());
 			}
 		}
 		else if (PinchEvent::isPinch(event)) {
-			screen = true;
+			isScreen = true;
 
 			if (isCapturedOrApplicationHasNoCapture()) {
 				const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
 				const auto& bounds = getBounds();
 
-				over = bounds.intersects(pinchEvent->getPosition1()) || bounds.intersects(pinchEvent->getPosition2());
+				isTouch = bounds.intersects(pinchEvent->getPosition1()) || bounds.intersects(pinchEvent->getPosition2());
 			}
 		}
 
-		setTouchOver(over);
+		setTouchOver(isTouch);
 
-		return screen;
+		return isScreen;
 	}
 
 	bool Element::isTouchOver() const {
