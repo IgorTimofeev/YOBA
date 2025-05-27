@@ -5,7 +5,9 @@ namespace YOBA {
 		if (!isVisible())
 			return;
 
-		callEventSpecificFunctions(
+		onEvent(event);
+
+		callScreenEventFunctions(
 			this,
 
 			&Control::onTouchDown,
@@ -18,8 +20,6 @@ namespace YOBA {
 
 			event
 		);
-
-		onEvent(event);
 	}
 
 	void Control::onEvent(Event* event) {

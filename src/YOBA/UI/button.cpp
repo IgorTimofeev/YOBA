@@ -4,6 +4,8 @@
 
 namespace YOBA {
 	void Button::onTouchDown(TouchDownEvent* event) {
+		ESP_LOGI("Button", "onTouchDown");
+
 		_wasDown = true;
 		_previousIsActive = isActive();
 		setActive(true);
@@ -12,6 +14,8 @@ namespace YOBA {
 	}
 
 	void Button::onTouchUp(TouchUpEvent* event) {
+		ESP_LOGI("Button", "onTouchUp");
+
 		if (!_wasDown)
 			return;
 
@@ -30,6 +34,8 @@ namespace YOBA {
 	}
 
 	void Button::onTouchOverChanged() {
+		ESP_LOGI("Button", "onTouchOverChanged: %d", isTouchOver());
+
 		if (!_wasDown || isTouchOver())
 			return;
 

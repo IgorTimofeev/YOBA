@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <esp_log.h>
+#include <esp_debug_helpers.h>
 
 #include <YOBA/UI/animation.h>
 #include <YOBA/UI/layout.h>
@@ -467,6 +468,8 @@ namespace YOBA {
 
 		if (!application || (application->_touchOverElement == this) == state)
 			return;
+
+		ESP_LOGI("Element", "setTouchOver, current: %p, new: %p, state: %d", application->_touchOverElement, this, state);
 
 		const auto previousElement = application->_touchOverElement;
 

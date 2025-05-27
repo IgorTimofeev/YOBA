@@ -139,8 +139,8 @@ namespace YOBA {
 
 			void setTouchOver(bool state);
 
-			template<typename TClass>
-			void callEventSpecificFunctions(
+			template<std::derived_from<Element> TClass>
+			static void callScreenEventFunctions(
 				TClass* instance,
 
 				void(TClass::*onTouchDown)(TouchDownEvent* event),
@@ -177,8 +177,8 @@ namespace YOBA {
 			);
 	};
 
-	template<typename TClass>
-	void Element::callEventSpecificFunctions(
+	template<std::derived_from<Element> TClass>
+	void Element::callScreenEventFunctions(
 		TClass* instance,
 
 		void(TClass::*onTouchDown)(TouchDownEvent* event),
@@ -192,27 +192,35 @@ namespace YOBA {
 		Event* event
 	) {
 		if (TouchEvent::isTouch(event)) {
-			if (isCaptured() || getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition())) {
+			if (instance->isCaptured() || instance->getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition())) {
 				if (event->getTypeID() == TouchDownEvent::typeID) {
 					(instance->*onTouchDown)(reinterpret_cast<TouchDownEvent*>(event));
+
+					if (event->isHandled()) {
+						instance->setTouchOver(true);
+					}
 				}
 				else if (event->getTypeID() == TouchDragEvent::typeID) {
 					(instance->*onTouchDrag)(reinterpret_cast<TouchDragEvent*>(event));
+
+					if (event->isHandled()) {
+						instance->setTouchOver(true);
+					}
 				}
 				else if (event->getTypeID() == TouchUpEvent::typeID) {
 					(instance->*onTouchUp)(reinterpret_cast<TouchUpEvent*>(event));
-				}
 
-				if (event->isHandled()) {
-					setTouchOver(true);
+					if (event->isHandled()) {
+						instance->setTouchOver(false);
+					}
 				}
 			}
 		}
 		else if (PinchEvent::isPinch(event)) {
 			const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-			const auto& bounds = getBounds();
+			const auto& bounds = instance->getBounds();
 
-			if (isCaptured() || (bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2()))) {
+			if (instance->isCaptured() || (bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2()))) {
 				if (event->getTypeID() == PinchDownEvent::typeID) {
 					(instance->*onPinchDown)(reinterpret_cast<PinchDownEvent*>(event));
 				}
@@ -221,10 +229,6 @@ namespace YOBA {
 				}
 				else if (event->getTypeID() == PinchUpEvent::typeID) {
 					(instance->*onPinchUp)(reinterpret_cast<PinchUpEvent*>(event));
-				}
-
-				if (event->isHandled()) {
-					setTouchOver(true);
 				}
 			}
 		}

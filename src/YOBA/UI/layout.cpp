@@ -17,21 +17,24 @@ namespace YOBA {
 		if (!isVisible())
 			return;
 
-		callEventSpecificFunctions(
+		onEventBeforeChildren(event);
+
+		callScreenEventFunctions(
 			this,
 
-			Layout::onTouchDownBeforeChildren,
-			Layout::onTouchDragBeforeChildren,
-			Layout::onTouchUpBeforeChildren,
+			&Layout::onTouchDownBeforeChildren,
+			&Layout::onTouchDragBeforeChildren,
+			&Layout::onTouchUpBeforeChildren,
 
-			Layout::onPinchDownBeforeChildren,
-			Layout::onPinchDragBeforeChildren,
-			Layout::onPinchUpBeforeChildren,
+			&Layout::onPinchDownBeforeChildren,
+			&Layout::onPinchDragBeforeChildren,
+			&Layout::onPinchUpBeforeChildren,
 
 			event
 		);
 
-		onEventBeforeChildren(event);
+		if (event->isHandled())
+			return;
 
 		if (!event->isHandled() && getChildrenCount() > 0) {
 			size_t i = getChildrenCount() - 1;
@@ -43,7 +46,7 @@ namespace YOBA {
 					child->pushEvent(event);
 
 					if (event->isHandled())
-						break;
+						return;
 				}
 
 				if (i == 0)
@@ -55,16 +58,16 @@ namespace YOBA {
 
 		onEventAfterChildren(event);
 
-		callEventSpecificFunctions(
+		callScreenEventFunctions(
 			this,
 
-			Layout::onTouchDownAfterChildren,
-			Layout::onTouchDragAfterChildren,
-			Layout::onTouchUpAfterChildren,
+			&Layout::onTouchDownAfterChildren,
+			&Layout::onTouchDragAfterChildren,
+			&Layout::onTouchUpAfterChildren,
 
-			Layout::onPinchDownAfterChildren,
-			Layout::onPinchDragAfterChildren,
-			Layout::onPinchUpAfterChildren,
+			&Layout::onPinchDownAfterChildren,
+			&Layout::onPinchDragAfterChildren,
+			&Layout::onPinchUpAfterChildren,
 
 			event
 		);
