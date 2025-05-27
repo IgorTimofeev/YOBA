@@ -181,15 +181,6 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Application::pushEvent(Event* event) {
-		if (getCapturedElement()) {
-			getCapturedElement()->pushEvent(event);
-		}
-		else {
-			Layout::pushEvent(event);
-		}
-	}
-
 	Renderer* Application::getRenderer() const {
 		return _renderer;
 	}

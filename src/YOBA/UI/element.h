@@ -71,6 +71,7 @@ namespace YOBA {
 			void setFocused(bool state);
 
 			bool isCaptured() const;
+			bool isCapturedOrApplicationHasNoCapture() const;
 			void setCaptured(bool state);
 
 			Alignment getHorizontalAlignment() const;
@@ -125,6 +126,7 @@ namespace YOBA {
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 			bool _focusable = true;
+			bool _isTouchOver = true;
 
 			Size _size = Size(Size::computed, Size::computed);
 			Size _minSize = Size(0, 0);
@@ -137,7 +139,9 @@ namespace YOBA {
 			Bounds _bounds {};
 			Size _measuredSize {};
 
-			void setTouchOver(bool state);
+			void setTouchOver(bool value);
+
+			bool updateTouchOver(Event* event);
 
 			template<std::derived_from<Element> TClass>
 			static void callScreenEventFunctions(
@@ -192,44 +196,25 @@ namespace YOBA {
 		Event* event
 	) {
 		if (TouchEvent::isTouch(event)) {
-			if (instance->isCaptured() || instance->getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition())) {
-				if (event->getTypeID() == TouchDownEvent::typeID) {
-					(instance->*onTouchDown)(reinterpret_cast<TouchDownEvent*>(event));
-
-					if (event->isHandled()) {
-						instance->setTouchOver(true);
-					}
-				}
-				else if (event->getTypeID() == TouchDragEvent::typeID) {
-					(instance->*onTouchDrag)(reinterpret_cast<TouchDragEvent*>(event));
-
-					if (event->isHandled()) {
-						instance->setTouchOver(true);
-					}
-				}
-				else if (event->getTypeID() == TouchUpEvent::typeID) {
-					(instance->*onTouchUp)(reinterpret_cast<TouchUpEvent*>(event));
-
-					if (event->isHandled()) {
-						instance->setTouchOver(false);
-					}
-				}
+			if (event->getTypeID() == TouchDownEvent::typeID) {
+				(instance->*onTouchDown)(reinterpret_cast<TouchDownEvent*>(event));
+			}
+			else if (event->getTypeID() == TouchDragEvent::typeID) {
+				(instance->*onTouchDrag)(reinterpret_cast<TouchDragEvent*>(event));
+			}
+			else if (event->getTypeID() == TouchUpEvent::typeID) {
+				(instance->*onTouchUp)(reinterpret_cast<TouchUpEvent*>(event));
 			}
 		}
 		else if (PinchEvent::isPinch(event)) {
-			const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-			const auto& bounds = instance->getBounds();
-
-			if (instance->isCaptured() || (bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2()))) {
-				if (event->getTypeID() == PinchDownEvent::typeID) {
-					(instance->*onPinchDown)(reinterpret_cast<PinchDownEvent*>(event));
-				}
-				else if (event->getTypeID() == PinchDragEvent::typeID) {
-					(instance->*onPinchDrag)(reinterpret_cast<PinchDragEvent*>(event));
-				}
-				else if (event->getTypeID() == PinchUpEvent::typeID) {
-					(instance->*onPinchUp)(reinterpret_cast<PinchUpEvent*>(event));
-				}
+			if (event->getTypeID() == PinchDownEvent::typeID) {
+				(instance->*onPinchDown)(reinterpret_cast<PinchDownEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchDragEvent::typeID) {
+				(instance->*onPinchDrag)(reinterpret_cast<PinchDragEvent*>(event));
+			}
+			else if (event->getTypeID() == PinchUpEvent::typeID) {
+				(instance->*onPinchUp)(reinterpret_cast<PinchUpEvent*>(event));
 			}
 		}
 	}

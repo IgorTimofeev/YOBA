@@ -17,26 +17,30 @@ namespace YOBA {
 		if (!isVisible())
 			return;
 
-		onEventBeforeChildren(event);
+		const auto callOnEvent = !updateTouchOver(event) || isTouchOver() || isCaptured();
 
-		callScreenEventFunctions(
-			this,
+		if (callOnEvent) {
+			onEventBeforeChildren(event);
 
-			&Layout::onTouchDownBeforeChildren,
-			&Layout::onTouchDragBeforeChildren,
-			&Layout::onTouchUpBeforeChildren,
+			callScreenEventFunctions(
+				this,
 
-			&Layout::onPinchDownBeforeChildren,
-			&Layout::onPinchDragBeforeChildren,
-			&Layout::onPinchUpBeforeChildren,
+				&Layout::onTouchDownBeforeChildren,
+				&Layout::onTouchDragBeforeChildren,
+				&Layout::onTouchUpBeforeChildren,
 
-			event
-		);
+				&Layout::onPinchDownBeforeChildren,
+				&Layout::onPinchDragBeforeChildren,
+				&Layout::onPinchUpBeforeChildren,
 
-		if (event->isHandled())
-			return;
+				event
+			);
 
-		if (!event->isHandled() && getChildrenCount() > 0) {
+			if (event->isHandled())
+				return;
+		}
+
+		if (getChildrenCount() > 0) {
 			size_t i = getChildrenCount() - 1;
 
 			while (true) {
@@ -56,21 +60,23 @@ namespace YOBA {
 			}
 		}
 
-		onEventAfterChildren(event);
+		if (callOnEvent) {
+			onEventAfterChildren(event);
 
-		callScreenEventFunctions(
-			this,
+			callScreenEventFunctions(
+				this,
 
-			&Layout::onTouchDownAfterChildren,
-			&Layout::onTouchDragAfterChildren,
-			&Layout::onTouchUpAfterChildren,
+				&Layout::onTouchDownAfterChildren,
+				&Layout::onTouchDragAfterChildren,
+				&Layout::onTouchUpAfterChildren,
 
-			&Layout::onPinchDownAfterChildren,
-			&Layout::onPinchDragAfterChildren,
-			&Layout::onPinchUpAfterChildren,
+				&Layout::onPinchDownAfterChildren,
+				&Layout::onPinchDragAfterChildren,
+				&Layout::onPinchUpAfterChildren,
 
-			event
-		);
+				event
+			);
+		}
 	}
 
 	void Layout::onEventBeforeChildren(Event* event) {

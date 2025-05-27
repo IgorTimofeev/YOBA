@@ -11,7 +11,6 @@
 
 namespace YOBA {
 	Element::~Element() {
-		setTouchOver(false);
 		setFocused(false);
 		setCaptured(false);
 	}
@@ -256,6 +255,12 @@ namespace YOBA {
 		return application && application->getCapturedElement() == this;
 	}
 
+	bool Element::isCapturedOrApplicationHasNoCapture() const {
+		const auto application = Application::getCurrent();
+
+		return application && (application->getCapturedElement() == nullptr || application->getCapturedElement() == this);
+	}
+
 	void Element::setCaptured(bool state) {
 		const auto application = Application::getCurrent();
 
@@ -463,27 +468,43 @@ namespace YOBA {
 
 	// -------------------------------- Events --------------------------------
 
-	void Element::setTouchOver(bool state) {
-		const auto application = Application::getCurrent();
-
-		if (!application || (application->_touchOverElement == this) == state)
+	void Element::setTouchOver(bool value) {
+		if (value == _isTouchOver)
 			return;
 
-		ESP_LOGI("Element", "setTouchOver, current: %p, new: %p, state: %d", application->_touchOverElement, this, state);
+		_isTouchOver = value;
+		onTouchOverChanged();
+	}
 
-		const auto previousElement = application->_touchOverElement;
+	bool Element::updateTouchOver(Event* event) {
+		auto screen = false;
+		auto over = false;
 
-		application->_touchOverElement = state ? this : nullptr;
+		if (TouchEvent::isTouch(event)) {
+			screen = true;
 
-		if (previousElement)
-			previousElement->onTouchOverChanged();
+			if (isCapturedOrApplicationHasNoCapture()) {
+				over = getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition());
+			}
+		}
+		else if (PinchEvent::isPinch(event)) {
+			screen = true;
 
-		if (application->_touchOverElement)
-			application->_touchOverElement->onTouchOverChanged();
+			if (isCapturedOrApplicationHasNoCapture()) {
+				const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
+				const auto& bounds = getBounds();
+
+				over = bounds.intersects(pinchEvent->getPosition1()) || bounds.intersects(pinchEvent->getPosition2());
+			}
+		}
+
+		setTouchOver(over);
+
+		return screen;
 	}
 
 	bool Element::isTouchOver() const {
-		return Application::getCurrent() ? Application::getCurrent()->_touchOverElement == this : false;
+		return _isTouchOver;
 	}
 
 	void Element::onTouchOverChanged() {

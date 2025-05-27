@@ -2,7 +2,7 @@
 
 namespace YOBA {
 	void Control::pushEvent(Event* event) {
-		if (!isVisible())
+		if (!isVisible() || (updateTouchOver(event) && !isTouchOver() && !isCaptured()))
 			return;
 
 		onEvent(event);
