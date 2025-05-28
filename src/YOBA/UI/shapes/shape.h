@@ -1,7 +1,7 @@
 #pragma once
 
+#include <YOBA/main/event.h>
 #include <YOBA/UI/control.h>
-#include <YOBA/main/rendering/renderer.h>
 #include <YOBA/UI/traits/fillColorElement.h>
 
 namespace YOBA {

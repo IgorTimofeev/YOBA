@@ -35,6 +35,14 @@ namespace YOBA {
 		invalidate();
 	}
 
+	bool Element::isVisibleForPointerEvents() const {
+		return _isVisibleForPointerEvents;
+	}
+
+	void Element::setVisibleForPointerEvents(bool value) {
+		_isVisibleForPointerEvents = value;
+	}
+
 	Size Element::onMeasure(const Size& availableSize) {
 		return { 0, 0 };
 	}
@@ -468,11 +476,11 @@ namespace YOBA {
 
 	// -------------------------------- Events --------------------------------
 
-	void Element::setTouchOver(bool value) {
-		if (value == _isTouchOver)
+	void Element::setPointerOver(bool value) {
+		if (value == _isPointerOver)
 			return;
 
-		_isTouchOver = value;
+		_isPointerOver = value;
 		onTouchOverChanged();
 	}
 
@@ -483,10 +491,10 @@ namespace YOBA {
 			isScreen = true;
 
 			if (isCapturedOrApplicationHasNoCapture()) {
-				setTouchOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
+				setPointerOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
 			}
 			else {
-				setTouchOver(false);
+				setPointerOver(false);
 			}
 		}
 		else if (PinchEvent::isPinch(event)) {
@@ -496,18 +504,18 @@ namespace YOBA {
 				const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
 				const auto& bounds = getBounds();
 
-				setTouchOver(bounds.intersects(pinchEvent->getPosition1()) || bounds.intersects(pinchEvent->getPosition2()));
+				setPointerOver(bounds.intersects(pinchEvent->getPosition1()) || bounds.intersects(pinchEvent->getPosition2()));
 			}
 			else {
-				setTouchOver(false);
+				setPointerOver(false);
 			}
 		}
 
-		return !isScreen || isTouchOver() || isCaptured();
+		return isEnabled() && (!isScreen || isPointerOver() || isCaptured());
 	}
 
-	bool Element::isTouchOver() const {
-		return _isTouchOver;
+	bool Element::isPointerOver() const {
+		return _isPointerOver;
 	}
 
 	void Element::onTouchOverChanged() {

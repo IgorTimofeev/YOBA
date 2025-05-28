@@ -77,11 +77,7 @@ namespace YOBA {
 		protected:
 			void onTick() override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
-
-			void onTouchDown(TouchDownEvent* event) override;
-			void onTouchDrag(TouchDragEvent* event) override;
-			void onTouchUp(TouchUpEvent* event) override;
-
+			void onEvent(Event* event) override;
 			void onFocusChanged() override;
 			void onTextChanged() override;
 

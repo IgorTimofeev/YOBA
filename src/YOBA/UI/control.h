@@ -6,18 +6,11 @@
 namespace YOBA {
 	class Control : public virtual Element {
 		public:
-			void pushEvent(Event* event) override;
+			void handleEvent(Event* event, bool callHandlers) override;
 
 		protected:
+			// Control will mark ScreenEvents as handled by default
 			virtual void onEvent(Event* event);
-
-			virtual void onTouchDown(TouchDownEvent* event);
-			virtual void onTouchDrag(TouchDragEvent* event);
-			virtual void onTouchUp(TouchUpEvent* event);
-
-			virtual void onPinchDown(PinchDownEvent* event);
-			virtual void onPinchDrag(PinchDragEvent* event);
-			virtual void onPinchUp(PinchUpEvent* event);
 
 		private:
 

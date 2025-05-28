@@ -14,79 +14,7 @@ namespace YOBA {
 	}
 
 	void Layout::pushEvent(Event* event) {
-		if (!isVisible())
-			return;
-
-		const auto shouldHandle = updateIsTouchOverAndCheckIfShouldHandleEvent(event);
-
-		if (shouldHandle) {
-			onEventBeforeChildren(event);
-
-			if (event->getTypeID() == TouchDownEvent::typeID) {
-				onTouchDownBeforeChildren(reinterpret_cast<TouchDownEvent*>(event));
-			}
-			else if (event->getTypeID() == TouchDragEvent::typeID) {
-				onTouchDragBeforeChildren(reinterpret_cast<TouchDragEvent*>(event));
-			}
-			else if (event->getTypeID() == TouchUpEvent::typeID) {
-				onTouchUpBeforeChildren(reinterpret_cast<TouchUpEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchDownEvent::typeID) {
-				onPinchDownBeforeChildren(reinterpret_cast<PinchDownEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchDragEvent::typeID) {
-				onPinchDragBeforeChildren(reinterpret_cast<PinchDragEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchUpEvent::typeID) {
-				onPinchUpBeforeChildren(reinterpret_cast<PinchUpEvent*>(event));
-			}
-
-			if (event->isHandled())
-				return;
-		}
-
-		if (getChildrenCount() > 0) {
-			size_t i = getChildrenCount() - 1;
-
-			while (true) {
-				const auto child = _children[i];
-
-				if (child->isVisible()) {
-					child->pushEvent(event);
-
-					if (event->isHandled())
-						return;
-				}
-
-				if (i == 0)
-					break;
-
-				i--;
-			}
-		}
-
-		if (shouldHandle) {
-			onEventAfterChildren(event);
-
-			if (event->getTypeID() == TouchDownEvent::typeID) {
-				onTouchDownAfterChildren(reinterpret_cast<TouchDownEvent*>(event));
-			}
-			else if (event->getTypeID() == TouchDragEvent::typeID) {
-				onTouchDragAfterChildren(reinterpret_cast<TouchDragEvent*>(event));
-			}
-			else if (event->getTypeID() == TouchUpEvent::typeID) {
-				onTouchUpAfterChildren(reinterpret_cast<TouchUpEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchDownEvent::typeID) {
-				onPinchDownAfterChildren(reinterpret_cast<PinchDownEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchDragEvent::typeID) {
-				onPinchDragAfterChildren(reinterpret_cast<PinchDragEvent*>(event));
-			}
-			else if (event->getTypeID() == PinchUpEvent::typeID) {
-				onPinchUpAfterChildren(reinterpret_cast<PinchUpEvent*>(event));
-			}
-		}
+		handleEvent(event, !event->isHandled());
 	}
 
 	void Layout::onEventBeforeChildren(Event* event) {
@@ -94,54 +22,6 @@ namespace YOBA {
 	}
 
 	void Layout::onEventAfterChildren(Event* event) {
-
-	}
-
-	void Layout::onTouchDownBeforeChildren(TouchDownEvent* event) {
-
-	}
-
-	void Layout::onTouchDownAfterChildren(TouchDownEvent* event) {
-
-	}
-
-	void Layout::onTouchDragBeforeChildren(TouchDragEvent* event) {
-
-	}
-
-	void Layout::onTouchDragAfterChildren(TouchDragEvent* event) {
-
-	}
-
-	void Layout::onTouchUpBeforeChildren(TouchUpEvent* event) {
-
-	}
-
-	void Layout::onTouchUpAfterChildren(TouchUpEvent* event) {
-
-	}
-
-	void Layout::onPinchDownBeforeChildren(PinchDownEvent* event) {
-
-	}
-
-	void Layout::onPinchDownAfterChildren(PinchDownEvent* event) {
-
-	}
-
-	void Layout::onPinchDragBeforeChildren(PinchDragEvent* event) {
-
-	}
-
-	void Layout::onPinchDragAfterChildren(PinchDragEvent* event) {
-
-	}
-
-	void Layout::onPinchUpBeforeChildren(PinchUpEvent* event) {
-
-	}
-
-	void Layout::onPinchUpAfterChildren(PinchUpEvent* event) {
 
 	}
 
@@ -172,8 +52,9 @@ namespace YOBA {
 	void Layout::removeChild(Element* child) {
 		const auto iterator = std::ranges::find(_children, child);
 
-		if (iterator == _children.end())
+		if (iterator == _children.end()) {
 			return;
+		}
 
 		_children.erase(iterator);
 
@@ -254,6 +135,93 @@ namespace YOBA {
 		removeChild(child);
 
 		return *this;
+	}
+
+	void Layout::handleEvent(Event* event, bool callHandlers) {
+		if (TouchEvent::isTouch(event)) {
+			bool callHandlersOfThis;
+
+			if (isVisible() && isVisibleForPointerEvents()) {
+				setPointerOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
+
+				if (isEnabled()) {
+					callHandlersOfThis = callHandlers && (isPointerOver() || isCaptured());
+				}
+				else {
+					callHandlers = false;
+					callHandlersOfThis = false;
+				}
+			}
+			else {
+				setPointerOver(false);
+
+				callHandlers = false;
+				callHandlersOfThis = false;
+			}
+
+			// Before
+			if (callHandlersOfThis) {
+				onEventBeforeChildren(event);
+
+				if (event->isHandled()) {
+					callHandlers = false;
+					callHandlersOfThis = false;
+				}
+			}
+
+			// Children
+			if (getChildrenCount() > 0) {
+				size_t i = getChildrenCount() - 1;
+
+				while (true) {
+					_children[i]->handleEvent(event, callHandlers);
+
+					if (event->isHandled()) {
+						callHandlers = false;
+						callHandlersOfThis = false;
+					}
+
+					if (i == 0)
+						break;
+
+					i--;
+				}
+			}
+
+			// After
+			if (callHandlersOfThis)
+				onEventAfterChildren(event);
+		}
+		else {
+			if (!isVisible() || !isEnabled())
+				return;
+
+			// Before
+			onEventBeforeChildren(event);
+
+			if (event->isHandled())
+				return;
+
+			// Children
+			if (getChildrenCount() > 0) {
+				size_t i = getChildrenCount() - 1;
+
+				while (true) {
+					_children[i]->handleEvent(event, callHandlers);
+
+					if (event->isHandled())
+						return;
+
+					if (i == 0)
+						break;
+
+					i--;
+				}
+			}
+
+			// After
+			onEventAfterChildren(event);
+		}
 	}
 
 	Size Layout::onMeasure(const Size& availableSize) {

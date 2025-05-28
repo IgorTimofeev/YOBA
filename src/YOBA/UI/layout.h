@@ -24,7 +24,7 @@ namespace YOBA {
 			void removeChildren();
 			void removeAndDeleteChildren();
 
-			void pushEvent(Event* event) override;
+			virtual void pushEvent(Event* event);
 
 			std::vector<Element*>::iterator begin();
 			std::vector<Element*>::iterator end();
@@ -34,30 +34,13 @@ namespace YOBA {
 			Layout& operator-=(Element* child);
 
 		protected:
+			void handleEvent(Event* event, bool callHandlers) override;
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			virtual void onEventBeforeChildren(Event* event);
 			virtual void onEventAfterChildren(Event* event);
-
-			virtual void onTouchDownBeforeChildren(TouchDownEvent* event);
-			virtual void onTouchDownAfterChildren(TouchDownEvent* event);
-
-			virtual void onTouchDragBeforeChildren(TouchDragEvent* event);
-			virtual void onTouchDragAfterChildren(TouchDragEvent* event);
-
-			virtual void onTouchUpBeforeChildren(TouchUpEvent* event);
-			virtual void onTouchUpAfterChildren(TouchUpEvent* event);
-
-			virtual void onPinchDownBeforeChildren(PinchDownEvent* event);
-			virtual void onPinchDownAfterChildren(PinchDownEvent* event);
-
-			virtual void onPinchDragBeforeChildren(PinchDragEvent* event);
-			virtual void onPinchDragAfterChildren(PinchDragEvent* event);
-
-			virtual void onPinchUpBeforeChildren(PinchUpEvent* event);
-			virtual void onPinchUpAfterChildren(PinchUpEvent* event);
 
 			virtual void onChildAdded(Element* child);
 			virtual void onChildRemoved(Element* child);

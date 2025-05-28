@@ -136,29 +136,29 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onTouchDown(TouchDownEvent* event) {
-		setCaptured(true);
-		setFocused(true);
+	void TextField::onEvent(Event* event) {
+		if (event->getTypeID() == TouchDownEvent::typeID) {
+			setCaptured(true);
+			setFocused(true);
 
-		_lastTouchX = event->getPosition().getX();
+			_lastTouchX = reinterpret_cast<TouchDownEvent*>(event)->getPosition().getX();
 
-		applyContinuousScroll();
+			applyContinuousScroll();
 
-		event->setHandled(true);
-	}
+			event->setHandled(true);
+		}
+		else if (event->getTypeID() == TouchDragEvent::typeID) {
+			_lastTouchX = reinterpret_cast<TouchDragEvent*>(event)->getPosition().getX();
 
-	void TextField::onTouchDrag(TouchDragEvent* event) {
-		_lastTouchX = event->getPosition().getX();
+			applyContinuousScroll();
 
-		applyContinuousScroll();
+			event->setHandled(true);
+		}
+		else if (event->getTypeID() == TouchUpEvent::typeID) {
+			setCaptured(false);
 
-		event->setHandled(true);
-	}
-
-	void TextField::onTouchUp(TouchUpEvent* event) {
-		setCaptured(false);
-
-		event->setHandled(true);
+			event->setHandled(true);
+		}
 	}
 
 	void TextField::applyContinuousScroll() {

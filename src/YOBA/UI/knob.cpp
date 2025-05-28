@@ -37,25 +37,25 @@ namespace YOBA {
 		}
 	}
 
-	void Knob::onTouchDown(TouchDownEvent* event) {
-		setCaptured(true);
+	void Knob::onEvent(Event* event) {
+		if (event->getTypeID() == TouchDownEvent::typeID) {
+			setCaptured(true);
 
-		event->setHandled(true);
-	}
+			event->setHandled(true);
+		}
+		else if (event->getTypeID() == TouchDragEvent::typeID) {
+			const auto oldAngle = _angle;
+			_angle = reinterpret_cast<TouchDragEvent*>(event)->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
 
-	void Knob::onTouchDrag(TouchDragEvent* event) {
-		const auto oldAngle = _angle;
-		_angle = event->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
+			rotated(oldAngle, _angle);
 
-		rotated(oldAngle, _angle);
+			event->setHandled(true);
+		}
+		else if (event->getTypeID() == TouchUpEvent::typeID) {
+			setCaptured(false);
 
-		event->setHandled(true);
-	}
-
-	void Knob::onTouchUp(TouchUpEvent* event) {
-		setCaptured(false);
-
-		event->setHandled(true);
+			event->setHandled(true);
+		}
 	}
 
 	float Knob::getAngle() const {

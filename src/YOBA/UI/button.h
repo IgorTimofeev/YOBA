@@ -49,8 +49,7 @@ namespace YOBA {
 			void setContentMargin(const Margin& contentMargin);
 
 		protected:
-			void onTouchDown(TouchDownEvent* event) override;
-			void onTouchUp(TouchUpEvent* event) override;
+			void onEvent(Event* event) override;
 			void onTouchOverChanged() override;
 			void onIsActiveChanged() override;
 

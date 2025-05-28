@@ -1,57 +1,27 @@
 #include <YOBA/UI/control.h>
+#include <YOBA/main/event.h>
 
 namespace YOBA {
-	void Control::pushEvent(Event* event) {
-		if (!isVisible() || !updateIsTouchOverAndCheckIfShouldHandleEvent(event))
-			return;
+	void Control::handleEvent(Event* event, bool callHandlers) {
+		if (TouchEvent::isTouch(event)) {
+			if (isVisible() && isVisibleForPointerEvents()) {
+				setPointerOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
 
-		onEvent(event);
-
-		if (event->getTypeID() == TouchDownEvent::typeID) {
-			onTouchDown(reinterpret_cast<TouchDownEvent*>(event));
+				if (callHandlers && isEnabled() && (isPointerOver() || isCaptured()))
+					onEvent(event);
+			}
+			else {
+				setPointerOver(false);
+			}
 		}
-		else if (event->getTypeID() == TouchDragEvent::typeID) {
-			onTouchDrag(reinterpret_cast<TouchDragEvent*>(event));
-		}
-		else if (event->getTypeID() == TouchUpEvent::typeID) {
-			onTouchUp(reinterpret_cast<TouchUpEvent*>(event));
-		}
-		else if (event->getTypeID() == PinchDownEvent::typeID) {
-			onPinchDown(reinterpret_cast<PinchDownEvent*>(event));
-		}
-		else if (event->getTypeID() == PinchDragEvent::typeID) {
-			onPinchDrag(reinterpret_cast<PinchDragEvent*>(event));
-		}
-		else if (event->getTypeID() == PinchUpEvent::typeID) {
-			onPinchUp(reinterpret_cast<PinchUpEvent*>(event));
+		else {
+			if (isVisible() && isEnabled())
+				onEvent(event);
 		}
 	}
 
 	void Control::onEvent(Event* event) {
-
-	}
-
-	void Control::onTouchDown(TouchDownEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Control::onTouchDrag(TouchDragEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Control::onTouchUp(TouchUpEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Control::onPinchDown(PinchDownEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Control::onPinchDrag(PinchDragEvent* event) {
-		event->setHandled(true);
-	}
-
-	void Control::onPinchUp(PinchUpEvent* event) {
-		event->setHandled(true);
+		if (ScreenEvent::isScreen(event))
+			event->setHandled(true);
 	}
 }

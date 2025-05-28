@@ -157,25 +157,25 @@ namespace YOBA {
 				}
 			}
 
-			void onTouchDown(TouchDownEvent* event) override {
-				setCaptured(true);
-				setFocused(true);
+			void onEvent(Event* event) override {
+				if (event->getTypeID() == TouchDownEvent::typeID) {
+					setCaptured(true);
+					setFocused(true);
 
-				event->setHandled(true);
-			}
+					event->setHandled(true);
+				}
+				else if (event->getTypeID() == TouchDragEvent::typeID) {
+					const auto& bounds = getBounds();
+					const int32_t localX = std::clamp(reinterpret_cast<TouchDragEvent*>(event)->getPosition().getX() - bounds.getX(), static_cast<int32_t>(0), static_cast<int32_t>(bounds.getWidth()));
 
-			void onTouchDrag(TouchDragEvent* event) override {
-				const auto& bounds = getBounds();
-				const int32_t localX = std::clamp(event->getPosition().getX() - bounds.getX(), static_cast<int32_t>(0), static_cast<int32_t>(bounds.getWidth()));
+					setValue(localX * 0xFFFF / bounds.getWidth());
 
-				setValue(localX * 0xFFFF / bounds.getWidth());
-
-				event->setHandled(true);
-			}
-
-			void onTouchUp(TouchUpEvent* event) override {
-				setCaptured(false);
-				event->setHandled(true);
+					event->setHandled(true);
+				}
+				else if (event->getTypeID() == TouchUpEvent::typeID) {
+					setCaptured(false);
+					event->setHandled(true);
+				}
 			}
 
 			virtual void onValueChanged() {

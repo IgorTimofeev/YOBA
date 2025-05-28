@@ -3,36 +3,37 @@
 #include <esp_log.h>
 
 namespace YOBA {
-	void Button::onTouchDown(TouchDownEvent* event) {
-		_wasDown = true;
-		_previousIsActive = isActive();
-		setActive(true);
+	void Button::onEvent(Event* event) {
+		if (event->getTypeID() == TouchDownEvent::typeID) {
+			_wasDown = true;
+			_previousIsActive = isActive();
+			setActive(true);
 
-		event->setHandled(true);
-	}
-
-	void Button::onTouchUp(TouchUpEvent* event) {
-		if (!_wasDown)
-			return;
-
-		if (_isToggle) {
-			setActive(!isActive());
+			event->setHandled(true);
 		}
-		else {
-			setActive(false);
+		else if (event->getTypeID() == TouchUpEvent::typeID) {
+			if (!_wasDown)
+				return;
+
+			if (_isToggle) {
+				setActive(!isActive());
+			}
+			else {
+				setActive(false);
+			}
+
+			callOnClick();
+
+			_wasDown = false;
+
+			event->setHandled(true);
 		}
-
-		callOnClick();
-
-		_wasDown = false;
-
-		event->setHandled(true);
 	}
 
 	void Button::onTouchOverChanged() {
 		// ESP_LOGI("Button", "onTouchOverChanged: %d", isTouchOver());
 
-		if (!_wasDown || isTouchOver())
+		if (!_wasDown || isPointerOver())
 			return;
 
 		if (_isToggle) {

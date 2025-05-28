@@ -47,9 +47,7 @@ namespace YOBA {
 			void measure(const Size& availableSize);
 			void render(Renderer* renderer, const Bounds& bounds);
 
-			virtual void pushEvent(Event* event) = 0;
-
-			bool isTouchOver() const;
+			bool isPointerOver() const;
 			virtual void invalidateRender();
 			virtual void invalidateMeasure();
 			virtual void invalidate();
@@ -63,6 +61,9 @@ namespace YOBA {
 
 			bool isEnabled() const;
 			void setEnabled(bool value);
+
+			bool isVisibleForPointerEvents() const;
+			void setVisibleForPointerEvents(bool value);
 
 			bool isFocusable() const;
 			void setFocusable(bool focusable);
@@ -107,6 +108,8 @@ namespace YOBA {
 			const Bounds& getBounds() const;
 
 		protected:
+			virtual void handleEvent(Event* event, bool callHandlers) = 0;
+
 			virtual void onAddedToParent(Layout* parent);
 			virtual void onRemovedFromParent(Layout* parent);
 
@@ -125,7 +128,8 @@ namespace YOBA {
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 			bool _focusable = true;
-			bool _isTouchOver = true;
+			bool _isPointerOver = true;
+			bool _isVisibleForPointerEvents = true;
 
 			Size _size = Size(Size::computed, Size::computed);
 			Size _minSize = Size(0, 0);
@@ -138,7 +142,7 @@ namespace YOBA {
 			Bounds _bounds {};
 			Size _measuredSize {};
 
-			void setTouchOver(bool value);
+			void setPointerOver(bool value);
 
 			bool updateIsTouchOverAndCheckIfShouldHandleEvent(Event* event);
 			bool isCapturedOrApplicationHasNoCapture() const;

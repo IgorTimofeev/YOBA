@@ -18,7 +18,6 @@
 #include <YOBA/UI/traits/activeElement.h>
 
 // Elements
-#include <YOBA/UI/modal.h>
 #include <YOBA/UI/keyboard.h>
 #include <YOBA/UI/selector.h>
 #include <YOBA/UI/button.h>
