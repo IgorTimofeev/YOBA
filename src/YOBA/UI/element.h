@@ -142,8 +142,10 @@ namespace YOBA {
 			Bounds _bounds {};
 			Size _measuredSize {};
 
-			void setPointerOver(bool value);
+			void addToParent(Layout* parent);
+			void removeFromParent(Layout* parent);
 
+			void setPointerOver(bool value);
 			bool updateIsTouchOverAndCheckIfShouldHandleEvent(Event* event);
 			bool isCapturedOrApplicationHasNoCapture() const;
 

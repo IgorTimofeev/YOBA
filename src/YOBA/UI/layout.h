@@ -22,6 +22,7 @@ namespace YOBA {
 			void removeChildAt(int index);
 			void removeChild(Element* child);
 			void removeChildren();
+			void moveChildrenTo(Layout* layout);
 			void removeAndDeleteChildren();
 
 			virtual void pushEvent(Event* event);

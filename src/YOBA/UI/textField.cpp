@@ -1,11 +1,13 @@
 #include <cstdint>
-#include "textField.h"
-#include "application.h"
+#include <YOBA/UI/textField.h>
+#include <YOBA/UI/application.h>
 
 namespace YOBA {
-	void TextField::onTick() {
-		Element::onTick();
+	TextField::~TextField() {
+		ApplicationKeyboardController::hide();
+	}
 
+	void TextField::onTick() {
 		if (isFocused()) {
 			if (isCaptured()) {
 				if (system::getTime() >= _continuousScrollTime) {
@@ -366,7 +368,7 @@ namespace YOBA {
 	}
 
 	void TextField::onFocusChanged() {
-		Element::onFocusChanged();
+		Control::onFocusChanged();
 
 		setCursorBlinkStateAndTime(isFocused());
 

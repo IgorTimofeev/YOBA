@@ -677,12 +677,7 @@ namespace YOBA {
 
 		// Moving children from root to temporary layout
 		_applicationChildrenLayout = new Layout();
-
-		for (const auto child : *application)
-			*_applicationChildrenLayout += child;
-
-		application->removeChildren();
-
+		application->moveChildrenTo(_applicationChildrenLayout);
 		*_keyboardAndApplicationChildrenLayout += _applicationChildrenLayout;
 
 		// Creating keyboard
@@ -702,10 +697,7 @@ namespace YOBA {
 		const auto application = Application::getCurrent();
 
 		application->removeChildren();
-
-		// Moving children back to root
-		for (const auto child : *_applicationChildrenLayout)
-			*application += child;
+		_applicationChildrenLayout->moveChildrenTo(application);
 
 		delete _keyboard;
 		_keyboard = nullptr;

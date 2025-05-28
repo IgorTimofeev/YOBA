@@ -1,5 +1,6 @@
 #include <YOBA/UI/element.h>
 
+#include <assert.h>
 #include <algorithm>
 #include <esp_log.h>
 #include <esp_debug_helpers.h>
@@ -11,8 +12,8 @@
 
 namespace YOBA {
 	Element::~Element() {
-		setFocused(false);
 		setCaptured(false);
+		setFocused(false);
 	}
 
 	bool Element::isVisible() const {
@@ -458,12 +459,28 @@ namespace YOBA {
 		_clipToBounds = value;
 	}
 
-	void Element::onAddedToParent(Layout* parent) {
+	void Element::addToParent(Layout* parent) {
+		assert(_parent == nullptr && "Element already has a parent. Remove it first.");
+
 		_parent = parent;
+
+		onAddedToParent(parent);
+	}
+
+	void Element::removeFromParent(Layout* parent) {
+		assert(parent == _parent && "Attempted to remove element from non-attached parent");
+
+		_parent = nullptr;
+
+		onRemovedFromParent(parent);
+	}
+
+	void Element::onAddedToParent(Layout* parent) {
+
 	}
 
 	void Element::onRemovedFromParent(Layout* parent) {
-		_parent = nullptr;
+
 	}
 
 	void Element::onFocusChanged() {

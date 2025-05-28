@@ -44,7 +44,7 @@ namespace YOBA {
 		_children.erase(_children.begin() + index);
 
 		onChildRemoved(child);
-		child->onRemovedFromParent(this);
+		child->removeFromParent(this);
 
 		invalidate();
 	}
@@ -59,7 +59,7 @@ namespace YOBA {
 		_children.erase(iterator);
 
 		onChildRemoved(child);
-		child->onRemovedFromParent(this);
+		child->removeFromParent(this);
 
 		invalidate();
 	}
@@ -70,12 +70,27 @@ namespace YOBA {
 
 		for (const auto child : _children) {
 			onChildRemoved(child);
-			child->onRemovedFromParent(this);
+			child->removeFromParent(this);
 		}
 
 		_children.clear();
 
 		invalidate();
+	}
+
+	void Layout::moveChildrenTo(Layout* layout) {
+		const auto childrenCount = _children.size();
+		const auto childrenCopy = new Element*[childrenCount];
+
+		for (size_t i = 0; i < childrenCount; i++)
+			childrenCopy[i] = _children[i];
+
+		removeChildren();
+
+		for (size_t i = 0; i < childrenCount; i++)
+			*layout += childrenCopy[i];
+
+		delete childrenCopy;
 	}
 
 	void Layout::removeAndDeleteChildren() {
@@ -84,7 +99,7 @@ namespace YOBA {
 
 		for (const auto child : _children) {
 			onChildRemoved(child);
-			child->onRemovedFromParent(this);
+			child->removeFromParent(this);
 
 			delete child;
 		}
@@ -102,7 +117,8 @@ namespace YOBA {
 		_children.push_back(child);
 
 		onChildAdded(child);
-		child->onAddedToParent(this);
+
+		child->addToParent(this);
 
 		invalidate();
 	}
@@ -111,7 +127,7 @@ namespace YOBA {
 		_children.insert(_children.begin() + index, child);
 
 		onChildAdded(child);
-		child->onAddedToParent(this);
+		child->addToParent(this);
 
 		invalidate();
 	}
