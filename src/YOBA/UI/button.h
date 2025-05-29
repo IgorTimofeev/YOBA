@@ -50,7 +50,7 @@ namespace YOBA {
 
 		protected:
 			void onEvent(Event* event) override;
-			void onTouchOverChanged() override;
+			void onPointerOverChanged() override;
 			void onIsActiveChanged() override;
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override;

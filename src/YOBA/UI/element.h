@@ -121,14 +121,14 @@ namespace YOBA {
 			virtual void onRender(Renderer* renderer, const Bounds& bounds);
 			virtual void onBoundsChanged();
 
-			virtual void onTouchOverChanged();
+			virtual void onPointerOverChanged();
 
 		private:
 			bool _isVisible = true;
 			bool _isEnabled = true;
 			bool _clipToBounds = false;
 			bool _focusable = true;
-			bool _isPointerOver = true;
+			bool _isPointerOver = false;
 			bool _isVisibleForPointerEvents = true;
 
 			Size _size = Size(Size::computed, Size::computed);
@@ -144,10 +144,7 @@ namespace YOBA {
 
 			void addToParent(Layout* parent);
 			void removeFromParent(Layout* parent);
-
 			void setPointerOver(bool value);
-			bool updateIsTouchOverAndCheckIfShouldHandleEvent(Event* event);
-			bool isCapturedOrApplicationHasNoCapture() const;
 
 			static uint16_t computeMeasureShit(
 				uint16_t size,

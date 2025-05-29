@@ -264,12 +264,6 @@ namespace YOBA {
 		return application && application->getCapturedElement() == this;
 	}
 
-	bool Element::isCapturedOrApplicationHasNoCapture() const {
-		const auto application = Application::getCurrent();
-
-		return application && (application->getCapturedElement() == nullptr || application->getCapturedElement() == this);
-	}
-
 	void Element::setCaptured(bool state) {
 		const auto application = Application::getCurrent();
 
@@ -498,44 +492,14 @@ namespace YOBA {
 			return;
 
 		_isPointerOver = value;
-		onTouchOverChanged();
-	}
-
-	bool Element::updateIsTouchOverAndCheckIfShouldHandleEvent(Event* event) {
-		auto isScreen = false;
-
-		if (TouchEvent::isTouch(event)) {
-			isScreen = true;
-
-			if (isCapturedOrApplicationHasNoCapture()) {
-				setPointerOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
-			}
-			else {
-				setPointerOver(false);
-			}
-		}
-		else if (PinchEvent::isPinch(event)) {
-			isScreen = true;
-
-			if (isCapturedOrApplicationHasNoCapture()) {
-				const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-				const auto& bounds = getBounds();
-
-				setPointerOver(bounds.intersects(pinchEvent->getPosition1()) || bounds.intersects(pinchEvent->getPosition2()));
-			}
-			else {
-				setPointerOver(false);
-			}
-		}
-
-		return isEnabled() && (!isScreen || isPointerOver() || isCaptured());
+		onPointerOverChanged();
 	}
 
 	bool Element::isPointerOver() const {
 		return _isPointerOver;
 	}
 
-	void Element::onTouchOverChanged() {
+	void Element::onPointerOverChanged() {
 
 	}
 }

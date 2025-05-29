@@ -139,24 +139,24 @@ namespace YOBA {
 	}
 
 	void TextField::onEvent(Event* event) {
-		if (event->getTypeID() == TouchDownEvent::typeID) {
+		if (event->getTypeID() == PointerDownEvent::typeID) {
 			setCaptured(true);
 			setFocused(true);
 
-			_lastTouchX = reinterpret_cast<TouchDownEvent*>(event)->getPosition().getX();
+			_lastTouchX = reinterpret_cast<PointerDownEvent*>(event)->getPosition().getX();
 
 			applyContinuousScroll();
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == TouchDragEvent::typeID) {
-			_lastTouchX = reinterpret_cast<TouchDragEvent*>(event)->getPosition().getX();
+		else if (event->getTypeID() == PointerDragEvent::typeID) {
+			_lastTouchX = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getX();
 
 			applyContinuousScroll();
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == TouchUpEvent::typeID) {
+		else if (event->getTypeID() == PointerUpEvent::typeID) {
 			setCaptured(false);
 
 			event->setHandled(true);

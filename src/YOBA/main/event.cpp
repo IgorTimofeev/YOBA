@@ -40,9 +40,9 @@ namespace YOBA {
 
 	bool ScreenEvent::isScreen(const Event* event) {
 		return
-			event->getTypeID() == TouchDownEvent::typeID
-			|| event->getTypeID() == TouchDragEvent::typeID
-			|| event->getTypeID() == TouchUpEvent::typeID
+			event->getTypeID() == PointerDownEvent::typeID
+			|| event->getTypeID() == PointerDragEvent::typeID
+			|| event->getTypeID() == PointerUpEvent::typeID
 
 			|| event->getTypeID() == PinchDownEvent::typeID
 			|| event->getTypeID() == PinchDragEvent::typeID
@@ -51,54 +51,54 @@ namespace YOBA {
 
 	// -------------------------------- Touch --------------------------------
 
-	TouchEvent::TouchEvent(uint16_t& staticTypeID, const Point& position) :
+	PointerEvent::PointerEvent(uint16_t& staticTypeID, const Point& position) :
 		ScreenEvent(staticTypeID),
 		_position(position)
 	{
 
 	}
 
-	const Point& TouchEvent::getPosition() const {
+	const Point& PointerEvent::getPosition() const {
 		return _position;
 	}
 
-	void TouchEvent::setPosition(const Point& position) {
+	void PointerEvent::setPosition(const Point& position) {
 		_position = position;
 	}
 
-	bool TouchEvent::isTouch(const Event* event) {
+	bool PointerEvent::isPointer(const Event* event) {
 		return
-			event->getTypeID() == TouchDownEvent::typeID
-			|| event->getTypeID() == TouchDragEvent::typeID
-			|| event->getTypeID() == TouchUpEvent::typeID;
+			event->getTypeID() == PointerDownEvent::typeID
+			|| event->getTypeID() == PointerDragEvent::typeID
+			|| event->getTypeID() == PointerUpEvent::typeID;
 	}
 
-	TouchDownEvent::TouchDownEvent(const Point& position) : TouchEvent(
+	PointerDownEvent::PointerDownEvent(const Point& position) : PointerEvent(
 		typeID,
 		position
 	) {
 
 	}
 
-	uint16_t TouchDownEvent::typeID = 0;
+	uint16_t PointerDownEvent::typeID = 0;
 
-	TouchDragEvent::TouchDragEvent(const Point& position) : TouchEvent(
+	PointerDragEvent::PointerDragEvent(const Point& position) : PointerEvent(
 		typeID,
 		position
 	) {
 
 	}
 
-	uint16_t TouchDragEvent::typeID = 0;
+	uint16_t PointerDragEvent::typeID = 0;
 
-	TouchUpEvent::TouchUpEvent(const Point& position) : TouchEvent(
+	PointerUpEvent::PointerUpEvent(const Point& position) : PointerEvent(
 		typeID,
 		position
 	) {
 
 	}
 
-	uint16_t TouchUpEvent::typeID = 0;
+	uint16_t PointerUpEvent::typeID = 0;
 
 	PinchEvent::PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2) :
 		ScreenEvent(staticTypeID),

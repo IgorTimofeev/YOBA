@@ -154,14 +154,32 @@ namespace YOBA {
 	}
 
 	void Layout::handleEvent(Event* event, bool callHandlers) {
-		if (TouchEvent::isTouch(event)) {
+		if (PointerEvent::isPointer(event)) {
 			bool callHandlersOfThis;
 
 			if (isVisible() && isVisibleForPointerEvents()) {
-				setPointerOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
+				const auto intersects = getBounds().intersects(reinterpret_cast<PointerEvent*>(event)->getPosition());
+				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+
+				setPointerOver(
+					event->getTypeID() != PointerUpEvent::typeID
+					&& intersects
+					&& (
+						!capturedElement
+						|| capturedElement == this
+					)
+				);
 
 				if (isEnabled()) {
-					callHandlersOfThis = callHandlers && (isPointerOver() || isCaptured());
+					callHandlersOfThis =
+						callHandlers
+						&& (
+							(
+								intersects
+								&& !capturedElement
+							)
+							|| capturedElement == this
+						);
 				}
 				else {
 					callHandlers = false;

@@ -55,6 +55,12 @@ namespace YOBA {
 			uint32_t getFlushDeltaTime() const;
 			uint32_t getPeripheralsDeltaTime() const;
 
+			Element* getFocusedElement() const;
+			void setFocusedElement(Element* element);
+
+			Element* getCapturedElement() const;
+			void setCapturedElement(Element* element);
+
 		protected:
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
@@ -78,12 +84,5 @@ namespace YOBA {
 			uint32_t _flushDeltaTime = 0;
 
 			void animationsTick();
-
-			// Will be only called from Element
-			Element* getFocusedElement() const;
-			void setFocusedElement(Element* element);
-
-			Element* getCapturedElement() const;
-			void setCapturedElement(Element* element);
 	};
 }

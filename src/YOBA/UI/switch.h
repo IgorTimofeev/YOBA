@@ -96,7 +96,7 @@ namespace YOBA {
 			}
 
 			void onEvent(Event* event) override {
-				if (event->getTypeID() != TouchUpEvent::typeID)
+				if (event->getTypeID() != PointerUpEvent::typeID)
 					return;
 
 				setActive(!isActive());

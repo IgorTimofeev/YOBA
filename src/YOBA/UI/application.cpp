@@ -146,6 +146,8 @@ namespace YOBA {
 	}
 
 	void Application::setCapturedElement(Element* element) {
+		// ESP_LOGI("Application", "setCapturedElement(): %p, previously capt %p", element, _capturedElement);
+
 		if (element == _capturedElement)
 			return;
 

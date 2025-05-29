@@ -38,20 +38,20 @@ namespace YOBA {
 	}
 
 	void Knob::onEvent(Event* event) {
-		if (event->getTypeID() == TouchDownEvent::typeID) {
+		if (event->getTypeID() == PointerDownEvent::typeID) {
 			setCaptured(true);
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == TouchDragEvent::typeID) {
+		else if (event->getTypeID() == PointerDragEvent::typeID) {
 			const auto oldAngle = _angle;
-			_angle = reinterpret_cast<TouchDragEvent*>(event)->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
+			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
 
 			rotated(oldAngle, _angle);
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == TouchUpEvent::typeID) {
+		else if (event->getTypeID() == PointerUpEvent::typeID) {
 			setCaptured(false);
 
 			event->setHandled(true);

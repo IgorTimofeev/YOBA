@@ -2,48 +2,58 @@
 
 #include <esp_log.h>
 
+#include "application.h"
+
 namespace YOBA {
 	void Button::onEvent(Event* event) {
-		if (event->getTypeID() == TouchDownEvent::typeID) {
+		if (event->getTypeID() == PointerDownEvent::typeID) {
+			// ESP_LOGI("Button", "PointerDownEvent");
+
 			_wasDown = true;
 			_previousIsActive = isActive();
 			setActive(true);
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == TouchUpEvent::typeID) {
-			if (!_wasDown)
-				return;
+		else if (event->getTypeID() == PointerUpEvent::typeID) {
+			// ESP_LOGI("Button", "PointerUpEvent");
+			// ESP_LOGI("Button", "isCaptured(): %d", isCaptured());
+			// ESP_LOGI("Button", "isPointerOver(): %d", isPointerOver());
+			// ESP_LOGI("Button", "global capt: %p, this %p", Application::getCurrent()->getCapturedElement(), this);
+			// ESP_LOGI("Button", "_wasDown: %d", _wasDown);
 
-			if (_isToggle) {
-				setActive(!isActive());
+			if (_wasDown) {
+				if (_isToggle) {
+					setActive(!isActive());
+				}
+				else {
+					setActive(false);
+				}
+
+				callOnClick();
+
+				_wasDown = false;
 			}
-			else {
-				setActive(false);
-			}
 
-			callOnClick();
-
-			_wasDown = false;
-
+			event->setHandled(true);
+		}
+		else if (PointerEvent::isPointer(event)) {
 			event->setHandled(true);
 		}
 	}
 
-	void Button::onTouchOverChanged() {
-		// ESP_LOGI("Button", "onTouchOverChanged: %d", isTouchOver());
+	void Button::onPointerOverChanged() {
+		// ESP_LOGI("Button", "onPointerOverChanged(): %d", isPointerOver());
 
-		if (!_wasDown || isPointerOver())
+		if (_wasDown && isPointerOver())
 			return;
 
 		if (_isToggle) {
-			setActive(!_previousIsActive);
+			setActive(_previousIsActive);
 		}
 		else {
 			setActive(false);
 		}
-
-		_wasDown = false;
 	}
 
 	void Button::onRender(Renderer* renderer, const Bounds& bounds) {

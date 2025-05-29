@@ -216,25 +216,36 @@ namespace YOBA {
 			}
 
 			void onEventBeforeChildren(Event* event) override {
-				if (event->getTypeID() == TouchDownEvent::typeID) {
-					_lastTouchPosition = reinterpret_cast<TouchDownEvent*>(event)->getPosition();
+				if (event->getTypeID() == PointerDownEvent::typeID) {
+					_lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
 				}
-				else if (event->getTypeID() == TouchDragEvent::typeID) {
+				else if (event->getTypeID() == PointerDragEvent::typeID) {
 					if (_lastTouchPosition.getX() >= 0) {
-						setCaptured(true);
+						const auto position = reinterpret_cast<PointerDragEvent*>(event)->getPosition();
+						const auto pointerDelta = position - _lastTouchPosition;
 
-						const auto position = reinterpret_cast<TouchDragEvent*>(event)->getPosition();
-						const auto touchDelta = position - _lastTouchPosition;
-						_lastTouchPosition = position;
+						if (isCaptured()) {
+							_lastTouchPosition = position;
 
-						if (_horizontalScrollPossible)
-							scrollHorizontallyBy(-touchDelta.getX());
+							if (_horizontalScrollPossible)
+								scrollHorizontallyBy(-pointerDelta.getX());
 
-						if (_verticalScrollPossible)
-							scrollVerticallyBy(-touchDelta.getY());
+							if (_verticalScrollPossible)
+								scrollVerticallyBy(-pointerDelta.getY());
+						}
+						else {
+							if (pointerDelta.getLength() >= 5) {
+								setCaptured(true);
+
+								_lastTouchPosition = position;
+							}
+						}
 					}
 				}
-				else if (event->getTypeID() == TouchUpEvent::typeID) {
+			}
+
+			void onEventAfterChildren(Event* event) override {
+				if (event->getTypeID() == PointerUpEvent::typeID) {
 					setCaptured(false);
 				}
 			}

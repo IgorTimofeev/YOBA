@@ -1,14 +1,36 @@
 #include <YOBA/UI/control.h>
+#include <YOBA/UI/application.h>
 #include <YOBA/main/event.h>
 
 namespace YOBA {
 	void Control::handleEvent(Event* event, bool callHandlers) {
-		if (TouchEvent::isTouch(event)) {
+		if (PointerEvent::isPointer(event)) {
 			if (isVisible() && isVisibleForPointerEvents()) {
-				setPointerOver(getBounds().intersects(reinterpret_cast<TouchEvent*>(event)->getPosition()));
+				const auto intersects = getBounds().intersects(reinterpret_cast<PointerEvent*>(event)->getPosition());
+				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
 
-				if (callHandlers && isEnabled() && (isPointerOver() || isCaptured()))
+				setPointerOver(
+					event->getTypeID() != PointerUpEvent::typeID
+					&& intersects
+					&& (
+						!capturedElement
+						|| capturedElement == this
+					)
+				);
+
+				if (
+					callHandlers
+					&& isEnabled()
+					&& (
+						(
+							intersects
+							&& !capturedElement
+						)
+						|| capturedElement == this
+					)
+				) {
 					onEvent(event);
+				}
 			}
 			else {
 				setPointerOver(false);

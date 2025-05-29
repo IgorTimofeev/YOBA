@@ -359,7 +359,7 @@ namespace YOBA {
 					if (point1 != _touchPoints[0].getPosition()) {
 						_touchPoints[0].setPosition(point1);
 
-						auto event = TouchDragEvent(
+						auto event = PointerDragEvent(
 							_touchPoints[0].getPosition()
 						);
 
@@ -373,7 +373,7 @@ namespace YOBA {
 					_touchPoints[0].setDown(true);
 					_touchPoints[0].setPosition(readOrientedPoint1(renderTarget));
 
-					auto event = TouchDownEvent(
+					auto event = PointerDownEvent(
 						_touchPoints[0].getPosition()
 					);
 
@@ -404,7 +404,7 @@ namespace YOBA {
 				_touchPoints[0].setDown(false);
 				_touchPoints[0].setPosition(readOrientedPoint1(renderTarget));
 
-				auto event = TouchUpEvent(
+				auto event = PointerUpEvent(
 					_touchPoints[0].getPosition()
 				);
 

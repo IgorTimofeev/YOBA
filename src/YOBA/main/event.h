@@ -44,38 +44,38 @@ namespace YOBA {
 			static bool isScreen(const Event* event);
 	};
 
-	// -------------------------------- Touch --------------------------------
+	// -------------------------------- Pointer --------------------------------
 
-	class TouchEvent : public ScreenEvent {
+	class PointerEvent : public ScreenEvent {
 		public:
-			TouchEvent(uint16_t& staticTypeID, const Point& position);
+			PointerEvent(uint16_t& staticTypeID, const Point& position);
 
 			const Point& getPosition() const;
 			void setPosition(const Point& position);
 
-			static bool isTouch(const Event* event);
+			static bool isPointer(const Event* event);
 
 		private:
 			Point _position;
 	};
 
-	class TouchDownEvent : public TouchEvent {
+	class PointerDownEvent : public PointerEvent {
 		public:
-			explicit TouchDownEvent(const Point& position);
+			explicit PointerDownEvent(const Point& position);
 
 			static uint16_t typeID;
 	};
 
-	class TouchDragEvent : public TouchEvent {
+	class PointerDragEvent : public PointerEvent {
 		public:
-			explicit TouchDragEvent(const Point& position);
+			explicit PointerDragEvent(const Point& position);
 
 			static uint16_t typeID;
 	};
 
-	class TouchUpEvent : public TouchEvent {
+	class PointerUpEvent : public PointerEvent {
 		public:
-			explicit TouchUpEvent(const Point& position);
+			explicit PointerUpEvent(const Point& position);
 
 			static uint16_t typeID;
 	};
