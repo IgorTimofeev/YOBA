@@ -2,8 +2,10 @@
 #include <algorithm>
 #include <esp_log.h>
 
-#include <YOBA/main/events/pointerEvent.h>
 #include <YOBA/UI/application.h>
+#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/main/events/pinchEvent.h>
+
 
 namespace YOBA {
 	void Layout::onTick() {
@@ -154,15 +156,29 @@ namespace YOBA {
 	}
 
 	void Layout::handleEvent(Event* event, bool callHandlers) {
-		if (PointerEvent::isPointer(event)) {
+		const auto isPointer = PointerEvent::isPointer(event);
+		const auto isPinch = PinchEvent::isPinch(event);
+
+		if (isPointer || isPinch) {
 			bool callHandlersOfThis;
 
 			if (isVisible() && isVisibleForPointerEvents()) {
-				const auto intersects = getBounds().intersects(reinterpret_cast<PointerEvent*>(event)->getPosition());
+				bool intersects;
+
+				if (isPointer) {
+					intersects = getBounds().intersects(reinterpret_cast<PointerEvent*>(event)->getPosition());
+				}
+				else {
+					const auto& bounds = getBounds();
+					const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
+					intersects = bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2());
+				}
+
 				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
 
 				setPointerOver(
 					event->getTypeID() != PointerUpEvent::typeID
+					&& event->getTypeID() != PinchUpEvent::typeID
 					&& intersects
 					&& (
 						!capturedElement
@@ -230,10 +246,12 @@ namespace YOBA {
 			if (!isVisible() || !isEnabled())
 				return;
 
-			// Before
-			onEventBeforeChildren(event);
+			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+			const auto callHandlersOnThis = callHandlers && (!capturedElement || capturedElement == this);
 
-			// ESP_LOGI("Layout", "handleEvent before, type: %d, handled: %d", event->getTypeID(), event->isHandled());
+			// Before
+			if (callHandlersOnThis)
+				onEventBeforeChildren(event);
 
 			if (event->isHandled())
 				return;
@@ -244,8 +262,6 @@ namespace YOBA {
 
 				while (true) {
 					_children[i]->handleEvent(event, callHandlers);
-
-					// ESP_LOGI("Layout", "handleEvent on CHILD, type: %d, handled: %d", event->getTypeID(), event->isHandled());
 
 					if (event->isHandled())
 						return;
@@ -258,9 +274,8 @@ namespace YOBA {
 			}
 
 			// After
-			// ESP_LOGI("Layout", "handleEvent after, type: %d, handled: %d", event->getTypeID(), event->isHandled());
-
-			onEventAfterChildren(event);
+			if (callHandlersOnThis)
+				onEventAfterChildren(event);
 		}
 	}
 
