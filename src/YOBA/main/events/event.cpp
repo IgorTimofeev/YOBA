@@ -1,14 +1,19 @@
 #include "event.h"
 
 namespace YOBA {
-	Event::Event(uint16_t& staticTypeID) {
-		if (staticTypeID == 0)
-			staticTypeID = _nextTypeID++;
-
-		_typeID = staticTypeID;
+	Event::Event(uint16_t typeID) {
+		_typeID = typeID;
 	}
 
-	uint16_t Event::_nextTypeID = 1;
+	uint16_t Event::_nextTypeID = 0;
+
+	uint16_t Event::registerTypeID() {
+		const auto result = _nextTypeID;
+
+		_nextTypeID++;
+
+		return result;
+	}
 
 	bool Event::isHandled() const {
 		return _handled;

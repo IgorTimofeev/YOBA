@@ -10,7 +10,7 @@
 namespace YOBA {
 	class KeyEvent : public Event {
 		public:
-			explicit KeyEvent(uint16_t& staticTypeID, Key key, const std::optional<std::wstring_view>& text);
+			explicit KeyEvent(uint16_t typeID, Key key, const std::optional<std::wstring_view>& text);
 
 			Key getKey() const;
 			const std::optional<std::wstring_view>& getText() const;

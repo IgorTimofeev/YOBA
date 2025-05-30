@@ -6,7 +6,7 @@
 namespace YOBA {
 	class PinchEvent : public ScreenEvent {
 		public:
-			PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2);
+			PinchEvent(uint16_t typeID, const Point& position1, const Point& position2);
 
 			const Point& getPosition1() const;
 			void setPosition1(const Point& position1);

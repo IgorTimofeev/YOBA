@@ -3,8 +3,8 @@
 #include <cstdint>
 
 namespace YOBA {
-	PinchEvent::PinchEvent(uint16_t& staticTypeID, const Point& position1, const Point& position2) :
-		ScreenEvent(staticTypeID),
+	PinchEvent::PinchEvent(uint16_t typeID, const Point& position1, const Point& position2) :
+		ScreenEvent(typeID),
 		_position1(position1),
 		_position2(position2)
 	{
@@ -46,7 +46,7 @@ namespace YOBA {
 
 	}
 
-	uint16_t PinchDownEvent::typeID = 0;
+	uint16_t PinchDownEvent::typeID = registerTypeID();
 
 	PinchDragEvent::PinchDragEvent(const Point& position1, const Point& position2) :
 		PinchEvent(
@@ -58,7 +58,7 @@ namespace YOBA {
 
 	}
 
-	uint16_t PinchDragEvent::typeID = 0;
+	uint16_t PinchDragEvent::typeID = registerTypeID();
 
 	PinchUpEvent::PinchUpEvent(const Point& position1, const Point& position2) : PinchEvent(
 		typeID,
@@ -68,5 +68,5 @@ namespace YOBA {
 
 	}
 
-	uint16_t PinchUpEvent::typeID = 0;
+	uint16_t PinchUpEvent::typeID = registerTypeID();
 }

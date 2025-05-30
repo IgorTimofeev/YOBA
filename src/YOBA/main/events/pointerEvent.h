@@ -6,7 +6,7 @@
 namespace YOBA {
 	class PointerEvent : public ScreenEvent {
 		public:
-			PointerEvent(uint16_t& staticTypeID, const Point& position);
+			PointerEvent(uint16_t typeID, const Point& position);
 
 			const Point& getPosition() const;
 			void setPosition(const Point& position);

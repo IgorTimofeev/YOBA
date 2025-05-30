@@ -1,7 +1,7 @@
 #include "keyEvent.h"
 
 namespace YOBA {
-	KeyEvent::KeyEvent(uint16_t& staticTypeID, Key key, const std::optional<std::wstring_view>& text) : Event(staticTypeID), _key(key), _text(text) {
+	KeyEvent::KeyEvent(uint16_t typeID, Key key, const std::optional<std::wstring_view>& text) : Event(typeID), _key(key), _text(text) {
 
 	}
 
@@ -18,12 +18,12 @@ namespace YOBA {
 
 	}
 
-	uint16_t KeyDownEvent::typeID = 0;
+	uint16_t KeyDownEvent::typeID = registerTypeID();
 
 	// Up
 	KeyUpEvent::KeyUpEvent(Key key, const std::optional<std::wstring_view>& text) : KeyEvent(typeID, key, text) {
 
 	}
 
-	uint16_t KeyUpEvent::typeID = 0;
+	uint16_t KeyUpEvent::typeID = registerTypeID();
 }

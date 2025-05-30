@@ -6,7 +6,7 @@
 #include "pointerEvent.h"
 
 namespace YOBA {
-	ScreenEvent::ScreenEvent(uint16_t& staticTypeID) : Event(staticTypeID) {
+	ScreenEvent::ScreenEvent(uint16_t typeID) : Event(typeID) {
 
 	}
 

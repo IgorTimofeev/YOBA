@@ -3,8 +3,8 @@
 #include <cstdint>
 
 namespace YOBA {
-	PointerEvent::PointerEvent(uint16_t& staticTypeID, const Point& position) :
-		ScreenEvent(staticTypeID),
+	PointerEvent::PointerEvent(uint16_t typeID, const Point& position) :
+		ScreenEvent(typeID),
 		_position(position)
 	{
 
@@ -32,7 +32,7 @@ namespace YOBA {
 
 	}
 
-	uint16_t PointerDownEvent::typeID = 0;
+	uint16_t PointerDownEvent::typeID = registerTypeID();
 
 	PointerDragEvent::PointerDragEvent(const Point& position) : PointerEvent(
 		typeID,
@@ -41,7 +41,7 @@ namespace YOBA {
 
 	}
 
-	uint16_t PointerDragEvent::typeID = 0;
+	uint16_t PointerDragEvent::typeID = registerTypeID();
 
 	PointerUpEvent::PointerUpEvent(const Point& position) : PointerEvent(
 		typeID,
@@ -50,5 +50,5 @@ namespace YOBA {
 
 	}
 
-	uint16_t PointerUpEvent::typeID = 0;
+	uint16_t PointerUpEvent::typeID = registerTypeID();
 }

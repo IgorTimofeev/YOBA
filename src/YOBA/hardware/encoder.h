@@ -12,11 +12,11 @@ namespace YOBA {
 
 	class EncoderValueChangedEvent : public Event {
 		public:
-			explicit EncoderValueChangedEvent(int32_t deltaPerSecond);
+			explicit EncoderValueChangedEvent(int16_t deltaPerSecond);
 
 			static uint16_t typeID;
 
-			int32_t getDPS() const;
+			int16_t getDPS() const;
 
 			template<typename TValue>
 			TValue getDPSFactor(uint16_t check1, TValue value1, TValue valueElse);
@@ -25,7 +25,7 @@ namespace YOBA {
 			TValue getDPSFactor(uint16_t check1, TValue check2, TValue value1, TValue value2, TValue valueElse);
 
 		private:
-			int32_t _DPS;
+			int16_t _DPS;
 	};
 
 	template<typename TValue>
@@ -69,12 +69,17 @@ namespace YOBA {
 			virtual void setup();
 			void tick() override;
 
+			uint16_t getMinimumDelta() const;
+
+			void setMinimumDelta(uint16_t value);
+
 		private:
 			uint8_t _aPin;
 			uint8_t _bPin;
 			uint8_t _oldAB = 0;
 			uint64_t _oldValueTime = 0;
-			int32_t _value = 0;
+			int16_t _value = 0;
+			uint16_t _minimumDelta = 0;
 
 			static void abInterruptHandler(void* args);
 			void readValue();

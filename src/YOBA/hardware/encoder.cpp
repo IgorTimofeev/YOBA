@@ -6,13 +6,13 @@
 namespace YOBA {
 	// -------------------------------- Value changed event --------------------------------
 
-	EncoderValueChangedEvent::EncoderValueChangedEvent(int32_t deltaPerSecond) : Event(typeID), _DPS(deltaPerSecond) {
+	EncoderValueChangedEvent::EncoderValueChangedEvent(int16_t deltaPerSecond) : Event(typeID), _DPS(deltaPerSecond) {
 
 	}
 
-	uint16_t EncoderValueChangedEvent::typeID = 0;
+	uint16_t EncoderValueChangedEvent::typeID = registerTypeID();
 
-	int32_t EncoderValueChangedEvent::getDPS() const {
+	int16_t EncoderValueChangedEvent::getDPS() const {
 		return _DPS;
 	}
 
@@ -34,21 +34,29 @@ namespace YOBA {
 	}
 
 	void Encoder::tick() {
-		if (_value == 0)
+		if (std::abs(_value) < _minimumDelta)
 			return;
 
 		const auto application = Application::getCurrent();
 
 		const auto time = system::getTime();
-		const uint32_t deltaTime = time - _oldValueTime;
+		const auto deltaTime = static_cast<int32_t>(time - _oldValueTime);
 		_oldValueTime = time;
 
-		const int32_t dps = _value * static_cast<int32_t>(1'000'000) / static_cast<int32_t>(deltaTime);
+		const auto dps = static_cast<int16_t>(static_cast<int32_t>(_value) * static_cast<int32_t>(1'000'000) / deltaTime);
 
 		auto event = EncoderValueChangedEvent(dps);
 		application->pushEvent(&event);
 
 		_value = 0;
+	}
+
+	uint16_t Encoder::getMinimumDelta() const {
+		return _minimumDelta;
+	}
+
+	void Encoder::setMinimumDelta(uint16_t value) {
+		_minimumDelta = value;
 	}
 
 	void Encoder::abInterruptHandler(void* args) {
@@ -96,7 +104,7 @@ namespace YOBA {
 
 	}
 
-	uint16_t PushButtonEncoderDownEvent::typeID = 0;
+	uint16_t PushButtonEncoderDownEvent::typeID = registerTypeID();
 
 	// -------------------------------- Push up event --------------------------------
 
@@ -104,7 +112,7 @@ namespace YOBA {
 
 	}
 
-	uint16_t PushButtonEncoderUpEvent::typeID = 0;
+	uint16_t PushButtonEncoderUpEvent::typeID = registerTypeID();
 
 
 	// -------------------------------- PushButtonEncoder --------------------------------
