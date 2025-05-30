@@ -6,7 +6,7 @@
 #include "cmath"
 #include <YOBA/main/callback.h>
 #include <YOBA/UI/traits/backgroundColorElement.h>
-#include <YOBA/main/event.h>
+#include <YOBA/main/events/pointerEvent.h>
 #include <YOBA/main/math.h>
 
 namespace YOBA {

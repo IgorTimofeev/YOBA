@@ -8,7 +8,8 @@
 #include "keyboard.h"
 
 #include <YOBA/main/callback.h>
-#include <YOBA/main/event.h>
+#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/main/events/pinchEvent.h>
 #include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA {
@@ -22,7 +23,7 @@ namespace YOBA {
 		public:
 			~TextField() override;
 
-			Callback<KeyCode, std::wstring_view> input {};
+			Callback<Key, std::wstring_view> input {};
 			Callback<> textChanged {};
 
 			wchar_t getMask() const;
@@ -73,9 +74,6 @@ namespace YOBA {
 			void insert(std::wstring_view value);
 			void backspace();
 
-			const std::optional<std::function<void(Keyboard*)>>& getKeyboardConfigurator() const;
-			void setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator);
-
 		protected:
 			void onTick() override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
@@ -83,7 +81,7 @@ namespace YOBA {
 			void onFocusChanged() override;
 			void onTextChanged() override;
 
-			virtual void onInput(KeyCode keyCode, std::wstring_view text);
+			virtual void onInput(Key keyCode, std::wstring_view text);
 
 		private:
 			int32_t _lastTouchX = -1;
@@ -112,10 +110,8 @@ namespace YOBA {
 
 			std::wstring _placeholder = std::wstring();
 			wchar_t _mask = 0;
-			std::optional<std::function<void(Keyboard*)>> _keyboardConfigurator = std::nullopt;
 
 			void setCursorBlinkStateAndTime(bool value);
-			void showKeyboard();
 			void applyContinuousScroll();
 	};
 }

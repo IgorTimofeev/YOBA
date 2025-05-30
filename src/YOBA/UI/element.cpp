@@ -8,7 +8,6 @@
 #include <YOBA/UI/animation.h>
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/application.h>
-#include <YOBA/main/event.h>
 
 namespace YOBA {
 	Element::~Element() {

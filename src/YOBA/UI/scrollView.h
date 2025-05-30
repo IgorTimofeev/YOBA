@@ -234,7 +234,7 @@ namespace YOBA {
 								scrollVerticallyBy(-pointerDelta.getY());
 						}
 						else {
-							if (pointerDelta.getLength() >= 5) {
+							if (pointerDelta.getLength() >= 3) {
 								setCaptured(true);
 
 								_lastTouchPosition = position;

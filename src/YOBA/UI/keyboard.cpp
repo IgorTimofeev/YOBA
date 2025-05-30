@@ -7,9 +7,9 @@
 namespace YOBA {
 	// ----------------------------- KeyboardKey -----------------------------
 
-	KeyboardKey::KeyboardKey(KeyboardKeyType type, KeyCode code, std::wstring_view name, float width) :
+	KeyboardKey::KeyboardKey(KeyboardKeyType type, Key key, std::wstring_view name, float width) :
 		_type(type),
-		_code(code),
+		_key(key),
 		_name(name),
 		_width(width)
 	{
@@ -24,14 +24,23 @@ namespace YOBA {
 
 	void KeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
 		const auto keyboard = button->getKeyboard();
-		const auto code = getCodeFromCase(keyboard);
+		const auto key = getKeyFromCase(keyboard);
 
-		if (code != KeyCode::none)
-			keyboard->keyPressedChanged(code, button->isActive());
+		if (key == Key::none)
+			return;
+
+		if (button->isActive()) {
+			auto event = KeyDownEvent(key, getTextFromCase(keyboard));
+			Application::getCurrent()->pushEvent(&event);
+		}
+		else {
+			auto event = KeyUpEvent(key, getTextFromCase(keyboard));
+			Application::getCurrent()->pushEvent(&event);
+		}
 	}
 
-	KeyCode KeyboardKey::getCode() const {
-		return _code;
+	Key KeyboardKey::getKey() const {
+		return _key;
 	}
 
 	std::wstring_view KeyboardKey::getName() const {
@@ -46,35 +55,39 @@ namespace YOBA {
 		return _type;
 	}
 
-	KeyCode KeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
-		return getCode();
+	Key KeyboardKey::getKeyFromCase(Keyboard* keyboard) const {
+		return getKey();
 	}
 
 	std::wstring_view KeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		return getName();
 	}
 
+	std::optional<std::wstring_view> KeyboardKey::getTextFromCase(Keyboard* keyboard) const {
+		return std::nullopt;
+	}
+
 	// ----------------------------- TextKeyboardKey -----------------------------
 
 	TextKeyboardKey::TextKeyboardKey(
-		KeyCode code,
+		Key key,
 		std::wstring_view name,
-		KeyCode uppercaseCode,
+		Key uppercaseKey,
 		std::wstring_view uppercaseName,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::normal, code, name, width),
-		_uppercaseCode(uppercaseCode),
+		KeyboardKey(KeyboardKeyType::normal, key, name, width),
+		_uppercaseKey(uppercaseKey),
 		_uppercaseName(uppercaseName)
 	{
 
 	}
 
-	TextKeyboardKey::TextKeyboardKey(KeyCode code, std::wstring_view name, float width) :
+	TextKeyboardKey::TextKeyboardKey(Key key, std::wstring_view name, float width) :
 		TextKeyboardKey(
-			code,
+			key,
 			name,
-			code,
+			key,
 			name,
 			width
 		)
@@ -82,20 +95,24 @@ namespace YOBA {
 
 	}
 
-	KeyCode TextKeyboardKey::getUppercaseCode() const {
-		return _uppercaseCode;
+	Key TextKeyboardKey::getUppercaseKey() const {
+		return _uppercaseKey;
 	}
 
 	std::wstring_view TextKeyboardKey::getUppercaseName() const {
 		return _uppercaseName;
 	}
 
-	KeyCode TextKeyboardKey::getCodeFromCase(Keyboard* keyboard) const {
-		return keyboard->getCase() == KeyboardCase::lower ? getCode() : getUppercaseCode();
+	Key TextKeyboardKey::getKeyFromCase(Keyboard* keyboard) const {
+		return keyboard->getCase() == KeyboardCase::lower ? getKey() : getUppercaseKey();
 	}
 
 	std::wstring_view TextKeyboardKey::getNameFromCase(Keyboard* keyboard) const {
 		return keyboard->getCase() == KeyboardCase::lower ? getName() : getUppercaseName();
+	}
+
+	std::optional<std::wstring_view> TextKeyboardKey::getTextFromCase(Keyboard* keyboard) const {
+		return getNameFromCase(keyboard);
 	}
 
 	void TextKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
@@ -105,8 +122,6 @@ namespace YOBA {
 			return;
 
 		const auto keyboard = button->getKeyboard();
-
-		keyboard->input(getCodeFromCase(keyboard), getNameFromCase(keyboard));
 
 		if (keyboard->getCase() == KeyboardCase::upper)
 			keyboard->setCase(KeyboardCase::lower);
@@ -122,7 +137,7 @@ namespace YOBA {
 	) :
 		KeyboardKey(
 			KeyboardKeyType::action,
-			KeyCode::shift,
+			Key::shift,
 			name,
 			width
 		),
@@ -167,7 +182,7 @@ namespace YOBA {
 	// ----------------------------- BackspaceKeyboardKey -----------------------------
 
 	BackspaceKeyboardKey::BackspaceKeyboardKey(std::wstring_view name, float width) :
-		KeyboardKey(KeyboardKeyType::action, KeyCode::backspace, name, width)
+		KeyboardKey(KeyboardKeyType::action, Key::backspace, name, width)
 	{
 
 	}
@@ -175,7 +190,7 @@ namespace YOBA {
 	// ----------------------------- EnterKeyboardKey -----------------------------
 
 	EnterKeyboardKey::EnterKeyboardKey(float width) :
-		KeyboardKey(KeyboardKeyType::action, KeyCode::enter, L"<-", width)
+		KeyboardKey(KeyboardKeyType::action, Key::enter, L"<-", width)
 	{
 
 	}
@@ -183,7 +198,7 @@ namespace YOBA {
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
 	SpaceKeyboardKey::SpaceKeyboardKey() :
-		TextKeyboardKey(KeyCode::space, L" ", KeyCode::space, L" ", stretched)
+		TextKeyboardKey(Key::space, L" ", Key::space, L" ", stretched)
 	{
 
 	}
@@ -194,7 +209,7 @@ namespace YOBA {
 		std::wstring_view name,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::charactersLayout, KeyCode::none, name, width)
+		KeyboardKey(KeyboardKeyType::charactersLayout, Key::none, name, width)
 	{
 
 	}
@@ -216,7 +231,7 @@ namespace YOBA {
 		std::wstring_view name,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::action, KeyCode::none, name, width)
+		KeyboardKey(KeyboardKeyType::action, Key::none, name, width)
 	{
 
 	}
@@ -238,7 +253,7 @@ namespace YOBA {
 		std::wstring_view name,
 		float width
 	) :
-		KeyboardKey(KeyboardKeyType::cyclicLayout, KeyCode::none, name, width)
+		KeyboardKey(KeyboardKeyType::cyclicLayout, Key::none, name, width)
 	{
 
 	}
@@ -372,27 +387,27 @@ namespace YOBA {
 	}
 
 	const Color* Keyboard::getDefaultKeyTextColor() const {
-		return _defaultKeySecondaryColor;
+		return _defaultKeyTextColor;
 	}
 
 	void Keyboard::setDefaultKeyTextColor(const Color* value) {
-		_defaultKeySecondaryColor = value;
+		_defaultKeyTextColor = value;
 	}
 
 	const Color* Keyboard::getActionKeyBackgroundColor() const {
-		return _actionKeyPrimaryColor;
+		return _actionKeyBackgroundColor;
 	}
 
 	void Keyboard::setActionKeyBackgroundColor(const Color* value) {
-		_actionKeyPrimaryColor = value;
+		_actionKeyBackgroundColor = value;
 	}
 
 	const Color* Keyboard::getActionKeyTextColor() const {
-		return _actionKeySecondaryColor;
+		return _actionKeyTextColor;
 	}
 
-	void Keyboard::setActionKeySecondaryColor(const Color* actionButtonSecondaryColor) {
-		_actionKeySecondaryColor = actionButtonSecondaryColor;
+	void Keyboard::setActionKeyTextColor(const Color* actionButtonSecondaryColor) {
+		_actionKeyTextColor = actionButtonSecondaryColor;
 	}
 
 	KeyboardLayout* Keyboard::getLayout() const {
@@ -662,58 +677,76 @@ namespace YOBA {
 
 	// ----------------------------- KeyboardController -----------------------------
 
-	Keyboard* ApplicationKeyboardController::_keyboard = nullptr;
-	Layout* ApplicationKeyboardController::_applicationChildrenLayout = nullptr;
-	RelativeStackLayout* ApplicationKeyboardController::_keyboardAndApplicationChildrenLayout = nullptr;
+	KeyboardControllerLayout::KeyboardControllerLayout() {
+		*this += &temporaryLayout;
 
-	Keyboard* ApplicationKeyboardController::show() {
-		if (_keyboard)
-			return nullptr;
-
-		const auto application = Application::getCurrent();
-
-		_keyboardAndApplicationChildrenLayout = new RelativeStackLayout();
-		_keyboardAndApplicationChildrenLayout->setSize(application->getRenderer()->getTarget()->getSize());
-
-		// Moving children from root to temporary layout
-		_applicationChildrenLayout = new Layout();
-		application->moveChildrenTo(_applicationChildrenLayout);
-		*_keyboardAndApplicationChildrenLayout += _applicationChildrenLayout;
-
-		// Creating keyboard
-		_keyboard = new Keyboard();
-		_keyboardAndApplicationChildrenLayout->setAutoSize(_keyboard);
-		*_keyboardAndApplicationChildrenLayout += _keyboard;
-
-		*application += _keyboardAndApplicationChildrenLayout;
-
-		return _keyboard;
+		*this += &keyboard;
+		setAutoSize(&keyboard);
 	}
 
-	void ApplicationKeyboardController::hide() {
-		if (!_keyboard)
+	KeyboardControllerLayout* KeyboardController::_controllerLayout = nullptr;
+	Layout* KeyboardController::_targetLayout = nullptr;
+	std::optional<std::function<void(Keyboard*)>> KeyboardController::_onKeyboardShow = std::nullopt;
+
+	void KeyboardController::show() {
+		if (_controllerLayout)
 			return;
 
-		const auto application = Application::getCurrent();
+		_controllerLayout = new KeyboardControllerLayout();
 
-		application->removeChildren();
-		_applicationChildrenLayout->moveChildrenTo(application);
+		const auto targetLayout = getTargetLayoutOrApplication();
 
-		delete _keyboard;
-		_keyboard = nullptr;
+		_controllerLayout->setSize(targetLayout->getBounds().getSize());
 
-		delete _applicationChildrenLayout;
-		_applicationChildrenLayout = nullptr;
+		// Moving children from target to temporary layout
+		targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);
 
-		delete _keyboardAndApplicationChildrenLayout;
-		_keyboardAndApplicationChildrenLayout = nullptr;
+		// Configuring keyboard
+		if (_onKeyboardShow.has_value())
+			_onKeyboardShow.value()(&_controllerLayout->keyboard);
+
+		*targetLayout += _controllerLayout;
 	}
 
-	bool ApplicationKeyboardController::isVisible() {
-		return _keyboard != nullptr;
+	void KeyboardController::hide() {
+		if (!_controllerLayout)
+			return;
+
+		const auto targetLayout = getTargetLayoutOrApplication();
+
+		targetLayout->removeChildren();
+		_controllerLayout->temporaryLayout.moveChildrenTo(targetLayout);
+
+		delete _controllerLayout;
+		_controllerLayout = nullptr;
+	}
+
+	bool KeyboardController::isVisible() {
+		return _controllerLayout != nullptr;
+	}
+
+	void KeyboardController::setOnShow(const std::optional<std::function<void(Keyboard*)>>& value) {
+		_onKeyboardShow = value;
+	}
+
+	Keyboard* KeyboardController::getKeyboard() {
+		return _controllerLayout ? &_controllerLayout->keyboard : nullptr;
+	}
+
+	Layout* KeyboardController::getTargetLayout() {
+		return _targetLayout;
+	}
+
+	void KeyboardController::setTargetLayout(Layout* value) {
+		_targetLayout = value;
+	}
+
+	Layout* KeyboardController::getTargetLayoutOrApplication() {
+		return _targetLayout ? _targetLayout : Application::getCurrent();
 	}
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------
+
 
 	CharactersKeyboardLayout::CharactersKeyboardLayout() : KeyboardLayout({
 		{

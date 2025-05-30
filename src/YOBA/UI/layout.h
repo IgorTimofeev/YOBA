@@ -5,7 +5,7 @@
 #include <YOBA/main/rendering/renderer.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/size.h>
-#include <YOBA/main/event.h>
+#include <YOBA/main/events/event.h>
 #include <iterator>
 
 namespace YOBA {

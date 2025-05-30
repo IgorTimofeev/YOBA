@@ -1,9 +1,9 @@
 #include "layout.h"
-#include <YOBA/main/event.h>
 #include <algorithm>
 #include <esp_log.h>
 
-#include "application.h"
+#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/UI/application.h>
 
 namespace YOBA {
 	void Layout::onTick() {
@@ -233,6 +233,8 @@ namespace YOBA {
 			// Before
 			onEventBeforeChildren(event);
 
+			// ESP_LOGI("Layout", "handleEvent before, type: %d, handled: %d", event->getTypeID(), event->isHandled());
+
 			if (event->isHandled())
 				return;
 
@@ -242,6 +244,8 @@ namespace YOBA {
 
 				while (true) {
 					_children[i]->handleEvent(event, callHandlers);
+
+					// ESP_LOGI("Layout", "handleEvent on CHILD, type: %d, handled: %d", event->getTypeID(), event->isHandled());
 
 					if (event->isHandled())
 						return;
@@ -254,6 +258,8 @@ namespace YOBA {
 			}
 
 			// After
+			// ESP_LOGI("Layout", "handleEvent after, type: %d, handled: %d", event->getTypeID(), event->isHandled());
+
 			onEventAfterChildren(event);
 		}
 	}

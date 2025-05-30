@@ -7,7 +7,7 @@
 #include <YOBA/main/callback.h>
 #include <YOBA/main/margin.h>
 #include <YOBA/main/bounds.h>
-#include <YOBA/main/event.h>
+#include <YOBA/main/events/event.h>
 #include <YOBA/main/size.h>
 #include <YOBA/main/rendering/renderer.h>
 

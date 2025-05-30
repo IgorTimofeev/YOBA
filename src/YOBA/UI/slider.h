@@ -2,7 +2,8 @@
 
 #include <algorithm>
 #include <YOBA/UI/control.h>
-#include <YOBA/main/event.h>
+#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/main/events/pinchEvent.h>
 #include <YOBA/main/math.h>
 
 namespace YOBA {

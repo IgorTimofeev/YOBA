@@ -3,7 +3,7 @@
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/activeElement.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>
-#include <YOBA/main/event.h>
+#include <YOBA/main/events/pointerEvent.h>
 
 namespace YOBA {
 	class Switch : public Control, public ActiveElement, public CornerRadiusElement {

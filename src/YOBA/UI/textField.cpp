@@ -1,10 +1,11 @@
 #include <cstdint>
 #include <YOBA/UI/textField.h>
 #include <YOBA/UI/application.h>
+#include <YOBA/main/events/keyEvent.h>
 
 namespace YOBA {
 	TextField::~TextField() {
-		ApplicationKeyboardController::hide();
+		KeyboardController::hide();
 	}
 
 	void TextField::onTick() {
@@ -160,6 +161,34 @@ namespace YOBA {
 			setCaptured(false);
 
 			event->setHandled(true);
+		}
+		else if (event->getTypeID() == KeyUpEvent::typeID) {
+			const auto keyUpEvent = reinterpret_cast<KeyUpEvent*>(event);
+
+			switch (keyUpEvent->getKey()) {
+				case Key::enter: {
+					setFocused(false);
+					break;
+				}
+				case Key::backspace: {
+					backspace();
+					break;
+				}
+				default: {
+					const auto text = keyUpEvent->getText();
+
+					if (text.has_value()) {
+						onInput(keyUpEvent->getKey(), text.value());
+						input(keyUpEvent->getKey(), text.value());
+
+						insert(text.value());
+					}
+
+					break;
+				}
+			}
+
+			keyUpEvent->setHandled(true);
 		}
 	}
 
@@ -373,10 +402,10 @@ namespace YOBA {
 		setCursorBlinkStateAndTime(isFocused());
 
 		if (isFocused()) {
-			showKeyboard();
+			KeyboardController::show();
 		}
 		else {
-			ApplicationKeyboardController::hide();
+			KeyboardController::hide();
 		}
 
 		invalidateRender();
@@ -386,41 +415,6 @@ namespace YOBA {
 		TextElement::onTextChanged();
 
 		textChanged();
-	}
-
-	void TextField::showKeyboard() {
-		const auto keyboard = ApplicationKeyboardController::show();
-
-		if (!keyboard)
-			return;
-
-		if (_keyboardConfigurator.has_value())
-			_keyboardConfigurator.value()(keyboard);
-
-		keyboard->keyPressedChanged += [this](KeyCode code, bool pressed) {
-			if (pressed)
-				return;
-
-			switch (code) {
-				case KeyCode::enter: {
-					setFocused(false);
-					break;
-				}
-				case KeyCode::backspace: {
-					backspace();
-					break;
-				}
-				default:
-					break;
-			}
-		};
-
-		keyboard->input += [this](KeyCode keyCode, std::wstring_view text) {
-			onInput(keyCode, text);
-			input(keyCode, text);
-
-			insert(text);
-		};
 	}
 
 	void TextField::setCursorBlinkStateAndTime(bool value) {
@@ -438,15 +432,7 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	const std::optional<std::function<void(Keyboard*)>>& TextField::getKeyboardConfigurator() const {
-		return _keyboardConfigurator;
-	}
-
-	void TextField::setKeyboardConfigurator(const std::optional<std::function<void(Keyboard*)>>& keyboardConfigurator) {
-		_keyboardConfigurator = keyboardConfigurator;
-	}
-
-	void TextField::onInput(KeyCode keyCode, std::wstring_view text) {
+	void TextField::onInput(Key keyCode, std::wstring_view text) {
 
 	}
 

@@ -1,5 +1,7 @@
 #include "selector.h"
 
+#include <YOBA/main/events/pointerEvent.h>
+
 namespace YOBA {
 	// -------------------------------- Selector --------------------------------
 

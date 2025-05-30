@@ -1,6 +1,5 @@
 #pragma once
 
-#include <YOBA/main/event.h>
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/fillColorElement.h>
 

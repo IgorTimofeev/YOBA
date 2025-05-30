@@ -9,6 +9,8 @@
 #include "FT6336UTouchPanel.h"
 #include <YOBA/system.h>
 #include <YOBA/UI/application.h>
+#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
 	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin) :

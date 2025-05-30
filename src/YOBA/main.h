@@ -17,7 +17,12 @@
 #include <YOBA/main/gradient.h>
 #include <YOBA/main/image.h>
 #include <YOBA/main/callback.h>
-#include <YOBA/main/event.h>
+
+// Events
+#include <YOBA/main/events/event.h>
+#include <YOBA/main/events/screenEvent.h>
+#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/main/events/pinchEvent.h>
 
 // Render targets
 #include <YOBA/main/rendering/renderTarget.h>
