@@ -54,9 +54,8 @@ namespace YOBA {
 	void Layout::removeChild(Element* child) {
 		const auto iterator = std::ranges::find(_children, child);
 
-		if (iterator == _children.end()) {
+		if (iterator == _children.end())
 			return;
-		}
 
 		_children.erase(iterator);
 

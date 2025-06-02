@@ -54,12 +54,13 @@ namespace YOBA {
 			}
 		}
 		else {
-			if (isVisible() && isEnabled()) {
-				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+			if (!isVisible() || !isEnabled())
+				return;
 
-				if (!capturedElement || capturedElement == this)
-					onEvent(event);
-			}
+			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+
+			if (!capturedElement || capturedElement == this)
+				onEvent(event);
 		}
 	}
 

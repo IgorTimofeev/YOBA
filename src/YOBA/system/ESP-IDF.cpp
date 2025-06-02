@@ -28,13 +28,12 @@ namespace YOBA::system {
 	// -------------------------------- GPIO --------------------------------
 
 	void GPIO::setMode(uint8_t pin, PinMode mode) {
-		const gpio_config_t config = {
-			.pin_bit_mask = 1ULL << pin,
-			.mode = mode == PinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT,
-			.pull_up_en = GPIO_PULLUP_ENABLE,
-			.pull_down_en = GPIO_PULLDOWN_DISABLE,
-			.intr_type = GPIO_INTR_DISABLE
-		};
+		gpio_config_t config {};
+		config.pin_bit_mask = 1ULL << pin;
+		config.mode = mode == PinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT;
+		config.pull_up_en = GPIO_PULLUP_ENABLE;
+		config.pull_down_en = GPIO_PULLDOWN_DISABLE;
+		config.intr_type = GPIO_INTR_DISABLE;
 
 		gpio_config(&config);
 	}
@@ -55,7 +54,7 @@ namespace YOBA::system {
 
 	// -------------------------------- SPI --------------------------------
 
-	spi_device_handle_t SPI::_deviceHandle = spi_device_handle_t();
+	spi_device_handle_t SPI::_deviceHandle {};
 
 	// Note: SPI instance will manage slave select output by itself
 	void SPI::setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency) {
@@ -106,8 +105,8 @@ namespace YOBA::system {
 
 	// -------------------------------- I2C --------------------------------
 
-	i2c_master_bus_handle_t I2C::_busHandle = {};
-	i2c_master_dev_handle_t I2C::_deviceHandle = {};
+	i2c_master_bus_handle_t I2C::_busHandle {};
+	i2c_master_dev_handle_t I2C::_deviceHandle {};
 
 	void I2C::setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency) {
 		i2c_master_bus_config_t busConfig {};
