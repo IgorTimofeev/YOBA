@@ -29,7 +29,6 @@ namespace YOBA {
 			// renderer->setTarget(&renderTarget);
 			// application.setRenderer(&renderer);
 			//
-			// hid.setup();
 			// application.addHID(&hid);
 			void setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid);
 
