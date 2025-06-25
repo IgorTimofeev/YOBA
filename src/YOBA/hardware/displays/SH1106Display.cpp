@@ -97,8 +97,6 @@ namespace YOBA {
 	}
 
 	void SH1106Display::setInverted(bool value) {
-		InvertibleDisplay::setInverted(value);
-
 		writeCommand(static_cast<uint8_t>(value ? Command::invertDisplay : Command::normalDisplay));
 	}
 }
