@@ -4,17 +4,17 @@
 
 namespace YOBA {
 	ILI9341Display::ILI9341Display(
-		uint8_t mosiPin,
-		uint8_t misoPin,
-		uint8_t sckPin,
-		uint8_t ssPin,
-		uint8_t dcPin,
-		int8_t rstPin,
-		uint32_t SPIFrequency,
+		const uint8_t mosiPin,
+		const uint8_t misoPin,
+		const uint8_t sckPin,
+		const uint8_t ssPin,
+		const uint8_t dcPin,
+		const int8_t rstPin,
+		const uint32_t SPIFrequency,
 
 		const Size& size,
-		ViewportRotation rotation,
-		ColorModel colorModel
+		const ViewportRotation rotation,
+		const ColorModel colorModel
 	) :
 		RenderTarget(
 			size,
