@@ -275,6 +275,38 @@ namespace YOBA {
 	    writeCommand(0x35);
 	    writeCommand(0x21);
 
+		writeCommand(GC9A01A_GAMMA1);
+		writeData(0x45);
+		writeData(0x09);
+		writeData(0x08);
+		writeData(0x08);
+		writeData(0x26);
+		writeData(0x2a);
+
+		writeCommand(GC9A01A_GAMMA2);
+		writeData(0x43);
+		writeData(0x70);
+		writeData(0x72);
+		writeData(0x36);
+		writeData(0x37);
+		writeData(0x6f);
+
+		writeCommand(GC9A01A_GAMMA3);
+		writeData(0x45);
+		writeData(0x09);
+		writeData(0x08);
+		writeData(0x08);
+		writeData(0x26);
+		writeData(0x2a);
+
+		writeCommand(GC9A01A_GAMMA4);
+		writeData(0x43);
+		writeData(0x70);
+		writeData(0x72);
+		writeData(0x36);
+		writeData(0x37);
+		writeData(0x6f);
+
 	    writeCommand(0x11);
 	    system::sleep(120);
 	    writeCommand(0x29);
