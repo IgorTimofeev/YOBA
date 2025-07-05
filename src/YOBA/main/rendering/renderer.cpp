@@ -412,6 +412,36 @@ namespace YOBA {
 		}
 	}
 
+	void Renderer::renderLine(const Point& from, const Point& to, const Color* color, const uint8_t thickness) {
+		const int dx = std::abs(to.getX() - from.getX());
+		const int dy = std::abs(to.getY() - from.getY());
+		const int sx = from.getX() < to.getX() ? 1 : -1;
+		const int sy = from.getY() < to.getY() ? 1 : -1;
+		int err = dx - dy;
+		int x = from.getX();
+		int y = from.getY();
+
+		const uint8_t radius = thickness / 2;
+
+		while (true) {
+			renderFilledCircle(Point(x, y), radius, color);
+
+			if (x == to.getX() && y == to.getY())
+				break;
+
+			const int e2 = 2 * err;
+
+			if (e2 > -dy) {
+				err -= dy;
+				x += sx;
+			}
+			if (e2 < dx) {
+				err += dx;
+				y += sy;
+			}
+		}
+	}
+	
 	void Renderer::renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
 		// Simple as fuck
 		renderLine(point1, point2, color);

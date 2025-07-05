@@ -38,6 +38,7 @@ namespace YOBA {
 			void renderRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
 			// Thanks, AdaFruit!
 			void renderLine(const Point& from, const Point& to, const Color* color);
+			void renderLine(const Point& from, const Point& to, const Color* color, uint8_t thickness);
 			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
 			void renderCircle(const Point& center, uint16_t radius, const Color* color);
 			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
