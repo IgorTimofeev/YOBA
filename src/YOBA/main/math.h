@@ -25,12 +25,12 @@ namespace YOBA {
 	}
 
 	template<typename T>
-	float toRadians(T degrees) {
+	constexpr float toRadians(T degrees) {
 		return static_cast<float>(degrees) * std::numbers::pi_v<float> / 180.f;
 	}
 
 	template<typename T>
-	float toDegrees(T radians) {
+	constexpr float toDegrees(T radians) {
 		return static_cast<float>(radians) * 180.f / std::numbers::pi_v<float>;
 	}
 
