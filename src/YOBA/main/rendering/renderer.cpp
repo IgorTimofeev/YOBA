@@ -413,32 +413,67 @@ namespace YOBA {
 	}
 
 	void Renderer::renderLine(const Point& from, const Point& to, const Color* color, const uint8_t thickness) {
-		const int dx = std::abs(to.getX() - from.getX());
-		const int dy = std::abs(to.getY() - from.getY());
-		const int sx = from.getX() < to.getX() ? 1 : -1;
-		const int sy = from.getY() < to.getY() ? 1 : -1;
-		int err = dx - dy;
-		int x = from.getX();
-		int y = from.getY();
+		if (thickness > 1) {
+			// Same Y, horizontal line
+			if (from.getY() == to.getY()) {
+				renderFilledRectangle(
+					Bounds(
+						std::min(from.getX(), to.getX()),
+						from.getY() - thickness / 2,
+						std::abs(to.getX() - from.getX()),
+						thickness
+					),
+					color
+				);
 
-		const uint8_t radius = thickness / 2;
-
-		while (true) {
-			renderFilledCircle(Point(x, y), radius, color);
-
-			if (x == to.getX() && y == to.getY())
-				break;
-
-			const int e2 = 2 * err;
-
-			if (e2 > -dy) {
-				err -= dy;
-				x += sx;
+				return;
 			}
-			if (e2 < dx) {
-				err += dx;
-				y += sy;
+
+			// Same X, vertical line
+			if (from.getX() == to.getX()) {
+				renderFilledRectangle(
+					Bounds(
+						from.getX() - thickness / 2,
+						std::min(from.getY(), to.getY()),
+						thickness,
+						std::abs(to.getY() - from.getY())
+					),
+					color
+				);
+
+				return;
 			}
+
+			// Interpolated line
+			auto p1 = from;
+			auto p2 = to;
+
+			const int32_t dx = p2.getX() - p1.getX();
+			const int32_t dy = p2.getY() - p1.getY();
+
+			// If angle < 45 deg, subdividing rendering by X
+			if (abs(dx) >= abs(dy)) {
+				if (p1.getX() > p2.getX())
+					std::swap(p1, p2);
+
+				for (int32_t x = p1.getX(); x <= p2.getX(); x++) {
+					const int32_t y = p1.getY() + dy * (x - p1.getX()) / dx;
+					renderVerticalLine(Point(x, y - thickness / 2), thickness, color);
+				}
+			}
+			// Else by Y
+			else {
+				if (p1.getY() > p2.getY())
+					std::swap(p1, p2);
+
+				for (int y = p1.getY(); y <= p2.getY(); y++) {
+					const int32_t x = p1.getX() + dx * (y - p1.getY()) / dy;
+					renderHorizontalLine(Point(x - thickness / 2, y), thickness, color);
+				}
+			}
+		}
+		else {
+			renderLine(from, to, color);
 		}
 	}
 	
