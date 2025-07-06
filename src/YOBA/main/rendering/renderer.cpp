@@ -157,7 +157,7 @@ namespace YOBA {
 
 	// -------------------------------- Non-native rendering --------------------------------
 
-	void Renderer::renderFilledRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color) {
+	void Renderer::renderFilledRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color* color) {
 		if (cornerRadius > 0) {
 			// Rect in middle
 			renderFilledRectangle(
@@ -239,7 +239,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color) {
+	void Renderer::renderRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color* color) {
 		if (cornerRadius > 0) {
 			renderHorizontalLine(
 				Point(bounds.getX() + cornerRadius, bounds.getY()),
@@ -691,69 +691,103 @@ namespace YOBA {
 	// --------+------- * x
 	//         |
 	//         |
-	void Renderer::renderArc(const Point& center, int16_t radius, int16_t start, int16_t end, const Color* color) {
-		if (start == end) {
+	void Renderer::renderArc(const Point& center, const uint16_t radius, float startAngleRad, float endAngleRad, const Color* color) {
+		if (startAngleRad == endAngleRad) {
+			if (startAngleRad == 0)
+				return;
+
 			renderCircle(center, radius, color);
 			return;
 		}
-		
-		const uint8_t inverted = (start > end);
-		const uint8_t a_start = inverted ? end : start;
-		const uint8_t a_end = inverted ? start : end;
+
+		// Normalizing
+		while (startAngleRad < 0)
+			startAngleRad += 2 * std::numbers::pi_v<float>;
+
+		while (endAngleRad < 0)
+			endAngleRad += 2 * std::numbers::pi_v<float>;
+
+		if (endAngleRad < startAngleRad)
+			std::swap(startAngleRad, endAngleRad);
 
 		int32_t x = 0;
 		int32_t y = radius;
-		int32_t d = radius - 1;
+		int32_t d = 3 - 2 * radius;
 
-		// Trace arc radius with the Andres circle algorithm (process each pixel of a 1/8th circle of radius rad)
-		while (y >= x) {
-			// Get the percentage of 1/8th circle drawn with a fast approximation of arctan(x/y)
-			uint32_t ratio = x * 255 / y; // x/y [0..255]
-			ratio = ratio * (770195 - (ratio - 255) * (ratio + 941)) / 6137491; // arctan(x/y) [0..32]
+		const auto checkAngle = [startAngleRad, endAngleRad](const int32_t x1, const int32_t y1) {
+			auto angle = fastAtan2(static_cast<float>(y1), static_cast<float>(x1));
 
-			// Fill the pixels with the 8 sections of the circle, but only on the arc defined by the angles (start and end)
-			if ((ratio >= a_start && ratio < a_end) ^ inverted)
-				renderPixel(Point(center.getX() + y, center.getY() - x), color);
-			
-			if (((ratio + a_end) > 63 && (ratio + a_start) <= 63) ^ inverted)
+			while (angle < 0)
+				angle += 2 * std::numbers::pi_v<float>;
+
+			return angle >= startAngleRad && angle <= endAngleRad;
+		};
+
+		while (x <= y) {
+			if (checkAngle(x, y))
 				renderPixel(Point(center.getX() + x, center.getY() - y), color);
-			
-			if (((ratio + 64) >= a_start && (ratio + 64) < a_end) ^ inverted)
+
+			if (checkAngle(y, x))
+				renderPixel(Point(center.getX() + y, center.getY() - x), color);
+
+			if (checkAngle(-x, y))
 				renderPixel(Point(center.getX() - x, center.getY() - y), color);
-			
-			if (((ratio + a_end) > 127 && (ratio + a_start) <= 127) ^ inverted)
+
+			if (checkAngle(-y, x))
 				renderPixel(Point(center.getX() - y, center.getY() - x), color);
-			
-			if (((ratio + 128) >= a_start && (ratio + 128) < a_end) ^ inverted)
-				renderPixel(Point(center.getX() - y, center.getY() + x), color);
-			
-			if (((ratio + a_end) > 191 && (ratio + a_start) <= 191) ^ inverted)
+
+			if (checkAngle(-x, -y))
 				renderPixel(Point(center.getX() - x, center.getY() + y), color);
-			
-			if (((ratio + 192) >= a_start && (ratio + 192) < a_end) ^ inverted)
+
+			if (checkAngle(-y, -x))
+				renderPixel(Point(center.getX() - y, center.getY() + x), color);
+
+			if (checkAngle(x, -y))
 				renderPixel(Point(center.getX() + x, center.getY() + y), color);
-			
-			if (((ratio + a_end) > 255 && (ratio + a_start) <= 255) ^ inverted)
+
+			if (checkAngle(y, -x))
 				renderPixel(Point(center.getX() + y, center.getY() + x), color);
-			
-			// Run Andres circle algorithm to get to the next pixel
-			if (d >= 2 * x) {
-				d = d - 2 * x - 1;
-				x = x + 1;
-			}
-			else if (d < 2 * (radius - y)) {
-				d = d + 2 * y - 1;
-				y = y - 1;
+
+			if (d < 0) {
+				d = d + 4 * x + 6;
 			}
 			else {
-				d = d + 2 * (y - x - 1);
-				y = y - 1;
-				x = x + 1;
+				d = d + 4 * (x - y) + 10;
+				y--;
 			}
+
+			x++;
 		}
 	}
 
-	void Renderer::renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color) {
+	float Renderer::fastAtan2(const float y, const float x) {
+		//http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
+		//Volkan SALMA
+
+		constexpr float ONEQTR_PI = std::numbers::pi_v<float> / 4.0;
+		constexpr float THRQTR_PI = 3.0 * std::numbers::pi_v<float> / 4.0;
+
+		float r, angle;
+		const float abs_y = std::fabs(y) + 1e-10f;      // kludge to prevent 0/0 condition
+
+		if ( x < 0.0f ) {
+			r = (x + abs_y) / (abs_y - x);
+			angle = THRQTR_PI;
+		}
+		else {
+			r = (x - abs_y) / (x + abs_y);
+			angle = ONEQTR_PI;
+		}
+
+		angle += (0.1963f * r * r - 0.9817f) * r;
+
+		if ( y < 0.0f )
+			return -angle;     // negate if in quad III or IV
+
+		return angle;
+	}
+
+	void Renderer::renderRoundedCorners(const Point& center, int32_t radius, const uint8_t corner, const Color* color) {
 		int32_t f     = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -2 * radius;
@@ -817,7 +851,7 @@ namespace YOBA {
 		} while (xe < radius--);
 	}
 
-	void Renderer::renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color) {
+	void Renderer::renderFilledRoundedCorners(const Point& center, uint16_t radius, const bool upper, const int32_t delta, const Color* color) {
 		int32_t f = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -radius - radius;
@@ -848,7 +882,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale) {
+	void Renderer::renderMissingGlyph(const Point& point, const Font* font, const Color* color, const uint8_t fontScale) {
 		renderRectangle(
 			Bounds(
 				point.getX(),
@@ -860,7 +894,7 @@ namespace YOBA {
 		);
 	}
 
-	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale) {
+	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, const uint8_t fontScale) {
 		auto bitIndex = glyph->getBitmapIndex();
 		uint8_t bitmapByte;
 
@@ -899,7 +933,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale) {
+	void Renderer::renderString(const Point& point, const Font* font, const Color* color, const std::wstring_view string, const uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
@@ -951,7 +985,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale) {
+	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, const wchar_t ch, const uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 

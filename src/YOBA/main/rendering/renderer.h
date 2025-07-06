@@ -44,7 +44,7 @@ namespace YOBA {
 			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
 			void renderFilledCircle(const Point& center, uint16_t radius, const Color* color);
 			// Thanks, u8g2!
-			void renderArc(const Point& center, int16_t radius, int16_t start, int16_t end, const Color* color);
+			void renderArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
 
 			/**
 			* @brief Renders single line of text
@@ -71,6 +71,8 @@ namespace YOBA {
 		private:
 			RenderTarget* _target = nullptr;
 			Bounds _viewport {};
+
+			static float fastAtan2(const float y, const float x);
 
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
