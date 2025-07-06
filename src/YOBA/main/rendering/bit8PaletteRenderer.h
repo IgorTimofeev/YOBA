@@ -17,6 +17,7 @@ namespace YOBA {
 			size_t computePixelBufferLength() const override;
 			size_t computePaletteIndicesBufferLength() const override;
 
+
 			inline void clearNative(const Color* color) override;
 			inline void renderPixelNative(const Point& point, const Color* color) override;
 			inline void renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) override;

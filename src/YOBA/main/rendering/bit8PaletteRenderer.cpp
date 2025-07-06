@@ -7,7 +7,7 @@ namespace YOBA {
 	}
 
 	size_t Bit8PaletteRenderer::computePixelBufferLength() const {
-		return getTarget()->getSize().getWidth() * getTransactionBufferHeight() * 2;
+		return getTarget()->getSize().getWidth() * getTransactionViewportHeight() * Color::getBytesPerModel(getTarget()->getColorModel());
 	}
 
 	size_t Bit8PaletteRenderer::computePaletteIndicesBufferLength() const {
@@ -24,7 +24,7 @@ namespace YOBA {
 				const uint16_t* palettePtr = reinterpret_cast<uint16_t*>(getPalette());
 				const uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
 
-				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionBufferHeight()) {
+				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionViewportHeight()) {
 					auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
 
 					// Taking indices from palette, converting them to color & copying to pixel buffer
@@ -36,7 +36,35 @@ namespace YOBA {
 
 					// Writing pixel buffer on target
 					getTarget()->writePixels(
-						Bounds(0, y, size.getWidth(), getTransactionBufferHeight()),
+						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
+						_pixelBuffer,
+						_pixelBufferLength
+					);
+				}
+
+				break;
+			}
+			// TODO: move this to some sort of RGB666Bit8PaletteRenderer
+			case ColorModel::RGB666: {
+				const auto& size = getTarget()->getSize();
+
+				const uint8_t* pixelBufferEndPtr = _pixelBuffer + _pixelBufferLength;
+
+				const uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
+
+				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionViewportHeight()) {
+					auto pixelBufferPtr = _pixelBuffer;
+
+					// Taking indices from palette, converting them to color & copying to pixel buffer
+					while (pixelBufferPtr < pixelBufferEndPtr) {
+						std::memcpy(pixelBufferPtr, getPalette() + *paletteIndicesBufferPtr, 3);
+						paletteIndicesBufferPtr++;
+						pixelBufferPtr += 3;
+					}
+
+					// Writing pixel buffer on target
+					getTarget()->writePixels(
+						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
 						_pixelBuffer,
 						_pixelBufferLength
 					);

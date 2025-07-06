@@ -3,16 +3,16 @@
 
 namespace YOBA {
 	ColorModel Color::getModel() const {
-		return _type;
+		return _model;
 	}
 
 	// -------------------------------- Color --------------------------------
 
-	Color::Color(ColorModel model) : _type(model) {
+	Color::Color(const ColorModel model) : _model(model) {
 
 	}
 
-	uint8_t Color::getBytesPerModel(ColorModel colorModel) {
+	uint8_t Color::getBytesPerModel(const ColorModel colorModel) {
 		switch (colorModel) {
 			case ColorModel::RGB565:
 				return 2;
@@ -26,7 +26,7 @@ namespace YOBA {
 		}
 	}
 
-	size_t Color::getBytesPerModel(size_t pixelCount, ColorModel colorModel) {
+	size_t Color::getBytesPerModel(const size_t pixelCount, const ColorModel colorModel) {
 		switch (colorModel) {
 			case ColorModel::monochrome:
 				return pixelCount >= 8 ? pixelCount / 8 : 1;
@@ -45,7 +45,7 @@ namespace YOBA {
 
 	// -------------------------------- Rgb888Color --------------------------------
 
-	RGB888Color::RGB888Color(uint8_t r, uint8_t g, uint8_t b) :
+	RGB888Color::RGB888Color(const uint8_t r, const uint8_t g, const uint8_t b) :
 		Color(ColorModel::RGB888),
 		_r(r),
 		_g(g),
@@ -58,7 +58,7 @@ namespace YOBA {
 
 	}
 
-	RGB888Color::RGB888Color(uint32_t rgb888) : RGB888Color(
+	RGB888Color::RGB888Color(const uint32_t rgb888) : RGB888Color(
 		rgb888 >> 16 & 0xFF,
 		rgb888 >> 8 & 0xFF,
 		rgb888 & 0xFF
@@ -83,7 +83,7 @@ namespace YOBA {
 		return MonochromeColor(_r > 0 || _g > 0 || _b > 0);
 	}
 
-	void RGB888Color::interpolateTo(const RGB888Color &second, float position) {
+	void RGB888Color::interpolateTo(const RGB888Color &second, const float position) {
 		_r = interpolate(_r, second._r, position);
 		_g = interpolate(_g, second._g, position);
 		_b = interpolate(_b, second._b, position);
@@ -93,7 +93,7 @@ namespace YOBA {
 		return _r;
 	}
 
-	void RGB888Color::setR(uint8_t r) {
+	void RGB888Color::setR(const uint8_t r) {
 		_r = r;
 	}
 
@@ -101,7 +101,7 @@ namespace YOBA {
 		return _g;
 	}
 
-	void RGB888Color::setG(uint8_t g) {
+	void RGB888Color::setG(const uint8_t g) {
 		_g = g;
 	}
 
@@ -109,13 +109,13 @@ namespace YOBA {
 		return _b;
 	}
 
-	void RGB888Color::setB(uint8_t b) {
+	void RGB888Color::setB(const uint8_t b) {
 		_b = b;
 	}
 
 	// -------------------------------- HsbColor --------------------------------
 
-	HSBColor::HSBColor(float h, float s, float b) :  Color(ColorModel::HSB), _h(h), _s(s), _b(b) {
+	HSBColor::HSBColor(const float h, const float s, const float b) :  Color(ColorModel::HSB), _h(h), _s(s), _b(b) {
 
 	}
 
@@ -123,7 +123,7 @@ namespace YOBA {
 		return _h;
 	}
 
-	void HSBColor::setH(float h) {
+	void HSBColor::setH(const float h) {
 		_h = h;
 	}
 
@@ -131,7 +131,7 @@ namespace YOBA {
 		return _s;
 	}
 
-	void HSBColor::setS(float s) {
+	void HSBColor::setS(const float s) {
 		_s = s;
 	}
 
@@ -139,7 +139,7 @@ namespace YOBA {
 		return _b;
 	}
 
-	void HSBColor::setB(float b) {
+	void HSBColor::setB(const float b) {
 		_b = b;
 	}
 
@@ -198,7 +198,7 @@ namespace YOBA {
 
 	// -------------------------------- MonochromeColor --------------------------------
 
-	MonochromeColor::MonochromeColor(bool value) : ValueColor(ColorModel::monochrome, value) {
+	MonochromeColor::MonochromeColor(const bool value) : ValueColor(ColorModel::monochrome, value) {
 
 	}
 
@@ -211,7 +211,7 @@ namespace YOBA {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	RGB565Color::RGB565Color(uint16_t value) : ValueColor(ColorModel::RGB565, value) {
+	RGB565Color::RGB565Color(const uint16_t value) : ValueColor(ColorModel::RGB565, value) {
 
 	}
 
@@ -225,7 +225,7 @@ namespace YOBA {
 
 	// -------------------------------- Rgb666Color --------------------------------
 
-	RGB666Color::RGB666Color(uint32_t value) : ValueColor(ColorModel::RGB666, value) {
+	RGB666Color::RGB666Color(const uint32_t value) : ValueColor(ColorModel::RGB666, value) {
 
 	}
 
@@ -239,7 +239,7 @@ namespace YOBA {
 
 	// -------------------------------- PaletteColor --------------------------------
 
-	Bit8PaletteColor::Bit8PaletteColor(uint16_t index) : PaletteColor(index) {
+	Bit8PaletteColor::Bit8PaletteColor(const uint16_t index) : PaletteColor(index) {
 
 	}
 

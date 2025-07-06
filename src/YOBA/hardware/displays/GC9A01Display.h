@@ -79,7 +79,11 @@ namespace YOBA {
 				uint8_t ssPin,
 				uint8_t dcPin,
 				int8_t rstPin,
-				uint32_t SPIFrequency
+				uint32_t SPIFrequency,
+
+				const Size& size = Size(240, 240),
+				ViewportRotation rotation = ViewportRotation::clockwise0,
+				ColorModel colorModel = ColorModel::RGB565
 			);
 
 			void setup() override;

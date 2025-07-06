@@ -10,13 +10,17 @@ namespace YOBA {
 		const uint8_t ssPin,
 		const uint8_t dcPin,
 		const int8_t rstPin,
-		const uint32_t SPIFrequency
+		const uint32_t SPIFrequency,
+
+		const Size& size,
+		const ViewportRotation rotation,
+		const ColorModel colorModel
 	) :
 		RenderTarget(
-			Size(240, 240),
-			ViewportRotation::clockwise0,
+			size,
+			rotation,
 			PixelOrder::XY,
-			ColorModel::RGB565
+			colorModel
 		),
 		SPIDisplay(
 			mosiPin,
@@ -103,7 +107,7 @@ namespace YOBA {
 	// #endif
 
 	    writeCommand(COLOR_MODE);
-	    writeData(COLOR_MODE__16_BIT);
+	    writeData(getColorModel() == ColorModel::RGB565 ? COLOR_MODE__16_BIT : COLOR_MODE__18_BIT);
 
 	    writeCommand(0x90);
 	    writeData(0x08);

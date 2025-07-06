@@ -17,6 +17,7 @@ namespace YOBA {
 	class Color {
 		public:
 			explicit Color(ColorModel model);
+			virtual ~Color() = default;
 
 			ColorModel getModel() const;
 
@@ -24,18 +25,17 @@ namespace YOBA {
 			static size_t getBytesPerModel(size_t pixelCount, ColorModel colorModel);
 
 			static const Color* select(
-				bool condition,
+				const bool condition,
 				const Color* defaultColor,
 				const Color* conditionColor,
 				const Color* fallbackColor = nullptr
 			) {
 				if (condition) {
-					if (conditionColor) {
+					if (conditionColor)
 						return conditionColor;
-					}
-					else if (defaultColor) {
+
+					if (defaultColor)
 						return defaultColor;
-					}
 				}
 				else if (defaultColor) {
 					return defaultColor;
@@ -45,7 +45,7 @@ namespace YOBA {
 			}
 
 		private:
-			ColorModel _type;
+			ColorModel _model;
 	};
 
 	// -------------------------------- HSB --------------------------------
@@ -88,7 +88,7 @@ namespace YOBA {
 	};
 
 	template<typename TValue>
-	ValueColor<TValue>::ValueColor(ColorModel model, TValue value) : Color(model), _value(value) {
+	ValueColor<TValue>::ValueColor(const ColorModel model, TValue value) : Color(model), _value(value) {
 
 	}
 
