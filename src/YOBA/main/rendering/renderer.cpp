@@ -682,6 +682,15 @@ namespace YOBA {
 		}
 	}
 
+	// Counter-clockwise, started from middle right. For example, in a unit circle,
+	// drawing will start from x = 1, y = 0:
+	//
+	//         y
+	//         |  <- )
+	//         |       )
+	// --------+------- * x
+	//         |
+	//         |
 	void Renderer::renderArc(const Point& center, int16_t radius, int16_t start, int16_t end, const Color* color) {
 		if (start == end) {
 			renderCircle(center, radius, color);
