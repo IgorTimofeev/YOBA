@@ -27,7 +27,7 @@ namespace YOBA::system {
 
 	class SPI {
 		public:
-			static void setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency);
+			static void setup(uint8_t mosiPin, uint8_t sckPin, int8_t ssPin, uint32_t frequency);
 			static void write(uint8_t data);
 			static void write(const uint8_t* data, size_t length);
 

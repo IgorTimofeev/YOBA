@@ -6,6 +6,6 @@ namespace YOBA {
 	// Maybe will be used in future
 	class Display : public virtual RenderTarget {
 		public:
-			virtual ~Display() = 0;
+			~Display() override = 0;
 	};
 }

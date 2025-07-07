@@ -7,7 +7,7 @@ namespace YOBA {
 		const uint8_t mosiPin,
 		const uint8_t misoPin,
 		const uint8_t sckPin,
-		const uint8_t ssPin,
+		const int8_t ssPin,
 		const uint8_t dcPin,
 		const int8_t rstPin,
 		const uint32_t SPIFrequency,
@@ -38,7 +38,11 @@ namespace YOBA {
 	void GC9A01Display::setup() {
 		SPIDisplay::setup();
 
-		/* Initial Sequence */
+		// Software reset
+		if (rstPin < 0) {
+			writeCommand(GC9A01A_SWRESET);
+			system::sleep(150);
+		}
 
 	    writeCommand(0xEF);
 

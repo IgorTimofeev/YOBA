@@ -57,7 +57,7 @@ namespace YOBA::system {
 	spi_device_handle_t SPI::_deviceHandle {};
 
 	// Note: SPI instance will manage slave select output by itself
-	void SPI::setup(uint8_t mosiPin, uint8_t sckPin, uint8_t ssPin, uint32_t frequency) {
+	void SPI::setup(uint8_t mosiPin, uint8_t sckPin, int8_t ssPin, uint32_t frequency) {
 		// GPIO
 		GPIO::setMode(ssPin, GPIO::PinMode::output);
 		GPIO::write(ssPin, true);
@@ -79,7 +79,7 @@ namespace YOBA::system {
 		spi_device_interface_config_t interfaceConfig {};
 		interfaceConfig.mode = 0;
 		interfaceConfig.clock_speed_hz = static_cast<int>(frequency);
-		interfaceConfig.spics_io_num = ssPin;
+		interfaceConfig.spics_io_num = static_cast<int>(ssPin);
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
 

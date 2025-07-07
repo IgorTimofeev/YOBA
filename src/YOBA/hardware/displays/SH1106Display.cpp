@@ -7,7 +7,7 @@ namespace YOBA {
 		uint8_t mosiPin,
 		uint8_t misoPin,
 		uint8_t sckPin,
-		uint8_t ssPin,
+		int8_t ssPin,
 		uint8_t dcPin,
 		int8_t rstPin,
 		uint32_t SPIFrequency

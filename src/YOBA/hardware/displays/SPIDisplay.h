@@ -10,17 +10,25 @@ namespace YOBA {
 				uint8_t mosiPin,
 				uint8_t misoPin,
 				uint8_t sckPin,
-				uint8_t ssPin,
+				int8_t ssPin,
 				uint8_t dcPin,
 				int8_t rstPin,
 				uint32_t frequency
 			);
 
-			virtual ~SPIDisplay() = 0;
+			~SPIDisplay() override = default;
 
 			void setup() override;
 
 		protected:
+			uint8_t mosiPin;
+			uint8_t misoPin;
+			uint8_t sckPin;
+			int8_t ssPin;
+			uint8_t dcPin;
+			int8_t rstPin;
+			uint32_t frequency;
+
 			void setDataCommandPin(bool value) const;
 			void setResetPin(bool value) const;
 
@@ -33,15 +41,6 @@ namespace YOBA {
 			void writeCommandAndData(uint8_t command, uint8_t data);
 
 			virtual void toggleResetPin();
-
-		private:
-			uint8_t _mosiPin;
-			uint8_t _misoPin;
-			uint8_t _sckPin;
-			uint8_t _ssPin;
-			uint8_t _dcPin;
-			int8_t _rstPin;
-			uint32_t _frequency;
 
 	};
 }
