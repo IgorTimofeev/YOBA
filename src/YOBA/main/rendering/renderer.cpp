@@ -770,7 +770,7 @@ namespace YOBA {
 		float r, angle;
 		const float abs_y = std::fabs(y) + 1e-10f;      // kludge to prevent 0/0 condition
 
-		if ( x < 0.0f ) {
+		if (x < 0.0f) {
 			r = (x + abs_y) / (abs_y - x);
 			angle = THRQTR_PI;
 		}
@@ -781,7 +781,7 @@ namespace YOBA {
 
 		angle += (0.1963f * r * r - 0.9817f) * r;
 
-		if ( y < 0.0f )
+		if (y < 0.0f)
 			return -angle;     // negate if in quad III or IV
 
 		return angle;
