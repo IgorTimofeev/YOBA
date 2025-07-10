@@ -95,8 +95,8 @@ namespace YOBA {
 
 		// Running scheduled tasks
 		if (!_scheduledOnTickTasks.empty()) {
-			for (size_t i = 0; i < _scheduledOnTickTasks.size(); i++)
-				_scheduledOnTickTasks[i]();
+			for (const auto& task : _scheduledOnTickTasks)
+				task();
 
 			_scheduledOnTickTasks.clear();
 		}
