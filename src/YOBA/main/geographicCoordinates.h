@@ -8,7 +8,7 @@
 namespace YOBA {
 	class GeographicCoordinates {
 		public:
-			GeographicCoordinates(float latitude, float longitude, float altitude) : _latitude(latitude), _longitude(longitude), _altitude(altitude) {
+			GeographicCoordinates(const float latitude, const float longitude, const float altitude) : _latitude(latitude), _longitude(longitude), _altitude(altitude) {
 
 			}
 
@@ -16,7 +16,7 @@ namespace YOBA {
 
 			}
 
-			explicit GeographicCoordinates(const Vector3F& cartesian, float radius) {
+			explicit GeographicCoordinates(const Vector3F& cartesian, const float radius) {
 				const float length = cartesian.getLength();
 
 				_latitude = std::asinf(cartesian.getZ() / length);
@@ -53,7 +53,7 @@ namespace YOBA {
 				return _latitude;
 			}
 
-			void setLatitude(float latitude) {
+			void setLatitude(const float latitude) {
 				_latitude = latitude;
 			}
 
@@ -61,7 +61,7 @@ namespace YOBA {
 				return _longitude;
 			}
 
-			void setLongitude(float longitude) {
+			void setLongitude(const float longitude) {
 				_longitude = longitude;
 			}
 
@@ -69,7 +69,7 @@ namespace YOBA {
 				return _altitude;
 			}
 
-			void setAltitude(float altitude) {
+			void setAltitude(const float altitude) {
 				_altitude = altitude;
 			}
 
