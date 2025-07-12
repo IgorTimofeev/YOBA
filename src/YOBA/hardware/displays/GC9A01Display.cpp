@@ -315,10 +315,8 @@ namespace YOBA {
 		writeData(0x37);
 		writeData(0x6f);
 
-	    writeCommand(0x11);
+	    writeCommand(GC9A01A_SLPOUT);
 	    system::sleep(120);
-	    writeCommand(0x29);
-	    system::sleep(20);
 	}
 
 	void GC9A01Display::writeMADCTLCommand() {
@@ -361,5 +359,10 @@ namespace YOBA {
 
 		// Memory write
 		writeCommandAndData(MEM_WR, source, length);
+	}
+
+	void GC9A01Display::turnOn() {
+		writeCommand(GC9A01A_DISPON);
+		system::sleep(20);
 	}
 }
