@@ -51,21 +51,9 @@ namespace YOBA {
 				return horizontalScrollBar.getPosition();
 			}
 
-			void setHorizontalPosition(uint16_t value) {
-				const auto& bounds = getBounds();
-
-				if (value > 0) {
-					if (contentBounds.getWidth() > bounds.getWidth()) {
-						const auto contentBoundsEnd = bounds.getX() - value + contentBounds.getWidth() - 1;
-
-						if (contentBoundsEnd < bounds.getX2()) {
-							value = contentBounds.getWidth() - bounds.getWidth();
-						}
-					}
-					else {
-						value = 0;
-					}
-				}
+			void setHorizontalPosition(const uint16_t value) {
+				if (!horizontalScrollPossible)
+					return;
 
 				horizontalScrollBar.setPosition(value);
 
@@ -73,24 +61,13 @@ namespace YOBA {
 			}
 
 			uint16_t getVerticalPosition() const {
+
 				return verticalScrollBar.getPosition();
 			}
 
-			void setVerticalPosition(uint16_t value) {
-				const auto& bounds = getBounds();
-
-				if (value > 0) {
-					if (contentBounds.getHeight() > bounds.getHeight()) {
-						const auto contentBoundsEnd = bounds.getY() - value + contentBounds.getHeight() - 1;
-
-						if (contentBoundsEnd < bounds.getY2()) {
-							value = contentBounds.getHeight() - bounds.getHeight();
-						}
-					}
-					else {
-						value = 0;
-					}
-				}
+			void setVerticalPosition(const uint16_t value) {
+				if (!verticalScrollPossible)
+					return;
 
 				verticalScrollBar.setPosition(value);
 
@@ -125,16 +102,20 @@ namespace YOBA {
 				const auto& elementBounds = element->getBounds();
 				const auto& bounds = getBounds();
 
-				// Scroll vertically
-				if (elementBounds.getY() < bounds.getY()) {
-					const auto delta = elementBounds.getY() - bounds.getY();
+				// Horizontal
+				if (elementBounds.getX() < bounds.getX()) {
+					scrollHorizontallyBy(elementBounds.getX() - bounds.getX());
+				}
+				else if (elementBounds.getX2() > bounds.getX2()) {
+					scrollHorizontallyBy(elementBounds.getX2() - bounds.getX2());
+				}
 
-					scrollVerticallyBy(delta);
+				// Vertical
+				if (elementBounds.getY() < bounds.getY()) {
+					scrollVerticallyBy(elementBounds.getY() - bounds.getY());
 				}
 				else if (elementBounds.getY2() > bounds.getY2()) {
-					const auto delta = elementBounds.getY2() - bounds.getY2();
-
-					scrollVerticallyBy(delta);
+					scrollVerticallyBy(elementBounds.getY2() - bounds.getY2());
 				}
 			}
 
@@ -176,29 +157,54 @@ namespace YOBA {
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				if (horizontalScrollMode == ScrollMode::disabled) {
+					if (horizontalScrollBar.getPosition() > 0)
+						horizontalScrollBar.setPosition(0);
+
 					contentBounds.setX(bounds.getX());
 					contentBounds.setWidth(bounds.getWidth());
 				}
 				else {
+					if (horizontalScrollBar.getPosition() > 0) {
+						if (contentMeasuredSize.getWidth() > bounds.getWidth()) {
+							if (bounds.getX() + contentMeasuredSize.getWidth() - 1 - horizontalScrollBar.getPosition() < bounds.getX2())
+								horizontalScrollBar.setPosition(contentMeasuredSize.getWidth() - bounds.getWidth());
+						}
+						else {
+							horizontalScrollBar.setPosition(0);
+						}
+					}
+
 					contentBounds.setX(bounds.getX() - horizontalScrollBar.getPosition());
 					contentBounds.setWidth(contentMeasuredSize.getWidth());
 				}
 
 				if (verticalScrollMode == ScrollMode::disabled) {
+					if (verticalScrollBar.getPosition() > 0)
+						verticalScrollBar.setPosition(0);
+
 					contentBounds.setY(bounds.getY());
 					contentBounds.setHeight(bounds.getHeight());
 				}
 				else {
-					contentBounds.setY(bounds.getY() - getVerticalPosition());
+					if (verticalScrollBar.getPosition() > 0) {
+						// If content height > scroll view height
+						if (contentMeasuredSize.getHeight() > bounds.getHeight()) {
+							// If content Y2 with position < scroll view Y2
+							if (bounds.getY() + contentMeasuredSize.getHeight() - 1 - verticalScrollBar.getPosition() < bounds.getY2())
+								verticalScrollBar.setPosition(contentMeasuredSize.getHeight() - bounds.getHeight());
+						}
+						else {
+							verticalScrollBar.setPosition(0);
+						}
+					}
+
+					contentBounds.setY(bounds.getY() - verticalScrollBar.getPosition());
 					contentBounds.setHeight(contentMeasuredSize.getHeight());
 				}
 
-				for (const auto element : *this) {
-					if (!element->isVisible())
-						continue;
-
-					element->render(renderer, contentBounds);
-				}
+				for (const auto element : *this)
+					if (element->isVisible())
+						element->render(renderer, contentBounds);
 
 				const auto& processScrollBar = [&bounds, &renderer](ScrollBar& bar, bool& possible, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 					bar.setContentSize(contentSize);
@@ -273,35 +279,17 @@ namespace YOBA {
 			}
 
 			void scrollHorizontallyBy(const int32_t delta) {
-				if (!horizontalScrollPossible)
-					return;
-
-				auto position = getHorizontalPosition();
-
-				computeScrollPositionForDelta(
-					position,
-					delta,
-					getBounds().getX2(),
-					contentBounds.getX2()
-				);
-
-				setHorizontalPosition(position);
+				setHorizontalPosition(static_cast<uint16_t>(std::max(
+					static_cast<int32_t>(getHorizontalPosition()) + delta,
+					static_cast<int32_t>(0)
+				)));
 			}
 
 			void scrollVerticallyBy(const int32_t delta) {
-				if (!verticalScrollPossible)
-					return;
-
-				auto position = getVerticalPosition();
-
-				computeScrollPositionForDelta(
-					position,
-					delta,
-					getBounds().getY2(),
-					contentBounds.getY2()
-				);
-
-				setVerticalPosition(position);
+				setVerticalPosition(static_cast<uint16_t>(std::max(
+					static_cast<int32_t>(getVerticalPosition()) + delta,
+					static_cast<int32_t>(0)
+				)));
 			}
 
 		private:
@@ -318,23 +306,5 @@ namespace YOBA {
 			bool verticalScrollPossible = false;
 
 			Point lastTouchPosition { -1, -1 };
-
-			static void computeScrollPositionForDelta(uint16_t& position, const int32_t delta, const int32_t boundsPosition2, const int32_t contentPosition2) {
-				if (delta > 0) {
-					const auto position2Delta = contentPosition2 - boundsPosition2;
-
-					if (position2Delta > 0) {
-						position += delta > position2Delta ? position2Delta : delta;
-					}
-				}
-				else {
-					if (-delta > position) {
-						position = 0;
-					}
-					else {
-						position += delta;
-					}
-				}
-			}
 	};
 }
