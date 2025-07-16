@@ -19,7 +19,7 @@ namespace YOBA {
 	}
 
 	template<typename T>
-	T round(T value, uint8_t decimalPlaces) {
+	T round(T value, const uint8_t decimalPlaces) {
 		const float factor = std::pow(10.0, decimalPlaces);
 		return static_cast<T>(std::roundf(static_cast<float>(value) * factor) / factor);
 	}
@@ -55,7 +55,7 @@ namespace YOBA {
 	}
 
 	template<typename T>
-	T interpolate(T first, T second, float position) {
+	T interpolate(T first, T second, const float position) {
 		return static_cast<T>(static_cast<float>(first) + static_cast<float>(second - first) * position);
 	}
 

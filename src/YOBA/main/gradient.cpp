@@ -1,30 +1,30 @@
 #include "gradient.h"
 
 namespace YOBA {
-	GradientStop::GradientStop(float position, const RGB888Color& color) :
-		_position(position),
-		_color(color)
+	GradientStop::GradientStop(const float position, const RGB888Color& color) :
+		position(position),
+		color(color)
 	{
 
 	}
 
 	float GradientStop::getPosition() const {
-		return _position;
+		return position;
 	}
 
-	void GradientStop::setPosition(float value) {
-		_position = value;
+	void GradientStop::setPosition(const float value) {
+		position = value;
 	}
 
 	const RGB888Color& GradientStop::getColor() const {
-		return _color;
+		return color;
 	}
 
 	void GradientStop::setColor(const RGB888Color& value) {
-		_color = RGB888Color(value);
+		color = RGB888Color(value);
 	}
 
-	RGB888Color LinearGradient::getRgb888Color(float position) const {
+	RGB888Color LinearGradient::getRgb888Color(const float position) const {
 		if (_stops.size() < 2)
 			return {0, 0, 0};
 

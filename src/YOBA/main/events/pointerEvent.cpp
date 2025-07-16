@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace YOBA {
-	PointerEvent::PointerEvent(uint16_t typeID, const Point& position) :
+	PointerEvent::PointerEvent(const uint16_t typeID, const Point& position) :
 		ScreenEvent(typeID),
 		_position(position)
 	{

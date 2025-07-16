@@ -18,7 +18,7 @@ namespace YOBA {
 				setTextColor(foreground);
 			}
 
-			explicit Text(std::wstring_view text) {
+			explicit Text(const std::wstring_view text) {
 				setText(text);
 			}
 
@@ -30,7 +30,7 @@ namespace YOBA {
 				return _wrappingEnabled;
 			}
 
-			void setWrappingEnabled(bool value) {
+			void setWrappingEnabled(const bool value) {
 				if (value == _wrappingEnabled)
 					return;
 
@@ -56,7 +56,7 @@ namespace YOBA {
 						getText(),
 						getFontScale(),
 						availableSize.getWidth(),
-						[this, &result, font](std::wstring_view line, uint16_t width) {
+						[this, &result, font](const std::wstring_view line, const uint16_t width) {
 							if (width > result.getWidth())
 								result.setWidth(width);
 
@@ -68,12 +68,11 @@ namespace YOBA {
 
 					return result;
 				}
-				else {
-					return {
-						font->getWidth(getText(), getFontScale()),
-						font->getHeight(getFontScale())
-					};
-				}
+
+				return {
+					font->getWidth(getText(), getFontScale()),
+					font->getHeight(getFontScale())
+				};
 			}
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {

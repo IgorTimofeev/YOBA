@@ -9,7 +9,7 @@ namespace YOBA {
 				return _fontScale;
 			}
 
-			void setFontScale(uint8_t value) {
+			void setFontScale(const uint8_t value) {
 				if (value == _fontScale)
 					return;
 

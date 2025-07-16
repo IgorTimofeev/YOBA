@@ -6,7 +6,7 @@ namespace YOBA::spatial {
 		return _visible;
 	}
 
-	void SceneElement::setVisible(bool value) {
+	void SceneElement::setVisible(const bool value) {
 		_visible = value;
 	}
 }

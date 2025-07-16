@@ -9,7 +9,7 @@ namespace YOBA {
 				return _orientation;
 			}
 
-			void setOrientation(Orientation value) {
+			void setOrientation(const Orientation value) {
 				if (value == _orientation)
 					return;
 

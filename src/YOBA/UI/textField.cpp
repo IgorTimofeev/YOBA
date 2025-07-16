@@ -207,7 +207,7 @@ namespace YOBA {
 		size_t cursorPosition;
 		int32_t cursorX;
 
-		const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, &text](int32_t targetX) {
+		const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, &text](const int32_t targetX) {
 			cursorX = boundsXWithoutMargin - _scrollPosition;
 			cursorPosition = 0;
 
@@ -261,7 +261,7 @@ namespace YOBA {
 		_continuousScrollTime = system::getTime() + _continuousScrollInterval;
 	}
 
-	void TextField::insert(std::wstring_view value) {
+	void TextField::insert(const std::wstring_view value) {
 		const auto text = getText();
 		const auto cursorPosition = getCursorPosition();
 
@@ -324,7 +324,7 @@ namespace YOBA {
 		return _cursorPosition;
 	}
 
-	void TextField::setCursorPosition(size_t value) {
+	void TextField::setCursorPosition(const size_t value) {
 		_cursorPosition = value;
 
 		const auto textLength = getText().length();
@@ -342,7 +342,7 @@ namespace YOBA {
 		return _cursorBlinkInterval;
 	}
 
-	void TextField::setCursorBlinkInterval(uint32_t value) {
+	void TextField::setCursorBlinkInterval(const uint32_t value) {
 		_cursorBlinkInterval = value;
 	}
 
@@ -417,7 +417,7 @@ namespace YOBA {
 		textChanged();
 	}
 
-	void TextField::setCursorBlinkStateAndTime(bool value) {
+	void TextField::setCursorBlinkStateAndTime(const bool value) {
 		_cursorBlinkState = value;
 		_cursorBlinkTime = system::getTime() + _cursorBlinkInterval;
 	}
@@ -472,7 +472,7 @@ namespace YOBA {
 		return _mask;
 	}
 
-	void TextField::setMask(wchar_t mask) {
+	void TextField::setMask(const wchar_t mask) {
 		_mask = mask;
 	}
 

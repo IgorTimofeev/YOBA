@@ -47,13 +47,13 @@ namespace YOBA {
 		*(reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point)) = static_cast<const RGB565Color*>(color)->getValue();
 	}
 
-	void RGB565PixelBufferRenderer::renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) {
+	void RGB565PixelBufferRenderer::renderHorizontalLineNative(const Point& point, const uint16_t length, const Color* color) {
 		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
 
 		std::fill_n(pixelBufferPtr, length, static_cast<const RGB565Color*>(color)->getValue());
 	}
 
-	void RGB565PixelBufferRenderer::renderVerticalLineNative(const Point& point, uint16_t length, const Color* color) {
+	void RGB565PixelBufferRenderer::renderVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();

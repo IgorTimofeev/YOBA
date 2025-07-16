@@ -18,8 +18,8 @@ namespace YOBA {
 			void setColor(const RGB888Color& value);
 
 		private:
-			float _position;
-			RGB888Color _color;
+			float position;
+			RGB888Color color;
 	};
 
 	class LinearGradient {

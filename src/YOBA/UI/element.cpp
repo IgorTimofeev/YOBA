@@ -19,7 +19,7 @@ namespace YOBA {
 		return _isVisible;
 	}
 
-	void Element::setVisible(bool value) {
+	void Element::setVisible(const bool value) {
 		_isVisible = value;
 
 		invalidate();
@@ -29,7 +29,7 @@ namespace YOBA {
 		return _isEnabled;
 	}
 
-	void Element::setEnabled(bool value) {
+	void Element::setEnabled(const bool value) {
 		_isEnabled = value;
 
 		invalidate();
@@ -39,7 +39,7 @@ namespace YOBA {
 		return _isVisibleForPointerEvents;
 	}
 
-	void Element::setVisibleForPointerEvents(bool value) {
+	void Element::setVisibleForPointerEvents(const bool value) {
 		_isVisibleForPointerEvents = value;
 	}
 
@@ -48,12 +48,12 @@ namespace YOBA {
 	}
 
 	uint16_t Element::computeMeasureShit(
-		uint16_t size,
-		uint16_t desiredSize,
-		int32_t marginStart,
-		int32_t marginEnd,
-		uint16_t min,
-		uint16_t max
+		const uint16_t size,
+		const uint16_t desiredSize,
+		const int32_t marginStart,
+		const int32_t marginEnd,
+		const uint16_t min,
+		const uint16_t max
 	) {
 		int32_t newSize = 0;
 
@@ -113,15 +113,15 @@ namespace YOBA {
 	}
 
 	void Element::computeBoundsShit(
-		Alignment alignment,
-		int32_t position,
-		uint16_t size,
+		const Alignment alignment,
+		const int32_t position,
+		const uint16_t size,
 
-		uint16_t desiredSize,
-		int32_t marginStart,
-		int32_t marginEnd,
+		const uint16_t desiredSize,
+		const int32_t marginStart,
+		const int32_t marginEnd,
 
-		uint16_t bounds,
+		const uint16_t bounds,
 		int32_t& newPosition,
 		int32_t& newSize
 	) {
@@ -238,7 +238,7 @@ namespace YOBA {
 		return _focusable;
 	}
 
-	void Element::setFocusable(bool focusable) {
+	void Element::setFocusable(const bool focusable) {
 		_focusable = focusable;
 	}
 
@@ -248,7 +248,7 @@ namespace YOBA {
 		return application && application->getFocusedElement() == this;
 	}
 
-	void Element::setFocused(bool state) {
+	void Element::setFocused(const bool state) {
 		const auto application = Application::getCurrent();
 
 		if (!application || !_focusable || (application->getFocusedElement() == this) == state)
@@ -263,7 +263,7 @@ namespace YOBA {
 		return application && application->getCapturedElement() == this;
 	}
 
-	void Element::setCaptured(bool state) {
+	void Element::setCaptured(const bool state) {
 		const auto application = Application::getCurrent();
 
 		if (!application || (application->getCapturedElement() == this) == state)
@@ -304,13 +304,13 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Element::setWidth(uint16_t value) {
+	void Element::setWidth(const uint16_t value) {
 		_size.setWidth(value);
 
 		invalidate();
 	}
 
-	void Element::setHeight(uint16_t value) {
+	void Element::setHeight(const uint16_t value) {
 		_size.setHeight(value);
 
 		invalidate();
@@ -329,13 +329,13 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Element::setMaxWidth(uint16_t value) {
+	void Element::setMaxWidth(const uint16_t value) {
 		_maxSize.setWidth(value);
 
 		invalidate();
 	}
 
-	void Element::setMaxHeight(uint16_t value) {
+	void Element::setMaxHeight(const uint16_t value) {
 		_maxSize.setHeight(value);
 
 		invalidate();
@@ -354,13 +354,13 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Element::setMinWidth(uint16_t value) {
+	void Element::setMinWidth(const uint16_t value) {
 		_minSize.setWidth(value);
 
 		invalidate();
 	}
 
-	void Element::setMinHeight(uint16_t value) {
+	void Element::setMinHeight(const uint16_t value) {
 		_minSize.setHeight(value);
 
 		invalidate();
@@ -379,7 +379,7 @@ namespace YOBA {
 		return _margin;
 	}
 
-	void Element::setAlignment(Alignment horizontal, Alignment vertical) {
+	void Element::setAlignment(const Alignment horizontal, const Alignment vertical) {
 		if (horizontal == _horizontalAlignment && vertical == _verticalAlignment)
 			return;
 
@@ -389,11 +389,11 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Element::setAlignment(Alignment uniformValue) {
+	void Element::setAlignment(const Alignment uniformValue) {
 		setAlignment(uniformValue, uniformValue);
 	}
 
-	void Element::setVerticalAlignment(Alignment value) {
+	void Element::setVerticalAlignment(const Alignment value) {
 		if (value == _verticalAlignment)
 			return;
 
@@ -406,7 +406,7 @@ namespace YOBA {
 		return _verticalAlignment;
 	}
 
-	void Element::setHorizontalAlignment(Alignment value) {
+	void Element::setHorizontalAlignment(const Alignment value) {
 		if (value == _horizontalAlignment)
 			return;
 
@@ -448,7 +448,7 @@ namespace YOBA {
 		return _clipToBounds;
 	}
 
-	void Element::setClipToBounds(bool value) {
+	void Element::setClipToBounds(const bool value) {
 		_clipToBounds = value;
 	}
 
@@ -486,7 +486,7 @@ namespace YOBA {
 
 	// -------------------------------- Events --------------------------------
 
-	void Element::setPointerOver(bool value) {
+	void Element::setPointerOver(const bool value) {
 		if (value == _isPointerOver)
 			return;
 

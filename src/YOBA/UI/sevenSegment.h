@@ -46,7 +46,7 @@ namespace YOBA {
 			uint8_t getSegmentThickness() const {
 				return _segmentThickness;
 			}
-			void setSegmentThickness(uint8_t value) {
+			void setSegmentThickness(const uint8_t value) {
 				_segmentThickness = value;
 
 				invalidate();
@@ -55,7 +55,7 @@ namespace YOBA {
 			uint8_t getSegmentLength() const {
 				return _segmentLength;
 			}
-			void setSegmentLength(uint8_t value) {
+			void setSegmentLength(const uint8_t value) {
 				_segmentLength = value;
 
 				invalidate();
@@ -64,7 +64,7 @@ namespace YOBA {
 			uint32_t getValue() const {
 				return _value;
 			}
-			void setValue(uint32_t value) {
+			void setValue(const uint32_t value) {
 				_value = value;
 
 				invalidateRender();
@@ -73,7 +73,7 @@ namespace YOBA {
 			uint8_t getDigitCount() const {
 				return _digitCount;
 			}
-			void setDigitCount(uint8_t value) {
+			void setDigitCount(const uint8_t value) {
 				_digitCount = value;
 
 				invalidate();
@@ -82,7 +82,7 @@ namespace YOBA {
 			uint8_t getSpacing() const {
 				return _spacing;
 			}
-			void setSpacing(uint8_t value) {
+			void setSpacing(const uint8_t value) {
 				_spacing = value;
 
 				invalidate();
@@ -122,13 +122,13 @@ namespace YOBA {
 			void renderSegments(
 				Renderer* renderer,
 				const Point& position,
-				bool s0,
-				bool s1,
-				bool s2,
-				bool s3,
-				bool s4,
-				bool s5,
-				bool s6
+				const bool s0,
+				const bool s1,
+				const bool s2,
+				const bool s3,
+				const bool s4,
+				const bool s5,
+				const bool s6
 			) const {
 				const uint8_t t = getSegmentThickness();
 				const uint8_t l = getSegmentLength();
@@ -142,7 +142,7 @@ namespace YOBA {
 				renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? _activeColor : _inactiveColor);
 			}
 
-			void renderDigit(Renderer* renderer, const Point& position, uint8_t digit) const {
+			void renderDigit(Renderer* renderer, const Point& position, const uint8_t digit) const {
 				switch (digit) {
 					case 0:
 						renderSegments(

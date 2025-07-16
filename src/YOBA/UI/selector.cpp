@@ -9,7 +9,7 @@ namespace YOBA {
 		_itemsLayout = this;
 	}
 
-	SelectorItem* Selector::getItemAt(size_t index) const {
+	SelectorItem* Selector::getItemAt(const size_t index) const {
 		return
 			_itemsLayout
 			? dynamic_cast<SelectorItem*>((*_itemsLayout)[index])
@@ -58,7 +58,7 @@ namespace YOBA {
 			: nullptr;
 	}
 
-	void Selector::setSelectedIndex(int32_t index) {
+	void Selector::setSelectedIndex(const int32_t index) {
 		if (index == _selectedIndex || !_itemsLayout)
 			return;
 

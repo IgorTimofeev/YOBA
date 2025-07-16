@@ -41,7 +41,7 @@ namespace YOBA::spatial {
 		return _lineVertexIndicesCount;
 	}
 
-	void LinearMesh::setLineVertexIndicesCount(uint16_t lineVertexIndicesCount) {
+	void LinearMesh::setLineVertexIndicesCount(const uint16_t lineVertexIndicesCount) {
 		_lineVertexIndicesCount = lineVertexIndicesCount;
 	}
 

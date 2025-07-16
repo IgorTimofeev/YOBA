@@ -10,7 +10,7 @@ namespace YOBA {
 
 			}
 
-			explicit SinAndCos(float angle) : _sin(std::sinf(angle)), _cos(std::cosf(angle)) {
+			explicit SinAndCos(const float angle) : _sin(std::sinf(angle)), _cos(std::cosf(angle)) {
 
 			}
 
@@ -18,7 +18,7 @@ namespace YOBA {
 				return _sin;
 			}
 
-			void setSin(float sin) {
+			void setSin(const float sin) {
 				_sin = sin;
 			}
 
@@ -26,7 +26,7 @@ namespace YOBA {
 				return _cos;
 			}
 
-			void setCos(float cos) {
+			void setCos(const float cos) {
 				_cos = cos;
 			}
 

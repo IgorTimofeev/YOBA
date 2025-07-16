@@ -8,7 +8,7 @@
 namespace YOBA {
 	class GeographicCoordinates {
 		public:
-			GeographicCoordinates(const float latitude, const float longitude, const float altitude) : _latitude(latitude), _longitude(longitude), _altitude(altitude) {
+			GeographicCoordinates(const float latitude, const float longitude, const float altitude) : latitude(latitude), longitude(longitude), altitude(altitude) {
 
 			}
 
@@ -19,9 +19,9 @@ namespace YOBA {
 			explicit GeographicCoordinates(const Vector3F& cartesian, const float radius) {
 				const float length = cartesian.getLength();
 
-				_latitude = std::asinf(cartesian.getZ() / length);
-				_longitude = std::atan2f(cartesian.getY(), cartesian.getX());
-				_altitude = length - radius;
+				latitude = std::asinf(cartesian.getZ() / length);
+				longitude = std::atan2f(cartesian.getY(), cartesian.getX());
+				altitude = length - radius;
 			}
 
 			explicit GeographicCoordinates(const Vector3F& cartesian) : GeographicCoordinates(cartesian, equatorialRadiusMeters) {
@@ -34,14 +34,14 @@ namespace YOBA {
 			constexpr static float equatorialMetersPerRadian = equatorialLengthMeters / (2.f * std::numbers::pi_v<float>);
 
 			Vector3F toCartesian(float radius) const {
-				radius += _altitude;
+				radius += altitude;
 
-				const float latCos = std::cosf(_latitude);
+				const float latCos = std::cosf(latitude);
 
 				return Vector3F(
-					radius * latCos * std::cosf(_longitude),
-					radius * latCos * std::sinf(_longitude),
-					radius * std::sinf(_latitude)
+					radius * latCos * std::cosf(longitude),
+					radius * latCos * std::sinf(longitude),
+					radius * std::sinf(latitude)
 				);
 			}
 
@@ -69,32 +69,32 @@ namespace YOBA {
 			}
 
 			float getLatitude() const {
-				return _latitude;
+				return latitude;
 			}
 
-			void setLatitude(const float latitude) {
-				_latitude = latitude;
+			void setLatitude(const float value) {
+				this->latitude = value;
 			}
 
 			float getLongitude() const {
-				return _longitude;
+				return longitude;
 			}
 
-			void setLongitude(const float longitude) {
-				_longitude = longitude;
+			void setLongitude(const float value) {
+				this->longitude = value;
 			}
 
 			float getAltitude() const {
-				return _altitude;
+				return altitude;
 			}
 
-			void setAltitude(const float altitude) {
-				_altitude = altitude;
+			void setAltitude(const float value) {
+				this->altitude = value;
 			}
 
 		private:
-			float _latitude;
-			float _longitude;
-			float _altitude;
+			float latitude;
+			float longitude;
+			float altitude;
 	};
 }

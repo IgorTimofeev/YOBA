@@ -40,7 +40,7 @@ namespace YOBA {
 		return iterator - _children.begin();
 	}
 
-	void Layout::removeChildAt(int index) {
+	void Layout::removeChildAt(const int index) {
 		const auto child = _children[index];
 
 		_children.erase(_children.begin() + index);
@@ -110,7 +110,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	Element* Layout::getChildAt(size_t index) const {
+	Element* Layout::getChildAt(const size_t index) const {
 		return _children[index];
 	}
 
@@ -124,7 +124,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Layout::insertChild(size_t index, Element* child) {
+	void Layout::insertChild(const size_t index, Element* child) {
 		_children.insert(_children.begin() + index, child);
 
 		onChildAdded(child);
@@ -133,12 +133,12 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Layout::insertChildFromEnd(size_t offset, Element* child) {
+	void Layout::insertChildFromEnd(const size_t offset, Element* child) {
 		const ssize_t index = _children.size() - offset;
 		insertChild(index >= 0 ? index : 0, child);
 	}
 
-	Element* Layout::operator[](size_t index) const {
+	Element* Layout::operator[](const size_t index) const {
 		return getChildAt(index);
 	}
 
@@ -165,12 +165,12 @@ namespace YOBA {
 				bool intersects;
 
 				if (isPointer) {
-					intersects = getBounds().intersects(reinterpret_cast<PointerEvent*>(event)->getPosition());
+					intersects = getBounds().contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
 				}
 				else {
 					const auto& bounds = getBounds();
 					const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-					intersects = bounds.intersects(pinchEvent->getPosition1()) && bounds.intersects(pinchEvent->getPosition2());
+					intersects = bounds.contains(pinchEvent->getPosition1()) && bounds.contains(pinchEvent->getPosition2());
 				}
 
 				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;

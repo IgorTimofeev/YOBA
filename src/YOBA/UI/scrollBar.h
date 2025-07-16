@@ -9,41 +9,41 @@ namespace YOBA {
 	class ScrollBar : public Control, public OrientationElement, public CornerRadiusElement {
 		public:
 			uint16_t getPosition() const {
-				return _position;
+				return position;
 			}
 
-			void setPosition(uint16_t value) {
-				_position = value;
+			void setPosition(const uint16_t value) {
+				position = value;
 
 				invalidate();
 			}
 
 			uint16_t getViewportSize() const {
-				return _viewportSize;
+				return viewportSize;
 			}
 
-			void setViewportSize(uint16_t value) {
-				_viewportSize = value;
+			void setViewportSize(const uint16_t value) {
+				viewportSize = value;
 
 				invalidate();
 			}
 
-			uint16_t getTotalSize() const {
-				return _totalSize;
+			uint16_t getContentSize() const {
+				return contentSize;
 			}
 
-			void setTotalSize(uint16_t value) {
-				_totalSize = value;
+			void setContentSize(const uint16_t value) {
+				contentSize = value;
 
 				invalidate();
 			}
 
 			const Color* getThumbColor() const {
-				return _thumbColor;
+				return thumbColor;
 			}
 
 			void setThumbColor(const Color* value) {
-				_thumbColor = value;
+				thumbColor = value;
 
 				invalidate();
 			}
@@ -51,43 +51,43 @@ namespace YOBA {
 		protected:
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				// Thumb
-				if (!_thumbColor)
+				if (!thumbColor)
 					return;
 
-				const auto size = static_cast<uint16_t>(static_cast<uint64_t>(_viewportSize) * static_cast<uint64_t>(bounds.getHeight()) / static_cast<uint64_t>(_totalSize));
-				const auto position = static_cast<uint16_t>(static_cast<uint64_t>(_position) * static_cast<uint64_t>(bounds.getHeight()) / static_cast<uint64_t>(_totalSize));
+				const auto size = static_cast<uint16_t>(static_cast<uint64_t>(bounds.getHeight()) * static_cast<uint64_t>(viewportSize) / static_cast<uint64_t>(contentSize));
+				const auto renderPos = static_cast<uint16_t>(static_cast<uint64_t>(bounds.getHeight()) * static_cast<uint64_t>(position) / static_cast<uint64_t>(contentSize));
 
 				if (getOrientation() == Orientation::horizontal) {
 					renderer->renderFilledRectangle(
 						Bounds(
-							bounds.getX() + position,
+							bounds.getX() + renderPos,
 							bounds.getY(),
 							size,
 							bounds.getHeight()
 						),
 						getCornerRadius(),
-						_thumbColor
+						thumbColor
 					);
 				}
 				else {
 					renderer->renderFilledRectangle(
 						Bounds(
 							bounds.getX(),
-							bounds.getY() + position,
+							bounds.getY() + renderPos,
 							bounds.getWidth(),
 							size
 						),
 						getCornerRadius(),
-						_thumbColor
+						thumbColor
 					);
 				}
 			}
 
 		private:
-			uint16_t _position = 0;
-			uint16_t _viewportSize = 0;
-			uint16_t _totalSize = 0;
+			uint16_t position = 0;
+			uint16_t viewportSize = 0;
+			uint16_t contentSize = 0;
 
-			const Color* _thumbColor = nullptr;
+			const Color* thumbColor = nullptr;
 	};
 }

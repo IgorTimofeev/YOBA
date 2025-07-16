@@ -168,7 +168,7 @@ namespace YOBA::spatial {
 		return _FOV;
 	}
 
-	void Scene::setFOV(float value) {
+	void Scene::setFOV(const float value) {
 		_FOV = value;
 	}
 
@@ -176,7 +176,7 @@ namespace YOBA::spatial {
 		return _nearPlaneDistance;
 	}
 
-	void Scene::setNearPlaneDistance(float value) {
+	void Scene::setNearPlaneDistance(const float value) {
 		_nearPlaneDistance = value;
 	}
 
@@ -184,7 +184,7 @@ namespace YOBA::spatial {
 		return _farPlaneDistance;
 	}
 
-	void Scene::setFarPlaneDistance(float value) {
+	void Scene::setFarPlaneDistance(const float value) {
 		_farPlaneDistance = value;
 	}
 
@@ -192,7 +192,7 @@ namespace YOBA::spatial {
 		return _FOVVertical;
 	}
 
-	void Scene::setFOVVertical(bool fovVertical) {
+	void Scene::setFOVVertical(const bool fovVertical) {
 		_FOVVertical = fovVertical;
 	}
 

@@ -30,7 +30,6 @@ namespace YOBA {
 			Size getSize() const;
 			void setSize(const Size& value);
 
-
 			int32_t getX2() const;
 			int32_t getY2() const;
 			int32_t getXCenter() const;
@@ -43,8 +42,9 @@ namespace YOBA {
 			Point getBottomRight() const;
 			Point getBottomLeft() const;
 
-			bool intersects(const Point& point) const;
+			bool contains(const Point& point) const;
 			bool intersects(const Bounds& bounds) const;
+			bool contains(const Bounds& bounds) const;
 
 			bool haveZeroSize() const;
 			bool isLandscape() const;
@@ -54,9 +54,9 @@ namespace YOBA {
 			Bounds getExpansion(const Bounds& bounds) const;
 
 		private:
-			int32_t _x = 0;
-			int32_t _y = 0;
-			uint16_t _width = 0;
-			uint16_t _height = 0;
+			int32_t x = 0;
+			int32_t y = 0;
+			uint16_t width = 0;
+			uint16_t height = 0;
 	};
 }

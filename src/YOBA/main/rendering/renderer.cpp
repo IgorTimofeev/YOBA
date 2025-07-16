@@ -66,7 +66,7 @@ namespace YOBA {
 	}
 
 	void Renderer::renderPixel(const Point& point, const Color* color) {
-		if (!getViewport().intersects(point))
+		if (!getViewport().contains(point))
 			return;
 
 		renderPixelNative(point, color);

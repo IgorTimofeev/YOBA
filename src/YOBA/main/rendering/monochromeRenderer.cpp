@@ -40,13 +40,13 @@ namespace YOBA {
 		}
 	}
 
-	void MonochromeRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
+	void MonochromeRenderer::renderHorizontalLineNative(const Point& point, const uint16_t width, const Color* color) {
 		for (int32_t x = point.getX(); x < point.getX() + width; x++) {
 			renderPixelNative(Point(x, point.getY()), color);
 		}
 	}
 
-	void MonochromeRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
+	void MonochromeRenderer::renderVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
 		for (int32_t y = point.getY(); y < point.getY() + height; y++) {
 			renderPixelNative(Point(point.getX(), y), color);
 		}

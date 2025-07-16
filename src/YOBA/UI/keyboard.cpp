@@ -7,7 +7,7 @@
 namespace YOBA {
 	// ----------------------------- KeyboardKey -----------------------------
 
-	KeyboardKey::KeyboardKey(KeyboardKeyType type, Key key, std::wstring_view name, float width) :
+	KeyboardKey::KeyboardKey(const KeyboardKeyType type, const Key key, const std::wstring_view name, const float width) :
 		_type(type),
 		_key(key),
 		_name(name),
@@ -70,11 +70,11 @@ namespace YOBA {
 	// ----------------------------- TextKeyboardKey -----------------------------
 
 	TextKeyboardKey::TextKeyboardKey(
-		Key key,
-		std::wstring_view name,
-		Key uppercaseKey,
-		std::wstring_view uppercaseName,
-		float width
+		const Key key,
+		const std::wstring_view name,
+		const Key uppercaseKey,
+		const std::wstring_view uppercaseName,
+		const float width
 	) :
 		KeyboardKey(KeyboardKeyType::normal, key, name, width),
 		_uppercaseKey(uppercaseKey),
@@ -83,7 +83,7 @@ namespace YOBA {
 
 	}
 
-	TextKeyboardKey::TextKeyboardKey(Key key, std::wstring_view name, float width) :
+	TextKeyboardKey::TextKeyboardKey(const Key key, const std::wstring_view name, const float width) :
 		TextKeyboardKey(
 			key,
 			name,
@@ -130,10 +130,10 @@ namespace YOBA {
 	// ----------------------------- ActionKeyboardKey -----------------------------
 
 	ShiftKeyboardKey::ShiftKeyboardKey(
-		std::wstring_view name,
-		std::wstring_view uppercaseName,
-		std::wstring_view capsName,
-		float width
+		const std::wstring_view name,
+		const std::wstring_view uppercaseName,
+		const std::wstring_view capsName,
+		const float width
 	) :
 		KeyboardKey(
 			KeyboardKeyType::action,
@@ -181,7 +181,7 @@ namespace YOBA {
 
 	// ----------------------------- BackspaceKeyboardKey -----------------------------
 
-	BackspaceKeyboardKey::BackspaceKeyboardKey(std::wstring_view name, float width) :
+	BackspaceKeyboardKey::BackspaceKeyboardKey(const std::wstring_view name, const float width) :
 		KeyboardKey(KeyboardKeyType::action, Key::backspace, name, width)
 	{
 
@@ -189,7 +189,7 @@ namespace YOBA {
 
 	// ----------------------------- EnterKeyboardKey -----------------------------
 
-	EnterKeyboardKey::EnterKeyboardKey(float width) :
+	EnterKeyboardKey::EnterKeyboardKey(const float width) :
 		KeyboardKey(KeyboardKeyType::action, Key::enter, L"<-", width)
 	{
 
@@ -206,8 +206,8 @@ namespace YOBA {
 	// ----------------------------- CharactersLayoutKeyboardKey -----------------------------
 
 	CharactersLayoutKeyboardKey::CharactersLayoutKeyboardKey(
-		std::wstring_view name,
-		float width
+		const std::wstring_view name,
+		const float width
 	) :
 		KeyboardKey(KeyboardKeyType::charactersLayout, Key::none, name, width)
 	{
@@ -228,8 +228,8 @@ namespace YOBA {
 	// ----------------------------- DefaultLayoutKeyboardKey -----------------------------
 
 	CurrentCyclicLayoutKeyboardKey::CurrentCyclicLayoutKeyboardKey(
-		std::wstring_view name,
-		float width
+		const std::wstring_view name,
+		const float width
 	) :
 		KeyboardKey(KeyboardKeyType::action, Key::none, name, width)
 	{
@@ -250,8 +250,8 @@ namespace YOBA {
 	// ----------------------------- CyclicLayoutKeyboardKey -----------------------------
 
 	CyclicLayoutKeyboardKey::CyclicLayoutKeyboardKey(
-		std::wstring_view name,
-		float width
+		const std::wstring_view name,
+		const float width
 	) :
 		KeyboardKey(KeyboardKeyType::cyclicLayout, Key::none, name, width)
 	{
@@ -268,7 +268,7 @@ namespace YOBA {
 
 	// ----------------------------- KeyboardButton -----------------------------
 
-	KeyboardButton::KeyboardButton(Keyboard* keyboard, uint8_t row, uint8_t column) :
+	KeyboardButton::KeyboardButton(Keyboard* keyboard, const uint8_t row, const uint8_t column) :
 		_keyboard(keyboard),
 		_row(row),
 		_column(column)
@@ -451,7 +451,7 @@ namespace YOBA {
 		}
 	}
 
-	void Keyboard::setCyclicLayoutIndex(int8_t value) {
+	void Keyboard::setCyclicLayoutIndex(const int8_t value) {
 		_cyclicLayoutIndex = value;
 
 		setLayout(_cyclicLayoutIndex >= 0 ? _cyclicLayoutBuilders[_cyclicLayoutIndex]() : nullptr);
@@ -465,7 +465,7 @@ namespace YOBA {
 		return _horizontalKeySpacing;
 	}
 
-	void Keyboard::setHorizontalKeySpacing(uint8_t horizontalKeySpacing) {
+	void Keyboard::setHorizontalKeySpacing(const uint8_t horizontalKeySpacing) {
 		_horizontalKeySpacing = horizontalKeySpacing;
 	}
 
@@ -473,7 +473,7 @@ namespace YOBA {
 		return _verticalKeySpacing;
 	}
 
-	void Keyboard::setVerticalKeySpacing(uint8_t value) {
+	void Keyboard::setVerticalKeySpacing(const uint8_t value) {
 		_verticalKeySpacing = value;
 	}
 
@@ -481,7 +481,7 @@ namespace YOBA {
 		return _keyHeight;
 	}
 
-	void Keyboard::setKeyHeight(uint16_t value) {
+	void Keyboard::setKeyHeight(const uint16_t value) {
 		_keyHeight = value;
 	}
 
@@ -489,7 +489,7 @@ namespace YOBA {
 		return _case;
 	}
 
-	void Keyboard::setCase(KeyboardCase value) {
+	void Keyboard::setCase(const KeyboardCase value) {
 		_case = value;
 
 		if (!_layout)
@@ -504,7 +504,7 @@ namespace YOBA {
 		return _continuousTypingDelay;
 	}
 
-	void Keyboard::setContinuousTypingDelay(uint16_t value) {
+	void Keyboard::setContinuousTypingDelay(const uint16_t value) {
 		_continuousTypingDelay = value;
 	}
 
@@ -512,7 +512,7 @@ namespace YOBA {
 		return _continuousTypingInterval;
 	}
 
-	void Keyboard::setContinuousTypingInterval(uint16_t value) {
+	void Keyboard::setContinuousTypingInterval(const uint16_t value) {
 		_continuousTypingInterval = value;
 	}
 
@@ -549,7 +549,7 @@ namespace YOBA {
 		return _keyCornerRadius;
 	}
 
-	void Keyboard::setKeyCornerRadius(uint8_t value) {
+	void Keyboard::setKeyCornerRadius(const uint8_t value) {
 		_keyCornerRadius = value;
 	}
 
@@ -582,7 +582,7 @@ namespace YOBA {
 		uint8_t rowButtonCount = 0;
 		uint16_t y = bounds.getY();
 
-		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom, &renderer](size_t buttonIndexTo) {
+		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom, &renderer](const size_t buttonIndexTo) {
 			if (rowButtonCount == 0)
 				return;
 

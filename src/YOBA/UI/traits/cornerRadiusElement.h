@@ -9,7 +9,7 @@ namespace YOBA {
 				return _cornerRadius;
 			}
 
-			void setCornerRadius(uint16_t value) {
+			void setCornerRadius(const uint16_t value) {
 				if (value == _cornerRadius)
 					return;
 

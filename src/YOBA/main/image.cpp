@@ -2,26 +2,26 @@
 
 namespace YOBA {
 	Image::Image(
-		uint8_t flags,
+		const uint8_t flags,
 		const Size& size,
 		const uint8_t* bitmap
 	) :
-		_flags(flags),
-		_size(size),
-		_bitmap(bitmap)
+		flags(flags),
+		size(size),
+		bitmap(bitmap)
 	{
 
 	}
 
 	uint8_t Image::getFlags() const {
-		return _flags;
+		return flags;
 	}
 
 	const Size& Image::getSize() const {
-		return _size;
+		return size;
 	}
 
 	const uint8_t* Image::getBitmap() const {
-		return _bitmap;
+		return bitmap;
 	}
 }

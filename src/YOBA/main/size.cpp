@@ -1,14 +1,14 @@
 #include "size.h"
 
 namespace YOBA {
-	Size::Size(uint16_t width, uint16_t height) :
-		_width(width),
-		_height(height)
+	Size::Size(const uint16_t width, const uint16_t height) :
+		width(width),
+		height(height)
 	{
 
 	}
 
-	Size::Size(uint16_t uniformValue) : Size(uniformValue, uniformValue) {
+	Size::Size(const uint16_t uniformValue) : Size(uniformValue, uniformValue) {
 
 	}
 
@@ -17,27 +17,27 @@ namespace YOBA {
 	}
 
 	uint16_t Size::getWidth() const {
-		return _width;
+		return width;
 	}
 
-	void Size::setWidth(uint16_t value) {
-		_width = value;
+	void Size::setWidth(const uint16_t value) {
+		width = value;
 	}
 
 	uint16_t Size::getHeight() const {
-		return _height;
+		return height;
 	}
 
-	void Size::setHeight(uint16_t value) {
-		_height = value;
+	void Size::setHeight(const uint16_t value) {
+		height = value;
 	}
 
 	uint16_t Size::getXCenter() const {
-		return _width / 2;
+		return width / 2;
 	}
 
 	uint16_t Size::getYCenter() const {
-		return _height / 2;
+		return height / 2;
 	}
 
 	Point Size::getCenter() const {
@@ -48,7 +48,7 @@ namespace YOBA {
 	}
 
 	uint32_t Size::getSquare() const {
-		return _width * _height;
+		return width * height;
 	}
 
 	Size Size::interpolate(const Size& to, const double& position) const {
@@ -59,7 +59,7 @@ namespace YOBA {
 	}
 
 	bool Size::operator==(const Size& rhs) const {
-		return _width == rhs._width && _height == rhs._height;
+		return width == rhs.width && height == rhs.height;
 	}
 
 	bool Size::operator!=(const Size& rhs) const {

@@ -14,7 +14,7 @@ namespace YOBA::spatial {
 		return _vertexCount;
 	}
 
-	void Mesh::setVertexCount(uint16_t vertexCount) {
+	void Mesh::setVertexCount(const uint16_t vertexCount) {
 		_vertexCount = vertexCount;
 	}
 }

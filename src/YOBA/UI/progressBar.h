@@ -12,7 +12,7 @@ namespace YOBA {
 				return _value;
 			}
 
-			void setValue(uint16_t value) {
+			void setValue(const uint16_t value) {
 				if (value == _value)
 					return;
 

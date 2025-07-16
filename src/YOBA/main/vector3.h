@@ -45,13 +45,13 @@ namespace YOBA {
 			bool operator!=(const Vector3 &right) const;
 
 		private:
-			T _x;
-			T _y;
-			T _z;
+			T x;
+			T y;
+			T z;
 	};
 
 	template<typename T>
-	Vector3<T>::Vector3(T x, T y, T z) : _x(x), _y(y), _z(z) {
+	Vector3<T>::Vector3(T x, T y, T z) : x(x), y(y), z(z) {
 
 	}
 
@@ -68,40 +68,40 @@ namespace YOBA {
 
 	template<typename T>
 	T Vector3<T>::getX() const {
-		return _x;
+		return x;
 	}
 
 	template<typename T>
 	void Vector3<T>::setX(T value) {
-		_x = value;
+		x = value;
 	}
 
 	template<typename T>
 	T Vector3<T>::getY() const {
-		return _y;
+		return y;
 	}
 
 	template<typename T>
 	void Vector3<T>::setY(T value) {
-		_y = value;
+		y = value;
 	}
 
 	template<typename T>
 	T Vector3<T>::getZ() const {
-		return _z;
+		return z;
 	}
 
 	template<typename T>
 	void Vector3<T>::setZ(T value) {
-		_z = value;
+		z = value;
 	}
 
 	template<typename T>
 	T Vector3<T>::getLength() const {
 		return static_cast<T>(std::sqrt(
-			static_cast<float>(_x) * static_cast<float>(_x)
-			+ static_cast<float>(_y) * static_cast<float>(_y)
-			+ static_cast<float>(_z) * static_cast<float>(_z)
+			static_cast<float>(x) * static_cast<float>(x)
+			+ static_cast<float>(y) * static_cast<float>(y)
+			+ static_cast<float>(z) * static_cast<float>(z)
 		));
 	}
 
@@ -110,68 +110,68 @@ namespace YOBA {
 		auto length = getLength();
 
 		return {
-			_x / length,
-			_y / length,
-			_z / length
+			x / length,
+			y / length,
+			z / length
 		};
 	}
 
 	template<typename T>
 	Vector3<T> Vector3<T>::rotateAroundXAxis(const SinAndCos& sinAndCos) const {
 		return {
-			static_cast<T>(_x),
-			static_cast<T>(sinAndCos.getCos() * static_cast<float>(_y) - sinAndCos.getSin() * static_cast<float>(_z)),
-			static_cast<T>(sinAndCos.getSin() * static_cast<float>(_y) + sinAndCos.getCos() * static_cast<float>(_z))
+			static_cast<T>(x),
+			static_cast<T>(sinAndCos.getCos() * static_cast<float>(y) - sinAndCos.getSin() * static_cast<float>(z)),
+			static_cast<T>(sinAndCos.getSin() * static_cast<float>(y) + sinAndCos.getCos() * static_cast<float>(z))
 		};
 	}
 
 	template<typename T>
-	Vector3<T> Vector3<T>::rotateAroundXAxis(float angle) const {
+	Vector3<T> Vector3<T>::rotateAroundXAxis(const float angle) const {
 		return rotateAroundXAxis(SinAndCos(angle));
 	}
 
 	template<typename T>
 	Vector3<T> Vector3<T>::rotateAroundYAxis(const SinAndCos& sinAndCos) const {
 		return {
-			static_cast<T>(sinAndCos.getCos() * static_cast<float>(_x) + sinAndCos.getSin() * static_cast<float>(_z)),
-			static_cast<T>(_y),
-			static_cast<T>(-sinAndCos.getSin() * static_cast<float>(_x) + sinAndCos.getCos() * static_cast<float>(_z))
+			static_cast<T>(sinAndCos.getCos() * static_cast<float>(x) + sinAndCos.getSin() * static_cast<float>(z)),
+			static_cast<T>(y),
+			static_cast<T>(-sinAndCos.getSin() * static_cast<float>(x) + sinAndCos.getCos() * static_cast<float>(z))
 		};
 	}
 
 	template<typename T>
-	Vector3<T> Vector3<T>::rotateAroundYAxis(float angle) const {
+	Vector3<T> Vector3<T>::rotateAroundYAxis(const float angle) const {
 		return rotateAroundYAxis(SinAndCos(angle));
 	}
 
 	template<typename T>
 	Vector3<T> Vector3<T>::rotateAroundZAxis(const SinAndCos& sinAndCos) const {
 		return {
-			static_cast<T>(sinAndCos.getCos() * static_cast<float>(_x) - sinAndCos.getSin() * static_cast<float>(_y)),
-			static_cast<T>(sinAndCos.getSin() * static_cast<float>(_x) + sinAndCos.getCos() * static_cast<float>(_y)),
-			_z
+			static_cast<T>(sinAndCos.getCos() * static_cast<float>(x) - sinAndCos.getSin() * static_cast<float>(y)),
+			static_cast<T>(sinAndCos.getSin() * static_cast<float>(x) + sinAndCos.getCos() * static_cast<float>(y)),
+			z
 		};
 	}
 
 	template<typename T>
-	Vector3<T> Vector3<T>::rotateAroundZAxis(float angle) const {
+	Vector3<T> Vector3<T>::rotateAroundZAxis(const float angle) const {
 		return rotateAroundZAxis(SinAndCos(angle));
 	}
 
 	template<typename T>
 	Vector3<T> Vector3<T>::operator+(const Vector3& right) const {
 		return {
-			_x + right._x,
-			_y + right._y,
-			_z + right._z,
+			x + right.x,
+			y + right.y,
+			z + right.z,
 		};
 	}
 
 	template<typename T>
 	Vector3<T>& Vector3<T>::operator+=(const Vector3& right) {
-		_x += right._x;
-		_y += right._y;
-		_z += right._z;
+		x += right.x;
+		y += right.y;
+		z += right.z;
 
 		return *this;
 	}
@@ -179,26 +179,26 @@ namespace YOBA {
 	template<typename T>
 	Vector3<T> Vector3<T>::operator-(const Vector3& right) const {
 		return {
-			_x - right._x,
-			_y - right._y,
-			_z - right._z,
+			x - right.x,
+			y - right.y,
+			z - right.z,
 		};
 	}
 
 	template<typename T>
 	Vector3<T> Vector3<T>::operator-() const {
 		return {
-			-_x,
-			-_y,
-			-_z,
+			-x,
+			-y,
+			-z,
 		};
 	}
 
 	template<typename T>
 	Vector3<T>& Vector3<T>::operator-=(const Vector3& right) {
-		_x -= right._x;
-		_y -= right._y;
-		_z -= right._z;
+		x -= right.x;
+		y -= right.y;
+		z -= right.z;
 
 		return *this;
 	}
@@ -206,17 +206,17 @@ namespace YOBA {
 	template<typename T>
 	Vector3<T> Vector3<T>::operator*(T factor) const {
 		return {
-			_x * factor,
-			_y * factor,
-			_z * factor
+			x * factor,
+			y * factor,
+			z * factor
 		};
 	}
 
 	template<typename T>
 	Vector3<T>& Vector3<T>::operator*=(const Vector3& right) {
-		_x *= right._x;
-		_y *= right._y;
-		_z *= right._z;
+		x *= right.x;
+		y *= right.y;
+		z *= right.z;
 
 		return *this;
 	}
@@ -224,17 +224,17 @@ namespace YOBA {
 	template<typename T>
 	Vector3<T> Vector3<T>::operator/(T factor) const {
 		return {
-			_x / factor,
-			_y / factor,
-			_z / factor
+			x / factor,
+			y / factor,
+			z / factor
 		};
 	}
 
 	template<typename T>
 	Vector3<T>& Vector3<T>::operator/=(const Vector3& right) {
-		_x /= right._x;
-		_y /= right._y;
-		_z /= right._z;
+		x /= right.x;
+		y /= right.y;
+		z /= right.z;
 
 		return *this;
 	}
@@ -242,9 +242,9 @@ namespace YOBA {
 	template<typename T>
 	bool Vector3<T>::operator==(const Vector3& right) const {
 		return
-			_x == right._x
-			&& _y == right._y
-			&& _z == right._z;
+			x == right.x
+			&& y == right.y
+			&& z == right.z;
 	}
 
 	template<typename T>

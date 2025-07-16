@@ -9,15 +9,15 @@ namespace YOBA {
 		public:
 			StackLayout() = default;
 
-			explicit StackLayout(Orientation orientation) {
+			explicit StackLayout(const Orientation orientation) {
 				setOrientation(orientation);
 			}
 
-			explicit StackLayout(uint16_t spacing) {
+			explicit StackLayout(const uint16_t spacing) {
 				setSpacing(spacing);
 			}
 
-			StackLayout(Orientation orientation, uint16_t spacing) {
+			StackLayout(const Orientation orientation, const uint16_t spacing) {
 				setOrientation(orientation);
 				setSpacing(spacing);
 			}
@@ -84,6 +84,8 @@ namespace YOBA {
 						break;
 					}
 				}
+
+				// ESP_LOGI("Stack lay", "rend height: %f", (float)result.getHeight());
 
 				return result;
 			}

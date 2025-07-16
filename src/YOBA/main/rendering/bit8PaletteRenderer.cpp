@@ -2,7 +2,7 @@
 #include <YOBA/main/bounds.h>
 
 namespace YOBA {
-	Bit8PaletteRenderer::Bit8PaletteRenderer(uint8_t paletteLength) : PaletteRenderer(paletteLength) {
+	Bit8PaletteRenderer::Bit8PaletteRenderer(const uint8_t paletteLength) : PaletteRenderer(paletteLength) {
 
 	}
 
@@ -85,11 +85,11 @@ namespace YOBA {
 		_paletteIndicesBuffer[getPixelIndex(point)] = getPaletteIndex(color);
 	}
 
-	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, uint16_t width, const Color* color) {
+	void Bit8PaletteRenderer::renderHorizontalLineNative(const Point& point, const uint16_t width, const Color* color) {
 		std::memset(_paletteIndicesBuffer + getPixelIndex(point), getPaletteIndex(color), width);
 	}
 
-	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, uint16_t height, const Color* color) {
+	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);

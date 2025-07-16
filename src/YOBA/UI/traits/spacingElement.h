@@ -9,7 +9,7 @@ namespace YOBA {
 				return _spacing;
 			}
 
-			void setSpacing(int32_t value) {
+			void setSpacing(const int32_t value) {
 				if (value == _spacing)
 					return;
 

@@ -45,7 +45,7 @@ namespace YOBA {
 				return _trackSize;
 			}
 
-			void setTrackSize(uint8_t value) {
+			void setTrackSize(const uint8_t value) {
 				_trackSize = value;
 
 				invalidateRender();
@@ -55,7 +55,7 @@ namespace YOBA {
 				return _trackCornerRadius;
 			}
 
-			void setTrackCornerRadius(uint8_t value) {
+			void setTrackCornerRadius(const uint8_t value) {
 				_trackCornerRadius = value;
 
 				invalidateRender();
@@ -65,7 +65,7 @@ namespace YOBA {
 				return _handleSize;
 			}
 
-			void setHandleSize(uint8_t value) {
+			void setHandleSize(const uint8_t value) {
 				_handleSize = value;
 
 				invalidateRender();
@@ -75,7 +75,7 @@ namespace YOBA {
 				return _handleCornerRadius;
 			}
 
-			void setHandleCornerRadius(uint8_t value) {
+			void setHandleCornerRadius(const uint8_t value) {
 				_handleCornerRadius = value;
 
 				invalidateRender();
@@ -85,7 +85,7 @@ namespace YOBA {
 				return _value;
 			}
 
-			void setValue(uint16_t value) {
+			void setValue(const uint16_t value) {
 				if (value == _value)
 					return;
 

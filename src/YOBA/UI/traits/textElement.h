@@ -9,7 +9,7 @@ namespace YOBA {
 				return _text;
 			}
 
-			void setText(std::wstring_view value) {
+			void setText(const std::wstring_view value) {
 				_text = value;
 
 				onTextChanged();

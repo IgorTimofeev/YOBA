@@ -9,7 +9,7 @@ namespace YOBA {
 				return _horizontalSpacing;
 			}
 
-			void setHorizontalSpacing(uint16_t value) {
+			void setHorizontalSpacing(const uint16_t value) {
 				if (value == _horizontalSpacing)
 					return;
 
@@ -22,7 +22,7 @@ namespace YOBA {
 				return _verticalSpacing;
 			}
 
-			void setVerticalSpacing(uint16_t value) {
+			void setVerticalSpacing(const uint16_t value) {
 				if (value == _verticalSpacing)
 					return;
 
@@ -31,7 +31,7 @@ namespace YOBA {
 				invalidate();
 			}
 
-			void setSpacing(uint16_t horizontal, uint16_t vertical) {
+			void setSpacing(const uint16_t horizontal, const uint16_t vertical) {
 				if (horizontal == _horizontalSpacing && vertical == _verticalSpacing)
 					return;
 
@@ -41,7 +41,7 @@ namespace YOBA {
 				invalidate();
 			}
 
-			void setSpacing(uint16_t uniformValue) {
+			void setSpacing(const uint16_t uniformValue) {
 				setSpacing(uniformValue, uniformValue);
 			}
 

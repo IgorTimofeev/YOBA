@@ -12,15 +12,15 @@ namespace YOBA {
 
 			}
 
-			explicit RelativeStackLayout(Orientation orientation) : StackLayout(orientation) {
+			explicit RelativeStackLayout(const Orientation orientation) : StackLayout(orientation) {
 
 			}
 
-			explicit RelativeStackLayout(uint16_t spacing) : StackLayout(spacing) {
+			explicit RelativeStackLayout(const uint16_t spacing) : StackLayout(spacing) {
 
 			}
 
-			RelativeStackLayout(Orientation orientation, uint16_t spacing) : StackLayout(orientation, spacing) {
+			RelativeStackLayout(const Orientation orientation, const uint16_t spacing) : StackLayout(orientation, spacing) {
 
 			}
 
@@ -43,7 +43,7 @@ namespace YOBA {
 				return getRelativeSize(child) == autoSize;
 			}
 
-			void setAutoSize(const Element* child, bool value = true) {
+			void setAutoSize(const Element* child, const bool value = true) {
 				setRelativeSize(child, value ? autoSize : 1);
 			}
 

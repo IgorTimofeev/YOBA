@@ -10,7 +10,7 @@ namespace YOBA {
 		public:
 			Switch() = default;
 
-			explicit Switch(bool checked) {
+			explicit Switch(const bool checked) {
 				setActive(checked);
 			}
 

@@ -62,7 +62,7 @@ namespace YOBA {
 		return _angle;
 	}
 
-	void Knob::setAngle(float angle) {
+	void Knob::setAngle(const float angle) {
 		_angle = angle;
 	}
 
@@ -70,7 +70,7 @@ namespace YOBA {
 		return _angleStep;
 	}
 
-	void Knob::setAngleStep(float angleStep) {
+	void Knob::setAngleStep(const float angleStep) {
 		_angleStep = angleStep;
 	}
 

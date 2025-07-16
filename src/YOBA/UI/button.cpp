@@ -112,7 +112,7 @@ namespace YOBA {
 		return _isToggle;
 	}
 
-	void Button::setToggle(bool value) {
+	void Button::setToggle(const bool value) {
 		_isToggle = value;
 	}
 

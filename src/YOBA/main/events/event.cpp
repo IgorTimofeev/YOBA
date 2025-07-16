@@ -1,7 +1,7 @@
 #include "event.h"
 
 namespace YOBA {
-	Event::Event(uint16_t typeID) {
+	Event::Event(const uint16_t typeID) {
 		_typeID = typeID;
 	}
 
@@ -19,7 +19,7 @@ namespace YOBA {
 		return _handled;
 	}
 
-	void Event::setHandled(bool handled) {
+	void Event::setHandled(const bool handled) {
 		_handled = handled;
 	}
 

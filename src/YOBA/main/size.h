@@ -7,7 +7,7 @@ namespace YOBA {
 	struct Size {
 		public:
 			Size(uint16_t width, uint16_t height);
-			Size(uint16_t uniformValue);
+			explicit Size(uint16_t uniformValue);
 			Size();
 
 			constexpr static uint16_t computed = 0xFFFF;
@@ -30,7 +30,7 @@ namespace YOBA {
 			bool operator!=(const Size& rhs) const;
 
 		private:
-			uint16_t _width;
-			uint16_t _height;
+			uint16_t width;
+			uint16_t height;
 	};
 }

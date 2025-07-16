@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace YOBA {
-	PinchEvent::PinchEvent(uint16_t typeID, const Point& position1, const Point& position2) :
+	PinchEvent::PinchEvent(const uint16_t typeID, const Point& position1, const Point& position2) :
 		ScreenEvent(typeID),
 		_position1(position1),
 		_position2(position2)

@@ -66,9 +66,9 @@ namespace YOBA {
 			void setB(float b);
 
 		private:
-			float _h = 0;
-			float _s = 0;
-			float _b = 0;
+			float h = 0;
+			float s = 0;
+			float b = 0;
 	};
 
 	// -------------------------------- ValueColor --------------------------------
@@ -84,22 +84,22 @@ namespace YOBA {
 			virtual RGB888Color toRgb888() const = 0;
 
 		protected:
-			TValue _value;
+			TValue value;
 	};
 
 	template<typename TValue>
-	ValueColor<TValue>::ValueColor(const ColorModel model, TValue value) : Color(model), _value(value) {
+	ValueColor<TValue>::ValueColor(const ColorModel model, TValue value) : Color(model), value(value) {
 
 	}
 
 	template<typename TValue>
 	TValue ValueColor<TValue>::getValue() const {
-		return _value;
+		return value;
 	}
 
 	template<typename TValue>
 	void ValueColor<TValue>::setValue(TValue value) {
-		_value = value;
+		this->value = value;
 	}
 
 	// -------------------------------- Monochrome --------------------------------
@@ -154,9 +154,9 @@ namespace YOBA {
 			void interpolateTo(const RGB888Color& second, float position);
 
 		private:
-			uint8_t _r = 0;
-			uint8_t _g = 0;
-			uint8_t _b = 0;
+			uint8_t r = 0;
+			uint8_t g = 0;
+			uint8_t b = 0;
 	};
 
 	// -------------------------------- PaletteColor --------------------------------

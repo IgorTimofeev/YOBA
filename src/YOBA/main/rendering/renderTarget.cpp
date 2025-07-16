@@ -5,9 +5,9 @@
 namespace YOBA {
 	RenderTarget::RenderTarget(
 		const Size& size,
-		ViewportRotation rotation,
-		PixelOrder pixelOrder,
-		ColorModel colorModel
+		const ViewportRotation rotation,
+		const PixelOrder pixelOrder,
+		const ColorModel colorModel
 	) :
 		_defaultSize(size),
 		_size(size),
@@ -42,7 +42,7 @@ namespace YOBA {
 		return _rotation;
 	}
 
-	void RenderTarget::setRotation(ViewportRotation value) {
+	void RenderTarget::setRotation(const ViewportRotation value) {
 		if (value == _rotation)
 			return;
 
