@@ -6,11 +6,14 @@ namespace YOBA {
 	class TextElement : public virtual Element {
 		public:
 			std::wstring_view getText() const {
-				return _text;
+				return text;
 			}
 
 			void setText(const std::wstring_view value) {
-				_text = value;
+				if (value == text)
+					return;
+
+				text = value;
 
 				onTextChanged();
 
@@ -23,6 +26,6 @@ namespace YOBA {
 			}
 
 		private:
-			std::wstring _text = std::wstring();
+			std::wstring text = std::wstring();
 	};
 }
