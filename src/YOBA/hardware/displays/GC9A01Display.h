@@ -90,6 +90,7 @@ namespace YOBA {
 			void writeMADCTLCommand();
 			void writePixels(const Bounds& bounds, uint8_t* source, size_t length) override;
 			void turnOn();
+			void turnOff();
 
 		private:
 

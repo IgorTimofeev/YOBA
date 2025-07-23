@@ -365,4 +365,8 @@ namespace YOBA {
 		writeCommand(GC9A01A_DISPON);
 		system::sleep(20);
 	}
+
+	void GC9A01Display::turnOff() {
+		writeCommand(GC9A01A_DISPOFF);
+	}
 }

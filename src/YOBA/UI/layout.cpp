@@ -66,7 +66,7 @@ namespace YOBA {
 	}
 
 	void Layout::removeChildren() {
-		if (_children.size() == 0)
+		if (_children.empty())
 			return;
 
 		for (const auto child : _children) {
@@ -95,7 +95,7 @@ namespace YOBA {
 	}
 
 	void Layout::removeAndDeleteChildren() {
-		if (_children.size() == 0)
+		if (_children.empty())
 			return;
 
 		for (const auto child : _children) {
@@ -134,7 +134,7 @@ namespace YOBA {
 	}
 
 	void Layout::insertChildFromEnd(const size_t offset, Element* child) {
-		const ssize_t index = _children.size() - offset;
+		const auto index = static_cast<ssize_t>(_children.size()) - static_cast<ssize_t>(offset);
 		insertChild(index >= 0 ? index : 0, child);
 	}
 
