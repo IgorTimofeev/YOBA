@@ -91,7 +91,7 @@ namespace YOBA {
 		for (size_t i = 0; i < childrenCount; i++)
 			*layout += childrenCopy[i];
 
-		delete childrenCopy;
+		delete[] childrenCopy;
 	}
 
 	void Layout::removeAndDeleteChildren() {
