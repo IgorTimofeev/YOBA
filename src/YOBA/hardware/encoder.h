@@ -111,6 +111,7 @@ namespace YOBA {
 
 			void setup() override;
 			void tick() override;
+			bool isPressed() const;
 
 		private:
 			uint8_t _swPin;

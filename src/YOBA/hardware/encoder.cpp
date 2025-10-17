@@ -126,6 +126,7 @@ namespace YOBA {
 
 		system::GPIO::setMode(_swPin, system::GPIO::PinMode::input);
 		system::GPIO::addInterruptHandler(_swPin, swInterruptHandler, this);
+		readPressed();
 	}
 
 	void PushButtonEncoder::tick() {
@@ -154,5 +155,9 @@ namespace YOBA {
 
 	void PushButtonEncoder::readPressed() {
 		_pressed = !system::GPIO::read(_swPin);
+	}
+
+	bool PushButtonEncoder::isPressed() const {
+		return _pressed;
 	}
 }
