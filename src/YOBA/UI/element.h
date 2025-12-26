@@ -149,20 +149,20 @@ namespace YOBA {
 			static uint16_t computeMeasureShit(
 				uint16_t size,
 				uint16_t desiredSize,
-				int32_t marginStart,
-				int32_t marginEnd,
+				int32_t marginStartClamped,
+				int32_t marginEndClamped,
 				uint16_t min,
 				uint16_t max
 			);
 
 			static void computeBoundsShit(
 				Alignment alignment,
-				int32_t position,
+				int32_t boundsStart,
+				uint16_t boundsSize,
 				uint16_t size,
 				uint16_t desiredSize,
 				int32_t marginStart,
 				int32_t marginEnd,
-				uint16_t bounds,
 
 				int32_t& newPosition,
 				int32_t& newSize

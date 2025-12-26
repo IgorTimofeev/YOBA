@@ -50,28 +50,23 @@ namespace YOBA {
 	uint16_t Element::computeMeasureShit(
 		const uint16_t size,
 		const uint16_t desiredSize,
-		const int32_t marginStart,
-		const int32_t marginEnd,
+		const int32_t marginStartClamped,
+		const int32_t marginEndClamped,
 		const uint16_t min,
 		const uint16_t max
 	) {
 		int32_t newSize = 0;
 
 		if (size == Size::computed) {
-			newSize = desiredSize;
+			newSize = static_cast<int32_t>(desiredSize);
 		}
 		else {
 			newSize = size;
 		}
-
-		if (newSize < min) {
-			newSize = min;
-		}
-		else if (newSize > max) {
-			newSize = max;
-		}
-				
-		return newSize + marginStart + marginEnd;
+		
+		newSize = newSize + marginStartClamped + marginEndClamped;
+		
+		return std::clamp<int32_t>(newSize, min, max);
 	}
 
 	void Element::onBoundsChanged() {
@@ -85,18 +80,36 @@ namespace YOBA {
 	void Element::measure(const Size& availableSize) {
 		const auto& size = getSize();
 		const auto& margin = getMargin();
-
+		
+		// Reducing available size with margins
+		// Negative margin values must NOT impact element size on measure,
+		const auto marginLeftClamped = std::max<int32_t>(margin.getLeft(), 0);
+		const auto marginTopClamped = std::max<int32_t>(margin.getTop(), 0);
+		const auto marginRightClamped = std::max<int32_t>(margin.getRight(), 0);
+		const auto marginBottomClamped = std::max<int32_t>(margin.getBottom(), 0);
+	
 		_measuredSize = onMeasure(Size(
-			static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(availableSize.getWidth()) - margin.getLeft() - margin.getRight(), 0)),
-			static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(availableSize.getHeight()) - margin.getTop() - margin.getBottom(), 0))
+			availableSize.getWidth() == Size::unlimited
+				? Size::unlimited
+				: static_cast<uint16_t>(std::max<int32_t>(
+					static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
+					0
+				)),
+			
+				availableSize.getHeight() == Size::unlimited
+				? Size::unlimited
+				: static_cast<uint16_t>(std::max<int32_t>(
+					static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
+					0
+				))
 		));
 
 		// Horizontal
 		_measuredSize.setWidth(computeMeasureShit(
 			size.getWidth(),
 			_measuredSize.getWidth(),
-			margin.getLeft(),
-			margin.getRight(),
+			marginLeftClamped,
+			marginRightClamped,
 			_minSize.getWidth(),
 			_maxSize.getWidth()
 		));
@@ -105,8 +118,8 @@ namespace YOBA {
 		_measuredSize.setHeight(computeMeasureShit(
 			size.getHeight(),
 			_measuredSize.getHeight(),
-			margin.getTop(),
-			margin.getBottom(),
+			marginTopClamped,
+			marginBottomClamped,
 			_minSize.getHeight(),
 			_maxSize.getHeight()
 		));
@@ -114,51 +127,70 @@ namespace YOBA {
 
 	void Element::computeBoundsShit(
 		const Alignment alignment,
-		const int32_t position,
+		const int32_t boundsStart,
+		const uint16_t boundsSize,
+		
 		const uint16_t size,
-
 		const uint16_t desiredSize,
+		
 		const int32_t marginStart,
 		const int32_t marginEnd,
-
-		const uint16_t bounds,
+		
 		int32_t& newPosition,
 		int32_t& newSize
 	) {
 		switch (alignment) {
 			case Alignment::start:
-				newSize = static_cast<int32_t>(desiredSize) - marginStart - marginEnd;
+				newSize = static_cast<int32_t>(desiredSize);
+				
+				if (marginStart > 0)
+					newSize -= marginStart;
+				
+				if (marginEnd > 0)
+					newSize -= marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
 
-				newPosition = position + marginStart;
+				newPosition = boundsStart + marginStart;
 
 				break;
 
 			case Alignment::center:
-				newSize = static_cast<int32_t>(desiredSize) - marginStart - marginEnd;
+				newSize = static_cast<int32_t>(desiredSize);
+				
+				if (marginStart > 0)
+					newSize -= marginStart;
+				
+				if (marginEnd > 0)
+					newSize -= marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
 
-				newPosition = position + marginStart - marginEnd + bounds / 2 - newSize / 2;
+				newPosition = boundsStart + marginStart - marginEnd + boundsSize / 2 - newSize / 2;
 
 				break;
 
 			case Alignment::end:
-				newSize = static_cast<int32_t>(desiredSize) - marginStart - marginEnd;
+				newSize = static_cast<int32_t>(desiredSize);
+				
+				if (marginStart > 0)
+					newSize -= marginStart;
+				
+				if (marginEnd > 0)
+					newSize -= marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
 
-				newPosition = position + bounds - marginEnd - newSize;
+				newPosition = boundsStart + boundsSize - marginEnd - newSize;
 
 				break;
 
 			case Alignment::stretch:
 				if (size == Size::computed) {
-					newSize = bounds;
+					newSize = boundsSize;
 				}
 				else {
 					newSize = static_cast<int32_t>(desiredSize);
@@ -169,7 +201,7 @@ namespace YOBA {
 				if (newSize < 0)
 					newSize = 0;
 
-				newPosition = position + marginStart;
+				newPosition = boundsStart + marginStart;
 
 				break;
 		}
@@ -188,11 +220,14 @@ namespace YOBA {
 		computeBoundsShit(
 			getHorizontalAlignment(),
 			bounds.getX(),
+			bounds.getWidth(),
+			
 			size.getWidth(),
 			measuredSize.getWidth(),
+			
 			margin.getLeft(),
 			margin.getRight(),
-			bounds.getWidth(),
+			
 			newPosition,
 			newSize
 		);
@@ -204,11 +239,14 @@ namespace YOBA {
 		computeBoundsShit(
 			getVerticalAlignment(),
 			bounds.getY(),
+			bounds.getHeight(),
+			
 			size.getHeight(),
 			measuredSize.getHeight(),
+			
 			margin.getTop(),
 			margin.getBottom(),
-			bounds.getHeight(),
+			
 			newPosition,
 			newSize
 		);
