@@ -9,25 +9,30 @@
 namespace YOBA {
 	class SevenSegment : public Control {
 		public:
-			constexpr static uint32_t dashes = 0xFFFFFFFF;
+			constexpr static uint32_t noValue = 0xFFFFFFFF;
+			constexpr static uint8_t decimalSeparatorDisabled = 0xFF;
 
 			Size onMeasure(const Size& availableSize) override {
 				return {
-					static_cast<uint16_t>((getDigitWidth() + getSpacing()) * getDigitCount() - getSpacing()),
+					static_cast<uint16_t>(
+						_decimalSeparatorIndex == decimalSeparatorDisabled
+						? getDigitWidth() * getDigitCount() + getDigitSpacing() * (getDigitCount() - 1)
+						: getDigitWidth() * getDigitCount() + getDigitSpacing() * std::max(getDigitCount() - 2, 0) + getDecimalSeparatorSpacing() * 2 + getSegmentThickness()
+					),
 					getDigitHeight()
 				};
 			}
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
 				auto position = Point(
-					bounds.getX() + (getDigitWidth() + getSpacing()) * (getDigitCount() - 1),
+					bounds.getX() + (getDigitWidth() + getDigitSpacing()) * (getDigitCount() - 1),
 					bounds.getY()
 				);
 
 				auto value = getValue();
 
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
-					if (value == dashes) {
+					if (value == noValue) {
 						renderDashes(renderer, position);
 					}
 					else if (value > 0) {
@@ -38,14 +43,25 @@ namespace YOBA {
 					else {
 						renderDigit(renderer, position, 0);
 					}
-
-					position.setX(position.getX() - getDigitWidth() - getSpacing());
+					
+					if (i == _decimalSeparatorIndex) {
+						renderer->renderFilledRectangle(
+							Bounds(position.getX() - _decimalSeparatorSpacing - 1, bounds.getY2() - _segmentThickness + 1, _segmentThickness, _segmentThickness),
+							_activeColor
+						);
+						
+						position.setX(position.getX() - getDigitWidth() - _decimalSeparatorSpacing * 2 - _segmentThickness);
+					}
+					else {
+						position.setX(position.getX() - getDigitWidth() - getDigitSpacing());
+					}
 				}
 			}
 
 			uint8_t getSegmentThickness() const {
 				return _segmentThickness;
 			}
+			
 			void setSegmentThickness(const uint8_t value) {
 				_segmentThickness = value;
 
@@ -55,6 +71,7 @@ namespace YOBA {
 			uint8_t getSegmentLength() const {
 				return _segmentLength;
 			}
+			
 			void setSegmentLength(const uint8_t value) {
 				_segmentLength = value;
 
@@ -64,6 +81,7 @@ namespace YOBA {
 			uint32_t getValue() const {
 				return _value;
 			}
+			
 			void setValue(const uint32_t value) {
 				_value = value;
 
@@ -73,24 +91,47 @@ namespace YOBA {
 			uint8_t getDigitCount() const {
 				return _digitCount;
 			}
+			
 			void setDigitCount(const uint8_t value) {
 				_digitCount = value;
 
 				invalidate();
 			}
 
-			uint8_t getSpacing() const {
-				return _spacing;
+			uint8_t getDigitSpacing() const {
+				return _digitSpacing;
 			}
-			void setSpacing(const uint8_t value) {
-				_spacing = value;
+			
+			void setDigitSpacing(const uint8_t value) {
+				_digitSpacing = value;
 
 				invalidate();
 			}
-
+			
+			uint8_t getDecimalSeparatorSpacing() const {
+				return _decimalSeparatorSpacing;
+			}
+			
+			void setDecimalSeparatorSpacing(const uint8_t value) {
+				_decimalSeparatorSpacing = value;
+				
+				invalidate();
+			}
+			
+			uint8_t getDecimalSeparatorIndex() const {
+				return _decimalSeparatorIndex;
+			}
+			
+			void setDecimalSeparatorIndex(uint8_t value) {
+				_decimalSeparatorIndex = value;
+				
+				invalidate();
+			}
+			
 			uint16_t getDigitWidth() const {
 				return static_cast<uint16_t>(getSegmentThickness() * 2 + getSegmentLength());
 			}
+			
 			uint16_t getDigitHeight() const {
 				return static_cast<uint16_t>(getSegmentThickness() * 3 + getSegmentLength() * 2);
 			}
@@ -112,7 +153,9 @@ namespace YOBA {
 		private:
 			uint32_t _value = 0;
 			uint8_t _digitCount = 1;
-			uint8_t _spacing = 3;
+			uint8_t _digitSpacing = 3;
+			uint8_t _decimalSeparatorSpacing = 2;
+			uint8_t _decimalSeparatorIndex = decimalSeparatorDisabled;
 			uint8_t _segmentThickness = 3;
 			uint8_t _segmentLength = 9;
 
