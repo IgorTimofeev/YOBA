@@ -85,8 +85,8 @@ namespace YOBA {
 
 		for (const auto hid : _HIDs)
 			hid->tick();
-
-		_peripheralsDeltaTime = system::getTime() - time;
+		
+		_HIDTickDeltaTime = system::getTime() - time;
 
 		// Handling tick for children
 		time = system::getTime();
@@ -218,7 +218,7 @@ namespace YOBA {
 		Layout::onRender(renderer, bounds);
 	}
 
-	uint32_t Application::getPeripheralsDeltaTime() const {
-		return _peripheralsDeltaTime;
+	uint32_t Application::getHIDTickDeltaTime() const {
+		return _HIDTickDeltaTime;
 	}
 }

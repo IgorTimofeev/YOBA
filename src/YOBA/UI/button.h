@@ -69,7 +69,7 @@ namespace YOBA {
 			const Color* _activeTextColor = nullptr;
 
 			bool _isToggle = false;
-			bool _wasDown = false;
+			bool _pointerWasDown = false;
 			bool _previousIsActive = false;
 
 			void callOnClick();

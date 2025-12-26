@@ -9,7 +9,7 @@ namespace YOBA {
 		if (event->getTypeID() == PointerDownEvent::typeID) {
 			// ESP_LOGI("Button", "PointerDownEvent");
 
-			_wasDown = true;
+			_pointerWasDown = true;
 			_previousIsActive = isActive();
 			setActive(true);
 
@@ -22,7 +22,7 @@ namespace YOBA {
 			// ESP_LOGI("Button", "global capt: %p, this %p", Application::getCurrent()->getCapturedElement(), this);
 			// ESP_LOGI("Button", "_wasDown: %d", _wasDown);
 
-			if (_wasDown) {
+			if (_pointerWasDown) {
 				if (_isToggle) {
 					setActive(!isActive());
 				}
@@ -31,8 +31,8 @@ namespace YOBA {
 				}
 
 				callOnClick();
-
-				_wasDown = false;
+				
+				_pointerWasDown = false;
 			}
 
 			event->setHandled(true);
@@ -45,7 +45,7 @@ namespace YOBA {
 	void Button::onPointerOverChanged() {
 		// ESP_LOGI("Button", "onPointerOverChanged(): %d", isPointerOver());
 
-		if (_wasDown && isPointerOver())
+		if (!_pointerWasDown || isPointerOver())
 			return;
 
 		if (_isToggle) {

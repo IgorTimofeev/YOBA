@@ -52,7 +52,7 @@ namespace YOBA {
 			uint32_t getLayoutDeltaTime() const;
 			uint32_t getRenderDeltaTime() const;
 			uint32_t getFlushDeltaTime() const;
-			uint32_t getPeripheralsDeltaTime() const;
+			uint32_t getHIDTickDeltaTime() const;
 
 			Element* getFocusedElement() const;
 			void setFocusedElement(Element* element);
@@ -76,7 +76,7 @@ namespace YOBA {
 			std::vector<HID*> _HIDs {};
 			std::vector<std::function<void()>> _scheduledOnTickTasks {};
 
-			uint32_t _peripheralsDeltaTime = 0;
+			uint32_t _HIDTickDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;
 			uint32_t _layoutDeltaTime = 0;
 			uint32_t _renderDeltaTime = 0;
