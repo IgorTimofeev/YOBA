@@ -53,7 +53,7 @@ namespace YOBA {
 
 		return x - 180;
 	}
-
+	
 	template<typename T>
 	T interpolate(T first, T second, const float position) {
 		return static_cast<T>(static_cast<float>(first) + static_cast<float>(second - first) * position);
