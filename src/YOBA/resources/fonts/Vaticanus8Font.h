@@ -5,7 +5,7 @@
 namespace YOBA {
 	class Vaticanus8Font : public Font {
 		public:
-			Vaticanus8Font() : Font(
+			constexpr Vaticanus8Font() : Font(
 				32,
 				126,
 				0,

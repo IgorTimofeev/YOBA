@@ -5,7 +5,7 @@
 namespace YOBA {
 	class unscii16Font : public Font {
 		public:
-			unscii16Font() : Font(
+			constexpr unscii16Font() : Font(
 				32,
 				126,
 				8,

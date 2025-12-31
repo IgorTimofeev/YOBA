@@ -1,24 +1,6 @@
 #include "font.h"
 
 namespace YOBA {
-	Font::Font(
-		const uint32_t fromCodepoint,
-		const uint32_t toCodepoint,
-		const uint8_t glyphWidth,
-		const uint8_t glyphHeight,
-		const Glyph *glyphs,
-		const uint8_t *bitmap
-	) :
-		fromCodepoint(fromCodepoint),
-		toCodepoint(toCodepoint),
-		glyphWidth(glyphWidth),
-		glyphHeight(glyphHeight),
-		glyphs(glyphs),
-		bitmap(bitmap)
-	{
-
-	}
-
 	bool Font::isVariableWidth() const {
 		return glyphWidth == 0;
 	}

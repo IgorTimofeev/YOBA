@@ -4,7 +4,7 @@
 namespace YOBA {
 	class unscii8ThinFont : public Font {
 		public:
-			unscii8ThinFont() : Font(
+			constexpr unscii8ThinFont() : Font(
 				32,
 				126,
 				8,

@@ -6,9 +6,20 @@
 namespace YOBA {
 	struct Size {
 		public:
-			Size(uint16_t width, uint16_t height);
-			explicit Size(uint16_t uniformValue);
-			Size();
+			constexpr Size(const uint16_t width, const uint16_t height) :
+				width(width),
+				height(height)
+			{
+			
+			}
+			
+			constexpr Size(const uint16_t uniformValue) : Size(uniformValue, uniformValue) {
+			
+			}
+			
+			constexpr Size() : Size(0, 0) {
+			
+			}
 
 			constexpr static uint16_t computed = 0xFFFF;
 			constexpr static uint16_t unlimited = 0xFFFE;

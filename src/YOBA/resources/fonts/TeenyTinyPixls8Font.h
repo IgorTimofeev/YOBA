@@ -5,7 +5,7 @@
 namespace YOBA {
 	class TeenyTinyPixls8Font : public Font {
 		public:
-			TeenyTinyPixls8Font() : Font(
+			constexpr TeenyTinyPixls8Font() : Font(
 				32,
 				126,
 				6,

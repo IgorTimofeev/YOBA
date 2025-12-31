@@ -161,15 +161,18 @@ namespace YOBA {
 			void onEvent(Event* event) override {
 				if (event->getTypeID() == PointerDownEvent::typeID) {
 					setCaptured(true);
-					setFocused(true);
-
+					
+					if (isFocused()) {
+						updateValueFromEvent(reinterpret_cast<PointerDownEvent*>(event));
+					}
+					else {
+						setFocused(true);
+					}
+					
 					event->setHandled(true);
 				}
 				else if (event->getTypeID() == PointerDragEvent::typeID) {
-					const auto& bounds = getBounds();
-					const int32_t localX = std::clamp(reinterpret_cast<PointerDragEvent*>(event)->getPosition().getX() - bounds.getX(), static_cast<int32_t>(0), static_cast<int32_t>(bounds.getWidth()));
-
-					setValue(localX * 0xFFFF / bounds.getWidth());
+					updateValueFromEvent(reinterpret_cast<PointerDragEvent*>(event));
 
 					event->setHandled(true);
 				}
@@ -195,5 +198,17 @@ namespace YOBA {
 			const Color* _handleColor = nullptr;
 
 			uint16_t _value = 0xFFFF;
+			
+			void updateValueFromEvent(PointerEvent* event) {
+				const auto& bounds = getBounds();
+				
+				const auto localX = std::clamp<int32_t>(
+					event->getPosition().getX() - bounds.getX(),
+					0,
+					bounds.getWidth()
+				);
+				
+				setValue(localX * 0xFFFF / bounds.getWidth());
+			}
 	};
 }

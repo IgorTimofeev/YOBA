@@ -5,7 +5,7 @@
 namespace YOBA {
 	class PIXY10Font : public Font {
 		public:
-			PIXY10Font() : Font(
+			constexpr PIXY10Font() : Font(
 				32,
 				126,
 				0,

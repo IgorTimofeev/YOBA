@@ -1,21 +1,6 @@
 #include "size.h"
 
 namespace YOBA {
-	Size::Size(const uint16_t width, const uint16_t height) :
-		width(width),
-		height(height)
-	{
-
-	}
-
-	Size::Size(const uint16_t uniformValue) : Size(uniformValue, uniformValue) {
-
-	}
-
-	Size::Size() : Size(0, 0) {
-
-	}
-
 	uint16_t Size::getWidth() const {
 		return width;
 	}

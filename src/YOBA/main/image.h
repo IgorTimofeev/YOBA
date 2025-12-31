@@ -15,11 +15,17 @@ namespace YOBA {
 
 	class Image {
 		public:
-			Image(
-				uint8_t flags,
+			constexpr Image(
+				const uint8_t flags,
 				const Size& size,
 				const uint8_t* bitmap
-			);
+			) :
+				flags(flags),
+				size(size),
+				bitmap(bitmap)
+			{
+			
+			}
 
 			uint8_t getFlags() const;
 			const Size& getSize() const;
