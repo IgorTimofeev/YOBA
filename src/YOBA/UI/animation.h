@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "functional"
+#include <functional>
 #include <YOBA/main/callback.h>
 
 namespace YOBA {
