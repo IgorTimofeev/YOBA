@@ -1,5 +1,6 @@
 #include "color.h"
-#include "./math.h"
+
+#include "math.h"
 
 namespace YOBA {
 	ColorModel Color::getModel() const {
@@ -59,9 +60,9 @@ namespace YOBA {
 	}
 
 	void RGB888Color::interpolateTo(const RGB888Color &second, const float position) {
-		r = interpolate(r, second.r, position);
-		g = interpolate(g, second.g, position);
-		b = interpolate(b, second.b, position);
+		r = static_cast<uint8_t>(interpolate(static_cast<float>(r), static_cast<float>(second.r), position));
+		g = static_cast<uint8_t>(interpolate(static_cast<float>(g), static_cast<float>(second.g), position));
+		b = static_cast<uint8_t>(interpolate(static_cast<float>(b), static_cast<float>(second.b), position));
 	}
 
 	uint8_t RGB888Color::getR() const {
