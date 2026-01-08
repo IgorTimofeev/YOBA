@@ -32,7 +32,7 @@ namespace YOBA {
 	TValue EncoderValueChangedEvent::getDPSFactor(uint16_t check1, TValue value1, TValue valueElse) {
 		TValue value;
 
-		if (std::abs(_DPS) < check1) {
+		if (std::abs(_DPS) >= check1) {
 			value = value1;
 		}
 		else {
@@ -47,11 +47,11 @@ namespace YOBA {
 		const auto absRPS = std::abs(_DPS);
 		TValue value;
 
-		if (absRPS < check1) {
-			value = value1;
-		}
-		else if (absRPS < check2) {
+		if (absRPS >= check2) {
 			value = value2;
+		}
+		else if (absRPS >= check1) {
+			value = value1;
 		}
 		else {
 			value = valueElse;
