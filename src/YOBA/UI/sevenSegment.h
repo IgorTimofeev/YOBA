@@ -9,7 +9,6 @@
 namespace YOBA {
 	class SevenSegment : public Control {
 		public:
-			constexpr static uint32_t noValue = 0xFFFFFFFF;
 			constexpr static uint8_t decimalSeparatorDisabled = 0xFF;
 
 			Size onMeasure(const Size& availableSize) override {
@@ -29,21 +28,37 @@ namespace YOBA {
 					bounds.getY()
 				);
 
-				auto value = getValue();
-
+				const auto value = getValue();
+				auto valueAbs = std::abs(value);
+				
 				for (uint8_t i = 0; i < getDigitCount(); i++) {
-					if (value == noValue) {
-						renderDashes(renderer, position);
+					// Last digit
+					if (i == getDigitCount() - 1) {
+						if (_signVisible) {
+							if (value >= 0) {
+								renderEmpty(renderer, position);
+							}
+							else {
+								renderMinus(renderer, position);
+							}
+						}
+						else {
+							renderDigit(renderer, position, valueAbs % 10);
+						}
 					}
-					else if (value > 0) {
-						renderDigit(renderer, position, value % 10);
-
-						value /= 10;
-					}
+					// Non-last
 					else {
-						renderDigit(renderer, position, 0);
+						if (valueAbs > 0) {
+							renderDigit(renderer, position, valueAbs % 10);
+							
+							valueAbs /= 10;
+						}
+						else {
+							renderDigit(renderer, position, 0);
+						}
 					}
 					
+					// Decimal separator
 					if (i == _decimalSeparatorIndex) {
 						renderer->renderFilledRectangle(
 							Bounds(position.getX() - _decimalSeparatorSpacing - 1, bounds.getY2() - _segmentThickness + 1, _segmentThickness, _segmentThickness),
@@ -77,12 +92,12 @@ namespace YOBA {
 
 				invalidate();
 			}
-
-			uint32_t getValue() const {
+			
+			int32_t getValue() const {
 				return _value;
 			}
 			
-			void setValue(const uint32_t value) {
+			void setValue(const int32_t value) {
 				_value = value;
 
 				invalidateRender();
@@ -149,19 +164,33 @@ namespace YOBA {
 			void setActiveColor(const Color* value) {
 				_activeColor = value;
 			}
-
+			
+			bool isSignVisible() const {
+				return _signVisible;
+			}
+			
+			void setSignVisible(bool signVisible) {
+				_signVisible = signVisible;
+			}
+		
 		private:
-			uint32_t _value = 0;
+			int32_t _value = 0;
 			uint8_t _digitCount = 1;
 			uint8_t _digitSpacing = 3;
 			uint8_t _decimalSeparatorSpacing = 2;
 			uint8_t _decimalSeparatorIndex = decimalSeparatorDisabled;
 			uint8_t _segmentThickness = 3;
 			uint8_t _segmentLength = 9;
+			bool _signVisible = false;
 
 			const Color* _inactiveColor = nullptr;
 			const Color* _activeColor = nullptr;
 
+			// -1111-
+			// 6----2
+			// -7777-
+			// 5----3
+			// -4444-
 			void renderSegments(
 				Renderer* renderer,
 				const Point& position,
@@ -338,14 +367,42 @@ namespace YOBA {
 						break;
 				}
 			}
-
-			void renderDashes(Renderer* renderer, const Point& position) const {
+			
+			void renderEmpty(Renderer* renderer, const Point& position) const {
 				renderSegments(
 					renderer,
 					position,
 					false,
 					false,
 					false,
+					false,
+					false,
+					false,
+					false
+				);
+			}
+			
+			void renderMinus(Renderer* renderer, const Point& position) const {
+				renderSegments(
+					renderer,
+					position,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					true
+				);
+			}
+			
+			void renderPlus(Renderer* renderer, const Point& position) const {
+				renderSegments(
+					renderer,
+					position,
+					false,
+					true,
+					true,
 					false,
 					false,
 					false,
