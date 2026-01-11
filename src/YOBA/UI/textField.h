@@ -1,11 +1,13 @@
 #pragma once
 
-#include <YOBA/UI/control.h>
+#include <optional>
+
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/UI/traits/textElement.h>
 #include <YOBA/UI/traits/fontElement.h>
 #include <YOBA/UI/traits/fontScaleElement.h>
-#include "keyboard.h"
+#include <YOBA/UI/control.h>
+#include <YOBA/UI/keyboard.h>
 
 #include <YOBA/main/callback.h>
 #include <YOBA/main/events/pointerEvent.h>
@@ -23,7 +25,7 @@ namespace YOBA {
 		public:
 			~TextField() override;
 
-			Callback<Key, std::wstring_view> input {};
+			Callback<Key, std::optional<std::wstring_view>> input {};
 			Callback<> textChanged {};
 
 			wchar_t getMask() const;
@@ -81,7 +83,7 @@ namespace YOBA {
 			void onFocusChanged() override;
 			void onTextChanged() override;
 
-			virtual void onInput(Key keyCode, std::wstring_view text);
+			virtual void onInput(Key key, std::optional<std::wstring_view> text);
 
 		private:
 			int32_t _lastTouchX = -1;

@@ -169,7 +169,7 @@ namespace YOBA {
 			const auto keyUpEvent = reinterpret_cast<KeyUpEvent*>(event);
 
 //			ESP_LOGI("textField", "keyUpEvent: %d", (int32_t) keyUpEvent->getKey());
-			
+
 			switch (keyUpEvent->getKey()) {
 				case Key::enter: {
 					setFocused(false);
@@ -183,15 +183,15 @@ namespace YOBA {
 					const auto text = keyUpEvent->getText();
 
 					if (text.has_value()) {
-						onInput(keyUpEvent->getKey(), text.value());
-						input(keyUpEvent->getKey(), text.value());
-
 						insert(text.value());
 					}
 
 					break;
 				}
 			}
+			
+			onInput(keyUpEvent->getKey(), keyUpEvent->getText());
+			input(keyUpEvent->getKey(), keyUpEvent->getText());
 
 			keyUpEvent->setHandled(true);
 		}
@@ -437,7 +437,7 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	void TextField::onInput(Key keyCode, std::wstring_view text) {
+	void TextField::onInput(Key key, std::optional<std::wstring_view> text) {
 
 	}
 
