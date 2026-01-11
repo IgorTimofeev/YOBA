@@ -163,8 +163,13 @@ namespace YOBA {
 			event->setHandled(true);
 		}
 		else if (event->getTypeID() == KeyUpEvent::typeID) {
+			if (!isFocused())
+				return;
+			
 			const auto keyUpEvent = reinterpret_cast<KeyUpEvent*>(event);
 
+			ESP_LOGI("textField", "keyUpEvent: %d", (int32_t) keyUpEvent->getKey());
+			
 			switch (keyUpEvent->getKey()) {
 				case Key::enter: {
 					setFocused(false);
