@@ -307,141 +307,141 @@ namespace YOBA {
 	};
 
 	// ----------------------------- Layouts -----------------------------
-
+	
 	class CharactersKeyboardLayout : public KeyboardLayout {
 		public:
 			CharactersKeyboardLayout();
-
+		
 		private:
-			TextKeyboardKey _key1 = TextKeyboardKey(Key::number1, L"1", Key::deadTilde, L"~", 0.1f);
-			TextKeyboardKey _key2 = TextKeyboardKey(Key::number2, L"2", Key::deadGrave, L"`", 0.1f);
-			TextKeyboardKey _key3 = TextKeyboardKey(Key::number3, L"3", Key::verticalBar, L"|", 0.1f);
-			TextKeyboardKey _key4 = TextKeyboardKey(Key::number4, L"4", Key::bullet, L"•", 0.1f);
-			TextKeyboardKey _key5 = TextKeyboardKey(Key::number5, L"5", Key::squareRoot, L"√", 0.1f);
-			TextKeyboardKey _key6 = TextKeyboardKey(Key::number6, L"6", Key::pi, L"π", 0.1f);
-			TextKeyboardKey _key7 = TextKeyboardKey(Key::number7, L"7", Key::division, L"÷", 0.1f);
-			TextKeyboardKey _key8 = TextKeyboardKey(Key::number8, L"8", Key::multiplication, L"×", 0.1f);
-			TextKeyboardKey _key9 = TextKeyboardKey(Key::number9, L"9", Key::section, L"§", 0.1f);
-			TextKeyboardKey _key0 = TextKeyboardKey(Key::number0, L"0", Key::delta, L"Δ", 0.1f);
-
-			TextKeyboardKey _keyAt = TextKeyboardKey(Key::at, L"@", Key::pound, L"£", 0.1f);
-			TextKeyboardKey _keyNumberSign = TextKeyboardKey(Key::numberSign, L"#", Key::cent, L"¢", 0.1f);
-			TextKeyboardKey _keyDollar = TextKeyboardKey(Key::dollar, L"$", Key::euro, L"€", 0.1f);
-			TextKeyboardKey _keyUnderscore = TextKeyboardKey(Key::underscore, L"_", Key::yen, L"¥", 0.1f);
-			TextKeyboardKey _keyAmpersand = TextKeyboardKey(Key::ampersand, L"&", Key::circumflex, L"^", 0.1f);
-			TextKeyboardKey _keyMinus = TextKeyboardKey(Key::minus, L"-", Key::degree, L"°", 0.1f);
-			TextKeyboardKey _keyPlus = TextKeyboardKey(Key::plus, L"+", Key::equals, L"=", 0.1f);
-			TextKeyboardKey _keyLeftBrace = TextKeyboardKey(Key::leftBrace, L"(", Key::leftParenthesis, L"{", 0.1f);
-			TextKeyboardKey _keyRightBrace = TextKeyboardKey(Key::rightBrace, L")", Key::rightParenthesis, L"}", 0.1f);
-			TextKeyboardKey _keySlash = TextKeyboardKey(Key::slash, L"/", Key::backSlash, L"\\", 0.1f);
-
-			ShiftKeyboardKey _keyShift = ShiftKeyboardKey(L"^", L"^^", L"^^^", 0.15f);
-			TextKeyboardKey _keyAsterisk = TextKeyboardKey(Key::asterisk, L"*", Key::percent, L"%", 0.1f);
-			TextKeyboardKey _keyDoubleQuote = TextKeyboardKey(Key::doubleQuote, L"\"", Key::copyright, L"©", 0.1f);
-			TextKeyboardKey _keyQuote = TextKeyboardKey(Key::quote, L"\'", Key::registered, L"®", 0.1f);
-			TextKeyboardKey _keyColon = TextKeyboardKey(Key::colon, L":", Key::trademark, L"™", 0.1f);
-			TextKeyboardKey _keySemicolon = TextKeyboardKey(Key::semicolon, L";", Key::check, L"✓", 0.1f);
-			TextKeyboardKey _keyExclamationMark = TextKeyboardKey(Key::exclamationMark, L"!", Key::openBracket, L"[", 0.1f);
-			TextKeyboardKey _keyQuestionMark = TextKeyboardKey(Key::questionMark, L"?", Key::closeBracket, L"]", 0.1f);
-			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 0.15f);
-
-			CurrentCyclicLayoutKeyboardKey _keyCyclicLayout = CurrentCyclicLayoutKeyboardKey(L"Abc", 0.1f);
-			TextKeyboardKey _keyComma = TextKeyboardKey(Key::comma, L",", 0.1f);
-			TextKeyboardKey _keySpace = TextKeyboardKey(Key::space, L" ", 0.5f);
-			TextKeyboardKey _keyPeriod = TextKeyboardKey(Key::period, L".", 0.1f);
-			EnterKeyboardKey _keyEnter = EnterKeyboardKey(0.2f);
+			TextKeyboardKey _key1 { Key::number1, L"1", Key::deadTilde, L"~", 0.1f };
+			TextKeyboardKey _key2 { Key::number2, L"2", Key::deadGrave, L"`", 0.1f };
+			TextKeyboardKey _key3 { Key::number3, L"3", Key::verticalBar, L"|", 0.1f };
+			TextKeyboardKey _key4 { Key::number4, L"4", Key::bullet, L"•", 0.1f };
+			TextKeyboardKey _key5 { Key::number5, L"5", Key::squareRoot, L"√", 0.1f };
+			TextKeyboardKey _key6 { Key::number6, L"6", Key::pi, L"π", 0.1f };
+			TextKeyboardKey _key7 { Key::number7, L"7", Key::division, L"÷", 0.1f };
+			TextKeyboardKey _key8 { Key::number8, L"8", Key::multiplication, L"×", 0.1f };
+			TextKeyboardKey _key9 { Key::number9, L"9", Key::section, L"§", 0.1f };
+			TextKeyboardKey _key0 { Key::number0, L"0", Key::delta, L"Δ", 0.1f };
+			
+			TextKeyboardKey _keyAt { Key::at, L"@", Key::pound, L"£", 0.1f };
+			TextKeyboardKey _keyNumberSign { Key::numberSign, L"#", Key::cent, L"¢", 0.1f };
+			TextKeyboardKey _keyDollar { Key::dollar, L"$", Key::euro, L"€", 0.1f };
+			TextKeyboardKey _keyUnderscore { Key::underscore, L"_", Key::yen, L"¥", 0.1f };
+			TextKeyboardKey _keyAmpersand { Key::ampersand, L"&", Key::circumflex, L"^", 0.1f };
+			TextKeyboardKey _keyMinus { Key::minus, L"-", Key::degree, L"°", 0.1f };
+			TextKeyboardKey _keyPlus { Key::plus, L"+", Key::equals, L"=", 0.1f };
+			TextKeyboardKey _keyLeftBrace { Key::leftBrace, L"(", Key::leftParenthesis, L"{", 0.1f };
+			TextKeyboardKey _keyRightBrace { Key::rightBrace, L")", Key::rightParenthesis, L"}", 0.1f };
+			TextKeyboardKey _keySlash { Key::slash, L"/", Key::backSlash, L"\\", 0.1f };
+			
+			ShiftKeyboardKey _keyShift { L"^", L"^^", L"^^^", 0.15f };
+			TextKeyboardKey _keyAsterisk { Key::asterisk, L"*", Key::percent, L"%", 0.1f };
+			TextKeyboardKey _keyDoubleQuote { Key::doubleQuote, L"\"", Key::copyright, L"©", 0.1f };
+			TextKeyboardKey _keyQuote { Key::quote, L"\'", Key::registered, L"®", 0.1f };
+			TextKeyboardKey _keyColon { Key::colon, L":", Key::trademark, L"™", 0.1f };
+			TextKeyboardKey _keySemicolon { Key::semicolon, L";", Key::check, L"✓", 0.1f };
+			TextKeyboardKey _keyExclamationMark { Key::exclamationMark, L"!", Key::openBracket, L"[", 0.1f };
+			TextKeyboardKey _keyQuestionMark { Key::questionMark, L"?", Key::closeBracket, L"]", 0.1f };
+			BackspaceKeyboardKey _keyBackspace { L"<", 0.15f };
+		
+			CurrentCyclicLayoutKeyboardKey _keyCyclicLayout { L"Abc", 0.1f };
+			TextKeyboardKey _keyComma { Key::comma, L",", 0.1f };
+			TextKeyboardKey _keySpace { Key::space, L" ", 0.5f };
+			TextKeyboardKey _keyPeriod { Key::period, L".", 0.1f };
+			EnterKeyboardKey _keyEnter { 0.2f };
 	};
 
 	class EnglishKeyboardLayout : public KeyboardLayout {
 		public:
 			EnglishKeyboardLayout();
-
+		
 		private:
-			TextKeyboardKey _keyQ = TextKeyboardKey(Key::q, L"q", Key::q, L"Q", 0.1f);
-			TextKeyboardKey _keyW = TextKeyboardKey(Key::w, L"w", Key::w, L"W", 0.1f);
-			TextKeyboardKey _keyE = TextKeyboardKey(Key::e, L"e", Key::e, L"E", 0.1f);
-			TextKeyboardKey _keyR = TextKeyboardKey(Key::r, L"r", Key::r, L"R", 0.1f);
-			TextKeyboardKey _keyT = TextKeyboardKey(Key::t, L"t", Key::t, L"T", 0.1f);
-			TextKeyboardKey _keyY = TextKeyboardKey(Key::y, L"y", Key::y, L"Y", 0.1f);
-			TextKeyboardKey _keyU = TextKeyboardKey(Key::u, L"u", Key::u, L"L", 0.1f);
-			TextKeyboardKey _keyI = TextKeyboardKey(Key::i, L"i", Key::i, L"I", 0.1f);
-			TextKeyboardKey _keyO = TextKeyboardKey(Key::o, L"o", Key::o, L"O", 0.1f);
-			TextKeyboardKey _keyP = TextKeyboardKey(Key::p, L"p", Key::p, L"P", 0.1f);
-
-			TextKeyboardKey _keyA = TextKeyboardKey(Key::a, L"a", Key::a, L"A", 0.1f);
-			TextKeyboardKey _keyS = TextKeyboardKey(Key::s, L"s", Key::s, L"S", 0.1f);
-			TextKeyboardKey _keyD = TextKeyboardKey(Key::d, L"d", Key::d, L"D", 0.1f);
-			TextKeyboardKey _keyF = TextKeyboardKey(Key::f, L"f", Key::f, L"F", 0.1f);
-			TextKeyboardKey _keyG = TextKeyboardKey(Key::g, L"g", Key::g, L"G", 0.1f);
-			TextKeyboardKey _keyH = TextKeyboardKey(Key::h, L"h", Key::h, L"H", 0.1f);
-			TextKeyboardKey _keyJ = TextKeyboardKey(Key::j, L"j", Key::j, L"J", 0.1f);
-			TextKeyboardKey _keyK = TextKeyboardKey(Key::k, L"k", Key::k, L"K", 0.1f);
-			TextKeyboardKey _keyL = TextKeyboardKey(Key::l, L"l", Key::l, L"L", 0.1f);
-
-			ShiftKeyboardKey _keyShift = ShiftKeyboardKey(L"^", L"^^", L"^^^", 0.15f);
-			TextKeyboardKey _keyZ = TextKeyboardKey(Key::z, L"z", Key::z, L"Z", 0.1f);
-			TextKeyboardKey _keyX = TextKeyboardKey(Key::x, L"x", Key::x, L"X", 0.1f);
-			TextKeyboardKey _keyC = TextKeyboardKey(Key::c, L"c", Key::c, L"C", 0.1f);
-			TextKeyboardKey _keyV = TextKeyboardKey(Key::v, L"v", Key::v, L"V", 0.1f);
-			TextKeyboardKey _keyB = TextKeyboardKey(Key::b, L"b", Key::b, L"B", 0.1f);
-			TextKeyboardKey _keyN = TextKeyboardKey(Key::n, L"n", Key::n, L"N", 0.1f);
-			TextKeyboardKey _keyM = TextKeyboardKey(Key::m, L"m", Key::m, L"M", 0.1f);
-			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 0.15f);
-
-			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f);
-			CyclicLayoutKeyboardKey _keyCyclicLayout = CyclicLayoutKeyboardKey(L"Lang", 0.1f);
-			TextKeyboardKey _keyComma = TextKeyboardKey(Key::comma, L",", 0.1f);
-			SpaceKeyboardKey _keySpace = SpaceKeyboardKey();
-			TextKeyboardKey _keyPeriod = TextKeyboardKey(Key::period, L".", 0.1f);
-			EnterKeyboardKey _keyEnter = EnterKeyboardKey(0.2f);
+			TextKeyboardKey _keyQ { Key::q, L"q", Key::q, L"Q", 0.1f };
+			TextKeyboardKey _keyW { Key::w, L"w", Key::w, L"W", 0.1f };
+			TextKeyboardKey _keyE { Key::e, L"e", Key::e, L"E", 0.1f };
+			TextKeyboardKey _keyR { Key::r, L"r", Key::r, L"R", 0.1f };
+			TextKeyboardKey _keyT { Key::t, L"t", Key::t, L"T", 0.1f };
+			TextKeyboardKey _keyY { Key::y, L"y", Key::y, L"Y", 0.1f };
+			TextKeyboardKey _keyU { Key::u, L"u", Key::u, L"L", 0.1f };
+			TextKeyboardKey _keyI { Key::i, L"i", Key::i, L"I", 0.1f };
+			TextKeyboardKey _keyO { Key::o, L"o", Key::o, L"O", 0.1f };
+			TextKeyboardKey _keyP { Key::p, L"p", Key::p, L"P", 0.1f };
+			
+			TextKeyboardKey _keyA { Key::a, L"a", Key::a, L"A", 0.1f };
+			TextKeyboardKey _keyS { Key::s, L"s", Key::s, L"S", 0.1f };
+			TextKeyboardKey _keyD { Key::d, L"d", Key::d, L"D", 0.1f };
+			TextKeyboardKey _keyF { Key::f, L"f", Key::f, L"F", 0.1f };
+			TextKeyboardKey _keyG { Key::g, L"g", Key::g, L"G", 0.1f };
+			TextKeyboardKey _keyH { Key::h, L"h", Key::h, L"H", 0.1f };
+			TextKeyboardKey _keyJ { Key::j, L"j", Key::j, L"J", 0.1f };
+			TextKeyboardKey _keyK { Key::k, L"k", Key::k, L"K", 0.1f };
+			TextKeyboardKey _keyL { Key::l, L"l", Key::l, L"L", 0.1f };
+			
+			ShiftKeyboardKey _keyShift = { L"^", L"^^", L"^^^", 0.15f };
+			TextKeyboardKey _keyZ { Key::z, L"z", Key::z, L"Z", 0.1f };
+			TextKeyboardKey _keyX { Key::x, L"x", Key::x, L"X", 0.1f };
+			TextKeyboardKey _keyC { Key::c, L"c", Key::c, L"C", 0.1f };
+			TextKeyboardKey _keyV { Key::v, L"v", Key::v, L"V", 0.1f };
+			TextKeyboardKey _keyB { Key::b, L"b", Key::b, L"B", 0.1f };
+			TextKeyboardKey _keyN { Key::n, L"n", Key::n, L"N", 0.1f };
+			TextKeyboardKey _keyM { Key::m, L"m", Key::m, L"M", 0.1f };
+			BackspaceKeyboardKey _keyBackspace { L"<", 0.15f };
+			
+			CharactersLayoutKeyboardKey _keyCharactersLayout { L"123", 0.1f };
+			CyclicLayoutKeyboardKey _keyCyclicLayout { L"Lang", 0.1f };
+			TextKeyboardKey _keyComma { Key::comma, L",", 0.1f };
+			SpaceKeyboardKey _keySpace  {  };
+			TextKeyboardKey _keyPeriod { Key::period, L".", 0.1f };
+			EnterKeyboardKey _keyEnter { 0.2f };
 	};
 
 	class RussianKeyboardLayout : public KeyboardLayout {
 		public:
 			RussianKeyboardLayout();
-
+		
 		private:
-			TextKeyboardKey _keyQ = TextKeyboardKey(Key::q, L"й", Key::q, L"Й", 1.f / 11.f);
-			TextKeyboardKey _keyW = TextKeyboardKey(Key::w, L"ц", Key::w, L"Ц", 1.f / 11.f);
-			TextKeyboardKey _keyE = TextKeyboardKey(Key::e, L"у", Key::e, L"У", 1.f / 11.f);
-			TextKeyboardKey _keyR = TextKeyboardKey(Key::r, L"к", Key::r, L"К", 1.f / 11.f);
-			TextKeyboardKey _keyT = TextKeyboardKey(Key::t, L"е", Key::t, L"Е", 1.f / 11.f);
-			TextKeyboardKey _keyY = TextKeyboardKey(Key::y, L"н", Key::y, L"Н", 1.f / 11.f);
-			TextKeyboardKey _keyU = TextKeyboardKey(Key::u, L"г", Key::u, L"Г", 1.f / 11.f);
-			TextKeyboardKey _keyI = TextKeyboardKey(Key::i, L"ш", Key::i, L"Ш", 1.f / 11.f);
-			TextKeyboardKey _keyO = TextKeyboardKey(Key::o, L"щ", Key::o, L"Щ", 1.f / 11.f);
-			TextKeyboardKey _keyP = TextKeyboardKey(Key::p, L"з", Key::p, L"З", 1.f / 11.f);
-			TextKeyboardKey _keyBracket = TextKeyboardKey(Key::openBracket, L"х", Key::openBracket, L"Х", 1.f / 11.f);
-
-			TextKeyboardKey _keyA = TextKeyboardKey(Key::a, L"ф", Key::a, L"Ф", 1.f / 11.f);
-			TextKeyboardKey _keyS = TextKeyboardKey(Key::s, L"ы", Key::s, L"Ы", 1.f / 11.f);
-			TextKeyboardKey _keyD = TextKeyboardKey(Key::d, L"в", Key::d, L"В", 1.f / 11.f);
-			TextKeyboardKey _keyF = TextKeyboardKey(Key::f, L"а", Key::f, L"А", 1.f / 11.f);
-			TextKeyboardKey _keyG = TextKeyboardKey(Key::g, L"п", Key::g, L"П", 1.f / 11.f);
-			TextKeyboardKey _keyH = TextKeyboardKey(Key::h, L"р", Key::h, L"Р", 1.f / 11.f);
-			TextKeyboardKey _keyJ = TextKeyboardKey(Key::j, L"о", Key::j, L"О", 1.f / 11.f);
-			TextKeyboardKey _keyK = TextKeyboardKey(Key::k, L"л", Key::k, L"Л", 1.f / 11.f);
-			TextKeyboardKey _keyL = TextKeyboardKey(Key::l, L"д", Key::l, L"Д", 1.f / 11.f);
-			TextKeyboardKey _keySemicolon = TextKeyboardKey(Key::semicolon, L"ж", Key::semicolon, L"Ж", 1.f / 11.f);
-			TextKeyboardKey _keyQuote = TextKeyboardKey(Key::quote, L"э", Key::quote, L"Э", 1.f / 11.f);
-
-			ShiftKeyboardKey _keyShift = ShiftKeyboardKey(L"^", L"^^", L"^^^", 1.f / 11.f);
-			TextKeyboardKey _keyZ = TextKeyboardKey(Key::z, L"я", Key::z, L"Я", 1.f / 11.f);
-			TextKeyboardKey _keyX = TextKeyboardKey(Key::x, L"ч", Key::x, L"Ч", 1.f / 11.f);
-			TextKeyboardKey _keyC = TextKeyboardKey(Key::c, L"с", Key::c, L"С", 1.f / 11.f);
-			TextKeyboardKey _keyV = TextKeyboardKey(Key::v, L"м", Key::v, L"М", 1.f / 11.f);
-			TextKeyboardKey _keyB = TextKeyboardKey(Key::b, L"и", Key::b, L"И", 1.f / 11.f);
-			TextKeyboardKey _keyN = TextKeyboardKey(Key::n, L"т", Key::n, L"Т", 1.f / 11.f);
-			TextKeyboardKey _keyM = TextKeyboardKey(Key::m, L"ь", Key::m, L"Ь", 1.f / 11.f);
-			TextKeyboardKey _keyLessThan = TextKeyboardKey(Key::lessThan, L"б", Key::m, L"Б", 1.f / 11.f);
-			TextKeyboardKey _keyMoreThan = TextKeyboardKey(Key::moreThan, L"ю", Key::m, L"Ю", 1.f / 11.f);
-			BackspaceKeyboardKey _keyBackspace = BackspaceKeyboardKey(L"<", 1.f / 11.f);
-
-			CharactersLayoutKeyboardKey _keyCharactersLayout = CharactersLayoutKeyboardKey(L"123", 0.1f);
-			CyclicLayoutKeyboardKey _keyCyclicLayout = CyclicLayoutKeyboardKey(L"Lang", 0.1f);
-			TextKeyboardKey _keyComma = TextKeyboardKey(Key::comma, L",", 0.1f);
-			SpaceKeyboardKey _keySpace = SpaceKeyboardKey();
-			TextKeyboardKey _keyPeriod = TextKeyboardKey(Key::period, L".", 0.1f);
-			EnterKeyboardKey _keyEnter = EnterKeyboardKey(0.2f);
+			TextKeyboardKey _keyQ { Key::q, L"й", Key::q, L"Й", 1.f / 11.f };
+			TextKeyboardKey _keyW { Key::w, L"ц", Key::w, L"Ц", 1.f / 11.f };
+			TextKeyboardKey _keyE { Key::e, L"у", Key::e, L"У", 1.f / 11.f };
+			TextKeyboardKey _keyR { Key::r, L"к", Key::r, L"К", 1.f / 11.f };
+			TextKeyboardKey _keyT { Key::t, L"е", Key::t, L"Е", 1.f / 11.f };
+			TextKeyboardKey _keyY { Key::y, L"н", Key::y, L"Н", 1.f / 11.f };
+			TextKeyboardKey _keyU { Key::u, L"г", Key::u, L"Г", 1.f / 11.f };
+			TextKeyboardKey _keyI { Key::i, L"ш", Key::i, L"Ш", 1.f / 11.f };
+			TextKeyboardKey _keyO { Key::o, L"щ", Key::o, L"Щ", 1.f / 11.f };
+			TextKeyboardKey _keyP { Key::p, L"з", Key::p, L"З", 1.f / 11.f };
+			TextKeyboardKey _keyBracket { Key::openBracket, L"х", Key::openBracket, L"Х", 1.f / 11.f };
+			
+			TextKeyboardKey _keyA { Key::a, L"ф", Key::a, L"Ф", 1.f / 11.f };
+			TextKeyboardKey _keyS { Key::s, L"ы", Key::s, L"Ы", 1.f / 11.f };
+			TextKeyboardKey _keyD { Key::d, L"в", Key::d, L"В", 1.f / 11.f };
+			TextKeyboardKey _keyF { Key::f, L"а", Key::f, L"А", 1.f / 11.f };
+			TextKeyboardKey _keyG { Key::g, L"п", Key::g, L"П", 1.f / 11.f };
+			TextKeyboardKey _keyH { Key::h, L"р", Key::h, L"Р", 1.f / 11.f };
+			TextKeyboardKey _keyJ { Key::j, L"о", Key::j, L"О", 1.f / 11.f };
+			TextKeyboardKey _keyK { Key::k, L"л", Key::k, L"Л", 1.f / 11.f };
+			TextKeyboardKey _keyL { Key::l, L"д", Key::l, L"Д", 1.f / 11.f };
+			TextKeyboardKey _keySemicolon { Key::semicolon, L"ж", Key::semicolon, L"Ж", 1.f / 11.f };
+			TextKeyboardKey _keyQuote { Key::quote, L"э", Key::quote, L"Э", 1.f / 11.f };
+			
+			ShiftKeyboardKey _keyShift { L"^", L"^^", L"^^^", 1.f / 11.f };
+			TextKeyboardKey _keyZ { Key::z, L"я", Key::z, L"Я", 1.f / 11.f };
+			TextKeyboardKey _keyX { Key::x, L"ч", Key::x, L"Ч", 1.f / 11.f };
+			TextKeyboardKey _keyC { Key::c, L"с", Key::c, L"С", 1.f / 11.f };
+			TextKeyboardKey _keyV { Key::v, L"м", Key::v, L"М", 1.f / 11.f };
+			TextKeyboardKey _keyB { Key::b, L"и", Key::b, L"И", 1.f / 11.f };
+			TextKeyboardKey _keyN { Key::n, L"т", Key::n, L"Т", 1.f / 11.f };
+			TextKeyboardKey _keyM { Key::m, L"ь", Key::m, L"Ь", 1.f / 11.f };
+			TextKeyboardKey _keyLessThan { Key::lessThan, L"б", Key::m, L"Б", 1.f / 11.f };
+			TextKeyboardKey _keyMoreThan { Key::moreThan, L"ю", Key::m, L"Ю", 1.f / 11.f };
+			BackspaceKeyboardKey _keyBackspace { L"<", 1.f / 11.f };
+			
+			CharactersLayoutKeyboardKey _keyCharactersLayout { L"123", 0.1f };
+			CyclicLayoutKeyboardKey _keyCyclicLayout { L"Lang", 0.1f };
+			TextKeyboardKey _keyComma { Key::comma, L",", 0.1f };
+			SpaceKeyboardKey _keySpace {  };
+			TextKeyboardKey _keyPeriod { Key::period, L".", 0.1f };
+			EnterKeyboardKey _keyEnter { 0.2f };
 	};
 }
