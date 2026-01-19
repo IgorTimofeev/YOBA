@@ -68,7 +68,7 @@ namespace YOBA {
 			if (_paletteIndicesBuffer)
 				heap_caps_free(_paletteIndicesBuffer);
 
-			_paletteIndicesBuffer = reinterpret_cast<uint8_t*>(heap_caps_malloc(_paletteIndicesBufferLength, MALLOC_CAP_DMA));
+			_paletteIndicesBuffer = static_cast<uint8_t*>(heap_caps_malloc(_paletteIndicesBufferLength, MALLOC_CAP_DMA));
 			assert(_paletteIndicesBuffer != nullptr);
 		#else
 			delete _paletteIndicesBuffer;
@@ -81,13 +81,13 @@ namespace YOBA {
 		if (!getTarget())
 			return;
 
-		size_t paletteLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
+		const size_t paletteLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
 
 		#ifdef ESP_PLATFORM
 			if (_palette)
 				heap_caps_free(_palette);
 
-			_palette = reinterpret_cast<uint8_t*>(heap_caps_malloc(paletteLength, MALLOC_CAP_DMA));
+			_palette = static_cast<uint8_t*>(heap_caps_malloc(paletteLength, MALLOC_CAP_DMA));
 			assert(_palette != nullptr);
 		#else
 			delete _palette;
