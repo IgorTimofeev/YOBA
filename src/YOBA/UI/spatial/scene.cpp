@@ -110,8 +110,8 @@ namespace YOBA::spatial {
 				// screenX = x * screenWidth / 2 / tan(FOV / 2) / y
 
 				_screenSpaceVertices.push_back(Vector3F(
-					static_cast<float>(bounds.getXCenter()) + _pivotOffset.getX() + (vertex.getX() * projectionPlaneDistance / vertex.getY()),
-					static_cast<float>(bounds.getYCenter()) + _pivotOffset.getY() - (vertex.getZ() * projectionPlaneDistance / vertex.getY()),
+					static_cast<float>(bounds.getXCenter()) + _pivotOffset.getX() + vertex.getX() * projectionPlaneDistance / vertex.getY(),
+					static_cast<float>(bounds.getYCenter()) + _pivotOffset.getY() - vertex.getZ() * projectionPlaneDistance / vertex.getY(),
 					vertex.getY()
 				));
 			}

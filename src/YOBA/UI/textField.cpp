@@ -227,7 +227,7 @@ namespace YOBA {
 			}
 
 			// Converting to [0 px; Cursor px]
-			cursorX -= (boundsXWithoutMargin - _scrollPosition);
+			cursorX -= boundsXWithoutMargin - _scrollPosition;
 		};
 
 		if (_lastTouchX < boundsXWithoutMargin) {
