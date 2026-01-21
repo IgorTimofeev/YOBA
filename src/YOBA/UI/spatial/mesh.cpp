@@ -6,12 +6,12 @@ namespace YOBA::spatial {
 		return _vertices;
 	}
 
-	void Mesh::setVertices(const Vector3F* vertices) {
-		_vertices = vertices;
-	}
-
 	uint16_t Mesh::getVertexCount() {
 		return _vertexCount;
+	}
+
+	void Mesh::setVertices(const Vector3F* vertices) {
+		_vertices = vertices;
 	}
 
 	void Mesh::setVertexCount(const uint16_t vertexCount) {
