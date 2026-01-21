@@ -2,12 +2,12 @@
 #include "scene.h"
 
 namespace YOBA::spatial {
-	void LinearMesh::onRender(Renderer* renderer, const Scene& scene, const Vector3F* vertices) {
+	void LinearMesh::onRender(Renderer* renderer, const Scene& scene, const Vector3F* projectedVertices) {
 		const auto nearPlane = scene.getNearPlaneDistance();
 
 		for (uint16_t i = 0; i < _lineVertexIndicesCount; i += 2) {
-			const auto vertex0 = vertices + _lineVertexIndices[i];
-			const auto vertex1 = vertices + _lineVertexIndices[i + 1];
+			const auto vertex0 = projectedVertices + _lineVertexIndices[i];
+			const auto vertex1 = projectedVertices + _lineVertexIndices[i + 1];
 
 			if (
 				vertex0->getZ() < nearPlane

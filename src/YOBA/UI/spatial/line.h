@@ -12,7 +12,7 @@ namespace YOBA::spatial {
 			const Vector3F* getVertices() override;
 			uint16_t getVertexCount() override;
 
-			void onRender(Renderer* renderer, const Scene& scene, const Vector3F* vertices) override;
+			void onRender(Renderer* renderer, const Scene& scene, const Vector3F* projectedVertices) override;
 
 			Vector3F getFrom() const;
 			void setFrom(const Vector3F& from);
