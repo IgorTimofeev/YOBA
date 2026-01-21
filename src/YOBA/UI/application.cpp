@@ -141,6 +141,10 @@ namespace YOBA {
 		}
 	}
 
+	void Application::pushEvent(Event* event) {
+		handleEvent(event, getBounds(), true);
+	}
+
 	Element* Application::getCapturedElement() const {
 		return _capturedElement;
 	}

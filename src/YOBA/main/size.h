@@ -4,7 +4,7 @@
 #include "vector2.h"
 
 namespace YOBA {
-	struct Size {
+	class Size {
 		public:
 			constexpr Size(const uint16_t width, const uint16_t height) :
 				width(width),

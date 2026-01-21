@@ -25,8 +25,6 @@ namespace YOBA {
 			void moveChildrenTo(Layout* layout);
 			void removeAndDeleteChildren();
 
-			virtual void pushEvent(Event* event);
-
 			std::vector<Element*>::iterator begin();
 			std::vector<Element*>::iterator end();
 
@@ -35,7 +33,7 @@ namespace YOBA {
 			Layout& operator-=(Element* child);
 
 		protected:
-			void handleEvent(Event* event, bool callHandlers) override;
+			void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) override;
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;

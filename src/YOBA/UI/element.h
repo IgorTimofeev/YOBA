@@ -108,7 +108,7 @@ namespace YOBA {
 			const Bounds& getBounds() const;
 
 		protected:
-			virtual void handleEvent(Event* event, bool callHandlers) = 0;
+			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
 
 			virtual void onAddedToParent(Layout* parent);
 			virtual void onRemovedFromParent(Layout* parent);
@@ -124,12 +124,12 @@ namespace YOBA {
 			virtual void onPointerOverChanged();
 
 		private:
-			bool _isVisible = true;
-			bool _isEnabled = true;
-			bool _clipToBounds = false;
-			bool _focusable = true;
-			bool _isPointerOver = false;
-			bool _isVisibleForPointerEvents = true;
+			bool _isVisible: 1 = true;
+			bool _isEnabled: 1 = true;
+			bool _clipToBounds: 1 = false;
+			bool _focusable: 1 = true;
+			bool _isPointerOver: 1 = false;
+			bool _isVisibleForPointerEvents: 1 = true;
 
 			Size _size = Size(Size::computed, Size::computed);
 			Size _minSize = Size(0, 0);

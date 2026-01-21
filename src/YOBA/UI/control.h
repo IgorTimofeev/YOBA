@@ -6,13 +6,10 @@
 namespace YOBA {
 	class Control : public virtual Element {
 		public:
-			void handleEvent(Event* event, bool callHandlers) override;
+			void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) override;
 
 		protected:
 			// Control will mark ScreenEvents as handled by default
 			virtual void onEvent(Event* event);
-
-		private:
-
 	};
 }

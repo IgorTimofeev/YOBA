@@ -6,21 +6,28 @@
 #include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
-	void Control::handleEvent(Event* event, const bool callHandlers) {
+	void Control::handleEvent(Event* event, const Bounds& parentBounds, const bool callHandlers) {
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
 
 		if (isPointer || isPinch) {
 			if (isVisible() && isVisibleForPointerEvents()) {
-				bool intersects;
+				auto currentBounds = getBounds();
+				bool contains;
 
-				if (isPointer) {
-					intersects = getBounds().contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
+				if (parentBounds.intersects(currentBounds)) {
+					currentBounds = parentBounds.getIntersection(currentBounds);
+
+					if (isPointer) {
+						contains = currentBounds.contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
+					}
+					else {
+						const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
+						contains = currentBounds.contains(pinchEvent->getPosition1()) && currentBounds.contains(pinchEvent->getPosition2());
+					}
 				}
 				else {
-					const auto& bounds = getBounds();
-					const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-					intersects = bounds.contains(pinchEvent->getPosition1()) && bounds.contains(pinchEvent->getPosition2());
+					contains = false;
 				}
 
 				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
@@ -28,7 +35,7 @@ namespace YOBA {
 				setPointerOver(
 					event->getTypeID() != PointerUpEvent::typeID
 					&& event->getTypeID() != PinchUpEvent::typeID
-					&& intersects
+					&& contains
 					&& (
 						!capturedElement
 						|| capturedElement == this
@@ -40,7 +47,7 @@ namespace YOBA {
 					&& isEnabled()
 					&& (
 						(
-							intersects
+							contains
 							&& !capturedElement
 						)
 						|| capturedElement == this

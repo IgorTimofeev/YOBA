@@ -15,10 +15,6 @@ namespace YOBA {
 			element->onTick();
 	}
 
-	void Layout::pushEvent(Event* event) {
-		handleEvent(event, !event->isHandled());
-	}
-
 	void Layout::onEventBeforeChildren(Event* event) {
 
 	}
@@ -154,23 +150,31 @@ namespace YOBA {
 		return *this;
 	}
 
-	void Layout::handleEvent(Event* event, bool callHandlers) {
+	void Layout::handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) {
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
+		auto currentBounds = getBounds();
 
 		if (isPointer || isPinch) {
-			bool callHandlersOfThis;
+			bool callCurrentHandlers;
 
 			if (isVisible() && isVisibleForPointerEvents()) {
-				bool intersects;
+				bool contains;
 
-				if (isPointer) {
-					intersects = getBounds().contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
+				if (parentBounds.intersects(currentBounds)) {
+					currentBounds = parentBounds.getIntersection(currentBounds);
+
+					if (isPointer) {
+						contains = currentBounds.contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
+					}
+					else {
+						const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
+						contains = currentBounds.contains(pinchEvent->getPosition1()) && currentBounds.contains(pinchEvent->getPosition2());
+					}
 				}
 				else {
-					const auto& bounds = getBounds();
-					const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-					intersects = bounds.contains(pinchEvent->getPosition1()) && bounds.contains(pinchEvent->getPosition2());
+					contains = false;
+					currentBounds = Bounds::invalidValue;
 				}
 
 				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
@@ -178,7 +182,7 @@ namespace YOBA {
 				setPointerOver(
 					event->getTypeID() != PointerUpEvent::typeID
 					&& event->getTypeID() != PinchUpEvent::typeID
-					&& intersects
+					&& contains
 					&& (
 						!capturedElement
 						|| capturedElement == this
@@ -186,11 +190,11 @@ namespace YOBA {
 				);
 
 				if (isEnabled()) {
-					callHandlersOfThis =
+					callCurrentHandlers =
 						callHandlers
 						&& (
 							(
-								intersects
+								contains
 								&& !capturedElement
 							)
 							|| capturedElement == this
@@ -198,23 +202,23 @@ namespace YOBA {
 				}
 				else {
 					callHandlers = false;
-					callHandlersOfThis = false;
+					callCurrentHandlers = false;
 				}
 			}
 			else {
 				setPointerOver(false);
 
 				callHandlers = false;
-				callHandlersOfThis = false;
+				callCurrentHandlers = false;
 			}
 
-			// Before
-			if (callHandlersOfThis) {
+			// Before children
+			if (callCurrentHandlers) {
 				onEventBeforeChildren(event);
 
 				if (event->isHandled()) {
 					callHandlers = false;
-					callHandlersOfThis = false;
+					callCurrentHandlers = false;
 				}
 			}
 
@@ -223,11 +227,11 @@ namespace YOBA {
 				size_t i = getChildrenCount() - 1;
 
 				while (true) {
-					_children[i]->handleEvent(event, callHandlers);
+					_children[i]->handleEvent(event, currentBounds, callHandlers);
 
 					if (event->isHandled()) {
 						callHandlers = false;
-						callHandlersOfThis = false;
+						callCurrentHandlers = false;
 					}
 
 					if (i == 0)
@@ -237,8 +241,8 @@ namespace YOBA {
 				}
 			}
 
-			// After
-			if (callHandlersOfThis)
+			// After children
+			if (callCurrentHandlers)
 				onEventAfterChildren(event);
 		}
 		else {
@@ -260,7 +264,7 @@ namespace YOBA {
 				size_t i = getChildrenCount() - 1;
 
 				while (true) {
-					_children[i]->handleEvent(event, callHandlers);
+					_children[i]->handleEvent(event, currentBounds, callHandlers);
 
 					if (event->isHandled())
 						return;

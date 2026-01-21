@@ -38,6 +38,7 @@ namespace YOBA {
 			void invalidateMeasure() override;
 			void invalidateRender() override;
 			void invalidate() override;
+			void pushEvent(Event* event);
 
 			void startAnimation(Animation* animation) override;
 
