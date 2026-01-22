@@ -17,85 +17,85 @@ namespace YOBA {
 			ScrollView() {
 				setClipToBounds(true);
 
-				horizontalScrollBar.setOrientation(Orientation::horizontal);
-				horizontalScrollBar.setAlignment(Alignment::stretch, Alignment::end);
+				_horizontalScrollBar.setOrientation(Orientation::horizontal);
+				_horizontalScrollBar.setAlignment(Alignment::stretch, Alignment::end);
 
-				verticalScrollBar.setOrientation(Orientation::vertical);
-				verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
+				_verticalScrollBar.setOrientation(Orientation::vertical);
+				_verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
 
 				setScrollBarSize(3);
 				setScrollBarOffset(3);
 			}
 
 			ScrollMode getHorizontalScrollMode() const {
-				return horizontalScrollMode;
+				return _horizontalScrollMode;
 			}
 
 			void setHorizontalScrollMode(const ScrollMode value) {
-				horizontalScrollMode = value;
+				_horizontalScrollMode = value;
 
 				invalidate();
 			}
 
 			ScrollMode getVerticalScrollMode() const {
-				return verticalScrollMode;
+				return _verticalScrollMode;
 			}
 
 			void setVerticalScrollMode(const ScrollMode value) {
-				verticalScrollMode = value;
+				_verticalScrollMode = value;
 
 				invalidate();
 			}
 
 			uint16_t getHorizontalPosition() const {
-				return horizontalScrollBar.getPosition();
+				return _horizontalScrollBar.getPosition();
 			}
 
 			void setHorizontalPosition(const uint16_t value) {
-				if (!horizontalScrollPossible)
+				if (!_horizontalScrollPossible)
 					return;
 
-				horizontalScrollBar.setPosition(value);
+				_horizontalScrollBar.setPosition(value);
 
 				invalidate();
 			}
 
 			uint16_t getVerticalPosition() const {
 
-				return verticalScrollBar.getPosition();
+				return _verticalScrollBar.getPosition();
 			}
 
 			void setVerticalPosition(const uint16_t value) {
-				if (!verticalScrollPossible)
+				if (!_verticalScrollPossible)
 					return;
 
-				verticalScrollBar.setPosition(value);
+				_verticalScrollBar.setPosition(value);
 
 				invalidate();
 			}
 
 			void setScrollBarOffset(const uint16_t value) {
-				horizontalScrollBar.setMargin(Margin(value, 0, value, value));
-				verticalScrollBar.setMargin(Margin(0, value, value, value));
+				_horizontalScrollBar.setMargin(Margin(value, 0, value, value));
+				_verticalScrollBar.setMargin(Margin(0, value, value, value));
 			}
 
 			void setScrollBarSize(const uint16_t value) {
-				horizontalScrollBar.setSize(Size(Size::computed, value));
-				verticalScrollBar.setSize(Size(value, Size::computed));
+				_horizontalScrollBar.setSize(Size(Size::computed, value));
+				_verticalScrollBar.setSize(Size(value, Size::computed));
 			}
 
 			void setScrollBarCornerRadius(const uint16_t value) {
-				horizontalScrollBar.setCornerRadius(value);
-				verticalScrollBar.setCornerRadius(value);
+				_horizontalScrollBar.setCornerRadius(value);
+				_verticalScrollBar.setCornerRadius(value);
 			}
 
 			void setScrollBarThumbColor(const Color* value) {
-				horizontalScrollBar.setThumbColor(value);
-				verticalScrollBar.setThumbColor(value);
+				_horizontalScrollBar.setThumbColor(value);
+				_verticalScrollBar.setThumbColor(value);
 			}
 
 			const Bounds& getContentBounds() const {
-				return contentBounds;
+				return _contentBounds;
 			}
 
 			void scrollTo(const Element* element) {
@@ -122,17 +122,17 @@ namespace YOBA {
 		protected:
 			Size onMeasure(const Size& availableSize) override {
 				const auto& contentSize = Size(
-					horizontalScrollMode == ScrollMode::disabled
+					_horizontalScrollMode == ScrollMode::disabled
 					? availableSize.getWidth()
 					: Size::unlimited,
 
-					verticalScrollMode == ScrollMode::disabled
+					_verticalScrollMode == ScrollMode::disabled
 					? availableSize.getHeight()
 					: Size::unlimited
 				);
 
-				contentMeasuredSize.setWidth(0);
-				contentMeasuredSize.setHeight(0);
+				_contentMeasuredSize.setWidth(0);
+				_contentMeasuredSize.setHeight(0);
 
 				for (const auto element : *this) {
 					if (!element->isVisible())
@@ -142,69 +142,69 @@ namespace YOBA {
 
 					const auto& elementSize = element->getMeasuredSize();
 
-					if (elementSize.getWidth() > contentMeasuredSize.getWidth())
-						contentMeasuredSize.setWidth(elementSize.getWidth());
+					if (elementSize.getWidth() > _contentMeasuredSize.getWidth())
+						_contentMeasuredSize.setWidth(elementSize.getWidth());
 
-					if (elementSize.getHeight() > contentMeasuredSize.getHeight())
-						contentMeasuredSize.setHeight(elementSize.getHeight());
+					if (elementSize.getHeight() > _contentMeasuredSize.getHeight())
+						_contentMeasuredSize.setHeight(elementSize.getHeight());
 				}
 
-				horizontalScrollBar.measure(availableSize);
-				verticalScrollBar.measure(availableSize);
+				_horizontalScrollBar.measure(availableSize);
+				_verticalScrollBar.measure(availableSize);
 
-				return contentMeasuredSize;
+				return _contentMeasuredSize;
 			}
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
-				if (horizontalScrollMode == ScrollMode::disabled) {
-					if (horizontalScrollBar.getPosition() > 0)
-						horizontalScrollBar.setPosition(0);
+				if (_horizontalScrollMode == ScrollMode::disabled) {
+					if (_horizontalScrollBar.getPosition() > 0)
+						_horizontalScrollBar.setPosition(0);
 
-					contentBounds.setX(bounds.getX());
-					contentBounds.setWidth(bounds.getWidth());
+					_contentBounds.setX(bounds.getX());
+					_contentBounds.setWidth(bounds.getWidth());
 				}
 				else {
-					if (horizontalScrollBar.getPosition() > 0) {
-						if (contentMeasuredSize.getWidth() > bounds.getWidth()) {
-							if (bounds.getX() + contentMeasuredSize.getWidth() - 1 - horizontalScrollBar.getPosition() < bounds.getX2())
-								horizontalScrollBar.setPosition(contentMeasuredSize.getWidth() - bounds.getWidth());
+					if (_horizontalScrollBar.getPosition() > 0) {
+						if (_contentMeasuredSize.getWidth() > bounds.getWidth()) {
+							if (bounds.getX() + _contentMeasuredSize.getWidth() - 1 - _horizontalScrollBar.getPosition() < bounds.getX2())
+								_horizontalScrollBar.setPosition(_contentMeasuredSize.getWidth() - bounds.getWidth());
 						}
 						else {
-							horizontalScrollBar.setPosition(0);
+							_horizontalScrollBar.setPosition(0);
 						}
 					}
 
-					contentBounds.setX(bounds.getX() - horizontalScrollBar.getPosition());
-					contentBounds.setWidth(contentMeasuredSize.getWidth());
+					_contentBounds.setX(bounds.getX() - _horizontalScrollBar.getPosition());
+					_contentBounds.setWidth(_contentMeasuredSize.getWidth());
 				}
 
-				if (verticalScrollMode == ScrollMode::disabled) {
-					if (verticalScrollBar.getPosition() > 0)
-						verticalScrollBar.setPosition(0);
+				if (_verticalScrollMode == ScrollMode::disabled) {
+					if (_verticalScrollBar.getPosition() > 0)
+						_verticalScrollBar.setPosition(0);
 
-					contentBounds.setY(bounds.getY());
-					contentBounds.setHeight(bounds.getHeight());
+					_contentBounds.setY(bounds.getY());
+					_contentBounds.setHeight(bounds.getHeight());
 				}
 				else {
-					if (verticalScrollBar.getPosition() > 0) {
+					if (_verticalScrollBar.getPosition() > 0) {
 						// If content height > scroll view height
-						if (contentMeasuredSize.getHeight() > bounds.getHeight()) {
+						if (_contentMeasuredSize.getHeight() > bounds.getHeight()) {
 							// If content Y2 with position < scroll view Y2
-							if (bounds.getY() + contentMeasuredSize.getHeight() - 1 - verticalScrollBar.getPosition() < bounds.getY2())
-								verticalScrollBar.setPosition(contentMeasuredSize.getHeight() - bounds.getHeight());
+							if (bounds.getY() + _contentMeasuredSize.getHeight() - 1 - _verticalScrollBar.getPosition() < bounds.getY2())
+								_verticalScrollBar.setPosition(_contentMeasuredSize.getHeight() - bounds.getHeight());
 						}
 						else {
-							verticalScrollBar.setPosition(0);
+							_verticalScrollBar.setPosition(0);
 						}
 					}
 
-					contentBounds.setY(bounds.getY() - verticalScrollBar.getPosition());
-					contentBounds.setHeight(contentMeasuredSize.getHeight());
+					_contentBounds.setY(bounds.getY() - _verticalScrollBar.getPosition());
+					_contentBounds.setHeight(_contentMeasuredSize.getHeight());
 				}
 
 				for (const auto element : *this)
 					if (element->isVisible())
-						element->render(renderer, contentBounds);
+						element->render(renderer, _contentBounds);
 
 				const auto& processScrollBar = [&bounds, &renderer](ScrollBar& bar, bool& possible, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 					bar.setContentSize(contentSize);
@@ -221,18 +221,18 @@ namespace YOBA {
 				};
 
 				processScrollBar(
-					horizontalScrollBar,
-					horizontalScrollPossible,
-					horizontalScrollMode,
-					contentBounds.getWidth(),
+					_horizontalScrollBar,
+					_horizontalScrollPossible,
+					_horizontalScrollMode,
+					_contentBounds.getWidth(),
 					bounds.getWidth()
 				);
 
 				processScrollBar(
-					verticalScrollBar,
-					verticalScrollPossible,
-					verticalScrollMode,
-					contentBounds.getHeight(),
+					_verticalScrollBar,
+					_verticalScrollPossible,
+					_verticalScrollMode,
+					_contentBounds.getHeight(),
 					bounds.getHeight()
 				);
 
@@ -243,29 +243,29 @@ namespace YOBA {
 				Layout::onCaptureChanged();
 
 				if (!isCaptured())
-					lastTouchPosition.setX(-1);
+					_lastTouchPosition.setX(-1);
 			}
 
 			void onEventBeforeChildren(Event* event) override {
 				if (event->getTypeID() == PointerDownEvent::typeID) {
-					lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
+					_lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
 				}
 				else if (event->getTypeID() == PointerDragEvent::typeID) {
-					if (lastTouchPosition.getX() >= 0) {
+					if (_lastTouchPosition.getX() >= 0) {
 						const auto position = reinterpret_cast<PointerDragEvent*>(event)->getPosition();
-						const auto pointerDelta = position - lastTouchPosition;
+						const auto pointerDelta = position - _lastTouchPosition;
 
 						if (isCaptured()) {
-							lastTouchPosition = position;
+							_lastTouchPosition = position;
 
 							scrollHorizontallyBy(-pointerDelta.getX());
 							scrollVerticallyBy(-pointerDelta.getY());
 						}
 						else {
 							if (pointerDelta.getLength() >= 3) {
-								setCaptured(true);
+								_lastTouchPosition = position;
 
-								lastTouchPosition = position;
+								setCaptured(true);
 							}
 						}
 					}
@@ -293,18 +293,18 @@ namespace YOBA {
 			}
 
 		private:
-			ScrollBar horizontalScrollBar {};
-			ScrollBar verticalScrollBar {};
+			ScrollBar _horizontalScrollBar {};
+			ScrollBar _verticalScrollBar {};
 
-			ScrollMode horizontalScrollMode = ScrollMode::disabled;
-			ScrollMode verticalScrollMode = ScrollMode::computed;
+			ScrollMode _horizontalScrollMode = ScrollMode::disabled;
+			ScrollMode _verticalScrollMode = ScrollMode::computed;
 
-			Size contentMeasuredSize {};
-			Bounds contentBounds {};
+			Size _contentMeasuredSize {};
+			Bounds _contentBounds {};
 
-			bool horizontalScrollPossible = false;
-			bool verticalScrollPossible = false;
+			bool _horizontalScrollPossible = false;
+			bool _verticalScrollPossible = false;
 
-			Point lastTouchPosition { -1, -1 };
+			Point _lastTouchPosition { -1, -1 };
 	};
 }
