@@ -1,22 +1,23 @@
 #pragma once
 
-#include <YOBA/main/vector3.h>
 #include <cstdint>
 #include <cmath>
 #include <numbers>
 
+#include <YOBA/main/vector3.h>
+
 namespace YOBA {
-	class GeographicCoordinates {
+	class GeoCoordinates {
 		public:
-			GeographicCoordinates(const float latitude, const float longitude, const float altitude) : latitude(latitude), longitude(longitude), altitude(altitude) {
+			GeoCoordinates(const float latitude, const float longitude, const float altitude) : latitude(latitude), longitude(longitude), altitude(altitude) {
 
 			}
 
-			GeographicCoordinates() : GeographicCoordinates(0, 0, 0) {
+			GeoCoordinates() : GeoCoordinates(0, 0, 0) {
 
 			}
 
-			explicit GeographicCoordinates(const Vector3F& cartesian, const float radius) {
+			explicit GeoCoordinates(const Vector3F& cartesian, const float radius) {
 				const float length = cartesian.getLength();
 
 				latitude = std::asinf(cartesian.getZ() / length);
@@ -24,7 +25,7 @@ namespace YOBA {
 				altitude = length - radius;
 			}
 
-			explicit GeographicCoordinates(const Vector3F& cartesian) : GeographicCoordinates(cartesian, equatorialRadiusMeters) {
+			explicit GeoCoordinates(const Vector3F& cartesian) : GeoCoordinates(cartesian, equatorialRadiusMeters) {
 
 			}
 
