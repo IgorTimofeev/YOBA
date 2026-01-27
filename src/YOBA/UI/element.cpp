@@ -491,7 +491,8 @@ namespace YOBA {
 	}
 
 	void Element::addToParent(Layout* parent) {
-		assert(_parent == nullptr && "Element already has a parent. Remove it first.");
+		assert(_parent == nullptr && "Can't add element to parent, because it already have one");
+		assert(_parent != this && "Can't add element to itself");
 
 		_parent = parent;
 
@@ -499,7 +500,7 @@ namespace YOBA {
 	}
 
 	void Element::removeFromParent(Layout* parent) {
-		assert(parent == _parent && "Attempted to remove element from non-attached parent");
+		assert(parent == _parent && "Can't remove element from parent that's not related to it");
 
 		_parent = nullptr;
 
