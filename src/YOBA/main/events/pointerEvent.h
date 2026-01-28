@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <YOBA/main/events/screenEvent.h>
 #include <YOBA/main/vector2.h>
 

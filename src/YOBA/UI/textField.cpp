@@ -2,6 +2,7 @@
 #include <YOBA/UI/textField.h>
 #include <YOBA/UI/application.h>
 #include <YOBA/main/events/keyEvent.h>
+#include <YOBA/main/events/scrollIntoViewEvent.h>
 
 namespace YOBA {
 	TextField::~TextField() {
@@ -141,8 +142,8 @@ namespace YOBA {
 
 	void TextField::onEvent(Event* event) {
 		if (event->getTypeID() == PointerDownEvent::typeID) {
-			setCaptured(true);
 			setFocused(true);
+			setCaptured(true);
 
 			_lastTouchX = reinterpret_cast<PointerDownEvent*>(event)->getPosition().getX();
 
@@ -408,6 +409,8 @@ namespace YOBA {
 
 		if (isFocused()) {
 			KeyboardController::show();
+
+			scrollIntoView();
 		}
 		else {
 			KeyboardController::hide();

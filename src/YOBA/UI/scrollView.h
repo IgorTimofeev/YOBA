@@ -1,8 +1,8 @@
 #pragma once
 
-#include "scrollBar.h"
-
+#include <YOBA/UI/scrollBar.h>
 #include <YOBA/UI/layout.h>
+#include <YOBA/main/events/scrollIntoViewEvent.h>
 
 namespace YOBA {
 	enum class ScrollMode : uint8_t {
@@ -119,6 +119,18 @@ namespace YOBA {
 				}
 			}
 
+			void scrollToCenter(const Element* element) {
+				const auto& elementBounds = element->getBounds();
+				const auto& bounds = getBounds();
+
+				const auto elementCenter = elementBounds.getCenter();
+				const auto center = bounds.getCenter();
+
+				// Horizontal
+				scrollHorizontallyBy(elementCenter.getX() - center.getX());
+				scrollVerticallyBy(elementCenter.getY() - center.getY());
+			}
+
 		protected:
 			Size onMeasure(const Size& availableSize) override {
 				const auto& contentSize = Size(
@@ -156,6 +168,14 @@ namespace YOBA {
 			}
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
+				if (_scrollLaterTo) {
+					// FR FR 100% need to scroll
+					if (!bounds.contains(_scrollLaterTo->getBounds()))
+						scrollToCenter(_scrollLaterTo);
+
+					_scrollLaterTo = nullptr;
+				}
+
 				if (_horizontalScrollMode == ScrollMode::disabled) {
 					if (_horizontalScrollBar.getPosition() > 0)
 						_horizontalScrollBar.setPosition(0);
@@ -270,6 +290,11 @@ namespace YOBA {
 						}
 					}
 				}
+				else if (event->getTypeID() == ScrollIntoViewEvent::typeID) {
+					_scrollLaterTo = reinterpret_cast<ScrollIntoViewEvent*>(event)->getElement();
+
+					event->setHandled(true);
+				}
 			}
 
 			void onEventAfterChildren(Event* event) override {
@@ -301,6 +326,7 @@ namespace YOBA {
 
 			Size _contentMeasuredSize {};
 			Bounds _contentBounds {};
+			const Element* _scrollLaterTo = nullptr;
 
 			bool _horizontalScrollPossible = false;
 			bool _verticalScrollPossible = false;

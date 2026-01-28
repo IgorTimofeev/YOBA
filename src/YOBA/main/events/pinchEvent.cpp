@@ -1,6 +1,4 @@
-#include "pinchEvent.h"
-
-#include <cstdint>
+#include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
 	PinchEvent::PinchEvent(const uint16_t typeID, const Point& position1, const Point& position2) :

@@ -74,6 +74,8 @@ namespace YOBA {
 			bool isCaptured() const;
 			void setCaptured(bool state);
 
+			void scrollIntoView();
+
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);
 

@@ -1,4 +1,4 @@
-#include "keyEvent.h"
+#include <YOBA/main/events/keyEvent.h>
 
 namespace YOBA {
 	KeyEvent::KeyEvent(const uint16_t typeID, const Key key, const std::optional<std::wstring_view>& text) : Event(typeID), _key(key), _text(text) {

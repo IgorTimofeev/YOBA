@@ -1,9 +1,7 @@
-#include "screenEvent.h"
+#include <YOBA/main/events/screenEvent.h>
 
-#include <cstdint>
-
-#include "pinchEvent.h"
-#include "pointerEvent.h"
+#include <YOBA/main/events/pinchEvent.h>
+#include <YOBA/main/events/pointerEvent.h>
 
 namespace YOBA {
 	ScreenEvent::ScreenEvent(const uint16_t typeID) : Event(typeID) {

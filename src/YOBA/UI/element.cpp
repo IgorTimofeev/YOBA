@@ -8,6 +8,7 @@
 #include <YOBA/UI/animation.h>
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/application.h>
+#include <YOBA/main/events/scrollIntoViewEvent.h>
 
 namespace YOBA {
 	Element::~Element() {
@@ -308,6 +309,11 @@ namespace YOBA {
 			return;
 
 		application->setCapturedElement(state ? this : nullptr);
+	}
+
+	void Element::scrollIntoView() {
+		ScrollIntoViewEvent event { this };
+		Application::getCurrent()->pushEvent(&event);
 	}
 
 	void Element::startAnimation(Animation* animation) {

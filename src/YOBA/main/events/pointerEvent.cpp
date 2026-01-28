@@ -1,6 +1,4 @@
-#include "pointerEvent.h"
-
-#include <cstdint>
+#include <YOBA/main/events/pointerEvent.h>
 
 namespace YOBA {
 	PointerEvent::PointerEvent(const uint16_t typeID, const Point& position) :

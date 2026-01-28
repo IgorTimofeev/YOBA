@@ -151,6 +151,8 @@ namespace YOBA {
 	}
 
 	void Layout::handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) {
+		// ESP_LOGI("layout.handleEvent()", "callHandlers: %d", callHandlers);
+
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
 		auto currentBounds = getBounds();
@@ -251,6 +253,8 @@ namespace YOBA {
 
 			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
 			const auto callHandlersOnThis = callHandlers && (!capturedElement || capturedElement == this);
+
+			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis: %d", callHandlersOnThis);
 
 			// Before
 			if (callHandlersOnThis)

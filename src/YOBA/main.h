@@ -23,6 +23,7 @@
 #include <YOBA/main/events/screenEvent.h>
 #include <YOBA/main/events/pointerEvent.h>
 #include <YOBA/main/events/pinchEvent.h>
+#include <YOBA/main/events/scrollIntoViewEvent.h>
 
 // Render targets
 #include <YOBA/main/rendering/renderTarget.h>

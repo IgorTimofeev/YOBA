@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <YOBA/main/events/event.h>
 
 namespace YOBA {
