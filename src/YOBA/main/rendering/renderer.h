@@ -46,6 +46,7 @@ namespace YOBA {
 			void renderFilledCircle(const Point& center, uint16_t radius, const Color* color);
 			// Thanks, u8g2!
 			void renderArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
+			void renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve = 10, const float tension = 0.5f);
 
 			/**
 			* @brief Renders single line of text
@@ -73,8 +74,9 @@ namespace YOBA {
 			RenderTarget* _target = nullptr;
 			Bounds _viewport {};
 
-			static float fastAtan2(const float y, const float x);
+			static Point getCatmullRomPoint(const Point* points, size_t index, float t, float tension);
 
+			static float fastAtan2(const float y, const float x);
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);

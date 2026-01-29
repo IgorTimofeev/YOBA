@@ -765,6 +765,63 @@ namespace YOBA {
 		}
 	}
 
+	void Renderer::renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve, const float tension) {
+		assert(pointsLength >= 4 && "At least 4 points required");
+
+		Point pointPrev {};
+		bool pizda = false;
+
+		for (size_t pointIndex = 0; pointIndex < pointsLength - 3; pointIndex++) {
+			for (uint16_t segment = 0; segment <= segmentsPerCurve; segment++) {
+				const float t = static_cast<float>(segment) / segmentsPerCurve;
+				const auto point = getCatmullRomPoint(points, pointIndex, t, tension);
+
+				// Linking to prev point
+				if (pizda)
+					renderLine(pointPrev, point, color);
+
+				pointPrev = point;
+				pizda = true;
+			}
+		}
+	}
+
+	Point Renderer::getCatmullRomPoint(const Point* points, const size_t index, const float t, const float tension) {
+		// CatmullRom matrix with tension support
+		const float m00 = -tension;
+		const float m01 = 2 - tension;
+		const float m02 = tension - 2;
+		const float m03 = tension;
+		const float m10 = 2 * tension;
+		const float m11 = tension - 3;
+		const float m12 = 3 - 2 * tension;
+		const float m13 = -tension;
+		const float m20 = -tension;
+		constexpr float m21 = 0;
+		const float m22 = tension;
+		constexpr float m23 = 0;
+		constexpr float m30 = 0;
+		constexpr float m31 = 1;
+		constexpr float m32 = 0;
+		constexpr float m33 = 0;
+
+		// Spline coefficients
+		const float t2 = t * t;
+		const float t3 = t2 * t;
+
+		// Vector T: [t³, t², t, 1]
+		const float tx = m00 * t3 + m10 * t2 + m20 * t + m30;
+		const float ty = m01 * t3 + m11 * t2 + m21 * t + m31;
+		const float tz = m02 * t3 + m12 * t2 + m22 * t + m32;
+		const float tw = m03 * t3 + m13 * t2 + m23 * t + m33;
+
+		// Multiplying T on control point matrix
+		return {
+			static_cast<int32_t>(tx * points[index].getX() + ty * points[index + 1].getX() + tz * points[index + 2].getX() + tw * points[index + 3].getX()),
+			static_cast<int32_t>(tx * points[index].getY() + ty * points[index + 1].getY() + tz * points[index + 2].getY() + tw * points[index + 3].getY())
+		};
+	}
+
 	float Renderer::fastAtan2(const float y, const float x) {
 		//http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
 		//Volkan SALMA
