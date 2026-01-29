@@ -23,8 +23,6 @@ namespace YOBA {
 		public FontScaleElement
 	{
 		public:
-			~TextField() override;
-
 			Callback<Key, std::optional<std::wstring_view>> input {};
 			Callback<> textChanged {};
 

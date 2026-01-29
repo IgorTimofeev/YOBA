@@ -5,10 +5,6 @@
 #include <YOBA/main/events/scrollIntoViewEvent.h>
 
 namespace YOBA {
-	TextField::~TextField() {
-		KeyboardController::hide();
-	}
-
 	void TextField::onTick() {
 		if (isFocused()) {
 			if (isCaptured()) {
@@ -174,6 +170,7 @@ namespace YOBA {
 			switch (keyUpEvent->getKey()) {
 				case Key::enter: {
 					setFocused(false);
+
 					break;
 				}
 				case Key::backspace: {
@@ -411,9 +408,6 @@ namespace YOBA {
 			KeyboardController::show();
 
 			scrollIntoView();
-		}
-		else {
-			KeyboardController::hide();
 		}
 
 		invalidateRender();

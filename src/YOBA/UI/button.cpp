@@ -12,6 +12,7 @@ namespace YOBA {
 			_pointerWasDown = true;
 			_previousIsActive = isActive();
 			setActive(true);
+			setFocused(true);
 
 			event->setHandled(true);
 		}
@@ -34,6 +35,8 @@ namespace YOBA {
 				
 				_pointerWasDown = false;
 			}
+
+			setFocused(false);
 
 			event->setHandled(true);
 		}

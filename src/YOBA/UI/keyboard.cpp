@@ -22,7 +22,7 @@ namespace YOBA {
 
 	}
 
-	void KeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
+	void KeyboardKey::onIsActiveChanged(KeyboardButton* button) {
 		const auto keyboard = button->getKeyboard();
 		const auto key = getKeyFromCase(keyboard);
 
@@ -115,8 +115,8 @@ namespace YOBA {
 		return getNameFromCase(keyboard);
 	}
 
-	void TextKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
-		KeyboardKey::onKeyPressedChanged(button);
+	void TextKeyboardKey::onIsActiveChanged(KeyboardButton* button) {
+		KeyboardKey::onIsActiveChanged(button);
 
 		if (button->isActive())
 			return;
@@ -147,8 +147,8 @@ namespace YOBA {
 
 	}
 
-	void ShiftKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
-		KeyboardKey::onKeyPressedChanged(button);
+	void ShiftKeyboardKey::onIsActiveChanged(KeyboardButton* button) {
+		KeyboardKey::onIsActiveChanged(button);
 
 		if (button->isActive())
 			return;
@@ -195,6 +195,15 @@ namespace YOBA {
 
 	}
 
+	void EnterKeyboardKey::onIsActiveChanged(KeyboardButton* button) {
+		KeyboardKey::onIsActiveChanged(button);
+
+		if (button->isActive())
+			return;
+
+		KeyboardController::hide();
+	}
+
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
 	SpaceKeyboardKey::SpaceKeyboardKey() :
@@ -214,8 +223,8 @@ namespace YOBA {
 
 	}
 
-	void CharactersLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
-		KeyboardKey::onKeyPressedChanged(button);
+	void CharactersLayoutKeyboardKey::onIsActiveChanged(KeyboardButton* button) {
+		KeyboardKey::onIsActiveChanged(button);
 
 		if (button->isActive())
 			return;
@@ -236,8 +245,8 @@ namespace YOBA {
 
 	}
 
-	void CurrentCyclicLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
-		KeyboardKey::onKeyPressedChanged(button);
+	void CurrentCyclicLayoutKeyboardKey::onIsActiveChanged(KeyboardButton* button) {
+		KeyboardKey::onIsActiveChanged(button);
 
 		if (button->isActive())
 			return;
@@ -258,8 +267,8 @@ namespace YOBA {
 
 	}
 
-	void CyclicLayoutKeyboardKey::onKeyPressedChanged(KeyboardButton* button) {
-		KeyboardKey::onKeyPressedChanged(button);
+	void CyclicLayoutKeyboardKey::onIsActiveChanged(KeyboardButton* button) {
+		KeyboardKey::onIsActiveChanged(button);
 
 		if (!button->isActive()) {
 			button->getKeyboard()->setNextCyclicLayoutIndex();
@@ -273,7 +282,7 @@ namespace YOBA {
 		_row(row),
 		_column(column)
 	{
-		setFocusable(false);
+		// setFocusable(false);
 		setCornerRadius(_keyboard->getKeyCornerRadius());
 		setFont(_keyboard->getFont());
 		updateTextFromCase();
@@ -310,7 +319,7 @@ namespace YOBA {
 		Button::onIsActiveChanged();
 
 		Application::getCurrent()->scheduleOnTick([this] {
-			getKey()->onKeyPressedChanged(this);
+			getKey()->onIsActiveChanged(this);
 		});
 	}
 

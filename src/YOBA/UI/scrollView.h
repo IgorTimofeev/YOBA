@@ -168,14 +168,101 @@ namespace YOBA {
 			}
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override {
+				// Render pass 1
+				onRenderPass(renderer, bounds);
+
+				// Since we have combined pass for arranging/rendering (lol it's MCU),
+				// we should scroll to element first and apply second render pass
+				// Not really optimal solution, but definitely better than creating separated
+				// recursive loops for arranging and rendering
 				if (_scrollLaterTo) {
 					// FR FR 100% need to scroll
-					if (!bounds.contains(_scrollLaterTo->getBounds()))
+					if (!bounds.contains(_scrollLaterTo->getBounds())) {
 						scrollToCenter(_scrollLaterTo);
+
+						// FUCKING SECOND PASS :(((((
+						onRenderPass(renderer, bounds);
+					}
 
 					_scrollLaterTo = nullptr;
 				}
+			}
 
+			void onCaptureChanged() override {
+				Layout::onCaptureChanged();
+
+				if (!isCaptured())
+					_lastTouchPosition.setX(-1);
+			}
+
+			void onEventBeforeChildren(Event* event) override {
+				if (event->getTypeID() == PointerDownEvent::typeID) {
+					_lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
+				}
+				else if (event->getTypeID() == PointerDragEvent::typeID) {
+					if (_lastTouchPosition.getX() >= 0) {
+						const auto position = reinterpret_cast<PointerDragEvent*>(event)->getPosition();
+						const auto pointerDelta = position - _lastTouchPosition;
+
+						if (isCaptured()) {
+							_lastTouchPosition = position;
+
+							scrollHorizontallyBy(-pointerDelta.getX());
+							scrollVerticallyBy(-pointerDelta.getY());
+						}
+						else {
+							if (pointerDelta.getLength() >= 3) {
+								_lastTouchPosition = position;
+
+								setCaptured(true);
+							}
+						}
+					}
+				}
+				else if (event->getTypeID() == ScrollIntoViewEvent::typeID) {
+					_scrollLaterTo = reinterpret_cast<ScrollIntoViewEvent*>(event)->getElement();
+
+					event->setHandled(true);
+				}
+			}
+
+			void onEventAfterChildren(Event* event) override {
+				if (event->getTypeID() == PointerUpEvent::typeID) {
+					setCaptured(false);
+				}
+			}
+
+			void scrollHorizontallyBy(const int32_t delta) {
+				setHorizontalPosition(static_cast<uint16_t>(std::max(
+					static_cast<int32_t>(getHorizontalPosition()) + delta,
+					static_cast<int32_t>(0)
+				)));
+			}
+
+			void scrollVerticallyBy(const int32_t delta) {
+				setVerticalPosition(static_cast<uint16_t>(std::max(
+					static_cast<int32_t>(getVerticalPosition()) + delta,
+					static_cast<int32_t>(0)
+				)));
+			}
+
+		private:
+			ScrollBar _horizontalScrollBar {};
+			ScrollBar _verticalScrollBar {};
+
+			ScrollMode _horizontalScrollMode = ScrollMode::disabled;
+			ScrollMode _verticalScrollMode = ScrollMode::computed;
+
+			Size _contentMeasuredSize {};
+			Bounds _contentBounds {};
+			const Element* _scrollLaterTo = nullptr;
+
+			bool _horizontalScrollPossible = false;
+			bool _verticalScrollPossible = false;
+
+			Point _lastTouchPosition { -1, -1 };
+
+			void onRenderPass(Renderer* renderer, const Bounds& bounds) {
 				if (_horizontalScrollMode == ScrollMode::disabled) {
 					if (_horizontalScrollBar.getPosition() > 0)
 						_horizontalScrollBar.setPosition(0);
@@ -258,79 +345,5 @@ namespace YOBA {
 
 				// ESP_LOGI("SCROLL", "contentSize: %f, viewportSize: %f", (float) contentBounds.getHeight(), (float) bounds.getHeight());
 			}
-
-			void onCaptureChanged() override {
-				Layout::onCaptureChanged();
-
-				if (!isCaptured())
-					_lastTouchPosition.setX(-1);
-			}
-
-			void onEventBeforeChildren(Event* event) override {
-				if (event->getTypeID() == PointerDownEvent::typeID) {
-					_lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
-				}
-				else if (event->getTypeID() == PointerDragEvent::typeID) {
-					if (_lastTouchPosition.getX() >= 0) {
-						const auto position = reinterpret_cast<PointerDragEvent*>(event)->getPosition();
-						const auto pointerDelta = position - _lastTouchPosition;
-
-						if (isCaptured()) {
-							_lastTouchPosition = position;
-
-							scrollHorizontallyBy(-pointerDelta.getX());
-							scrollVerticallyBy(-pointerDelta.getY());
-						}
-						else {
-							if (pointerDelta.getLength() >= 3) {
-								_lastTouchPosition = position;
-
-								setCaptured(true);
-							}
-						}
-					}
-				}
-				else if (event->getTypeID() == ScrollIntoViewEvent::typeID) {
-					_scrollLaterTo = reinterpret_cast<ScrollIntoViewEvent*>(event)->getElement();
-
-					event->setHandled(true);
-				}
-			}
-
-			void onEventAfterChildren(Event* event) override {
-				if (event->getTypeID() == PointerUpEvent::typeID) {
-					setCaptured(false);
-				}
-			}
-
-			void scrollHorizontallyBy(const int32_t delta) {
-				setHorizontalPosition(static_cast<uint16_t>(std::max(
-					static_cast<int32_t>(getHorizontalPosition()) + delta,
-					static_cast<int32_t>(0)
-				)));
-			}
-
-			void scrollVerticallyBy(const int32_t delta) {
-				setVerticalPosition(static_cast<uint16_t>(std::max(
-					static_cast<int32_t>(getVerticalPosition()) + delta,
-					static_cast<int32_t>(0)
-				)));
-			}
-
-		private:
-			ScrollBar _horizontalScrollBar {};
-			ScrollBar _verticalScrollBar {};
-
-			ScrollMode _horizontalScrollMode = ScrollMode::disabled;
-			ScrollMode _verticalScrollMode = ScrollMode::computed;
-
-			Size _contentMeasuredSize {};
-			Bounds _contentBounds {};
-			const Element* _scrollLaterTo = nullptr;
-
-			bool _horizontalScrollPossible = false;
-			bool _verticalScrollPossible = false;
-
-			Point _lastTouchPosition { -1, -1 };
 	};
 }
