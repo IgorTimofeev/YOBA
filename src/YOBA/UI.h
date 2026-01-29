@@ -18,7 +18,10 @@
 #include <YOBA/UI/traits/activeElement.h>
 
 // Elements
-#include <YOBA/UI/keyboard.h>
+#include <YOBA/UI/keyboard/keyboardLayout.h>
+#include <YOBA/UI/keyboard/button.h>
+#include <YOBA/UI/keyboard/keyboard.h>
+#include <YOBA/UI/keyboard/controller.h>
 #include <YOBA/UI/selector.h>
 #include <YOBA/UI/button.h>
 #include <YOBA/UI/sevenSegment.h>

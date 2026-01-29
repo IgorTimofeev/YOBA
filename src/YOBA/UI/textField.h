@@ -2,17 +2,16 @@
 
 #include <optional>
 
+#include <YOBA/main/callback.h>
+#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/main/key.h>
+
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/UI/traits/textElement.h>
 #include <YOBA/UI/traits/fontElement.h>
 #include <YOBA/UI/traits/fontScaleElement.h>
 #include <YOBA/UI/control.h>
-#include <YOBA/UI/keyboard.h>
-
-#include <YOBA/main/callback.h>
-#include <YOBA/main/events/pointerEvent.h>
-#include <YOBA/main/events/pinchEvent.h>
-#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/UI/keyboard/generic.h>
 
 namespace YOBA {
 	class TextField :
