@@ -67,6 +67,14 @@ namespace YOBA {
 		return std::nullopt;
 	}
 
+	bool KeyboardKey::canBeAdded(Keyboard* keyboard) {
+		return true;
+	}
+
+	bool KeyboardKey::isEnabled(Keyboard* keyboard) {
+		return true;
+	}
+
 	// ----------------------------- TextKeyboardKey -----------------------------
 
 	TextKeyboardKey::TextKeyboardKey(
@@ -206,10 +214,43 @@ namespace YOBA {
 
 	// ----------------------------- SpaceKeyboardKey -----------------------------
 
-	SpaceKeyboardKey::SpaceKeyboardKey() :
-		TextKeyboardKey(Key::space, L" ", Key::space, L" ", stretched)
+	SpaceKeyboardKey::SpaceKeyboardKey() :TextKeyboardKey(Key::space, L" ", Key::space, L" ", stretched)
 	{
 
+	}
+
+	// ----------------------------- PeriodKeyboardKey -----------------------------
+
+	PeriodKeyboardKey::PeriodKeyboardKey(const float width) : TextKeyboardKey(Key::period, L".", width) {
+
+	}
+
+	bool PeriodKeyboardKey::isEnabled(Keyboard* keyboard) {
+		const auto options = keyboard->getLayoutOptions();
+
+		return !(options & KeyboardLayoutOptions::numeric) || options & KeyboardLayoutOptions::allowDecimal;
+	}
+
+	// ----------------------------- NumericSignMinusKeyboardKey -----------------------------
+
+	NumericSignMinusKeyboardKey::NumericSignMinusKeyboardKey(const float width) : TextKeyboardKey(Key::minus, L"-", width) {
+
+	}
+
+	bool NumericSignMinusKeyboardKey::isEnabled(Keyboard* keyboard) {
+		const auto options = keyboard->getLayoutOptions();
+
+		return !(options & KeyboardLayoutOptions::numeric) || options & KeyboardLayoutOptions::allowSigned;
+	}
+
+	// ----------------------------- NumericSignMinusKeyboardKey -----------------------------
+
+	DummyKeyboardKey::DummyKeyboardKey(const float width) : TextKeyboardKey(Key::none, L" ", width) {
+
+	}
+
+	bool DummyKeyboardKey::isEnabled(Keyboard* keyboard) {
+		return false;
 	}
 
 	// ----------------------------- CharactersLayoutKeyboardKey -----------------------------
@@ -232,6 +273,10 @@ namespace YOBA {
 		const auto keyboard = button->getKeyboard();
 
 		keyboard->setLayout(keyboard->getCharactersLayoutBuilder().value()());
+	}
+
+	bool CharactersLayoutKeyboardKey::canBeAdded(Keyboard* keyboard) {
+		return keyboard->getCharactersLayoutBuilder().has_value();
 	}
 
 	// ----------------------------- DefaultLayoutKeyboardKey -----------------------------
@@ -275,6 +320,10 @@ namespace YOBA {
 		}
 	}
 
+	bool CyclicLayoutKeyboardKey::canBeAdded(Keyboard* keyboard) {
+		return keyboard->getCyclicLayoutBuilders().size() > 1;
+	}
+
 	// ----------------------------- KeyboardButton -----------------------------
 
 	KeyboardButton::KeyboardButton(Keyboard* keyboard, const uint8_t row, const uint8_t column) :
@@ -282,30 +331,38 @@ namespace YOBA {
 		_row(row),
 		_column(column)
 	{
-		// setFocusable(false);
+		setFocusable(false);
 		setCornerRadius(_keyboard->getKeyCornerRadius());
 		setFont(_keyboard->getFont());
 		updateTextFromCase();
 
-		switch (getKey()->getType()) {
-			case KeyboardKeyType::normal: {
-				setDefaultBackgroundColor(_keyboard->getDefaultKeyBackgroundColor());
-				setDefaultTextColor(_keyboard->getDefaultKeyTextColor());
+		if (getKey()->isEnabled(_keyboard)) {
+			switch (getKey()->getType()) {
+				case KeyboardKeyType::normal: {
+					setDefaultBackgroundColor(_keyboard->getDefaultKeyBackgroundColor());
+					setDefaultTextColor(_keyboard->getDefaultKeyTextColor());
 
-				setActiveBackgroundColor(_keyboard->getDefaultKeyTextColor());
-				setActiveTextColor(_keyboard->getDefaultKeyBackgroundColor());
+					setActiveBackgroundColor(_keyboard->getDefaultKeyTextColor());
+					setActiveTextColor(_keyboard->getDefaultKeyBackgroundColor());
 
-				break;
+					break;
+				}
+				default: {
+					setDefaultBackgroundColor(_keyboard->getActionKeyBackgroundColor());
+					setDefaultTextColor(_keyboard->getActionKeyTextColor());
+
+					setActiveBackgroundColor(_keyboard->getActionKeyTextColor());
+					setActiveTextColor(_keyboard->getActionKeyBackgroundColor());
+
+					break;
+				}
 			}
-			default: {
-				setDefaultBackgroundColor(_keyboard->getActionKeyBackgroundColor());
-				setDefaultTextColor(_keyboard->getActionKeyTextColor());
+		}
+		else {
+			setEnabled(false);
 
-				setActiveBackgroundColor(_keyboard->getActionKeyTextColor());
-				setActiveTextColor(_keyboard->getActionKeyBackgroundColor());
-
-				break;
-			}
+			setDefaultBackgroundColor(_keyboard->getDisabledKeyBackgroundColor());
+			setDefaultTextColor(_keyboard->getDisabledKeyTextColor());
 		}
 	}
 
@@ -388,11 +445,11 @@ namespace YOBA {
 	}
 
 	const Color* Keyboard::getDefaultKeyBackgroundColor() const {
-		return _defaultKeyPrimaryColor;
+		return _defaultKeyBackgroundColor;
 	}
 
 	void Keyboard::setDefaultKeyBackgroundColor(const Color* value) {
-		_defaultKeyPrimaryColor = value;
+		_defaultKeyBackgroundColor = value;
 	}
 
 	const Color* Keyboard::getDefaultKeyTextColor() const {
@@ -409,6 +466,22 @@ namespace YOBA {
 
 	void Keyboard::setActionKeyBackgroundColor(const Color* value) {
 		_actionKeyBackgroundColor = value;
+	}
+
+	const Color* Keyboard::getDisabledKeyBackgroundColor() const {
+		return _disabledKeyBackgroundColor;
+	}
+
+	void Keyboard::setDisabledKeyBackgroundColor(const Color* value) {
+		_disabledKeyBackgroundColor = value;
+	}
+
+	const Color* Keyboard::getDisabledKeyTextColor() const {
+		return _disabledKeyTextColor;
+	}
+
+	void Keyboard::setDisabledKeyTextColor(const Color* value) {
+		_disabledKeyTextColor = value;
 	}
 
 	const Color* Keyboard::getActionKeyTextColor() const {
@@ -438,26 +511,16 @@ namespace YOBA {
 			for (int columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
 				const auto key = layoutRow[columnIndex];
 
-				switch (key->getType()) {
-					case KeyboardKeyType::charactersLayout: {
-						if (!_charactersLayoutBuilder.has_value())
-							continue;
-
-						break;
-					}
-					case KeyboardKeyType::cyclicLayout: {
-						if (_cyclicLayoutBuilders.size() < 2)
-							continue;
-
-						break;
-					}
-					default:
-						break;
-				}
+				if (!key->canBeAdded(this))
+					continue;
 
 				_buttonsLayout += new KeyboardButton(this, rowIndex, columnIndex);
 			}
 		}
+	}
+
+	uint8_t Keyboard::getLayoutOptions() const {
+		return _layoutOptions;
 	}
 
 	void Keyboard::setCyclicLayoutIndex(const int8_t value) {
@@ -538,20 +601,47 @@ namespace YOBA {
 		setCyclicLayoutIndex(index);
 	}
 
+	void Keyboard::setLayout(const uint8_t options) {
+		if (options == _layoutOptions)
+			return;
+
+		_layoutOptions = options;
+
+		if (_layoutOptions & KeyboardLayoutOptions::text) {
+			setCyclicLayoutIndex(getCyclicLayoutIndex());
+		}
+		else if (_layoutOptions & KeyboardLayoutOptions::numeric) {
+			if (getNumericLayoutBuilder().has_value()) {
+				setLayout(getNumericLayoutBuilder().value()());
+			}
+			else {
+				setCyclicLayoutIndex(getCyclicLayoutIndex());
+			}
+		}
+	}
+
 	std::vector<std::function<KeyboardLayout*()>>& Keyboard::getCyclicLayoutBuilders() {
 		return _cyclicLayoutBuilders;
 	}
 
-	void Keyboard::setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& cyclicLayoutBuilders) {
-		_cyclicLayoutBuilders = cyclicLayoutBuilders;
+	void Keyboard::setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& builder) {
+		_cyclicLayoutBuilders = builder;
 	}
 
 	const std::optional<std::function<KeyboardLayout*()>>& Keyboard::getCharactersLayoutBuilder() const {
 		return _charactersLayoutBuilder;
 	}
 
-	void Keyboard::setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& charactersLayoutBuilder) {
-		_charactersLayoutBuilder = charactersLayoutBuilder;
+	void Keyboard::setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder) {
+		_charactersLayoutBuilder = builder;
+	}
+	
+	const std::optional<std::function<KeyboardLayout*()>>& Keyboard::getNumericLayoutBuilder() const {
+		return _numericLayoutBuilder;
+	}
+
+	void Keyboard::setNumericLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder) {
+		_numericLayoutBuilder = builder;
 	}
 
 	uint8_t Keyboard::getKeyCornerRadius() const {
@@ -697,24 +787,25 @@ namespace YOBA {
 	Layout* KeyboardController::_targetLayout = nullptr;
 	std::optional<std::function<void(Keyboard*)>> KeyboardController::_onKeyboardShow = std::nullopt;
 
-	void KeyboardController::show() {
-		if (_controllerLayout)
-			return;
+	void KeyboardController::show(const uint8_t layoutOptions) {
+		if (!_controllerLayout) {
+			_controllerLayout = new KeyboardControllerLayout();
 
-		_controllerLayout = new KeyboardControllerLayout();
+			const auto targetLayout = getTargetLayoutOrApplication();
 
-		const auto targetLayout = getTargetLayoutOrApplication();
+			_controllerLayout->setSize(targetLayout->getBounds().getSize());
 
-		_controllerLayout->setSize(targetLayout->getBounds().getSize());
+			// Moving children from target to temporary layout
+			targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);
 
-		// Moving children from target to temporary layout
-		targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);
+			// Configuring keyboard
+			if (_onKeyboardShow.has_value())
+				_onKeyboardShow.value()(&_controllerLayout->keyboard);
 
-		// Configuring keyboard
-		if (_onKeyboardShow.has_value())
-			_onKeyboardShow.value()(&_controllerLayout->keyboard);
+			*targetLayout += _controllerLayout;
+		}
 
-		*targetLayout += _controllerLayout;
+		_controllerLayout->keyboard.setLayout(layoutOptions);
 	}
 
 	void KeyboardController::hide() {
@@ -755,6 +846,38 @@ namespace YOBA {
 	}
 
 	// ----------------------------- NumericKeyboardLayout -----------------------------
+
+	NumericKeyboardLayout::NumericKeyboardLayout() : KeyboardLayout({
+		{
+			&_key1,
+			&_key2,
+			&_key3,
+			&_keyDummy30
+		},
+		{
+			&_key4,
+			&_key5,
+			&_key6,
+			&_keyDummy31
+		},
+		{
+			&_key7,
+			&_key8,
+			&_key9,
+			&_keyBackspace
+		},
+
+		{
+			&_keyMinus,
+			&_key0,
+			&_keyPeriod,
+			&_keyEnter
+		},
+	}) {
+
+	}
+
+	// ----------------------------- CharactersKeyboardLayout -----------------------------
 
 
 	CharactersKeyboardLayout::CharactersKeyboardLayout() : KeyboardLayout({

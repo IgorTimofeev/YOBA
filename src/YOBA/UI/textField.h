@@ -26,6 +26,9 @@ namespace YOBA {
 			Callback<Key, std::optional<std::wstring_view>> input {};
 			Callback<> textChanged {};
 
+			uint8_t getKeyboardLayoutOptions() const;
+			void setKeyboardLayoutOptions(const uint8_t keyboardLayoutOptions);
+
 			wchar_t getMask() const;
 			void setMask(wchar_t mask);
 
@@ -110,6 +113,7 @@ namespace YOBA {
 
 			std::wstring _placeholder = std::wstring();
 			wchar_t _mask = 0;
+			uint8_t _keyboardLayoutOptions = KeyboardLayoutOptions::text;
 
 			void setCursorBlinkStateAndTime(bool value);
 			void applyContinuousScroll();

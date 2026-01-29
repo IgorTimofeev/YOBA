@@ -11,7 +11,7 @@ namespace YOBA {
 		const auto isPinch = PinchEvent::isPinch(event);
 
 		if (isPointer || isPinch) {
-			if (isVisible() && isVisibleForPointerEvents()) {
+			if (isVisible() && isVisibleForPointerEvents() && isEnabled()) {
 				auto currentBounds = getBounds();
 				bool contains;
 

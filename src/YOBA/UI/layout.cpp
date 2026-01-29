@@ -160,7 +160,7 @@ namespace YOBA {
 		if (isPointer || isPinch) {
 			bool callCurrentHandlers;
 
-			if (isVisible() && isVisibleForPointerEvents()) {
+			if (isVisible() && isVisibleForPointerEvents() && isEnabled()) {
 				bool contains;
 
 				if (parentBounds.intersects(currentBounds)) {

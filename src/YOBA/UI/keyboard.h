@@ -48,6 +48,8 @@ namespace YOBA {
 			virtual Key getKeyFromCase(Keyboard* keyboard) const;
 			virtual std::wstring_view getNameFromCase(Keyboard* keyboard) const;
 			virtual std::optional<std::wstring_view> getTextFromCase(Keyboard* keyboard) const;
+			virtual bool canBeAdded(Keyboard* keyboard);
+			virtual bool isEnabled(Keyboard* keyboard);
 
 			float getWidth() const;
 			KeyboardKeyType getType() const;
@@ -123,14 +125,33 @@ namespace YOBA {
 			SpaceKeyboardKey();
 	};
 
+	class PeriodKeyboardKey : public TextKeyboardKey {
+		public:
+			PeriodKeyboardKey(const float width);
+
+			bool isEnabled(Keyboard* keyboard) override;
+	};
+
+	class NumericSignMinusKeyboardKey : public TextKeyboardKey {
+		public:
+			NumericSignMinusKeyboardKey(const float width);
+
+			bool isEnabled(Keyboard* keyboard) override;
+	};
+
+	class DummyKeyboardKey : public TextKeyboardKey {
+		public:
+			DummyKeyboardKey(const float width);
+
+			bool isEnabled(Keyboard* keyboard) override;
+	};
+
 	class CharactersLayoutKeyboardKey : public KeyboardKey {
 		public:
 			CharactersLayoutKeyboardKey(std::wstring_view name, float width);
 
 			void onIsActiveChanged(KeyboardButton* button) override;
-
-		private:
-			std::function<KeyboardLayout*()> _layoutBuilder;
+			bool canBeAdded(Keyboard* keyboard) override;
 	};
 
 	class CurrentCyclicLayoutKeyboardKey : public KeyboardKey {
@@ -145,6 +166,7 @@ namespace YOBA {
 			CyclicLayoutKeyboardKey(std::wstring_view name, float width);
 
 			void onIsActiveChanged(KeyboardButton* button) override;
+			bool canBeAdded(Keyboard* keyboard) override;
 	};
 
 	class KeyboardButtonsLayout : public Layout {
@@ -159,6 +181,16 @@ namespace YOBA {
 		private:
 			Keyboard* _keyboard;
 	};
+
+	namespace KeyboardLayoutOptions {
+		enum : uint8_t {
+			text = 0b0000'0001,
+			numeric = 0b0000'0010,
+
+			allowSigned = 0b0000'1000,
+			allowDecimal = 0b0001'0000
+		};
+	}
 
 	class KeyboardLayout {
 		public:
@@ -200,13 +232,15 @@ namespace YOBA {
 
 			~Keyboard() override;
 
-			void setLayout(KeyboardLayout* value);
 			KeyboardLayout* getLayout() const;
+			void setLayout(KeyboardLayout* value);
+
+			uint8_t getLayoutOptions() const;
+			void setLayout(const uint8_t options = KeyboardLayoutOptions::text);
 
 			uint8_t getCyclicLayoutsCount() const;
 			int8_t getCyclicLayoutIndex() const;
 			void setCyclicLayoutIndex(int8_t value);
-
 			void setNextCyclicLayoutIndex();
 
 			const Color* getBackgroundColor() const;
@@ -221,6 +255,12 @@ namespace YOBA {
 
 			const Color* getActionKeyBackgroundColor() const;
 			void setActionKeyBackgroundColor(const Color* value);
+
+			const Color* getDisabledKeyBackgroundColor() const;
+			void setDisabledKeyBackgroundColor(const Color* value);
+
+			const Color* getDisabledKeyTextColor() const;
+			void setDisabledKeyTextColor(const Color* value);
 
 			const Color* getActionKeyTextColor() const;
 			void setActionKeyTextColor(const Color* actionButtonSecondaryColor);
@@ -241,11 +281,13 @@ namespace YOBA {
 			void setCase(KeyboardCase value);
 
 			std::vector<std::function<KeyboardLayout*()>>& getCyclicLayoutBuilders();
-			void setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& cyclicLayoutBuilders);
+			void setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& builder);
 
 			const std::optional<std::function<KeyboardLayout*()>>& getCharactersLayoutBuilder() const;
+			void setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder);
 
-			void setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& charactersLayoutBuilder);
+			const std::optional<std::function<KeyboardLayout*()>>& getNumericLayoutBuilder() const;
+			void setNumericLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder);
 
 			uint16_t getContinuousTypingDelay() const;
 			void setContinuousTypingDelay(uint16_t value);
@@ -254,11 +296,16 @@ namespace YOBA {
 			void setContinuousTypingInterval(uint16_t value);
 
 		private:
-			const Color* _defaultKeyPrimaryColor = nullptr;
+			const Color* _defaultKeyBackgroundColor = nullptr;
 			const Color* _defaultKeyTextColor = nullptr;
+
 			const Color* _actionKeyBackgroundColor = nullptr;
 			const Color* _actionKeyTextColor = nullptr;
 
+			const Color* _disabledKeyBackgroundColor = nullptr;
+			const Color* _disabledKeyTextColor = nullptr;
+
+			uint8_t _layoutOptions = KeyboardLayoutOptions::text;
 			KeyboardCase _case = KeyboardCase::lower;
 
 			uint8_t _keyCornerRadius = 0;
@@ -269,6 +316,7 @@ namespace YOBA {
 			KeyboardLayout* _layout = nullptr;
 			std::vector<std::function<KeyboardLayout*()>> _cyclicLayoutBuilders;
 			std::optional<std::function<KeyboardLayout*()>> _charactersLayoutBuilder = std::nullopt;
+			std::optional<std::function<KeyboardLayout*()>> _numericLayoutBuilder = std::nullopt;
 
 			Rectangle _backgroundPanel = Rectangle();
 			KeyboardButtonsLayout _buttonsLayout;
@@ -290,7 +338,7 @@ namespace YOBA {
 
 	class KeyboardController {
 		public:
-			static void show();
+			static void show(const uint8_t layoutOptions);
 			static void hide();
 			static bool isVisible();
 
@@ -309,7 +357,33 @@ namespace YOBA {
 	};
 
 	// ----------------------------- Layouts -----------------------------
-	
+
+	class NumericKeyboardLayout : public KeyboardLayout {
+		public:
+			NumericKeyboardLayout();
+
+		private:
+			TextKeyboardKey _key1 { Key::number1, L"1", 1.f / 4.f };
+			TextKeyboardKey _key2 { Key::number2, L"2", 1.f / 4.f };
+			TextKeyboardKey _key3 { Key::number3, L"3", 1.f / 4.f };
+			DummyKeyboardKey _keyDummy30 { 1.f / 4.f };
+
+			TextKeyboardKey _key4 { Key::number4, L"4", 1.f / 4.f };
+			TextKeyboardKey _key5 { Key::number5, L"5", 1.f / 4.f };
+			TextKeyboardKey _key6 { Key::number6, L"6", 1.f / 4.f };
+			DummyKeyboardKey _keyDummy31 { 1.f / 4.f };
+
+			TextKeyboardKey _key7 { Key::number7, L"7", 1.f / 4.f };
+			TextKeyboardKey _key8 { Key::number8, L"8", 1.f / 4.f };
+			TextKeyboardKey _key9 { Key::number9, L"9", 1.f / 4.f };
+			BackspaceKeyboardKey _keyBackspace { L"<", 1.f / 4.f };
+
+			NumericSignMinusKeyboardKey _keyMinus { 1.f / 4.f };
+			TextKeyboardKey _key0 { Key::number0, L"0", Key::number0, L"0", 1.f / 4.f };
+			PeriodKeyboardKey _keyPeriod { 1.f / 4.f };
+			EnterKeyboardKey _keyEnter { 1.f / 4.f };
+	};
+
 	class CharactersKeyboardLayout : public KeyboardLayout {
 		public:
 			CharactersKeyboardLayout();
@@ -350,7 +424,7 @@ namespace YOBA {
 			CurrentCyclicLayoutKeyboardKey _keyCyclicLayout { L"Abc", 0.1f };
 			TextKeyboardKey _keyComma { Key::comma, L",", 0.1f };
 			TextKeyboardKey _keySpace { Key::space, L" ", 0.5f };
-			TextKeyboardKey _keyPeriod { Key::period, L".", 0.1f };
+			PeriodKeyboardKey _keyPeriod { 0.1f };
 			EnterKeyboardKey _keyEnter { 0.2f };
 	};
 
@@ -394,7 +468,7 @@ namespace YOBA {
 			CyclicLayoutKeyboardKey _keyCyclicLayout { L"Lang", 0.1f };
 			TextKeyboardKey _keyComma { Key::comma, L",", 0.1f };
 			SpaceKeyboardKey _keySpace  {  };
-			TextKeyboardKey _keyPeriod { Key::period, L".", 0.1f };
+			PeriodKeyboardKey _keyPeriod { 0.1f };
 			EnterKeyboardKey _keyEnter { 0.2f };
 	};
 
@@ -443,7 +517,7 @@ namespace YOBA {
 			CyclicLayoutKeyboardKey _keyCyclicLayout { L"Lang", 0.1f };
 			TextKeyboardKey _keyComma { Key::comma, L",", 0.1f };
 			SpaceKeyboardKey _keySpace {  };
-			TextKeyboardKey _keyPeriod { Key::period, L".", 0.1f };
+			PeriodKeyboardKey _keyPeriod { 0.1f };
 			EnterKeyboardKey _keyEnter { 0.2f };
 	};
 }

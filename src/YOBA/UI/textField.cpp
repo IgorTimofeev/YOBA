@@ -405,7 +405,7 @@ namespace YOBA {
 		setCursorBlinkStateAndTime(isFocused());
 
 		if (isFocused()) {
-			KeyboardController::show();
+			KeyboardController::show(_keyboardLayoutOptions);
 
 			scrollIntoView();
 		}
@@ -468,6 +468,14 @@ namespace YOBA {
 
 	void TextField::setPlaceholderColor(const Color* value) {
 		_placeholderColor = value;
+	}
+
+	uint8_t TextField::getKeyboardLayoutOptions() const {
+		return _keyboardLayoutOptions;
+	}
+
+	void TextField::setKeyboardLayoutOptions(const uint8_t keyboardLayoutOptions) {
+		_keyboardLayoutOptions = keyboardLayoutOptions;
 	}
 
 	wchar_t TextField::getMask() const {
