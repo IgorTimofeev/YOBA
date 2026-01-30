@@ -195,11 +195,10 @@ namespace YOBA {
 
 		const auto trackY = bounds.getY() + handleHeightHalf - _trackSize / 2;
 		const auto valueFactor = getValueFactor();
-		const auto widthWithoutHandle = bounds.getWidth() - _handleSize.getWidth();
 
 		const auto handleCenterLocal =
 			handleWidthHalf
-			+ static_cast<uint16_t>(valueFactor * static_cast<float>(widthWithoutHandle));
+			+ static_cast<uint16_t>(valueFactor * static_cast<float>(bounds.getWidth() - _handleSize.getWidth()));
 
 		// Fill
 		if (getValue() > 0 && _fillColor) {
@@ -235,7 +234,7 @@ namespace YOBA {
 			float tickXF = bounds.getX() + handleWidthHalf;
 			float tickValue = _valueMinimum;
 			const auto tickValueInterval = (_valueMaximum - _valueMinimum) / _tickQuantity;
-			const auto tickPixelInterval = widthWithoutHandle / _tickQuantity;
+			const auto tickPixelInterval = static_cast<float>(bounds.getWidth() - handleWidthHalf) / _tickQuantity;
 
 			for (uint16_t tickIndex = 0; tickIndex < _tickQuantity + 1; tickIndex++) {
 				const auto isBig = tickIndex % _bigTickStep == 0;
@@ -243,7 +242,7 @@ namespace YOBA {
 
 				// Line
 				renderer->renderVerticalLine(
-					Point(static_cast<int32_t>(std::round(tickXF)), tickY),
+					Point(static_cast<int32_t>(tickXF), tickY),
 					lineLength,
 					_tickColor
 				);
@@ -252,11 +251,20 @@ namespace YOBA {
 				if (isBig && _tickLabelFont) {
 					const auto text = std::wstring(_tickLabelBuilder(tickValue));
 
+					int32_t textX;
+
+					if (tickIndex == 0) {
+						textX = static_cast<int32_t>(tickXF);
+					}
+					else if (tickIndex < _tickQuantity) {
+						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) / 2);
+					}
+					else {
+						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) + 1);
+					}
+
 					renderer->renderString(
-						Point(
-							static_cast<int32_t>(std::round(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) / 2)),
-							tickY + lineLength + _tickLabelOffset
-						),
+						Point(textX, tickY + lineLength + _tickLabelOffset),
 						_tickLabelFont,
 						_tickColor,
 						text
