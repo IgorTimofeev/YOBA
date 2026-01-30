@@ -3,9 +3,9 @@
 #include <optional>
 
 #include <YOBA/main/key.h>
-#include <YOBA/UI/keyboard/generic.h>
 #include <YOBA/UI/button.h>
 #include <YOBA/UI/relativeStackLayout.h>
+#include <YOBA/UI/keyboard/generic.h>
 
 namespace YOBA {
 	class Keyboard;

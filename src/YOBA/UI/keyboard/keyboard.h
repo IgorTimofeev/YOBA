@@ -3,13 +3,9 @@
 #include <optional>
 
 #include <YOBA/UI/keyboard/generic.h>
-#include <YOBA/UI/keyboard/button.h>
-#include <YOBA/UI/keyboard/buttonsLayout.h>
-#include <YOBA/UI/keyboard/keyboardLayout.h>
+#include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/fontElement.h>
 #include <YOBA/UI/shapes/rectangle.h>
-#include <YOBA/UI/layout.h>
-#include <YOBA/UI/button.h>
 
 namespace YOBA {
 	class Keyboard;
@@ -109,7 +105,6 @@ namespace YOBA {
 			std::optional<std::function<KeyboardLayout*()>> _numericLayoutBuilder = std::nullopt;
 
 			Rectangle _backgroundPanel = Rectangle();
-			KeyboardButtonsLayout _buttonsLayout;
 
 			uint8_t _horizontalKeySpacing = 1;
 			uint8_t _verticalKeySpacing = 1;

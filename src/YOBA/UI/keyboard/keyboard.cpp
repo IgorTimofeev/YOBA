@@ -1,14 +1,11 @@
 #include <YOBA/UI/keyboard/keyboard.h>
-#include <YOBA/UI/application.h>
+#include <YOBA/UI/keyboard/layout.h>
 
 namespace YOBA {
 	// ----------------------------- Keyboard -----------------------------
 
-	Keyboard::Keyboard() :
-		_buttonsLayout(this)
-	{
+	Keyboard::Keyboard() {
 		*this += &_backgroundPanel;
-		*this += &_buttonsLayout;
 	}
 
 	Keyboard::~Keyboard() {
@@ -19,7 +16,7 @@ namespace YOBA {
 		if (!_layout)
 			return;
 
-		_buttonsLayout.removeChildren();
+		this->removeChild(_layout);
 
 		delete _layout;
 	}
@@ -93,20 +90,8 @@ namespace YOBA {
 		if (!_layout)
 			return;
 
-		for (size_t rowIndex = 0; rowIndex < _layout->keys.size(); rowIndex++) {
-			const auto& layoutRow = _layout->keys[rowIndex];
-
-			for (size_t columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
-				const auto button = layoutRow[columnIndex];
-
-				button->assignKeyboard(this, rowIndex, columnIndex);
-
-				if (!button->canBeAdded())
-					continue;
-
-				_buttonsLayout += button;
-			}
-		}
+		*this += _layout;
+		_layout->assignKeyboard(this);
 	}
 
 	uint8_t Keyboard::getLayoutOptions() const {
@@ -157,8 +142,14 @@ namespace YOBA {
 		if (!_layout)
 			return;
 
-		for (const auto element : _buttonsLayout) {
-			dynamic_cast<KeyboardButton*>(element)->updateFromCase();
+		for (size_t rowIndex = 0; rowIndex < _layout->getButtons().size(); rowIndex++) {
+			const auto& layoutRow =  _layout->getButtons()[rowIndex];
+
+			for (size_t columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
+				const auto button = layoutRow[columnIndex];
+
+				button->updateFromCase();
+			}
 		}
 	}
 

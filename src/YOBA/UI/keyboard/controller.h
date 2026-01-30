@@ -1,15 +1,9 @@
 #pragma once
 
 #include <optional>
-#include <cstdint>
 
 #include <YOBA/UI/keyboard/keyboard.h>
 
-#include <YOBA/main/key.h>
-#include <YOBA/main/events/keyEvent.h>
-
-#include <YOBA/UI/traits/fontElement.h>
-#include <YOBA/UI/shapes/rectangle.h>
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/button.h>
 #include <YOBA/UI/relativeStackLayout.h>

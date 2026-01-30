@@ -3,6 +3,10 @@
 #include <vector>
 
 #include <YOBA/UI/keyboard/button.h>
+#include <YOBA/UI/shapes/rectangle.h>
+#include <YOBA/UI/layout.h>
+
+#include <YOBA/UI/keyboard/button.h>
 #include <YOBA/main/key.h>
 #include <YOBA/UI/layout.h>
 
@@ -10,11 +14,20 @@ namespace YOBA {
 	class Keyboard;
 	class KeyboardButton;
 
-	class KeyboardLayout {
+	class KeyboardLayout : public Layout {
 		public:
 			explicit KeyboardLayout(const std::vector<std::vector<KeyboardButton*>>& keys);
 
-			std::vector<std::vector<KeyboardButton*>> keys;
+			void assignKeyboard(Keyboard* keyboard);
+			const std::vector<std::vector<KeyboardButton*>>& getButtons() const;
+
+		protected:
+			Size onMeasure(const Size& availableSize) override;
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
+
+		private:
+			std::vector<std::vector<KeyboardButton*>> _buttons;
+			Keyboard* _keyboard = nullptr;
 	};
 
 	class NumericKeyboardLayout : public KeyboardLayout {
