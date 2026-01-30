@@ -8,80 +8,20 @@
 namespace YOBA {
 	class ScrollBar : public Control, public OrientationElement, public CornerRadiusElement {
 		public:
-			uint16_t getPosition() const {
-				return position;
-			}
+			uint16_t getPosition() const;
+			void setPosition(const uint16_t value);
 
-			void setPosition(const uint16_t value) {
-				position = value;
+			uint16_t getViewportSize() const;
+			void setViewportSize(const uint16_t value);
 
-				invalidate();
-			}
+			uint16_t getContentSize() const;
+			void setContentSize(const uint16_t value);
 
-			uint16_t getViewportSize() const {
-				return viewportSize;
-			}
-
-			void setViewportSize(const uint16_t value) {
-				viewportSize = value;
-
-				invalidate();
-			}
-
-			uint16_t getContentSize() const {
-				return contentSize;
-			}
-
-			void setContentSize(const uint16_t value) {
-				contentSize = value;
-
-				invalidate();
-			}
-
-			const Color* getThumbColor() const {
-				return thumbColor;
-			}
-
-			void setThumbColor(const Color* value) {
-				thumbColor = value;
-
-				invalidate();
-			}
+			const Color* getThumbColor() const;
+			void setThumbColor(const Color* value);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
-				// Thumb
-				if (!thumbColor)
-					return;
-
-				const auto size = static_cast<uint16_t>(static_cast<uint64_t>(bounds.getHeight()) * static_cast<uint64_t>(viewportSize) / static_cast<uint64_t>(contentSize));
-				const auto renderPos = static_cast<uint16_t>(static_cast<uint64_t>(bounds.getHeight()) * static_cast<uint64_t>(position) / static_cast<uint64_t>(contentSize));
-
-				if (getOrientation() == Orientation::horizontal) {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX() + renderPos,
-							bounds.getY(),
-							size,
-							bounds.getHeight()
-						),
-						getCornerRadius(),
-						thumbColor
-					);
-				}
-				else {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX(),
-							bounds.getY() + renderPos,
-							bounds.getWidth(),
-							size
-						),
-						getCornerRadius(),
-						thumbColor
-					);
-				}
-			}
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 		private:
 			uint16_t position = 0;

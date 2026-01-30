@@ -1,190 +1,40 @@
 #pragma once
 
-#include <algorithm>
-#include <YOBA/UI/control.h>
+#include <limits>
+
 #include <YOBA/main/events/pointerEvent.h>
-#include <YOBA/main/events/pinchEvent.h>
-#include <YOBA/main/math.h>
+#include <YOBA/UI/control.h>
+#include <YOBA/UI/traits/valueElement.h>
 
 namespace YOBA {
-	class Slider : public Control {
+	class Slider : public Control, public ValueElement<uint16_t> {
 		public:
-			Callback<> valueChanged;
+			constexpr static uint16_t valueMax = std::numeric_limits<uint16_t>::max();
 
-			const Color* getTrackColor() const {
-				return _trackColor;
-			}
+			const Color* getTrackColor() const;
+			void setTrackColor(const Color* value);
 
-			void setTrackColor(const Color* value) {
-				_trackColor = value;
+			const Color* getFillColor() const;
+			void setFillColor(const Color* value);
 
-				invalidateRender();
-			}
+			const Color* getHandleColor() const;
+			void setHandleColor(const Color* value);
 
-			const Color* getFillColor() const {
-				return _fillColor;
-			}
+			uint8_t getTrackSize() const;
+			void setTrackSize(const uint8_t value);
 
-			void setFillColor(const Color* value) {
-				_fillColor = value;
+			uint8_t getTrackCornerRadius() const;
+			void setTrackCornerRadius(const uint8_t value);
 
-				invalidateRender();
-			}
+			uint8_t getHandleSize() const;
+			void setHandleSize(const uint8_t value);
 
-			const Color* getHandleColor() const {
-				return _handleColor;
-			}
-
-			void setHandleColor(const Color* value) {
-				_handleColor = value;
-
-				invalidateRender();
-			}
-
-			uint8_t getTrackSize() const {
-				return _trackSize;
-			}
-
-			void setTrackSize(const uint8_t value) {
-				_trackSize = value;
-
-				invalidateRender();
-			}
-
-			uint8_t getTrackCornerRadius() const {
-				return _trackCornerRadius;
-			}
-
-			void setTrackCornerRadius(const uint8_t value) {
-				_trackCornerRadius = value;
-
-				invalidateRender();
-			}
-
-			uint8_t getHandleSize() const {
-				return _handleSize;
-			}
-
-			void setHandleSize(const uint8_t value) {
-				_handleSize = value;
-
-				invalidateRender();
-			}
-
-			uint8_t getHandleCornerRadius() const {
-				return _handleCornerRadius;
-			}
-
-			void setHandleCornerRadius(const uint8_t value) {
-				_handleCornerRadius = value;
-
-				invalidateRender();
-			}
-
-			uint16_t getValue() const {
-				return _value;
-			}
-
-			void setValue(const uint16_t value) {
-				if (value == _value)
-					return;
-
-				_value = value;
-
-				onValueChanged();
-				valueChanged();
-
-				invalidateRender();
-			}
+			uint8_t getHandleCornerRadius() const;
+			void setHandleCornerRadius(const uint8_t value);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
-				const auto handleHalf = _handleSize / 2;
-				const auto trackY = bounds.getY() + handleHalf - _trackSize / 2;
-				const auto handleCenterLocal = handleHalf + static_cast<uint16_t>(std::round(_value * (bounds.getWidth() - bounds.getHeight()) / 0xFFFF));
-
-				// Fill
-				if (_value > 0 && _fillColor) {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX(),
-							trackY,
-							handleCenterLocal,
-							_trackSize
-						),
-						_trackCornerRadius,
-						_fillColor
-					);
-				}
-
-				// Track
-				if (_value < 0xFFFF && _trackColor) {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX() + handleCenterLocal,
-							trackY,
-							bounds.getWidth() - handleCenterLocal,
-							_trackSize
-						),
-						_trackCornerRadius,
-						_trackColor
-					);
-				}
-
-				// Handle
-				if (_handleColor) {
-					if (_handleSize == bounds.getHeight() && _handleCornerRadius == handleHalf) {
-						renderer->renderFilledCircle(
-							Point(
-								bounds.getX() + handleCenterLocal,
-								bounds.getY() + handleHalf
-							),
-							_handleCornerRadius,
-							_handleColor
-						);
-					}
-					else {
-						renderer->renderFilledRectangle(
-							Bounds(
-								bounds.getX() + handleCenterLocal - handleHalf,
-								bounds.getY(),
-								_handleSize,
-								bounds.getHeight()
-							),
-							_handleCornerRadius,
-							_handleColor
-						);
-					}
-				}
-			}
-
-			void onEvent(Event* event) override {
-				if (event->getTypeID() == PointerDownEvent::typeID) {
-					setCaptured(true);
-					
-					if (isFocused()) {
-						updateValueFromEvent(reinterpret_cast<PointerDownEvent*>(event));
-					}
-					else {
-						setFocused(true);
-					}
-					
-					event->setHandled(true);
-				}
-				else if (event->getTypeID() == PointerDragEvent::typeID) {
-					updateValueFromEvent(reinterpret_cast<PointerDragEvent*>(event));
-
-					event->setHandled(true);
-				}
-				else if (event->getTypeID() == PointerUpEvent::typeID) {
-					setCaptured(false);
-					event->setHandled(true);
-				}
-			}
-
-			virtual void onValueChanged() {
-
-			}
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onEvent(Event* event) override;
 
 		private:
 			uint8_t _trackSize = 4;
@@ -197,18 +47,6 @@ namespace YOBA {
 			const Color* _fillColor = nullptr;
 			const Color* _handleColor = nullptr;
 
-			uint16_t _value = 0xFFFF;
-			
-			void updateValueFromEvent(PointerEvent* event) {
-				const auto& bounds = getBounds();
-				
-				const auto localX = std::clamp<int32_t>(
-					event->getPosition().getX() - bounds.getX(),
-					0,
-					bounds.getWidth()
-				);
-				
-				setValue(localX * 0xFFFF / bounds.getWidth());
-			}
+			void updateValueFromEvent(const PointerEvent* event);
 	};
 }

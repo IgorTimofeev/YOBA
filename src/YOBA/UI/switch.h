@@ -3,112 +3,28 @@
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/activeElement.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>
-#include <YOBA/main/events/pointerEvent.h>
 
 namespace YOBA {
 	class Switch : public Control, public ActiveElement, public CornerRadiusElement {
 		public:
 			Switch() = default;
-
-			explicit Switch(const bool checked) {
-				setActive(checked);
-			}
+			Switch(const bool checked);
 
 			Callback<> isActiveChanged {};
 
-			const Color* getTrackColor() const {
-				return _trackColor;
-			}
+			const Color* getTrackColor() const;
+			void setTrackColor(const Color* value);
 
-			void setTrackColor(const Color* value) {
-				_trackColor = value;
+			const Color* getCheckedColor() const;
+			void setCheckedColor(const Color* value);
 
-				invalidateRender();
-			}
-
-			const Color* getCheckedColor() const {
-				return _checkedColor;
-			}
-
-			void setCheckedColor(const Color* value) {
-				_checkedColor = value;
-
-				invalidateRender();
-			}
-
-			const Color* getHandleColor() const {
-				return _handleColor;
-			}
-
-			void setHandleColor(const Color* value) {
-				_handleColor = value;
-
-				invalidateRender();
-			}
+			const Color* getHandleColor() const;
+			void setHandleColor(const Color* value);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
-				const uint16_t handleHalf = bounds.getHeight() / 2;
-				const uint16_t handleOffset = isActive() ? bounds.getWidth() - bounds.getHeight() : 0;
-				const uint16_t handleOffsetCenter = handleOffset + handleHalf;
-
-				// Checked
-				if (handleOffset > 0 && _checkedColor) {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX(),
-							bounds.getY(),
-							handleOffsetCenter + handleHalf,
-							bounds.getHeight()
-						),
-						getCornerRadius(),
-						_checkedColor
-					);
-				}
-
-				// Track
-				if (handleOffset + bounds.getHeight() < bounds.getX2() && _trackColor) {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX() + handleOffsetCenter - handleHalf,
-							bounds.getY(),
-							bounds.getWidth() - handleOffsetCenter + handleHalf,
-							bounds.getHeight()
-						),
-						getCornerRadius(),
-						_trackColor
-					);
-				}
-
-				// Handle
-				if (_handleColor) {
-					renderer->renderFilledRectangle(
-						Bounds(
-							bounds.getX() + handleOffset,
-							bounds.getY(),
-							bounds.getHeight(),
-							bounds.getHeight()
-						),
-						getCornerRadius(),
-						_handleColor
-					);
-				}
-			}
-
-			void onEvent(Event* event) override {
-				if (event->getTypeID() != PointerUpEvent::typeID)
-					return;
-
-				setActive(!isActive());
-
-				event->setHandled(true);
-			}
-
-			void onIsActiveChanged() override {
-				ActiveElement::onIsActiveChanged();
-
-				isActiveChanged();
-			}
+			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onEvent(Event* event) override;
+			void onIsActiveChanged() override;
 
 		private:
 			const Color* _trackColor = nullptr;
