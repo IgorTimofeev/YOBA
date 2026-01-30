@@ -5,10 +5,8 @@
 #include <YOBA/UI/traits/valueElement.h>
 
 namespace YOBA {
-	class ProgressBar : public Control, public CornerRadiusElement, public ValueElement<uint16_t> {
+	class ProgressBar : public Control, public CornerRadiusElement, public ValueElement<float> {
 		public:
-			constexpr static uint16_t valueMax = std::numeric_limits<uint16_t>::max();
-
 			const Color* getTrackColor() const;
 			void setTrackColor(const Color* value);
 

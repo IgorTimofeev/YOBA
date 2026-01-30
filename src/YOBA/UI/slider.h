@@ -40,23 +40,23 @@ namespace YOBA {
 			void setValue(const float value) override;
 			float getValueFactor() const;
 
-			float getTickInterval() const;
-			void setTickInterval(const float value);
+			uint8_t getTickQuantity() const;
+			void setTickQuantity(const uint8_t value);
 
 			const Color* getTickColor() const;
 			void setTickColor(const Color* value);
 
-			uint8_t getSmallTickLength() const;
-			void setSmallTickLength(const uint8_t value);
+			uint8_t getSmallTickLineLength() const;
+			void setSmallTickLineLength(const uint8_t value);
 
-			uint8_t getBigTickLength() const;
-			void setBigTickLength(const uint8_t value);
+			uint8_t getBigTickLineLength() const;
+			void setBigTickLineLength(const uint8_t value);
 
 			uint8_t getTickOffset() const;
 			void setTickOffset(const uint8_t value);
 
-			uint8_t getBigTickIndex() const;
-			void setBigTickIndex(const uint8_t value);
+			uint8_t getBigTickStep() const;
+			void setBigTickStep(const uint8_t value);
 
 			uint8_t getTickLabelOffset() const;
 			void setTickLabelOffset(const uint8_t value);
@@ -94,14 +94,14 @@ namespace YOBA {
 			const Color* _handleColor = nullptr;
 
 			// Tick
-			float _tickInterval = 1.0f;
-			uint8_t _bigTickIndex = 1;
-			uint8_t _tickOffset = 1;
-			uint8_t _smallTickLength = 2;
-			uint8_t _bigTickLength = 4;
+			uint8_t _tickQuantity = 10;
+			uint8_t _bigTickStep = 5;
+			uint8_t _tickOffset = 0;
+			uint8_t _smallTickLineLength = 3;
+			uint8_t _bigTickLineLength = 5;
 			const Color* _tickColor = nullptr;
 
-			uint8_t _tickLabelOffset = 1;
+			uint8_t _tickLabelOffset = 2;
 			const Font* _tickLabelFont = nullptr;
 			std::function<std::wstring_view(float)> _tickLabelBuilder = percentTickLabelBuilder;
 

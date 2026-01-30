@@ -95,12 +95,12 @@ namespace YOBA {
 		return (getValue() - _valueMinimum) / (_valueMaximum - _valueMinimum);
 	}
 
-	float Slider::getTickInterval() const {
-		return _tickInterval;
+	uint8_t Slider::getTickQuantity() const {
+		return _tickQuantity;
 	}
 
-	void Slider::setTickInterval(const float value) {
-		_tickInterval = value;
+	void Slider::setTickQuantity(const uint8_t value) {
+		_tickQuantity = value;
 	}
 
 	const Color* Slider::getTickColor() const {
@@ -111,20 +111,20 @@ namespace YOBA {
 		_tickColor = value;
 	}
 
-	uint8_t Slider::getSmallTickLength() const {
-		return _smallTickLength;
+	uint8_t Slider::getSmallTickLineLength() const {
+		return _smallTickLineLength;
 	}
 
-	void Slider::setSmallTickLength(const uint8_t value) {
-		_smallTickLength = value;
+	void Slider::setSmallTickLineLength(const uint8_t value) {
+		_smallTickLineLength = value;
 	}
 
-	uint8_t Slider::getBigTickLength() const {
-		return _bigTickLength;
+	uint8_t Slider::getBigTickLineLength() const {
+		return _bigTickLineLength;
 	}
 
-	void Slider::setBigTickLength(const uint8_t value) {
-		_bigTickLength = value;
+	void Slider::setBigTickLineLength(const uint8_t value) {
+		_bigTickLineLength = value;
 	}
 
 	uint8_t Slider::getTickOffset() const {
@@ -143,12 +143,12 @@ namespace YOBA {
 		_tickLabelOffset = value;
 	}
 
-	uint8_t Slider::getBigTickIndex() const {
-		return _bigTickIndex;
+	uint8_t Slider::getBigTickStep() const {
+		return _bigTickStep;
 	}
 
-	void Slider::setBigTickIndex(const uint8_t value) {
-		_bigTickIndex = value;
+	void Slider::setBigTickStep(const uint8_t value) {
+		_bigTickStep = value;
 	}
 
 	const Font* Slider::getTickLabelFont() const {
@@ -170,14 +170,17 @@ namespace YOBA {
 	}
 
 	Size Slider::onMeasure(const Size& availableSize) {
-		auto height = std::max<uint16_t>(_handleSize.getHeight(), _trackSize);
+		uint16_t height = _handleSize.getHeight() / 2 + _trackSize / 2;
 
-		if (_tickInterval > 0) {
-			height += _tickOffset + _bigTickLength;
+		if (_tickQuantity > 0) {
+			height += _tickOffset + _bigTickLineLength;
 
 			if (_tickLabelFont) {
 				height += _tickLabelOffset + _tickLabelFont->getHeight();
 			}
+		}
+		else {
+			height += _handleSize.getHeight() / 2;
 		}
 
 		return {
@@ -227,22 +230,20 @@ namespace YOBA {
 		}
 
 		// Ticks
-		if (_tickInterval > 0 && _tickColor) {
+		if (_tickQuantity > 0 && _tickColor) {
 			const auto tickY = trackY + _trackSize + _tickOffset;
-
 			float tickXF = bounds.getX() + handleWidthHalf;
 			float tickValue = _valueMinimum;
-			const auto tickPixelInterval = _tickInterval / (_valueMaximum - _valueMinimum) * widthWithoutHandle;
-			uint16_t tickIndex = 0;
-			const auto tickToX = bounds.getX2();
+			const auto tickValueInterval = (_valueMaximum - _valueMinimum) / _tickQuantity;
+			const auto tickPixelInterval = widthWithoutHandle / _tickQuantity;
 
-			while (tickValue <= _valueMaximum) {
-				const auto isBig = tickIndex % _bigTickIndex == 0;
-				const auto lineLength = isBig ? _bigTickLength : _smallTickLength;
+			for (uint16_t tickIndex = 0; tickIndex < _tickQuantity + 1; tickIndex++) {
+				const auto isBig = tickIndex % _bigTickStep == 0;
+				const auto lineLength = isBig ? _bigTickLineLength : _smallTickLineLength;
 
 				// Line
 				renderer->renderVerticalLine(
-					Point(static_cast<int32_t>(tickXF), tickY),
+					Point(static_cast<int32_t>(std::round(tickXF)), tickY),
 					lineLength,
 					_tickColor
 				);
@@ -253,7 +254,7 @@ namespace YOBA {
 
 					renderer->renderString(
 						Point(
-							static_cast<int32_t>(tickXF - _tickLabelFont->getWidth(text) / 2),
+							static_cast<int32_t>(std::round(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) / 2)),
 							tickY + lineLength + _tickLabelOffset
 						),
 						_tickLabelFont,
@@ -262,9 +263,8 @@ namespace YOBA {
 					);
 				}
 
-				tickValue += _tickInterval;
+				tickValue += tickValueInterval;
 				tickXF += tickPixelInterval;
-				tickIndex++;
 			}
 		}
 
