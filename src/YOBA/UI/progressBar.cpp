@@ -37,7 +37,7 @@ namespace YOBA {
 				Bounds(
 					bounds.getX(),
 					bounds.getY(),
-					getValue() * bounds.getWidth() / valueMax,
+					static_cast<uint64_t>(getValue()) * bounds.getWidth() / valueMax,
 					bounds.getHeight()
 				),
 				getCornerRadius(),

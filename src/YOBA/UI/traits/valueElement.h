@@ -9,11 +9,11 @@ namespace YOBA {
 		public:
 			Callback<> valueChanged {};
 
-			TValue getValue() const {
+			virtual TValue getValue() const {
 				return _value;
 			}
 
-			void setValue(const bool value) {
+			virtual void setValue(const TValue value) {
 				if (value == _value)
 					return;
 
