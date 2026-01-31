@@ -2,14 +2,12 @@
 
 #include <cstdint>
 #include <functional>
-#include <YOBA/main/callback.h>
 
 namespace YOBA {
 	class Application;
 
 	class Animation {
 		public:
-			Callback<> completed;
 
 			Animation(Application* application, const uint32_t& duration, const std::function<void(const double &)>& interpolator);
 
@@ -31,6 +29,7 @@ namespace YOBA {
 			Application* _application;
 			uint32_t _duration = 0;
 			uint64_t _start = 0;
+			std::function<void()> _completed = nullptr;
 
 			std::function<void(const double&)> _interpolator;
 	};

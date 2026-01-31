@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/activeElement.h>
 
@@ -10,8 +12,6 @@ namespace YOBA {
 		public:
 			Selector();
 
-			Callback<> selectionChanged;
-			
 			size_t getItemsCount() const;
 
 			SelectorItem* getItemAt(size_t index) const;
@@ -28,12 +28,15 @@ namespace YOBA {
 			void setSelectedIndex(int32_t index);
 			void setItemsLayout(Layout* layout);
 
+			void setOnSelectionChanged(const std::function<void()>& onSelectionChanged);
+
 		protected:
 			virtual void onSelectionChanged();
 
 		private:
 			Layout* _itemsLayout;
 			int32_t _selectedIndex = -1;
+			std::function<void()> _onSelectionChanged = nullptr;
 	};
 
 	class SelectorItem : public Layout, public ActiveElement {

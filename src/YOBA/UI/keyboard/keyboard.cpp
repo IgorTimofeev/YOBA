@@ -192,8 +192,8 @@ namespace YOBA {
 			setCyclicLayoutIndex(getCyclicLayoutIndex());
 		}
 		else if (_layoutOptions & KeyboardLayoutOptions::numeric) {
-			if (getNumericLayoutBuilder().has_value()) {
-				setLayout(getNumericLayoutBuilder().value()());
+			if (getNumericLayoutBuilder()) {
+				setLayout(getNumericLayoutBuilder()());
 			}
 			else {
 				setCyclicLayoutIndex(getCyclicLayoutIndex());
@@ -209,19 +209,19 @@ namespace YOBA {
 		_cyclicLayoutBuilders = builder;
 	}
 
-	const std::optional<std::function<KeyboardLayout*()>>& Keyboard::getCharactersLayoutBuilder() const {
+	const std::function<KeyboardLayout*()>& Keyboard::getCharactersLayoutBuilder() const {
 		return _charactersLayoutBuilder;
 	}
 
-	void Keyboard::setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder) {
+	void Keyboard::setCharactersLayoutBuilder(const std::function<KeyboardLayout*()>& builder) {
 		_charactersLayoutBuilder = builder;
 	}
 	
-	const std::optional<std::function<KeyboardLayout*()>>& Keyboard::getNumericLayoutBuilder() const {
+	const std::function<KeyboardLayout*()>& Keyboard::getNumericLayoutBuilder() const {
 		return _numericLayoutBuilder;
 	}
 
-	void Keyboard::setNumericLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder) {
+	void Keyboard::setNumericLayoutBuilder(const std::function<KeyboardLayout*()>& builder) {
 		_numericLayoutBuilder = builder;
 	}
 

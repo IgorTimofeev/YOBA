@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/UI/control.h>
 #include <YOBA/main/color.h>
 #include <YOBA/main/rendering/renderer.h>
@@ -20,9 +22,6 @@ namespace YOBA {
 		public CornerRadiusElement
 	{
 		public:
-			Callback<> click {};
-			Callback<> isActiveChanged {};
-
 			bool isToggle() const;
 			void setToggle(bool value);
 
@@ -48,10 +47,11 @@ namespace YOBA {
 			const Margin& getContentMargin() const;
 			void setContentMargin(const Margin& contentMargin);
 
+			void setOnClick(const std::function<void()>& onClick);
+
 		protected:
 			void onEvent(Event* event) override;
 			void onPointerOverChanged() override;
-			void onIsActiveChanged() override;
 
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
@@ -71,6 +71,8 @@ namespace YOBA {
 			bool _isToggle = false;
 			bool _pointerWasDown = false;
 			bool _previousIsActive = false;
+
+			std::function<void()> _onClick {};
 
 			void callOnClick();
 	};

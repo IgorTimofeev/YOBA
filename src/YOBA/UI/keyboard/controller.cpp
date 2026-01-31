@@ -13,7 +13,7 @@ namespace YOBA {
 
 	KeyboardControllerLayout* KeyboardController::_controllerLayout = nullptr;
 	Layout* KeyboardController::_targetLayout = nullptr;
-	std::optional<std::function<void(Keyboard*)>> KeyboardController::_onKeyboardShow = std::nullopt;
+	std::function<void(Keyboard*)> KeyboardController::_onKeyboardShow = nullptr;
 
 	void KeyboardController::show(const uint8_t layoutOptions) {
 		if (!_controllerLayout) {
@@ -27,8 +27,8 @@ namespace YOBA {
 			targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);
 
 			// Configuring keyboard
-			if (_onKeyboardShow.has_value())
-				_onKeyboardShow.value()(&_controllerLayout->keyboard);
+			if (_onKeyboardShow)
+				_onKeyboardShow(&_controllerLayout->keyboard);
 
 			*targetLayout += _controllerLayout;
 		}
@@ -53,7 +53,7 @@ namespace YOBA {
 		return _controllerLayout != nullptr;
 	}
 
-	void KeyboardController::setOnShow(const std::optional<std::function<void(Keyboard*)>>& value) {
+	void KeyboardController::setOnShow(const std::function<void(Keyboard*)>& value) {
 		_onKeyboardShow = value;
 	}
 

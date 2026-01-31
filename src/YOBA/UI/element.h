@@ -4,7 +4,6 @@
 #include <limits>
 
 #include <YOBA/system.h>
-#include <YOBA/main/callback.h>
 #include <YOBA/main/margin.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/events/event.h>

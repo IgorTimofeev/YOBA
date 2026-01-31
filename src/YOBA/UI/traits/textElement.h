@@ -17,7 +17,14 @@ namespace YOBA {
 
 				onTextChanged();
 
+				if (_textChanged)
+					_textChanged();
+
 				invalidate();
+			}
+
+			void setOnTextChanged(const std::function<void()>& callback) {
+				_textChanged = callback;
 			}
 
 		protected:
@@ -27,5 +34,6 @@ namespace YOBA {
 
 		private:
 			std::wstring text = std::wstring();
+			std::function<void()> _textChanged = nullptr;
 	};
 }

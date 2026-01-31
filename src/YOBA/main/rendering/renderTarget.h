@@ -4,7 +4,6 @@
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/vector2.h>
 #include <YOBA/main/size.h>
-#include <YOBA/main/callback.h>
 
 #include <cstdint>
 

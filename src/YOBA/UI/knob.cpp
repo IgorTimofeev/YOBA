@@ -47,7 +47,8 @@ namespace YOBA {
 			const auto oldAngle = _angle;
 			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
 
-			rotated(oldAngle, _angle);
+			if (_onRotate)
+				_onRotate(oldAngle, _angle);
 
 			event->setHandled(true);
 		}
@@ -88,5 +89,9 @@ namespace YOBA {
 
 	void Knob::setMiddleColor(const Color* value) {
 		_middleColor = value;
+	}
+
+	void Knob::setOnRotate(const std::function<void(float, float)>& onRotate) {
+		_onRotate = onRotate;
 	}
 }

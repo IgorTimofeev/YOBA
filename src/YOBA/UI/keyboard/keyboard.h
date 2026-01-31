@@ -69,11 +69,11 @@ namespace YOBA {
 			std::vector<std::function<KeyboardLayout*()>>& getCyclicLayoutBuilders();
 			void setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& builder);
 
-			const std::optional<std::function<KeyboardLayout*()>>& getCharactersLayoutBuilder() const;
-			void setCharactersLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder);
+			const std::function<KeyboardLayout*()>& getCharactersLayoutBuilder() const;
+			void setCharactersLayoutBuilder(const std::function<KeyboardLayout*()>& builder);
 
-			const std::optional<std::function<KeyboardLayout*()>>& getNumericLayoutBuilder() const;
-			void setNumericLayoutBuilder(const std::optional<std::function<KeyboardLayout*()>>& builder);
+			const std::function<KeyboardLayout*()>& getNumericLayoutBuilder() const;
+			void setNumericLayoutBuilder(const std::function<KeyboardLayout*()>& builder);
 
 			uint16_t getContinuousTypingDelay() const;
 			void setContinuousTypingDelay(uint16_t value);
@@ -101,8 +101,8 @@ namespace YOBA {
 			uint8_t _cyclicLayoutIndex = 0;
 			KeyboardLayout* _layout = nullptr;
 			std::vector<std::function<KeyboardLayout*()>> _cyclicLayoutBuilders;
-			std::optional<std::function<KeyboardLayout*()>> _charactersLayoutBuilder = std::nullopt;
-			std::optional<std::function<KeyboardLayout*()>> _numericLayoutBuilder = std::nullopt;
+			std::function<KeyboardLayout*()> _charactersLayoutBuilder = nullptr;
+			std::function<KeyboardLayout*()> _numericLayoutBuilder = nullptr;
 
 			Rectangle _backgroundPanel = Rectangle();
 

@@ -23,14 +23,14 @@ namespace YOBA {
 			static void hide();
 			static bool isVisible();
 
-			static void setOnShow(const std::optional<std::function<void(Keyboard*)>>& value);
+			static void setOnShow(const std::function<void(Keyboard*)>& value);
 			static Keyboard* getKeyboard();
 
 			static Layout* getTargetLayout();
 			static void setTargetLayout(Layout* value);
 
 		private:
-			static std::optional<std::function<void(Keyboard*)>> _onKeyboardShow;
+			static std::function<void(Keyboard*)> _onKeyboardShow;
 			static KeyboardControllerLayout* _controllerLayout;
 			static Layout* _targetLayout;
 

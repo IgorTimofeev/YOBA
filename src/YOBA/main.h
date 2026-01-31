@@ -16,7 +16,6 @@
 #include <YOBA/main/font.h>
 #include <YOBA/main/gradient.h>
 #include <YOBA/main/image.h>
-#include <YOBA/main/callback.h>
 
 // Events
 #include <YOBA/main/events/event.h>

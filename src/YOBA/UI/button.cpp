@@ -105,12 +105,6 @@ namespace YOBA {
 		Element::onRender(renderer, bounds);
 	}
 
-	void Button::onIsActiveChanged() {
-		ActiveElement::onIsActiveChanged();
-
-		isActiveChanged();
-	}
-
 	bool Button::isToggle() const {
 		return _isToggle;
 	}
@@ -174,7 +168,8 @@ namespace YOBA {
 	void Button::callOnClick() {
 		onClick();
 
-		click();
+		if (_onClick)
+			_onClick();
 	}
 
 	const Margin& Button::getContentMargin() const {
@@ -185,5 +180,9 @@ namespace YOBA {
 		_contentMargin = contentMargin;
 
 		invalidate();
+	}
+
+	void Button::setOnClick(const std::function<void()>& onClick) {
+		_onClick = onClick;
 	}
 }

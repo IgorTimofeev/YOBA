@@ -70,7 +70,8 @@ namespace YOBA {
 
 		onSelectionChanged();
 
-		selectionChanged();
+		if (_onSelectionChanged)
+			_onSelectionChanged();
 
 		invalidate();
 	}
@@ -85,6 +86,10 @@ namespace YOBA {
 
 	void Selector::setItemsLayout(Layout *layout) {
 		_itemsLayout = layout;
+	}
+
+	void Selector::setOnSelectionChanged(const std::function<void()>& onSelectionChanged) {
+		_onSelectionChanged = onSelectionChanged;
 	}
 
 	// -------------------------------- SelectorItem --------------------------------

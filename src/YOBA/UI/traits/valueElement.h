@@ -1,14 +1,13 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/UI/element.h>
-#include <YOBA/main/callback.h>
 
 namespace YOBA {
 	template<typename TValue>
 	class ValueElement : public virtual Element {
 		public:
-			Callback<> valueChanged {};
-
 			virtual TValue getValue() const {
 				return _value;
 			}
@@ -20,9 +19,15 @@ namespace YOBA {
 				_value = value;
 
 				onValueChanged();
-				valueChanged();
+
+				if (_onValueChanged)
+					_onValueChanged();
 
 				invalidate();
+			}
+
+			void setOnValueChanged(const std::function<void()>& callback) {
+				_onValueChanged = callback;
 			}
 
 		protected:
@@ -32,5 +37,7 @@ namespace YOBA {
 
 		private:
 			TValue _value {};
+
+			std::function<void()> _onValueChanged = nullptr;
 	};
 }

@@ -10,8 +10,6 @@ namespace YOBA {
 			Switch() = default;
 			Switch(const bool checked);
 
-			Callback<> isActiveChanged {};
-
 			const Color* getTrackColor() const;
 			void setTrackColor(const Color* value);
 
@@ -24,7 +22,6 @@ namespace YOBA {
 		protected:
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 			void onEvent(Event* event) override;
-			void onIsActiveChanged() override;
 
 		private:
 			const Color* _trackColor = nullptr;

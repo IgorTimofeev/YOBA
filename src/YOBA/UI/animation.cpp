@@ -30,7 +30,8 @@ namespace YOBA {
 			return true;
 		}
 		else {
-			completed();
+			if (_completed)
+				_completed();
 
 			return false;
 		}

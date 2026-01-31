@@ -331,12 +331,12 @@ namespace YOBA {
 			return;
 
 		Application::getCurrent()->scheduleOnTick([this] {
-			getKeyboard()->setLayout(getKeyboard()->getCharactersLayoutBuilder().value()());
+			getKeyboard()->setLayout(getKeyboard()->getCharactersLayoutBuilder()());
 		});
 	}
 
 	bool CharactersLayoutKeyboardButton::canBeAdded() {
-		return getKeyboard()->getCharactersLayoutBuilder().has_value();
+		return !!getKeyboard()->getCharactersLayoutBuilder();
 	}
 
 	// ----------------------------- DefaultLayoutKeyboardButton -----------------------------

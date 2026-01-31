@@ -191,7 +191,9 @@ namespace YOBA {
 			}
 			
 			onInput(keyUpEvent->getKey(), keyUpEvent->getText());
-			input(keyUpEvent->getKey(), keyUpEvent->getText());
+
+			if (_onInput)
+				_onInput(keyUpEvent->getKey(), keyUpEvent->getText());
 
 			keyUpEvent->setHandled(true);
 		}
@@ -325,6 +327,10 @@ namespace YOBA {
 		setCursorPosition(getCursorPosition() - 1);
 	}
 
+	void TextField::setOnInput(const std::function<void(Key, std::optional<std::wstring_view>)>& callback) {
+		_onInput = callback;
+	}
+
 	size_t TextField::getCursorPosition() const {
 		return _cursorPosition;
 	}
@@ -413,12 +419,6 @@ namespace YOBA {
 		}
 
 		invalidateRender();
-	}
-
-	void TextField::onTextChanged() {
-		TextElement::onTextChanged();
-
-		textChanged();
 	}
 
 	void TextField::setCursorBlinkStateAndTime(const bool value) {

@@ -92,10 +92,4 @@ namespace YOBA {
 
 		event->setHandled(true);
 	}
-
-	void Switch::onIsActiveChanged() {
-		ActiveElement::onIsActiveChanged();
-
-		isActiveChanged();
-	}
 }

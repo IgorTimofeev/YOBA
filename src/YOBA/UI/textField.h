@@ -1,8 +1,8 @@
 #pragma once
 
 #include <optional>
+#include <functional>
 
-#include <YOBA/main/callback.h>
 #include <YOBA/main/rendering/renderer.h>
 #include <YOBA/main/key.h>
 
@@ -22,9 +22,6 @@ namespace YOBA {
 		public FontScaleElement
 	{
 		public:
-			Callback<Key, std::optional<std::wstring_view>> input {};
-			Callback<> textChanged {};
-
 			uint8_t getKeyboardLayoutOptions() const;
 			void setKeyboardLayoutOptions(const uint8_t keyboardLayoutOptions);
 
@@ -76,12 +73,13 @@ namespace YOBA {
 			void insert(std::wstring_view value);
 			void backspace();
 
+			void setOnInput(const std::function<void(Key, std::optional<std::wstring_view>)>& callback);
+
 		protected:
 			void onTick() override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 			void onEvent(Event* event) override;
 			void onFocusChanged() override;
-			void onTextChanged() override;
 
 			virtual void onInput(Key key, std::optional<std::wstring_view> text);
 
@@ -113,6 +111,8 @@ namespace YOBA {
 			std::wstring _placeholder = std::wstring();
 			wchar_t _mask = 0;
 			uint8_t _keyboardLayoutOptions = KeyboardLayoutOptions::text;
+
+			std::function<void(Key, std::optional<std::wstring_view>)> _onInput = nullptr;
 
 			void setCursorBlinkStateAndTime(bool value);
 			void applyContinuousScroll();

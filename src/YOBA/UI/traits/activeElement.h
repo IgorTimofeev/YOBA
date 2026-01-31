@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/UI/element.h>
 
 namespace YOBA {
@@ -17,7 +19,14 @@ namespace YOBA {
 
 				onIsActiveChanged();
 
+				if (_onIsActiveChanged)
+					_onIsActiveChanged();
+
 				invalidate();
+			}
+
+			void setOnIsActiveChanged(const std::function<void()>& callback) {
+				_onIsActiveChanged = callback;
 			}
 
 		protected:
@@ -26,6 +35,8 @@ namespace YOBA {
 			}
 
 		private:
+			std::function<void()> _onIsActiveChanged = nullptr;
+
 			bool _active = false;
 	};
 }
