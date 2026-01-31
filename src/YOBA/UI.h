@@ -24,7 +24,7 @@
 #include <YOBA/UI/sevenSegment.h>
 #include <YOBA/UI/slider.h>
 #include <YOBA/UI/knob.h>
-#include <YOBA/UI/text.h>
+#include <YOBA/UI/textView.h>
 #include <YOBA/UI/textField.h>
 #include <YOBA/UI/imageView.h>
 #include <YOBA/UI/scrollView.h>

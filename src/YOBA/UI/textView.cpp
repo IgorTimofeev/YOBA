@@ -1,24 +1,24 @@
-#include <YOBA/UI/text.h>
+#include <YOBA/UI/textView.h>
 
 namespace YOBA {
-	Text::Text(const Font* font, const Color* foreground) {
+	TextView::TextView(const Font* font, const Color* foreground) {
 		setFont(font);
 		setTextColor(foreground);
 	}
 
-	Text::Text(const std::wstring_view text) {
+	TextView::TextView(const std::wstring_view text) {
 		setText(text);
 	}
 
-	Text::Text(const Color* foreground) {
+	TextView::TextView(const Color* foreground) {
 		setTextColor(foreground);
 	}
 
-	bool Text::isWrappingEnabled() const {
+	bool TextView::isWrappingEnabled() const {
 		return _wrappingEnabled;
 	}
 
-	void Text::setWrappingEnabled(const bool value) {
+	void TextView::setWrappingEnabled(const bool value) {
 		if (value == _wrappingEnabled)
 			return;
 
@@ -28,7 +28,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	Size Text::onMeasure(const Size& availableSize) {
+	Size TextView::onMeasure(const Size& availableSize) {
 		const auto font = getFont();
 
 		if (!font)
@@ -62,7 +62,7 @@ namespace YOBA {
 		};
 	}
 
-	void Text::onRender(Renderer* renderer, const Bounds& bounds) {
+	void TextView::onRender(Renderer* renderer, const Bounds& bounds) {
 		const auto font = getFont();
 
 		if (!font)

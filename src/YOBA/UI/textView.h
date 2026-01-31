@@ -9,12 +9,12 @@
 #include <YOBA/UI/traits/fontScaleElement.h>
 
 namespace YOBA {
-	class Text : public Control, public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
+	class TextView : public Control, public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
 		public:
-			Text() = default;
-			Text(const Font* font, const Color* foreground);
-			Text(const std::wstring_view text);
-			Text(const Color* foreground);
+			TextView() = default;
+			TextView(const Font* font, const Color* foreground);
+			TextView(const std::wstring_view text);
+			TextView(const Color* foreground);
 
 			bool isWrappingEnabled() const;
 			void setWrappingEnabled(const bool value);
