@@ -25,6 +25,9 @@ namespace YOBA {
 
 			T getLength() const;
 			Vector3 normalize() const;
+			Vector3 min(const Vector3& right);
+			Vector3 max(const Vector3& right);
+
 			Vector3 rotateAroundXAxis(const SinAndCos& sinAndCos) const;
 			Vector3 rotateAroundXAxis(float angle) const;
 			Vector3 rotateAroundYAxis(const SinAndCos& sinAndCos) const;
@@ -117,6 +120,24 @@ namespace YOBA {
 			x / length,
 			y / length,
 			z / length
+		};
+	}
+
+	template <typename T>
+	Vector3<T> Vector3<T>::min(const Vector3& right) {
+		return {
+			std::min(x, right.x),
+			std::min(y, right.y),
+			std::min(z, right.z)
+		};
+	}
+
+	template <typename T>
+	Vector3<T> Vector3<T>::max(const Vector3& right) {
+		return {
+			std::max(x, right.x),
+			std::max(y, right.y),
+			std::max(z, right.z)
 		};
 	}
 
