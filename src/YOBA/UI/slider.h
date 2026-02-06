@@ -31,11 +31,11 @@ namespace YOBA {
 			uint8_t getHandleCornerRadius() const;
 			void setHandleCornerRadius(const uint8_t value);
 
-			float getValueMinimum() const;
-			void setValueMinimum(const float value);
+			float getMinimumValue() const;
+			void setMinimumValue(const float value);
 
-			float getValueMaximum() const;
-			void setValueMaximum(const float value);
+			float getMaximumValue() const;
+			void setMaximumValue(const float value);
 
 			void setValue(const float value) override;
 			float getValueFactor() const;
@@ -77,8 +77,8 @@ namespace YOBA {
 
 		private:
 			// Value
-			float _valueMinimum = 0.0f;
-			float _valueMaximum = 1.0f;
+			float _minimumValue = 0.0f;
+			float _maximumValue = 1.0f;
 
 			// Track
 			uint8_t _trackSize = 4;

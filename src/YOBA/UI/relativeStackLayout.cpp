@@ -26,7 +26,7 @@ namespace YOBA {
 			tryRemoveRelativeSize(child);
 		}
 		else {
-			_elementSizes.insert(std::pair(child, value));
+			_elementSizes.insert_or_assign(child, value);
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace YOBA {
 					: availableSize.getWidth() - (visibleCount - 1) * getSpacing();
 
 				availableSizeForRelativeElements =
-				availableSizeWithoutSpacing >= autoSizeSum
+					availableSizeWithoutSpacing >= autoSizeSum
 					? availableSizeWithoutSpacing - autoSizeSum
 					: 0;
 
@@ -106,22 +106,17 @@ namespace YOBA {
 						relativeIndex++;
 
 						if (relativeIndex < relativeCount) {
-							childSize = availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum);
+							childSize = static_cast<uint16_t>(static_cast<float>(availableSizeForRelativeElements) * (childRelativeSize / relativeSizesSum));
 							usedRelativeSize += childSize;
 						}
 						else {
 							childSize =
-							availableSizeForRelativeElements >= usedRelativeSize
+								availableSizeForRelativeElements >= usedRelativeSize
 								? availableSizeForRelativeElements - usedRelativeSize
 								: 0;
 						}
 
-						child->measure(
-							Size(
-								childSize,
-								availableSize.getHeight()
-							)
-						);
+						child->measure(Size(childSize, availableSize.getHeight()));
 					}
 					// Auto, already measured
 					else {
@@ -162,12 +157,12 @@ namespace YOBA {
 				}
 
 				availableSizeWithoutSpacing =
-				visibleCount < 2
+					visibleCount < 2
 					? availableSize.getHeight()
 					: availableSize.getHeight() - (visibleCount - 1) * getSpacing();
 
 				availableSizeForRelativeElements =
-				availableSizeWithoutSpacing >= autoSizeSum
+					availableSizeWithoutSpacing >= autoSizeSum
 					? availableSizeWithoutSpacing - autoSizeSum
 					: 0;
 
@@ -183,22 +178,17 @@ namespace YOBA {
 						relativeIndex++;
 
 						if (relativeIndex < relativeCount) {
-							childSize = availableSizeForRelativeElements * (childRelativeSize / relativeSizesSum);
+							childSize = static_cast<uint16_t>(static_cast<float>(availableSizeForRelativeElements) * (childRelativeSize / relativeSizesSum));
 							usedRelativeSize += childSize;
 						}
 						else {
 							childSize =
-							availableSizeForRelativeElements >= usedRelativeSize
+								availableSizeForRelativeElements >= usedRelativeSize
 								? availableSizeForRelativeElements - usedRelativeSize
 								: 0;
 						}
 
-						child->measure(
-							Size(
-								availableSize.getWidth(),
-								childSize
-							)
-						);
+						child->measure(Size(availableSize.getWidth(), childSize));
 					}
 					// Auto, already measured
 					else {

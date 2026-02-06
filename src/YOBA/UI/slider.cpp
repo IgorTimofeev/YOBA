@@ -71,28 +71,28 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	float Slider::getValueMinimum() const {
-		return _valueMinimum;
+	float Slider::getMinimumValue() const {
+		return _minimumValue;
 	}
 
-	void Slider::setValueMinimum(const float value) {
-		_valueMinimum = value;
+	void Slider::setMinimumValue(const float value) {
+		_minimumValue = value;
 	}
 
-	float Slider::getValueMaximum() const {
-		return _valueMaximum;
+	float Slider::getMaximumValue() const {
+		return _maximumValue;
 	}
 
-	void Slider::setValueMaximum(const float value) {
-		_valueMaximum = value;
+	void Slider::setMaximumValue(const float value) {
+		_maximumValue = value;
 	}
 
 	void Slider::setValue(const float value) {
-		ValueElement::setValue(std::clamp(value, _valueMinimum, _valueMaximum));
+		ValueElement::setValue(std::clamp(value, _minimumValue, _maximumValue));
 	}
 
 	float Slider::getValueFactor() const {
-		return (getValue() - _valueMinimum) / (_valueMaximum - _valueMinimum);
+		return (getValue() - _minimumValue) / (_maximumValue - _minimumValue);
 	}
 
 	uint8_t Slider::getTickQuantity() const {
@@ -232,8 +232,8 @@ namespace YOBA {
 		if (_tickQuantity > 0 && _tickColor) {
 			const auto tickY = trackY + _trackSize + _tickOffset;
 			float tickXF = bounds.getX() + handleWidthHalf;
-			float tickValue = _valueMinimum;
-			const auto tickValueInterval = (_valueMaximum - _valueMinimum) / _tickQuantity;
+			float tickValue = _minimumValue;
+			const auto tickValueInterval = (_maximumValue - _minimumValue) / _tickQuantity;
 			const auto tickPixelInterval = static_cast<float>(bounds.getWidth() - handleWidthHalf) / _tickQuantity;
 
 			for (uint16_t tickIndex = 0; tickIndex < _tickQuantity + 1; tickIndex++) {
@@ -340,7 +340,7 @@ namespace YOBA {
 			bounds.getWidth()
 		);
 
-		setValue(_valueMinimum + static_cast<float>(localX) / bounds.getWidth() * (_valueMaximum - _valueMinimum));
+		setValue(_minimumValue + static_cast<float>(localX) / bounds.getWidth() * (_maximumValue - _minimumValue));
 	}
 
 	std::wstring_view Slider::percentTickLabelBuilder(const float value) {
