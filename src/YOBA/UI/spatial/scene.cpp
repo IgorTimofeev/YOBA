@@ -20,6 +20,9 @@ namespace YOBA::spatial {
 
 		std::vector<Vector3F> _screenSpaceVertices {};
 
+		const auto xCenter = static_cast<float>(bounds.getXCenter());
+		const auto yCenter = static_cast<float>(bounds.getYCenter());
+
 		for (const auto element : _elements) {
 			if (!element->isVisible())
 				continue;
@@ -110,8 +113,8 @@ namespace YOBA::spatial {
 				// screenX = x * screenWidth / 2 / tan(FOV / 2) / y
 
 				_screenSpaceVertices.push_back(Vector3F(
-					static_cast<float>(bounds.getXCenter()) + _pivotOffset.getX() + vertex.getX() * projectionPlaneDistance / vertex.getY(),
-					static_cast<float>(bounds.getYCenter()) + _pivotOffset.getY() - vertex.getZ() * projectionPlaneDistance / vertex.getY(),
+					xCenter + _pivotOffset.getX() + vertex.getX() * projectionPlaneDistance / vertex.getY(),
+					yCenter + _pivotOffset.getY() - vertex.getZ() * projectionPlaneDistance / vertex.getY(),
 					vertex.getY()
 				));
 			}
