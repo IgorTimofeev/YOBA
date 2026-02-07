@@ -65,7 +65,7 @@ namespace YOBA {
 	}
 	
 	template<typename T>
-	int getDigitCount(T number) {
+	constexpr uint8_t getDigitCount(T number) {
 		if (number < 0)
 			number = -number;
 		

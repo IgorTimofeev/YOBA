@@ -2,10 +2,10 @@
 
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/orientationElement.h>
-#include <YOBA/UI/traits/spacingElement.h>
+#include <YOBA/UI/traits/gapElement.h>
 
 namespace YOBA {
-	class StackLayout : public Layout, public OrientationElement, public SpacingElement {
+	class StackLayout : public Layout, public OrientationElement, public GapElement {
 		public:
 			StackLayout() = default;
 			StackLayout(const Orientation orientation);

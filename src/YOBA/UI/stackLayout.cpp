@@ -6,12 +6,12 @@ namespace YOBA {
 	}
 
 	StackLayout::StackLayout(const uint16_t spacing) {
-		setSpacing(spacing);
+		setGap(spacing);
 	}
 
 	StackLayout::StackLayout(const Orientation orientation, const uint16_t spacing) {
 		setOrientation(orientation);
-		setSpacing(spacing);
+		setGap(spacing);
 	}
 
 	Size StackLayout::onMeasure(const Size& availableSize) {
@@ -34,7 +34,7 @@ namespace YOBA {
 
 					const auto& childSize = child->getMeasuredSize();
 
-					result.setWidth(result.getWidth() + childSize.getWidth() + getSpacing());
+					result.setWidth(result.getWidth() + childSize.getWidth() + getGap());
 
 					if (childSize.getHeight() > result.getHeight())
 						result.setHeight(childSize.getHeight());
@@ -43,7 +43,7 @@ namespace YOBA {
 				}
 
 				if (visibleChildrenCount > 0)
-					result.setWidth(result.getWidth() - getSpacing());
+					result.setWidth(result.getWidth() - getGap());
 
 				break;
 			}
@@ -64,13 +64,13 @@ namespace YOBA {
 					if (childSize.getWidth() > result.getWidth())
 						result.setWidth(childSize.getWidth());
 
-					result.setHeight(result.getHeight() + childSize.getHeight() + getSpacing());
+					result.setHeight(result.getHeight() + childSize.getHeight() + getGap());
 
 					visibleChildrenCount++;
 				}
 
 				if (visibleChildrenCount > 0)
-					result.setHeight(result.getHeight() - getSpacing());
+					result.setHeight(result.getHeight() - getGap());
 
 				break;
 			}
@@ -101,7 +101,7 @@ namespace YOBA {
 			        	bounds.getHeight()
 		            ));
 
-					position += childSize.getWidth() + getSpacing();
+					position += childSize.getWidth() + getGap();
 				}
 
 				break;
@@ -122,7 +122,7 @@ namespace YOBA {
 						childSize.getHeight()
 					));
 
-					position += childSize.getHeight() + getSpacing();
+					position += childSize.getHeight() + getGap();
 				}
 
 				break;

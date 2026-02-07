@@ -87,7 +87,7 @@ namespace YOBA {
 				availableSizeWithoutSpacing =
 				visibleCount < 2
 					? availableSize.getWidth()
-					: availableSize.getWidth() - (visibleCount - 1) * getSpacing();
+					: availableSize.getWidth() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
 					availableSizeWithoutSpacing >= autoSizeSum
@@ -128,11 +128,11 @@ namespace YOBA {
 					if (childMeasuredSize.getHeight() > result.getHeight())
 						result.setHeight(childMeasuredSize.getHeight());
 
-					result.setWidth(result.getWidth() + childMeasuredSize.getWidth() + getSpacing());
+					result.setWidth(result.getWidth() + childMeasuredSize.getWidth() + getGap());
 				}
 
 				if (visibleCount > 1)
-					result.setWidth(result.getWidth() - getSpacing());
+					result.setWidth(result.getWidth() - getGap());
 
 				break;
 			}
@@ -159,7 +159,7 @@ namespace YOBA {
 				availableSizeWithoutSpacing =
 					visibleCount < 2
 					? availableSize.getHeight()
-					: availableSize.getHeight() - (visibleCount - 1) * getSpacing();
+					: availableSize.getHeight() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
 					availableSizeWithoutSpacing >= autoSizeSum
@@ -200,11 +200,11 @@ namespace YOBA {
 					if (childMeasuredSize.getWidth() > result.getWidth())
 						result.setWidth(childMeasuredSize.getWidth());
 
-					result.setHeight(result.getHeight() + childMeasuredSize.getHeight() + getSpacing());
+					result.setHeight(result.getHeight() + childMeasuredSize.getHeight() + getGap());
 				}
 
 				if (visibleCount > 1)
-					result.setHeight(result.getHeight() - getSpacing());
+					result.setHeight(result.getHeight() - getGap());
 
 				break;
 			}
@@ -258,7 +258,7 @@ namespace YOBA {
 				availableSizeWithoutSpacing =
 				visibleCount < 2
 					? bounds.getWidth()
-					: bounds.getWidth() - (visibleCount - 1) * getSpacing();
+					: bounds.getWidth() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
 				availableSizeWithoutSpacing >= autoSizeSum
@@ -300,7 +300,7 @@ namespace YOBA {
 						              bounds.getHeight()
 					              ));
 
-					position += childSize + getSpacing();
+					position += childSize + getGap();
 				}
 
 				break;
@@ -328,7 +328,7 @@ namespace YOBA {
 				availableSizeWithoutSpacing =
 				visibleCount < 2
 					? bounds.getHeight()
-					: bounds.getHeight() - (visibleCount - 1) * getSpacing();
+					: bounds.getHeight() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
 				availableSizeWithoutSpacing >= autoSizeSum
@@ -371,7 +371,7 @@ namespace YOBA {
 						              childSize
 					              ));
 
-					position += childSize + getSpacing();
+					position += childSize + getGap();
 				}
 
 				break;
