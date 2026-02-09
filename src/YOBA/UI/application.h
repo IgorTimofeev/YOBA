@@ -47,7 +47,9 @@ namespace YOBA {
 
 			void addHID(HID* hid);
 
-			void scheduleOnTick(const std::function<void()>& task);
+			void invokeOnNextTick(const std::function<void()>& func);
+
+			void requestSecondRenderPass();
 
 			uint32_t getTickDeltaTime() const;
 			uint32_t getLayoutDeltaTime() const;
@@ -68,6 +70,7 @@ namespace YOBA {
 			static Application* _current;
 			Renderer* _renderer = nullptr;
 
+			bool _secondRenderPassRequested = false;
 			bool _renderInvalidated = true;
 			bool _measureInvalidated = true;
 			Element* _capturedElement = nullptr;
@@ -75,7 +78,7 @@ namespace YOBA {
 
 			std::vector<Animation*> _animations {};
 			std::vector<HID*> _HIDs {};
-			std::vector<std::function<void()>> _scheduledOnTickTasks {};
+			std::vector<std::function<void()>> _functionToCallOnNextTick {};
 
 			uint32_t _HIDTickDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;

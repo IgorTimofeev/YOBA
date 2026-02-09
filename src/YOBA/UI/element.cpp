@@ -21,6 +21,9 @@ namespace YOBA {
 	}
 
 	void Element::setVisible(const bool value) {
+		if (value == _isVisible)
+			return;
+
 		_isVisible = value;
 
 		invalidate();
@@ -31,6 +34,9 @@ namespace YOBA {
 	}
 
 	void Element::setEnabled(const bool value) {
+		if (value == _isEnabled)
+			return;
+
 		_isEnabled = value;
 
 		invalidate();

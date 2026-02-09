@@ -254,7 +254,7 @@ namespace YOBA {
 			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
 			const auto callHandlersOnThis = callHandlers && (!capturedElement || capturedElement == this);
 
-			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis: %d", callHandlersOnThis);
+			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 1: %d", callHandlersOnThis);
 
 			// Before
 			if (callHandlersOnThis)
@@ -279,6 +279,8 @@ namespace YOBA {
 					i--;
 				}
 			}
+
+			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 2: %d", callHandlersOnThis);
 
 			// After
 			if (callHandlersOnThis)

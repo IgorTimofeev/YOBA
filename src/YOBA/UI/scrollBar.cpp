@@ -6,6 +6,9 @@ namespace YOBA {
 	}
 
 	void ScrollBar::setPosition(const uint16_t value) {
+		if (value == position)
+			return;
+
 		position = value;
 
 		invalidate();
@@ -16,6 +19,9 @@ namespace YOBA {
 	}
 
 	void ScrollBar::setViewportSize(const uint16_t value) {
+		if (value == viewportSize)
+			return;
+
 		viewportSize = value;
 
 		invalidate();
@@ -26,6 +32,9 @@ namespace YOBA {
 	}
 
 	void ScrollBar::setContentSize(const uint16_t value) {
+		if (value == contentSize)
+			return;
+
 		contentSize = value;
 
 		invalidate();
@@ -36,6 +45,9 @@ namespace YOBA {
 	}
 
 	void ScrollBar::setThumbColor(const Color* value) {
+		if (value == thumbColor)
+			return;
+
 		thumbColor = value;
 
 		invalidate();

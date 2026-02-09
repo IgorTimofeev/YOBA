@@ -94,11 +94,11 @@ namespace YOBA {
 		onTick();
 
 		// Running scheduled tasks
-		if (!_scheduledOnTickTasks.empty()) {
-			for (const auto& task : _scheduledOnTickTasks)
+		if (!_functionToCallOnNextTick.empty()) {
+			for (const auto& task : _functionToCallOnNextTick)
 				task();
 
-			_scheduledOnTickTasks.clear();
+			_functionToCallOnNextTick.clear();
 		}
 
 		// Playing animations
@@ -115,10 +115,9 @@ namespace YOBA {
 			time = system::getTime();
 
 			measure(getSize());
+			_measureInvalidated = false;
 
 			_layoutDeltaTime = system::getTime() - time;
-
-			_measureInvalidated = false;
 		}
 
 		// Render pass
@@ -128,6 +127,9 @@ namespace YOBA {
 			// Rendering children
 			Layout::render(_renderer, getBounds());
 
+			if (_secondRenderPassRequested)
+				Layout::render(_renderer, getBounds());
+
 			_renderDeltaTime = system::getTime() - time;
 
 			// Flushing screen buffer
@@ -135,9 +137,9 @@ namespace YOBA {
 
 			_renderer->flush();
 
-			_flushDeltaTime = system::getTime() - time;
-
 			_renderInvalidated = false;
+
+			_flushDeltaTime = system::getTime() - time;
 		}
 	}
 
@@ -195,8 +197,12 @@ namespace YOBA {
 		_HIDs.push_back(hid);
 	}
 
-	void Application::scheduleOnTick(const std::function<void()>& task) {
-		_scheduledOnTickTasks.push_back(task);
+	void Application::invokeOnNextTick(const std::function<void()>& func) {
+		_functionToCallOnNextTick.push_back(func);
+	}
+
+	void Application::requestSecondRenderPass() {
+		_secondRenderPassRequested = true;
 	}
 
 	uint32_t Application::getTickDeltaTime() const {

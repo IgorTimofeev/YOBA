@@ -68,18 +68,26 @@ namespace YOBA {
 	constexpr uint8_t getDigitCount(T number) {
 		if (number < 0)
 			number = -number;
-		
-		return
-			(number < 10 ? 1 :
-			 (number < 100 ? 2 :
-			  (number < 1000 ? 3 :
-			   (number < 10000 ? 4 :
-				(number < 100000 ? 5 :
-				 (number < 1000000 ? 6 :
-				  (number < 10000000 ? 7 :
-				   (number < 100000000 ? 8 :
-					(number < 1000000000 ? 9 :
-					 10)))))))));
+
+		if (number < 10) return 1;
+		else if (number < 100) return 2;
+		else if (number < 1000) return 3;
+		else if (number < 10000) return 4;
+		else if (number < 100000) return 5;
+		else if (number < 1000000) return 6;
+		else if (number < 10000000) return 7;
+		else if (number < 100000000) return 8;
+		else if (number < 1000000000) return 9;
+		else if (number < 10000000000ULL) return 10;
+		else if (number < 100000000000ULL) return 11;
+		else if (number < 1000000000000ULL) return 12;
+		else if (number < 10000000000000ULL) return 13;
+		else if (number < 100000000000000ULL) return 14;
+		else if (number < 1000000000000000ULL) return 15;
+		else if (number < 10000000000000000ULL) return 16;
+		else if (number < 100000000000000000ULL) return 17;
+		else if (number < 1000000000000000000ULL) return 18;
+		else return 19;
 	}
 	
 	template<typename TValue, typename TAddend>

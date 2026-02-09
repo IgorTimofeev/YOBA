@@ -55,13 +55,11 @@ namespace YOBA {
 
 			Size _contentMeasuredSize {};
 			Bounds _contentBounds {};
-			const Element* _scrollLaterTo = nullptr;
+			const Element* _scrollIntoViewLaterTo = nullptr;
 
 			bool _horizontalScrollPossible = false;
 			bool _verticalScrollPossible = false;
 
 			Point _lastTouchPosition { -1, -1 };
-
-			void onRenderPass(Renderer* renderer, const Bounds& bounds);
 	};
 }
