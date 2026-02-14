@@ -13,7 +13,7 @@
 #include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
-	FT6336UTouchPanel::FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin) :
+	FT6336UTouchPanel::FT6336UTouchPanel(const uint8_t sdaPin, const uint8_t sclPin, const int8_t rstPin, const uint8_t intPin) :
 		_sdaPin(sdaPin),
 		_sclPin(sclPin),
 		_rstPin(rstPin),
@@ -46,7 +46,7 @@ namespace YOBA {
 		return (readByte(FT6336U_ADDR_DEVICE_MODE) & 0x70) >> 4;
 	}
 
-	void FT6336UTouchPanel::write_device_mode(DEVICE_MODE_Enum mode) {
+	void FT6336UTouchPanel::write_device_mode(const DEVICE_MODE_Enum mode) {
 		writeByte(FT6336U_ADDR_DEVICE_MODE, (mode & 0x07) << 4);
 	}
 
@@ -141,7 +141,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_CTRL);
 	}
 
-	void FT6336UTouchPanel::write_ctrl_mode(CTRL_MODE_Enum mode) {
+	void FT6336UTouchPanel::write_ctrl_mode(const CTRL_MODE_Enum mode) {
 		writeByte(FT6336U_ADDR_CTRL, mode);
 	}
 
@@ -162,7 +162,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_RADIAN_VALUE);
 	}
 
-	void FT6336UTouchPanel::write_radian_value(uint8_t val) {
+	void FT6336UTouchPanel::write_radian_value(const uint8_t val) {
 		writeByte(FT6336U_ADDR_RADIAN_VALUE, val);
 	}
 
@@ -170,7 +170,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_OFFSET_LEFT_RIGHT);
 	}
 
-	void FT6336UTouchPanel::write_offset_left_right(uint8_t val) {
+	void FT6336UTouchPanel::write_offset_left_right(const uint8_t val) {
 		writeByte(FT6336U_ADDR_OFFSET_LEFT_RIGHT, val);
 	}
 
@@ -178,7 +178,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_OFFSET_UP_DOWN);
 	}
 
-	void FT6336UTouchPanel::write_offset_up_down(uint8_t val) {
+	void FT6336UTouchPanel::write_offset_up_down(const uint8_t val) {
 		writeByte(FT6336U_ADDR_OFFSET_UP_DOWN, val);
 	}
 
@@ -186,7 +186,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_DISTANCE_LEFT_RIGHT);
 	}
 
-	void FT6336UTouchPanel::write_distance_left_right(uint8_t val) {
+	void FT6336UTouchPanel::write_distance_left_right(const uint8_t val) {
 		writeByte(FT6336U_ADDR_DISTANCE_LEFT_RIGHT, val);
 	}
 
@@ -194,7 +194,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_DISTANCE_UP_DOWN);
 	}
 
-	void FT6336UTouchPanel::write_distance_up_down(uint8_t val) {
+	void FT6336UTouchPanel::write_distance_up_down(const uint8_t val) {
 		writeByte(FT6336U_ADDR_DISTANCE_UP_DOWN, val);
 	}
 
@@ -202,7 +202,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_DISTANCE_ZOOM);
 	}
 
-	void FT6336UTouchPanel::write_distance_zoom(uint8_t val) {
+	void FT6336UTouchPanel::write_distance_zoom(const uint8_t val) {
 		writeByte(FT6336U_ADDR_DISTANCE_ZOOM, val);
 	}
 
@@ -223,7 +223,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_G_MODE);
 	}
 
-	void FT6336UTouchPanel::write_g_mode(G_MODE_Enum mode) {
+	void FT6336UTouchPanel::write_g_mode(const G_MODE_Enum mode) {
 		writeByte(FT6336U_ADDR_G_MODE, mode);
 	}
 
@@ -247,7 +247,7 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_STATE);
 	}
 
-	uint8_t FT6336UTouchPanel::readByte(uint8_t addr) {
+	uint8_t FT6336UTouchPanel::readByte(const uint8_t addr) {
 		uint8_t buffer = addr;
 
 		system::I2C::write(&buffer, 1);
@@ -256,7 +256,7 @@ namespace YOBA {
 		return buffer;
 	}
 
-	void FT6336UTouchPanel::writeByte(uint8_t addr, uint8_t data) {
+	void FT6336UTouchPanel::writeByte(const uint8_t addr, const uint8_t data) {
 		const uint8_t buffer[2] = {
 			addr,
 			data

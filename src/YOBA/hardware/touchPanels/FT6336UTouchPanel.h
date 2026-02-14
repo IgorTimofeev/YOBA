@@ -15,10 +15,6 @@
 #include <YOBA/main/rendering/renderTarget.h>
 
 namespace YOBA {
-	class Application;
-}
-
-namespace YOBA {
 	#define I2C_ADDR_FT6336U 0x38
 
 	// Touch Parameter
@@ -80,12 +76,8 @@ namespace YOBA {
 	#define FT6336U_ADDR_RELEASE_CODE_ID    0xAF
 	#define FT6336U_ADDR_STATE              0xBC
 
+	class Application;
 
-	/**************************************************************************/
-	/*!
-		@brief  FT6336U I2C CTP controller driver
-	*/
-	/**************************************************************************/
 	class FT6336UTouchPanel : public TouchPanel {
 		public:
 			FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin);
