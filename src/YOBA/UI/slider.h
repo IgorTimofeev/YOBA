@@ -40,8 +40,8 @@ namespace YOBA {
 			void setValue(const float value) override;
 			float getValueFactor() const;
 
-			uint8_t getTickQuantity() const;
-			void setTickQuantity(const uint8_t value);
+			uint8_t getTickCount() const;
+			void setTickCount(const uint8_t value);
 
 			const Color* getTickColor() const;
 			void setTickColor(const Color* value);
@@ -94,7 +94,7 @@ namespace YOBA {
 			const Color* _handleColor = nullptr;
 
 			// Tick
-			uint8_t _tickQuantity = 10;
+			uint8_t _tickCount = 10;
 			uint8_t _bigTickStep = 5;
 			uint8_t _tickOffset = 0;
 			uint8_t _smallTickLineLength = 3;
