@@ -128,7 +128,7 @@ namespace YOBA {
 			if (i == getDigitCount() - 1) {
 				if (_signVisible) {
 					if (value >= 0) {
-						renderPlus(renderer, position);
+						renderEmpty(renderer, position);
 					}
 					else {
 						renderMinus(renderer, position);
