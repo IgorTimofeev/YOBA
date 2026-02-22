@@ -1,19 +1,19 @@
 #include <YOBA/UI/imageView.h>
 
 namespace YOBA {
-	ImageView::ImageView(const Image* image) {
+	ImageView::ImageView(const Image& image) {
 		setImage(image);
 	}
 
-	const Image* ImageView::getImage() const {
-		return _image;
+	const Image& ImageView::getImage() const {
+		return *_image;
 	}
 
-	void ImageView::setImage(const Image* value) {
-		if (value == _image)
+	void ImageView::setImage(const Image& value) {
+		if (&value == _image)
 			return;
 
-		_image = value;
+		_image = &value;
 		setSize(_image->getSize());
 
 		invalidateRender();
@@ -21,15 +21,13 @@ namespace YOBA {
 
 	Size ImageView::onMeasure(const Size& availableSize) {
 		return
-		getImage()
-			? getImage()->getSize()
-			: Size(0, 0);
+			_image
+			? _image->getSize()
+			: Size();
 	}
 
 	void ImageView::onRender(Renderer& renderer, const Bounds& bounds) {
-		if (!getImage())
-			return;
-
-		renderer.renderImage(getBounds().getPosition(), getImage());
+		if (_image)
+			renderer.renderImage(getBounds().getPosition(), *_image);
 	}
 }

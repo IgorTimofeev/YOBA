@@ -60,7 +60,7 @@ namespace YOBA {
 		}
 	}
 
-	void MonochromeRenderer::renderImageNative(const Point& point, const Image* image) {
+	void MonochromeRenderer::renderImageNative(const Point& point, const Image& image) {
 
 	}
 }

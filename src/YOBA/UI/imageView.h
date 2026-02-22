@@ -7,10 +7,10 @@ namespace YOBA {
 	class ImageView : public Control {
 		public:
 			ImageView() = default;
-			ImageView(const Image* image);
+			ImageView(const Image& image);
 
-			const Image* getImage() const;
-			void setImage(const Image* value);
+			const Image& getImage() const;
+			void setImage(const Image& value);
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;

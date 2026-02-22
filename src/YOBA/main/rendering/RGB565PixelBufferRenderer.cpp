@@ -75,23 +75,23 @@ namespace YOBA {
 		}
 	}
 
-	void RGB565PixelBufferRenderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getFlags() & ImageFlags::RGB565))
+	void RGB565PixelBufferRenderer::renderImageNative(const Point& point, const Image& image) {
+		if (!(image.getFlags() & ImageFlags::RGB565))
 			return;
 
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
-		const size_t pixelBufferScanlineLength = getTarget().getSize().getWidth() - image->getSize().getWidth();
+		const size_t pixelBufferScanlineLength = getTarget().getSize().getWidth() - image.getSize().getWidth();
 
 		// With alpha
-		if (image->getFlags() & ImageFlags::alpha1Bit) {
-			auto bitmapPtr = image->getBitmap();
+		if (image.getFlags() & ImageFlags::alpha1Bit) {
+			auto bitmapPtr = image.getBitmap();
 
 			uint8_t bitmapBitIndex = 0;
 
 			// 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
 			// ---- ---- | ---- -+-- | ---- ---- | ---- -2--
-			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
-				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+			for (uint16_t y = 0; y < image.getSize().getHeight(); y++) {
+				for (uint16_t x = 0; x < image.getSize().getWidth(); x++) {
 					// Non-transparent
 					if (*bitmapPtr & (1 << bitmapBitIndex)) {
 						bitmapBitIndex++;
@@ -131,10 +131,10 @@ namespace YOBA {
 		}
 		// Without
 		else {
-			auto bitmapPtr = reinterpret_cast<const uint16_t*>(image->getBitmap());
+			auto bitmapPtr = reinterpret_cast<const uint16_t*>(image.getBitmap());
 
-			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
-				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+			for (uint16_t y = 0; y < image.getSize().getHeight(); y++) {
+				for (uint16_t x = 0; x < image.getSize().getWidth(); x++) {
 					*pixelBufferPtr = *bitmapPtr;
 
 					pixelBufferPtr++;

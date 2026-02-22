@@ -159,8 +159,8 @@ namespace YOBA {
 		renderFilledTriangle(topLeft, bottomLeft, bottomRight, color);
 	}
 
-	void Renderer::renderImage(const Point& point, const Image* image) {
-		if (getViewport().intersects(Bounds(point, image->getSize())))
+	void Renderer::renderImage(const Point& point, const Image& image) {
+		if (getViewport().intersects(Bounds(point, image.getSize())))
 			renderImageNative(point, image);
 	}
 
