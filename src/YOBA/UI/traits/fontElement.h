@@ -6,15 +6,15 @@
 namespace YOBA {
 	class FontElement : public virtual Element {
 		public:
-			const Font* getFont() const {
-				return _font;
+			const Font& getFont() const {
+				return *_font;
 			}
 
-			void setFont(const Font* value) {
-				if (value == _font)
+			void setFont(const Font& value) {
+				if (&value == _font)
 					return;
 
-				_font = value;
+				_font = &value;
 
 				invalidate();
 			}

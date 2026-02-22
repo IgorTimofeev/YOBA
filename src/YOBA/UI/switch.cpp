@@ -84,12 +84,12 @@ namespace YOBA {
 		}
 	}
 
-	void Switch::onEvent(Event* event) {
-		if (event->getTypeID() != PointerUpEvent::typeID)
+	void Switch::onEvent(Event& event) {
+		if (event.getTypeID() != PointerUpEvent::typeID)
 			return;
 
 		setActive(!isActive());
 
-		event->setHandled(true);
+		event.setHandled(true);
 	}
 }

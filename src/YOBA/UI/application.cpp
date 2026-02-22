@@ -147,7 +147,7 @@ namespace YOBA {
 		}
 	}
 
-	void Application::pushEvent(Event* event) {
+	void Application::pushEvent(Event& event) {
 		handleEvent(event, getBounds(), true);
 	}
 

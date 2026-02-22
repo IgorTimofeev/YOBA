@@ -18,7 +18,7 @@ namespace YOBA {
 
 			float getLength() const;
 
-			static bool isPinch(const Event* event);
+			static bool isPinch(const Event& event);
 
 		private:
 			Point _position1, _position2;

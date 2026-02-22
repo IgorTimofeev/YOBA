@@ -5,8 +5,8 @@
 #include "application.h"
 
 namespace YOBA {
-	void Button::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+	void Button::onEvent(Event& event) {
+		if (event.getTypeID() == PointerDownEvent::typeID) {
 			// ESP_LOGI("Button", "PointerDownEvent");
 
 			_pointerWasDown = true;
@@ -14,9 +14,9 @@ namespace YOBA {
 			setActive(true);
 			setFocused(true);
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event.getTypeID() == PointerUpEvent::typeID) {
 			// ESP_LOGI("Button", "PointerUpEvent");
 			// ESP_LOGI("Button", "isCaptured(): %d", isCaptured());
 			// ESP_LOGI("Button", "isPointerOver(): %d", isPointerOver());
@@ -38,10 +38,10 @@ namespace YOBA {
 
 			setFocused(false);
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
 		else if (PointerEvent::isPointer(event)) {
-			event->setHandled(true);
+			event.setHandled(true);
 		}
 	}
 
@@ -83,23 +83,21 @@ namespace YOBA {
 		}
 
 		// Text
-		const auto font = getFont();
+		const auto& font = getFont();
 
-		if (font) {
-			color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
+		color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
 
-			if (color) {
-				renderer.renderString(
-					Point(
-						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + getContentMargin().getLeft() - getContentMargin().getRight(),
-						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()
-					),
-					font,
-					color,
-					getText(),
-					getFontScale()
-				);
-			}
+		if (color) {
+			renderer.renderText(
+				Point(
+					bounds.getXCenter() - font.getWidth(getText(), getFontScale()) / 2 + getContentMargin().getLeft() - getContentMargin().getRight(),
+					bounds.getYCenter() - font.getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()
+				),
+				font,
+				color,
+				getText(),
+				getFontScale()
+			);
 		}
 
 		Element::onRender(renderer, bounds);

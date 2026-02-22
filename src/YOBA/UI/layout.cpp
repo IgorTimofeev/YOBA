@@ -15,11 +15,11 @@ namespace YOBA {
 			element->onTick();
 	}
 
-	void Layout::onEventBeforeChildren(Event* event) {
+	void Layout::onEventBeforeChildren(Event& event) {
 
 	}
 
-	void Layout::onEventAfterChildren(Event* event) {
+	void Layout::onEventAfterChildren(Event& event) {
 
 	}
 
@@ -150,7 +150,7 @@ namespace YOBA {
 		return *this;
 	}
 
-	void Layout::handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) {
+	void Layout::handleEvent(Event& event, const Bounds& parentBounds, bool callHandlers) {
 		// ESP_LOGI("layout.handleEvent()", "callHandlers: %d", callHandlers);
 
 		const auto isPointer = PointerEvent::isPointer(event);
@@ -167,11 +167,11 @@ namespace YOBA {
 					currentBounds = parentBounds.getIntersection(currentBounds);
 
 					if (isPointer) {
-						contains = currentBounds.contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
+						contains = currentBounds.contains(reinterpret_cast<PointerEvent&>(event).getPosition());
 					}
 					else {
-						const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-						contains = currentBounds.contains(pinchEvent->getPosition1()) && currentBounds.contains(pinchEvent->getPosition2());
+						const auto& pinchEvent = reinterpret_cast<PinchEvent&>(event);
+						contains = currentBounds.contains(pinchEvent.getPosition1()) && currentBounds.contains(pinchEvent.getPosition2());
 					}
 				}
 				else {
@@ -185,8 +185,8 @@ namespace YOBA {
 					: nullptr;
 
 				setPointerOver(
-					event->getTypeID() != PointerUpEvent::typeID
-					&& event->getTypeID() != PinchUpEvent::typeID
+					event.getTypeID() != PointerUpEvent::typeID
+					&& event.getTypeID() != PinchUpEvent::typeID
 					&& contains
 					&& (
 						!capturedElement
@@ -221,7 +221,7 @@ namespace YOBA {
 			if (callCurrentHandlers) {
 				onEventBeforeChildren(event);
 
-				if (event->isHandled()) {
+				if (event.isHandled()) {
 					callHandlers = false;
 					callCurrentHandlers = false;
 				}
@@ -234,7 +234,7 @@ namespace YOBA {
 				while (true) {
 					_children[i]->handleEvent(event, currentBounds, callHandlers);
 
-					if (event->isHandled()) {
+					if (event.isHandled()) {
 						callHandlers = false;
 						callCurrentHandlers = false;
 					}
@@ -267,7 +267,7 @@ namespace YOBA {
 			if (callHandlersOnThis)
 				onEventBeforeChildren(event);
 
-			if (event->isHandled())
+			if (event.isHandled())
 				return;
 
 			// Children
@@ -277,7 +277,7 @@ namespace YOBA {
 				while (true) {
 					_children[i]->handleEvent(event, currentBounds, callHandlers);
 
-					if (event->isHandled())
+					if (event.isHandled())
 						return;
 
 					if (i == 0)

@@ -8,14 +8,14 @@ namespace YOBA {
 
 	}
 
-	bool ScreenEvent::isScreen(const Event* event) {
+	bool ScreenEvent::isScreen(const Event& event) {
 		return
-			event->getTypeID() == PointerDownEvent::typeID
-			|| event->getTypeID() == PointerDragEvent::typeID
-			|| event->getTypeID() == PointerUpEvent::typeID
+			event.getTypeID() == PointerDownEvent::typeID
+			|| event.getTypeID() == PointerDragEvent::typeID
+			|| event.getTypeID() == PointerUpEvent::typeID
 
-			|| event->getTypeID() == PinchDownEvent::typeID
-			|| event->getTypeID() == PinchDragEvent::typeID
-			|| event->getTypeID() == PinchUpEvent::typeID;
+			|| event.getTypeID() == PinchDownEvent::typeID
+			|| event.getTypeID() == PinchDragEvent::typeID
+			|| event.getTypeID() == PinchUpEvent::typeID;
 	}
 }

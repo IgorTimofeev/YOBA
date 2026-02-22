@@ -109,7 +109,7 @@ namespace YOBA {
 			const Bounds& getBounds() const;
 
 		protected:
-			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
+			virtual void handleEvent(Event& event, const Bounds& parentBounds, bool callHandlers) = 0;
 
 			virtual void onAddedToParent(Layout& parent);
 			virtual void onRemovedFromParent(Layout& parent);

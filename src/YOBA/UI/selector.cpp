@@ -87,8 +87,8 @@ namespace YOBA {
 
 	// -------------------------------- SelectorItem --------------------------------
 
-	void SelectorItem::onEventBeforeChildren(Event* event) {
-		if (event->getTypeID() != PointerUpEvent::typeID)
+	void SelectorItem::onEventBeforeChildren(Event& event) {
+		if (event.getTypeID() != PointerUpEvent::typeID)
 			return;
 
 		setFocused(true);
@@ -96,7 +96,7 @@ namespace YOBA {
 		if (getSelector())
 			getSelector()->setSelectedIndex(getSelector()->getIndexOfItem(*this));
 
-		event->setHandled(true);
+		event.setHandled(true);
 	}
 
 	Selector* SelectorItem::getSelector() const {

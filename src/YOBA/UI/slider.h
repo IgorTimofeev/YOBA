@@ -62,7 +62,7 @@ namespace YOBA {
 			void setTickLabelOffset(const uint8_t value);
 
 			const Font* getTickLabelFont() const;
-			void setTickLabelFont(const Font* value);
+			void setTickLabelFont(const Font& value);
 
 			const std::function<std::wstring_view(float)>& getTickLabelBuilder() const;
 			void setTickLabelBuilder(const std::function<std::wstring_view(float)>& value);
@@ -73,7 +73,7 @@ namespace YOBA {
 		protected:
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
-			void onEvent(Event* event) override;
+			void onEvent(Event& event) override;
 
 		private:
 			// Value
@@ -105,6 +105,6 @@ namespace YOBA {
 			const Font* _tickLabelFont = nullptr;
 			std::function<std::wstring_view(float)> _tickLabelBuilder = percentTickLabelBuilder;
 
-			void updateValueFromEvent(const PointerEvent* event);
+			void updateValueFromEvent(const PointerEvent& event);
 	};
 }

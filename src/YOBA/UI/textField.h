@@ -78,7 +78,7 @@ namespace YOBA {
 		protected:
 			void onTick() override;
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
-			void onEvent(Event* event) override;
+			void onEvent(Event& event) override;
 			void onFocusChanged() override;
 
 			virtual void onInput(Key key, std::optional<std::wstring_view> text);

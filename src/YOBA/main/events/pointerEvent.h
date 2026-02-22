@@ -13,7 +13,7 @@ namespace YOBA {
 			const Point& getPosition() const;
 			void setPosition(const Point& position);
 
-			static bool isPointer(const Event* event);
+			static bool isPointer(const Event& event);
 
 		private:
 			Point _position;

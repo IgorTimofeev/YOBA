@@ -8,6 +8,6 @@ namespace YOBA {
 		public:
 			explicit ScreenEvent(uint16_t typeID);
 
-			static bool isScreen(const Event* event);
+			static bool isScreen(const Event& event);
 	};
 }

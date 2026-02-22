@@ -341,7 +341,7 @@ namespace YOBA {
 
 	void Element::scrollIntoView() {
 		ScrollIntoViewEvent event { this };
-		Application::getCurrent().pushEvent(&event);
+		Application::getCurrent().pushEvent(event);
 	}
 
 	void Element::startAnimation(Animation* animation) {

@@ -57,8 +57,8 @@ namespace YOBA {
 			* @param string Template-based pointer to first character in text
 			* @param fontScale Scale factor of text, defaults to 1
 			*/
-			void renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale = 1);
-			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
+			void renderText(const Point& point, const Font& font, const Color* color, std::wstring_view string, uint8_t fontScale = 1);
+			void renderChar(const Point& point, const Font& font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
 
 			virtual void flush() = 0;
 
@@ -80,7 +80,7 @@ namespace YOBA {
 			static float fastAtan2(const float y, const float x);
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
-			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
-			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale);
+			void renderMissingGlyph(const Point& point, const Font& font, const Color* color, uint8_t fontScale);
+			inline void renderGlyph(const Point& point, const Font& font, const Color* color, const Glyph* glyph, uint8_t fontScale);
 	};
 }

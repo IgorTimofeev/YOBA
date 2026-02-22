@@ -29,7 +29,7 @@ namespace YOBA {
 
 		protected:
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
-			void onEvent(Event* event) override;
+			void onEvent(Event& event) override;
 
 		private:
 			float _angle = 0;

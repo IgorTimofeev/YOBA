@@ -50,7 +50,7 @@ namespace YOBA {
 			void setOnClick(const std::function<void()>& onClick);
 
 		protected:
-			void onEvent(Event* event) override;
+			void onEvent(Event& event) override;
 			void onPointerOverChanged() override;
 
 			void onRender(Renderer& renderer, const Bounds& bounds) override;

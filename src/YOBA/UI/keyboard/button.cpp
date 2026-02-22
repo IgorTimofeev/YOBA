@@ -71,11 +71,11 @@ namespace YOBA {
 
 			if (isActive()) {
 				auto event = KeyDownEvent(key, getTextFromCase());
-				Application::getCurrent().pushEvent(&event);
+				Application::getCurrent().pushEvent(event);
 			}
 			else {
 				auto event = KeyUpEvent(key, getTextFromCase());
-				Application::getCurrent().pushEvent(&event);
+				Application::getCurrent().pushEvent(event);
 			}
 		});
 	}

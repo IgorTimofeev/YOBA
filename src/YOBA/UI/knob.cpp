@@ -37,25 +37,25 @@ namespace YOBA {
 		}
 	}
 
-	void Knob::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+	void Knob::onEvent(Event& event) {
+		if (event.getTypeID() == PointerDownEvent::typeID) {
 			setCaptured(true);
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
+		else if (event.getTypeID() == PointerDragEvent::typeID) {
 			const auto oldAngle = _angle;
-			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
+			_angle = reinterpret_cast<PointerDragEvent&>(event).getPosition().getRotationFloat(getBounds().getCenter()) - toRadians(90);
 
 			if (_onRotate)
 				_onRotate(oldAngle, _angle);
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event.getTypeID() == PointerUpEvent::typeID) {
 			setCaptured(false);
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
 	}
 

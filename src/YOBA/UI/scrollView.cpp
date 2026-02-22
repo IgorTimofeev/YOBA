@@ -258,13 +258,13 @@ namespace YOBA {
 			_lastTouchPosition.setX(-1);
 	}
 
-	void ScrollView::onEventBeforeChildren(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
-			_lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
+	void ScrollView::onEventBeforeChildren(Event& event) {
+		if (event.getTypeID() == PointerDownEvent::typeID) {
+			_lastTouchPosition = reinterpret_cast<PointerDownEvent&>(event).getPosition();
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
+		else if (event.getTypeID() == PointerDragEvent::typeID) {
 			if (_lastTouchPosition.getX() >= 0) {
-				const auto position = reinterpret_cast<PointerDragEvent*>(event)->getPosition();
+				const auto position = reinterpret_cast<PointerDragEvent&>(event).getPosition();
 				const auto pointerDelta = position - _lastTouchPosition;
 
 				if (isCaptured()) {
@@ -282,15 +282,15 @@ namespace YOBA {
 				}
 			}
 		}
-		else if (event->getTypeID() == ScrollIntoViewEvent::typeID) {
-			_scrollIntoViewLaterTo = reinterpret_cast<ScrollIntoViewEvent*>(event)->getElement();
+		else if (event.getTypeID() == ScrollIntoViewEvent::typeID) {
+			_scrollIntoViewLaterTo = reinterpret_cast<ScrollIntoViewEvent&>(event).getElement();
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
 	}
 
-	void ScrollView::onEventAfterChildren(Event* event) {
-		if (event->getTypeID() == PointerUpEvent::typeID) {
+	void ScrollView::onEventAfterChildren(Event& event) {
+		if (event.getTypeID() == PointerUpEvent::typeID) {
 			setCaptured(false);
 		}
 	}

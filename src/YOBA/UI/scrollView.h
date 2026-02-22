@@ -43,8 +43,8 @@ namespace YOBA {
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
 			void onCaptureChanged() override;
-			void onEventBeforeChildren(Event* event) override;
-			void onEventAfterChildren(Event* event) override;
+			void onEventBeforeChildren(Event& event) override;
+			void onEventAfterChildren(Event& event) override;
 
 		private:
 			ScrollBar _horizontalScrollBar {};

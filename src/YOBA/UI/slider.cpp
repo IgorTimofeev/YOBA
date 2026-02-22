@@ -155,8 +155,8 @@ namespace YOBA {
 		return _tickLabelFont;
 	}
 
-	void Slider::setTickLabelFont(const Font* value) {
-		_tickLabelFont = value;
+	void Slider::setTickLabelFont(const Font& value) {
+		_tickLabelFont = &value;
 
 		invalidate();
 	}
@@ -263,9 +263,9 @@ namespace YOBA {
 						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) + 1);
 					}
 
-					renderer.renderString(
+					renderer.renderText(
 						Point(textX, tickY + lineLength + _tickLabelOffset),
-						_tickLabelFont,
+						*_tickLabelFont,
 						_tickColor,
 						text
 					);
@@ -307,35 +307,35 @@ namespace YOBA {
 		return _trackSize;
 	}
 
-	void Slider::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+	void Slider::onEvent(Event& event) {
+		if (event.getTypeID() == PointerDownEvent::typeID) {
 			setCaptured(true);
 
 			if (isFocused()) {
-				updateValueFromEvent(reinterpret_cast<PointerDownEvent*>(event));
+				updateValueFromEvent(reinterpret_cast<PointerDownEvent&>(event));
 			}
 			else {
 				setFocused(true);
 			}
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
-			updateValueFromEvent(reinterpret_cast<PointerDragEvent*>(event));
+		else if (event.getTypeID() == PointerDragEvent::typeID) {
+			updateValueFromEvent(reinterpret_cast<PointerDragEvent&>(event));
 
-			event->setHandled(true);
+			event.setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event.getTypeID() == PointerUpEvent::typeID) {
 			setCaptured(false);
-			event->setHandled(true);
+			event.setHandled(true);
 		}
 	}
 
-	void Slider::updateValueFromEvent(const PointerEvent* event) {
+	void Slider::updateValueFromEvent(const PointerEvent& event) {
 		const auto& bounds = getBounds();
 
 		const auto localX = std::clamp<int32_t>(
-			event->getPosition().getX() - bounds.getX(),
+			event.getPosition().getX() - bounds.getX(),
 			0,
 			bounds.getWidth()
 		);

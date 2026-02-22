@@ -6,7 +6,7 @@
 #include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
-	void Control::handleEvent(Event* event, const Bounds& parentBounds, const bool callHandlers) {
+	void Control::handleEvent(Event& event, const Bounds& parentBounds, const bool callHandlers) {
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
 
@@ -19,11 +19,11 @@ namespace YOBA {
 					currentBounds = parentBounds.getIntersection(currentBounds);
 
 					if (isPointer) {
-						contains = currentBounds.contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
+						contains = currentBounds.contains(reinterpret_cast<PointerEvent&>(event).getPosition());
 					}
 					else {
-						const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-						contains = currentBounds.contains(pinchEvent->getPosition1()) && currentBounds.contains(pinchEvent->getPosition2());
+						const auto& pinchEvent = reinterpret_cast<PinchEvent&>(event);
+						contains = currentBounds.contains(pinchEvent.getPosition1()) && currentBounds.contains(pinchEvent.getPosition2());
 					}
 				}
 				else {
@@ -36,8 +36,8 @@ namespace YOBA {
 					: nullptr;
 
 				setPointerOver(
-					event->getTypeID() != PointerUpEvent::typeID
-					&& event->getTypeID() != PinchUpEvent::typeID
+					event.getTypeID() != PointerUpEvent::typeID
+					&& event.getTypeID() != PinchUpEvent::typeID
 					&& contains
 					&& (
 						!capturedElement
@@ -77,8 +77,8 @@ namespace YOBA {
 		}
 	}
 
-	void Control::onEvent(Event* event) {
+	void Control::onEvent(Event& event) {
 		if (ScreenEvent::isScreen(event))
-			event->setHandled(true);
+			event.setHandled(true);
 	}
 }

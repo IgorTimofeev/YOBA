@@ -1,15 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <iterator>
+
 #include <YOBA/UI/element.h>
 #include <YOBA/main/rendering/renderer.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/size.h>
 #include <YOBA/main/events/event.h>
-#include <iterator>
 
 namespace YOBA {
-	// Вложенный класс итератора
 	class LayoutIterator {
 		public:
 			LayoutIterator(const std::vector<Element*>::iterator vectorIterator) : _vectorIterator(vectorIterator) {
@@ -72,13 +72,13 @@ namespace YOBA {
 			Layout& operator-=(Element& child);
 
 		protected:
-			void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) override;
+			void handleEvent(Event& event, const Bounds& parentBounds, bool callHandlers) override;
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
-			virtual void onEventBeforeChildren(Event* event);
-			virtual void onEventAfterChildren(Event* event);
+			virtual void onEventBeforeChildren(Event& event);
+			virtual void onEventAfterChildren(Event& event);
 
 			virtual void onChildAdded(Element& child);
 			virtual void onChildRemoved(Element& child);

@@ -25,11 +25,11 @@ namespace YOBA {
 		return (_position2 - _position1).getLength();
 	}
 
-	bool PinchEvent::isPinch(const Event* event) {
+	bool PinchEvent::isPinch(const Event& event) {
 		return
-			event->getTypeID() == PinchDownEvent::typeID
-			|| event->getTypeID() == PinchDragEvent::typeID
-			|| event->getTypeID() == PinchUpEvent::typeID;
+			event.getTypeID() == PinchDownEvent::typeID
+			|| event.getTypeID() == PinchDragEvent::typeID
+			|| event.getTypeID() == PinchUpEvent::typeID;
 	}
 
 	void PinchEvent::setPosition2(const Point& position2) {
