@@ -307,7 +307,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Layout::onRender(Renderer& renderer, const Bounds& bounds) {
 		Element::onRender(renderer, bounds);
 
 		for (const auto child : _children) {

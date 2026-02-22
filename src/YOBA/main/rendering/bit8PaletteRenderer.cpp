@@ -7,17 +7,17 @@ namespace YOBA {
 	}
 
 	size_t Bit8PaletteRenderer::computePixelBufferLength() const {
-		return getTarget()->getSize().getWidth() * getTransactionViewportHeight() * Color::getBytesPerModel(getTarget()->getColorModel());
+		return getTarget().getSize().getWidth() * getTransactionViewportHeight() * Color::getBytesPerModel(getTarget().getColorModel());
 	}
 
 	size_t Bit8PaletteRenderer::computePaletteIndicesBufferLength() const {
-		return getTarget()->getSize().getSquare();
+		return getTarget().getSize().getSquare();
 	}
 
 	void Bit8PaletteRenderer::flush() {
-		switch (getTarget()->getColorModel()) {
+		switch (getTarget().getColorModel()) {
 			case ColorModel::RGB565: {
-				const auto& size = getTarget()->getSize();
+				const auto& size = getTarget().getSize();
 
 				const uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(_pixelBuffer + _pixelBufferLength);
 
@@ -35,7 +35,7 @@ namespace YOBA {
 					}
 
 					// Writing pixel buffer on target
-					getTarget()->writePixels(
+					getTarget().writePixels(
 						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
 						_pixelBuffer,
 						_pixelBufferLength
@@ -46,7 +46,7 @@ namespace YOBA {
 			}
 			// TODO: move this to some sort of RGB666Bit8PaletteRenderer
 			case ColorModel::RGB666: {
-				const auto& size = getTarget()->getSize();
+				const auto& size = getTarget().getSize();
 
 				const uint8_t* pixelBufferEndPtr = _pixelBuffer + _pixelBufferLength;
 
@@ -63,7 +63,7 @@ namespace YOBA {
 					}
 
 					// Writing pixel buffer on target
-					getTarget()->writePixels(
+					getTarget().writePixels(
 						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
 						_pixelBuffer,
 						_pixelBufferLength
@@ -91,7 +91,7 @@ namespace YOBA {
 
 	void Bit8PaletteRenderer::renderVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
-		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		const uint16_t scanlineLength = getTarget().getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
 
 		for (uint16_t i = 0; i < height; i++) {
@@ -102,7 +102,7 @@ namespace YOBA {
 
 	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(bounds.getPosition());
-		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		const uint16_t scanlineLength = getTarget().getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
@@ -118,7 +118,7 @@ namespace YOBA {
 		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
 		auto bitmapPtr = image->getBitmap();
 
-		const auto scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
+		const auto scanlineLength = getTarget().getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
 		if (image->getFlags() & ImageFlags::alpha1Bit) {

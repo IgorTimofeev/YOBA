@@ -53,7 +53,7 @@ namespace YOBA {
 			void onEvent(Event* event) override;
 			void onPointerOverChanged() override;
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
 			virtual void onClick();
 

@@ -2,7 +2,7 @@
 
 namespace YOBA {
 	uint16_t TransactionalPixelBufferRenderer::computeTransactionViewportHeight() const {
-		return getTarget()->getSize().getHeight() / 4;
+		return getTarget().getSize().getHeight() / 4;
 	}
 
 	uint16_t TransactionalPixelBufferRenderer::getTransactionViewportHeight() const {

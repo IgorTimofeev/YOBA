@@ -19,18 +19,18 @@ namespace YOBA {
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
 			// renderTarget.setup();
-			// renderer->setTarget(&renderTarget);
+			// renderer.setTarget(&renderTarget);
 			// application->setRenderer(&renderer);
-			void setup(RenderTarget* renderTarget, Renderer* renderer);
+			void setup(RenderTarget& renderTarget, Renderer& renderer);
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
 			// renderTarget.setup();
-			// renderer->setTarget(&renderTarget);
+			// renderer.setTarget(&renderTarget);
 			// application.setRenderer(&renderer);
 			//
 			// application.addHID(&hid);
-			void setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid);
+			void setup(RenderTarget& renderTarget, Renderer& renderer, HID& hid);
 
 			virtual void tick();
 			virtual void render();
@@ -42,10 +42,10 @@ namespace YOBA {
 
 			void startAnimation(Animation* animation) override;
 
-			Renderer* getRenderer() const;
-			void setRenderer(Renderer* value);
+			Renderer& getRenderer() const;
+			void setRenderer(Renderer& value);
 
-			void addHID(HID* hid);
+			void addHID(HID& hid);
 
 			void invokeOnNextTick(const std::function<void()>& func);
 
@@ -64,7 +64,7 @@ namespace YOBA {
 			void setCapturedElement(Element* element);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
 		private:
 			static Application* _current;

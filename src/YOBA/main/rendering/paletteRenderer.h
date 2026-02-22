@@ -59,7 +59,7 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	void PaletteRenderer<TIndex, TValue>::reallocatePaletteIndicesBuffer() {
-		if (!getTarget())
+		if (!hasTarget())
 			return;
 
 		_paletteIndicesBufferLength = computePaletteIndicesBufferLength();
@@ -78,10 +78,10 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	void PaletteRenderer<TIndex, TValue>::reallocatePalette() {
-		if (!getTarget())
+		if (!hasTarget())
 			return;
 
-		const size_t paletteLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
+		const size_t paletteLength = _paletteColorCount * Color::getBytesPerModel(getTarget().getColorModel());
 
 		#ifdef ESP_PLATFORM
 			if (_palette)
@@ -97,7 +97,7 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	TValue PaletteRenderer<TIndex, TValue>::getPaletteValue(TIndex index) {
-		switch (getTarget()->getColorModel()) {
+		switch (getTarget().getColorModel()) {
 			case ColorModel::RGB565:
 				return *(reinterpret_cast<TValue*>(_palette) + index);
 
@@ -111,7 +111,7 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	void PaletteRenderer<TIndex, TValue>::setPaletteValue(TIndex index, TValue value) {
-		switch (getTarget()->getColorModel()) {
+		switch (getTarget().getColorModel()) {
 			case ColorModel::RGB565: {
 				reinterpret_cast<TValue*>(_palette)[index] = value;
 				break;
@@ -139,7 +139,7 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	void PaletteRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const RGB888Color& color) {
-		switch (getTarget()->getColorModel()) {
+		switch (getTarget().getColorModel()) {
 			case ColorModel::RGB565:
 				setPaletteValue(index, color.toRGB565().getValue());
 				break;

@@ -2,11 +2,11 @@
 
 namespace YOBA {
 	size_t MonochromeRenderer::computePixelBufferLength() const {
-		return getTarget()->getSize().getSquare() / 8;
+		return getTarget().getSize().getSquare() / 8;
 	}
 
 	void MonochromeRenderer::flush() {
-		getTarget()->writePixels(Bounds(getTarget()->getSize()), getPixelBuffer(), getPixelBufferLength());
+		getTarget().writePixels(Bounds(getTarget().getSize()), getPixelBuffer(), getPixelBufferLength());
 	}
 
 	void MonochromeRenderer::clearNative(const Color* color) {
@@ -14,23 +14,23 @@ namespace YOBA {
 	}
 
 	void MonochromeRenderer::renderPixelNative(const Point& point, const Color* color) {
-		switch (getTarget()->getPixelOrder()) {
+		switch (getTarget().getPixelOrder()) {
 			case PixelOrder::XY: {
 				if (reinterpret_cast<const MonochromeColor*>(color)->getValue()) {
-					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (point.getY() & 7));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget().getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}
 				else {
-					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (point.getY() & 7));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget().getSize().getWidth()] &= ~(1 << (point.getY() & 7));
 				}
 
 				break;
 			}
 			case PixelOrder::XYReversed: {
 				if (reinterpret_cast<const MonochromeColor*>(color)->getValue()) {
-					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget().getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
 				}
 				else {
-					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
+					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget().getSize().getWidth()] &= ~(1 << (7 - (point.getY() % 8)));
 				}
 
 				break;

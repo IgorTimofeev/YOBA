@@ -44,7 +44,7 @@ namespace YOBA {
 		return { width, height };
 	}
 
-	void WrapLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void WrapLayout::onRender(Renderer& renderer, const Bounds& bounds) {
 		int32_t x = 0;
 		int32_t y = 0;
 		uint16_t lineHeight = 0;

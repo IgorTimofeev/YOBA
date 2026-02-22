@@ -49,7 +49,7 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
 		private:
 			int32_t _value = 0;
@@ -70,7 +70,7 @@ namespace YOBA {
 			// 4----2
 			// -3333-
 			void renderSegments(
-				Renderer* renderer,
+				Renderer& renderer,
 				const Point& position,
 				bool s0,
 				bool s1,
@@ -81,13 +81,13 @@ namespace YOBA {
 				bool s6
 			) const;
 
-			void renderDigit(Renderer* renderer, const Point& position, uint8_t digit) const;
-			void renderEmpty(Renderer* renderer, const Point& position) const;
+			void renderDigit(Renderer& renderer, const Point& position, uint8_t digit) const;
+			void renderEmpty(Renderer& renderer, const Point& position) const;
 
-			void render9VerticalSegment(Renderer* renderer, const Point& position, bool state) const;
-			void renderDash(Renderer* renderer, const Point& position) const;
+			void render9VerticalSegment(Renderer& renderer, const Point& position, bool state) const;
+			void renderDash(Renderer& renderer, const Point& position) const;
 
-			void renderMinus(Renderer* renderer, const Point& position) const;
-			void renderPlus(Renderer* renderer, const Point& position) const;
+			void renderMinus(Renderer& renderer, const Point& position) const;
+			void renderPlus(Renderer& renderer, const Point& position) const;
 	};
 }

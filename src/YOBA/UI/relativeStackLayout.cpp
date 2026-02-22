@@ -213,7 +213,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void RelativeStackLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void RelativeStackLayout::onRender(Renderer& renderer, const Bounds& bounds) {
 		size_t
 		visibleCount = 0,
 		relativeCount = 0,

@@ -62,7 +62,7 @@ namespace YOBA {
 		};
 	}
 
-	void TextView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void TextView::onRender(Renderer& renderer, const Bounds& bounds) {
 		const auto font = getFont();
 
 		if (!font)
@@ -77,7 +77,7 @@ namespace YOBA {
 			auto position = getBounds().getPosition();
 
 			for (const auto& line : _wrappedLines) {
-				renderer->renderString(
+				renderer.renderString(
 					position,
 					font,
 					color,
@@ -89,7 +89,7 @@ namespace YOBA {
 			}
 		}
 		else {
-			renderer->renderString(
+			renderer.renderString(
 				getBounds().getPosition(),
 				font,
 				color,

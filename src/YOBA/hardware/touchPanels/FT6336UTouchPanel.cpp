@@ -271,15 +271,15 @@ namespace YOBA {
 		static_cast<FT6336UTouchPanel*>(args)->_interrupted = true;
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint1(const RenderTarget* renderTarget) {
-		return renderTarget->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint1(const RenderTarget& renderTarget) {
+		return renderTarget.orientPoint(Point(
 			read_touch1_x(),
 			read_touch1_y()
 		));
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint2(const RenderTarget* renderTarget) {
-		return renderTarget->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint2(const RenderTarget& renderTarget) {
+		return renderTarget.orientPoint(Point(
 			read_touch2_x(),
 			read_touch2_y()
 		));
@@ -296,7 +296,7 @@ namespace YOBA {
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;
 
-		const auto renderTarget = application->getRenderer()->getTarget();
+		const auto& renderTarget = application->getRenderer().getTarget();
 
 		if (isDown1) {
 			if (isDown2) {

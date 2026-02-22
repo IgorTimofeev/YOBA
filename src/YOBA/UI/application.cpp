@@ -16,19 +16,19 @@ namespace YOBA {
 
 	}
 
-	void Application::setRenderer(Renderer* value) {
-		_renderer = value;
+	void Application::setRenderer(Renderer& value) {
+		_renderer = &value;
 
 		 invalidate();
 	}
 
-	void Application::setup(RenderTarget* renderTarget, Renderer* renderer) {
-		renderTarget->setup();
-		renderer->setTarget(renderTarget);
+	void Application::setup(RenderTarget& renderTarget, Renderer& renderer) {
+		renderTarget.setup();
+		renderer.setTarget(renderTarget);
 		setRenderer(renderer);
 	}
 
-	void Application::setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid) {
+	void Application::setup(RenderTarget& renderTarget, Renderer& renderer, HID& hid) {
 		setup(renderTarget, renderer);
 
 		addHID(hid);
@@ -75,7 +75,7 @@ namespace YOBA {
 		_current = this;
 
 		// Root element size should match render target size
-		setSize(_renderer->getTarget()->getSize());
+		setSize(_renderer->getTarget().getSize());
 
 		// Resetting viewport just in case if some UI element broke it
 		_renderer->resetViewport();
@@ -125,10 +125,10 @@ namespace YOBA {
 			time = system::getTime();
 
 			// Rendering children
-			Layout::render(_renderer, getBounds());
+			Layout::render(*_renderer, getBounds());
 
 			if (_secondRenderPassRequested)
-				Layout::render(_renderer, getBounds());
+				Layout::render(*_renderer, getBounds());
 
 			_renderDeltaTime = system::getTime() - time;
 
@@ -189,12 +189,12 @@ namespace YOBA {
 		invalidate();
 	}
 
-	Renderer* Application::getRenderer() const {
-		return _renderer;
+	Renderer& Application::getRenderer() const {
+		return *_renderer;
 	}
 
-	void Application::addHID(HID* hid) {
-		_HIDs.push_back(hid);
+	void Application::addHID(HID& hid) {
+		_HIDs.push_back(&hid);
 	}
 
 	void Application::invokeOnNextTick(const std::function<void()>& func) {
@@ -221,9 +221,9 @@ namespace YOBA {
 		return _flushDeltaTime;
 	}
 
-	void Application::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Application::onRender(Renderer& renderer, const Bounds& bounds) {
 		if (getBackgroundColor())
-			renderer->clear(getBackgroundColor());
+			renderer.clear(getBackgroundColor());
 
 		Layout::onRender(renderer, bounds);
 	}

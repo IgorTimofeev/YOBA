@@ -4,24 +4,24 @@
 
 namespace YOBA {
 	size_t RGB565PixelBufferRenderer::computePixelBufferLength() const {
-		return getTarget()->getSize().getSquare() * 2;
+		return getTarget().getSize().getSquare() * 2;
 	}
 
 	void RGB565PixelBufferRenderer::flush() {
-		switch (getTarget()->getColorModel()) {
+		switch (getTarget().getColorModel()) {
 			case ColorModel::RGB565: {
-				// getTarget()->writePixels(
-				// 	Bounds(getTarget()->getSize()),
+				// getTarget().writePixels(
+				// 	Bounds(getTarget().getSize()),
 				// 	getPixelBuffer(),
 				// 	getPixelBufferLength()
 				// );
 
-				const auto& size = getTarget()->getSize();
+				const auto& size = getTarget().getSize();
 				const auto transactionLength = size.getWidth() * getTransactionViewportHeight() * 2;
 				auto pixelBufferPtr = _pixelBuffer;
 
 				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionViewportHeight()) {
-					getTarget()->writePixels(
+					getTarget().writePixels(
 						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
 						pixelBufferPtr,
 						transactionLength
@@ -55,7 +55,7 @@ namespace YOBA {
 
 	void RGB565PixelBufferRenderer::renderVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
-		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		const uint16_t scanlineLength = getTarget().getSize().getWidth();
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();
 
 		for (uint16_t i = 0; i < length; i++) {
@@ -66,7 +66,7 @@ namespace YOBA {
 
 	void RGB565PixelBufferRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(bounds.getX(), bounds.getY());
-		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
+		const uint16_t scanlineLength = getTarget().getSize().getWidth();
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();
 
 		for (uint16_t i = 0; i < bounds.getHeight(); i++) {
@@ -80,7 +80,7 @@ namespace YOBA {
 			return;
 
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
-		const size_t pixelBufferScanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
+		const size_t pixelBufferScanlineLength = getTarget().getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
 		if (image->getFlags() & ImageFlags::alpha1Bit) {

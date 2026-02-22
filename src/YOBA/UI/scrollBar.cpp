@@ -53,7 +53,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void ScrollBar::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ScrollBar::onRender(Renderer& renderer, const Bounds& bounds) {
 		// Thumb
 		if (!thumbColor)
 			return;
@@ -62,7 +62,7 @@ namespace YOBA {
 		const auto renderPos = static_cast<uint16_t>(static_cast<uint64_t>(bounds.getHeight()) * static_cast<uint64_t>(position) / static_cast<uint64_t>(contentSize));
 
 		if (getOrientation() == Orientation::horizontal) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX() + renderPos,
 					bounds.getY(),
@@ -74,7 +74,7 @@ namespace YOBA {
 			);
 		}
 		else {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX(),
 					bounds.getY() + renderPos,

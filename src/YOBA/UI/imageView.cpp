@@ -26,10 +26,10 @@ namespace YOBA {
 			: Size(0, 0);
 	}
 
-	void ImageView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ImageView::onRender(Renderer& renderer, const Bounds& bounds) {
 		if (!getImage())
 			return;
 
-		renderer->renderImage(getBounds().getPosition(), getImage());
+		renderer.renderImage(getBounds().getPosition(), getImage());
 	}
 }

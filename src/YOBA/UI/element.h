@@ -44,7 +44,7 @@ namespace YOBA {
 			virtual ~Element();
 
 			void measure(const Size& availableSize);
-			void render(Renderer* renderer, const Bounds& bounds);
+			void render(Renderer& renderer, const Bounds& bounds);
 
 			bool isPointerOver() const;
 			virtual void invalidateRender();
@@ -119,7 +119,7 @@ namespace YOBA {
 
 			virtual void onTick();
 			virtual Size onMeasure(const Size& availableSize);
-			virtual void onRender(Renderer* renderer, const Bounds& bounds);
+			virtual void onRender(Renderer& renderer, const Bounds& bounds);
 			virtual void onBoundsChanged();
 
 			virtual void onPointerOverChanged();

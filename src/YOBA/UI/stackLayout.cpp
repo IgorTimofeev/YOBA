@@ -81,7 +81,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void StackLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void StackLayout::onRender(Renderer& renderer, const Bounds& bounds) {
 		int32_t position;
 
 		switch (getOrientation()) {

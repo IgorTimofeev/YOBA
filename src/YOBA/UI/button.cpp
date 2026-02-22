@@ -59,12 +59,12 @@ namespace YOBA {
 		}
 	}
 
-	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Button::onRender(Renderer& renderer, const Bounds& bounds) {
 		// Primary color
 		auto color = Color::select(isActive(), _defaultBackgroundColor, _activeBackgroundColor);
 
 		if (color) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
 				color
@@ -75,7 +75,7 @@ namespace YOBA {
 		color = Color::select(isActive(), _defaultBorderColor, _activeBorderColor);
 
 		if (color) {
-			renderer->renderRectangle(
+			renderer.renderRectangle(
 				bounds,
 				getCornerRadius(),
 				color
@@ -89,7 +89,7 @@ namespace YOBA {
 			color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
 
 			if (color) {
-				renderer->renderString(
+				renderer.renderString(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + getContentMargin().getLeft() - getContentMargin().getRight(),
 						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()

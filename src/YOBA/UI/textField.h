@@ -77,7 +77,7 @@ namespace YOBA {
 
 		protected:
 			void onTick() override;
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 			void onEvent(Event* event) override;
 			void onFocusChanged() override;
 

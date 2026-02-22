@@ -189,7 +189,7 @@ namespace YOBA {
 		};
 	}
 
-	void Slider::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Slider::onRender(Renderer& renderer, const Bounds& bounds) {
 		const auto handleWidthHalf = _handleSize.getWidth() / 2;
 		const auto handleHeightHalf = _handleSize.getHeight() / 2;
 
@@ -202,7 +202,7 @@ namespace YOBA {
 
 		// Fill
 		if (getValue() > 0 && _fillColor) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX(),
 					trackY,
@@ -216,7 +216,7 @@ namespace YOBA {
 
 		// Track
 		if (_trackColor) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX() + handleCenterLocal,
 					trackY,
@@ -241,7 +241,7 @@ namespace YOBA {
 				const auto lineLength = isBig ? _bigTickLineLength : _smallTickLineLength;
 
 				// Line
-				renderer->renderVerticalLine(
+				renderer.renderVerticalLine(
 					Point(static_cast<int32_t>(tickXF), tickY),
 					lineLength,
 					_tickColor
@@ -263,7 +263,7 @@ namespace YOBA {
 						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) + 1);
 					}
 
-					renderer->renderString(
+					renderer.renderString(
 						Point(textX, tickY + lineLength + _tickLabelOffset),
 						_tickLabelFont,
 						_tickColor,
@@ -279,7 +279,7 @@ namespace YOBA {
 		// Handle
 		if (_handleColor) {
 			if (_handleSize == bounds.getHeight() && _handleCornerRadius == handleWidthHalf) {
-				renderer->renderFilledCircle(
+				renderer.renderFilledCircle(
 					Point(
 						bounds.getX() + handleCenterLocal,
 						bounds.getY() + handleWidthHalf
@@ -289,7 +289,7 @@ namespace YOBA {
 				);
 			}
 			else {
-				renderer->renderFilledRectangle(
+				renderer.renderFilledRectangle(
 					Bounds(
 						bounds.getX() + handleCenterLocal - handleWidthHalf,
 						bounds.getY(),

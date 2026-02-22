@@ -23,14 +23,14 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onRender(Renderer* renderer, const Bounds& bounds) {
+	void TextField::onRender(Renderer& renderer, const Bounds& bounds) {
 		const auto focused = isFocused();
 
 		// Background
 		const auto backgroundColor = Color::select(focused, _defaultBackgroundColor, _focusedBackgroundColor);
 
 		if (backgroundColor) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
 				backgroundColor
@@ -41,7 +41,7 @@ namespace YOBA {
 		const auto borderColor = Color::select(focused, _defaultBorderColor, _focusedBorderColor);
 
 		if (borderColor) {
-			renderer->renderRectangle(
+			renderer.renderRectangle(
 				bounds,
 				getCornerRadius(),
 				borderColor
@@ -63,7 +63,7 @@ namespace YOBA {
 				const auto& placeholder = getPlaceholder();
 
 				if (!placeholder.empty()) {
-					renderer->renderString(
+					renderer.renderString(
 						Point(
 							bounds.getX() + _textMargin,
 							bounds.getYCenter() - fontHeight / 2
@@ -92,7 +92,7 @@ namespace YOBA {
 				if (!textColor)
 					return;
 
-				const auto oldViewport = renderer->pushViewport(Bounds(
+				const auto oldViewport = renderer.pushViewport(Bounds(
 					bounds.getX() + _textMargin,
 					bounds.getY(),
 					bounds.getWidth() - _textMargin * 2,
@@ -102,7 +102,7 @@ namespace YOBA {
 				for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
 					const wchar_t ch = _mask ? _mask : text[charIndex];
 
-					renderer->renderChar(
+					renderer.renderChar(
 						textPosition,
 						font,
 						textColor,
@@ -116,7 +116,7 @@ namespace YOBA {
 					textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
 				}
 
-				renderer->popViewport(oldViewport);
+				renderer.popViewport(oldViewport);
 			}
 
 			// Cursor
@@ -125,7 +125,7 @@ namespace YOBA {
 				if (_cursorPosition == text.length())
 					blinkX = textPosition.getX();
 
-				renderer->renderFilledRectangle(
+				renderer.renderFilledRectangle(
 					Bounds(
 						blinkX,
 						textPosition.getY() + fontHeight / 2 - _cursorSize.getHeight() / 2,

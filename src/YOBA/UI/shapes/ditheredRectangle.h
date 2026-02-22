@@ -13,11 +13,11 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer& renderer, const Bounds& bounds) override {
 				const auto color = getFillColor();
 
 				if (color)
-					renderer->renderDitheredRectangle(getBounds(), color);
+					renderer.renderDitheredRectangle(getBounds(), color);
 			}
 	};
 }

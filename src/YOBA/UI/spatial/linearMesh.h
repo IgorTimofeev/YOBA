@@ -7,7 +7,7 @@
 namespace YOBA::spatial {
 	class LinearMesh : public Mesh {
 		public:
-			void onRender(Renderer* renderer, const Scene& scene, const Vector3F* projectedVertices) override;
+			void onRender(Renderer& renderer, const Scene& scene, const Vector3F* projectedVertices) override;
 
 			const uint16_t* getLineVertexIndices() const;
 			void setLineVertexIndices(const uint16_t* lineVertexIndices);

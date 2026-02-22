@@ -214,7 +214,7 @@ namespace YOBA {
 		}
 	}
 
-	void Element::render(Renderer* renderer, const Bounds& bounds) {
+	void Element::render(Renderer& renderer, const Bounds& bounds) {
 		const auto& margin = getMargin();
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
@@ -267,12 +267,12 @@ namespace YOBA {
 
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
-			const auto previousViewport = renderer->pushViewport(_bounds);
+			const auto previousViewport = renderer.pushViewport(_bounds);
 
 			onRender(renderer, _bounds);
 
 			// Restoring viewport
-			renderer->popViewport(previousViewport);
+			renderer.popViewport(previousViewport);
 		}
 		else {
 			onRender(renderer, _bounds);
@@ -490,7 +490,7 @@ namespace YOBA {
 			application->invalidate();
 	}
 
-	void Element::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Element::onRender(Renderer& renderer, const Bounds& bounds) {
 
 	}
 

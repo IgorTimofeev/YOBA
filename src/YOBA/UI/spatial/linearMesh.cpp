@@ -2,7 +2,7 @@
 #include "scene.h"
 
 namespace YOBA::spatial {
-	void LinearMesh::onRender(Renderer* renderer, const Scene& scene, const Vector3F* projectedVertices) {
+	void LinearMesh::onRender(Renderer& renderer, const Scene& scene, const Vector3F* projectedVertices) {
 		const auto nearPlane = scene.getNearPlaneDistance();
 
 		for (uint16_t i = 0; i < _lineVertexIndicesCount; i += 2) {
@@ -15,7 +15,7 @@ namespace YOBA::spatial {
 			)
 				continue;
 
-			renderer->renderLine(
+			renderer.renderLine(
 				Point(
 					static_cast<int32_t>(vertex0->getX()),
 					static_cast<int32_t>(vertex0->getY())

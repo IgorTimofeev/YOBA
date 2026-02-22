@@ -158,7 +158,7 @@ namespace YOBA {
 
 			static void interruptHandler(void* args);
 
-			Point readOrientedPoint1(const RenderTarget* renderTarget);
-			Point readOrientedPoint2(const RenderTarget* renderTarget);
+			Point readOrientedPoint1(const RenderTarget& renderTarget);
+			Point readOrientedPoint2(const RenderTarget& renderTarget);
 	};
 }

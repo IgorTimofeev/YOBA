@@ -1,13 +1,13 @@
 #include "knob.h"
 
 namespace YOBA {
-	void Knob::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Knob::onRender(Renderer& renderer, const Bounds& bounds) {
 		const uint16_t radius = std::max(bounds.getWidth(), bounds.getHeight()) / 2;
 		const auto center = bounds.getCenter();
 
 		// Primary circle
 		if (getBackgroundColor()) {
-			renderer->renderFilledCircle(
+			renderer.renderFilledCircle(
 				center,
 				radius,
 				getBackgroundColor()
@@ -16,7 +16,7 @@ namespace YOBA {
 
 		// Center circle
 		if (getMiddleColor()) {
-			renderer->renderFilledCircle(
+			renderer.renderFilledCircle(
 				center,
 				static_cast<uint16_t>(static_cast<float>(radius) * 0.5f),
 				getMiddleColor()
@@ -29,7 +29,7 @@ namespace YOBA {
 			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 
-			renderer->renderLine(
+			renderer.renderLine(
 				static_cast<Point>(lineStart),
 				static_cast<Point>(lineEnd),
 				getLineColor()

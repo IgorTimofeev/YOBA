@@ -13,13 +13,13 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer& renderer, const Bounds& bounds) override {
 				const auto color = getFillColor();
 
 				if (!color)
 					return;
 
-				renderer->renderFilledCircle(
+				renderer.renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
 					std::min(bounds.getWidth(), bounds.getHeight()) / 2,
 					color

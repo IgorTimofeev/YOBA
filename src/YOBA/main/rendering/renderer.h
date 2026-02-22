@@ -16,8 +16,9 @@ namespace YOBA {
 		public:
 			virtual ~Renderer() = default;
 
-			RenderTarget* getTarget() const;
-			void setTarget(RenderTarget* value);
+			bool hasTarget() const;
+			RenderTarget& getTarget() const;
+			void setTarget(RenderTarget& value);
 
 			const Bounds& getViewport() const;
 			void setViewport(const Bounds& viewport);

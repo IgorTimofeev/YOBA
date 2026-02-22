@@ -28,7 +28,7 @@ namespace YOBA {
 			void setOnRotate(const std::function<void(float, float)>& onRotate);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 			void onEvent(Event* event) override;
 
 		private:

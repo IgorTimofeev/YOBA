@@ -40,7 +40,7 @@ namespace YOBA::spatial {
 			void setFOVVertical(bool fovVertical);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
 		private:
 			std::vector<SceneElement*> _elements {};

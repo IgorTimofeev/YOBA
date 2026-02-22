@@ -14,7 +14,7 @@ namespace YOBA {
 			void setFillColor(const Color* value);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
 		private:
 			const Color* _trackColor = nullptr;

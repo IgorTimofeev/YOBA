@@ -47,7 +47,7 @@ namespace YOBA {
 			: Size();
 	}
 
-	void KeyboardLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void KeyboardLayout::onRender(Renderer& renderer, const Bounds& bounds) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)

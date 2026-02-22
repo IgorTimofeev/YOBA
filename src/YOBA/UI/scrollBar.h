@@ -21,7 +21,7 @@ namespace YOBA {
 			void setThumbColor(const Color* value);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
 		private:
 			uint16_t position = 0;

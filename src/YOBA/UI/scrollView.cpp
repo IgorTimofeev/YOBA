@@ -157,7 +157,7 @@ namespace YOBA {
 		return _contentMeasuredSize;
 	}
 
-	void ScrollView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ScrollView::onRender(Renderer& renderer, const Bounds& bounds) {
 		if (_horizontalScrollMode == ScrollMode::disabled) {
 			if (_horizontalScrollBar.getPosition() > 0)
 				_horizontalScrollBar.setPosition(0);

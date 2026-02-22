@@ -36,14 +36,14 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	void Switch::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Switch::onRender(Renderer& renderer, const Bounds& bounds) {
 		const uint16_t handleHalf = bounds.getHeight() / 2;
 		const uint16_t handleOffset = isActive() ? bounds.getWidth() - bounds.getHeight() : 0;
 		const uint16_t handleOffsetCenter = handleOffset + handleHalf;
 
 		// Checked
 		if (handleOffset > 0 && _checkedColor) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX(),
 					bounds.getY(),
@@ -57,7 +57,7 @@ namespace YOBA {
 
 		// Track
 		if (handleOffset + bounds.getHeight() < bounds.getX2() && _trackColor) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX() + handleOffsetCenter - handleHalf,
 					bounds.getY(),
@@ -71,7 +71,7 @@ namespace YOBA {
 
 		// Handle
 		if (_handleColor) {
-			renderer->renderFilledRectangle(
+			renderer.renderFilledRectangle(
 				Bounds(
 					bounds.getX() + handleOffset,
 					bounds.getY(),
