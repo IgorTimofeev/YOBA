@@ -267,12 +267,12 @@ namespace YOBA {
 
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
-			const auto viewport = renderer->pushViewport(_bounds);
+			const auto previousViewport = renderer->pushViewport(_bounds);
 
 			onRender(renderer, _bounds);
 
 			// Restoring viewport
-			renderer->popViewport(viewport);
+			renderer->popViewport(previousViewport);
 		}
 		else {
 			onRender(renderer, _bounds);

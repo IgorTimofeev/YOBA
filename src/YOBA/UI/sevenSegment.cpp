@@ -124,29 +124,42 @@ namespace YOBA {
 		auto valueAbs = std::abs(value);
 
 		for (uint8_t i = 0; i < getDigitCount(); i++) {
-			// Last digit
-			if (i == getDigitCount() - 1) {
-				if (_signVisible) {
-					if (value >= 0) {
-						renderEmpty(renderer, position);
-					}
-					else {
-						renderMinus(renderer, position);
-					}
-				}
-				else {
-					renderDigit(renderer, position, valueAbs % 10);
-				}
+			// Dashes
+			if (value == valueDashes) {
+				renderDash(renderer, position);
 			}
-			// Non-last
+			// Regular number
 			else {
-				if (valueAbs > 0) {
-					renderDigit(renderer, position, valueAbs % 10);
-
-					valueAbs /= 10;
+				// Last digit
+				if (i == getDigitCount() - 1) {
+					// Sign
+					if (_signVisible) {
+						// Plus
+						if (value >= 0) {
+							renderPlus(renderer, position);
+						}
+						// Minus
+						else {
+							renderMinus(renderer, position);
+						}
+					}
+					// Digit
+					else {
+						renderDigit(renderer, position, valueAbs % 10);
+					}
 				}
+				// Not last
 				else {
-					renderDigit(renderer, position, 0);
+					// Not 0
+					if (valueAbs > 0) {
+						renderDigit(renderer, position, valueAbs % 10);
+
+						valueAbs /= 10;
+					}
+					// 0
+					else {
+						renderDigit(renderer, position, 0);
+					}
 				}
 			}
 
@@ -166,8 +179,8 @@ namespace YOBA {
 	}
 
 	void SevenSegment::renderSegments(Renderer* renderer, const Point& position, const bool s0, const bool s1, const bool s2, const bool s3, const bool s4, const bool s5, const bool s6) const {
-		const uint8_t t = getSegmentThickness();
-		const uint8_t l = getSegmentLength();
+		const auto t = getSegmentThickness();
+		const auto l = getSegmentLength();
 
 		renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? _activeColor : _inactiveColor);
 		renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? _activeColor : _inactiveColor);
@@ -346,7 +359,7 @@ namespace YOBA {
 		);
 	}
 
-	void SevenSegment::renderMinus(Renderer* renderer, const Point& position) const {
+	void SevenSegment::renderDash(Renderer* renderer, const Point& position) const {
 		renderSegments(
 			renderer,
 			position,
@@ -360,17 +373,25 @@ namespace YOBA {
 		);
 	}
 
+	void SevenSegment::render9VerticalSegment(Renderer* renderer, const Point& position, const bool state) const {
+		constexpr static uint8_t offset = 1;
+
+		const auto t = getSegmentThickness();
+		const auto l = getSegmentLength() > offset * 2 ? getSegmentLength() - offset * 2 : 0;
+		const auto x = position.getX() + t + l / 2;
+		const auto color = state ? _activeColor : _inactiveColor;
+
+		renderer->renderFilledRectangle(Bounds(x, position.getY() + t + offset, t, l), color);
+		renderer->renderFilledRectangle(Bounds(x, position.getY() + t + offset + l + offset + t + offset, t, l), color);
+	}
+
+	void SevenSegment::renderMinus(Renderer* renderer, const Point& position) const {
+		renderDash(renderer, position);
+		render9VerticalSegment(renderer, position, false);
+	}
+
 	void SevenSegment::renderPlus(Renderer* renderer, const Point& position) const {
-		renderSegments(
-			renderer,
-			position,
-			false,
-			true,
-			true,
-			false,
-			false,
-			false,
-			true
-		);
+		renderDash(renderer, position);
+		render9VerticalSegment(renderer, position, true);
 	}
 }

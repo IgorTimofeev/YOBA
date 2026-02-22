@@ -1,36 +1,39 @@
 #pragma once
 
-#include "stackLayout.h"
+#include <cmath>
+#include <limits>
+
 #include <YOBA/main/color.h>
 #include <YOBA/main/rendering/renderer.h>
-#include "cmath"
 #include <YOBA/UI/control.h>
+#include <YOBA/UI/stackLayout.h>
 
 namespace YOBA {
 	class SevenSegment : public Control {
 		public:
 			constexpr static uint8_t decimalSeparatorDisabled = 0xFF;
+			constexpr static int32_t valueDashes = std::numeric_limits<int32_t>::min();
 
 			uint8_t getSegmentThickness() const;
-			void setSegmentThickness(const uint8_t value);
+			void setSegmentThickness(uint8_t value);
 			uint8_t getSegmentLength() const;
 
-			void setSegmentLength(const uint8_t value);
+			void setSegmentLength(uint8_t value);
 
 			int32_t getValue() const;
-			void setValue(const int32_t value);
+			void setValue(int32_t value);
 
 			uint8_t getDigitCount() const;
-			void setDigitCount(const uint8_t value);
+			void setDigitCount(uint8_t value);
 
 			uint8_t getDigitSpacing() const;
-			void setDigitSpacing(const uint8_t value);
+			void setDigitSpacing(uint8_t value);
 
 			uint8_t getDecimalSeparatorSpacing() const;
-			void setDecimalSeparatorSpacing(const uint8_t value);
+			void setDecimalSeparatorSpacing(uint8_t value);
 
 			uint8_t getDecimalSeparatorIndex() const;
-			void setDecimalSeparatorIndex(const uint8_t value);
+			void setDecimalSeparatorIndex(uint8_t value);
 
 			uint16_t getDigitWidth() const;
 			uint16_t getDigitHeight() const;
@@ -42,7 +45,7 @@ namespace YOBA {
 			void setActiveColor(const Color* value);
 
 			bool isSignVisible() const;
-			void setSignVisible(const bool signVisible);
+			void setSignVisible(bool signVisible);
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
@@ -61,25 +64,29 @@ namespace YOBA {
 			const Color* _inactiveColor = nullptr;
 			const Color* _activeColor = nullptr;
 
-			// -1111-
-			// 6----2
-			// -7777-
-			// 5----3
-			// -4444-
+			// -0000-
+			// 5----1
+			// -6666-
+			// 4----2
+			// -3333-
 			void renderSegments(
 				Renderer* renderer,
 				const Point& position,
-				const bool s0,
-				const bool s1,
-				const bool s2,
-				const bool s3,
-				const bool s4,
-				const bool s5,
-				const bool s6
+				bool s0,
+				bool s1,
+				bool s2,
+				bool s3,
+				bool s4,
+				bool s5,
+				bool s6
 			) const;
 
-			void renderDigit(Renderer* renderer, const Point& position, const uint8_t digit) const;
+			void renderDigit(Renderer* renderer, const Point& position, uint8_t digit) const;
 			void renderEmpty(Renderer* renderer, const Point& position) const;
+
+			void render9VerticalSegment(Renderer* renderer, const Point& position, bool state) const;
+			void renderDash(Renderer* renderer, const Point& position) const;
+
 			void renderMinus(Renderer* renderer, const Point& position) const;
 			void renderPlus(Renderer* renderer, const Point& position) const;
 	};
