@@ -34,6 +34,6 @@ namespace YOBA {
 			static KeyboardControllerLayout* _controllerLayout;
 			static Layout* _targetLayout;
 
-			static Layout* getTargetLayoutOrApplication();
+			static Layout& getTargetLayoutOrApplication();
 	};
 }

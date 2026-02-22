@@ -27,8 +27,8 @@ namespace YOBA {
 		return _children.size();
 	}
 
-	size_t Layout::getIndexOfChild(Element* element) {
-		const auto iterator = std::ranges::find(_children, element);
+	size_t Layout::getIndexOfChild(Element& element) {
+		const auto iterator = std::ranges::find(_children, &element);
 
 		if (iterator == _children.end())
 			return -1;
@@ -41,14 +41,14 @@ namespace YOBA {
 
 		_children.erase(_children.begin() + index);
 
-		onChildRemoved(child);
-		child->removeFromParent(this);
+		onChildRemoved(*child);
+		child->removeFromParent(*this);
 
 		invalidate();
 	}
 
-	void Layout::removeChild(Element* child) {
-		const auto iterator = std::ranges::find(_children, child);
+	void Layout::removeChild(Element& child) {
+		const auto iterator = std::ranges::find(_children, &child);
 
 		if (iterator == _children.end())
 			return;
@@ -56,7 +56,7 @@ namespace YOBA {
 		_children.erase(iterator);
 
 		onChildRemoved(child);
-		child->removeFromParent(this);
+		child.removeFromParent(*this);
 
 		invalidate();
 	}
@@ -66,8 +66,8 @@ namespace YOBA {
 			return;
 
 		for (const auto child : _children) {
-			onChildRemoved(child);
-			child->removeFromParent(this);
+			onChildRemoved(*child);
+			child->removeFromParent(*this);
 		}
 
 		_children.clear();
@@ -75,7 +75,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void Layout::moveChildrenTo(Layout* layout) {
+	void Layout::moveChildrenTo(Layout& layout) {
 		const auto childrenCount = _children.size();
 		const auto childrenCopy = new Element*[childrenCount];
 
@@ -85,7 +85,7 @@ namespace YOBA {
 		removeChildren();
 
 		for (size_t i = 0; i < childrenCount; i++)
-			*layout += childrenCopy[i];
+			layout += *childrenCopy[i];
 
 		delete[] childrenCopy;
 	}
@@ -95,8 +95,8 @@ namespace YOBA {
 			return;
 
 		for (const auto child : _children) {
-			onChildRemoved(child);
-			child->removeFromParent(this);
+			onChildRemoved(*child);
+			child->removeFromParent(*this);
 
 			delete child;
 		}
@@ -106,45 +106,45 @@ namespace YOBA {
 		invalidate();
 	}
 
-	Element* Layout::getChildAt(const size_t index) const {
-		return _children[index];
+	Element& Layout::getChildAt(const size_t index) const {
+		return *_children[index];
 	}
 
-	void Layout::addChild(Element* child) {
-		_children.push_back(child);
+	void Layout::addChild(Element& child) {
+		_children.push_back(&child);
 
 		onChildAdded(child);
 
-		child->addToParent(this);
+		child.addToParent(*this);
 
 		invalidate();
 	}
 
-	void Layout::insertChild(const size_t index, Element* child) {
-		_children.insert(_children.begin() + index, child);
+	void Layout::insertChild(const size_t index, Element& child) {
+		_children.insert(_children.begin() + index, &child);
 
 		onChildAdded(child);
-		child->addToParent(this);
+		child.addToParent(*this);
 
 		invalidate();
 	}
 
-	void Layout::insertChildFromEnd(const size_t offset, Element* child) {
+	void Layout::insertChildFromEnd(const size_t offset, Element& child) {
 		const auto index = static_cast<ssize_t>(_children.size()) - static_cast<ssize_t>(offset);
 		insertChild(index >= 0 ? index : 0, child);
 	}
 
-	Element* Layout::operator[](const size_t index) const {
+	Element& Layout::operator[](const size_t index) const {
 		return getChildAt(index);
 	}
 
-	Layout& Layout::operator+=(Element* child) {
+	Layout& Layout::operator+=(Element& child) {
 		addChild(child);
 
 		return *this;
 	}
 
-	Layout& Layout::operator-=(Element* child) {
+	Layout& Layout::operator-=(Element& child) {
 		removeChild(child);
 
 		return *this;
@@ -179,7 +179,10 @@ namespace YOBA {
 					currentBounds = Bounds::invalidValue;
 				}
 
-				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+				const auto capturedElement =
+					Application::hasCurrent() && Application::getCurrent().hasCapturedElement()
+					? &Application::getCurrent().getCapturedElement()
+					: nullptr;
 
 				setPointerOver(
 					event->getTypeID() != PointerUpEvent::typeID
@@ -251,7 +254,11 @@ namespace YOBA {
 			if (!isVisible() || !isEnabled())
 				return;
 
-			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+			const auto capturedElement =
+				Application::hasCurrent() && Application::getCurrent().hasCapturedElement()
+				? &Application::getCurrent().getCapturedElement()
+				: nullptr;
+
 			const auto callHandlersOnThis = callHandlers && (!capturedElement || capturedElement == this);
 
 			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 1: %d", callHandlersOnThis);
@@ -317,19 +324,19 @@ namespace YOBA {
 		}
 	}
 
-	std::vector<Element*>::iterator Layout::begin() {
+	LayoutIterator Layout::begin() {
 		return _children.begin();
 	}
 
-	std::vector<Element*>::iterator Layout::end() {
+	LayoutIterator Layout::end() {
 		return _children.end();
 	}
 
-	void Layout::onChildAdded(Element* child) {
+	void Layout::onChildAdded(Element& child) {
 
 	}
 
-	void Layout::onChildRemoved(Element* child) {
+	void Layout::onChildRemoved(Element& child) {
 
 	}
 }

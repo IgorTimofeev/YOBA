@@ -37,7 +37,7 @@ namespace YOBA {
 		if (std::abs(_value) < _minimumDelta)
 			return;
 
-		const auto application = Application::getCurrent();
+		auto& application = Application::getCurrent();
 
 		const auto time = system::getTime();
 		const auto deltaTime = static_cast<int32_t>(time - _oldValueTime);
@@ -46,7 +46,7 @@ namespace YOBA {
 		const auto dps = static_cast<int16_t>(static_cast<int32_t>(_value) * static_cast<int32_t>(1'000'000) / deltaTime);
 
 		auto event = EncoderValueChangedEvent(dps);
-		application->pushEvent(&event);
+		application.pushEvent(&event);
 
 		_value = 0;
 	}
@@ -135,15 +135,15 @@ namespace YOBA {
 		if (_pressed == _oldPressed)
 			return;
 
-		const auto application = Application::getCurrent();
+		auto& application = Application::getCurrent();
 
 		if (_pressed) {
 			auto event = PushButtonEncoderDownEvent();
-			application->pushEvent(&event);
+			application.pushEvent(&event);
 		}
 		else {
 			auto event = PushButtonEncoderUpEvent();
-			application->pushEvent(&event);
+			application.pushEvent(&event);
 		}
 
 		_oldPressed = _pressed;

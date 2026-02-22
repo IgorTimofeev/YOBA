@@ -23,11 +23,11 @@ namespace YOBA {
 			const auto& layoutRow = _buttons[rowIndex];
 
 			for (size_t columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
-				const auto button = layoutRow[columnIndex];
+				auto& button = *layoutRow[columnIndex];
 
-				button->assignKeyboard(_keyboard, rowIndex, columnIndex);
+				button.assignKeyboard(_keyboard, rowIndex, columnIndex);
 
-				if (!button->canBeAdded())
+				if (!button.canBeAdded())
 					continue;
 
 				*this += button;
@@ -66,13 +66,12 @@ namespace YOBA {
 			const uint16_t availableWidthWithoutSpacing = bounds.getWidth() - totalSpacing;
 			float defaultWidthWithoutSpacing = 0;
 			uint8_t stretchedCount = 0;
-			KeyboardButton* button;
 			float buttonWidth;
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
-				button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+				auto& button = dynamic_cast<KeyboardButton&>(getChildAt(i));
 
-				buttonWidth = button->getKeyWidth();
+				buttonWidth = button.getKeyWidth();
 
 				if (buttonWidth == KeyboardButton::stretched) {
 					stretchedCount++;
@@ -100,9 +99,9 @@ namespace YOBA {
 			}
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
-				button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+				auto& button = dynamic_cast<KeyboardButton&>(getChildAt(i));
 
-				buttonWidth = button->getKeyWidth();
+				buttonWidth = button.getKeyWidth();
 
 				buttonWidth =
 					// Not last key in row
@@ -121,7 +120,7 @@ namespace YOBA {
 						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
 					);
 
-				button->render(renderer, Bounds(
+				button.render(renderer, Bounds(
 					bounds.getX() + localX,
 					y,
 					static_cast<uint16_t>(buttonWidth),
@@ -133,9 +132,9 @@ namespace YOBA {
 		};
 
 		for (size_t i = 0; i < getChildrenCount(); i++) {
-			const auto button = dynamic_cast<KeyboardButton*>(getChildAt(i));
+			const auto& button = dynamic_cast<KeyboardButton&>(getChildAt(i));
 
-			if (button->getRow() > rowIndex) {
+			if (button.getRow() > rowIndex) {
 				arrangeRow(i);
 
 				y += _keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing();

@@ -111,8 +111,8 @@ namespace YOBA {
 		protected:
 			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
 
-			virtual void onAddedToParent(Layout* parent);
-			virtual void onRemovedFromParent(Layout* parent);
+			virtual void onAddedToParent(Layout& parent);
+			virtual void onRemovedFromParent(Layout& parent);
 
 			virtual void onFocusChanged();
 			virtual void onCaptureChanged();
@@ -143,8 +143,8 @@ namespace YOBA {
 			Bounds _bounds {};
 			Size _measuredSize {};
 
-			void addToParent(Layout* parent);
-			void removeFromParent(Layout* parent);
+			void addToParent(Layout& parent);
+			void removeFromParent(Layout& parent);
 			void setPointerOver(bool value);
 
 			static uint16_t computeMeasureShit(

@@ -14,26 +14,22 @@ namespace YOBA {
 
 			constexpr static float autoSize = -1;
 
-			float getRelativeSize(const Element* child);
-			void setRelativeSize(const Element* child, float value);
+			float getRelativeSize(const Element& child);
+			void setRelativeSize(const Element& child, float value);
 
-			bool isAutoSize(const Element* child);
-			void setAutoSize(const Element* child, const bool value = true);
+			bool isAutoSize(const Element& child);
+			void setAutoSize(const Element& child, const bool value = true);
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
 
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
 
-			void onChildRemoved(Element* child) override {
-				Layout::onChildRemoved(child);
-
-				tryRemoveRelativeSize(child);
-			}
+			void onChildRemoved(Element& child) override;
 
 		private:
 			std::unordered_map<const Element*, float> _elementSizes {};
 
-			void tryRemoveRelativeSize(const Element* child);
+			void tryRemoveRelativeSize(const Element& child);
 	};
 }

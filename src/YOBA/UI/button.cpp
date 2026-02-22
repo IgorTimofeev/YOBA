@@ -20,7 +20,7 @@ namespace YOBA {
 			// ESP_LOGI("Button", "PointerUpEvent");
 			// ESP_LOGI("Button", "isCaptured(): %d", isCaptured());
 			// ESP_LOGI("Button", "isPointerOver(): %d", isPointerOver());
-			// ESP_LOGI("Button", "global capt: %p, this %p", Application::getCurrent()->getCapturedElement(), this);
+			// ESP_LOGI("Button", "global capt: %p, this %p", Application::getCurrent().getCapturedElement(), this);
 			// ESP_LOGI("Button", "_wasDown: %d", _wasDown);
 
 			if (_pointerWasDown) {

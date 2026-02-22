@@ -8,8 +8,12 @@
 namespace YOBA {
 	Application* Application::_current = nullptr;
 
-	Application* Application::getCurrent() {
+	bool Application::hasCurrent() {
 		return _current;
+	}
+
+	Application& Application::getCurrent() {
+		return *_current;
 	}
 
 	Application::Application() {
@@ -147,11 +151,15 @@ namespace YOBA {
 		handleEvent(event, getBounds(), true);
 	}
 
-	Element* Application::getCapturedElement() const {
+	bool Application::hasCapturedElement() const {
 		return _capturedElement;
 	}
 
-	void Application::setCapturedElement(Element* element) {
+	Element& Application::getCapturedElement() const {
+		return *_capturedElement;
+	}
+
+	void Application::setCapturedElementInternal(Element* element) {
 		// ESP_LOGI("Application", "setCapturedElement(): %p, previously capt %p", element, _capturedElement);
 
 		if (element == _capturedElement)
@@ -169,11 +177,23 @@ namespace YOBA {
 		invalidate();
 	}
 
-	Element* Application::getFocusedElement() const {
+	void Application::releaseElementCapture() {
+		setCapturedElementInternal(nullptr);
+	}
+
+	void Application::captureElement(Element& element) {
+		setCapturedElementInternal(&element);
+	}
+
+	bool Application::hasFocusedElement() const {
 		return _focusedElement;
 	}
 
-	void Application::setFocusedElement(Element* element) {
+	Element& Application::getFocusedElement() const {
+		return *_focusedElement;
+	}
+
+	void Application::setFocusedElementInternal(Element* element) {
 		if (element == _focusedElement)
 			return;
 
@@ -187,6 +207,14 @@ namespace YOBA {
 			_focusedElement->onFocusChanged();
 
 		invalidate();
+	}
+
+	void Application::clearElementFocus() {
+		setFocusedElementInternal(nullptr);
+	}
+
+	void Application::focusElement(Element& element) {
+		setFocusedElementInternal(&element);
 	}
 
 	Renderer& Application::getRenderer() const {

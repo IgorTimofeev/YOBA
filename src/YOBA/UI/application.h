@@ -12,7 +12,8 @@ namespace YOBA {
 		friend class Layout;
 
 		public:
-			static Application* getCurrent();
+			static bool hasCurrent();
+			static Application& getCurrent();
 
 			explicit Application();
 
@@ -20,7 +21,7 @@ namespace YOBA {
 			//
 			// renderTarget.setup();
 			// renderer.setTarget(&renderTarget);
-			// application->setRenderer(&renderer);
+			// application.setRenderer(&renderer);
 			void setup(RenderTarget& renderTarget, Renderer& renderer);
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
@@ -57,11 +58,15 @@ namespace YOBA {
 			uint32_t getFlushDeltaTime() const;
 			uint32_t getHIDTickDeltaTime() const;
 
-			Element* getFocusedElement() const;
-			void setFocusedElement(Element* element);
+			bool hasFocusedElement() const;
+			Element& getFocusedElement() const;
+			void clearElementFocus();
+			void focusElement(Element& element);
 
-			Element* getCapturedElement() const;
-			void setCapturedElement(Element* element);
+			bool hasCapturedElement() const;
+			Element& getCapturedElement() const;
+			void releaseElementCapture();
+			void captureElement(Element& element);
 
 		protected:
 			void onRender(Renderer& renderer, const Bounds& bounds) override;
@@ -85,6 +90,9 @@ namespace YOBA {
 			uint32_t _layoutDeltaTime = 0;
 			uint32_t _renderDeltaTime = 0;
 			uint32_t _flushDeltaTime = 0;
+
+			void setCapturedElementInternal(Element* element);
+			void setFocusedElementInternal(Element* element);
 
 			void animationsTick();
 	};

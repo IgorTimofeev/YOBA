@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/activeElement.h>
@@ -14,19 +15,19 @@ namespace YOBA {
 
 			size_t getItemsCount() const;
 
-			SelectorItem* getItemAt(size_t index) const;
+			SelectorItem& getItemAt(size_t index) const;
 
-			int32_t getIndexOfItem(SelectorItem* item) const;
+			int32_t getIndexOfItem(SelectorItem& item) const;
 
-			void addItem(SelectorItem* item);
+			void addItem(SelectorItem& item);
 			void removeItems();
 			void removeAndDeleteItems();
 
 			int32_t getSelectedIndex() const;
-			SelectorItem* getSelectedItem() const;
+			SelectorItem& getSelectedItem() const;
 
 			void setSelectedIndex(int32_t index);
-			void setItemsLayout(Layout* layout);
+			void setItemsLayout(Layout& layout);
 
 			void setOnSelectionChanged(const std::function<void()>& onSelectionChanged);
 

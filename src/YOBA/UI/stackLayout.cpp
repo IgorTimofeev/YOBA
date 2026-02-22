@@ -21,18 +21,18 @@ namespace YOBA {
 
 		switch (getOrientation()) {
 			case Orientation::horizontal: {
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
-					child->measure(
+					child.measure(
 						Size(
 							Size::unlimited,
 							availableSize.getHeight()
 						)
 					);
 
-					const auto& childSize = child->getMeasuredSize();
+					const auto& childSize = child.getMeasuredSize();
 
 					result.setWidth(result.getWidth() + childSize.getWidth() + getGap());
 
@@ -48,18 +48,18 @@ namespace YOBA {
 				break;
 			}
 			case Orientation::vertical: {
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
-					child->measure(
+					child.measure(
 						Size(
 							availableSize.getWidth(),
 							Size::unlimited
 						)
 					);
 
-					const auto& childSize = child->getMeasuredSize();
+					const auto& childSize = child.getMeasuredSize();
 
 					if (childSize.getWidth() > result.getWidth())
 						result.setWidth(childSize.getWidth());
@@ -88,13 +88,13 @@ namespace YOBA {
 			case Orientation::horizontal: {
 				position = bounds.getX();
 
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
-					const auto& childSize = child->getMeasuredSize();
+					const auto& childSize = child.getMeasuredSize();
 
-					child->render(renderer, Bounds(
+					child.render(renderer, Bounds(
 			        	position,
 			        	bounds.getY(),
 			        	childSize.getWidth(),
@@ -109,13 +109,13 @@ namespace YOBA {
 			case Orientation::vertical: {
 				position = bounds.getY();
 
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
-					const auto& childSize = child->getMeasuredSize();
+					const auto& childSize = child.getMeasuredSize();
 
-					child->render(renderer, Bounds(
+					child.render(renderer, Bounds(
 						bounds.getX(),
 						position,
 						bounds.getWidth(),

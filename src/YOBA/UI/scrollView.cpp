@@ -136,13 +136,13 @@ namespace YOBA {
 		_contentMeasuredSize.setWidth(0);
 		_contentMeasuredSize.setHeight(0);
 
-		for (const auto element : *this) {
-			if (!element->isVisible())
+		for (auto& child : *this) {
+			if (!child.isVisible())
 				continue;
 
-			element->measure(contentSize);
+			child.measure(contentSize);
 
-			const auto& elementSize = element->getMeasuredSize();
+			const auto& elementSize = child.getMeasuredSize();
 
 			if (elementSize.getWidth() > _contentMeasuredSize.getWidth())
 				_contentMeasuredSize.setWidth(elementSize.getWidth());
@@ -204,9 +204,9 @@ namespace YOBA {
 			_contentBounds.setHeight(_contentMeasuredSize.getHeight());
 		}
 
-		for (const auto element : *this)
-			if (element->isVisible())
-				element->render(renderer, _contentBounds);
+		for (auto& child : *this)
+			if (child.isVisible())
+				child.render(renderer, _contentBounds);
 
 		const auto& processScrollBar = [&bounds, &renderer](ScrollBar& bar, bool& possible, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 			bar.setContentSize(contentSize);
@@ -244,7 +244,7 @@ namespace YOBA {
 			if (!bounds.contains(_scrollIntoViewLaterTo->getBounds())) {
 				scrollToCenter(_scrollIntoViewLaterTo);
 
-				Application::getCurrent()->requestSecondRenderPass();
+				Application::getCurrent().requestSecondRenderPass();
 			}
 
 			_scrollIntoViewLaterTo = nullptr;

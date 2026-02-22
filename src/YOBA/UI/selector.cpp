@@ -9,25 +9,22 @@ namespace YOBA {
 		_itemsLayout = this;
 	}
 
-	SelectorItem* Selector::getItemAt(const size_t index) const {
-		return
-			_itemsLayout
-			? dynamic_cast<SelectorItem*>((*_itemsLayout)[index])
-			: nullptr;
+	SelectorItem& Selector::getItemAt(const size_t index) const {
+		return dynamic_cast<SelectorItem&>((*_itemsLayout)[index]);
 	}
 
-	int32_t Selector::getIndexOfItem(SelectorItem* item) const {
+	int32_t Selector::getIndexOfItem(SelectorItem& item) const {
 		return
 			_itemsLayout
 			? _itemsLayout->getIndexOfChild(item)
 			: -1;
 	}
 
-	void Selector::addItem(SelectorItem* item) {
+	void Selector::addItem(SelectorItem& item) {
 		if (!_itemsLayout)
 			return;
 
-		item->setSelector(this);
+		item.setSelector(this);
 		*_itemsLayout += item;
 	}
 
@@ -51,11 +48,8 @@ namespace YOBA {
 		return _selectedIndex;
 	}
 
-	SelectorItem* Selector::getSelectedItem() const {
-		return
-			_selectedIndex >= 0
-			? getItemAt(_selectedIndex)
-			: nullptr;
+	SelectorItem& Selector::getSelectedItem() const {
+		return getItemAt(_selectedIndex);
 	}
 
 	void Selector::setSelectedIndex(const int32_t index) {
@@ -64,9 +58,8 @@ namespace YOBA {
 
 		_selectedIndex = index;
 
-		for (size_t i = 0; i < getItemsCount(); i++) {
-			getItemAt(i)->setActive(i == _selectedIndex);
-		}
+		for (size_t i = 0; i < getItemsCount(); i++)
+			getItemAt(i).setActive(i == _selectedIndex);
 
 		onSelectionChanged();
 
@@ -84,8 +77,8 @@ namespace YOBA {
 		return _itemsLayout ? _itemsLayout->getChildrenCount() : 0;
 	}
 
-	void Selector::setItemsLayout(Layout *layout) {
-		_itemsLayout = layout;
+	void Selector::setItemsLayout(Layout& layout) {
+		_itemsLayout = &layout;
 	}
 
 	void Selector::setOnSelectionChanged(const std::function<void()>& onSelectionChanged) {
@@ -101,7 +94,7 @@ namespace YOBA {
 		setFocused(true);
 
 		if (getSelector())
-			getSelector()->setSelectedIndex(getSelector()->getIndexOfItem(this));
+			getSelector()->setSelectedIndex(getSelector()->getIndexOfItem(*this));
 
 		event->setHandled(true);
 	}

@@ -5,10 +5,10 @@
 
 namespace YOBA {
 	KeyboardControllerLayout::KeyboardControllerLayout() {
-		*this += &temporaryLayout;
+		*this += temporaryLayout;
 
-		*this += &keyboard;
-		setAutoSize(&keyboard);
+		*this += keyboard;
+		setAutoSize(keyboard);
 	}
 
 	KeyboardControllerLayout* KeyboardController::_controllerLayout = nullptr;
@@ -19,18 +19,18 @@ namespace YOBA {
 		if (!_controllerLayout) {
 			_controllerLayout = new KeyboardControllerLayout();
 
-			const auto targetLayout = getTargetLayoutOrApplication();
+			auto& targetLayout = getTargetLayoutOrApplication();
 
-			_controllerLayout->setSize(targetLayout->getBounds().getSize());
+			_controllerLayout->setSize(targetLayout.getBounds().getSize());
 
 			// Moving children from target to temporary layout
-			targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);
+			targetLayout.moveChildrenTo(_controllerLayout->temporaryLayout);
 
 			// Configuring keyboard
 			if (_onKeyboardShow)
 				_onKeyboardShow(&_controllerLayout->keyboard);
 
-			*targetLayout += _controllerLayout;
+			targetLayout += *_controllerLayout;
 		}
 
 		_controllerLayout->keyboard.setLayout(layoutOptions);
@@ -40,9 +40,9 @@ namespace YOBA {
 		if (!_controllerLayout)
 			return;
 
-		const auto targetLayout = getTargetLayoutOrApplication();
+		auto& targetLayout = getTargetLayoutOrApplication();
 
-		targetLayout->removeChildren();
+		targetLayout.removeChildren();
 		_controllerLayout->temporaryLayout.moveChildrenTo(targetLayout);
 
 		delete _controllerLayout;
@@ -69,7 +69,7 @@ namespace YOBA {
 		_targetLayout = value;
 	}
 
-	Layout* KeyboardController::getTargetLayoutOrApplication() {
-		return _targetLayout ? _targetLayout : Application::getCurrent();
+	Layout& KeyboardController::getTargetLayoutOrApplication() {
+		return _targetLayout ? *_targetLayout : Application::getCurrent();
 	}
 }

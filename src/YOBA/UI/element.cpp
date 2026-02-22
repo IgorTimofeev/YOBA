@@ -288,45 +288,66 @@ namespace YOBA {
 	}
 
 	bool Element::isFocused() const {
-		const auto application = Application::getCurrent();
+		if (!Application::hasCurrent())
+			return false;
+		
+		const auto& application = Application::getCurrent();
 
-		return application && application->getFocusedElement() == this;
+		return application.hasFocusedElement() && &application.getFocusedElement() == this;
 	}
 
 	void Element::setFocused(const bool state) {
-		const auto application = Application::getCurrent();
+		if (!_focusable || !Application::hasCurrent())
+			return;
+		
+		auto& application = Application::getCurrent();
 
-		if (!application || !_focusable || (application->getFocusedElement() == this) == state)
+		if ((application.hasFocusedElement() && &application.getFocusedElement() == this) == state)
 			return;
 
-		application->setFocusedElement(state ? this : nullptr);
+		if (state) {
+			application.focusElement(*this);
+		}
+		else {
+			application.clearElementFocus();
+		}
 	}
 
 	bool Element::isCaptured() const {
-		const auto application = Application::getCurrent();
+		if (!Application::hasCurrent())
+			return false;
 
-		return application && application->getCapturedElement() == this;
+		const auto& application = Application::getCurrent();
+
+		return application.hasCapturedElement() && &application.getCapturedElement() == this;
 	}
 
 	void Element::setCaptured(const bool state) {
-		const auto application = Application::getCurrent();
-
-		if (!application || (application->getCapturedElement() == this) == state)
+		if (!Application::hasCurrent())
 			return;
 
-		application->setCapturedElement(state ? this : nullptr);
+		auto& application = Application::getCurrent();
+
+		if ((application.hasCapturedElement() && &application.getCapturedElement() == this) == state)
+			return;
+
+		if (state) {
+			application.captureElement(*this);
+		}
+		else {
+			application.releaseElementCapture();
+		}
 	}
 
 	void Element::scrollIntoView() {
 		ScrollIntoViewEvent event { this };
-		Application::getCurrent()->pushEvent(&event);
+		Application::getCurrent().pushEvent(&event);
 	}
 
 	void Element::startAnimation(Animation* animation) {
-		const auto application = Application::getCurrent();
-
-		if (application)
-			application->startAnimation(animation);
+		if (Application::hasCurrent()) {
+			Application::getCurrent().startAnimation(animation);
+		}
 	}
 
 	Layout* Element::getParent() const {
@@ -470,24 +491,24 @@ namespace YOBA {
 	}
 
 	void Element::invalidateRender() {
-		const auto application = Application::getCurrent();
+		if (!Application::hasCurrent())
+			return;
 
-		if (application)
-			application->invalidateRender();
+		Application::getCurrent().invalidateRender();
 	}
 
 	void Element::invalidateMeasure() {
-		const auto application = Application::getCurrent();
+		if (!Application::hasCurrent())
+			return;
 
-		if (application)
-			application->invalidateMeasure();
+		Application::getCurrent().invalidateMeasure();
 	}
 
 	void Element::invalidate() {
-		const auto application = Application::getCurrent();
+		if (!Application::hasCurrent())
+			return;
 
-		if (application)
-			application->invalidate();
+		Application::getCurrent().invalidate();
 	}
 
 	void Element::onRender(Renderer& renderer, const Bounds& bounds) {
@@ -502,28 +523,28 @@ namespace YOBA {
 		_clipToBounds = value;
 	}
 
-	void Element::addToParent(Layout* parent) {
+	void Element::addToParent(Layout& parent) {
 		assert(_parent == nullptr && "Can't add element to parent, because it already have one");
 		assert(_parent != this && "Can't add element to itself");
 
-		_parent = parent;
+		_parent = &parent;
 
 		onAddedToParent(parent);
 	}
 
-	void Element::removeFromParent(Layout* parent) {
-		assert(parent == _parent && "Can't remove element from parent that's not related to it");
+	void Element::removeFromParent(Layout& parent) {
+		assert(&parent == _parent && "Can't remove element from parent that's not related to it");
 
 		_parent = nullptr;
 
 		onRemovedFromParent(parent);
 	}
 
-	void Element::onAddedToParent(Layout* parent) {
+	void Element::onAddedToParent(Layout& parent) {
 
 	}
 
-	void Element::onRemovedFromParent(Layout* parent) {
+	void Element::onRemovedFromParent(Layout& parent) {
 
 	}
 

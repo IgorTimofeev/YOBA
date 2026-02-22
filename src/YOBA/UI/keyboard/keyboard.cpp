@@ -5,7 +5,7 @@ namespace YOBA {
 	// ----------------------------- Keyboard -----------------------------
 
 	Keyboard::Keyboard() {
-		*this += &_backgroundPanel;
+		*this += _backgroundPanel;
 	}
 
 	Keyboard::~Keyboard() {
@@ -16,7 +16,7 @@ namespace YOBA {
 		if (!_layout)
 			return;
 
-		this->removeChild(_layout);
+		this->removeChild(*_layout);
 
 		delete _layout;
 	}
@@ -90,7 +90,7 @@ namespace YOBA {
 		if (!_layout)
 			return;
 
-		*this += _layout;
+		*this += *_layout;
 		_layout->assignKeyboard(this);
 	}
 

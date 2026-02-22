@@ -8,13 +8,13 @@ namespace YOBA {
 		lineWidthWithSpacing = 0,
 		lineHeight = 0;
 
-		for (const auto child : *this) {
-			child->measure(Size(
+		for (auto& child : *this) {
+			child.measure(Size(
 				availableSize.getWidth(),
 				Size::unlimited
 			));
 
-			const auto& childSize = child->getMeasuredSize();
+			const auto& childSize = child.getMeasuredSize();
 
 			// Overflow
 			if (lineWidthWithSpacing + childSize.getWidth() > availableSize.getWidth()) {
@@ -49,18 +49,18 @@ namespace YOBA {
 		int32_t y = 0;
 		uint16_t lineHeight = 0;
 
-		for (const auto child : *this) {
-			if (!child->isVisible())
+		for (auto& child : *this) {
+			if (!child.isVisible())
 				continue;
 
-			const auto& childSize = child->getMeasuredSize();
+			const auto& childSize = child.getMeasuredSize();
 
 			// Overflow
 			if (x + childSize.getWidth() > bounds.getWidth()) {
 				if (lineHeight > 0)
 					y += getVerticalSpacing() + lineHeight;
 
-				child->render(renderer, Bounds(
+				child.render(renderer, Bounds(
 		        	bounds.getX(),
 		        	bounds.getY() + y,
 		        	childSize.getWidth(),
@@ -72,7 +72,7 @@ namespace YOBA {
 			}
 			// Normal
 			else {
-				child->render(renderer, Bounds(
+				child.render(renderer, Bounds(
 	            	bounds.getX() + x,
 	            	bounds.getY() + y,
 	            	childSize.getWidth(),

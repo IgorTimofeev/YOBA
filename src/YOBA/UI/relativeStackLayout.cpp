@@ -17,24 +17,24 @@ namespace YOBA {
 
 	}
 
-	float RelativeStackLayout::getRelativeSize(const Element* child) {
-		return _elementSizes.contains(child) ? _elementSizes[child] : 1;
+	float RelativeStackLayout::getRelativeSize(const Element& child) {
+		return _elementSizes.contains(&child) ? _elementSizes[&child] : 1;
 	}
 
-	void RelativeStackLayout::setRelativeSize(const Element* child, float value) {
+	void RelativeStackLayout::setRelativeSize(const Element& child, float value) {
 		if (value == 1) {
 			tryRemoveRelativeSize(child);
 		}
 		else {
-			_elementSizes.insert_or_assign(child, value);
+			_elementSizes.insert_or_assign(&child, value);
 		}
 	}
 
-	bool RelativeStackLayout::isAutoSize(const Element* child) {
+	bool RelativeStackLayout::isAutoSize(const Element& child) {
 		return getRelativeSize(child) == autoSize;
 	}
 
-	void RelativeStackLayout::setAutoSize(const Element* child, const bool value) {
+	void RelativeStackLayout::setAutoSize(const Element& child, const bool value) {
 		setRelativeSize(child, value ? autoSize : 1);
 	}
 
@@ -63,8 +63,8 @@ namespace YOBA {
 		switch (getOrientation()) {
 			case Orientation::horizontal: {
 				// 1st loop, computing sum of relative sizes & sum of auto sizes
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -76,9 +76,9 @@ namespace YOBA {
 					}
 					// Auto
 					else {
-						child->measure(availableSize);
+						child.measure(availableSize);
 
-						autoSizeSum += child->getMeasuredSize().getWidth();
+						autoSizeSum += child.getMeasuredSize().getWidth();
 					}
 
 					visibleCount++;
@@ -95,8 +95,8 @@ namespace YOBA {
 					: 0;
 
 				// 2nd loop, measuring relative-sized children & computing total layout size
-				for (const auto child : *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -116,14 +116,14 @@ namespace YOBA {
 								: 0;
 						}
 
-						child->measure(Size(childSize, availableSize.getHeight()));
+						child.measure(Size(childSize, availableSize.getHeight()));
 					}
 					// Auto, already measured
 					else {
 
 					}
 
-					childMeasuredSize = child->getMeasuredSize();
+					childMeasuredSize = child.getMeasuredSize();
 
 					if (childMeasuredSize.getHeight() > result.getHeight())
 						result.setHeight(childMeasuredSize.getHeight());
@@ -137,8 +137,8 @@ namespace YOBA {
 				break;
 			}
 			case Orientation::vertical: {
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -148,9 +148,9 @@ namespace YOBA {
 						relativeCount++;
 					}
 					else {
-						child->measure(availableSize);
+						child.measure(availableSize);
 
-						autoSizeSum += child->getMeasuredSize().getHeight();
+						autoSizeSum += child.getMeasuredSize().getHeight();
 					}
 
 					visibleCount++;
@@ -167,8 +167,8 @@ namespace YOBA {
 					: 0;
 
 				// 2nd loop, measuring relative-sized children & computing total layout size
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -188,14 +188,14 @@ namespace YOBA {
 								: 0;
 						}
 
-						child->measure(Size(availableSize.getWidth(), childSize));
+						child.measure(Size(availableSize.getWidth(), childSize));
 					}
 					// Auto, already measured
 					else {
 
 					}
 
-					childMeasuredSize = child->getMeasuredSize();
+					childMeasuredSize = child.getMeasuredSize();
 
 					if (childMeasuredSize.getWidth() > result.getWidth())
 						result.setWidth(childMeasuredSize.getWidth());
@@ -236,8 +236,8 @@ namespace YOBA {
 
 		switch (getOrientation()) {
 			case Orientation::horizontal: {
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (const auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -249,7 +249,7 @@ namespace YOBA {
 					}
 					// Auto
 					else {
-						autoSizeSum += child->getMeasuredSize().getWidth();
+						autoSizeSum += child.getMeasuredSize().getWidth();
 					}
 
 					visibleCount++;
@@ -267,8 +267,8 @@ namespace YOBA {
 
 				position = bounds.getX();
 
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -287,13 +287,13 @@ namespace YOBA {
 						}
 					}
 					else {
-						childSize = child->getMeasuredSize().getWidth();
+						childSize = child.getMeasuredSize().getWidth();
 					}
 
 					if (childSize > bounds.getWidth())
 						childSize = bounds.getWidth();
 
-					child->render(renderer, Bounds(
+					child.render(renderer, Bounds(
 						              position,
 						              bounds.getY(),
 						              childSize,
@@ -306,8 +306,8 @@ namespace YOBA {
 				break;
 			}
 			case Orientation::vertical: {
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (const auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -319,7 +319,7 @@ namespace YOBA {
 					}
 					// Auto
 					else {
-						autoSizeSum += child->getMeasuredSize().getHeight();
+						autoSizeSum += child.getMeasuredSize().getHeight();
 					}
 
 					visibleCount++;
@@ -337,8 +337,8 @@ namespace YOBA {
 
 				position = bounds.getY();
 
-				for (const auto child: *this) {
-					if (!child->isVisible())
+				for (auto& child : *this) {
+					if (!child.isVisible())
 						continue;
 
 					childRelativeSize = getRelativeSize(child);
@@ -358,18 +358,18 @@ namespace YOBA {
 						}
 					}
 					else {
-						childSize = child->getMeasuredSize().getHeight();
+						childSize = child.getMeasuredSize().getHeight();
 					}
 
 					if (childSize > bounds.getHeight())
 						childSize = bounds.getHeight();
 
-					child->render(renderer, Bounds(
-						              bounds.getX(),
-						              position,
-						              bounds.getWidth(),
-						              childSize
-					              ));
+					child.render(renderer, Bounds(
+			              bounds.getX(),
+			              position,
+			              bounds.getWidth(),
+			              childSize
+		              ));
 
 					position += childSize + getGap();
 				}
@@ -379,7 +379,13 @@ namespace YOBA {
 		}
 	}
 
-	void RelativeStackLayout::tryRemoveRelativeSize(const Element* child) {
-		_elementSizes.erase(child);
+	void RelativeStackLayout::onChildRemoved(Element& child) {
+		Layout::onChildRemoved(child);
+
+		tryRemoveRelativeSize(child);
+	}
+
+	void RelativeStackLayout::tryRemoveRelativeSize(const Element& child) {
+		_elementSizes.erase(&child);
 	}
 }

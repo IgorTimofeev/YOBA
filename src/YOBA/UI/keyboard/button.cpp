@@ -63,7 +63,7 @@ namespace YOBA {
 	void KeyboardButton::onIsActiveChanged() {
 		Button::onIsActiveChanged();
 
-		Application::getCurrent()->invokeOnNextTick([this] {
+		Application::getCurrent().invokeOnNextTick([this] {
 			const auto key = getKeyFromCase();
 
 			if (key == Key::none)
@@ -71,11 +71,11 @@ namespace YOBA {
 
 			if (isActive()) {
 				auto event = KeyDownEvent(key, getTextFromCase());
-				Application::getCurrent()->pushEvent(&event);
+				Application::getCurrent().pushEvent(&event);
 			}
 			else {
 				auto event = KeyUpEvent(key, getTextFromCase());
-				Application::getCurrent()->pushEvent(&event);
+				Application::getCurrent().pushEvent(&event);
 			}
 		});
 	}
@@ -267,7 +267,7 @@ namespace YOBA {
 		if (isActive())
 			return;
 
-		Application::getCurrent()->invokeOnNextTick([] {
+		Application::getCurrent().invokeOnNextTick([] {
 			KeyboardController::hide();
 		});
 	}
@@ -330,7 +330,7 @@ namespace YOBA {
 		if (isActive())
 			return;
 
-		Application::getCurrent()->invokeOnNextTick([this] {
+		Application::getCurrent().invokeOnNextTick([this] {
 			getKeyboard()->setLayout(getKeyboard()->getCharactersLayoutBuilder()());
 		});
 	}
@@ -356,7 +356,7 @@ namespace YOBA {
 		if (isActive())
 			return;
 
-		Application::getCurrent()->invokeOnNextTick([this] {
+		Application::getCurrent().invokeOnNextTick([this] {
 			getKeyboard()->setCyclicLayoutIndex(getKeyboard()->getCyclicLayoutIndex());
 		});
 	}
@@ -378,7 +378,7 @@ namespace YOBA {
 		if (isActive())
 			return;
 
-		Application::getCurrent()->invokeOnNextTick([this] {
+		Application::getCurrent().invokeOnNextTick([this] {
 			getKeyboard()->setNextCyclicLayoutIndex();
 		});
 	}
