@@ -6,15 +6,19 @@
 namespace YOBA {
 	class TextColorElement : public virtual Element {
 		public:
-			const Color* getTextColor() const {
+			bool hasTextColor() const {
 				return _textColor;
 			}
 
-			void setTextColor(const Color* value) {
-				if (value == _textColor)
+			const Color& getTextColor() const {
+				return *_textColor;
+			}
+
+			void setTextColor(const Color& value) {
+				if (&value == _textColor)
 					return;
 
-				_textColor = value;
+				_textColor = &value;
 
 				invalidate();
 			}

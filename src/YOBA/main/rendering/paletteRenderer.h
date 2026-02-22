@@ -17,7 +17,7 @@ namespace YOBA {
 			uint8_t* getPaletteIndicesBuffer() const;
 			size_t getPaletteIndicesBufferLength() const;
 
-			virtual TIndex getPaletteIndex(const Color* color);
+			virtual TIndex getPaletteIndex(const Color& color);
 
 			TValue getPaletteValue(TIndex index);
 			void setPaletteValue(TIndex index, TValue value);
@@ -127,10 +127,10 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	TIndex PaletteRenderer<TIndex, TValue>::getPaletteIndex(const Color* color) {
-		switch (color->getModel()) {
+	TIndex PaletteRenderer<TIndex, TValue>::getPaletteIndex(const Color& color) {
+		switch (color.getModel()) {
 			case ColorModel::palette8Bit:
-				return reinterpret_cast<const Bit8PaletteColor*>(color)->getIndex();
+				return reinterpret_cast<const Bit8PaletteColor&>(color).getIndex();
 
 			default:
 				return 0;

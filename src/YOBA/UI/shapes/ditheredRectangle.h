@@ -9,15 +9,13 @@ namespace YOBA {
 		public:
 			DitheredRectangle() = default;
 
-			explicit DitheredRectangle(const Color* color) {
+			explicit DitheredRectangle(const Color& color) {
 				setFillColor(color);
 			}
 
 			void onRender(Renderer& renderer, const Bounds& bounds) override {
-				const auto color = getFillColor();
-
-				if (color)
-					renderer.renderDitheredRectangle(getBounds(), color);
+				if (hasFillColor())
+					renderer.renderDitheredRectangle(getBounds(), getFillColor());
 			}
 	};
 }

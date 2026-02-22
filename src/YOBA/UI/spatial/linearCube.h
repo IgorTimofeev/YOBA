@@ -9,7 +9,7 @@ namespace YOBA::spatial {
 	// 0######3  3######4  4######7  7######0  1######2  0######3
 	class LinearCube : public LinearMesh {
 		public:
-			LinearCube(const Vector3F& center, float size, const Color* color);
+			LinearCube(const Vector3F& center, float size, const Color& color);
 
 		private:
 			Vector3F _vertices[8] {};

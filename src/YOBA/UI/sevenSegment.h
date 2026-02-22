@@ -38,11 +38,11 @@ namespace YOBA {
 			uint16_t getDigitWidth() const;
 			uint16_t getDigitHeight() const;
 
-			const Color* getInactiveColor() const;
-			void setInactiveColor(const Color* value);
+			const Color& getInactiveColor() const;
+			void setInactiveColor(const Color& value);
 
-			const Color* getActiveColor() const;
-			void setActiveColor(const Color* value);
+			const Color& getActiveColor() const;
+			void setActiveColor(const Color& value);
 
 			bool isSignVisible() const;
 			void setSignVisible(bool signVisible);

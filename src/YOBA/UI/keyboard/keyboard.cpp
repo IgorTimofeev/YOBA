@@ -21,60 +21,60 @@ namespace YOBA {
 		delete _layout;
 	}
 
-	const Color* Keyboard::getBackgroundColor() const {
+	const Color& Keyboard::getBackgroundColor() const {
 		return _backgroundPanel.getFillColor();
 	}
 
-	void Keyboard::setBackgroundColor(const Color* value) {
+	void Keyboard::setBackgroundColor(const Color& value) {
 		_backgroundPanel.setFillColor(value);
 	}
 
-	const Color* Keyboard::getDefaultKeyBackgroundColor() const {
-		return _defaultKeyBackgroundColor;
+	const Color& Keyboard::getDefaultKeyBackgroundColor() const {
+		return *_defaultKeyBackgroundColor;
 	}
 
-	void Keyboard::setDefaultKeyBackgroundColor(const Color* value) {
-		_defaultKeyBackgroundColor = value;
+	void Keyboard::setDefaultKeyBackgroundColor(const Color& value) {
+		_defaultKeyBackgroundColor = &value;
 	}
 
-	const Color* Keyboard::getDefaultKeyTextColor() const {
-		return _defaultKeyTextColor;
+	const Color& Keyboard::getDefaultKeyTextColor() const {
+		return *_defaultKeyTextColor;
 	}
 
-	void Keyboard::setDefaultKeyTextColor(const Color* value) {
-		_defaultKeyTextColor = value;
+	void Keyboard::setDefaultKeyTextColor(const Color& value) {
+		_defaultKeyTextColor = &value;
 	}
 
-	const Color* Keyboard::getActionKeyBackgroundColor() const {
-		return _actionKeyBackgroundColor;
+	const Color& Keyboard::getActionKeyBackgroundColor() const {
+		return *_actionKeyBackgroundColor;
 	}
 
-	void Keyboard::setActionKeyBackgroundColor(const Color* value) {
-		_actionKeyBackgroundColor = value;
+	void Keyboard::setActionKeyBackgroundColor(const Color& value) {
+		_actionKeyBackgroundColor = &value;
 	}
 
-	const Color* Keyboard::getDisabledKeyBackgroundColor() const {
-		return _disabledKeyBackgroundColor;
+	const Color& Keyboard::getDisabledKeyBackgroundColor() const {
+		return *_disabledKeyBackgroundColor;
 	}
 
-	void Keyboard::setDisabledKeyBackgroundColor(const Color* value) {
-		_disabledKeyBackgroundColor = value;
+	void Keyboard::setDisabledKeyBackgroundColor(const Color& value) {
+		_disabledKeyBackgroundColor = &value;
 	}
 
-	const Color* Keyboard::getDisabledKeyTextColor() const {
-		return _disabledKeyTextColor;
+	const Color& Keyboard::getDisabledKeyTextColor() const {
+		return *_disabledKeyTextColor;
 	}
 
-	void Keyboard::setDisabledKeyTextColor(const Color* value) {
-		_disabledKeyTextColor = value;
+	void Keyboard::setDisabledKeyTextColor(const Color& value) {
+		_disabledKeyTextColor = &value;
 	}
 
-	const Color* Keyboard::getActionKeyTextColor() const {
-		return _actionKeyTextColor;
+	const Color& Keyboard::getActionKeyTextColor() const {
+		return *_actionKeyTextColor;
 	}
 
-	void Keyboard::setActionKeyTextColor(const Color* actionButtonSecondaryColor) {
-		_actionKeyTextColor = actionButtonSecondaryColor;
+	void Keyboard::setActionKeyTextColor(const Color& actionButtonSecondaryColor) {
+		_actionKeyTextColor = &actionButtonSecondaryColor;
 	}
 
 	KeyboardLayout* Keyboard::getLayout() const {

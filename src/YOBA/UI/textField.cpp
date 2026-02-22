@@ -33,7 +33,7 @@ namespace YOBA {
 			renderer.renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				backgroundColor
+				*backgroundColor
 			);
 		}
 
@@ -44,11 +44,14 @@ namespace YOBA {
 			renderer.renderRectangle(
 				bounds,
 				getCornerRadius(),
-				borderColor
+				*borderColor
 			);
 		}
 
 		// Text
+		if (!hasFont())
+			return;
+
 		const auto& font = getFont();
 		const auto fontHeight = font.getHeight(getFontScale());
 		const auto& text = getText();
@@ -65,7 +68,7 @@ namespace YOBA {
 							bounds.getYCenter() - fontHeight / 2
 						),
 						font,
-						_placeholderColor,
+						*_placeholderColor,
 						placeholder,
 						getFontScale()
 					);
@@ -101,7 +104,7 @@ namespace YOBA {
 					renderer.renderChar(
 						textPosition,
 						font,
-						textColor,
+						*textColor,
 						ch,
 						getFontScale()
 					);
@@ -128,7 +131,7 @@ namespace YOBA {
 						_cursorSize.getWidth(),
 						_cursorSize.getHeight()
 					),
-					_cursorColor
+					*_cursorColor
 				);
 			}
 		}
@@ -196,6 +199,9 @@ namespace YOBA {
 	}
 
 	void TextField::applyContinuousScroll() {
+		if (!hasFont())
+			return;
+
 		const auto& font = getFont();
 		const auto text = getText();
 		const auto& bounds = getBounds();
@@ -349,36 +355,36 @@ namespace YOBA {
 		_cursorBlinkInterval = value;
 	}
 
-	const Color* TextField::getCursorColor() const {
-		return _cursorColor;
+	const Color& TextField::getCursorColor() const {
+		return *_cursorColor;
 	}
 
-	void TextField::setCursorColor(const Color* cursorColor) {
-		_cursorColor = cursorColor;
+	void TextField::setCursorColor(const Color& cursorColor) {
+		_cursorColor = &cursorColor;
 	}
 
-	const Color* TextField::getDefaultBorderColor() const {
-		return _defaultBorderColor;
+	const Color& TextField::getDefaultBorderColor() const {
+		return *_defaultBorderColor;
 	}
 
-	void TextField::setDefaultBorderColor(const Color* value) {
-		_defaultBorderColor = value;
+	void TextField::setDefaultBorderColor(const Color& value) {
+		_defaultBorderColor = &value;
 	}
 
-	const Color* TextField::getDefaultBackgroundColor() const {
-		return _defaultBackgroundColor;
+	const Color& TextField::getDefaultBackgroundColor() const {
+		return *_defaultBackgroundColor;
 	}
 
-	void TextField::setDefaultBackgroundColor(const Color* value) {
-		_defaultBackgroundColor = value;
+	void TextField::setDefaultBackgroundColor(const Color& value) {
+		_defaultBackgroundColor = &value;
 	}
 
-	const Color* TextField::getDefaultTextColor() const {
-		return _defaultTextColor;
+	const Color& TextField::getDefaultTextColor() const {
+		return *_defaultTextColor;
 	}
 
-	void TextField::setDefaultTextColor(const Color* value) {
-		_defaultTextColor = value;
+	void TextField::setDefaultTextColor(const Color& value) {
+		_defaultTextColor = &value;
 	}
 
 	const Size& TextField::getCursorSize() const {
@@ -432,36 +438,36 @@ namespace YOBA {
 
 	}
 
-	const Color* TextField::getFocusedBorderColor() const {
-		return _focusedBorderColor;
+	const Color& TextField::getFocusedBorderColor() const {
+		return *_focusedBorderColor;
 	}
 
-	void TextField::setFocusedBorderColor(const Color* value) {
-		_focusedBorderColor = value;
+	void TextField::setFocusedBorderColor(const Color& value) {
+		_focusedBorderColor = &value;
 	}
 
-	const Color* TextField::getFocusedBackgroundColor() const {
-		return _focusedBackgroundColor;
+	const Color& TextField::getFocusedBackgroundColor() const {
+		return *_focusedBackgroundColor;
 	}
 
-	void TextField::setFocusedBackgroundColor(const Color* value) {
-		_focusedBackgroundColor = value;
+	void TextField::setFocusedBackgroundColor(const Color& value) {
+		_focusedBackgroundColor = &value;
 	}
 
-	const Color* TextField::getFocusedTextColor() const {
-		return _focusedTextColor;
+	const Color& TextField::getFocusedTextColor() const {
+		return *_focusedTextColor;
 	}
 
-	void TextField::setFocusedTextColor(const Color* value) {
-		_focusedTextColor = value;
+	void TextField::setFocusedTextColor(const Color& value) {
+		_focusedTextColor = &value;
 	}
 
-	const Color* TextField::getPlaceholderColor() const {
-		return _placeholderColor;
+	const Color& TextField::getPlaceholderColor() const {
+		return *_placeholderColor;
 	}
 
-	void TextField::setPlaceholderColor(const Color* value) {
-		_placeholderColor = value;
+	void TextField::setPlaceholderColor(const Color& value) {
+		_placeholderColor = &value;
 	}
 
 	uint8_t TextField::getKeyboardLayoutOptions() const {

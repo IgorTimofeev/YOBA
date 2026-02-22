@@ -10,14 +10,14 @@
 namespace YOBA {
 	class Slider : public Control,public ValueElement<float> {
 		public:
-			const Color* getTrackColor() const;
-			void setTrackColor(const Color* value);
+			const Color& getTrackColor() const;
+			void setTrackColor(const Color& value);
 
-			const Color* getFillColor() const;
-			void setFillColor(const Color* value);
+			const Color& getFillColor() const;
+			void setFillColor(const Color& value);
 
-			const Color* getHandleColor() const;
-			void setHandleColor(const Color* value);
+			const Color& getHandleColor() const;
+			void setHandleColor(const Color& value);
 
 			uint8_t getTrackSize() const;
 			void setTrackSize(const uint8_t value);
@@ -43,8 +43,8 @@ namespace YOBA {
 			uint8_t getTickCount() const;
 			void setTickCount(const uint8_t value);
 
-			const Color* getTickColor() const;
-			void setTickColor(const Color* value);
+			const Color& getTickColor() const;
+			void setTickColor(const Color& value);
 
 			uint8_t getSmallTickLineLength() const;
 			void setSmallTickLineLength(const uint8_t value);

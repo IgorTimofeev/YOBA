@@ -37,29 +37,29 @@ namespace YOBA {
 			const Size& getCursorSize() const;
 			void setCursorSize(const Size& cursorSize);
 
-			const Color* getCursorColor() const;
-			void setCursorColor(const Color* cursorColor);
+			const Color& getCursorColor() const;
+			void setCursorColor(const Color& cursorColor);
 
-			const Color* getDefaultBorderColor() const;
-			void setDefaultBorderColor(const Color* value);
+			const Color& getDefaultBorderColor() const;
+			void setDefaultBorderColor(const Color& value);
 
-			const Color* getDefaultBackgroundColor() const;
-			void setDefaultBackgroundColor(const Color* value);
+			const Color& getDefaultBackgroundColor() const;
+			void setDefaultBackgroundColor(const Color& value);
 
-			const Color* getDefaultTextColor() const;
-			void setDefaultTextColor(const Color* value);
+			const Color& getDefaultTextColor() const;
+			void setDefaultTextColor(const Color& value);
 
-			const Color* getFocusedBorderColor() const;
-			void setFocusedBorderColor(const Color* value);
+			const Color& getFocusedBorderColor() const;
+			void setFocusedBorderColor(const Color& value);
 
-			const Color* getFocusedBackgroundColor() const;
-			void setFocusedBackgroundColor(const Color* value);
+			const Color& getFocusedBackgroundColor() const;
+			void setFocusedBackgroundColor(const Color& value);
 
-			const Color* getFocusedTextColor() const;
-			void setFocusedTextColor(const Color* value);
+			const Color& getFocusedTextColor() const;
+			void setFocusedTextColor(const Color& value);
 
-			const Color* getPlaceholderColor() const;
-			void setPlaceholderColor(const Color* value);
+			const Color& getPlaceholderColor() const;
+			void setPlaceholderColor(const Color& value);
 
 			uint32_t getCursorBlinkInterval() const;
 			void setCursorBlinkInterval(uint32_t value);

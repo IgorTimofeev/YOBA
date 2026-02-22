@@ -12,9 +12,9 @@ namespace YOBA {
 	class TextView : public Control, public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
 		public:
 			TextView() = default;
-			TextView(const Font& font, const Color* foreground);
+			TextView(const Font& font, const Color& foreground);
 			TextView(const std::wstring_view text);
-			TextView(const Color* foreground);
+			TextView(const Color& foreground);
 
 			bool isWrappingEnabled() const;
 			void setWrappingEnabled(const bool value);

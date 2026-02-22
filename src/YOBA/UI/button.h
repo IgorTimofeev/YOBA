@@ -25,24 +25,24 @@ namespace YOBA {
 			bool isToggle() const;
 			void setToggle(bool value);
 
-			const Color* getDefaultBackgroundColor() const;
-			void setDefaultBackgroundColor(const Color* value);
+			const Color& getDefaultBackgroundColor() const;
+			void setDefaultBackgroundColor(const Color& value);
 
-			const Color* getDefaultTextColor() const;
-			void setDefaultTextColor(const Color* value);
+			const Color& getDefaultTextColor() const;
+			void setDefaultTextColor(const Color& value);
 
-			const Color* getActiveBackgroundColor() const;
-			void setActiveBackgroundColor(const Color* value);
+			const Color& getActiveBackgroundColor() const;
+			void setActiveBackgroundColor(const Color& value);
 
-			const Color* getActiveTextColor() const;
-			void setActiveTextColor(const Color* value);
+			const Color& getActiveTextColor() const;
+			void setActiveTextColor(const Color& value);
 
-			const Color* getDefaultBorderColor() const;
+			const Color& getDefaultBorderColor() const;
 
-			void setDefaultBorderColor(const Color* defaultBorderColor);
+			void setDefaultBorderColor(const Color& defaultBorderColor);
 
-			const Color* getActiveBorderColor() const;
-			void setActiveBorderColor(const Color* pressedBorderColor);
+			const Color& getActiveBorderColor() const;
+			void setActiveBorderColor(const Color& pressedBorderColor);
 
 			const Margin& getContentMargin() const;
 			void setContentMargin(const Margin& contentMargin);

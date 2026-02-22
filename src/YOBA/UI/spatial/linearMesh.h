@@ -15,8 +15,8 @@ namespace YOBA::spatial {
 			uint16_t getLineVertexIndicesCount() const;
 			void setLineVertexIndicesCount(uint16_t lineVertexIndicesCount);
 
-			const Color* getColor() const;
-			void setColor(const Color* color);
+			const Color& getColor() const;
+			void setColor(const Color& color);
 
 		private:
 			const uint16_t* _lineVertexIndices = nullptr;

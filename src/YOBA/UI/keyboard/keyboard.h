@@ -29,27 +29,27 @@ namespace YOBA {
 			void setCyclicLayoutIndex(uint8_t value);
 			void setNextCyclicLayoutIndex();
 
-			const Color* getBackgroundColor() const;
+			const Color& getBackgroundColor() const;
 
-			void setBackgroundColor(const Color* value);
+			void setBackgroundColor(const Color& value);
 
-			const Color* getDefaultKeyBackgroundColor() const;
-			void setDefaultKeyBackgroundColor(const Color* value);
+			const Color& getDefaultKeyBackgroundColor() const;
+			void setDefaultKeyBackgroundColor(const Color& value);
 
-			const Color* getDefaultKeyTextColor() const;
-			void setDefaultKeyTextColor(const Color* value);
+			const Color& getDefaultKeyTextColor() const;
+			void setDefaultKeyTextColor(const Color& value);
 
-			const Color* getActionKeyBackgroundColor() const;
-			void setActionKeyBackgroundColor(const Color* value);
+			const Color& getActionKeyBackgroundColor() const;
+			void setActionKeyBackgroundColor(const Color& value);
 
-			const Color* getDisabledKeyBackgroundColor() const;
-			void setDisabledKeyBackgroundColor(const Color* value);
+			const Color& getDisabledKeyBackgroundColor() const;
+			void setDisabledKeyBackgroundColor(const Color& value);
 
-			const Color* getDisabledKeyTextColor() const;
-			void setDisabledKeyTextColor(const Color* value);
+			const Color& getDisabledKeyTextColor() const;
+			void setDisabledKeyTextColor(const Color& value);
 
-			const Color* getActionKeyTextColor() const;
-			void setActionKeyTextColor(const Color* actionButtonSecondaryColor);
+			const Color& getActionKeyTextColor() const;
+			void setActionKeyTextColor(const Color& actionButtonSecondaryColor);
 
 			uint8_t getHorizontalKeySpacing() const;
 			void setHorizontalKeySpacing(uint8_t horizontalKeySpacing);

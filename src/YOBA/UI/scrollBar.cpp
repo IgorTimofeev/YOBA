@@ -40,15 +40,15 @@ namespace YOBA {
 		invalidate();
 	}
 
-	const Color* ScrollBar::getThumbColor() const {
-		return thumbColor;
+	const Color& ScrollBar::getThumbColor() const {
+		return *thumbColor;
 	}
 
-	void ScrollBar::setThumbColor(const Color* value) {
-		if (value == thumbColor)
+	void ScrollBar::setThumbColor(const Color& value) {
+		if (&value == thumbColor)
 			return;
 
-		thumbColor = value;
+		thumbColor = &value;
 
 		invalidate();
 	}
@@ -70,7 +70,7 @@ namespace YOBA {
 					bounds.getHeight()
 				),
 				getCornerRadius(),
-				thumbColor
+				*thumbColor
 			);
 		}
 		else {
@@ -82,7 +82,7 @@ namespace YOBA {
 					size
 				),
 				getCornerRadius(),
-				thumbColor
+				*thumbColor
 			);
 		}
 	}

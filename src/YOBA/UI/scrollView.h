@@ -30,7 +30,7 @@ namespace YOBA {
 			void setScrollBarOffset(const uint16_t value);
 			void setScrollBarSize(const uint16_t value);
 			void setScrollBarCornerRadius(const uint16_t value);
-			void setScrollBarThumbColor(const Color* value);
+			void setScrollBarThumbColor(const Color& value);
 
 			const Bounds& getContentBounds() const;
 

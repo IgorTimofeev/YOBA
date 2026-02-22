@@ -7,11 +7,11 @@
 namespace YOBA {
 	class ProgressBar : public Control, public CornerRadiusElement, public ValueElement<float> {
 		public:
-			const Color* getTrackColor() const;
-			void setTrackColor(const Color* value);
+			const Color& getTrackColor() const;
+			void setTrackColor(const Color& value);
 
-			const Color* getFillColor() const;
-			void setFillColor(const Color* value);
+			const Color& getFillColor() const;
+			void setFillColor(const Color& value);
 
 		protected:
 			void onRender(Renderer& renderer, const Bounds& bounds) override;

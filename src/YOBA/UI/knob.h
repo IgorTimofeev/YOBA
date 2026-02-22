@@ -19,11 +19,11 @@ namespace YOBA {
 			float getAngleStep() const;
 			void setAngleStep(float angleStep);
 
-			const Color* getLineColor() const;
-			void setLineColor(const Color* lineColor);
+			const Color& getLineColor() const;
+			void setLineColor(const Color& lineColor);
 
-			const Color* getMiddleColor() const;
-			void setMiddleColor(const Color* value);
+			const Color& getMiddleColor() const;
+			void setMiddleColor(const Color& value);
 
 			void setOnRotate(const std::function<void(float, float)>& onRotate);
 

@@ -6,32 +6,32 @@ namespace YOBA {
 		setActive(checked);
 	}
 
-	const Color* Switch::getTrackColor() const {
-		return _trackColor;
+	const Color& Switch::getTrackColor() const {
+		return *_trackColor;
 	}
 
-	void Switch::setTrackColor(const Color* value) {
-		_trackColor = value;
+	void Switch::setTrackColor(const Color& value) {
+		_trackColor = &value;
 
 		invalidateRender();
 	}
 
-	const Color* Switch::getCheckedColor() const {
-		return _checkedColor;
+	const Color& Switch::getCheckedColor() const {
+		return *_checkedColor;
 	}
 
-	void Switch::setCheckedColor(const Color* value) {
-		_checkedColor = value;
+	void Switch::setCheckedColor(const Color& value) {
+		_checkedColor = &value;
 
 		invalidateRender();
 	}
 
-	const Color* Switch::getHandleColor() const {
-		return _handleColor;
+	const Color& Switch::getHandleColor() const {
+		return *_handleColor;
 	}
 
-	void Switch::setHandleColor(const Color* value) {
-		_handleColor = value;
+	void Switch::setHandleColor(const Color& value) {
+		_handleColor = &value;
 
 		invalidateRender();
 	}
@@ -51,7 +51,7 @@ namespace YOBA {
 					bounds.getHeight()
 				),
 				getCornerRadius(),
-				_checkedColor
+				*_checkedColor
 			);
 		}
 
@@ -65,7 +65,7 @@ namespace YOBA {
 					bounds.getHeight()
 				),
 				getCornerRadius(),
-				_trackColor
+				*_trackColor
 			);
 		}
 
@@ -79,7 +79,7 @@ namespace YOBA {
 					bounds.getHeight()
 				),
 				getCornerRadius(),
-				_handleColor
+				*_handleColor
 			);
 		}
 	}

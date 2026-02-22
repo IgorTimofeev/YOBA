@@ -65,18 +65,18 @@ namespace YOBA {
 
 	// -------------------------------- Native rendering --------------------------------
 
-	void Renderer::clear(const Color* color) {
+	void Renderer::clear(const Color& color) {
 		clearNative(color);
 	}
 
-	void Renderer::renderPixel(const Point& point, const Color* color) {
+	void Renderer::renderPixel(const Point& point, const Color& color) {
 		if (!getViewport().contains(point))
 			return;
 
 		renderPixelNative(point, color);
 	}
 
-	void Renderer::renderHorizontalLine(const Point& point, uint16_t length, const Color* color) {
+	void Renderer::renderHorizontalLine(const Point& point, uint16_t length, const Color& color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -96,7 +96,7 @@ namespace YOBA {
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
 	}
 
-	void Renderer::renderVerticalLine(const Point& point, uint16_t length, const Color* color) {
+	void Renderer::renderVerticalLine(const Point& point, uint16_t length, const Color& color) {
 		const auto& viewport = getViewport();
 
 		if (
@@ -116,7 +116,7 @@ namespace YOBA {
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
 	}
 
-	void Renderer::renderFilledRectangle(const Bounds& bounds, const Color* color) {
+	void Renderer::renderFilledRectangle(const Bounds& bounds, const Color& color) {
 		const auto& viewport = getViewport();
 
 		if (bounds.haveZeroSize() || !viewport.intersects(bounds))
@@ -138,7 +138,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color* color) {
+	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color& color) {
 		constexpr uint8_t step = 1;
 		constexpr uint16_t totalSize = step + step;
 		bool odd = true;
@@ -154,7 +154,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderFilledQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color) {
+	void Renderer::renderFilledQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color& color) {
 		renderFilledTriangle(topLeft, topRight, bottomRight, color);
 		renderFilledTriangle(topLeft, bottomLeft, bottomRight, color);
 	}
@@ -166,7 +166,7 @@ namespace YOBA {
 
 	// -------------------------------- Non-native rendering --------------------------------
 
-	void Renderer::renderFilledRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color* color) {
+	void Renderer::renderFilledRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color& color) {
 		if (cornerRadius > 0) {
 			// Rect in middle
 			renderFilledRectangle(
@@ -208,7 +208,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderRectangle(const Bounds& bounds, const Color* color) {
+	void Renderer::renderRectangle(const Bounds& bounds, const Color& color) {
 		if (bounds.haveZeroSize())
 			return;
 
@@ -248,7 +248,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color* color) {
+	void Renderer::renderRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color& color) {
 		if (cornerRadius > 0) {
 			renderHorizontalLine(
 				Point(bounds.getX() + cornerRadius, bounds.getY()),
@@ -307,7 +307,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderLine(const Point& from, const Point& to, const Color* color) {
+	void Renderer::renderLine(const Point& from, const Point& to, const Color& color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {
 			renderVerticalLine(
@@ -421,7 +421,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderLine(const Point& from, const Point& to, const Color* color, const uint8_t thickness) {
+	void Renderer::renderLine(const Point& from, const Point& to, const Color& color, const uint8_t thickness) {
 		if (thickness > 1) {
 			// Same Y, horizontal line
 			if (from.getY() == to.getY()) {
@@ -486,14 +486,14 @@ namespace YOBA {
 		}
 	}
 	
-	void Renderer::renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
+	void Renderer::renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color& color) {
 		// Simple as fuck
 		renderLine(point1, point2, color);
 		renderLine(point2, point3, color);
 		renderLine(point3, point1, color);
 	}
 
-	void Renderer::renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
+	void Renderer::renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color& color) {
 		int32_t
 			x1 = point1.getX(),
 			y1 = point1.getY(),
@@ -599,7 +599,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderCircle(const Point& center, uint16_t radius, const Color* color) {
+	void Renderer::renderCircle(const Point& center, uint16_t radius, const Color& color) {
 		if (radius == 0)
 			return;
 
@@ -661,7 +661,7 @@ namespace YOBA {
 		while (xe < --radius);
 	}
 
-	void Renderer::renderFilledCircle(const Point& center, uint16_t radius, const Color* color) {
+	void Renderer::renderFilledCircle(const Point& center, uint16_t radius, const Color& color) {
 		if (radius == 0)
 			return;
 
@@ -700,7 +700,7 @@ namespace YOBA {
 	// --------+------- * x
 	//         |
 	//         |
-	void Renderer::renderArc(const Point& center, const uint16_t radius, float startAngleRad, float endAngleRad, const Color* color) {
+	void Renderer::renderArc(const Point& center, const uint16_t radius, float startAngleRad, float endAngleRad, const Color& color) {
 		if (startAngleRad == endAngleRad) {
 			if (startAngleRad == 0)
 				return;
@@ -769,7 +769,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve, const float tension) {
+	void Renderer::renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color& color, const uint16_t segmentsPerCurve, const float tension) {
 		assert(pointsLength >= 4 && "At least 4 points required");
 
 		Point pointPrev {};
@@ -853,7 +853,7 @@ namespace YOBA {
 		return angle;
 	}
 
-	void Renderer::renderRoundedCorners(const Point& center, int32_t radius, const uint8_t corner, const Color* color) {
+	void Renderer::renderRoundedCorners(const Point& center, int32_t radius, const uint8_t corner, const Color& color) {
 		int32_t f     = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -2 * radius;
@@ -917,7 +917,7 @@ namespace YOBA {
 		} while (xe < radius--);
 	}
 
-	void Renderer::renderFilledRoundedCorners(const Point& center, uint16_t radius, const bool upper, const int32_t delta, const Color* color) {
+	void Renderer::renderFilledRoundedCorners(const Point& center, uint16_t radius, const bool upper, const int32_t delta, const Color& color) {
 		int32_t f = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -radius - radius;
@@ -948,7 +948,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderMissingGlyph(const Point& point, const Font& font, const Color* color, const uint8_t fontScale) {
+	void Renderer::renderMissingGlyph(const Point& point, const Font& font, const Color& color, const uint8_t fontScale) {
 		renderRectangle(
 			Bounds(
 				point.getX(),
@@ -960,7 +960,7 @@ namespace YOBA {
 		);
 	}
 
-	void Renderer::renderGlyph(const Point& point, const Font& font, const Color* color, const Glyph* glyph, const uint8_t fontScale) {
+	void Renderer::renderGlyph(const Point& point, const Font& font, const Color& color, const Glyph* glyph, const uint8_t fontScale) {
 		auto bitIndex = glyph->getBitmapIndex();
 		uint8_t bitmapByte;
 
@@ -999,7 +999,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderText(const Point& point, const Font& font, const Color* color, const std::wstring_view string, const uint8_t fontScale) {
+	void Renderer::renderText(const Point& point, const Font& font, const Color& color, const std::wstring_view string, const uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
@@ -1008,7 +1008,6 @@ namespace YOBA {
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
 			|| point.getY() + font.getHeight(fontScale) < viewport.getY()
-			|| !color
 		)
 			return;
 
@@ -1051,7 +1050,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderChar(const Point& point, const Font& font, const Color* color, const wchar_t ch, const uint8_t fontScale) {
+	void Renderer::renderChar(const Point& point, const Font& font, const Color& color, const wchar_t ch, const uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
@@ -1059,7 +1058,6 @@ namespace YOBA {
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
 			|| point.getY() + font.getHeight(fontScale) < viewport.getY()
-			|| !color
 		)
 			return;
 

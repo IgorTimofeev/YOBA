@@ -7,7 +7,7 @@
 namespace YOBA::spatial {
 	class Line : public SceneElement {
 		public:
-			Line(const Vector3F& from, const Vector3F& to, const Color* color);
+			Line(const Vector3F& from, const Vector3F& to, const Color& color);
 
 			const Vector3F* getVertices() override;
 			uint16_t getVertexCount() override;
@@ -20,8 +20,8 @@ namespace YOBA::spatial {
 			Vector3F getTo() const;
 			void setTo(const Vector3F& from);
 
-			const Color* getColor() const;
-			void setColor(const Color* color);
+			const Color& getColor() const;
+			void setColor(const Color& color);
 
 		private:
 			Vector3F _vertices[2];

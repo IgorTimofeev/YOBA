@@ -2,7 +2,7 @@
 #include "scene.h"
 
 namespace YOBA::spatial {
-	Line::Line(const Vector3F& from, const Vector3F& to, const Color* color) : _color(color) {
+	Line::Line(const Vector3F& from, const Vector3F& to, const Color& color) : _color(&color) {
 		_vertices[0] = from;
 		_vertices[1] = to;
 	}
@@ -33,7 +33,7 @@ namespace YOBA::spatial {
 				static_cast<int32_t>(projectedVertices[1].getX()),
 				static_cast<int32_t>(projectedVertices[1].getY())
 			),
-			_color
+			*_color
 		);
 	}
 
@@ -53,11 +53,11 @@ namespace YOBA::spatial {
 		_vertices[1] = from;
 	}
 
-	const Color* Line::getColor() const {
-		return _color;
+	const Color& Line::getColor() const {
+		return *_color;
 	}
 
-	void Line::setColor(const Color* color) {
-		_color = color;
+	void Line::setColor(const Color& color) {
+		_color = &color;
 	}
 }

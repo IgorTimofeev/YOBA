@@ -5,32 +5,32 @@
 #include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
-	const Color* Slider::getTrackColor() const {
-		return _trackColor;
+	const Color& Slider::getTrackColor() const {
+		return *_trackColor;
 	}
 
-	void Slider::setTrackColor(const Color* value) {
-		_trackColor = value;
+	void Slider::setTrackColor(const Color& value) {
+		_trackColor = &value;
 
 		Element::invalidateRender();
 	}
 
-	const Color* Slider::getFillColor() const {
-		return _fillColor;
+	const Color& Slider::getFillColor() const {
+		return *_fillColor;
 	}
 
-	void Slider::setFillColor(const Color* value) {
-		_fillColor = value;
+	void Slider::setFillColor(const Color& value) {
+		_fillColor = &value;
 
 		Element::invalidateRender();
 	}
 
-	const Color* Slider::getHandleColor() const {
-		return _handleColor;
+	const Color& Slider::getHandleColor() const {
+		return *_handleColor;
 	}
 
-	void Slider::setHandleColor(const Color* value) {
-		_handleColor = value;
+	void Slider::setHandleColor(const Color& value) {
+		_handleColor = &value;
 
 		Element::invalidateRender();
 	}
@@ -103,12 +103,12 @@ namespace YOBA {
 		_tickCount = value;
 	}
 
-	const Color* Slider::getTickColor() const {
-		return _tickColor;
+	const Color& Slider::getTickColor() const {
+		return *_tickColor;
 	}
 
-	void Slider::setTickColor(const Color* value) {
-		_tickColor = value;
+	void Slider::setTickColor(const Color& value) {
+		_tickColor = &value;
 	}
 
 	uint8_t Slider::getSmallTickLineLength() const {
@@ -210,7 +210,7 @@ namespace YOBA {
 					_trackSize
 				),
 				_trackCornerRadius,
-				_fillColor
+				*_fillColor
 			);
 		}
 
@@ -224,7 +224,7 @@ namespace YOBA {
 					_trackSize
 				),
 				_trackCornerRadius,
-				_trackColor
+				*_trackColor
 			);
 		}
 
@@ -244,7 +244,7 @@ namespace YOBA {
 				renderer.renderVerticalLine(
 					Point(static_cast<int32_t>(tickXF), tickY),
 					lineLength,
-					_tickColor
+					*_tickColor
 				);
 
 				// Text
@@ -266,7 +266,7 @@ namespace YOBA {
 					renderer.renderText(
 						Point(textX, tickY + lineLength + _tickLabelOffset),
 						*_tickLabelFont,
-						_tickColor,
+						*_tickColor,
 						text
 					);
 				}
@@ -285,7 +285,7 @@ namespace YOBA {
 						bounds.getY() + handleWidthHalf
 					),
 					_handleCornerRadius,
-					_handleColor
+					*_handleColor
 				);
 			}
 			else {
@@ -297,7 +297,7 @@ namespace YOBA {
 						_handleSize.getHeight()
 					),
 					_handleCornerRadius,
-					_handleColor
+					*_handleColor
 				);
 			}
 		}

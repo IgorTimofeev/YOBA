@@ -6,6 +6,10 @@
 namespace YOBA {
 	class FontElement : public virtual Element {
 		public:
+			bool hasFont() const {
+				return _font;
+			}
+
 			const Font& getFont() const {
 				return *_font;
 			}

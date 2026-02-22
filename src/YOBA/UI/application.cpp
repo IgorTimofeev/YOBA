@@ -250,7 +250,7 @@ namespace YOBA {
 	}
 
 	void Application::onRender(Renderer& renderer, const Bounds& bounds) {
-		if (getBackgroundColor())
+		if (hasBackgroundColor())
 			renderer.clear(getBackgroundColor());
 
 		Layout::onRender(renderer, bounds);

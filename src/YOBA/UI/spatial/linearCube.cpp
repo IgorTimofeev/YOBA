@@ -2,7 +2,7 @@
 #include "scene.h"
 
 namespace YOBA::spatial {
-	LinearCube::LinearCube(const Vector3F& center, const float size, const Color* color) {
+	LinearCube::LinearCube(const Vector3F& center, const float size, const Color& color) {
 		const auto sizeHalf = size / 2.f;
 
 		_vertices[0] = center + Vector3F(-sizeHalf, -sizeHalf, -sizeHalf);

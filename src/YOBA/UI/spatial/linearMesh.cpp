@@ -24,7 +24,7 @@ namespace YOBA::spatial {
 					static_cast<int32_t>(vertex1->getX()),
 					static_cast<int32_t>(vertex1->getY())
 				),
-				_color
+				*_color
 			);
 		}
 	}
@@ -45,11 +45,11 @@ namespace YOBA::spatial {
 		_lineVertexIndicesCount = lineVertexIndicesCount;
 	}
 
-	const Color* LinearMesh::getColor() const {
-		return _color;
+	const Color& LinearMesh::getColor() const {
+		return *_color;
 	}
 
-	void LinearMesh::setColor(const Color* color) {
-		_color = color;
+	void LinearMesh::setColor(const Color& color) {
+		_color = &color;
 	}
 }

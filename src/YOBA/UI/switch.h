@@ -10,14 +10,14 @@ namespace YOBA {
 			Switch() = default;
 			Switch(const bool checked);
 
-			const Color* getTrackColor() const;
-			void setTrackColor(const Color* value);
+			const Color& getTrackColor() const;
+			void setTrackColor(const Color& value);
 
-			const Color* getCheckedColor() const;
-			void setCheckedColor(const Color* value);
+			const Color& getCheckedColor() const;
+			void setCheckedColor(const Color& value);
 
-			const Color* getHandleColor() const;
-			void setHandleColor(const Color* value);
+			const Color& getHandleColor() const;
+			void setHandleColor(const Color& value);
 
 		protected:
 			void onRender(Renderer& renderer, const Bounds& bounds) override;

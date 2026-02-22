@@ -80,7 +80,7 @@ namespace YOBA {
 		_verticalScrollBar.setCornerRadius(value);
 	}
 
-	void ScrollView::setScrollBarThumbColor(const Color* value) {
+	void ScrollView::setScrollBarThumbColor(const Color& value) {
 		_horizontalScrollBar.setThumbColor(value);
 		_verticalScrollBar.setThumbColor(value);
 	}

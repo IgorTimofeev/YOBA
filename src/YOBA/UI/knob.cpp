@@ -6,7 +6,7 @@ namespace YOBA {
 		const auto center = bounds.getCenter();
 
 		// Primary circle
-		if (getBackgroundColor()) {
+		if (hasBackgroundColor()) {
 			renderer.renderFilledCircle(
 				center,
 				radius,
@@ -15,16 +15,16 @@ namespace YOBA {
 		}
 
 		// Center circle
-		if (getMiddleColor()) {
+		if (_middleColor) {
 			renderer.renderFilledCircle(
 				center,
 				static_cast<uint16_t>(static_cast<float>(radius) * 0.5f),
-				getMiddleColor()
+				*_middleColor
 			);
 		}
 
 		// Line
-		if (getLineColor()) {
+		if (_lineColor) {
 			const auto centerF = static_cast<Vector2F>(center);
 			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
@@ -32,7 +32,7 @@ namespace YOBA {
 			renderer.renderLine(
 				static_cast<Point>(lineStart),
 				static_cast<Point>(lineEnd),
-				getLineColor()
+				*_lineColor
 			);
 		}
 	}
@@ -75,20 +75,20 @@ namespace YOBA {
 		_angleStep = angleStep;
 	}
 
-	const Color* Knob::getLineColor() const {
-		return _lineColor;
+	const Color& Knob::getLineColor() const {
+		return *_lineColor;
 	}
 
-	void Knob::setLineColor(const Color* lineColor) {
-		_lineColor = lineColor;
+	void Knob::setLineColor(const Color& lineColor) {
+		_lineColor = &lineColor;
 	}
 
-	const Color* Knob::getMiddleColor() const {
-		return _middleColor;
+	const Color& Knob::getMiddleColor() const {
+		return *_middleColor;
 	}
 
-	void Knob::setMiddleColor(const Color* value) {
-		_middleColor = value;
+	void Knob::setMiddleColor(const Color& value) {
+		_middleColor = &value;
 	}
 
 	void Knob::setOnRotate(const std::function<void(float, float)>& onRotate) {

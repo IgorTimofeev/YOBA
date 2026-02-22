@@ -11,20 +11,16 @@ namespace YOBA {
 		public:
 			Rectangle() = default;
 
-			explicit Rectangle(const Color* color) {
+			explicit Rectangle(const Color& color) {
 				setFillColor(color);
 			}
 
 			void onRender(Renderer& renderer, const Bounds& bounds) override {
-				auto color = getFillColor();
+				if (hasFillColor())
+					renderer.renderFilledRectangle(bounds, getCornerRadius(), getFillColor());
 
-				if (color)
-					renderer.renderFilledRectangle(bounds, getCornerRadius(), color);
-
-				color = getBorderColor();
-
-				if (color)
-					renderer.renderRectangle(bounds, getCornerRadius(), color);
+				if (hasBorderColor())
+					renderer.renderRectangle(bounds, getCornerRadius(), getBorderColor());
 			}
 	};
 }

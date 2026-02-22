@@ -17,8 +17,8 @@ namespace YOBA {
 			uint16_t getContentSize() const;
 			void setContentSize(const uint16_t value);
 
-			const Color* getThumbColor() const;
-			void setThumbColor(const Color* value);
+			const Color& getThumbColor() const;
+			void setThumbColor(const Color& value);
 
 		protected:
 			void onRender(Renderer& renderer, const Bounds& bounds) override;

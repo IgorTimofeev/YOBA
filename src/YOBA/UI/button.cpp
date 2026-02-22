@@ -67,7 +67,7 @@ namespace YOBA {
 			renderer.renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				color
+				*color
 			);
 		}
 
@@ -78,11 +78,14 @@ namespace YOBA {
 			renderer.renderRectangle(
 				bounds,
 				getCornerRadius(),
-				color
+				*color
 			);
 		}
 
 		// Text
+		if (!hasFont())
+			return;
+
 		const auto& font = getFont();
 
 		color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
@@ -94,7 +97,7 @@ namespace YOBA {
 					bounds.getYCenter() - font.getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()
 				),
 				font,
-				color,
+				*color,
 				getText(),
 				getFontScale()
 			);
@@ -111,52 +114,52 @@ namespace YOBA {
 		_isToggle = value;
 	}
 
-	const Color* Button::getActiveBackgroundColor() const {
-		return _activeBackgroundColor;
+	const Color& Button::getActiveBackgroundColor() const {
+		return *_activeBackgroundColor;
 	}
 
-	void Button::setActiveBackgroundColor(const Color* value) {
-		_activeBackgroundColor = value;
+	void Button::setActiveBackgroundColor(const Color& value) {
+		_activeBackgroundColor = &value;
 	}
 
-	const Color* Button::getActiveTextColor() const {
-		return _activeTextColor;
+	const Color& Button::getActiveTextColor() const {
+		return *_activeTextColor;
 	}
 
-	void Button::setActiveTextColor(const Color* value) {
-		_activeTextColor = value;
+	void Button::setActiveTextColor(const Color& value) {
+		_activeTextColor = &value;
 	}
 
-	const Color* Button::getDefaultBackgroundColor() const {
-		return _defaultBackgroundColor;
+	const Color& Button::getDefaultBackgroundColor() const {
+		return *_defaultBackgroundColor;
 	}
 
-	void Button::setDefaultBackgroundColor(const Color* value) {
-		_defaultBackgroundColor = value;
+	void Button::setDefaultBackgroundColor(const Color& value) {
+		_defaultBackgroundColor = &value;
 	}
 
-	const Color* Button::getDefaultTextColor() const {
-		return _defaultTextColor;
+	const Color& Button::getDefaultTextColor() const {
+		return *_defaultTextColor;
 	}
 
-	void Button::setDefaultTextColor(const Color* value) {
-		_defaultTextColor = value;
+	void Button::setDefaultTextColor(const Color& value) {
+		_defaultTextColor = &value;
 	}
 
-	const Color* Button::getDefaultBorderColor() const {
-		return _defaultBorderColor;
+	const Color& Button::getDefaultBorderColor() const {
+		return *_defaultBorderColor;
 	}
 
-	void Button::setDefaultBorderColor(const Color* defaultBorderColor) {
-		_defaultBorderColor = defaultBorderColor;
+	void Button::setDefaultBorderColor(const Color& defaultBorderColor) {
+		_defaultBorderColor = &defaultBorderColor;
 	}
 
-	const Color* Button::getActiveBorderColor() const {
-		return _activeBorderColor;
+	const Color& Button::getActiveBorderColor() const {
+		return *_activeBorderColor;
 	}
 
-	void Button::setActiveBorderColor(const Color* pressedBorderColor) {
-		_activeBorderColor = pressedBorderColor;
+	void Button::setActiveBorderColor(const Color& pressedBorderColor) {
+		_activeBorderColor = &pressedBorderColor;
 	}
 
 	void Button::onClick() {

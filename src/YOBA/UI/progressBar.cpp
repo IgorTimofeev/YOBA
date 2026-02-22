@@ -1,22 +1,22 @@
 #include <YOBA/UI/progressBar.h>
 
 namespace YOBA {
-	const Color* ProgressBar::getTrackColor() const {
-		return _trackColor;
+	const Color& ProgressBar::getTrackColor() const {
+		return *_trackColor;
 	}
 
-	void ProgressBar::setTrackColor(const Color* value) {
-		_trackColor = value;
+	void ProgressBar::setTrackColor(const Color& value) {
+		_trackColor = &value;
 
 		invalidate();
 	}
 
-	const Color* ProgressBar::getFillColor() const {
-		return _fillColor;
+	const Color& ProgressBar::getFillColor() const {
+		return *_fillColor;
 	}
 
-	void ProgressBar::setFillColor(const Color* value) {
-		_fillColor = value;
+	void ProgressBar::setFillColor(const Color& value) {
+		_fillColor = &value;
 
 		invalidate();
 	}
@@ -27,7 +27,7 @@ namespace YOBA {
 			renderer.renderFilledRectangle(
 				bounds,
 				getCornerRadius(),
-				_trackColor
+				*_trackColor
 			);
 		}
 
@@ -41,7 +41,7 @@ namespace YOBA {
 					bounds.getHeight()
 				),
 				getCornerRadius(),
-				_fillColor
+				*_fillColor
 			);
 		}
 	}

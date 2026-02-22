@@ -5,7 +5,7 @@
 namespace YOBA::spatial {
 	class LinearSphere : public LinearMesh {
 		public:
-			LinearSphere(const Vector3F& center, float radius, const uint16_t latitudeSegments, uint16_t longitudeSegments, const Color* color);
+			LinearSphere(const Vector3F& center, float radius, const uint16_t latitudeSegments, uint16_t longitudeSegments, const Color& color);
 
 		private:
 			std::vector<Vector3F> _vertices {};
