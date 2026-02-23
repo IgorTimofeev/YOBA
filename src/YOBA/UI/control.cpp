@@ -30,10 +30,7 @@ namespace YOBA {
 					contains = false;
 				}
 
-				const auto capturedElement =
-					Application::hasCurrent() && Application::getCurrent().hasCapturedElement()
-					? &Application::getCurrent().getCapturedElement()
-					: nullptr;
+				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
 
 				setPointerOver(
 					event->getTypeID() != PointerUpEvent::typeID
@@ -67,10 +64,7 @@ namespace YOBA {
 			if (!isVisible() || !isEnabled())
 				return;
 
-			const auto capturedElement =
-				Application::hasCurrent() && Application::getCurrent().hasCapturedElement()
-				? &Application::getCurrent().getCapturedElement()
-				: nullptr;
+			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
 
 			if (!capturedElement || capturedElement == this)
 				onEvent(event);
