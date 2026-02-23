@@ -9,15 +9,15 @@ namespace YOBA {
 		public:
 			Circle() = default;
 
-			explicit Circle(const Color& color) {
+			explicit Circle(const Color* color) {
 				setFillColor(color);
 			}
 
 			void onRender(Renderer& renderer, const Bounds& bounds) override {
-				if (!hasFillColor())
-					return;
+				const auto color = getFillColor();
 
-				const auto& color = getFillColor();
+				if (!color)
+					return;
 
 				renderer.renderFilledCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),

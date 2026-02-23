@@ -1,7 +1,7 @@
 #include <YOBA/UI/textView.h>
 
 namespace YOBA {
-	TextView::TextView(const Font& font, const Color& foreground) {
+	TextView::TextView(const Font& font, const Color* foreground) {
 		setFont(font);
 		setTextColor(foreground);
 	}
@@ -10,7 +10,7 @@ namespace YOBA {
 		setText(text);
 	}
 
-	TextView::TextView(const Color& foreground) {
+	TextView::TextView(const Color* foreground) {
 		setTextColor(foreground);
 	}
 
@@ -29,9 +29,6 @@ namespace YOBA {
 	}
 
 	Size TextView::onMeasure(const Size& availableSize) {
-		if (!hasFont())
-			return {};
-
 		const auto& font = getFont();
 
 		if (_wrappingEnabled) {
@@ -63,11 +60,11 @@ namespace YOBA {
 	}
 
 	void TextView::onRender(Renderer& renderer, const Bounds& bounds) {
-		if (!hasFont() || !hasTextColor())
-			return;
-
 		const auto& font = getFont();
-		const auto& color = getTextColor();
+		const auto color = getTextColor();
+
+		if (!color)
+			return;
 
 		if (_wrappingEnabled) {
 			auto position = getBounds().getPosition();

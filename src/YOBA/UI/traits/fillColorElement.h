@@ -6,19 +6,15 @@
 namespace YOBA {
 	class FillColorElement : public virtual Element {
 		public:
-			bool hasFillColor() const {
+			const Color* getFillColor() const {
 				return _fillColor;
 			}
 
-			const Color& getFillColor() const {
-				return *_fillColor;
-			}
-
-			void setFillColor(const Color& value) {
-				if (&value == _fillColor)
+			void setFillColor(const Color* value) {
+				if (value == _fillColor)
 					return;
 
-				_fillColor = &value;
+				_fillColor = value;
 
 				invalidate();
 			}

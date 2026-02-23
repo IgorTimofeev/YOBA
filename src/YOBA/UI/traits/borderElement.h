@@ -6,19 +6,15 @@
 namespace YOBA {
 	class BorderElement : public virtual Element {
 		public:
-			bool hasBorderColor() const {
+			const Color* getBorderColor() const {
 				return _borderColor;
 			}
 
-			const Color& getBorderColor() const {
-				return *_borderColor;
-			}
-
-			void setBorderColor(const Color& value) {
-				if (&value == _borderColor)
+			void setBorderColor(const Color* value) {
+				if (value == _borderColor)
 					return;
 
-				_borderColor = &value;
+				_borderColor = value;
 
 				invalidate();
 			}
