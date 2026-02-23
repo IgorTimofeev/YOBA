@@ -2,16 +2,12 @@
 #include <YOBA/main/math.h>
 
 namespace YOBA {
-	bool Renderer::hasTarget() const {
-		return _target != nullptr;
+	RenderTarget* Renderer::getTarget() const {
+		return _target;
 	}
 
-	RenderTarget& Renderer::getTarget() const {
-		return *_target;
-	}
-
-	void Renderer::setTarget(RenderTarget& value) {
-		if (&value == _target || (_target && value == *_target))
+	void Renderer::setTarget(RenderTarget* value) {
+		if (value == _target || (_target && *value == *_target))
 			return;
 
 		const auto previousTarget = _target;
@@ -20,7 +16,7 @@ namespace YOBA {
 			previousTarget->_renderer = nullptr;
 		}
 
-		_target = &value;
+		_target = value;
 		_target->_renderer = this;
 
 		resetViewport();

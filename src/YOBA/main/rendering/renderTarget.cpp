@@ -117,10 +117,6 @@ namespace YOBA {
 		return !(rhs == *this);
 	}
 
-	bool RenderTarget::hasRenderer() const {
-		return _renderer != nullptr;
-	}
-
 	Renderer* RenderTarget::getRenderer() const {
 		return _renderer;
 	}
