@@ -1,7 +1,7 @@
 #include <YOBA/UI/textView.h>
 
 namespace YOBA {
-	TextView::TextView(const Font& font, const Color* foreground) {
+	TextView::TextView(const Font* font, const Color* foreground) {
 		setFont(font);
 		setTextColor(foreground);
 	}
@@ -29,14 +29,17 @@ namespace YOBA {
 	}
 
 	Size TextView::onMeasure(const Size& availableSize) {
-		const auto& font = getFont();
+		const auto font = getFont();
+
+		if (!font)
+			return {};
 
 		if (_wrappingEnabled) {
 			auto result = Size();
 
 			_wrappedLines.clear();
 
-			font.wrap(
+			font->wrap(
 				getText(),
 				getFontScale(),
 				availableSize.getWidth(),
@@ -44,7 +47,7 @@ namespace YOBA {
 					if (width > result.getWidth())
 						result.setWidth(width);
 
-					result.setHeight(result.getHeight() + font.getHeight(getFontScale()));
+					result.setHeight(result.getHeight() + font->getHeight(getFontScale()));
 
 					_wrappedLines.push_back(line);
 				}
@@ -54,13 +57,17 @@ namespace YOBA {
 		}
 
 		return {
-			font.getWidth(getText(), getFontScale()),
-			font.getHeight(getFontScale())
+			font->getWidth(getText(), getFontScale()),
+			font->getHeight(getFontScale())
 		};
 	}
 
 	void TextView::onRender(Renderer& renderer, const Bounds& bounds) {
-		const auto& font = getFont();
+		const auto font = getFont();
+
+		if (!font)
+			return;
+
 		const auto color = getTextColor();
 
 		if (!color)
@@ -70,7 +77,7 @@ namespace YOBA {
 			auto position = getBounds().getPosition();
 
 			for (const auto& line : _wrappedLines) {
-				renderer.renderText(
+				renderer.renderString(
 					position,
 					font,
 					color,
@@ -78,11 +85,11 @@ namespace YOBA {
 					getFontScale()
 				);
 
-				position.setY(position.getY() + font.getHeight(getFontScale()));
+				position.setY(position.getY() + font->getHeight(getFontScale()));
 			}
 		}
 		else {
-			renderer.renderText(
+			renderer.renderString(
 				getBounds().getPosition(),
 				font,
 				color,

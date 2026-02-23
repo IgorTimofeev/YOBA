@@ -49,8 +49,12 @@ namespace YOBA {
 		}
 
 		// Text
-		const auto& font = getFont();
-		const auto fontHeight = font.getHeight(getFontScale());
+		const auto font = getFont();
+
+		if (!font)
+			return;
+
+		const auto fontHeight = font->getHeight(getFontScale());
 		const auto& text = getText();
 
 		// Placeholder
@@ -59,7 +63,7 @@ namespace YOBA {
 				const auto& placeholder = getPlaceholder();
 
 				if (!placeholder.empty()) {
-					renderer.renderText(
+					renderer.renderString(
 						Point(
 							bounds.getX() + _textMargin,
 							bounds.getYCenter() - fontHeight / 2
@@ -109,7 +113,7 @@ namespace YOBA {
 					if (charIndex == _cursorPosition)
 						blinkX = textPosition.getX();
 
-					textPosition.setX(textPosition.getX() + font.getWidth(ch, getFontScale()));
+					textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
 				}
 
 				renderer.popViewport(oldViewport);
@@ -134,38 +138,38 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onEvent(Event& event) {
-		if (event.getTypeID() == PointerDownEvent::typeID) {
+	void TextField::onEvent(Event* event) {
+		if (event->getTypeID() == PointerDownEvent::typeID) {
 			setFocused(true);
 			setCaptured(true);
 
-			_lastTouchX = reinterpret_cast<PointerDownEvent&>(event).getPosition().getX();
+			_lastTouchX = reinterpret_cast<PointerDownEvent*>(event)->getPosition().getX();
 
 			applyContinuousScroll();
 
-			event.setHandled(true);
+			event->setHandled(true);
 		}
-		else if (event.getTypeID() == PointerDragEvent::typeID) {
-			_lastTouchX = reinterpret_cast<PointerDragEvent&>(event).getPosition().getX();
+		else if (event->getTypeID() == PointerDragEvent::typeID) {
+			_lastTouchX = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getX();
 
 			applyContinuousScroll();
 
-			event.setHandled(true);
+			event->setHandled(true);
 		}
-		else if (event.getTypeID() == PointerUpEvent::typeID) {
+		else if (event->getTypeID() == PointerUpEvent::typeID) {
 			setCaptured(false);
 
-			event.setHandled(true);
+			event->setHandled(true);
 		}
-		else if (event.getTypeID() == KeyUpEvent::typeID) {
+		else if (event->getTypeID() == KeyUpEvent::typeID) {
 			if (!isFocused())
 				return;
 			
-			const auto& keyUpEvent = reinterpret_cast<KeyUpEvent&>(event);
+			const auto keyUpEvent = reinterpret_cast<KeyUpEvent*>(event);
 
-//			ESP_LOGI("textField", "keyUpEvent: %d", (int32_t) keyUpEvent.getKey());
+//			ESP_LOGI("textField", "keyUpEvent: %d", (int32_t) keyUpEvent->getKey());
 
-			switch (keyUpEvent.getKey()) {
+			switch (keyUpEvent->getKey()) {
 				case Key::enter: {
 					setFocused(false);
 
@@ -176,7 +180,7 @@ namespace YOBA {
 					break;
 				}
 				default: {
-					const auto text = keyUpEvent.getText();
+					const auto text = keyUpEvent->getText();
 
 					if (text.has_value()) {
 						insert(text.value());
@@ -186,17 +190,21 @@ namespace YOBA {
 				}
 			}
 			
-			onInput(keyUpEvent.getKey(), keyUpEvent.getText());
+			onInput(keyUpEvent->getKey(), keyUpEvent->getText());
 
 			if (_onInput)
-				_onInput(keyUpEvent.getKey(), keyUpEvent.getText());
+				_onInput(keyUpEvent->getKey(), keyUpEvent->getText());
 
-			event.setHandled(true);
+			keyUpEvent->setHandled(true);
 		}
 	}
 
 	void TextField::applyContinuousScroll() {
-		const auto& font = getFont();
+		const auto font = getFont();
+
+		if (!font)
+			return;
+
 		const auto text = getText();
 		const auto& bounds = getBounds();
 		const int32_t boundsXWithoutMargin = bounds.getX() + _textMargin;
@@ -213,7 +221,7 @@ namespace YOBA {
 			for (size_t i = 0; i < text.length(); i++) {
 				if (cursorX < targetX) {
 					cursorPosition++;
-					cursorX += font.getWidth(_mask ? _mask : text[i]);
+					cursorX += font->getWidth(_mask ? _mask : text[i]);
 				}
 				else {
 					break;
@@ -231,7 +239,7 @@ namespace YOBA {
 				cursorPosition--;
 
 				if (_scrollPosition > 0) {
-					const auto previousCharWidth = font.getWidth(_mask ? _mask : text[cursorPosition], getFontScale());
+					const auto previousCharWidth = font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale());
 
 					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
 				}
@@ -243,7 +251,7 @@ namespace YOBA {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
 			if (cursorPosition < text.length()) {
-				const int32_t pizda = cursorX + font.getWidth(_mask ? _mask : text[cursorPosition], getFontScale()) - boundsWidthWithoutMargin;
+				const int32_t pizda = cursorX + font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale()) - boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 
