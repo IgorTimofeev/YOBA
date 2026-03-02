@@ -823,8 +823,8 @@ namespace YOBA {
 	}
 
 	float Renderer::fastAtan2(const float y, const float x) {
-		//http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
-		//Volkan SALMA
+		// http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
+		// Volkan SALMA
 
 		constexpr float ONEQTR_PI = std::numbers::pi_v<float> / 4.0;
 		constexpr float THRQTR_PI = 3.0 * std::numbers::pi_v<float> / 4.0;

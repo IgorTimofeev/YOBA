@@ -11,7 +11,7 @@ namespace YOBA {
 			Vector2(T x, T y);
 
 			template<class TOther>
-			explicit Vector2(const Vector2<TOther>& other);
+			Vector2(const Vector2<TOther>& other);
 
 			T getX() const;
 			void setX(T value);
@@ -20,7 +20,7 @@ namespace YOBA {
 			void setY(T value);
 
 			float getLength() const;
-			Vector2 <T> clockwisePerpendicular() const;
+			Vector2 clockwisePerpendicular() const;
 			Vector2 counterClockwisePerpendicular() const;
 			float getRotationFloat(const Vector2& point) const;
 			Vector2 rotate(float angleSin, float angleCos) const;
@@ -33,7 +33,7 @@ namespace YOBA {
 			Vector2 operator-(const Vector2& right) const;
 			Vector2 operator-(T value) const;
 			Vector2 operator-() const;
-			Vector2<T>& operator-=(const Vector2& right);
+			Vector2& operator-=(const Vector2& right);
 			Vector2 operator*(const Vector2& right) const;
 			Vector2 operator*(T factor) const;
 			Vector2& operator*=(const Vector2& right);
@@ -44,12 +44,12 @@ namespace YOBA {
 			bool operator!=(const Vector2 &right) const;
 
 		private:
-			T x;
-			T y;
+			T _x;
+			T _y;
 	};
 
 	template<typename T>
-	Vector2<T>::Vector2(T x, T y) : x(x), y(y) {
+	Vector2<T>::Vector2(T x, T y) : _x(x), _y(y) {
 
 	}
 
@@ -66,43 +66,43 @@ namespace YOBA {
 
 	template<typename T>
 	T Vector2<T>::getX() const {
-		return x;
+		return _x;
 	}
 
 	template<typename T>
 	void Vector2<T>::setX(T value) {
-		x = value;
+		_x = value;
 	}
 
 	template<typename T>
 	T Vector2<T>::getY() const {
-		return y;
+		return _y;
 	}
 
 	template<typename T>
 	void Vector2<T>::setY(T value) {
-		y = value;
+		_y = value;
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::clockwisePerpendicular() const {
 		return {
-			y,
-			-x,
+			_y,
+			-_x,
 		};
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::counterClockwisePerpendicular() const {
 		return {
-			-y,
-			x,
+			-_y,
+			_x,
 		};
 	}
 
 	template<typename T>
 	float Vector2<T>::getLength() const {
-		return std::sqrt(static_cast<float>(x) * static_cast<float>(x) + static_cast<float>(y) * static_cast<float>(y));
+		return std::sqrt(static_cast<float>(_x) * static_cast<float>(_x) + static_cast<float>(_y) * static_cast<float>(_y));
 	}
 
 	template<typename T>
@@ -110,21 +110,21 @@ namespace YOBA {
 		const auto length = getLength();
 
 		return {
-			static_cast<T>(static_cast<float>(x) / length),
-			static_cast<T>(static_cast<float>(y) / length)
+			static_cast<T>(static_cast<float>(_x) / length),
+			static_cast<T>(static_cast<float>(_y) / length)
 		};
 	}
 
 	template<typename T>
 	float Vector2<T>::getRotationFloat(const Vector2& point) const {
-		return std::atan2(static_cast<float>(point.y - y), static_cast<float>(point.x - x));
+		return std::atan2(static_cast<float>(point._y - _y), static_cast<float>(point._x - _x));
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::rotate(const float angleSin, const float angleCos) const {
 		return {
-			static_cast<T>(static_cast<float>(x) * angleCos - static_cast<float>(y) * angleSin),
-			static_cast<T>(static_cast<float>(x) * angleSin + static_cast<float>(y) * angleCos)
+			static_cast<T>(static_cast<float>(_x) * angleCos - static_cast<float>(_y) * angleSin),
+			static_cast<T>(static_cast<float>(_x) * angleSin + static_cast<float>(_y) * angleCos)
 		};
 	}
 
@@ -136,23 +136,23 @@ namespace YOBA {
 	template<typename T>
 	Vector2<T> Vector2<T>::operator+(const Vector2& right) const {
 		return {
-			x + right.x,
-			y + right.y,
+			_x + right._x,
+			_y + right._y,
 		};
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::operator+(T value) const {
 		return {
-			x + value,
-			y + value,
+			_x + value,
+			_y + value,
 		};
 	}
 
 	template<typename T>
 	Vector2<T>& Vector2<T>::operator+=(const Vector2& right) {
-		x += right.x;
-		y += right.y;
+		_x += right._x;
+		_y += right._y;
 
 		return *this;
 	}
@@ -160,31 +160,31 @@ namespace YOBA {
 	template<typename T>
 	Vector2<T> Vector2<T>::operator-(const Vector2& right) const {
 		return {
-			x - right.x,
-			y - right.y,
+			_x - right._x,
+			_y - right._y,
 		};
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::operator-(T value) const {
 		return {
-			x - value,
-			y - value,
+			_x - value,
+			_y - value,
 		};
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::operator-() const {
 		return {
-			-x,
-			-y
+			-_x,
+			-_y
 		};
 	}
 
 	template<typename T>
 	Vector2<T>& Vector2<T>::operator-=(const Vector2& right) {
-		x -= right.x;
-		y -= right.y;
+		_x -= right._x;
+		_y -= right._y;
 
 		return *this;
 	}
@@ -192,23 +192,23 @@ namespace YOBA {
 	template<typename T>
 	Vector2<T> Vector2<T>::operator*(const Vector2<T>& right) const {
 		return {
-			x * right.x,
-			y * right.y,
+			_x * right._x,
+			_y * right._y,
 		};
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::operator*(T factor) const {
 		return {
-			x * factor,
-			y * factor,
+			_x * factor,
+			_y * factor,
 		};
 	}
 
 	template<typename T>
 	Vector2<T>& Vector2<T>::operator*=(const Vector2& right) {
-		x *= right.x;
-		y *= right.y;
+		_x *= right._x;
+		_y *= right._y;
 
 		return *this;
 	}
@@ -216,30 +216,30 @@ namespace YOBA {
 	template<typename T>
 	Vector2<T> Vector2<T>::operator/(const Vector2<T>& right) const {
 		return {
-			x / right.x,
-			y / right.y,
+			_x / right._x,
+			_y / right._y,
 		};
 	}
 
 	template<typename T>
 	Vector2<T> Vector2<T>::operator/(T factor) const {
 		return {
-			x / factor,
-			y / factor,
+			_x / factor,
+			_y / factor,
 		};
 	}
 
 	template<typename T>
 	Vector2<T>& Vector2<T>::operator/=(const Vector2& right) {
-		x /= right.x;
-		y /= right.y;
+		_x /= right._x;
+		_y /= right._y;
 
 		return *this;
 	}
 	
 	template<typename T>
 	bool Vector2<T>::operator==(const Vector2& right) const {
-		return x == right.x && y == right.y;
+		return _x == right._x && _y == right._y;
 	}
 
 	template<typename T>

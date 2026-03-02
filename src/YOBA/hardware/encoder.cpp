@@ -6,7 +6,7 @@
 namespace YOBA {
 	// -------------------------------- Value changed event --------------------------------
 
-	EncoderValueChangedEvent::EncoderValueChangedEvent(int16_t deltaPerSecond) : Event(typeID), _DPS(deltaPerSecond) {
+	EncoderValueChangedEvent::EncoderValueChangedEvent(const int16_t deltaPerSecond) : Event(typeID), _DPS(deltaPerSecond) {
 
 	}
 
@@ -18,7 +18,7 @@ namespace YOBA {
 
 	// -------------------------------- Encoder --------------------------------
 
-	Encoder::Encoder(uint8_t aPin, uint8_t bPin) :
+	Encoder::Encoder(const uint8_t aPin, const uint8_t bPin) :
 		_aPin(aPin),
 		_bPin(bPin)
 	{
@@ -29,8 +29,8 @@ namespace YOBA {
 		system::GPIO::setMode(_aPin, system::GPIO::PinMode::input);
 		system::GPIO::setMode(_bPin, system::GPIO::PinMode::input);
 
-		system::GPIO::addInterruptHandler(_aPin, abInterruptHandler, this);
-		system::GPIO::addInterruptHandler(_bPin, abInterruptHandler, this);
+		system::GPIO::addInterruptHandler(_aPin, ABInterruptHandler, this);
+		system::GPIO::addInterruptHandler(_bPin, ABInterruptHandler, this);
 	}
 
 	void Encoder::tick() {
@@ -55,47 +55,39 @@ namespace YOBA {
 		return _minimumDelta;
 	}
 
-	void Encoder::setMinimumDelta(uint16_t value) {
+	void Encoder::setMinimumDelta(const uint16_t value) {
 		_minimumDelta = value;
 	}
 
-	void Encoder::abInterruptHandler(void* args) {
-		static_cast<Encoder*>(args)->readValue();
+	void Encoder::ABInterruptHandler(void* args) {
+		static_cast<Encoder*>(args)->readAB();
 	}
 
-	void Encoder::readValue() {
+	void Encoder::readAB() {
 		const auto AB = system::GPIO::read(_aPin) << 1 | system::GPIO::read(_bPin);
 
-		if (AB != _oldAB) {
-			switch (_oldAB | AB << 2) {
-				case 0:
-				case 5:
-				case 10:
-				case 15:
-					break;
-				case 1:
-				case 7:
-				case 8:
-				case 14:
-					_value++;
-					break;
-				case 2:
-				case 4:
-				case 11:
-				case 13:
-					_value--;
-					break;
-				case 3:
-				case 12:
-					_value += 2;
-					break;
-				default:
-					_value -= 2;
-					break;
-			}
+		switch (_oldAB | AB << 2) {
+			// Clockwise
+			case 0b0010:
+			case 0b0100:
+			case 0b1011:
+			case 0b1101:
+				_value++;
+				break;
 
-			_oldAB = AB;
+			// Counterclockwise
+			case 0b0001:
+			case 0b0111:
+			case 0b1000:
+			case 0b1110:
+				_value--;
+				break;
+
+			default:
+				break;
 		}
+
+		_oldAB = AB;
 	}
 
 	// -------------------------------- Push down event --------------------------------
@@ -117,7 +109,7 @@ namespace YOBA {
 
 	// -------------------------------- PushButtonEncoder --------------------------------
 
-	PushButtonEncoder::PushButtonEncoder(uint8_t aPin, uint8_t bPin, uint8_t swPin): Encoder(aPin, bPin), _swPin(swPin) {
+	PushButtonEncoder::PushButtonEncoder(const uint8_t aPin, const uint8_t bPin, const uint8_t swPin): Encoder(aPin, bPin), _swPin(swPin) {
 
 	}
 

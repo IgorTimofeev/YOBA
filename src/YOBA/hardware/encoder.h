@@ -81,8 +81,8 @@ namespace YOBA {
 			int16_t _value = 0;
 			uint16_t _minimumDelta = 0;
 
-			static void abInterruptHandler(void* args);
-			void readValue();
+			static void ABInterruptHandler(void* args);
+			void readAB();
 	};
 
 	// -------------------------------- Push down event --------------------------------
