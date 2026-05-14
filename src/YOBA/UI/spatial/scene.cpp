@@ -86,12 +86,12 @@ namespace YOBA::spatial {
 				// camera. Trigonometry will help us:
 				//
 				// X
-				// │         ╱│ } screenWidth - projection plane width
+				// │         ╱│ } screenWidth, projection plane width
 				// │       ╱  │
 				// │     ╱    │      * x - original x
 				// │   ╱      * x' - projected x
 				// │ ╱ )      │
-				// ├ ─ ) ──── screenZ ───────────────────────── Z
+				// ├ ─ ) ──── screenZ, projection plane Z ────────── Z
 				// │ ╲ ) FOV  │
 				// │   ╲      │
 				// │     ╲    │
@@ -104,8 +104,9 @@ namespace YOBA::spatial {
 				// Then
 				// screenZ = (screenWidth / 2) / tan(FOV / 2)
 				//
-				// So the final formula will be
-				// x' = x * screenWidth / 2 / tan(FOV / 2) / z
+				// So the coordinate projection formula will be
+				// x' = x * screenZ / z
+				// x' = x * (screenWidth / 2 / tan(FOV / 2)) / z
 				//
 				// In the final we need to move from world space to screen space. Since our world coordinate system is Z-up,
 				// but the screen coordinate system is Y-up, they can be simply swapped:
@@ -191,17 +192,7 @@ namespace YOBA::spatial {
 		_farPlaneDistance = value;
 	}
 
-	bool Scene::isFOVVertical() const {
-		return _FOVVertical;
-	}
-
-	void Scene::setFOVVertical(const bool fovVertical) {
-		_FOVVertical = fovVertical;
-	}
-
 	float Scene::getProjectionPlaneDistance() const {
-		return _FOVVertical
-			? static_cast<float>(getBounds().getHeight()) / 2.f / std::tanf(_FOV / 2.f)
-			: static_cast<float>(getBounds().getWidth()) / 2.f / std::tanf(_FOV / 2.f);
+		return static_cast<float>(getBounds().getWidth()) / 2.f / std::tanf(_FOV / 2.f);
 	}
 }

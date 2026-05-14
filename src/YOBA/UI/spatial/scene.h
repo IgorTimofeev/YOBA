@@ -36,9 +36,6 @@ namespace YOBA::spatial {
 
 			float getProjectionPlaneDistance() const;
 
-			bool isFOVVertical() const;
-			void setFOVVertical(bool fovVertical);
-
 		protected:
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
@@ -53,7 +50,6 @@ namespace YOBA::spatial {
 
 			// 90 deg by default
 			float _FOV = std::numbers::pi_v<float> / 2.f;
-			bool _FOVVertical = false;
 
 			float _nearPlaneDistance = 0.1f;
 			float _farPlaneDistance = 1000.f;
