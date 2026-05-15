@@ -182,7 +182,7 @@ namespace YOBA {
 
 		// Sleep out
 		this->writeCommandAndData(0x11, 0x00);
-		system::sleep(5'000);
+		system::delayUs(5'000);
 	}
 
 	void ILI9341Display::onRotationChanged() {

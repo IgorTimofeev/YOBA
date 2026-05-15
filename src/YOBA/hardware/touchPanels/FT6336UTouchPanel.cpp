@@ -34,7 +34,7 @@ namespace YOBA {
 		if (_rstPin >= 0) {
 			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::output);
 			system::GPIO::write(_rstPin, false);
-			system::sleep(10'000);
+			system::delayUs(10'000);
 			system::GPIO::write(_rstPin, true);
 		}
 

@@ -76,9 +76,9 @@ namespace YOBA {
 
 	void SPIDisplay::toggleResetPin() {
 		setResetPin(false);
-		system::sleep(100'000);
+		system::delayUs(100'000);
 
 		setResetPin(true);
-		system::sleep(100'000);
+		system::delayUs(100'000);
 	}
 }

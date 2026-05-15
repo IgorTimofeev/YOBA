@@ -11,7 +11,7 @@ namespace YOBA {
 	}
 
 	void Animation::start() {
-		_start = system::getTime();
+		_start = system::getTimeUs();
 	}
 
 	void Animation::stop() {
@@ -19,7 +19,7 @@ namespace YOBA {
 	}
 
 	bool Animation::tick() {
-		double position = static_cast<double>(system::getTime() - _start) / static_cast<double>(_duration);
+		double position = static_cast<double>(system::getTimeUs() - _start) / static_cast<double>(_duration);
 
 		if (position > 1)
 			position = 1;

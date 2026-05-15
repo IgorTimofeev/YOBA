@@ -17,11 +17,11 @@
 namespace YOBA::system {
 	// -------------------------------- System --------------------------------
 
-	void sleep(const uint32_t interval) {
-		vTaskDelay(pdMS_TO_TICKS(interval / 1000));
+	void delayUs(const uint32_t intervalMs) {
+		vTaskDelay(pdMS_TO_TICKS(intervalMs / 1000));
 	}
 
-	uint64_t getTime() {
+	uint64_t getTimeUs() {
 		return static_cast<uint64_t>(esp_timer_get_time());
 	}
 

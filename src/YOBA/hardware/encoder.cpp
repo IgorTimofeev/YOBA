@@ -39,7 +39,7 @@ namespace YOBA {
 
 		const auto application = Application::getCurrent();
 
-		const auto time = system::getTime();
+		const auto time = system::getTimeUs();
 		const auto deltaTime = static_cast<int32_t>(time - _oldValueTime);
 		_oldValueTime = time;
 

@@ -13,9 +13,9 @@
 #include "driver/i2c_master.h"
 
 namespace YOBA::system {
-	void sleep(uint32_t interval);
+	void delayUs(uint32_t intervalMs);
 
-	uint64_t getTime();
+	uint64_t getTimeUs();
 
 	class GPIO {
 		public:

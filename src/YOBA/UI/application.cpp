@@ -81,15 +81,15 @@ namespace YOBA {
 		_renderer->resetViewport();
 
 		// Handling input from HIDs like touchscreens, rotary encoders, etc.
-		auto time = system::getTime();
+		auto time = system::getTimeUs();
 
 		for (const auto hid : _HIDs)
 			hid->tick();
 		
-		_HIDTickDeltaTime = system::getTime() - time;
+		_HIDTickDeltaTime = system::getTimeUs() - time;
 
 		// Handling tick for children
-		time = system::getTime();
+		time = system::getTimeUs();
 
 		onTick();
 
@@ -104,7 +104,7 @@ namespace YOBA {
 		// Playing animations
 		animationsTick();
 
-		_tickDeltaTime = system::getTime() - time;
+		_tickDeltaTime = system::getTimeUs() - time;
 	}
 
 	void Application::render() {
@@ -112,17 +112,17 @@ namespace YOBA {
 
 		// Measuring children size
 		if (_measureInvalidated) {
-			time = system::getTime();
+			time = system::getTimeUs();
 
 			measure(getSize());
 			_measureInvalidated = false;
 
-			_layoutDeltaTime = system::getTime() - time;
+			_layoutDeltaTime = system::getTimeUs() - time;
 		}
 
 		// Render pass
 		if (_renderInvalidated) {
-			time = system::getTime();
+			time = system::getTimeUs();
 
 			// Rendering children
 			Layout::render(_renderer, getBounds());
@@ -130,16 +130,16 @@ namespace YOBA {
 			if (_secondRenderPassRequested)
 				Layout::render(_renderer, getBounds());
 
-			_renderDeltaTime = system::getTime() - time;
+			_renderDeltaTime = system::getTimeUs() - time;
 
 			// Flushing screen buffer
-			time = system::getTime();
+			time = system::getTimeUs();
 
 			_renderer->flush();
 
 			_renderInvalidated = false;
 
-			_flushDeltaTime = system::getTime() - time;
+			_flushDeltaTime = system::getTimeUs() - time;
 		}
 	}
 

@@ -2,7 +2,11 @@
 
 namespace YOBA {
 	uint16_t TransactionalPixelBufferRenderer::computeTransactionViewportHeight() const {
-		return getTarget()->getSize().getHeight() / 4;
+		#if defined(CONFIG_IDF_TARGET_ESP32S3)
+			return getTarget()->getSize().getHeight() / 8;
+		#else
+			return getTarget()->getSize().getHeight() / 4;
+		#endif
 	}
 
 	uint16_t TransactionalPixelBufferRenderer::getTransactionViewportHeight() const {

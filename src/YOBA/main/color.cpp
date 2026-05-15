@@ -46,11 +46,6 @@ namespace YOBA {
 		return r << 16 | g << 8 | b;
 	}
 
-	RGB565Color RGB888Color::toRGB565() const {
-		return RGB565Color(r >> 3 << 3 | g >> 5 | g >> 2 << 13 | b >> 3 << 8);
-//		return Rgb565Color(((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3));
-	}
-
 	RGB666Color RGB888Color::toRGB666() const {
 		return RGB666Color(r << 16 | g << 8 | b);
 	}
@@ -170,7 +165,7 @@ namespace YOBA {
 
 	// -------------------------------- MonochromeColor --------------------------------
 
-	RGB888Color MonochromeColor::toRgb888() const {
+	RGB888Color MonochromeColor::toRGB888() const {
 		return
 			_value > 0
 			? RGB888Color(0xFf, 0xFF, 0xFF)
@@ -179,7 +174,7 @@ namespace YOBA {
 
 	// -------------------------------- Rgb565Color --------------------------------
 
-	RGB888Color RGB565Color::toRgb888() const {
+	RGB888Color RGB565Color::toRGB888() const {
 		return {
 			static_cast<uint8_t>(((_value >> 11 & 0x1F) * 255 + 15) / 31),
 			static_cast<uint8_t>(((_value >> 5 & 0x3F) * 255 + 31) / 63),
@@ -189,7 +184,7 @@ namespace YOBA {
 
 	// -------------------------------- Rgb666Color --------------------------------
 
-	RGB888Color RGB666Color::toRgb888() const {
+	RGB888Color RGB666Color::toRGB888() const {
 		return {
 			static_cast<uint8_t>((_value >> 12 & 0b111111) * 255 / 0b111111),
 			static_cast<uint8_t>((_value >> 6 & 0b111111) * 255 / 0b111111),

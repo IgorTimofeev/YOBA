@@ -41,7 +41,7 @@ namespace YOBA {
 		// Software reset
 		if (rstPin < 0) {
 			writeCommand(GC9A01A_SWRESET);
-			system::sleep(150);
+			system::delayUs(150);
 		}
 
 	    writeCommand(0xEF);
@@ -316,7 +316,7 @@ namespace YOBA {
 		writeData(0x6f);
 
 	    writeCommand(GC9A01A_SLPOUT);
-	    system::sleep(120);
+	    system::delayUs(120);
 	}
 
 	void GC9A01Display::writeMADCTLCommand() {
@@ -363,7 +363,7 @@ namespace YOBA {
 
 	void GC9A01Display::turnOn() {
 		writeCommand(GC9A01A_DISPON);
-		system::sleep(20);
+		system::delayUs(20);
 	}
 
 	void GC9A01Display::turnOff() {

@@ -93,7 +93,7 @@ namespace YOBA {
 				this->_value = value;
 			}
 
-			virtual RGB888Color toRgb888() const = 0;
+			virtual RGB888Color toRGB888() const = 0;
 
 		protected:
 			TValue _value;
@@ -107,7 +107,7 @@ namespace YOBA {
 			
 			}
 
-			RGB888Color toRgb888() const override;
+			RGB888Color toRGB888() const override;
 	};
 
 	// -------------------------------- RGB565 --------------------------------
@@ -118,7 +118,11 @@ namespace YOBA {
 			
 			}
 
-			RGB888Color toRgb888() const override;
+			constexpr RGB565Color(const RGB565Color& value) : ValueColor(ColorModel::RGB565, value._value) {
+
+			}
+
+			RGB888Color toRGB888() const override;
 	};
 
 	// -------------------------------- RGB666 --------------------------------
@@ -129,7 +133,7 @@ namespace YOBA {
 			
 			}
 
-			RGB888Color toRgb888() const override;
+			RGB888Color toRGB888() const override;
 	};
 
 	// -------------------------------- RGB888 --------------------------------
@@ -167,7 +171,12 @@ namespace YOBA {
 			void setB(uint8_t b);
 
 			uint32_t toUint32() const;
-			RGB565Color toRGB565() const;
+
+			constexpr RGB565Color toRGB565() const {
+				return RGB565Color(r >> 3 << 3 | g >> 5 | g >> 2 << 13 | b >> 3 << 8);
+				//		return Rgb565Color(((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3));
+			}
+
 			RGB666Color toRGB666() const;
 			MonochromeColor toMonochrome() const;
 

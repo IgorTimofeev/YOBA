@@ -1,4 +1,6 @@
 #include "renderer.h"
+
+#include <cassert>
 #include <YOBA/main/math.h>
 
 namespace YOBA {
@@ -773,7 +775,7 @@ namespace YOBA {
 
 		for (size_t pointIndex = 0; pointIndex < pointsLength - 3; pointIndex++) {
 			for (uint16_t segment = 0; segment <= segmentsPerCurve; segment++) {
-				const float t = static_cast<float>(segment) / segmentsPerCurve;
+				const float t = static_cast<float>(segment) / static_cast<float>(segmentsPerCurve);
 				const auto point = getCatmullRomPoint(points, pointIndex, t, tension);
 
 				// Linking to prev point
