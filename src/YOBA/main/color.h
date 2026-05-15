@@ -85,7 +85,7 @@ namespace YOBA {
 			
 			};
 
-			TValue getValue() const {
+			constexpr TValue getValue() const {
 				return _value;
 			}
 			
