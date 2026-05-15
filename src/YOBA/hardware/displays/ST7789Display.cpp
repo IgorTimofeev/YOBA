@@ -184,8 +184,6 @@ namespace YOBA {
 	void ST7789Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {
 		uint8_t data[4];
 
-//		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
-
 		// Column Address Set
 		data[0] = bounds.getX() >> 8; //Start Col High
 		data[1] = bounds.getX() & 0xff; //Start Col Low

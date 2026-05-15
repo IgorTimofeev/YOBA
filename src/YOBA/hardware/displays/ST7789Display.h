@@ -8,9 +8,6 @@
 namespace YOBA {
 	class ST7789Display : public SPIDisplay {
 		public:
-			// Recommended SPI frequencies:
-			// Arduino: 40 MHz
-			// ESP-IDF: 60 MHz
 			ST7789Display(
 				uint8_t mosiPin,
 				uint8_t misoPin,
