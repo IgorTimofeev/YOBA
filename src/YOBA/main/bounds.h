@@ -33,7 +33,7 @@ namespace YOBA {
 
 			}
 
-			// Defines a element bounds that couldn't exist in any UI
+			// Defines an element bounds that couldn't exist in any UI
 			static const Bounds& invalidValue;
 
 			int32_t getX() const {
@@ -188,7 +188,7 @@ namespace YOBA {
 				return result;
 			}
 
-			Bounds getExpansion(const Bounds& bounds) const {
+			Bounds expandTo(const Bounds& bounds) const {
 				Bounds result {};
 
 				result.x = std::min(x, bounds.x);
