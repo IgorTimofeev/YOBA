@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <cstdint>
 
 namespace YOBA {
@@ -11,6 +12,15 @@ namespace YOBA {
 			bool isHandled() const;
 			void setHandled(bool handled);
 			uint16_t getTypeID() const;
+
+			template<class T>
+			requires std::derived_from<T, Event>
+			T* castTo() {
+				return
+					T::typeID == this->_typeID
+					? static_cast<T*>(this)
+					: nullptr;
+			}
 
 		protected:
 			static uint16_t registerTypeID();

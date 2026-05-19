@@ -6,44 +6,44 @@ namespace YOBA {
 	// -------------------------------- Selector --------------------------------
 
 	Selector::Selector() {
-		_itemsLayout = this;
+		_itemLayout = this;
 	}
 
 	SelectorItem* Selector::getItemAt(const size_t index) const {
 		return
-			_itemsLayout
-			? dynamic_cast<SelectorItem*>((*_itemsLayout)[index])
+			_itemLayout
+			? dynamic_cast<SelectorItem*>((*_itemLayout)[index])
 			: nullptr;
 	}
 
 	int32_t Selector::getIndexOfItem(SelectorItem* item) const {
 		return
-			_itemsLayout
-			? _itemsLayout->getIndexOfChild(item)
+			_itemLayout
+			? _itemLayout->getIndexOfChild(item)
 			: -1;
 	}
 
 	void Selector::addItem(SelectorItem* item) {
-		if (!_itemsLayout)
+		if (!_itemLayout)
 			return;
 
 		item->setSelector(this);
-		*_itemsLayout += item;
+		*_itemLayout += item;
 	}
 
 	void Selector::removeItems() {
-		if (!_itemsLayout)
+		if (!_itemLayout)
 			return;
 
-		_itemsLayout->removeChildren();
+		_itemLayout->removeChildren();
 		setSelectedIndex(-1);
 	}
 
 	void Selector::removeAndDeleteItems() {
-		if (!_itemsLayout)
+		if (!_itemLayout)
 			return;
 
-		_itemsLayout->removeAndDeleteChildren();
+		_itemLayout->removeAndDeleteChildren();
 		setSelectedIndex(-1);
 	}
 
@@ -59,12 +59,12 @@ namespace YOBA {
 	}
 
 	void Selector::setSelectedIndex(const int32_t index) {
-		if (index == _selectedIndex || !_itemsLayout)
+		if (index == _selectedIndex || !_itemLayout)
 			return;
 
 		_selectedIndex = index;
 
-		for (size_t i = 0; i < getItemsCount(); i++) {
+		for (size_t i = 0; i < getItemCount(); i++) {
 			getItemAt(i)->setActive(i == _selectedIndex);
 		}
 
@@ -80,12 +80,12 @@ namespace YOBA {
 
 	}
 
-	size_t Selector::getItemsCount() const {
-		return _itemsLayout ? _itemsLayout->getChildrenCount() : 0;
+	size_t Selector::getItemCount() const {
+		return _itemLayout ? _itemLayout->getChildrenCount() : 0;
 	}
 
 	void Selector::setItemsLayout(Layout *layout) {
-		_itemsLayout = layout;
+		_itemLayout = layout;
 	}
 
 	void Selector::setOnSelectionChanged(const std::function<void()>& onSelectionChanged) {

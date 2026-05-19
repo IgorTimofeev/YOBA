@@ -12,7 +12,7 @@ namespace YOBA {
 		public:
 			Selector();
 
-			size_t getItemsCount() const;
+			size_t getItemCount() const;
 
 			SelectorItem* getItemAt(size_t index) const;
 
@@ -34,7 +34,7 @@ namespace YOBA {
 			virtual void onSelectionChanged();
 
 		private:
-			Layout* _itemsLayout;
+			Layout* _itemLayout;
 			int32_t _selectedIndex = -1;
 			std::function<void()> _onSelectionChanged = nullptr;
 	};
