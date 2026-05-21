@@ -116,8 +116,15 @@ namespace YOBA {
 		return value;
 	}
 	
-	template<typename T>
-	T divideCeiling(T a, T b) {
-		return 1 + (a - 1) / b;
+	template<std::integral T>
+	T divideCeiling(T dividend, T divisor) {
+		return 1 + (dividend - 1) / divisor;
+	}
+
+	template<std::integral T>
+	T divideRounding(T dividend, T divisor) {
+		const auto offset = (((dividend < 0) == (divisor < 0)) ? divisor : -divisor) / 2;
+
+		return (dividend + offset) / divisor;
 	}
 }
