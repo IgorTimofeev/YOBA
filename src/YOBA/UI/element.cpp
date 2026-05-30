@@ -267,18 +267,19 @@ namespace YOBA {
 
 		_layoutBounds = newBounds;
 
+		// Applying rendering transform if it presents
+		// TODO: find a way to put this into render pass, because the only reason it's being calculated during arranging is FUCKING SCROLLVIEW
+		_renderBounds =
+			_renderTransform
+			? _renderTransform->apply(_layoutBounds)
+			: _layoutBounds;
+
 		onBoundsChanged();
 
 		onArrange(_layoutBounds);
 	}
 
 	void Element::render(Renderer* renderer, const Bounds& bounds) {
-		// Applying rendering transform if it presents
-		_renderBounds =
-			_renderTransform
-			? _renderTransform->apply(_layoutBounds)
-			: _layoutBounds;
-
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
 			const auto previousViewport = renderer->pushViewport(_layoutBounds);

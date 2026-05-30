@@ -74,7 +74,7 @@ namespace YOBA {
 			return;
 
 		if (_wrappingEnabled) {
-			auto position = getLayoutBounds().getPosition();
+			auto position = bounds.getPosition();
 
 			for (const auto& line : _wrappedLines) {
 				renderer->renderText(
@@ -90,7 +90,7 @@ namespace YOBA {
 		}
 		else {
 			renderer->renderText(
-				getLayoutBounds().getPosition(),
+				bounds.getPosition(),
 				font,
 				color,
 				getText(),

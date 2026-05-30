@@ -21,7 +21,7 @@ namespace YOBA {
 
 	Size ImageView::onMeasure(const Size& availableSize) {
 		return
-		getImage()
+			getImage()
 			? getImage()->getSize()
 			: Size(0, 0);
 	}
@@ -30,6 +30,6 @@ namespace YOBA {
 		if (!getImage())
 			return;
 
-		renderer->renderImage(getLayoutBounds().getPosition(), getImage());
+		renderer->renderImage(bounds.getPosition(), getImage());
 	}
 }

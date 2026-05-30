@@ -7,8 +7,9 @@ namespace YOBA {
 	template<typename T>
 	class Vector2 {
 		public:
-			Vector2();
 			Vector2(T x, T y);
+			Vector2(T both);
+			Vector2();
 
 			template<class TOther>
 			Vector2(const Vector2<TOther>& other);
@@ -54,7 +55,12 @@ namespace YOBA {
 	}
 
 	template<typename T>
-	Vector2<T>::Vector2() : Vector2(0, 0) {
+	Vector2<T>::Vector2(T both) : _x(both), _y(both) {
+
+	}
+
+	template<typename T>
+	Vector2<T>::Vector2() : _x(0), _y(0) {
 
 	}
 

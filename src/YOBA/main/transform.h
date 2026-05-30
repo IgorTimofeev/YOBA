@@ -18,12 +18,11 @@ namespace YOBA {
 
 			}
 
-			ScaleTransform(const float uniformScale, const Vector2F& origin = Vector2F(0.5f, 0.5f)) : ScaleTransform(
-				Vector2F(uniformScale, uniformScale),
-				origin
-			) {
+			ScaleTransform() : ScaleTransform(Vector2F(1.f, 1.f)) {
 
 			}
+
+			constexpr static float computed = -1.f;
 
 			const Vector2F& getScale() const {
 				return _scale;
@@ -31,6 +30,10 @@ namespace YOBA {
 
 			void setScale(const Vector2F& scale) {
 				_scale = scale;
+			}
+
+			void setScale(const float uniformScale) {
+				setScale(Vector2F(uniformScale, uniformScale));
 			}
 
 			const Vector2F& getOrigin() const {
@@ -42,15 +45,26 @@ namespace YOBA {
 			}
 
 			Bounds apply(const Bounds& bounds) override {
+				// Simple as fuck, nothing to do here
+				if (_scale.getX() == 1 && _scale.getY() == 1)
+					return bounds;
+
 				const auto newWidth = static_cast<uint16_t>(static_cast<float>(bounds.getWidth()) * _scale.getX());
 				const auto newHeight = static_cast<uint16_t>(static_cast<float>(bounds.getHeight()) * _scale.getY());
 
-				const auto deltaX = static_cast<int32_t>(newWidth) - bounds.getWidth();
-				const auto deltaY = static_cast<int32_t>(newHeight) - bounds.getHeight();
-
 				return {
-					bounds.getX() - static_cast<int32_t>(static_cast<float>(deltaX) * _origin.getX()),
-					bounds.getY() - static_cast<int32_t>(static_cast<float>(deltaY) * _origin.getY()),
+					bounds.getX()
+						- static_cast<int32_t>(
+							// DeltaX
+							static_cast<float>(static_cast<int32_t>(newWidth) - bounds.getWidth())
+							* _origin.getX()
+						),
+					bounds.getY()
+						- static_cast<int32_t>(
+							// DeltaY
+							static_cast<float>(static_cast<int32_t>(newHeight) - bounds.getHeight())
+							* _origin.getY()
+						),
 					newWidth,
 					newHeight,
 				};

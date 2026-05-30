@@ -9,8 +9,8 @@
 
 namespace YOBA {
 	enum class AnimationState : uint8_t {
-		stopped,
 		started,
+		stopped,
 		completed
 	};
 
@@ -66,10 +66,10 @@ namespace YOBA {
 
 	class SizeAnimation : public TargetAnimation {
 		public:
-			Size getFrom() const;
+			const Size& getFrom() const;
 			void setFrom(const Size& from);
 
-			Size getTo() const;
+			const Size& getTo() const;
 			void setTo(const Size& to);
 
 		protected:
@@ -77,10 +77,31 @@ namespace YOBA {
 			void onTick() override;
 
 		private:
-			Size _from;
-			Size _to;
+			Size _from {};
+			Size _to {};
 
 			Size _computedFrom {};
 			Size _computedTo {};
+	};
+
+	class ScaleTransformAnimation : public TargetAnimation {
+		public:
+			ScaleTransform* getTransform() const;
+			void setTransform(ScaleTransform* transform);
+
+			const Vector2F& getFrom() const;
+			void setFrom(const Vector2F& from);
+
+			const Vector2F& getTo() const;
+			void setTo(const Vector2F& to);
+
+		protected:
+			void onStateChanged(const AnimationState state) override;
+			void onTick() override;
+
+		private:
+			ScaleTransform* _transform = nullptr;
+			Vector2F _from {};
+			Vector2F _to {};
 	};
 }

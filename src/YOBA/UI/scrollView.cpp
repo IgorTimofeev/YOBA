@@ -90,8 +90,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::scrollTo(const Element* element) {
-		const auto& elementBounds = element->getLayoutBounds();
-		const auto& bounds = getLayoutBounds();
+		const auto& elementBounds = element->getRenderBounds();
+		const auto& bounds = getRenderBounds();
 
 		// Horizontal
 		if (elementBounds.getX() < bounds.getX()) {
@@ -111,8 +111,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::scrollToCenter(const Element* element) {
-		const auto& elementBounds = element->getLayoutBounds();
-		const auto& bounds = getLayoutBounds();
+		const auto& elementBounds = element->getRenderBounds();
+		const auto& bounds = getRenderBounds();
 
 		const auto elementCenter = elementBounds.getCenter();
 		const auto center = bounds.getCenter();
@@ -243,16 +243,18 @@ namespace YOBA {
 		// 1st arrange pass
 		onArrangePass(bounds);
 
-		if (_scrollIntoViewLaterTo) {
-			// FR FR 100% need to scroll
-			if (!bounds.contains(_scrollIntoViewLaterTo->getLayoutBounds())) {
-				scrollToCenter(_scrollIntoViewLaterTo);
+		if (!_scrollIntoViewLaterTo)
+			return;
 
-				onArrangePass(bounds);
-			}
+		// FR FR 100% need to scroll
+		if (!bounds.contains(_scrollIntoViewLaterTo->getRenderBounds())) {
+			scrollToCenter(_scrollIntoViewLaterTo);
 
-			_scrollIntoViewLaterTo = nullptr;
+			// 2nd arrange pass
+			onArrangePass(bounds);
 		}
+
+		_scrollIntoViewLaterTo = nullptr;
 	}
 
 	void ScrollView::onRender(Renderer* renderer, const Bounds& bounds) {
