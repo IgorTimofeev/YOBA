@@ -44,7 +44,7 @@ namespace YOBA {
 		return { width, height };
 	}
 
-	void WrapLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void WrapLayout::onArrange(const Bounds& bounds) {
 		int32_t x = 0;
 		int32_t y = 0;
 		uint16_t lineHeight = 0;
@@ -60,24 +60,24 @@ namespace YOBA {
 				if (lineHeight > 0)
 					y += getVerticalSpacing() + lineHeight;
 
-				child->render(renderer, Bounds(
-		        	bounds.getX(),
-		        	bounds.getY() + y,
-		        	childSize.getWidth(),
-		        	childSize.getHeight()
-	            ));
+				child->arrange(Bounds(
+					bounds.getX(),
+					bounds.getY() + y,
+					childSize.getWidth(),
+					childSize.getHeight()
+				));
 
 				x = childSize.getWidth() + getHorizontalSpacing();
 				lineHeight = childSize.getHeight();
 			}
 			// Normal
 			else {
-				child->render(renderer, Bounds(
-	            	bounds.getX() + x,
-	            	bounds.getY() + y,
-	            	childSize.getWidth(),
-	            	childSize.getHeight()
-				 ));
+				child->arrange(Bounds(
+					bounds.getX() + x,
+					bounds.getY() + y,
+					childSize.getWidth(),
+					childSize.getHeight()
+				));
 
 				x += childSize.getWidth() + getHorizontalSpacing();
 

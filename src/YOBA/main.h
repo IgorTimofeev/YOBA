@@ -8,6 +8,8 @@
 #include <YOBA/main/vector2.h>
 #include <YOBA/main/vector3.h>
 #include <YOBA/main/geoCoordinates.h>
+#include <YOBA/main/alignment.h>
+#include <YOBA/main/orientation.h>
 #include <YOBA/main/size.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/margin.h>

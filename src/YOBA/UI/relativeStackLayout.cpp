@@ -213,7 +213,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void RelativeStackLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void RelativeStackLayout::onArrange(const Bounds& bounds) {
 		size_t
 		visibleCount = 0,
 		relativeCount = 0,
@@ -293,12 +293,12 @@ namespace YOBA {
 					if (childSize > bounds.getWidth())
 						childSize = bounds.getWidth();
 
-					child->render(renderer, Bounds(
-						              position,
-						              bounds.getY(),
-						              childSize,
-						              bounds.getHeight()
-					              ));
+					child->arrange(Bounds(
+						position,
+						bounds.getY(),
+						childSize,
+						bounds.getHeight()
+					));
 
 					position += childSize + getGap();
 				}
@@ -364,12 +364,12 @@ namespace YOBA {
 					if (childSize > bounds.getHeight())
 						childSize = bounds.getHeight();
 
-					child->render(renderer, Bounds(
-						              bounds.getX(),
-						              position,
-						              bounds.getWidth(),
-						              childSize
-					              ));
+					child->arrange(Bounds(
+						bounds.getX(),
+						position,
+						bounds.getWidth(),
+						childSize
+					));
 
 					position += childSize + getGap();
 				}
@@ -377,6 +377,12 @@ namespace YOBA {
 				break;
 			}
 		}
+	}
+
+	void RelativeStackLayout::onChildRemoved(Element* child) {
+		Layout::onChildRemoved(child);
+
+		tryRemoveRelativeSize(child);
 	}
 
 	void RelativeStackLayout::tryRemoveRelativeSize(const Element* child) {

@@ -2,9 +2,9 @@
 #include "application.h"
 
 namespace YOBA {
-	Animation::Animation(Application* application, const uint32_t &duration, const std::function<void(const double &)> &interpolator) :
+	Animation::Animation(Application* application, const uint32_t &durationUs, const std::function<void(const double &)> &interpolator) :
 		_application(application),
-		_duration(duration),
+		_durationUs(durationUs),
 		_interpolator(interpolator)
 	{
 
@@ -19,7 +19,7 @@ namespace YOBA {
 	}
 
 	bool Animation::tick() {
-		double position = static_cast<double>(system::getTimeUs() - _start) / static_cast<double>(_duration);
+		double position = static_cast<double>(system::getTimeUs() - _start) / static_cast<double>(_durationUs);
 
 		if (position > 1)
 			position = 1;
@@ -42,11 +42,11 @@ namespace YOBA {
 	}
 
 	uint32_t Animation::getDuration() const {
-		return _duration;
+		return _durationUs;
 	}
 
 	void Animation::setDuration(const uint32_t &duration) {
-		_duration = duration;
+		_durationUs = duration;
 	}
 
 	void Animation::setInterpolator(const std::function<void(const double &)> &interpolator) {

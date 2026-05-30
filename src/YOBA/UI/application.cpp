@@ -34,8 +34,8 @@ namespace YOBA {
 		addHID(hid);
 	}
 
-	void Application::invalidateMeasure() {
-		_measureInvalidated = true;
+	void Application::invalidateLayout() {
+		_layoutInvalidated = true;
 	}
 
 	void Application::invalidateRender() {
@@ -45,7 +45,7 @@ namespace YOBA {
 	}
 
 	void Application::invalidate() {
-		invalidateMeasure();
+		invalidateLayout();
 		invalidateRender();
 	}
 
@@ -110,25 +110,27 @@ namespace YOBA {
 	void Application::render() {
 		uint64_t time;
 
-		// Measuring children size
-		if (_measureInvalidated) {
+		// Layout pass
+		if (_layoutInvalidated) {
 			time = system::getTimeUs();
 
+			// Measuring size of children
 			measure(getSize());
-			_measureInvalidated = false;
+
+			// Arranging children & computing their bounds
+			arrange(Bounds(getSize()));
+
+			_layoutInvalidated = false;
 
 			_layoutDeltaTime = system::getTimeUs() - time;
 		}
 
 		// Render pass
 		if (_renderInvalidated) {
+			// Rendering children
 			time = system::getTimeUs();
 
-			// Rendering children
-			Layout::render(_renderer, getBounds());
-
-			if (_secondRenderPassRequested)
-				Layout::render(_renderer, getBounds());
+			Layout::render(_renderer, getLayoutBounds());
 
 			_renderDeltaTime = system::getTimeUs() - time;
 
@@ -144,7 +146,7 @@ namespace YOBA {
 	}
 
 	void Application::pushEvent(Event* event) {
-		handleEvent(event, getBounds(), true);
+		handleEvent(event, getLayoutBounds(), true);
 	}
 
 	Element* Application::getCapturedElement() const {
@@ -199,10 +201,6 @@ namespace YOBA {
 
 	void Application::invokeOnNextTick(const std::function<void()>& func) {
 		_functionToCallOnNextTick.push_back(func);
-	}
-
-	void Application::requestSecondRenderPass() {
-		_secondRenderPassRequested = true;
 	}
 
 	uint32_t Application::getTickDeltaTime() const {

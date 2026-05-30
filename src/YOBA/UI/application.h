@@ -35,7 +35,7 @@ namespace YOBA {
 			virtual void tick();
 			virtual void render();
 
-			void invalidateMeasure() override;
+			void invalidateLayout() override;
 			void invalidateRender() override;
 			void invalidate() override;
 			void pushEvent(Event* event);
@@ -48,8 +48,6 @@ namespace YOBA {
 			void addHID(HID* hid);
 
 			void invokeOnNextTick(const std::function<void()>& func);
-
-			void requestSecondRenderPass();
 
 			uint32_t getTickDeltaTime() const;
 			uint32_t getLayoutDeltaTime() const;
@@ -70,9 +68,8 @@ namespace YOBA {
 			static Application* _current;
 			Renderer* _renderer = nullptr;
 
-			bool _secondRenderPassRequested = false;
+			bool _layoutInvalidated = true;
 			bool _renderInvalidated = true;
-			bool _measureInvalidated = true;
 			Element* _capturedElement = nullptr;
 			Element* _focusedElement = nullptr;
 

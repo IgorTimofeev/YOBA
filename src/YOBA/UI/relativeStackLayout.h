@@ -22,14 +22,9 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
+			void onArrange(const Bounds& bounds) override;
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
-
-			void onChildRemoved(Element* child) override {
-				Layout::onChildRemoved(child);
-
-				tryRemoveRelativeSize(child);
-			}
+			void onChildRemoved(Element* child) override;
 
 		private:
 			std::unordered_map<const Element*, float> _elementSizes {};

@@ -18,7 +18,10 @@ namespace YOBA {
 
 			}
 
-			ScaleTransform(const float scaleX, const float scaleY) : ScaleTransform(Vector2F(scaleX, scaleY)) {
+			ScaleTransform(const float uniformScale, const Vector2F& origin = Vector2F(0.5f, 0.5f)) : ScaleTransform(
+				Vector2F(uniformScale, uniformScale),
+				origin
+			) {
 
 			}
 

@@ -155,7 +155,7 @@ namespace YOBA {
 
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
-		auto currentBounds = getBounds();
+		auto currentBounds = getLayoutBounds();
 
 		if (isPointer || isPinch) {
 			bool callCurrentHandlers;
@@ -307,9 +307,15 @@ namespace YOBA {
 		return result;
 	}
 
-	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
-		Element::onRender(renderer, bounds);
+	void Layout::onArrange(const Bounds& bounds) {
+		for (const auto child : _children) {
+			if (child->isVisible()) {
+				child->arrange(bounds);
+			}
+		}
+	}
 
+	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
 		for (const auto child : _children) {
 			if (child->isVisible()) {
 				child->render(renderer, bounds);

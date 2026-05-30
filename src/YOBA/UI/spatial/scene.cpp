@@ -193,6 +193,6 @@ namespace YOBA::spatial {
 	}
 
 	float Scene::getProjectionPlaneDistance() const {
-		return static_cast<float>(getBounds().getWidth()) / 2.f / std::tanf(_FOV / 2.f);
+		return static_cast<float>(getLayoutBounds().getWidth()) / 2.f / std::tanf(_FOV / 2.f);
 	}
 }

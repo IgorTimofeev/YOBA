@@ -8,11 +8,9 @@ namespace YOBA {
 
 	class Animation {
 		public:
-
-			Animation(Application* application, const uint32_t& duration, const std::function<void(const double &)>& interpolator);
+			Animation(Application* application, const uint32_t& durationUs, const std::function<void(const double &)>& interpolator);
 
 			void start();
-
 			void stop();
 
 			bool tick();
@@ -27,8 +25,8 @@ namespace YOBA {
 
 		private:
 			Application* _application;
-			uint32_t _duration = 0;
-			uint64_t _start = 0;
+			uint32_t _durationUs = 0;
+			int64_t _start = 0;
 			std::function<void()> _completed = nullptr;
 
 			std::function<void(const double&)> _interpolator;

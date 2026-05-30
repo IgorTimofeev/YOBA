@@ -30,6 +30,6 @@ namespace YOBA {
 		if (!getImage())
 			return;
 
-		renderer->renderImage(getBounds().getPosition(), getImage());
+		renderer->renderImage(getLayoutBounds().getPosition(), getImage());
 	}
 }

@@ -36,6 +36,7 @@ namespace YOBA {
 			void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) override;
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
+			void onArrange(const Bounds& bounds) override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 
 			virtual void onEventBeforeChildren(Event* event);

@@ -12,7 +12,7 @@ namespace YOBA {
 
 		if (isPointer || isPinch) {
 			if (isVisible() && isVisibleForPointerEvents() && isEnabled()) {
-				auto currentBounds = getBounds();
+				auto currentBounds = getLayoutBounds();
 				bool contains;
 
 				if (parentBounds.intersects(currentBounds)) {

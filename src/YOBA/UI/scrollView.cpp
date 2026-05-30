@@ -90,8 +90,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::scrollTo(const Element* element) {
-		const auto& elementBounds = element->getBounds();
-		const auto& bounds = getBounds();
+		const auto& elementBounds = element->getLayoutBounds();
+		const auto& bounds = getLayoutBounds();
 
 		// Horizontal
 		if (elementBounds.getX() < bounds.getX()) {
@@ -111,8 +111,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::scrollToCenter(const Element* element) {
-		const auto& elementBounds = element->getBounds();
-		const auto& bounds = getBounds();
+		const auto& elementBounds = element->getLayoutBounds();
+		const auto& bounds = getLayoutBounds();
 
 		const auto elementCenter = elementBounds.getCenter();
 		const auto center = bounds.getCenter();
@@ -157,7 +157,7 @@ namespace YOBA {
 		return _contentMeasuredSize;
 	}
 
-	void ScrollView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ScrollView::onArrangePass(const Bounds& bounds) {
 		if (_horizontalScrollMode == ScrollMode::disabled) {
 			if (_horizontalScrollBar.getPosition() > 0)
 				_horizontalScrollBar.setPosition(0);
@@ -206,9 +206,9 @@ namespace YOBA {
 
 		for (const auto element : *this)
 			if (element->isVisible())
-				element->render(renderer, _contentBounds);
+				element->arrange(_contentBounds);
 
-		const auto& processScrollBar = [&bounds, &renderer](ScrollBar& bar, bool& possible, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
+		const auto& processScrollBar = [&bounds](ScrollBar& bar, bool& possible, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 			bar.setContentSize(contentSize);
 			bar.setViewportSize(viewportSize);
 			possible = mode != ScrollMode::disabled && contentSize > viewportSize;
@@ -219,7 +219,7 @@ namespace YOBA {
 			);
 
 			if (bar.isVisible())
-				bar.render(renderer, bounds);
+				bar.arrange(bounds);
 		};
 
 		processScrollBar(
@@ -237,18 +237,34 @@ namespace YOBA {
 			_contentBounds.getHeight(),
 			bounds.getHeight()
 		);
+	}
 
-		// ((((
+	void ScrollView::onArrange(const Bounds& bounds) {
+		// 1st arrange pass
+		onArrangePass(bounds);
+
 		if (_scrollIntoViewLaterTo) {
 			// FR FR 100% need to scroll
-			if (!bounds.contains(_scrollIntoViewLaterTo->getBounds())) {
+			if (!bounds.contains(_scrollIntoViewLaterTo->getLayoutBounds())) {
 				scrollToCenter(_scrollIntoViewLaterTo);
 
-				Application::getCurrent()->requestSecondRenderPass();
+				onArrangePass(bounds);
 			}
 
 			_scrollIntoViewLaterTo = nullptr;
 		}
+	}
+
+	void ScrollView::onRender(Renderer* renderer, const Bounds& bounds) {
+		Layout::onRender(renderer, bounds);
+
+		const auto& processScrollBar = [&bounds, renderer](ScrollBar& bar) {
+			if (bar.isVisible())
+				bar.render(renderer, bounds);
+		};
+
+		processScrollBar(_horizontalScrollBar);
+		processScrollBar(_verticalScrollBar);
 	}
 
 	void ScrollView::onCaptureChanged() {

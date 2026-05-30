@@ -47,7 +47,7 @@ namespace YOBA {
 			: Size();
 	}
 
-	void KeyboardLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void KeyboardLayout::onArrange(const Bounds& bounds) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
@@ -58,7 +58,7 @@ namespace YOBA {
 		uint8_t rowButtonCount = 0;
 		uint16_t y = bounds.getY();
 
-		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom, &renderer](const size_t buttonIndexTo) {
+		const auto& arrangeRow = [this, &bounds, &y, &rowButtonCount, &buttonIndexFrom](const size_t buttonIndexTo) {
 			if (rowButtonCount == 0)
 				return;
 
@@ -121,7 +121,7 @@ namespace YOBA {
 						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
 					);
 
-				button->render(renderer, Bounds(
+				button->arrange(Bounds(
 					bounds.getX() + localX,
 					y,
 					static_cast<uint16_t>(buttonWidth),

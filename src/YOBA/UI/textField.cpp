@@ -206,7 +206,7 @@ namespace YOBA {
 			return;
 
 		const auto text = getText();
-		const auto& bounds = getBounds();
+		const auto& bounds = getLayoutBounds();
 		const int32_t boundsXWithoutMargin = bounds.getX() + _textMargin;
 		const uint16_t boundsWidthWithoutMargin = bounds.getWidth() - _textMargin * 2;
 		const int32_t boundsX2WithoutMargin = boundsXWithoutMargin + boundsWidthWithoutMargin - 1;

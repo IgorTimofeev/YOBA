@@ -17,7 +17,7 @@ namespace YOBA {
 				const auto color = getFillColor();
 
 				if (color)
-					renderer->renderDitheredRectangle(getBounds(), color);
+					renderer->renderDitheredRectangle(getLayoutBounds(), color);
 			}
 	};
 }

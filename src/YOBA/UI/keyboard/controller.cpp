@@ -21,7 +21,7 @@ namespace YOBA {
 
 			const auto targetLayout = getTargetLayoutOrApplication();
 
-			_controllerLayout->setSize(targetLayout->getBounds().getSize());
+			_controllerLayout->setSize(targetLayout->getLayoutBounds().getSize());
 
 			// Moving children from target to temporary layout
 			targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);

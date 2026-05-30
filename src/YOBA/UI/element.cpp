@@ -54,6 +54,10 @@ namespace YOBA {
 		return { 0, 0 };
 	}
 
+	void Element::onArrange(const Bounds& bounds) {
+
+	}
+
 	uint16_t Element::computeMeasureShit(
 		const uint16_t size,
 		const uint16_t desiredSize,
@@ -214,7 +218,7 @@ namespace YOBA {
 		}
 	}
 
-	void Element::render(Renderer* renderer, const Bounds& bounds) {
+	void Element::arrange(const Bounds& bounds) {
 		const auto& margin = getMargin();
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
@@ -261,19 +265,23 @@ namespace YOBA {
 		newBounds.setY(newPosition);
 		newBounds.setHeight(newSize);
 
-		_bounds = newBounds;
-
-		// Applying rendering transform if it presents
-		_renderBounds =
-			_transform
-			? _transform->apply(_bounds)
-			: _bounds;
+		_layoutBounds = newBounds;
 
 		onBoundsChanged();
 
+		onArrange(_layoutBounds);
+	}
+
+	void Element::render(Renderer* renderer, const Bounds& bounds) {
+		// Applying rendering transform if it presents
+		_renderBounds =
+			_renderTransform
+			? _renderTransform->apply(_layoutBounds)
+			: _layoutBounds;
+
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
-			const auto previousViewport = renderer->pushViewport(_bounds);
+			const auto previousViewport = renderer->pushViewport(_layoutBounds);
 
 			onRender(renderer, _renderBounds);
 
@@ -339,12 +347,26 @@ namespace YOBA {
 		return _parent;
 	}
 
-	const Bounds& Element::getBounds() const {
-		return _bounds;
-	}
-
 	const Size& Element::getMeasuredSize() const {
 		return _measuredSize;
+	}
+
+	const Bounds& Element::getLayoutBounds() const {
+		return _layoutBounds;
+	}
+
+	const Bounds& Element::getRenderBounds() const {
+		return _renderBounds;
+	}
+
+	Transform* Element::getRenderTransform() const {
+		return _renderTransform;
+	}
+
+	void Element::setRenderTransform(Transform* transform) {
+		_renderTransform = transform;
+
+		invalidate();
 	}
 
 	const Size& Element::getSize() const {
@@ -482,11 +504,11 @@ namespace YOBA {
 			application->invalidateRender();
 	}
 
-	void Element::invalidateMeasure() {
+	void Element::invalidateLayout() {
 		const auto application = Application::getCurrent();
 
 		if (application)
-			application->invalidateMeasure();
+			application->invalidateLayout();
 	}
 
 	void Element::invalidate() {

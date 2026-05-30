@@ -4,6 +4,7 @@
 #include <limits>
 
 #include <YOBA/system.h>
+#include <YOBA/main/alignment.h>
 #include <YOBA/main/margin.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/events/event.h>
@@ -17,19 +18,6 @@ namespace YOBA {
 
 namespace YOBA {
 	class Animation;
-
-	enum class Alignment: uint8_t {
-		start,
-		center,
-		end,
-		stretch
-	};
-
-	enum class Orientation: uint8_t {
-		horizontal,
-		vertical
-	};
-
 	class Application;
 	class Control;
 	class Layout;
@@ -45,11 +33,12 @@ namespace YOBA {
 			virtual ~Element();
 
 			void measure(const Size& availableSize);
+			void arrange(const Bounds& bounds);
 			void render(Renderer* renderer, const Bounds& bounds);
 
 			bool isPointerOver() const;
 			virtual void invalidateRender();
-			virtual void invalidateMeasure();
+			virtual void invalidateLayout();
 			virtual void invalidate();
 
 			virtual void startAnimation(Animation* animation);
@@ -107,25 +96,13 @@ namespace YOBA {
 			void setMinHeight(uint16_t value);
 
 			const Size& getMeasuredSize() const;
-			const Bounds& getBounds() const;
+			const Bounds& getLayoutBounds() const;
+			const Bounds& getRenderBounds() const;
 
-			Transform* getTransform() const {
-				return _transform;
-			}
-
-			void setTransform(Transform* transform) {
-				_transform = transform;
-
-				invalidate();
-			}
-
-			const Bounds& getRenderBounds() const {
-				return _renderBounds;
-			}
+			Transform* getRenderTransform() const;
+			void setRenderTransform(Transform* transform);
 
 		protected:
-			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
-
 			virtual void onAddedToParent(Layout* parent);
 			virtual void onRemovedFromParent(Layout* parent);
 
@@ -134,6 +111,7 @@ namespace YOBA {
 
 			virtual void onTick();
 			virtual Size onMeasure(const Size& availableSize);
+			virtual void onArrange(const Bounds& bounds);
 			virtual void onRender(Renderer* renderer, const Bounds& bounds);
 			virtual void onBoundsChanged();
 
@@ -155,10 +133,10 @@ namespace YOBA {
 			Margin _margin = Margin::zero;
 			Layout* _parent = nullptr;
 
-			Transform* _transform = nullptr;
+			Transform* _renderTransform = nullptr;
 
 			Size _measuredSize {};
-			Bounds _bounds {};
+			Bounds _layoutBounds {};
 			Bounds _renderBounds {};
 
 			void addToParent(Layout* parent);
@@ -186,5 +164,7 @@ namespace YOBA {
 				int32_t& newPosition,
 				int32_t& newSize
 			);
+
+			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
 	};
 }

@@ -41,6 +41,7 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
+			void onArrange(const Bounds& bounds) override;
 			void onRender(Renderer* renderer, const Bounds& bounds) override;
 			void onCaptureChanged() override;
 			void onEventBeforeChildren(Event* event) override;
@@ -61,5 +62,7 @@ namespace YOBA {
 			bool _verticalScrollPossible = false;
 
 			Point _lastTouchPosition { -1, -1 };
+
+			void onArrangePass(const Bounds& bounds);
 	};
 }

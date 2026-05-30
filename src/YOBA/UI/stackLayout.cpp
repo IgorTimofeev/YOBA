@@ -81,7 +81,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void StackLayout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void StackLayout::onArrange(const Bounds& bounds) {
 		int32_t position;
 
 		switch (getOrientation()) {
@@ -94,12 +94,12 @@ namespace YOBA {
 
 					const auto& childSize = child->getMeasuredSize();
 
-					child->render(renderer, Bounds(
-			        	position,
-			        	bounds.getY(),
-			        	childSize.getWidth(),
-			        	bounds.getHeight()
-		            ));
+					child->arrange(Bounds(
+						position,
+						bounds.getY(),
+						childSize.getWidth(),
+						bounds.getHeight()
+					));
 
 					position += childSize.getWidth() + getGap();
 				}
@@ -115,7 +115,7 @@ namespace YOBA {
 
 					const auto& childSize = child->getMeasuredSize();
 
-					child->render(renderer, Bounds(
+					child->arrange(Bounds(
 						bounds.getX(),
 						position,
 						bounds.getWidth(),
