@@ -89,7 +89,7 @@ namespace YOBA {
 			color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
 
 			if (color) {
-				renderer->renderString(
+				renderer->renderText(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + getContentMargin().getLeft() - getContentMargin().getRight(),
 						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()

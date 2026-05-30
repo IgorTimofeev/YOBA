@@ -263,7 +263,7 @@ namespace YOBA {
 						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) + 1);
 					}
 
-					renderer->renderString(
+					renderer->renderText(
 						Point(textX, tickY + lineLength + _tickLabelOffset),
 						_tickLabelFont,
 						_tickColor,

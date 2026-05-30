@@ -63,7 +63,7 @@ namespace YOBA {
 				const auto& placeholder = getPlaceholder();
 
 				if (!placeholder.empty()) {
-					renderer->renderString(
+					renderer->renderText(
 						Point(
 							bounds.getX() + _textMargin,
 							bounds.getYCenter() - fontHeight / 2

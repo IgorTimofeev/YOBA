@@ -997,7 +997,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderString(const Point& point, const Font* font, const Color* color, const std::wstring_view string, const uint8_t fontScale) {
+	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::wstring_view text, const uint8_t fontScale) {
 		const auto& viewport = getViewport();
 		const auto viewportX2 = viewport.getX2();
 
@@ -1012,9 +1012,9 @@ namespace YOBA {
 
 		int32_t x = point.getX();
 
-		for (size_t charIndex = 0; charIndex < string.length(); charIndex++) {
+		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
 			// Trying to find glyph matched to char
-			const auto glyph = font->getGlyph(string[charIndex]);
+			const auto glyph = font->getGlyph(text[charIndex]);
 
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example,U+007F "DEL" symbol often has zero width in some fonts

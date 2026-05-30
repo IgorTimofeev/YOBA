@@ -9,8 +9,8 @@ namespace YOBA {
 		public:
 			StackLayout() = default;
 			StackLayout(const Orientation orientation);
-			StackLayout(const uint16_t spacing);
-			StackLayout(const Orientation orientation, const uint16_t spacing);
+			StackLayout(const uint16_t gap);
+			StackLayout(const Orientation orientation, const uint16_t gap);
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;

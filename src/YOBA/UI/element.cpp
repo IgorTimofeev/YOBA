@@ -263,19 +263,25 @@ namespace YOBA {
 
 		_bounds = newBounds;
 
+		// Applying rendering transform if it presents
+		_renderBounds =
+			_transform
+			? _transform->apply(_bounds)
+			: _bounds;
+
 		onBoundsChanged();
 
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
 			const auto previousViewport = renderer->pushViewport(_bounds);
 
-			onRender(renderer, _bounds);
+			onRender(renderer, _renderBounds);
 
 			// Restoring viewport
 			renderer->popViewport(previousViewport);
 		}
 		else {
-			onRender(renderer, _bounds);
+			onRender(renderer, _renderBounds);
 		}
 	}
 

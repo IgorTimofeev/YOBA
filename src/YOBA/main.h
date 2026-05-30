@@ -11,6 +11,7 @@
 #include <YOBA/main/size.h>
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/margin.h>
+#include <YOBA/main/transform.h>
 #include <YOBA/main/color.h>
 #include <YOBA/main/glyph.h>
 #include <YOBA/main/font.h>

@@ -8,6 +8,7 @@
 #include <YOBA/main/bounds.h>
 #include <YOBA/main/events/event.h>
 #include <YOBA/main/size.h>
+#include <YOBA/main/transform.h>
 #include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA {
@@ -108,6 +109,20 @@ namespace YOBA {
 			const Size& getMeasuredSize() const;
 			const Bounds& getBounds() const;
 
+			Transform* getTransform() const {
+				return _transform;
+			}
+
+			void setTransform(Transform* transform) {
+				_transform = transform;
+
+				invalidate();
+			}
+
+			const Bounds& getRenderBounds() const {
+				return _renderBounds;
+			}
+
 		protected:
 			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
 
@@ -140,8 +155,11 @@ namespace YOBA {
 			Margin _margin = Margin::zero;
 			Layout* _parent = nullptr;
 
-			Bounds _bounds {};
+			Transform* _transform = nullptr;
+
 			Size _measuredSize {};
+			Bounds _bounds {};
+			Bounds _renderBounds {};
 
 			void addToParent(Layout* parent);
 			void removeFromParent(Layout* parent);

@@ -5,13 +5,13 @@ namespace YOBA {
 		setOrientation(orientation);
 	}
 
-	StackLayout::StackLayout(const uint16_t spacing) {
-		setGap(spacing);
+	StackLayout::StackLayout(const uint16_t gap) {
+		setGap(gap);
 	}
 
-	StackLayout::StackLayout(const Orientation orientation, const uint16_t spacing) {
+	StackLayout::StackLayout(const Orientation orientation, const uint16_t gap) {
 		setOrientation(orientation);
-		setGap(spacing);
+		setGap(gap);
 	}
 
 	Size StackLayout::onMeasure(const Size& availableSize) {

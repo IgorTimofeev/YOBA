@@ -53,10 +53,10 @@ namespace YOBA {
 			* @param point Position of upper-left corner of the first character in text
 			* @param font Font with which the text will be rendered
 			* @param color Color with which the text will be rendered
-			* @param string Template-based pointer to first character in text
+			* @param text Text to render
 			* @param fontScale Scale factor of text, defaults to 1
 			*/
-			void renderString(const Point& point, const Font* font, const Color* color, std::wstring_view string, uint8_t fontScale = 1);
+			void renderText(const Point& point, const Font* font, const Color* color, std::wstring_view text, uint8_t fontScale = 1);
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
 
 			virtual void flush() = 0;
