@@ -6,7 +6,7 @@
 namespace YOBA {
 	class Control : public virtual Element {
 		public:
-			void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) override;
+			void handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) override;
 
 		protected:
 			// Control will mark ScreenEvents as handled by default

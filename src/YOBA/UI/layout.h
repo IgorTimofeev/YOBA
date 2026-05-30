@@ -33,11 +33,11 @@ namespace YOBA {
 			Layout& operator-=(Element* child);
 
 		protected:
-			void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) override;
+			void handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) override;
 			void onTick() override;
 			Size onMeasure(const Size& availableSize) override;
-			void onArrange(const Bounds& bounds) override;
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onArrange(const Rectangle& bounds) override;
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 			virtual void onEventBeforeChildren(Event* event);
 			virtual void onEventAfterChildren(Event* event);

@@ -150,7 +150,7 @@ namespace YOBA {
 		return *this;
 	}
 
-	void Layout::handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) {
+	void Layout::handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) {
 		// ESP_LOGI("layout.handleEvent()", "callHandlers: %d", callHandlers);
 
 		const auto isPointer = PointerEvent::isPointer(event);
@@ -176,7 +176,7 @@ namespace YOBA {
 				}
 				else {
 					contains = false;
-					currentBounds = Bounds::invalidValue;
+					currentBounds = Rectangle::invalidValue;
 				}
 
 				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
@@ -307,7 +307,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void Layout::onArrange(const Bounds& bounds) {
+	void Layout::onArrange(const Rectangle& bounds) {
 		for (const auto child : _children) {
 			if (child->isVisible()) {
 				child->arrange(bounds);
@@ -315,7 +315,7 @@ namespace YOBA {
 		}
 	}
 
-	void Layout::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Layout::onRender(Renderer* renderer, const Rectangle& bounds) {
 		for (const auto child : _children) {
 			if (child->isVisible()) {
 				child->render(renderer, bounds);

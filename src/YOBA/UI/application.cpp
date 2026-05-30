@@ -123,7 +123,7 @@ namespace YOBA {
 			measure(getSize());
 
 			// Arranging children & computing their bounds
-			arrange(Bounds(getSize()));
+			arrange(Rectangle(getSize()));
 
 			_layoutInvalidated = false;
 
@@ -224,7 +224,7 @@ namespace YOBA {
 		return _flushDeltaTime;
 	}
 
-	void Application::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Application::onRender(Renderer* renderer, const Rectangle& bounds) {
 		if (getBackgroundColor())
 			renderer->clear(getBackgroundColor());
 

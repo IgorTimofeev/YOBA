@@ -340,7 +340,7 @@ namespace YOBA {
 		writeCommandAndData(GC9A01A_MADCTL, &data, 1);
 	}
 
-	void GC9A01Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {
+	void GC9A01Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
 		uint8_t data[4];
 
 		writeCommand(COL_ADDR_SET);

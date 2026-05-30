@@ -54,7 +54,7 @@ namespace YOBA {
 		return { 0, 0 };
 	}
 
-	void Element::onArrange(const Bounds& bounds) {
+	void Element::onArrange(const Rectangle& bounds) {
 
 	}
 
@@ -218,12 +218,12 @@ namespace YOBA {
 		}
 	}
 
-	void Element::arrange(const Bounds& bounds) {
+	void Element::arrange(const Rectangle& bounds) {
 		const auto& margin = getMargin();
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
 
-		Bounds newBounds;
+		Rectangle newBounds;
 		int32_t newPosition = 0;
 		int32_t newSize = 0;
 
@@ -279,7 +279,7 @@ namespace YOBA {
 		onArrange(_layoutBounds);
 	}
 
-	void Element::render(Renderer* renderer, const Bounds& bounds) {
+	void Element::render(Renderer* renderer, const Rectangle& bounds) {
 		if (_clipToBounds) {
 			// Copying viewport to restore it after render pass
 			const auto previousViewport = renderer->pushViewport(_layoutBounds);
@@ -345,11 +345,11 @@ namespace YOBA {
 		return _measuredSize;
 	}
 
-	const Bounds& Element::getLayoutBounds() const {
+	const Rectangle& Element::getLayoutBounds() const {
 		return _layoutBounds;
 	}
 
-	const Bounds& Element::getRenderBounds() const {
+	const Rectangle& Element::getRenderBounds() const {
 		return _renderBounds;
 	}
 
@@ -512,7 +512,7 @@ namespace YOBA {
 			application->invalidate();
 	}
 
-	void Element::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Element::onRender(Renderer* renderer, const Rectangle& bounds) {
 
 	}
 

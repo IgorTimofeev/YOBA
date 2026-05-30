@@ -34,8 +34,8 @@ namespace YOBA {
 			virtual ~Element();
 
 			void measure(const Size& availableSize);
-			void arrange(const Bounds& bounds);
-			void render(Renderer* renderer, const Bounds& bounds);
+			void arrange(const Rectangle& bounds);
+			void render(Renderer* renderer, const Rectangle& bounds);
 
 			bool isPointerOver() const;
 			virtual void invalidateRender();
@@ -95,8 +95,8 @@ namespace YOBA {
 			void setMinHeight(uint16_t value);
 
 			const Size& getMeasuredSize() const;
-			const Bounds& getLayoutBounds() const;
-			const Bounds& getRenderBounds() const;
+			const Rectangle& getLayoutBounds() const;
+			const Rectangle& getRenderBounds() const;
 
 			Transform* getRenderTransform() const;
 			void setRenderTransform(Transform* transform);
@@ -110,8 +110,8 @@ namespace YOBA {
 
 			virtual void onTick();
 			virtual Size onMeasure(const Size& availableSize);
-			virtual void onArrange(const Bounds& bounds);
-			virtual void onRender(Renderer* renderer, const Bounds& bounds);
+			virtual void onArrange(const Rectangle& bounds);
+			virtual void onRender(Renderer* renderer, const Rectangle& bounds);
 			virtual void onBoundsChanged();
 
 			virtual void onPointerOverChanged();
@@ -135,8 +135,8 @@ namespace YOBA {
 			Transform* _renderTransform = nullptr;
 
 			Size _measuredSize {};
-			Bounds _layoutBounds {};
-			Bounds _renderBounds {};
+			Rectangle _layoutBounds {};
+			Rectangle _renderBounds {};
 
 			void addToParent(Layout* parent);
 			void removeFromParent(Layout* parent);
@@ -164,6 +164,6 @@ namespace YOBA {
 				int32_t& newSize
 			);
 
-			virtual void handleEvent(Event* event, const Bounds& parentBounds, bool callHandlers) = 0;
+			virtual void handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) = 0;
 	};
 }

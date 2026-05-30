@@ -62,7 +62,7 @@ namespace YOBA {
 		};
 	}
 
-	void TextView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void TextView::onRender(Renderer* renderer, const Rectangle& bounds) {
 		const auto font = getFont();
 
 		if (!font)

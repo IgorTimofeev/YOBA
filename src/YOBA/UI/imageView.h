@@ -14,7 +14,7 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
 			const Image* _image = nullptr;

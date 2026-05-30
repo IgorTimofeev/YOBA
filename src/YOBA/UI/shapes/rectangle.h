@@ -15,7 +15,7 @@ namespace YOBA {
 				setFillColor(color);
 			}
 
-			void onRender(Renderer* renderer, const Bounds& bounds) override {
+			void onRender(Renderer* renderer, const Rectangle& bounds) override {
 				auto color = getFillColor();
 
 				if (color)

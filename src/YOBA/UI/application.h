@@ -63,7 +63,7 @@ namespace YOBA {
 			void setCapturedElement(Element* element);
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
 			static Application* _current;

@@ -255,5 +255,6 @@ namespace YOBA {
 
 	using Vector2F = Vector2<float>;
 	using Vector2I = Vector2<int32_t>;
+	// TODO: fuck around if this isn't a sketchy shit idk
 	using Point = Vector2I;
 }

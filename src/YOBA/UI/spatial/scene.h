@@ -37,7 +37,7 @@ namespace YOBA::spatial {
 			float getProjectionPlaneDistance() const;
 
 		protected:
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
 			std::vector<SceneElement*> _elements {};

@@ -23,7 +23,7 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
-			void onArrange(const Bounds& bounds) override;
+			void onArrange(const Rectangle& bounds) override;
 
 		private:
 			std::vector<std::vector<KeyboardButton*>> _buttons;

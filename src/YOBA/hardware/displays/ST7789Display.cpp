@@ -181,7 +181,7 @@ namespace YOBA {
 		this->writeCommandAndData(MADCTL, data);
 	}
 
-	void ST7789Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {
+	void ST7789Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
 		uint8_t data[4];
 
 		// Column Address Set

@@ -32,7 +32,7 @@ namespace YOBA {
 			void setScrollBarCornerRadius(const uint16_t value);
 			void setScrollBarThumbColor(const Color* value);
 
-			const Bounds& getContentBounds() const;
+			const Rectangle& getContentBounds() const;
 
 			void scrollHorizontallyBy(const int32_t delta);
 			void scrollVerticallyBy(const int32_t delta);
@@ -41,8 +41,8 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
-			void onArrange(const Bounds& bounds) override;
-			void onRender(Renderer* renderer, const Bounds& bounds) override;
+			void onArrange(const Rectangle& bounds) override;
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 			void onCaptureChanged() override;
 			void onEventBeforeChildren(Event* event) override;
 			void onEventAfterChildren(Event* event) override;
@@ -55,7 +55,7 @@ namespace YOBA {
 			ScrollMode _verticalScrollMode = ScrollMode::computed;
 
 			Size _contentMeasuredSize {};
-			Bounds _contentBounds {};
+			Rectangle _contentBounds {};
 			const Element* _scrollIntoViewLaterTo = nullptr;
 
 			bool _horizontalScrollPossible = false;
@@ -63,6 +63,6 @@ namespace YOBA {
 
 			Point _lastTouchPosition { -1, -1 };
 
-			void onArrangePass(const Bounds& bounds);
+			void onArrangePass(const Rectangle& bounds);
 	};
 }

@@ -23,7 +23,7 @@ namespace YOBA {
 		}
 	}
 
-	void TextField::onRender(Renderer* renderer, const Bounds& bounds) {
+	void TextField::onRender(Renderer* renderer, const Rectangle& bounds) {
 		const auto focused = isFocused();
 
 		// Background
@@ -92,7 +92,7 @@ namespace YOBA {
 				if (!textColor)
 					return;
 
-				const auto oldViewport = renderer->pushViewport(Bounds(
+				const auto oldViewport = renderer->pushViewport(Rectangle(
 					bounds.getX() + _textMargin,
 					bounds.getY(),
 					bounds.getWidth() - _textMargin * 2,
@@ -126,7 +126,7 @@ namespace YOBA {
 					blinkX = textPosition.getX();
 
 				renderer->renderFilledRectangle(
-					Bounds(
+					Rectangle(
 						blinkX,
 						textPosition.getY() + fontHeight / 2 - _cursorSize.getHeight() / 2,
 						_cursorSize.getWidth(),

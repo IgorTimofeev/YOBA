@@ -21,7 +21,7 @@ namespace YOBA {
 		invalidate();
 	}
 
-	void ProgressBar::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ProgressBar::onRender(Renderer* renderer, const Rectangle& bounds) {
 		// Track
 		if (_trackColor && getValue() < 1) {
 			renderer->renderFilledRectangle(
@@ -34,7 +34,7 @@ namespace YOBA {
 		// Fill
 		if (_fillColor && getValue() > 0) {
 			renderer->renderFilledRectangle(
-				Bounds(
+				Rectangle(
 					bounds.getX(),
 					bounds.getY(),
 					static_cast<uint64_t>(getValue() * bounds.getWidth()),

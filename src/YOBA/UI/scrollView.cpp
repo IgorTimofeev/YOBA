@@ -85,7 +85,7 @@ namespace YOBA {
 		_verticalScrollBar.setThumbColor(value);
 	}
 
-	const Bounds& ScrollView::getContentBounds() const {
+	const Rectangle& ScrollView::getContentBounds() const {
 		return _contentBounds;
 	}
 
@@ -157,7 +157,7 @@ namespace YOBA {
 		return _contentMeasuredSize;
 	}
 
-	void ScrollView::onArrangePass(const Bounds& bounds) {
+	void ScrollView::onArrangePass(const Rectangle& bounds) {
 		if (_horizontalScrollMode == ScrollMode::disabled) {
 			if (_horizontalScrollBar.getPosition() > 0)
 				_horizontalScrollBar.setPosition(0);
@@ -239,7 +239,7 @@ namespace YOBA {
 		);
 	}
 
-	void ScrollView::onArrange(const Bounds& bounds) {
+	void ScrollView::onArrange(const Rectangle& bounds) {
 		// 1st arrange pass
 		onArrangePass(bounds);
 
@@ -257,7 +257,7 @@ namespace YOBA {
 		_scrollIntoViewLaterTo = nullptr;
 	}
 
-	void ScrollView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ScrollView::onRender(Renderer* renderer, const Rectangle& bounds) {
 		Layout::onRender(renderer, bounds);
 
 		const auto& processScrollBar = [&bounds, renderer](ScrollBar& bar) {

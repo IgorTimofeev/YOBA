@@ -9,7 +9,7 @@ namespace YOBA {
 		public:
 			virtual ~Transform() = default;
 
-			virtual Bounds apply(const Bounds& bounds) = 0;
+			virtual Rectangle apply(const Rectangle& bounds) = 0;
 	};
 
 	class ScaleTransform : public Transform {
@@ -44,7 +44,7 @@ namespace YOBA {
 				_origin = origin;
 			}
 
-			Bounds apply(const Bounds& bounds) override {
+			Rectangle apply(const Rectangle& bounds) override {
 				// Simple as fuck, nothing to do here
 				if (_scale.getX() == 1 && _scale.getY() == 1)
 					return bounds;

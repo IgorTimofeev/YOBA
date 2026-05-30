@@ -6,7 +6,7 @@ namespace YOBA {
 	}
 
 	void MonochromeRenderer::flush() {
-		getTarget()->writePixels(Bounds(getTarget()->getSize()), getPixelBuffer(), getPixelBufferLength());
+		getTarget()->writePixels(Rectangle(getTarget()->getSize()), getPixelBuffer(), getPixelBufferLength());
 	}
 
 	void MonochromeRenderer::clearNative(const Color* color) {
@@ -52,7 +52,7 @@ namespace YOBA {
 		}
 	}
 
-	void MonochromeRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void MonochromeRenderer::renderFilledRectangleNative(const Rectangle& bounds, const Color* color) {
 		for (int32_t y = bounds.getY(); y < bounds.getY() + bounds.getHeight(); y++) {
 			for (int32_t x = bounds.getX(); x < bounds.getX() + bounds.getWidth(); x++) {
 				renderPixelNative(Point(x, y), color);

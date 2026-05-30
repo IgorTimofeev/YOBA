@@ -222,7 +222,7 @@ namespace YOBA {
 		this->writeCommandAndData(static_cast<uint8_t>(Command::MADCTL), data);
 	}
 
-	void ILI9341Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {
+	void ILI9341Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
 		uint8_t data[4];
 
 //		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());

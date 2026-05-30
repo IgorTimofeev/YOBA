@@ -189,7 +189,7 @@ namespace YOBA {
 		};
 	}
 
-	void Slider::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Slider::onRender(Renderer* renderer, const Rectangle& bounds) {
 		const auto handleWidthHalf = _handleSize.getWidth() / 2;
 		const auto handleHeightHalf = _handleSize.getHeight() / 2;
 
@@ -203,7 +203,7 @@ namespace YOBA {
 		// Fill
 		if (getValue() > 0 && _fillColor) {
 			renderer->renderFilledRectangle(
-				Bounds(
+				Rectangle(
 					bounds.getX(),
 					trackY,
 					handleCenterLocal,
@@ -217,7 +217,7 @@ namespace YOBA {
 		// Track
 		if (_trackColor) {
 			renderer->renderFilledRectangle(
-				Bounds(
+				Rectangle(
 					bounds.getX() + handleCenterLocal,
 					trackY,
 					bounds.getWidth() - handleCenterLocal,
@@ -290,7 +290,7 @@ namespace YOBA {
 			}
 			else {
 				renderer->renderFilledRectangle(
-					Bounds(
+					Rectangle(
 						bounds.getX() + handleCenterLocal - handleWidthHalf,
 						bounds.getY(),
 						_handleSize.getWidth(),

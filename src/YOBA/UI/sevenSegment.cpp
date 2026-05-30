@@ -114,7 +114,7 @@ namespace YOBA {
 		};
 	}
 
-	void SevenSegment::onRender(Renderer* renderer, const Bounds& bounds) {
+	void SevenSegment::onRender(Renderer* renderer, const Rectangle& bounds) {
 		auto position = Point(
 			bounds.getX() + (getDigitWidth() + getDigitSpacing()) * (getDigitCount() - 1),
 			bounds.getY()
@@ -166,7 +166,7 @@ namespace YOBA {
 			// Decimal separator
 			if (i == _decimalSeparatorIndex) {
 				renderer->renderFilledRectangle(
-					Bounds(position.getX() - _decimalSeparatorSpacing - 1, bounds.getY2() - _segmentThickness + 1, _segmentThickness, _segmentThickness),
+					Rectangle(position.getX() - _decimalSeparatorSpacing - 1, bounds.getY2() - _segmentThickness + 1, _segmentThickness, _segmentThickness),
 					_activeColor
 				);
 
@@ -182,13 +182,13 @@ namespace YOBA {
 		const auto t = getSegmentThickness();
 		const auto l = getSegmentLength();
 
-		renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY(), l, t), s0 ? _activeColor : _inactiveColor);
-		renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t, t, l), s1 ? _activeColor : _inactiveColor);
-		renderer->renderFilledRectangle(Bounds(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? _activeColor : _inactiveColor);
-		renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? _activeColor : _inactiveColor);
-		renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t + l + t, t, l), s4 ? _activeColor : _inactiveColor);
-		renderer->renderFilledRectangle(Bounds(position.getX(), position.getY() + t, t, l), s5 ? _activeColor : _inactiveColor);
-		renderer->renderFilledRectangle(Bounds(position.getX() + t, position.getY() + t + l, l, t), s6 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX() + t, position.getY(), l, t), s0 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX() + t + l, position.getY() + t, t, l), s1 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX() + t + l, position.getY() + t + l + t, t, l), s2 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX() + t, position.getY() + (t + l) * 2, l, t), s3 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX(), position.getY() + t + l + t, t, l), s4 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX(), position.getY() + t, t, l), s5 ? _activeColor : _inactiveColor);
+		renderer->renderFilledRectangle(Rectangle(position.getX() + t, position.getY() + t + l, l, t), s6 ? _activeColor : _inactiveColor);
 	}
 
 	void SevenSegment::renderDigit(Renderer* renderer, const Point& position, const uint8_t digit) const {
@@ -381,8 +381,8 @@ namespace YOBA {
 		const auto x = position.getX() + t + l / 2;
 		const auto color = state ? _activeColor : _inactiveColor;
 
-		renderer->renderFilledRectangle(Bounds(x, position.getY() + t + offset, t, l), color);
-		renderer->renderFilledRectangle(Bounds(x, position.getY() + t + offset + l + offset + t + offset, t, l), color);
+		renderer->renderFilledRectangle(Rectangle(x, position.getY() + t + offset, t, l), color);
+		renderer->renderFilledRectangle(Rectangle(x, position.getY() + t + offset + l + offset + t + offset, t, l), color);
 	}
 
 	void SevenSegment::renderMinus(Renderer* renderer, const Point& position) const {

@@ -47,7 +47,7 @@ namespace YOBA {
 			: Size();
 	}
 
-	void KeyboardLayout::onArrange(const Bounds& bounds) {
+	void KeyboardLayout::onArrange(const Rectangle& bounds) {
 		const auto layout = _keyboard->getLayout();
 
 		if (!layout)
@@ -121,7 +121,7 @@ namespace YOBA {
 						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
 					);
 
-				button->arrange(Bounds(
+				button->arrange(Rectangle(
 					bounds.getX() + localX,
 					y,
 					static_cast<uint16_t>(buttonWidth),

@@ -22,7 +22,7 @@ namespace YOBA {
 
 		protected:
 			Size onMeasure(const Size& availableSize) override;
-			void onArrange(const Bounds& bounds) override;
+			void onArrange(const Rectangle& bounds) override;
 
 			void onChildRemoved(Element* child) override;
 

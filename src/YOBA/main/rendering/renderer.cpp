@@ -30,15 +30,15 @@ namespace YOBA {
 
 	}
 
-	const Bounds& Renderer::getViewport() const {
+	const Rectangle& Renderer::getViewport() const {
 		return _viewport;
 	}
 
-	void Renderer::setViewport(const Bounds& viewport) {
+	void Renderer::setViewport(const Rectangle& viewport) {
 		_viewport = viewport;
 	}
 
-	Bounds Renderer::pushViewport(const Bounds& bounds) {
+	Rectangle Renderer::pushViewport(const Rectangle& bounds) {
 		const auto oldViewport = _viewport;
 
 		if (_viewport.intersects(bounds)) {
@@ -51,7 +51,7 @@ namespace YOBA {
 		return oldViewport;
 	}
 
-	void Renderer::popViewport(const Bounds& bounds) {
+	void Renderer::popViewport(const Rectangle& bounds) {
 		_viewport = bounds;
 	}
 
@@ -114,7 +114,7 @@ namespace YOBA {
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
 	}
 
-	void Renderer::renderFilledRectangle(const Bounds& bounds, const Color* color) {
+	void Renderer::renderFilledRectangle(const Rectangle& bounds, const Color* color) {
 		const auto& viewport = getViewport();
 
 		if (bounds.haveZeroSize() || !viewport.intersects(bounds))
@@ -136,7 +136,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderDitheredRectangle(const Bounds& bounds, const Color* color) {
+	void Renderer::renderDitheredRectangle(const Rectangle& bounds, const Color* color) {
 		constexpr uint8_t step = 1;
 		constexpr uint16_t totalSize = step + step;
 		bool odd = true;
@@ -158,17 +158,17 @@ namespace YOBA {
 	}
 
 	void Renderer::renderImage(const Point& point, const Image* image) {
-		if (getViewport().intersects(Bounds(point, image->getSize())))
+		if (getViewport().intersects(Rectangle(point, image->getSize())))
 			renderImageNative(point, image);
 	}
 
 	// -------------------------------- Non-native rendering --------------------------------
 
-	void Renderer::renderFilledRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color* color) {
+	void Renderer::renderFilledRectangle(const Rectangle& bounds, const uint16_t cornerRadius, const Color* color) {
 		if (cornerRadius > 0) {
 			// Rect in middle
 			renderFilledRectangle(
-				Bounds(
+				Rectangle(
 					bounds.getX(),
 					bounds.getY() + cornerRadius,
 					bounds.getWidth(),
@@ -206,7 +206,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderRectangle(const Bounds& bounds, const Color* color) {
+	void Renderer::renderRectangle(const Rectangle& bounds, const Color* color) {
 		if (bounds.haveZeroSize())
 			return;
 
@@ -246,7 +246,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderRectangle(const Bounds& bounds, const uint16_t cornerRadius, const Color* color) {
+	void Renderer::renderRectangle(const Rectangle& bounds, const uint16_t cornerRadius, const Color* color) {
 		if (cornerRadius > 0) {
 			renderHorizontalLine(
 				Point(bounds.getX() + cornerRadius, bounds.getY()),
@@ -424,7 +424,7 @@ namespace YOBA {
 			// Same Y, horizontal line
 			if (from.getY() == to.getY()) {
 				renderFilledRectangle(
-					Bounds(
+					Rectangle(
 						std::min(from.getX(), to.getX()),
 						from.getY() - thickness / 2,
 						std::abs(to.getX() - from.getX()),
@@ -439,7 +439,7 @@ namespace YOBA {
 			// Same X, vertical line
 			if (from.getX() == to.getX()) {
 				renderFilledRectangle(
-					Bounds(
+					Rectangle(
 						from.getX() - thickness / 2,
 						std::min(from.getY(), to.getY()),
 						thickness,
@@ -948,7 +948,7 @@ namespace YOBA {
 
 	void Renderer::renderMissingGlyph(const Point& point, const Font* font, const Color* color, const uint8_t fontScale) {
 		renderRectangle(
-			Bounds(
+			Rectangle(
 				point.getX(),
 				point.getY(),
 				Font::missingGlyphWidth * fontScale,
@@ -985,7 +985,7 @@ namespace YOBA {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
-						renderFilledRectangle(Bounds(x, y, fontScale, fontScale), color);
+						renderFilledRectangle(Rectangle(x, y, fontScale, fontScale), color);
 
 					bitIndex++;
 					x += fontScale;

@@ -76,7 +76,7 @@ namespace YOBA {
 		setDataCommandPin(true);
 	}
 
-	void SH1106Display::writePixels(const Bounds& bounds, uint8_t* source, size_t length) {
+	void SH1106Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
 		for (uint8_t page = 0; page < _pageCount; page++) {
 			setDataCommandPin(false);
 				writeData(static_cast<uint8_t>(Command::setPageAddress) | page);

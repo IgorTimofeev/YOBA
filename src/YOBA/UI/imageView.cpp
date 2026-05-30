@@ -26,7 +26,7 @@ namespace YOBA {
 			: Size(0, 0);
 	}
 
-	void ImageView::onRender(Renderer* renderer, const Bounds& bounds) {
+	void ImageView::onRender(Renderer* renderer, const Rectangle& bounds) {
 		if (!getImage())
 			return;
 

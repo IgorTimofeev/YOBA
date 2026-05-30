@@ -6,7 +6,7 @@
 #include <YOBA/main/events/pinchEvent.h>
 
 namespace YOBA {
-	void Control::handleEvent(Event* event, const Bounds& parentBounds, const bool callHandlers) {
+	void Control::handleEvent(Event* event, const Rectangle& parentBounds, const bool callHandlers) {
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
 

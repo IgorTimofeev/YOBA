@@ -1,7 +1,7 @@
 #include "knob.h"
 
 namespace YOBA {
-	void Knob::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Knob::onRender(Renderer* renderer, const Rectangle& bounds) {
 		const uint16_t radius = std::max(bounds.getWidth(), bounds.getHeight()) / 2;
 		const auto center = bounds.getCenter();
 

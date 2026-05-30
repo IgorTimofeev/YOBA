@@ -36,7 +36,7 @@ namespace YOBA {
 
 					// Writing pixel buffer on target
 					getTarget()->writePixels(
-						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
+						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
 						_pixelBuffer,
 						_pixelBufferLength
 					);
@@ -64,7 +64,7 @@ namespace YOBA {
 
 					// Writing pixel buffer on target
 					getTarget()->writePixels(
-						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
+						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
 						_pixelBuffer,
 						_pixelBufferLength
 					);
@@ -100,7 +100,7 @@ namespace YOBA {
 		}
 	}
 
-	void Bit8PaletteRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void Bit8PaletteRenderer::renderFilledRectangleNative(const Rectangle& bounds, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(bounds.getPosition());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);

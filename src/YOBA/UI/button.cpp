@@ -59,7 +59,7 @@ namespace YOBA {
 		}
 	}
 
-	void Button::onRender(Renderer* renderer, const Bounds& bounds) {
+	void Button::onRender(Renderer* renderer, const Rectangle& bounds) {
 		// Primary color
 		auto color = Color::select(isActive(), _defaultBackgroundColor, _activeBackgroundColor);
 

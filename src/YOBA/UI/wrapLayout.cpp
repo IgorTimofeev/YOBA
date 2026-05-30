@@ -44,7 +44,7 @@ namespace YOBA {
 		return { width, height };
 	}
 
-	void WrapLayout::onArrange(const Bounds& bounds) {
+	void WrapLayout::onArrange(const Rectangle& bounds) {
 		int32_t x = 0;
 		int32_t y = 0;
 		uint16_t lineHeight = 0;
@@ -60,7 +60,7 @@ namespace YOBA {
 				if (lineHeight > 0)
 					y += getVerticalSpacing() + lineHeight;
 
-				child->arrange(Bounds(
+				child->arrange(Rectangle(
 					bounds.getX(),
 					bounds.getY() + y,
 					childSize.getWidth(),
@@ -72,7 +72,7 @@ namespace YOBA {
 			}
 			// Normal
 			else {
-				child->arrange(Bounds(
+				child->arrange(Rectangle(
 					bounds.getX() + x,
 					bounds.getY() + y,
 					childSize.getWidth(),

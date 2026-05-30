@@ -219,7 +219,7 @@ namespace YOBA {
 		return result;
 	}
 
-	void RelativeStackLayout::onArrange(const Bounds& bounds) {
+	void RelativeStackLayout::onArrange(const Rectangle& bounds) {
 		size_t
 		visibleCount = 0,
 		relativeCount = 0,
@@ -299,7 +299,7 @@ namespace YOBA {
 					if (childSize > bounds.getWidth())
 						childSize = bounds.getWidth();
 
-					child->arrange(Bounds(
+					child->arrange(Rectangle(
 						position,
 						bounds.getY(),
 						childSize,
@@ -370,7 +370,7 @@ namespace YOBA {
 					if (childSize > bounds.getHeight())
 						childSize = bounds.getHeight();
 
-					child->arrange(Bounds(
+					child->arrange(Rectangle(
 						bounds.getX(),
 						position,
 						bounds.getWidth(),

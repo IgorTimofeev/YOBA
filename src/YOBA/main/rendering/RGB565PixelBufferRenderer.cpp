@@ -22,7 +22,7 @@ namespace YOBA {
 
 				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionViewportHeight()) {
 					getTarget()->writePixels(
-						Bounds(0, y, size.getWidth(), getTransactionViewportHeight()),
+						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
 						pixelBufferPtr,
 						transactionLength
 					);
@@ -64,7 +64,7 @@ namespace YOBA {
 		}
 	}
 
-	void RGB565PixelBufferRenderer::renderFilledRectangleNative(const Bounds& bounds, const Color* color) {
+	void RGB565PixelBufferRenderer::renderFilledRectangleNative(const Rectangle& bounds, const Color* color) {
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(bounds.getX(), bounds.getY());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();

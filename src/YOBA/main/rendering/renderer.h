@@ -19,24 +19,24 @@ namespace YOBA {
 			RenderTarget* getTarget() const;
 			void setTarget(RenderTarget* value);
 
-			const Bounds& getViewport() const;
-			void setViewport(const Bounds& viewport);
-			Bounds pushViewport(const Bounds& bounds);
-			void popViewport(const Bounds& bounds);
+			const Rectangle& getViewport() const;
+			void setViewport(const Rectangle& viewport);
+			Rectangle pushViewport(const Rectangle& bounds);
+			void popViewport(const Rectangle& bounds);
 			void resetViewport();
 
 			void clear(const Color* color);
 			void renderPixel(const Point& point, const Color* color);
 			void renderHorizontalLine(const Point& point, uint16_t length, const Color* color);
 			void renderVerticalLine(const Point& point, uint16_t length, const Color* color);
-			void renderFilledRectangle(const Bounds& bounds, const Color* color);
-			void renderFilledRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
-			void renderDitheredRectangle(const Bounds& bounds, const Color* color);
+			void renderFilledRectangle(const Rectangle& bounds, const Color* color);
+			void renderFilledRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
+			void renderDitheredRectangle(const Rectangle& bounds, const Color* color);
 			void renderFilledQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
 
 			void renderImage(const Point& point, const Image* image);
-			void renderRectangle(const Bounds& bounds, const Color* color);
-			void renderRectangle(const Bounds& bounds, uint16_t cornerRadius, const Color* color);
+			void renderRectangle(const Rectangle& bounds, const Color* color);
+			void renderRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
 			// Thanks, AdaFruit!
 			void renderLine(const Point& from, const Point& to, const Color* color);
 			void renderLine(const Point& from, const Point& to, const Color* color, uint8_t thickness);
@@ -67,12 +67,12 @@ namespace YOBA {
 			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
 			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
 			virtual void renderVerticalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
-			virtual void renderFilledRectangleNative(const Bounds& bounds, const Color* color) = 0;
+			virtual void renderFilledRectangleNative(const Rectangle& bounds, const Color* color) = 0;
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
 		private:
 			RenderTarget* _target = nullptr;
-			Bounds _viewport {};
+			Rectangle _viewport {};
 
 			static Point getCatmullRomPoint(const Point* points, size_t index, float t, float tension);
 
