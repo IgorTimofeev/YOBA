@@ -13,12 +13,12 @@ namespace YOBA {
 			void setHandled(bool handled);
 			uint16_t getTypeID() const;
 
-			template<class T>
-			requires std::derived_from<T, Event>
-			T* castTo() {
+			template<class TEvent>
+			requires std::derived_from<TEvent, Event>
+			TEvent* as() {
 				return
-					T::typeID == this->_typeID
-					? static_cast<T*>(this)
+					TEvent::typeID == this->_typeID
+					? static_cast<TEvent*>(this)
 					: nullptr;
 			}
 
