@@ -126,11 +126,11 @@ namespace YOBA {
 		const auto& contentSize = Size(
 			_horizontalScrollMode == ScrollMode::disabled
 				? availableSize.getWidth()
-				: Size::unlimited,
+				: Size::computed,
 
 			_verticalScrollMode == ScrollMode::disabled
 				? availableSize.getHeight()
-				: Size::unlimited
+				: Size::computed
 		);
 
 		_contentMeasuredSize.setWidth(0);

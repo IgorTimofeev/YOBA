@@ -26,7 +26,7 @@ namespace YOBA {
 						continue;
 
 					child->measure({
-						Size::unlimited,
+						Size::computed,
 						availableSize.getHeight()
 					});
 
@@ -52,7 +52,7 @@ namespace YOBA {
 
 					child->measure({
 						availableSize.getWidth(),
-						Size::unlimited
+						Size::computed
 					});
 
 					const auto& childSize = child->getMeasuredSize();

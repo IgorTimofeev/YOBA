@@ -11,7 +11,7 @@ namespace YOBA {
 		for (const auto child : *this) {
 			child->measure({
 				availableSize.getWidth(),
-				Size::unlimited
+				Size::computed
 			});
 
 			const auto& childSize = child->getMeasuredSize();

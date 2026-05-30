@@ -126,7 +126,7 @@ namespace YOBA {
 
 			Size _size { Size::computed, Size::computed };
 			Size _minSize { 0, 0 };
-			Size _maxSize { Size::unlimited, Size::unlimited };
+			Size _maxSize { Size::computed, Size::computed };
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
 			Margin _margin = Margin::zero;

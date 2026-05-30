@@ -18,6 +18,14 @@ namespace YOBA {
 		_onStateChanged = onStateChanged;
 	}
 
+	uint32_t Animation::getElapsedTime() const {
+		return system::getTimeUs() - _startTimeUs;
+	}
+
+	float Animation::getPosition() const {
+		return static_cast<float>(std::min(getElapsedTime(), _durationUs)) / static_cast<float>(getDuration());
+	}
+
 	void Animation::start() {
 		if (getState() == AnimationState::started)
 			return;
@@ -42,14 +50,9 @@ namespace YOBA {
 	}
 
 	void Animation::tick() {
-		auto position = static_cast<float>(system::getTimeUs() - _startTimeUs) / static_cast<float>(_durationUs);
+		onTick();
 
-		if (position > 1)
-			position = 1;
-
-		onPositionChanged(position);
-
-		if (position >= 1) {
+		if (getElapsedTime() >= _durationUs) {
 			_startTimeUs = stateToTime(AnimationState::completed);
 			callOnStateChanged(AnimationState::completed);
 		}
@@ -120,7 +123,7 @@ namespace YOBA {
 
 				// Measuring
 				getTarget()->setSize( { Size::computed, Size::computed });
-				getTarget()->measure({ Size::unlimited, Size::unlimited });
+				getTarget()->measure({ Size::computed, Size::computed });
 				const auto& measured = getTarget()->getMeasuredSize();
 
 				// ESP_LOGI("anim", "measured: %d, %d", measured.getWidth(), measured.getHeight());
@@ -163,7 +166,7 @@ namespace YOBA {
 		}
 	}
 
-	void SizeAnimation::onPositionChanged(const float position) {
-		getTarget()->setSize(_computedFrom.interpolate(_computedTo, position));
+	void SizeAnimation::onTick() {
+		getTarget()->setSize(_computedFrom.interpolate(_computedTo, getPosition()));
 	}
 }

@@ -21,8 +21,17 @@ namespace YOBA {
 			
 			}
 
+			// Represents size value that should be interpreted by library as "automatically computed" during
+			// layout processing. At this moment, there's actually 2 situations when you should use it:
+			//
+			// 1) When setting element size explicitly by one axis, but wanting to keep automatic calculations by another.
+			//    For example, if you call button.setSize({ 100, Size::computed }), the library will keep button
+			//    width at 100 pixels, but will continue to adjust its height based on its contents
+			//
+			// 2) When developing custom layouts, Size::computed represents an infinite value during
+			//    measure/arrange pass. For example, when measuring vertical StackLayout I'm telling library that
+			//    there's no restrictions by vertical axis via child.onMeasure({ availableSize.getWidth(), Size::computed })
 			constexpr static uint16_t computed = 0xFFFF;
-			constexpr static uint16_t unlimited = 0xFFFE;
 
 			uint16_t getWidth() const;
 			void setWidth(uint16_t value);

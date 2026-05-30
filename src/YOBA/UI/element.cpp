@@ -100,19 +100,19 @@ namespace YOBA {
 		const auto marginBottomClamped = std::max<int32_t>(margin.getBottom(), 0);
 	
 		_measuredSize = onMeasure(Size(
-			availableSize.getWidth() == Size::unlimited
-				? Size::unlimited
-				: static_cast<uint16_t>(std::max<int32_t>(
-					static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
-					0
-				)),
-			
-				availableSize.getHeight() == Size::unlimited
-				? Size::unlimited
-				: static_cast<uint16_t>(std::max<int32_t>(
-					static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
-					0
-				))
+			availableSize.getWidth() == Size::computed
+					? Size::computed
+					: static_cast<uint16_t>(std::max<int32_t>(
+						static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
+						0
+					)),
+
+				availableSize.getHeight() == Size::computed
+					? Size::computed
+					: static_cast<uint16_t>(std::max<int32_t>(
+						static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
+						0
+					))
 		));
 
 		// Horizontal

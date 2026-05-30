@@ -53,6 +53,13 @@ namespace YOBA {
 		_animations.push_back(animation);
 	}
 
+	void Application::removeAnimation(Animation* animation) {
+		const auto iterator = std::ranges::find(_animations, animation);
+
+		if (iterator != _animations.end())
+			_animations.erase(iterator);
+	}
+
 	void Application::tick() {
 		_current = this;
 
@@ -90,9 +97,14 @@ namespace YOBA {
 
 				animation->tick();
 
-				if (animation->getState() != AnimationState::started) {
-					_animations.erase(_animations.begin() + i);
-					i--;
+				switch (animation->getState()) {
+					case AnimationState::stopped:
+					case AnimationState::completed: {
+						_animations.erase(_animations.begin() + i);
+						i--;
+						break;
+					}
+					default: break;
 				}
 			}
 		}

@@ -41,6 +41,7 @@ namespace YOBA {
 			void pushEvent(Event* event);
 
 			void addAnimation(Animation* animation);
+			void removeAnimation(Animation* animation);
 
 			Renderer* getRenderer() const;
 			void setRenderer(Renderer* value);

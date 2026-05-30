@@ -15,9 +15,6 @@ namespace YOBA {
 	};
 
 	class Animation {
-		// Application will handle tick()
-		friend class Application;
-
 		public:
 			Animation() = default;
 			virtual ~Animation() = default;
@@ -28,20 +25,22 @@ namespace YOBA {
 			AnimationState getState() const;
 			void setOnStateChanged(const std::function<void(const AnimationState state)>& onStateChanged);
 
+			uint32_t getElapsedTime() const;
+			float getPosition() const;
+
 			virtual void start();
 			void stop();
+			void tick();
 
 		protected:
 			virtual void onStateChanged(const AnimationState state) = 0;
-			virtual void onPositionChanged(const float position) = 0;
+			virtual void onTick() = 0;
 
 		private:
 			uint32_t _durationUs = 0;
 			int64_t _startTimeUs = stateToTime(AnimationState::stopped);
 
 			std::function<void(const AnimationState state)> _onStateChanged = nullptr;
-
-			void tick();
 
 			constexpr static int64_t stateToTime(const AnimationState state) {
 				switch (state) {
@@ -75,7 +74,7 @@ namespace YOBA {
 
 		protected:
 			void onStateChanged(const AnimationState state) override;
-			void onPositionChanged(const float position) override;
+			void onTick() override;
 
 		private:
 			Size _from;
