@@ -38,39 +38,38 @@ namespace YOBA {
 		application->addAnimation(this);
 
 		_startTimeUs = system::getTimeUs();
-		callOnStateChanged(AnimationState::started);
+		setState(AnimationState::started);
 	}
 
 	void Animation::stop() {
 		if (getState() == AnimationState::stopped)
 			return;
 
-		_startTimeUs = stateToTime(AnimationState::stopped);
-		callOnStateChanged(AnimationState::stopped);
+		_startTimeUs = -1;
+		setState(AnimationState::stopped);
 	}
 
 	void Animation::tick() {
 		onTick();
 
+		// Completed
 		if (getElapsedTime() >= _durationUs) {
-			_startTimeUs = stateToTime(AnimationState::completed);
-			callOnStateChanged(AnimationState::completed);
+			_startTimeUs = -1;
+			setState(AnimationState::completed);
 		}
+	}
+
+	void Animation::setState(const AnimationState state) {
+		_state = state;
+
+		onStateChanged(_state);
+
+		if (_onStateChanged)
+			_onStateChanged(_state);
 	}
 
 	AnimationState Animation::getState() const {
-		switch (_startTimeUs) {
-			case -1: return AnimationState::stopped;
-			case -2: return AnimationState::completed;
-			default: return AnimationState::started;
-		}
-	}
-
-	void Animation::callOnStateChanged(const AnimationState state) {
-		onStateChanged(state);
-
-		if (_onStateChanged)
-			_onStateChanged(state);
+		return _state;
 	}
 
 	// -------------------------------- TargetAnimation --------------------------------
@@ -110,7 +109,6 @@ namespace YOBA {
 	void SizeAnimation::onStateChanged(const AnimationState state) {
 		switch (state) {
 			case AnimationState::stopped: {
-				getTarget()->setSize(_to);
 
 				break;
 			}
@@ -161,8 +159,11 @@ namespace YOBA {
 
 				break;
 			}
-			case AnimationState::completed:
+			case AnimationState::completed: {
+				getTarget()->setSize(_to);
+
 				break;
+			}
 		}
 	}
 

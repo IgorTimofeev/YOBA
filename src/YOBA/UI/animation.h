@@ -37,20 +37,13 @@ namespace YOBA {
 			virtual void onTick() = 0;
 
 		private:
+			AnimationState _state = AnimationState::stopped;
 			uint32_t _durationUs = 0;
-			int64_t _startTimeUs = stateToTime(AnimationState::stopped);
+			int64_t _startTimeUs = -1;
 
 			std::function<void(const AnimationState state)> _onStateChanged = nullptr;
 
-			constexpr static int64_t stateToTime(const AnimationState state) {
-				switch (state) {
-					case AnimationState::stopped: return -1;
-					case AnimationState::completed: return -2;
-					default: return 0;
-				}
-			}
-
-			void callOnStateChanged(const AnimationState state);
+			void setState(AnimationState state);
 	};
 
 	class TargetAnimation : public Animation {
