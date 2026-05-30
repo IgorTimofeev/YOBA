@@ -47,7 +47,7 @@ namespace YOBA {
 
 			void addHID(HID* hid);
 
-			void invokeOnNextTick(const std::function<void()>& func);
+			void invokeLater(const std::function<void()>& func);
 
 			uint32_t getTickDeltaTime() const;
 			uint32_t getLayoutDeltaTime() const;
@@ -75,14 +75,12 @@ namespace YOBA {
 
 			std::vector<Animation*> _animations {};
 			std::vector<HID*> _HIDs {};
-			std::vector<std::function<void()>> _functionToCallOnNextTick {};
+			std::vector<std::function<void()>> _functionsToInvokeLater {};
 
 			uint32_t _HIDTickDeltaTime = 0;
 			uint32_t _tickDeltaTime = 0;
 			uint32_t _layoutDeltaTime = 0;
 			uint32_t _renderDeltaTime = 0;
 			uint32_t _flushDeltaTime = 0;
-
-			void animationsTick();
 	};
 }

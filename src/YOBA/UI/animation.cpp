@@ -1,55 +1,57 @@
 #include "animation.h"
-#include "application.h"
+
+#include <YOBA/system.h>
 
 namespace YOBA {
-	Animation::Animation(Application* application, const uint32_t &durationUs, const std::function<void(const double &)> &interpolator) :
-		_application(application),
+	Animation::Animation(
+		const uint32_t& durationUs,
+		const std::function<void(const float position)>& frameHandler
+	) :
 		_durationUs(durationUs),
-		_interpolator(interpolator)
+		_frameHandler(frameHandler)
 	{
 
 	}
 
-	void Animation::start() {
-		_start = system::getTimeUs();
-	}
+	Animation::Animation() : Animation(0, nullptr) {
 
-	void Animation::stop() {
-		_start = 0;
-	}
-
-	bool Animation::tick() {
-		double position = static_cast<double>(system::getTimeUs() - _start) / static_cast<double>(_durationUs);
-
-		if (position > 1)
-			position = 1;
-
-		_interpolator(position);
-
-		if (position < 1) {
-			return true;
-		}
-		else {
-			if (_completed)
-				_completed();
-
-			return false;
-		}
-	}
-
-	bool Animation::isStarted() const {
-		return _start > 0;
 	}
 
 	uint32_t Animation::getDuration() const {
 		return _durationUs;
 	}
 
-	void Animation::setDuration(const uint32_t &duration) {
-		_durationUs = duration;
+	void Animation::setDuration(const uint32_t& durationUs) {
+		_durationUs = durationUs;
 	}
 
-	void Animation::setInterpolator(const std::function<void(const double &)> &interpolator) {
-		_interpolator = interpolator;
+	void Animation::setFrameHandler(const std::function<void(const float position)>& frameHandler) {
+		_frameHandler = frameHandler;
+	}
+
+	void Animation::start() {
+		_startTimeUs = system::getTimeUs();
+	}
+
+	bool Animation::isStarted() const {
+		return _startTimeUs >= 0;
+	}
+
+	void Animation::stop() {
+		_startTimeUs = -1;
+	}
+
+	void Animation::tick() {
+		auto position = static_cast<float>(system::getTimeUs() - _startTimeUs) / static_cast<float>(_durationUs);
+
+		if (position > 1)
+			position = 1;
+
+		if (_frameHandler)
+			_frameHandler(position);
+
+		if (position >= 1) {
+			stop();
+		}
 	}
 }

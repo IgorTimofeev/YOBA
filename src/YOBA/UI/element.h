@@ -125,9 +125,9 @@ namespace YOBA {
 			bool _isPointerOver: 1 = false;
 			bool _isVisibleForPointerEvents: 1 = true;
 
-			Size _size = Size(Size::computed, Size::computed);
-			Size _minSize = Size(0, 0);
-			Size _maxSize = Size(0xFFFF, 0xFFFF);
+			Size _size { Size::computed, Size::computed };
+			Size _minSize { 0, 0 };
+			Size _maxSize { Size::unlimited, Size::unlimited };
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
 			Margin _margin = Margin::zero;

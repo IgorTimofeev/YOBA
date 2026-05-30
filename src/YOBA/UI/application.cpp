@@ -55,22 +55,6 @@ namespace YOBA {
 		animation->start();
 	}
 
-	void Application::animationsTick() {
-		if (_animations.empty())
-			return;
-
-		for (int i = 0; i < _animations.size(); i++) {
-			if (_animations[i]->tick())
-				continue;
-
-			_animations[i]->stop();
-			delete _animations[i];
-			_animations.erase(_animations.begin() + i);
-
-			i--;
-		}
-	}
-
 	void Application::tick() {
 		_current = this;
 
@@ -88,21 +72,32 @@ namespace YOBA {
 		
 		_HIDTickDeltaTime = system::getTimeUs() - time;
 
-		// Handling tick for children
+		// Handling onTick() of children
 		time = system::getTimeUs();
 
 		onTick();
 
-		// Running scheduled tasks
-		if (!_functionToCallOnNextTick.empty()) {
-			for (const auto& task : _functionToCallOnNextTick)
+		// Running functions that were scheduled to be invoked later in UI thread
+		if (!_functionsToInvokeLater.empty()) {
+			for (const auto& task : _functionsToInvokeLater)
 				task();
 
-			_functionToCallOnNextTick.clear();
+			_functionsToInvokeLater.clear();
 		}
 
-		// Playing animations
-		animationsTick();
+		// Handling animations
+		if (!_animations.empty()) {
+			for (size_t i = 0; i < _animations.size(); i++) {
+				const auto animation = _animations[i];
+
+				animation->tick();
+
+				if (!animation->isStarted()) {
+					_animations.erase(_animations.begin() + i);
+					i--;
+				}
+			}
+		}
 
 		_tickDeltaTime = system::getTimeUs() - time;
 	}
@@ -199,8 +194,8 @@ namespace YOBA {
 		_HIDs.push_back(hid);
 	}
 
-	void Application::invokeOnNextTick(const std::function<void()>& func) {
-		_functionToCallOnNextTick.push_back(func);
+	void Application::invokeLater(const std::function<void()>& func) {
+		_functionsToInvokeLater.push_back(func);
 	}
 
 	uint32_t Application::getTickDeltaTime() const {

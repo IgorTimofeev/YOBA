@@ -4,31 +4,31 @@
 #include <functional>
 
 namespace YOBA {
-	class Application;
-
 	class Animation {
 		public:
-			Animation(Application* application, const uint32_t& durationUs, const std::function<void(const double &)>& interpolator);
+			Animation(
+				const uint32_t& durationUs,
+				const std::function<void(const float position)>& frameHandler
+			);
 
-			void start();
-			void stop();
-
-			bool tick();
+			Animation();
 
 			uint32_t getDuration() const;
+			void setDuration(const uint32_t& durationUs);
 
-			void setDuration(const uint32_t &duration);
+			void setFrameHandler(const std::function<void(const float position)>& frameHandler);
 
+			void start();
 			bool isStarted() const;
 
-			void setInterpolator(const std::function<void(const double &)> &interpolator);
+			void stop();
+
+			void tick();
 
 		private:
-			Application* _application;
-			uint32_t _durationUs = 0;
-			int64_t _start = 0;
-			std::function<void()> _completed = nullptr;
+			uint32_t _durationUs;
+			std::function<void(const float position)> _frameHandler;
 
-			std::function<void(const double&)> _interpolator;
+			int64_t _startTimeUs = -1;
 	};
 }
