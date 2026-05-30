@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <YOBA/hardware/displays/SPIDisplay.h>
 #include <YOBA/hardware/displays/invertibleDisplay.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 
 namespace YOBA {
 	class ST7789Display : public SPIDisplay {

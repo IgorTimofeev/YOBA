@@ -5,11 +5,11 @@
 #include <YOBA/main/rendering/renderer.h>
 
 namespace YOBA {
-	class DitheredRectangle : public Shape {
+	class DitheredRectangleShape : public Shape {
 		public:
-			DitheredRectangle() = default;
+			DitheredRectangleShape() = default;
 
-			explicit DitheredRectangle(const Color* color) {
+			explicit DitheredRectangleShape(const Color* color) {
 				setFillColor(color);
 			}
 

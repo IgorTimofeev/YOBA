@@ -5,9 +5,9 @@
 #include "size.h"
 
 namespace YOBA {
-	class Bounds {
+	class Rectangle {
 		public:
-			constexpr Bounds(const int32_t x, const int32_t y, const int32_t width, const int32_t height) :
+			constexpr Rectangle(const int32_t x, const int32_t y, const int32_t width, const int32_t height) :
 				x(x),
 				y(y),
 				width(width),
@@ -16,11 +16,11 @@ namespace YOBA {
 
 			}
 
-			constexpr Bounds() : Bounds(0, 0, 0, 0) {
+			constexpr Rectangle() : Rectangle(0, 0, 0, 0) {
 
 			}
 
-			constexpr Bounds(const Point& position, const Size& size) : Bounds(
+			constexpr Rectangle(const Point& position, const Size& size) : Rectangle(
 				position.getX(),
 				position.getY(),
 				size.getWidth(),
@@ -29,12 +29,12 @@ namespace YOBA {
 
 			}
 
-			constexpr Bounds(const Size& size) : Bounds(Point(), size) {
+			constexpr Rectangle(const Size& size) : Rectangle(Point(), size) {
 
 			}
 
-			// Defines an element bounds that couldn't exist in any UI
-			static const Bounds& invalidValue;
+			// Defines an element rectangle that couldn't exist in any UI
+			constexpr static Rectangle invalidValue = { -1, -1, 0, 0 };
 
 			int32_t getX() const {
 				return x;
@@ -144,12 +144,12 @@ namespace YOBA {
 				};
 			}
 
-			bool intersects(const Bounds& bounds) const {
+			bool intersects(const Rectangle& rectangle) const {
 				return !(
-					x > bounds.getX2()
-					|| getX2() < bounds.x
-					|| y > bounds.getY2()
-					|| getY2() < bounds.y
+					x > rectangle.getX2()
+					|| getX2() < rectangle.x
+					|| y > rectangle.getY2()
+					|| getY2() < rectangle.y
 				);
 			}
 
@@ -161,12 +161,12 @@ namespace YOBA {
 					&& point.getY() <= getY2();
 			}
 
-			bool contains(const Bounds& bounds) const {
+			bool contains(const Rectangle& rectangle) const {
 				return
-					bounds.getX() >= x
-					&& bounds.getY() >= y
-					&& bounds.getX2() <= getX2()
-					&& bounds.getY2() <= getY2();
+					rectangle.getX() >= x
+					&& rectangle.getY() >= y
+					&& rectangle.getX2() <= getX2()
+					&& rectangle.getY2() <= getY2();
 			}
 
 			bool haveZeroSize() const {
@@ -177,24 +177,24 @@ namespace YOBA {
 				return getWidth() > getHeight();
 			}
 
-			Bounds getIntersection(const Bounds& bounds) const {
-				Bounds result {};
+			Rectangle getIntersection(const Rectangle& rectangle) const {
+				Rectangle result {};
 
-				result.x = std::max(x, bounds.x);
-				result.y = std::max(y, bounds.y);
-				result.width = std::min(x + width, bounds.x + bounds.width) - result.x;
-				result.height = std::min(y + height, bounds.y + bounds.height) - result.y;
+				result.x = std::max(x, rectangle.x);
+				result.y = std::max(y, rectangle.y);
+				result.width = std::min(x + width, rectangle.x + rectangle.width) - result.x;
+				result.height = std::min(y + height, rectangle.y + rectangle.height) - result.y;
 
 				return result;
 			}
 
-			Bounds expandTo(const Bounds& bounds) const {
-				Bounds result {};
+			Rectangle expandTo(const Rectangle& rectangle) const {
+				Rectangle result {};
 
-				result.x = std::min(x, bounds.x);
-				result.x = std::min(y, bounds.y);
-				result.width = std::max(x + width, bounds.x + bounds.width) - result.x;
-				result.height = std::max(y + height, bounds.y + bounds.height) - result.y;
+				result.x = std::min(x, rectangle.x);
+				result.x = std::min(y, rectangle.y);
+				result.width = std::max(x + width, rectangle.x + rectangle.width) - result.x;
+				result.height = std::max(y + height, rectangle.y + rectangle.height) - result.y;
 
 				return result;
 			}
@@ -205,4 +205,6 @@ namespace YOBA {
 			uint16_t width = 0;
 			uint16_t height = 0;
 	};
+
+	using Bounds = Rectangle;
 }

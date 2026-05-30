@@ -3,7 +3,7 @@
 #include <cstdint>
 #include "SPIDisplay.h"
 #include <YOBA/main/size.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 
 #define GC9A01A_SWRESET 0x01   ///< Software Reset (maybe, not documented)
 #define GC9A01A_RDDID 0x04     ///< Read display identification information

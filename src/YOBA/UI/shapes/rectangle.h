@@ -7,11 +7,11 @@
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 
 namespace YOBA {
-	class Rectangle : public Shape, public BorderElement, public CornerRadiusElement {
+	class RectangleShape : public Shape, public BorderElement, public CornerRadiusElement {
 		public:
-			Rectangle() = default;
+			RectangleShape() = default;
 
-			explicit Rectangle(const Color* color) {
+			explicit RectangleShape(const Color* color) {
 				setFillColor(color);
 			}
 

@@ -11,7 +11,7 @@
 #include <YOBA/main/alignment.h>
 #include <YOBA/main/orientation.h>
 #include <YOBA/main/size.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 #include <YOBA/main/margin.h>
 #include <YOBA/main/transform.h>
 #include <YOBA/main/color.h>

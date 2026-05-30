@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <YOBA/main/rendering/renderTarget.h>
 #include <YOBA/main/size.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 #include <YOBA/main/color.h>
 #include <YOBA/main/image.h>
 #include <YOBA/main/font.h>

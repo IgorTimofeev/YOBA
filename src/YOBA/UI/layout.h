@@ -3,7 +3,7 @@
 #include <vector>
 #include <YOBA/UI/element.h>
 #include <YOBA/main/rendering/renderer.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 #include <YOBA/main/size.h>
 #include <YOBA/main/events/event.h>
 #include <iterator>

@@ -104,7 +104,7 @@ namespace YOBA {
 			std::function<KeyboardLayout*()> _charactersLayoutBuilder = nullptr;
 			std::function<KeyboardLayout*()> _numericLayoutBuilder = nullptr;
 
-			Rectangle _backgroundPanel = Rectangle();
+			RectangleShape _backgroundPanel {};
 
 			uint8_t _horizontalKeySpacing = 1;
 			uint8_t _verticalKeySpacing = 1;

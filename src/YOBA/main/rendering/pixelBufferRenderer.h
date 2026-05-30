@@ -1,7 +1,7 @@
 #pragma once
 
 #include <YOBA/main/rendering/renderer.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 #include <functional>
 
 namespace YOBA {

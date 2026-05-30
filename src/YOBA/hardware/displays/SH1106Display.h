@@ -5,7 +5,7 @@
 #include <YOBA/hardware/displays/contrastDisplay.h>
 #include <YOBA/hardware/displays/invertibleDisplay.h>
 #include <YOBA/main/size.h>
-#include <YOBA/main/bounds.h>
+#include <YOBA/main/rectangle.h>
 
 namespace YOBA {
 	class SH1106Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {

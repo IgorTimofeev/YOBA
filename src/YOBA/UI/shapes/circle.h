@@ -5,11 +5,11 @@
 #include "shape.h"
 
 namespace YOBA {
-	class Circle : public Shape {
+	class CircleShape : public Shape {
 		public:
-			Circle() = default;
+			CircleShape() = default;
 
-			explicit Circle(const Color* color) {
+			explicit CircleShape(const Color* color) {
 				setFillColor(color);
 			}
 
