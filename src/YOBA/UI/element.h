@@ -18,6 +18,7 @@ namespace YOBA {
 
 namespace YOBA {
 	class Animation;
+	class TargetAnimation;
 	class Application;
 	class Control;
 	class Layout;
@@ -40,8 +41,6 @@ namespace YOBA {
 			virtual void invalidateRender();
 			virtual void invalidateLayout();
 			virtual void invalidate();
-
-			virtual void startAnimation(Animation* animation);
 
 			Layout* getParent() const;
 

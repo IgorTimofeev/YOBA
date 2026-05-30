@@ -25,12 +25,10 @@ namespace YOBA {
 					if (!child->isVisible())
 						continue;
 
-					child->measure(
-						Size(
-							Size::unlimited,
-							availableSize.getHeight()
-						)
-					);
+					child->measure({
+						Size::unlimited,
+						availableSize.getHeight()
+					});
 
 					const auto& childSize = child->getMeasuredSize();
 
@@ -52,12 +50,10 @@ namespace YOBA {
 					if (!child->isVisible())
 						continue;
 
-					child->measure(
-						Size(
-							availableSize.getWidth(),
-							Size::unlimited
-						)
-					);
+					child->measure({
+						availableSize.getWidth(),
+						Size::unlimited
+					});
 
 					const auto& childSize = child->getMeasuredSize();
 

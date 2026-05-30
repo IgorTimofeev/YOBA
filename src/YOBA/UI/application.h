@@ -40,7 +40,7 @@ namespace YOBA {
 			void invalidate() override;
 			void pushEvent(Event* event);
 
-			void startAnimation(Animation* animation) override;
+			void addAnimation(Animation* animation);
 
 			Renderer* getRenderer() const;
 			void setRenderer(Renderer* value);

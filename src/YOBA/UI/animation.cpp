@@ -1,21 +1,10 @@
 #include "animation.h"
 
 #include <YOBA/system.h>
+#include <YOBA/UI/application.h>
 
 namespace YOBA {
-	Animation::Animation(
-		const uint32_t& durationUs,
-		const std::function<void(const float position)>& frameHandler
-	) :
-		_durationUs(durationUs),
-		_frameHandler(frameHandler)
-	{
-
-	}
-
-	Animation::Animation() : Animation(0, nullptr) {
-
-	}
+	// -------------------------------- Animation --------------------------------
 
 	uint32_t Animation::getDuration() const {
 		return _durationUs;
@@ -25,20 +14,31 @@ namespace YOBA {
 		_durationUs = durationUs;
 	}
 
-	void Animation::setFrameHandler(const std::function<void(const float position)>& frameHandler) {
-		_frameHandler = frameHandler;
+	void Animation::setOnStateChanged(const std::function<void(const AnimationState state)>& onStateChanged) {
+		_onStateChanged = onStateChanged;
 	}
 
 	void Animation::start() {
-		_startTimeUs = system::getTimeUs();
-	}
+		if (getState() == AnimationState::started)
+			return;
 
-	bool Animation::isStarted() const {
-		return _startTimeUs >= 0;
+		const auto application = Application::getCurrent();
+
+		if (!application)
+			return;
+
+		application->addAnimation(this);
+
+		_startTimeUs = system::getTimeUs();
+		callOnStateChanged(AnimationState::started);
 	}
 
 	void Animation::stop() {
-		_startTimeUs = -1;
+		if (getState() == AnimationState::stopped)
+			return;
+
+		_startTimeUs = stateToTime(AnimationState::stopped);
+		callOnStateChanged(AnimationState::stopped);
 	}
 
 	void Animation::tick() {
@@ -47,11 +47,123 @@ namespace YOBA {
 		if (position > 1)
 			position = 1;
 
-		if (_frameHandler)
-			_frameHandler(position);
+		onPositionChanged(position);
 
 		if (position >= 1) {
-			stop();
+			_startTimeUs = stateToTime(AnimationState::completed);
+			callOnStateChanged(AnimationState::completed);
 		}
+	}
+
+	AnimationState Animation::getState() const {
+		switch (_startTimeUs) {
+			case -1: return AnimationState::stopped;
+			case -2: return AnimationState::completed;
+			default: return AnimationState::started;
+		}
+	}
+
+	void Animation::callOnStateChanged(const AnimationState state) {
+		onStateChanged(state);
+
+		if (_onStateChanged)
+			_onStateChanged(state);
+	}
+
+	// -------------------------------- TargetAnimation --------------------------------
+
+	Element* TargetAnimation::getTarget() const {
+		return _target;
+	}
+
+	void TargetAnimation::setTarget(Element* target) {
+		_target = target;
+	}
+
+	void TargetAnimation::start() {
+		assert(!!_target && "Target couldn't be nullptr");
+
+		Animation::start();
+	}
+
+	// -------------------------------- SizeAnimation --------------------------------
+
+	Size SizeAnimation::getFrom() const {
+		return _from;
+	}
+
+	void SizeAnimation::setFrom(const Size& from) {
+		_from = from;
+	}
+
+	Size SizeAnimation::getTo() const {
+		return _to;
+	}
+
+	void SizeAnimation::setTo(const Size& to) {
+		_to = to;
+	}
+
+	void SizeAnimation::onStateChanged(const AnimationState state) {
+		switch (state) {
+			case AnimationState::stopped: {
+				getTarget()->setSize(_to);
+
+				break;
+			}
+			case AnimationState::started: {
+				const auto& layout = getTarget()->getLayoutBounds().getSize();
+
+				// ESP_LOGI("anim", "from: %d, %d", _from.getWidth(), _from.getHeight());
+				// ESP_LOGI("anim", "to: %d, %d", _to.getWidth(), _to.getHeight());
+
+
+				// Measuring
+				getTarget()->setSize( { Size::computed, Size::computed });
+				getTarget()->measure({ Size::unlimited, Size::unlimited });
+				const auto& measured = getTarget()->getMeasuredSize();
+
+				// ESP_LOGI("anim", "measured: %d, %d", measured.getWidth(), measured.getHeight());
+
+				// Computing
+
+				// From
+				_computedFrom.setWidth(
+					_from.getWidth() == Size::computed
+						? layout.getWidth()
+						: _from.getWidth()
+				);
+
+				_computedFrom.setHeight(
+					_from.getHeight() == Size::computed
+						? layout.getHeight()
+						: _from.getHeight()
+				);
+
+				// To
+				_computedTo.setWidth(
+					_to.getWidth() == Size::computed
+						? measured.getWidth()
+						: _to.getWidth()
+				);
+
+				_computedTo.setHeight(
+					_to.getHeight() == Size::computed
+						? measured.getHeight()
+						: _to.getHeight()
+				);
+
+				// ESP_LOGI("anim", "_computedFrom: %d, %d", _computedFrom.getWidth(), _computedFrom.getHeight());
+				// ESP_LOGI("anim", "_computedTo: %d, %d", _computedTo.getWidth(), _computedTo.getHeight());
+
+				break;
+			}
+			case AnimationState::completed:
+				break;
+		}
+	}
+
+	void SizeAnimation::onPositionChanged(const float position) {
+		getTarget()->setSize(_computedFrom.interpolate(_computedTo, position));
 	}
 }

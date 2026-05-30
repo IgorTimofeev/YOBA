@@ -35,7 +35,7 @@ namespace YOBA {
 			Point getCenter() const;
 			uint32_t getSquare() const;
 
-			Size interpolate(const Size& to, const double &position) const;
+			Size interpolate(const Size& to, const float& position) const;
 
 			bool operator==(const Size& rhs) const;
 			bool operator!=(const Size& rhs) const;

@@ -336,13 +336,6 @@ namespace YOBA {
 		Application::getCurrent()->pushEvent(&event);
 	}
 
-	void Element::startAnimation(Animation* animation) {
-		const auto application = Application::getCurrent();
-
-		if (application)
-			application->startAnimation(animation);
-	}
-
 	Layout* Element::getParent() const {
 		return _parent;
 	}

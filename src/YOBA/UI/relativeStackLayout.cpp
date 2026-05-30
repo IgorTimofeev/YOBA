@@ -116,7 +116,10 @@ namespace YOBA {
 								: 0;
 						}
 
-						child->measure(Size(childSize, availableSize.getHeight()));
+						child->measure({
+							childSize,
+							availableSize.getHeight()
+						});
 					}
 					// Auto, already measured
 					else {
@@ -188,7 +191,10 @@ namespace YOBA {
 								: 0;
 						}
 
-						child->measure(Size(availableSize.getWidth(), childSize));
+						child->measure({
+							availableSize.getWidth(),
+							childSize
+						});
 					}
 					// Auto, already measured
 					else {

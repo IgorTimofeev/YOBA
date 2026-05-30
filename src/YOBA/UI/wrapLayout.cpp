@@ -9,10 +9,10 @@ namespace YOBA {
 		lineHeight = 0;
 
 		for (const auto child : *this) {
-			child->measure(Size(
+			child->measure({
 				availableSize.getWidth(),
 				Size::unlimited
-			));
+			});
 
 			const auto& childSize = child->getMeasuredSize();
 

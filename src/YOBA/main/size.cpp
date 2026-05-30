@@ -36,10 +36,10 @@ namespace YOBA {
 		return width * height;
 	}
 
-	Size Size::interpolate(const Size& to, const double& position) const {
+	Size Size::interpolate(const Size& to, const float& position) const {
 		return {
-			static_cast<uint16_t>(getWidth() + position * (to.getWidth() - getWidth())),
-			static_cast<uint16_t>(getHeight() + position * (to.getHeight() - getHeight()))
+			static_cast<uint16_t>(static_cast<int32_t>(getWidth()) + static_cast<int32_t>(position * static_cast<float>(static_cast<int32_t>(to.getWidth()) - static_cast<int32_t>(getWidth())))),
+			static_cast<uint16_t>(static_cast<int32_t>(getHeight()) + static_cast<int32_t>(position * static_cast<float>(static_cast<int32_t>(to.getHeight()) - static_cast<int32_t>(getHeight()))))
 		};
 	}
 

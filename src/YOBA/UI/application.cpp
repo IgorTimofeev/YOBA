@@ -49,10 +49,8 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	void Application::startAnimation(Animation* animation) {
+	void Application::addAnimation(Animation* animation) {
 		_animations.push_back(animation);
-
-		animation->start();
 	}
 
 	void Application::tick() {
@@ -92,7 +90,7 @@ namespace YOBA {
 
 				animation->tick();
 
-				if (!animation->isStarted()) {
+				if (animation->getState() != AnimationState::started) {
 					_animations.erase(_animations.begin() + i);
 					i--;
 				}
