@@ -22,11 +22,24 @@ namespace YOBA {
 		return system::getTimeUs() - _startTimeUs;
 	}
 
-	float Animation::getPosition() const {
+	float Animation::getProgress() const {
 		return static_cast<float>(std::min(getElapsedTime(), _durationUs)) / static_cast<float>(getDuration());
 	}
 
+	AnimationState Animation::getState() const {
+		return _state;
+	}
+	Element* Animation::getTarget() const {
+		return _target;
+	}
+
+	void Animation::setTarget(Element* target) {
+		_target = target;
+	}
+
 	void Animation::start() {
+		assert(!!_target && "Target couldn't be nullptr");
+
 		if (getState() == AnimationState::started)
 			return;
 
@@ -49,6 +62,10 @@ namespace YOBA {
 		setState(AnimationState::stopped);
 	}
 
+	void Animation::onStateChanged(const AnimationState state) {
+
+	}
+
 	void Animation::tick() {
 		onTick();
 
@@ -68,24 +85,19 @@ namespace YOBA {
 			_onStateChanged(_state);
 	}
 
-	AnimationState Animation::getState() const {
-		return _state;
+	// -------------------------------- ManualAnimation --------------------------------
+
+	const std::function<void(const float progress)>& ManualAnimation::getOnTick() const {
+		return _onTick;
 	}
 
-	// -------------------------------- TargetAnimation --------------------------------
-
-	Element* TargetAnimation::getTarget() const {
-		return _target;
+	void ManualAnimation::setOnTick(const std::function<void(const float progress)>& frameHandler) {
+		_onTick = frameHandler;
 	}
 
-	void TargetAnimation::setTarget(Element* target) {
-		_target = target;
-	}
-
-	void TargetAnimation::start() {
-		assert(!!_target && "Target couldn't be nullptr");
-
-		Animation::start();
+	void ManualAnimation::onTick() {
+		if (_onTick)
+			_onTick(getProgress());
 	}
 
 	// -------------------------------- SizeAnimation --------------------------------
@@ -168,7 +180,7 @@ namespace YOBA {
 	}
 
 	void SizeAnimation::onTick() {
-		getTarget()->setSize(_computedFrom.interpolate(_computedTo, getPosition()));
+		getTarget()->setSize(_computedFrom.interpolate(_computedTo, getProgress()));
 	}
 
 	// -------------------------------- SizeAnimation --------------------------------
@@ -217,7 +229,7 @@ namespace YOBA {
 	}
 
 	void ScaleTransformAnimation::onTick() {
-		_transform->setScale(_from + (_to - _from) * getPosition());
+		_transform->setScale(_from + (_to - _from) * getProgress());
 
 		getTarget()->invalidate();
 	}

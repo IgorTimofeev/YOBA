@@ -26,38 +26,43 @@ namespace YOBA {
 			void setOnStateChanged(const std::function<void(const AnimationState state)>& onStateChanged);
 
 			uint32_t getElapsedTime() const;
-			float getPosition() const;
+			float getProgress() const;
 
-			virtual void start();
+			Element* getTarget() const;
+			void setTarget(Element* target);
+
+			void start();
 			void stop();
 			void tick();
 
 		protected:
-			virtual void onStateChanged(const AnimationState state) = 0;
+			virtual void onStateChanged(const AnimationState state);
 			virtual void onTick() = 0;
 
 		private:
 			AnimationState _state = AnimationState::stopped;
 			uint32_t _durationUs = 0;
 			int64_t _startTimeUs = -1;
+			Element* _target = nullptr;
 
 			std::function<void(const AnimationState state)> _onStateChanged = nullptr;
 
 			void setState(AnimationState state);
 	};
 
-	class TargetAnimation : public Animation {
+	class ManualAnimation : public Animation {
 		public:
-			Element* getTarget() const;
-			void setTarget(Element* target);
+			const std::function<void(const float progress)>& getOnTick() const;
+			void setOnTick(const std::function<void(const float progress)>& frameHandler);
 
-			void start() override;
+		protected:
+			void onTick() override;
 
 		private:
-			Element* _target = nullptr;
+			std::function<void(const float progress)> _onTick = nullptr;
 	};
 
-	class SizeAnimation : public TargetAnimation {
+	class SizeAnimation : public Animation {
 		public:
 			const Size& getFrom() const;
 			void setFrom(const Size& from);
@@ -77,7 +82,7 @@ namespace YOBA {
 			Size _computedTo {};
 	};
 
-	class ScaleTransformAnimation : public TargetAnimation {
+	class ScaleTransformAnimation : public Animation {
 		public:
 			ScaleTransform* getTransform() const;
 			void setTransform(ScaleTransform* transform);
