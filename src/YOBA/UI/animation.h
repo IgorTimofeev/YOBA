@@ -52,14 +52,14 @@ namespace YOBA {
 
 	class ManualAnimation : public Animation {
 		public:
-			const std::function<void(const float progress)>& getOnTick() const;
-			void setOnTick(const std::function<void(const float progress)>& frameHandler);
+			const std::function<void(const float progress)>& getOnProgressChanged() const;
+			void setOnProgressChanged(const std::function<void(const float progress)>& callback);
 
 		protected:
 			void onTick() override;
 
 		private:
-			std::function<void(const float progress)> _onTick = nullptr;
+			std::function<void(const float progress)> _onProgressChanged = nullptr;
 	};
 
 	class SizeAnimation : public Animation {

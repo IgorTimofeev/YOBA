@@ -87,17 +87,17 @@ namespace YOBA {
 
 	// -------------------------------- ManualAnimation --------------------------------
 
-	const std::function<void(const float progress)>& ManualAnimation::getOnTick() const {
-		return _onTick;
+	const std::function<void(const float progress)>& ManualAnimation::getOnProgressChanged() const {
+		return _onProgressChanged;
 	}
 
-	void ManualAnimation::setOnTick(const std::function<void(const float progress)>& frameHandler) {
-		_onTick = frameHandler;
+	void ManualAnimation::setOnProgressChanged(const std::function<void(const float progress)>& callback) {
+		_onProgressChanged = callback;
 	}
 
 	void ManualAnimation::onTick() {
-		if (_onTick)
-			_onTick(getProgress());
+		if (_onProgressChanged)
+			_onProgressChanged(getProgress());
 	}
 
 	// -------------------------------- SizeAnimation --------------------------------
