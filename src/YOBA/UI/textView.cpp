@@ -6,7 +6,7 @@ namespace YOBA {
 		setTextColor(foreground);
 	}
 
-	TextView::TextView(const std::wstring_view text) {
+	TextView::TextView(const std::string_view text) {
 		setText(text);
 	}
 
@@ -43,7 +43,7 @@ namespace YOBA {
 				getText(),
 				getFontScale(),
 				availableSize.getWidth(),
-				[this, &result, font](const std::wstring_view line, const uint16_t width) {
+				[this, &result, font](const std::string_view line, const uint16_t width) {
 					if (width > result.getWidth())
 						result.setWidth(width);
 

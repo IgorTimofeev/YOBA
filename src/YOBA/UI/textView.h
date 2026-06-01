@@ -13,7 +13,7 @@ namespace YOBA {
 		public:
 			TextView() = default;
 			TextView(const Font* font, const Color* foreground);
-			TextView(const std::wstring_view text);
+			TextView(const std::string_view text);
 			TextView(const Color* foreground);
 
 			bool isWrappingEnabled() const;
@@ -25,6 +25,6 @@ namespace YOBA {
 
 		private:
 			bool _wrappingEnabled = false;
-			std::vector<std::wstring_view> _wrappedLines {};
+			std::vector<std::string_view> _wrappedLines {};
 	};
 }

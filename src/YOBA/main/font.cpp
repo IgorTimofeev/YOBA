@@ -1,19 +1,22 @@
 #include "font.h"
+
+#include <esp_log.h>
+
 #include "utf-8.h"
 
 namespace YOBA {
 	const uint8_t* Font::getBitmap() const {
-		return bitmap;
+		return _bitmap;
 	}
 
 	const Glyph* Font::getGlyph(const uint32_t codepoint) const {
 		return
-			codepoint < fromCodepoint || codepoint > toCodepoint
+			codepoint < _fromCodepoint || codepoint > _toCodepoint
 			? nullptr
 			: (
 				isMonospaced()
-				? glyphs + codepoint - fromCodepoint
-				: reinterpret_cast<const VariableWidthGlyph*>(glyphs) + codepoint - fromCodepoint
+				? _glyphs + codepoint - _fromCodepoint
+				: reinterpret_cast<const VariableWidthGlyph*>(_glyphs) + codepoint - _fromCodepoint
 			);
 	}
 
@@ -22,7 +25,7 @@ namespace YOBA {
 			glyph
 			? (
 				isMonospaced()
-				? glyphWidth
+				? _glyphWidth
 				: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getWidth()
 			)
 			: missingGlyphWidth;
@@ -45,33 +48,37 @@ namespace YOBA {
 
 		size_t charIndex = 0;
 
-		do {
+		while (charIndex < text.length()) {
 			width += getWidth(UTF8::nextCodepoint(text, charIndex));
 		}
-		while (charIndex < text.length());
 
 		return width;
 	}
 
-	uint16_t Font::getWidth(const std::wstring_view text) const {
-		uint16_t width = 0;
-
-		for (size_t charIndex = 0; charIndex < text.length(); charIndex++)
-			width += getWidth(text[charIndex]);
-
-		return width;
-	}
-
-	uint16_t Font::getWidth(const std::wstring_view text, const uint8_t scale) const {
+	uint16_t Font::getWidth(const std::string_view text, const uint8_t scale) const {
 		return getWidth(text) * scale;
 	}
 
 	uint8_t Font::getHeight() const {
-		return glyphHeight;
+		return _glyphHeight;
 	}
 
 	uint8_t Font::getHeight(const uint8_t scale) const {
-		return glyphHeight * scale;
+		return _glyphHeight * scale;
+	}
+
+	Size Font::getSize(const std::string_view text) const {
+		return {
+			getWidth(text),
+			getHeight()
+		};
+	}
+
+	Size Font::getSize(const std::string_view text, uint8_t scale) const {
+		return {
+			getWidth(text, scale),
+			getHeight(scale)
+		};
 	}
 
 	void Font::wrap(const std::string_view text, const uint8_t scale, const uint16_t maxWidth, const std::function<void(std::string_view, uint16_t width)>& lineHandler) const {
@@ -88,7 +95,7 @@ namespace YOBA {
 		// He pizd
 		size_t charIndex = 0;
 
-		do {
+		while (charIndex < text.length()) {
 			const auto codepoint = UTF8::nextCodepoint(text, charIndex);
 
 			switch (codepoint) {
@@ -158,122 +165,6 @@ namespace YOBA {
 					else {
 						// Whitespace
 						if (codepoint == ' ') {
-							// Line contains something
-							if (lineWidth > 0) {
-								spaceAt = charIndex;
-								spaceLineWidth = lineWidth;
-								lineWidth += charWidth;
-								spaceWidth = charWidth;
-							}
-							// Start of line
-							else {
-								lineFrom = charIndex + 1;
-
-								spaceAt = 0;
-								spaceLineWidth = 0;
-								lineWidth = 0;
-							}
-						}
-						// Any char
-						else {
-							lineWidth += charWidth;
-						}
-					}
-
-					break;
-				}
-			}
-		}
-		while (charIndex < text.length());
-
-		// Remaining non-wrapped part
-		if (lineWidth > 0) {
-			lineHandler(text.substr(lineFrom), lineWidth);
-		}
-	}
-
-	void Font::wrap(const std::wstring_view text, const uint8_t scale, const uint16_t maxWidth, const std::function<void(std::wstring_view, uint16_t width)>& lineHandler) const {
-		size_t
-			lineFrom = 0,
-			spaceAt = 0;
-
-		uint16_t
-			spaceWidth = 0,
-			lineWidth = 0,
-			spaceLineWidth = 0;
-
-		// 01234567
-		// He pizd
-		for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-			const uint32_t codepoint = text[charIndex];
-
-			switch (codepoint) {
-				// Retarded char, should skip
-				case L'\r': continue;
-				// Line ending, should wrap
-				case L'\n': {
-					if (lineWidth > 0) {
-						lineHandler(text.substr(lineFrom, charIndex - lineFrom), lineWidth);
-					}
-					else {
-						lineHandler(std::wstring(), 0);
-					}
-
-					lineFrom = charIndex + 1;
-
-					spaceAt = 0;
-					spaceLineWidth = 0;
-					lineWidth = 0;
-
-					break;
-				}
-				// Any char
-				default: {
-					const auto charWidth = getWidth(codepoint, scale);
-
-					// Line doesn't fit, should wrap
-					if (lineWidth + charWidth > maxWidth) {
-						// Whitespace on end of line
-						if (codepoint == L' ') {
-							if (lineWidth > 0)
-								lineHandler(text.substr(lineFrom, charIndex - lineFrom), lineWidth);
-
-							lineFrom = charIndex + 1;
-
-							spaceAt = 0;
-							spaceLineWidth = 0;
-							lineWidth = 0;
-						}
-						// Any char on end of  line
-						else {
-							// There was whitespace in the middle
-							if (spaceAt > lineFrom) {
-								if (spaceLineWidth > 0)
-									lineHandler(text.substr(lineFrom, spaceAt - lineFrom), spaceLineWidth);
-
-								lineFrom = spaceAt + 1;
-								lineWidth = lineWidth - spaceLineWidth - spaceWidth + charWidth;
-
-								spaceAt = 0;
-								spaceLineWidth = 0;
-							}
-							// Ugly case, cutting line into 2 parts
-							else {
-								if (lineWidth > 0)
-									lineHandler(text.substr(lineFrom, charIndex - lineFrom), lineWidth);
-
-								lineFrom = charIndex;
-
-								spaceAt = 0;
-								spaceLineWidth = 0;
-								lineWidth = 0;
-							}
-						}
-					}
-					// Line fits
-					else {
-						// Whitespace
-						if (codepoint == L' ') {
 							// Line contains something
 							if (lineWidth > 0) {
 								spaceAt = charIndex;

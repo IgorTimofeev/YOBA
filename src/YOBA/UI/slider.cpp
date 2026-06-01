@@ -161,11 +161,11 @@ namespace YOBA {
 		invalidate();
 	}
 
-	const std::function<std::wstring_view(float)>& Slider::getTickLabelBuilder() const {
+	const std::function<std::string_view(float)>& Slider::getTickLabelBuilder() const {
 		return _tickLabelBuilder;
 	}
 
-	void Slider::setTickLabelBuilder(const std::function<std::wstring_view(float)>& value) {
+	void Slider::setTickLabelBuilder(const std::function<std::string_view(float)>& value) {
 		_tickLabelBuilder = value;
 	}
 
@@ -249,7 +249,7 @@ namespace YOBA {
 
 				// Text
 				if (isBig && _tickLabelFont) {
-					const auto text = std::wstring(_tickLabelBuilder(tickValue));
+					const auto text = std::string(_tickLabelBuilder(tickValue));
 
 					int32_t textX;
 
@@ -343,11 +343,11 @@ namespace YOBA {
 		setValue(_minimumValue + static_cast<float>(localX) / bounds.getWidth() * (_maximumValue - _minimumValue));
 	}
 
-	std::wstring_view Slider::percentTickLabelBuilder(const float value) {
-		return std::to_wstring(static_cast<int32_t>(std::round(value * 100.0f)));
+	std::string_view Slider::percentTickLabelBuilder(const float value) {
+		return std::to_string(static_cast<int32_t>(std::round(value * 100.0f)));
 	}
 
-	std::wstring_view Slider::int32TickLabelBuilder(const float value) {
-		return std::to_wstring(static_cast<int32_t>(std::round(value)));
+	std::string_view Slider::int32TickLabelBuilder(const float value) {
+		return std::to_string(static_cast<int32_t>(std::round(value)));
 	}
 }

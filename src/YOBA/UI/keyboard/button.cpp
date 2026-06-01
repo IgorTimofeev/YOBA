@@ -11,7 +11,7 @@ namespace YOBA {
 	KeyboardButton::KeyboardButton(
 		const KeyboardKeyType type,
 		const Key key,
-		const std::wstring_view name,
+		const std::string_view name,
 		const float width
 	) :
 		_type(type),
@@ -85,7 +85,7 @@ namespace YOBA {
 		return _key;
 	}
 
-	std::wstring_view KeyboardButton::getName() const {
+	std::string_view KeyboardButton::getName() const {
 		return _name;
 	}
 
@@ -101,11 +101,11 @@ namespace YOBA {
 		return getKey();
 	}
 
-	std::wstring_view KeyboardButton::getNameFromCase() const {
+	std::string_view KeyboardButton::getNameFromCase() const {
 		return getName();
 	}
 
-	std::optional<std::wstring_view> KeyboardButton::getTextFromCase() const {
+	std::optional<std::string_view> KeyboardButton::getTextFromCase() const {
 		return std::nullopt;
 	}
 
@@ -141,9 +141,9 @@ namespace YOBA {
 
 	TextKeyboardButton::TextKeyboardButton(
 		const Key key,
-		const std::wstring_view name,
+		const std::string_view name,
 		const Key uppercaseKey,
-		const std::wstring_view uppercaseName,
+		const std::string_view uppercaseName,
 		const float width
 	) :
 		KeyboardButton(KeyboardKeyType::normal, key, name, width),
@@ -153,7 +153,7 @@ namespace YOBA {
 
 	}
 
-	TextKeyboardButton::TextKeyboardButton(const Key key, const std::wstring_view name, const float width) :
+	TextKeyboardButton::TextKeyboardButton(const Key key, const std::string_view name, const float width) :
 		TextKeyboardButton(
 			key,
 			name,
@@ -169,7 +169,7 @@ namespace YOBA {
 		return _uppercaseKey;
 	}
 
-	std::wstring_view TextKeyboardButton::getUppercaseName() const {
+	std::string_view TextKeyboardButton::getUppercaseName() const {
 		return _uppercaseName;
 	}
 
@@ -177,11 +177,11 @@ namespace YOBA {
 		return getKeyboard()->getCase() == KeyboardCase::lower ? getKey() : getUppercaseKey();
 	}
 
-	std::wstring_view TextKeyboardButton::getNameFromCase() const {
+	std::string_view TextKeyboardButton::getNameFromCase() const {
 		return getKeyboard()->getCase() == KeyboardCase::lower ? getName() : getUppercaseName();
 	}
 
-	std::optional<std::wstring_view> TextKeyboardButton::getTextFromCase() const {
+	std::optional<std::string_view> TextKeyboardButton::getTextFromCase() const {
 		return getNameFromCase();
 	}
 
@@ -198,9 +198,9 @@ namespace YOBA {
 	// ----------------------------- ActionKeyboardButton -----------------------------
 
 	ShiftKeyboardButton::ShiftKeyboardButton(
-		const std::wstring_view name,
-		const std::wstring_view uppercaseName,
-		const std::wstring_view capsName,
+		const std::string_view name,
+		const std::string_view uppercaseName,
+		const std::string_view capsName,
 		const float width
 	) :
 		KeyboardButton(
@@ -234,7 +234,7 @@ namespace YOBA {
 		}
 	}
 
-	std::wstring_view ShiftKeyboardButton::getNameFromCase() const {
+	std::string_view ShiftKeyboardButton::getNameFromCase() const {
 		switch (getKeyboard()->getCase()) {
 			case KeyboardCase::lower:
 				return getName();
@@ -247,7 +247,7 @@ namespace YOBA {
 
 	// ----------------------------- BackspaceKeyboardButton -----------------------------
 
-	BackspaceKeyboardButton::BackspaceKeyboardButton(const std::wstring_view name, const float width) :
+	BackspaceKeyboardButton::BackspaceKeyboardButton(const std::string_view name, const float width) :
 		KeyboardButton(KeyboardKeyType::action, Key::backspace, name, width)
 	{
 
@@ -256,7 +256,7 @@ namespace YOBA {
 	// ----------------------------- EnterKeyboardButton -----------------------------
 
 	EnterKeyboardButton::EnterKeyboardButton(const float width) :
-		KeyboardButton(KeyboardKeyType::action, Key::enter, L"<-", width)
+		KeyboardButton(KeyboardKeyType::action, Key::enter, "<-", width)
 	{
 
 	}
@@ -274,14 +274,14 @@ namespace YOBA {
 
 	// ----------------------------- SpaceKeyboardButton -----------------------------
 
-	SpaceKeyboardButton::SpaceKeyboardButton() :TextKeyboardButton(Key::space, L" ", Key::space, L" ", stretched)
+	SpaceKeyboardButton::SpaceKeyboardButton() :TextKeyboardButton(Key::space, " ", Key::space, " ", stretched)
 	{
 
 	}
 
 	// ----------------------------- PeriodKeyboardButton -----------------------------
 
-	PeriodKeyboardButton::PeriodKeyboardButton(const float width) : TextKeyboardButton(Key::period, L".", width) {
+	PeriodKeyboardButton::PeriodKeyboardButton(const float width) : TextKeyboardButton(Key::period, ".", width) {
 
 	}
 
@@ -293,7 +293,7 @@ namespace YOBA {
 
 	// ----------------------------- NumericSignMinusKeyboardButton -----------------------------
 
-	NumericSignMinusKeyboardKey::NumericSignMinusKeyboardKey(const float width) : TextKeyboardButton(Key::minus, L"-", width) {
+	NumericSignMinusKeyboardKey::NumericSignMinusKeyboardKey(const float width) : TextKeyboardButton(Key::minus, "-", width) {
 
 	}
 
@@ -305,7 +305,7 @@ namespace YOBA {
 
 	// ----------------------------- NumericSignMinusKeyboardButton -----------------------------
 
-	DummyKeyboardButton::DummyKeyboardButton(const float width) : TextKeyboardButton(Key::none, L" ", width) {
+	DummyKeyboardButton::DummyKeyboardButton(const float width) : TextKeyboardButton(Key::none, " ", width) {
 
 	}
 
@@ -316,7 +316,7 @@ namespace YOBA {
 	// ----------------------------- CharactersLayoutKeyboardButton -----------------------------
 
 	CharactersLayoutKeyboardButton::CharactersLayoutKeyboardButton(
-		const std::wstring_view name,
+		const std::string_view name,
 		const float width
 	) :
 		KeyboardButton(KeyboardKeyType::charactersLayout, Key::none, name, width)
@@ -342,7 +342,7 @@ namespace YOBA {
 	// ----------------------------- DefaultLayoutKeyboardButton -----------------------------
 
 	CurrentCyclicLayoutKeyboardButton::CurrentCyclicLayoutKeyboardButton(
-		const std::wstring_view name,
+		const std::string_view name,
 		const float width
 	) :
 		KeyboardButton(KeyboardKeyType::action, Key::none, name, width)
@@ -364,7 +364,7 @@ namespace YOBA {
 	// ----------------------------- CyclicLayoutKeyboardButton -----------------------------
 
 	CyclicLayoutKeyboardButton::CyclicLayoutKeyboardButton(
-		const std::wstring_view name,
+		const std::string_view name,
 		const float width
 	) :
 		KeyboardButton(KeyboardKeyType::cyclicLayout, Key::none, name, width)

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <string>
 
 namespace YOBA {
@@ -64,12 +63,24 @@ namespace YOBA {
 					return ((byte1 & 0b0000'0111) << 18) | ((byte2 & 0b0011'1111) << 12) | ((byte3 & 0b0011'1111) << 6) | (byte4 & 0b0011'1111);
 				}
 
-				// Some weird shit like corrupted char or if we've got into middle of utf sequence
+				// Some weird shit like corrupted char or if we've got into middle of UTF sequence
 				index += 1;
 
-				// Using replacement char �
+				// Falling back to replacement char �
 				return 0xFFFD;
 			}
 
+			static uint32_t getLength(const std::string_view str) {
+				size_t length = 0;
+
+				for (const auto ch : str) {
+					// If byte doesn't start with 10xxxxxx, i.e. it's not a continuation byte - then it fr start of a new char
+					if ((static_cast<uint8_t>(ch) & 0b1100'0000) != 0b1000'0000) {
+						length++;
+					}
+				}
+
+				return length;
+			}
 	};
 }

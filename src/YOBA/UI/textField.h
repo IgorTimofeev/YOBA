@@ -25,11 +25,11 @@ namespace YOBA {
 			uint8_t getKeyboardLayoutOptions() const;
 			void setKeyboardLayoutOptions(const uint8_t keyboardLayoutOptions);
 
-			wchar_t getMask() const;
-			void setMask(wchar_t mask);
+			char getMask() const;
+			void setMask(char mask);
 
-			std::wstring_view getPlaceholder() const;
-			void setPlaceholder(const std::wstring_view& value);
+			std::string_view getPlaceholder() const;
+			void setPlaceholder(const std::string_view& value);
 
 			const uint16_t& getTextMargin() const;
 			void setTextMargin(const uint16_t& textMargin);
@@ -70,10 +70,10 @@ namespace YOBA {
 			void setCursorToStart();
 			void setCursorToEnd();
 
-			void insert(std::wstring_view value);
+			void insert(std::string_view value);
 			void backspace();
 
-			void setOnInput(const std::function<void(Key, std::optional<std::wstring_view>)>& callback);
+			void setOnInput(const std::function<void(Key, std::optional<std::string_view>)>& callback);
 
 		protected:
 			void onTick() override;
@@ -81,7 +81,7 @@ namespace YOBA {
 			void onEvent(Event* event) override;
 			void onFocusChanged() override;
 
-			virtual void onInput(Key key, std::optional<std::wstring_view> text);
+			virtual void onInput(Key key, std::optional<std::string_view> text);
 
 		private:
 			int32_t _lastTouchX = -1;
@@ -108,11 +108,11 @@ namespace YOBA {
 			const Color* _placeholderColor = nullptr;
 			const Color* _cursorColor = nullptr;
 
-			std::wstring _placeholder = std::wstring();
-			wchar_t _mask = 0;
+			std::string _placeholder = std::string();
+			char _mask = 0;
 			uint8_t _keyboardLayoutOptions = KeyboardLayoutOptions::text;
 
-			std::function<void(Key, std::optional<std::wstring_view>)> _onInput = nullptr;
+			std::function<void(Key, std::optional<std::string_view>)> _onInput = nullptr;
 
 			void setCursorBlinkStateAndTime(bool value);
 			void applyContinuousScroll();

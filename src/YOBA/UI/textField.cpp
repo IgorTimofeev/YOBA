@@ -100,7 +100,7 @@ namespace YOBA {
 				));
 
 				for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-					const wchar_t ch = _mask ? _mask : text[charIndex];
+					const char ch = _mask ? _mask : text[charIndex];
 
 					renderer->renderChar(
 						textPosition,
@@ -268,7 +268,7 @@ namespace YOBA {
 		_continuousScrollTime = system::getTimeUs() + _continuousScrollInterval;
 	}
 
-	void TextField::insert(const std::wstring_view value) {
+	void TextField::insert(const std::string_view value) {
 		const auto text = getText();
 		const auto cursorPosition = getCursorPosition();
 
@@ -281,16 +281,16 @@ namespace YOBA {
 				setText(value);
 			}
 			else {
-				setText(std::wstring(value) + std::wstring(text));
+				setText(std::string(value) + std::string(text));
 			}
 		}
 		// End
 		else if (cursorPosition == text.length()) {
-			setText(std::wstring(text) + std::wstring(value));
+			setText(std::string(text) + std::string(value));
 		}
 		// Middle
 		else {
-			setText(std::wstring(text.substr(0, cursorPosition)) + std::wstring(value) + std::wstring(text.substr(cursorPosition)));
+			setText(std::string(text.substr(0, cursorPosition)) + std::string(value) + std::string(text.substr(cursorPosition)));
 		}
 
 		setCursorPosition(getCursorPosition() + value.length());
@@ -316,18 +316,18 @@ namespace YOBA {
 				setText(text.substr(1));
 			}
 			else if (!text.empty()) {
-				setText(std::wstring());
+				setText(std::string());
 			}
 		}
 		// Middle
 		else {
-			setText(std::wstring(text.substr(0, cursorPosition - 1)) + std::wstring(text.substr(cursorPosition)));
+			setText(std::string(text.substr(0, cursorPosition - 1)) + std::string(text.substr(cursorPosition)));
 		}
 
 		setCursorPosition(getCursorPosition() - 1);
 	}
 
-	void TextField::setOnInput(const std::function<void(Key, std::optional<std::wstring_view>)>& callback) {
+	void TextField::setOnInput(const std::function<void(Key, std::optional<std::string_view>)>& callback) {
 		_onInput = callback;
 	}
 
@@ -436,7 +436,7 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	void TextField::onInput(Key key, std::optional<std::wstring_view> text) {
+	void TextField::onInput(Key key, std::optional<std::string_view> text) {
 
 	}
 
@@ -480,19 +480,19 @@ namespace YOBA {
 		_keyboardLayoutOptions = keyboardLayoutOptions;
 	}
 
-	wchar_t TextField::getMask() const {
+	char TextField::getMask() const {
 		return _mask;
 	}
 
-	void TextField::setMask(const wchar_t mask) {
+	void TextField::setMask(const char mask) {
 		_mask = mask;
 	}
 
-	std::wstring_view TextField::getPlaceholder() const {
+	std::string_view TextField::getPlaceholder() const {
 		return _placeholder;
 	}
 
-	void TextField::setPlaceholder(const std::wstring_view& value) {
+	void TextField::setPlaceholder(const std::string_view& value) {
 		_placeholder = value;
 
 		invalidate();
