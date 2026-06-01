@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdlib>
-#include <cstdint>
+#include <string>
+
 #include <YOBA/main/rendering/renderTarget.h>
 #include <YOBA/main/size.h>
 #include <YOBA/main/rectangle.h>
@@ -48,6 +48,7 @@ namespace YOBA {
 			void renderArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
 			void renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve = 10, const float tension = 0.5f);
 
+			void renderChar(const Point& point, const Font* font, const Color* color, uint32_t codepoint, uint8_t fontScale = 1);
 			/**
 			* @brief Renders single line of text
 			* @param point Position of upper-left corner of the first character in text
@@ -56,8 +57,10 @@ namespace YOBA {
 			* @param text Text to render
 			* @param fontScale Scale factor of text, defaults to 1
 			*/
-			void renderText(const Point& point, const Font* font, const Color* color, std::wstring_view text, uint8_t fontScale = 1);
+			void renderText(const Point& point, const Font* font, const Color* color, std::string_view text, uint8_t fontScale = 1);
+
 			void renderChar(const Point& point, const Font* font, const Color* color, wchar_t ch, uint8_t fontScale = 1);
+			void renderText(const Point& point, const Font* font, const Color* color, std::wstring_view text, uint8_t fontScale = 1);
 
 			virtual void flush() = 0;
 

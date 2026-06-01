@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <YOBA/main/math.h>
+#include <YOBA/main/utf-8.h>
 
 namespace YOBA {
 	RenderTarget* Renderer::getTarget() const {
@@ -995,6 +996,92 @@ namespace YOBA {
 				y += fontScale;
 			}
 		}
+	}
+
+	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t fontScale) {
+		const auto& viewport = getViewport();
+		const auto viewportX2 = viewport.getX2();
+
+		if (
+			point.getX() > viewportX2
+			|| point.getY() > viewport.getY2()
+			|| point.getY() + font->getHeight(fontScale) < viewport.getY()
+			|| !color
+		)
+			return;
+
+		const auto glyph = font->getGlyph(codepoint);
+
+		if (glyph) {
+			if (point.getX() + font->getWidth(glyph, fontScale) < viewport.getX())
+				return;
+
+			renderGlyph(
+				point,
+				font,
+				color,
+				glyph,
+				fontScale
+			);
+		}
+		else {
+			renderMissingGlyph(point, font, color, fontScale);
+		}
+	}
+
+	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::string_view text, const uint8_t fontScale) {
+		const auto& viewport = getViewport();
+		const auto viewportX2 = viewport.getX2();
+
+		// Skipping rendering if text is obviously not in viewport
+		if (
+			point.getX() > viewportX2
+			|| point.getY() > viewport.getY2()
+			|| point.getY() + font->getHeight(fontScale) < viewport.getY()
+			|| !color
+		)
+			return;
+
+		int32_t x = point.getX();
+
+		size_t charIndex = 0;
+
+		do {
+			// Trying to find glyph matched to char
+			const auto glyph = font->getGlyph(UTF8::nextCodepoint(text, charIndex));
+
+			// If glyph was found in bitmap & can be rendered as "human-readable"
+			// For example,U+007F "DEL" symbol often has zero width in some fonts
+			if (glyph && font->getWidth(glyph) > 0) {
+				const int32_t x2 = x + font->getWidth(glyph, fontScale);
+
+				// Rendering current glyph only if it's in viewport
+				if (x2 > viewport.getX()) {
+					renderGlyph(
+						Point(
+							x,
+							point.getY()
+						),
+						font,
+						color,
+						glyph,
+						fontScale
+					);
+				}
+
+				x = x2;
+			}
+			else {
+				renderMissingGlyph(Point(x, point.getY()), font, color, fontScale);
+
+				x += Font::missingGlyphWidth * fontScale;
+			}
+
+			// Stopping rendering if next glyphs will not be in viewport
+			if (x > viewportX2)
+				break;
+		}
+		while (charIndex < text.length());
 	}
 
 	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::wstring_view text, const uint8_t fontScale) {
