@@ -74,7 +74,7 @@ namespace YOBA {
 		};
 	}
 
-	Size Font::getSize(const std::string_view text, uint8_t scale) const {
+	Size Font::getSize(const std::string_view text, const uint8_t scale) const {
 		return {
 			getWidth(text, scale),
 			getHeight(scale)
@@ -104,13 +104,13 @@ namespace YOBA {
 				// Line ending, should wrap
 				case '\n': {
 					if (lineWidth > 0) {
-						lineHandler(text.substr(lineFrom, charIndex - lineFrom), lineWidth);
+						lineHandler(text.substr(lineFrom, charIndex - 1 - lineFrom), lineWidth);
 					}
 					else {
 						lineHandler(std::string(), 0);
 					}
 
-					lineFrom = charIndex + 1;
+					lineFrom = charIndex - 1 + 1;
 
 					spaceAt = 0;
 					spaceLineWidth = 0;
@@ -127,9 +127,9 @@ namespace YOBA {
 						// Whitespace on end of line
 						if (codepoint == ' ') {
 							if (lineWidth > 0)
-								lineHandler(text.substr(lineFrom, charIndex - lineFrom), lineWidth);
+								lineHandler(text.substr(lineFrom, charIndex - 1 - lineFrom), lineWidth);
 
-							lineFrom = charIndex + 1;
+							lineFrom = charIndex - 1 + 1;
 
 							spaceAt = 0;
 							spaceLineWidth = 0;
@@ -151,9 +151,9 @@ namespace YOBA {
 							// Ugly case, cutting line into 2 parts
 							else {
 								if (lineWidth > 0)
-									lineHandler(text.substr(lineFrom, charIndex - lineFrom), lineWidth);
+									lineHandler(text.substr(lineFrom, charIndex - 1 - lineFrom), lineWidth);
 
-								lineFrom = charIndex;
+								lineFrom = charIndex - 1;
 
 								spaceAt = 0;
 								spaceLineWidth = 0;
@@ -167,14 +167,14 @@ namespace YOBA {
 						if (codepoint == ' ') {
 							// Line contains something
 							if (lineWidth > 0) {
-								spaceAt = charIndex;
+								spaceAt = charIndex - 1;
 								spaceLineWidth = lineWidth;
 								lineWidth += charWidth;
 								spaceWidth = charWidth;
 							}
 							// Start of line
 							else {
-								lineFrom = charIndex + 1;
+								lineFrom = charIndex - 1 + 1;
 
 								spaceAt = 0;
 								spaceLineWidth = 0;
