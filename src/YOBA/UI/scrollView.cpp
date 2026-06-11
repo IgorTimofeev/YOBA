@@ -44,9 +44,6 @@ namespace YOBA {
 	}
 
 	void ScrollView::setHorizontalPosition(const uint16_t value) {
-		if (!_horizontalScrollPossible)
-			return;
-
 		_horizontalScrollBar.setPosition(value);
 
 		invalidate();
@@ -57,9 +54,6 @@ namespace YOBA {
 	}
 
 	void ScrollView::setVerticalPosition(const uint16_t value) {
-		if (!_verticalScrollPossible)
-			return;
-
 		_verticalScrollBar.setPosition(value);
 
 		invalidate();
@@ -208,14 +202,13 @@ namespace YOBA {
 			if (element->isVisible())
 				element->arrange(_contentBounds);
 
-		const auto& processScrollBar = [&bounds](ScrollBar& bar, bool& possible, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
+		const auto& processScrollBar = [&bounds](ScrollBar& bar, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 			bar.setContentSize(contentSize);
 			bar.setViewportSize(viewportSize);
-			possible = mode != ScrollMode::disabled && contentSize > viewportSize;
 
 			bar.setVisible(
 				mode == ScrollMode::enabled
-				|| (mode == ScrollMode::computed && possible)
+				|| (mode == ScrollMode::computed && contentSize > viewportSize)
 			);
 
 			if (bar.isVisible())
@@ -224,7 +217,6 @@ namespace YOBA {
 
 		processScrollBar(
 			_horizontalScrollBar,
-			_horizontalScrollPossible,
 			_horizontalScrollMode,
 			_contentBounds.getWidth(),
 			bounds.getWidth()
@@ -232,7 +224,6 @@ namespace YOBA {
 
 		processScrollBar(
 			_verticalScrollBar,
-			_verticalScrollPossible,
 			_verticalScrollMode,
 			_contentBounds.getHeight(),
 			bounds.getHeight()

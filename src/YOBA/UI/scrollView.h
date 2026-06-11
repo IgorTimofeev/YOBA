@@ -58,9 +58,6 @@ namespace YOBA {
 			Rectangle _contentBounds {};
 			const Element* _scrollIntoViewLaterTo = nullptr;
 
-			bool _horizontalScrollPossible = false;
-			bool _verticalScrollPossible = false;
-
 			Point _lastTouchPosition { -1, -1 };
 
 			void onArrangePass(const Rectangle& bounds);
