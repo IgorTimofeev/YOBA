@@ -52,18 +52,18 @@ namespace YOBA {
 
 	void SPIDisplay::writeCommand(const uint8_t command) {
 		setDataCommandPin(false);
-		writeData(command);
+		system::SPI::write(command);
 		setDataCommandPin(true);
 	}
 
 	void SPIDisplay::writeCommandAndData(const uint8_t command, const uint8_t data) {
 		writeCommand(command);
-		writeData(data);
+		system::SPI::write(data);
 	}
 
 	void SPIDisplay::writeCommandAndData(const uint8_t command, const uint8_t *data, const size_t length) {
 		writeCommand(command);
-		writeData(data, length);
+		system::SPI::write(data, length);
 	}
 
 	void SPIDisplay::setDataCommandPin(const bool value) const {
