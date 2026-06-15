@@ -14,11 +14,11 @@ namespace YOBA {
 			// Arduino: 40 MHz
 			// ESP-IDF: 60 MHz
 			ILI9341Display(
-				uint8_t mosiPin,
-				uint8_t sckPin,
-				int8_t ssPin,
-				uint8_t dcPin,
-				int8_t rstPin,
+				uint8_t MOSIPin,
+				uint8_t SCKPin,
+				int8_t SSPin,
+				uint8_t DCPin,
+				int8_t RSTPin,
 				uint32_t SPIFrequency,
 
 				const Size& size = Size(240, 320),

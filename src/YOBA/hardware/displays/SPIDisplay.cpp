@@ -3,21 +3,21 @@
 
 namespace YOBA {
 	SPIDisplay::SPIDisplay(
-		const uint8_t mosiPin,
-		const uint8_t sckPin,
-		const int8_t ssPin,
-		const uint8_t dcPin,
-		const int8_t rstPin,
+		const uint8_t MOSIPin,
+		const uint8_t SCKPin,
+		const int8_t SSPin,
+		const uint8_t DCPin,
+		const int8_t RSTPin,
 		const uint32_t frequencyHz
 	) :
 		_SPIDevice(
-			mosiPin,
-			sckPin,
-			ssPin,
-			dcPin,
+			MOSIPin,
+			SCKPin,
+			SSPin,
+			DCPin,
 			frequencyHz
 		),
-		_rstPin(rstPin)
+		_RSTPin(RSTPin)
 	{
 
 	}
@@ -26,8 +26,8 @@ namespace YOBA {
 		RenderingTarget::setup();
 
 		// Reset pin
-		if (_rstPin >= 0) {
-			system::GPIO::setMode(_rstPin, system::GPIO::pinMode::output);
+		if (_RSTPin >= 0) {
+			system::GPIO::setMode(_RSTPin, system::GPIO::pinMode::output);
 
 			toggleResetPin();
 		}
@@ -51,7 +51,7 @@ namespace YOBA {
 	}
 
 	void SPIDisplay::setResetPin(const bool value) const {
-		system::GPIO::write(_rstPin, value);
+		system::GPIO::write(_RSTPin, value);
 	}
 
 	void SPIDisplay::toggleResetPin() {

@@ -10,11 +10,11 @@ namespace YOBA {
 	class SPIDisplay : public virtual Display {
 		public:
 			SPIDisplay(
-				uint8_t mosiPin,
-				uint8_t sckPin,
-				int8_t ssPin,
-				uint8_t dcPin,
-				int8_t rstPin,
+				uint8_t MOSIPin,
+				uint8_t SCKPin,
+				int8_t SSPin,
+				uint8_t DCPin,
+				int8_t RSTPin,
 				uint32_t frequencyHz
 			);
 
@@ -24,7 +24,7 @@ namespace YOBA {
 
 		protected:
 			system::SPIDevice _SPIDevice;
-			int8_t _rstPin;
+			int8_t _RSTPin;
 
 			void setResetPin(bool value) const;
 

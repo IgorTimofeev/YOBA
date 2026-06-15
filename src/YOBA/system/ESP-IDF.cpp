@@ -56,11 +56,11 @@ namespace YOBA::system {
 
 	// -------------------------------- SPI --------------------------------
 
-	SPIDevice::SPIDevice(const uint8_t mosiPin, const uint8_t sckPin, const int8_t ssPin, const int8_t dcPin, const uint32_t frequencyHz) :
-		_mosiPin(mosiPin),
-		_sckPin(sckPin),
-		_ssPin(ssPin),
-		_dcPin(dcPin),
+	SPIDevice::SPIDevice(const uint8_t MOSIPin, const uint8_t SCKPin, const int8_t SSPin, const int8_t DCPin, const uint32_t frequencyHz) :
+		_MOSIPin(MOSIPin),
+		_SCKPin(SCKPin),
+		_SSPin(SSPin),
+		_DCPin(DCPin),
 		_frequencyHz(frequencyHz)
 	{
 
@@ -68,14 +68,14 @@ namespace YOBA::system {
 
 	void SPIDevice::setup() {
 		// GPIO
-		GPIO::setMode(_ssPin, GPIO::pinMode::output);
-		GPIO::write(_ssPin, true);
+		GPIO::setMode(_SSPin, GPIO::pinMode::output);
+		GPIO::write(_SSPin, true);
 
 		// Bus
 		spi_bus_config_t busConfig {};
-		busConfig.mosi_io_num = _mosiPin;
+		busConfig.mosi_io_num = _MOSIPin;
 		busConfig.miso_io_num = -1;
-		busConfig.sclk_io_num = _sckPin;
+		busConfig.sclk_io_num = _SCKPin;
 		busConfig.quadwp_io_num = -1;
 		busConfig.quadhd_io_num = -1;
 		busConfig.max_transfer_sz = std::numeric_limits<int>::max();
@@ -88,27 +88,27 @@ namespace YOBA::system {
 		spi_device_interface_config_t interfaceConfig {};
 		interfaceConfig.mode = 0;
 		interfaceConfig.clock_speed_hz = static_cast<int>(_frequencyHz);
-		interfaceConfig.spics_io_num = static_cast<int>(_ssPin);
+		interfaceConfig.spics_io_num = static_cast<int>(_SSPin);
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
 
 		// Data / command pin behavior
-		if (_dcPin != GPIO_NUM_NC) {
-			GPIO::setMode(_dcPin, GPIO::pinMode::output);
-			GPIO::write(_dcPin, true);
+		if (_DCPin != GPIO_NUM_NC) {
+			GPIO::setMode(_DCPin, GPIO::pinMode::output);
+			GPIO::write(_DCPin, true);
 
 			interfaceConfig.pre_cb = [](spi_transaction_t* transaction) {
 				const auto device = static_cast<SPIDevice*>(transaction->user);
 
 				if (device->_commandMode)
-					GPIO::write(device->_dcPin, false);
+					GPIO::write(device->_DCPin, false);
 			};
 
 			interfaceConfig.post_cb = [](spi_transaction_t* transaction) {
 				const auto device = static_cast<SPIDevice*>(transaction->user);
 
 				if (device->_commandMode)
-					GPIO::write(device->_dcPin, true);
+					GPIO::write(device->_DCPin, true);
 			};
 		}
 

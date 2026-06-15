@@ -4,11 +4,11 @@
 
 namespace YOBA {
 	GC9A01Display::GC9A01Display(
-		const uint8_t mosiPin,
-		const uint8_t sckPin,
-		const int8_t ssPin,
-		const uint8_t dcPin,
-		const int8_t rstPin,
+		const uint8_t MOSIPin,
+		const uint8_t SCKPin,
+		const int8_t SSPin,
+		const uint8_t DCPin,
+		const int8_t RSTPin,
 		const uint32_t SPIFrequency,
 
 		const Size& size,
@@ -22,11 +22,11 @@ namespace YOBA {
 			colorModel
 		),
 		SPIDisplay(
-			mosiPin,
-			sckPin,
-			ssPin,
-			dcPin,
-			rstPin,
+			MOSIPin,
+			SCKPin,
+			SSPin,
+			DCPin,
+			RSTPin,
 			SPIFrequency
 		)
 	{
@@ -37,7 +37,7 @@ namespace YOBA {
 		SPIDisplay::setup();
 
 		// Software reset
-		if (_rstPin < 0) {
+		if (_RSTPin < 0) {
 			writeCommand(SWRESET);
 			system::delayMs(150);
 		}

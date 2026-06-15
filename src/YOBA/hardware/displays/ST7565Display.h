@@ -13,11 +13,11 @@ namespace YOBA {
 	class ST7565Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
 		public:
 			ST7565Display(
-				uint8_t mosiPin,
-				uint8_t sckPin,
-				int8_t ssPin,
-				uint8_t dcPin,
-				int8_t rstPin,
+				uint8_t MOSIPin,
+				uint8_t SCKPin,
+				int8_t SSPin,
+				uint8_t DCPin,
+				int8_t RSTPin,
 				uint32_t SPIFrequency
 			);
 

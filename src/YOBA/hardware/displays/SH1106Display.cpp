@@ -4,11 +4,11 @@
 
 namespace YOBA {
 	SH1106Display::SH1106Display(
-		const uint8_t mosiPin,
-		const uint8_t sckPin,
-		const int8_t ssPin,
-		const uint8_t dcPin,
-		const int8_t rstPin,
+		const uint8_t MOSIPin,
+		const uint8_t SCKPin,
+		const int8_t SSPin,
+		const uint8_t DCPin,
+		const int8_t RSTPin,
 		const uint32_t SPIFrequency
 	) :
 		RenderingTarget(
@@ -18,11 +18,11 @@ namespace YOBA {
 			ColorModel::monochrome
 		),
 		SPIDisplay(
-			mosiPin,
-			sckPin,
-			ssPin,
-			dcPin,
-			rstPin,
+			MOSIPin,
+			SCKPin,
+			SSPin,
+			DCPin,
+			RSTPin,
 			SPIFrequency
 		),
 		ContrastDisplay()
