@@ -11,13 +11,13 @@ namespace YOBA {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565: {
 				const auto& size = getTarget()->getSize();
-				const auto transactionLength = size.getWidth() * _transactionViewportHeight * 2;
+				const size_t transactionLength = size.getWidth() * _transactionViewportHeight * 2;
 				auto transactionBufferPtr = _pixelBuffer;
 
 				for (uint16_t y = 0; y < size.getHeight(); y += _transactionViewportHeight) {
 					getTarget()->writePixels(
 						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
-						{ pixelBufferPtr, transactionLength }
+						{ transactionBufferPtr, transactionLength }
 					);
 
 					transactionBufferPtr += transactionLength;

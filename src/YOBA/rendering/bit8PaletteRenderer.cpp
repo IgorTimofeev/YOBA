@@ -37,8 +37,7 @@ namespace YOBA {
 					// Writing pixel buffer on target
 					getTarget()->writePixels(
 						Rectangle(0, y, size.getWidth(), _transactionViewportHeight),
-						_pixelBuffer,
-						_pixelBufferLength
+						{ _pixelBuffer, _pixelBufferLength }
 					);
 				}
 
