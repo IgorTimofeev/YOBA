@@ -6,8 +6,13 @@
 
 namespace YOBA {
 	void PixelBufferRenderer::reallocatePixelBuffer() {
-		if (_pixelBuffer)
-			heap_caps_free(_pixelBuffer);
+		if (_pixelBuffer) {
+			#ifdef ESP_PLATFORM
+				heap_caps_free(_pixelBuffer);
+			#else
+				delete _pixelBuffer;
+			#endif
+		}
 
 		_pixelBufferLength = computePixelBufferLength();
 

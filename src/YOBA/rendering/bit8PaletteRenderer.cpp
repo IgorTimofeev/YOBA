@@ -19,25 +19,26 @@ namespace YOBA {
 			case ColorModel::RGB565: {
 				const auto& size = getTarget()->getSize();
 
-				const uint16_t* pixelBufferEndPtr = reinterpret_cast<uint16_t*>(_pixelBuffer + _pixelBufferLength);
+				const uint16_t* transactionBufferEndPtr = reinterpret_cast<uint16_t*>(_pixelBuffer + _pixelBufferLength);
 
 				const uint16_t* palettePtr = reinterpret_cast<uint16_t*>(getPalette());
 				const uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
 
-				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionViewportHeight()) {
-					auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
+				for (uint16_t y = 0; y < size.getHeight(); y += _transactionViewportHeight) {
+					auto transactionBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
 
 					// Taking indices from palette, converting them to color & copying to pixel buffer
-					while (pixelBufferPtr < pixelBufferEndPtr) {
-						*pixelBufferPtr = palettePtr[*paletteIndicesBufferPtr];
-						pixelBufferPtr++;
+					while (transactionBufferPtr < transactionBufferEndPtr) {
+						*transactionBufferPtr = palettePtr[*paletteIndicesBufferPtr];
+						transactionBufferPtr++;
 						paletteIndicesBufferPtr++;
 					}
 
 					// Writing pixel buffer on target
 					getTarget()->writePixels(
-						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
-						{ _pixelBuffer, _pixelBufferLength }
+						Rectangle(0, y, size.getWidth(), _transactionViewportHeight),
+						_pixelBuffer,
+						_pixelBufferLength
 					);
 				}
 

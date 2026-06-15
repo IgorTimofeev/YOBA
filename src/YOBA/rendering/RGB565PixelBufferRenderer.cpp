@@ -10,23 +10,17 @@ namespace YOBA {
 	void RGB565PixelBufferRenderer::flush() {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565: {
-				// getTarget()->writePixels(
-				// 	Bounds(getTarget()->getSize()),
-				// 	getPixelBuffer(),
-				// 	getPixelBufferLength()
-				// );
-
 				const auto& size = getTarget()->getSize();
-				const size_t transactionLength = size.getWidth() * getTransactionViewportHeight() * 2;
-				auto pixelBufferPtr = _pixelBuffer;
+				const auto transactionLength = size.getWidth() * _transactionViewportHeight * 2;
+				auto transactionBufferPtr = _pixelBuffer;
 
-				for (uint16_t y = 0; y < size.getHeight(); y += getTransactionViewportHeight()) {
+				for (uint16_t y = 0; y < size.getHeight(); y += _transactionViewportHeight) {
 					getTarget()->writePixels(
 						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
 						{ pixelBufferPtr, transactionLength }
 					);
 
-					pixelBufferPtr += transactionLength;
+					transactionBufferPtr += transactionLength;
 				}
 
 				break;
