@@ -1,11 +1,12 @@
 #pragma once
 
-#include <YOBA/rendering/renderer.h>
-#include <YOBA/core/rectangle.h>
 #include <functional>
 
+#include <YOBA/rendering/renderer.h>
+#include <YOBA/core/rectangle.h>
+
 namespace YOBA {
-	class PixelBufferRenderer : public virtual Renderer {
+	class BufferedRenderer : public virtual Renderer {
 		public:
 			uint8_t* getPixelBuffer() const;
 			size_t getPixelBufferLength() const;

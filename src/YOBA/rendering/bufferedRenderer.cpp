@@ -1,11 +1,11 @@
-#include <YOBA/rendering/pixelBufferRenderer.h>
+#include <YOBA/rendering/bufferedRenderer.h>
 
 #ifdef ESP_PLATFORM
 	#include <esp_heap_caps.h>
 #endif
 
 namespace YOBA {
-	void PixelBufferRenderer::reallocatePixelBuffer() {
+	void BufferedRenderer::reallocatePixelBuffer() {
 		if (_pixelBuffer) {
 			#ifdef ESP_PLATFORM
 				heap_caps_free(_pixelBuffer);
@@ -24,25 +24,25 @@ namespace YOBA {
 		#endif
 	}
 
-	void PixelBufferRenderer::updateFromTarget() {
+	void BufferedRenderer::updateFromTarget() {
 		Renderer::updateFromTarget();
 
 		reallocatePixelBuffer();
 	}
 
-	uint8_t* PixelBufferRenderer::getPixelBuffer() const {
+	uint8_t* BufferedRenderer::getPixelBuffer() const {
 		return _pixelBuffer;
 	}
 
-	size_t PixelBufferRenderer::getPixelBufferLength() const {
+	size_t BufferedRenderer::getPixelBufferLength() const {
 		return _pixelBufferLength;
 	}
 
-	size_t PixelBufferRenderer::getPixelIndex(const uint16_t x, const uint16_t y) const {
+	size_t BufferedRenderer::getPixelIndex(const uint16_t x, const uint16_t y) const {
 		return y * getTarget()->getSize().getWidth() + x;
 	}
 
-	size_t PixelBufferRenderer::getPixelIndex(const Point& point) const {
+	size_t BufferedRenderer::getPixelIndex(const Point& point) const {
 		return getPixelIndex(point.getX(), point.getY());
 	}
 }

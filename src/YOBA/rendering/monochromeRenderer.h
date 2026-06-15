@@ -2,10 +2,10 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <YOBA/rendering/pixelBufferRenderer.h>
+#include <YOBA/rendering/bufferedRenderer.h>
 
 namespace YOBA {
-	class MonochromeRenderer : public PixelBufferRenderer {
+	class MonochromeRenderer : public BufferedRenderer {
 		public:
 			void flush() override;
 

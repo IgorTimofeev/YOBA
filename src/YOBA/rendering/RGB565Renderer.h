@@ -1,9 +1,9 @@
 #pragma once
 
-#include <YOBA/rendering/transactionalPixelBufferRenderer.h>
+#include <YOBA/rendering/transactionalBufferedRenderer.h>
 
 namespace YOBA {
-	class RGB565PixelBufferRenderer : public TransactionalPixelBufferRenderer {
+	class RGB565Renderer : public TransactionalBufferedRenderer {
 		public:
 			void flush() override;
 

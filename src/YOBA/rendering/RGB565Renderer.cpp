@@ -1,53 +1,45 @@
-#include "RGB565PixelBufferRenderer.h"
+#include "RGB565Renderer.h"
 #include <YOBA/core/rectangle.h>
 #include <string.h>
 
 namespace YOBA {
-	size_t RGB565PixelBufferRenderer::computePixelBufferLength() const {
+	size_t RGB565Renderer::computePixelBufferLength() const {
 		return getTarget()->getSize().getSquare() * 2;
 	}
 
-	void RGB565PixelBufferRenderer::flush() {
-		switch (getTarget()->getColorModel()) {
-			case ColorModel::RGB565: {
-				const auto& size = getTarget()->getSize();
-				const size_t transactionLength = size.getWidth() * _transactionViewportHeight * 2;
-				auto transactionBufferPtr = _pixelBuffer;
+	void RGB565Renderer::flush() {
+		const auto& size = getTarget()->getSize();
+		const size_t transactionLength = size.getWidth() * _transactionViewportHeight * 2;
+		auto transactionBufferPtr = _pixelBuffer;
 
-				for (uint16_t y = 0; y < size.getHeight(); y += _transactionViewportHeight) {
-					getTarget()->writePixels(
-						Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
-						{ transactionBufferPtr, transactionLength }
-					);
+		for (uint16_t y = 0; y < size.getHeight(); y += _transactionViewportHeight) {
+			getTarget()->writePixels(
+				Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
+				{ transactionBufferPtr, transactionLength }
+			);
 
-					transactionBufferPtr += transactionLength;
-				}
-
-				break;
-			}
-			default:
-				break;
+			transactionBufferPtr += transactionLength;
 		}
 	}
 
-	void RGB565PixelBufferRenderer::clearNative(const Color* color) {
-		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer());
+	void RGB565Renderer::clearNative(const Color* color) {
+		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer);
 
 		std::fill_n(pixelBufferPtr, getPixelBufferLength() / 2, static_cast<const RGB565Color*>(color)->getValue());
 	}
 
-	void RGB565PixelBufferRenderer::renderPixelNative(const Point& point, const Color* color) {
-		*(reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point)) = static_cast<const RGB565Color*>(color)->getValue();
+	void RGB565Renderer::renderPixelNative(const Point& point, const Color* color) {
+		*(reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point)) = static_cast<const RGB565Color*>(color)->getValue();
 	}
 
-	void RGB565PixelBufferRenderer::renderHorizontalLineNative(const Point& point, const uint16_t length, const Color* color) {
-		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
+	void RGB565Renderer::renderHorizontalLineNative(const Point& point, const uint16_t length, const Color* color) {
+		const auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
 
 		std::fill_n(pixelBufferPtr, length, static_cast<const RGB565Color*>(color)->getValue());
 	}
 
-	void RGB565PixelBufferRenderer::renderVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
-		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
+	void RGB565Renderer::renderVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
+		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();
 
@@ -57,8 +49,8 @@ namespace YOBA {
 		}
 	}
 
-	void RGB565PixelBufferRenderer::renderFilledRectangleNative(const Rectangle& bounds, const Color* color) {
-		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(bounds.getX(), bounds.getY());
+	void RGB565Renderer::renderFilledRectangleNative(const Rectangle& bounds, const Color* color) {
+		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(bounds.getX(), bounds.getY());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto value = static_cast<const RGB565Color*>(color)->getValue();
 
@@ -68,11 +60,11 @@ namespace YOBA {
 		}
 	}
 
-	void RGB565PixelBufferRenderer::renderImageNative(const Point& point, const Image* image) {
+	void RGB565Renderer::renderImageNative(const Point& point, const Image* image) {
 		if (!(image->getFlags() & ImageFlags::RGB565))
 			return;
 
-		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(getPixelBuffer()) + getPixelIndex(point);
+		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
 		const size_t pixelBufferScanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha

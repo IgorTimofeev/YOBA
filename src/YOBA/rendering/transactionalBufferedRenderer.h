@@ -1,9 +1,9 @@
 #pragma once
 
-#include <YOBA/rendering/pixelBufferRenderer.h>
+#include <YOBA/rendering/bufferedRenderer.h>
 
 namespace YOBA {
-	class TransactionalPixelBufferRenderer : public virtual PixelBufferRenderer {
+	class TransactionalBufferedRenderer : public virtual BufferedRenderer {
 		public:
 			uint16_t getTransactionViewportHeight() const;
 

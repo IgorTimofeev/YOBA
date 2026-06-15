@@ -1,7 +1,7 @@
-#include <YOBA/rendering/transactionalPixelBufferRenderer.h>
+#include <YOBA/rendering/transactionalBufferedRenderer.h>
 
 namespace YOBA {
-	uint16_t TransactionalPixelBufferRenderer::computeTransactionViewportHeight() const {
+	uint16_t TransactionalBufferedRenderer::computeTransactionViewportHeight() const {
 		// On ESP32 S3 max transaction length is 32 kb
 
 		const auto& size = getTarget()->getSize();
@@ -41,13 +41,13 @@ namespace YOBA {
 		}
 	}
 
-	uint16_t TransactionalPixelBufferRenderer::getTransactionViewportHeight() const {
+	uint16_t TransactionalBufferedRenderer::getTransactionViewportHeight() const {
 		return _transactionViewportHeight;
 	}
 
-	void TransactionalPixelBufferRenderer::updateFromTarget() {
+	void TransactionalBufferedRenderer::updateFromTarget() {
 		_transactionViewportHeight = computeTransactionViewportHeight();
 
-		PixelBufferRenderer::updateFromTarget();
+		BufferedRenderer::updateFromTarget();
 	}
 }

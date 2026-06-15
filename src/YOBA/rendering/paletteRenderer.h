@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <YOBA/rendering/transactionalPixelBufferRenderer.h>
+#include <YOBA/rendering/transactionalBufferedRenderer.h>
 
 #ifdef ESP_PLATFORM
 	#include <esp_heap_caps.h>
@@ -10,7 +10,7 @@
 
 namespace YOBA {
 	template<typename TIndex, typename TValue>
-	class PaletteRenderer : public TransactionalPixelBufferRenderer {
+	class PaletteRenderer : public TransactionalBufferedRenderer {
 		public:
 			explicit PaletteRenderer(TIndex paletteColorCount);
 
@@ -51,7 +51,7 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	void PaletteRenderer<TIndex, TValue>::updateFromTarget() {
-		TransactionalPixelBufferRenderer::updateFromTarget();
+		TransactionalBufferedRenderer::updateFromTarget();
 
 		reallocatePaletteIndicesBuffer();
 		reallocatePalette();
