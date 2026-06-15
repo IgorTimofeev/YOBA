@@ -3,8 +3,8 @@
 #include <cmath>
 #include <limits>
 
-#include <YOBA/main/color.h>
-#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/core/color.h>
+#include <YOBA/rendering/renderer.h>
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/stackLayout.h>
 

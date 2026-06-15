@@ -4,23 +4,21 @@
 
 namespace YOBA {
 	ST7565Display::ST7565Display(
-		uint8_t mosiPin,
-		uint8_t misoPin,
-		uint8_t sckPin,
-		int8_t ssPin,
-		uint8_t dcPin,
-		int8_t rstPin,
-		uint32_t SPIFrequency
+		const uint8_t mosiPin,
+		const uint8_t sckPin,
+		const int8_t ssPin,
+		const uint8_t dcPin,
+		const int8_t rstPin,
+		const uint32_t SPIFrequency
 	) :
-		RenderTarget(
+		RenderingTarget(
 			Size(128, 64),
-			ViewportRotation::clockwise0,
+			Rotation::none,
 			PixelOrder::XYReversed,
 			ColorModel::monochrome
 		),
 		SPIDisplay(
 			mosiPin,
-			misoPin,
 			sckPin,
 			ssPin,
 			dcPin,
@@ -47,17 +45,17 @@ namespace YOBA {
 		// turn on voltage converter (VC=1, VR=0, VF=0)
 		writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x4);
 		// wait for 50% rising
-		system::delayUs(50'000);
+		system::delayMs(50);
 
 		// turn on voltage regulator (VC=1, VR=1, VF=0)
 		writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x6);
 		// wait >=50ms
-		system::delayUs(50'000);
+		system::delayMs(50);
 
 		// turn on voltage follower (VC=1, VR=1, VF=1)
 		writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x7);
 		// wait
-		system::delayUs(10'000);
+		system::delayMs(10);
 
 		// set lcd operating voltage (regulator resistor, ref voltage resistor)
 		writeCommand(static_cast<uint8_t>(Command::SET_RESISTOR_RATIO) | 0x6);
@@ -67,7 +65,7 @@ namespace YOBA {
 		setContrast(0x9);
 	}
 
-	void ST7565Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
+	void ST7565Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 //		for (uint8_t page = 0; page < pageCount; page++) {
 //			writeCommand(static_cast<uint8_t>(Command::SetPageAddress) | page);
 //			writeCommand(static_cast<uint8_t>(Command::SetColumnAddressLow));
@@ -87,17 +85,17 @@ namespace YOBA {
 			writeCommand(static_cast<uint8_t>(Command::RMW));
 
 			for (; col < static_cast<uint8_t>(getSize().getWidth()); col++) {
-				writeData(source[getSize().getWidth() * p + col]);
+				writeData(pixelBuffer[getSize().getWidth() * p + col]);
 			}
 		}
 	}
 
-	void ST7565Display::setContrast(uint8_t value) {
+	void ST7565Display::setContrast(const uint8_t value) {
 		writeCommand(static_cast<uint8_t>(Command::SET_VOLUME_FIRST));
 		writeCommand(static_cast<uint8_t>(Command::SET_VOLUME_SECOND) | (value & 0x3f));
 	}
 
-	void ST7565Display::setInverted(bool value) {
+	void ST7565Display::setInverted(const bool value) {
 		InvertibleDisplay::setInverted(value);
 
 		writeCommand(static_cast<uint8_t>(value ? Command::SET_DISP_REVERSE : Command::SET_DISP_NORMAL));

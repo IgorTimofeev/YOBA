@@ -4,7 +4,7 @@
 #include <esp_log.h>
 #include <functional>
 
-#include <YOBA/main/size.h>
+#include <YOBA/core/size.h>
 #include <YOBA/UI/element.h>
 
 namespace YOBA {

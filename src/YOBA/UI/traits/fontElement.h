@@ -1,7 +1,7 @@
 #pragma once
 
 #include <YOBA/UI/element.h>
-#include <YOBA/main/font.h>
+#include <YOBA/core/font.h>
 
 namespace YOBA {
 	class FontElement : public virtual Element {

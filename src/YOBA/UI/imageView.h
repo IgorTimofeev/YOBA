@@ -1,7 +1,7 @@
 #pragma once
 
 #include <YOBA/UI/control.h>
-#include <YOBA/main/image.h>
+#include <YOBA/core/image.h>
 
 namespace YOBA {
 	class ImageView : public Control {

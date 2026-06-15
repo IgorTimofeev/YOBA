@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <span>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
@@ -13,45 +14,72 @@
 #include "driver/i2c_master.h"
 
 namespace YOBA::system {
-	void delayUs(uint32_t intervalMs);
+	void delayMs(uint32_t duration);
 
 	uint64_t getTimeUs();
 
 	class GPIO {
 		public:
-			enum class PinMode : uint8_t {
+			enum class pinMode : uint8_t {
 				input,
 				output
 			};
 
-			static void setMode(uint8_t pin, PinMode mode);
+			static void setMode(uint8_t pin, pinMode mode);
 			static bool read(uint8_t pin);
 			static void write(uint8_t pin, bool value);
 			static void addInterruptHandler(uint8_t pin, const gpio_isr_t& callback, void* args);
 	};
 
-	class SPI {
+	class SPIDevice {
 		public:
-			static void setup(uint8_t mosiPin, uint8_t sckPin, int8_t ssPin, uint32_t frequency);
-			static void setMutex(const SemaphoreHandle_t value);
-			static bool write(uint8_t data);
-			static bool write(const uint8_t* data, size_t length);
+			SPIDevice(
+				const uint8_t mosiPin,
+				const uint8_t sckPin,
+				const int8_t ssPin,
+				const int8_t dcPin,
+
+				const uint32_t frequencyHz
+			);
+
+			void setup();
+			bool write(const uint8_t data);
+			bool write(const std::span<const uint8_t> data);
+
+			void setCommandMode(const bool value);
 
 		private:
-			static DRAM_ATTR spi_device_handle_t _deviceHandle;
-			static DRAM_ATTR SemaphoreHandle_t _mutex;
+			uint8_t _mosiPin;
+			uint8_t _sckPin;
+			int8_t _ssPin;
+			int8_t _dcPin;
+			uint32_t _frequencyHz;
+
+			spi_device_handle_t _deviceHandle {};
+
+			bool _commandMode = false;
 	};
 
-	class I2C {
+	class I2CDevice {
 		public:
-			static void setup(uint8_t sdaPin, uint8_t sclPin, uint16_t slaveAddress, uint32_t frequency);
-			static void setMutex(const SemaphoreHandle_t value);
-			static bool read(uint8_t* buffer, size_t length);
-			static bool write(const uint8_t* buffer, size_t length);
+			I2CDevice(
+				const uint8_t SCLPin,
+				const uint8_t SDAPin,
+				const uint16_t address,
+				const uint32_t frequencyHz
+			);
+
+			void setup();
+			bool read(const std::span<uint8_t> data) const;
+			bool write(const std::span<const uint8_t> data) const;
 
 		private:
-			static DRAM_ATTR i2c_master_bus_handle_t _busHandle;
-			static DRAM_ATTR i2c_master_dev_handle_t _deviceHandle;
-			static DRAM_ATTR SemaphoreHandle_t _mutex;
+			uint8_t _SCLPin;
+			uint8_t _SDAPin;
+			uint16_t _address;
+			uint32_t _frequencyHz;
+
+			i2c_master_bus_handle_t _busHandle {};
+			i2c_master_dev_handle_t _deviceHandle {};
 	};
 }

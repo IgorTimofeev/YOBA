@@ -1,12 +1,14 @@
 #include <YOBA/system.h>
 
-#ifdef YOBA_SYSTEM_ESPIDF
+#ifdef YOBA_SYSTEM_ESP_IDF
 
 #include <cstdio>
 #include <cstring>
 #include <esp_timer.h>
 #include <unordered_map>
 #include <functional>
+#include <limits>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
@@ -17,8 +19,8 @@
 namespace YOBA::system {
 	// -------------------------------- System --------------------------------
 
-	void delayUs(const uint32_t intervalMs) {
-		vTaskDelay(pdMS_TO_TICKS(intervalMs / 1000));
+	void delayMs(const uint32_t duration) {
+		vTaskDelay(pdMS_TO_TICKS(duration));
 	}
 
 	uint64_t getTimeUs() {
@@ -27,10 +29,10 @@ namespace YOBA::system {
 
 	// -------------------------------- GPIO --------------------------------
 
-	void GPIO::setMode(const uint8_t pin, const PinMode mode) {
+	void GPIO::setMode(const uint8_t pin, const pinMode mode) {
 		gpio_config_t config {};
 		config.pin_bit_mask = 1ULL << pin;
-		config.mode = mode == PinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT;
+		config.mode = mode == pinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT;
 		config.pull_up_en = GPIO_PULLUP_ENABLE;
 		config.pull_down_en = GPIO_PULLDOWN_DISABLE;
 		config.intr_type = GPIO_INTR_DISABLE;
@@ -54,23 +56,29 @@ namespace YOBA::system {
 
 	// -------------------------------- SPI --------------------------------
 
-	spi_device_handle_t SPI::_deviceHandle {};
-	SemaphoreHandle_t SPI::_mutex = nullptr;
+	SPIDevice::SPIDevice(const uint8_t mosiPin, const uint8_t sckPin, const int8_t ssPin, const int8_t dcPin, const uint32_t frequencyHz) :
+		_mosiPin(mosiPin),
+		_sckPin(sckPin),
+		_ssPin(ssPin),
+		_dcPin(dcPin),
+		_frequencyHz(frequencyHz)
+	{
 
-	// Note: SPI instance will manage slave select output by itself
-	void SPI::setup(const uint8_t mosiPin, const uint8_t sckPin, const int8_t ssPin, const uint32_t frequency) {
+	}
+
+	void SPIDevice::setup() {
 		// GPIO
-		GPIO::setMode(ssPin, GPIO::PinMode::output);
-		GPIO::write(ssPin, true);
+		GPIO::setMode(_ssPin, GPIO::pinMode::output);
+		GPIO::write(_ssPin, true);
 
 		// Bus
 		spi_bus_config_t busConfig {};
-		busConfig.mosi_io_num = mosiPin;
+		busConfig.mosi_io_num = _mosiPin;
 		busConfig.miso_io_num = -1;
-		busConfig.sclk_io_num = sckPin;
+		busConfig.sclk_io_num = _sckPin;
 		busConfig.quadwp_io_num = -1;
 		busConfig.quadhd_io_num = -1;
-		busConfig.max_transfer_sz = 320 * 240 * 2;
+		busConfig.max_transfer_sz = std::numeric_limits<int>::max();
 
 		// May be already initialized
 		const auto result = spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO);
@@ -79,66 +87,78 @@ namespace YOBA::system {
 		// Interface
 		spi_device_interface_config_t interfaceConfig {};
 		interfaceConfig.mode = 0;
-		interfaceConfig.clock_speed_hz = static_cast<int>(frequency);
-		interfaceConfig.spics_io_num = static_cast<int>(ssPin);
+		interfaceConfig.clock_speed_hz = static_cast<int>(_frequencyHz);
+		interfaceConfig.spics_io_num = static_cast<int>(_ssPin);
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
+
+		// Data / command pin behavior
+		if (_dcPin != GPIO_NUM_NC) {
+			GPIO::setMode(_dcPin, GPIO::pinMode::output);
+			GPIO::write(_dcPin, true);
+
+			interfaceConfig.pre_cb = [](spi_transaction_t* transaction) {
+				const auto device = static_cast<SPIDevice*>(transaction->user);
+
+				if (device->_commandMode)
+					GPIO::write(device->_dcPin, false);
+			};
+
+			interfaceConfig.post_cb = [](spi_transaction_t* transaction) {
+				const auto device = static_cast<SPIDevice*>(transaction->user);
+
+				if (device->_commandMode)
+					GPIO::write(device->_dcPin, true);
+			};
+		}
 
 		ESP_ERROR_CHECK(spi_bus_add_device(SPI2_HOST, &interfaceConfig, &_deviceHandle));
 	}
 
-	void SPI::setMutex(const SemaphoreHandle_t value) {
-		_mutex = value;
-	}
-
-	bool SPI::write(const uint8_t data) {
+	bool SPIDevice::write(const uint8_t data) {
 		spi_transaction_t transaction {};
 		transaction.tx_data[0] = data;
 		transaction.flags = SPI_TRANS_USE_TXDATA;
 		transaction.length = 8;
+		transaction.user = this;
 
-		if (_mutex)
-			xSemaphoreTake(_mutex, portMAX_DELAY);
-
-		const auto error = spi_device_transmit(_deviceHandle, &transaction);
-
-		if (_mutex)
-			xSemaphoreGive(_mutex);
-
-		ESP_ERROR_CHECK_WITHOUT_ABORT(error);
-
-		return error == ESP_OK;
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction));
 	}
 
-	bool SPI::write(const uint8_t* data, const size_t length) {
+	bool SPIDevice::write(const std::span<const uint8_t> data) {
 		spi_transaction_t transaction {};
-		transaction.length = length * 8;
-		transaction.tx_buffer = data;
+		transaction.length = data.size() * 8;
+		transaction.tx_buffer = data.data();
+		transaction.user = this;
 
-		if (_mutex)
-			xSemaphoreTake(_mutex, portMAX_DELAY);
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction));
+	}
 
-		const auto error = spi_device_transmit(_deviceHandle, &transaction);
-
-		if (_mutex)
-			xSemaphoreGive(_mutex);
-
-		ESP_ERROR_CHECK_WITHOUT_ABORT(error);
-
-		return error == ESP_OK;
+	void SPIDevice::setCommandMode(const bool value) {
+		_commandMode = value;
 	}
 
 	// -------------------------------- I2C --------------------------------
 
-	i2c_master_bus_handle_t I2C::_busHandle {};
-	i2c_master_dev_handle_t I2C::_deviceHandle {};
-	SemaphoreHandle_t I2C::_mutex = nullptr;
+	I2CDevice::I2CDevice(
+		const uint8_t SCLPin,
+		const uint8_t SDAPin,
+		const uint16_t address,
+		const uint32_t frequencyHz
+	) :
+		_SCLPin(SCLPin),
+		_SDAPin(SDAPin),
+		_address(address),
+		_frequencyHz(frequencyHz)
+	{
 
-	void I2C::setup(uint8_t sdaPin, uint8_t sclPin, const uint16_t slaveAddress, const uint32_t frequency) {
+	}
+
+	void I2CDevice::setup() {
 		i2c_master_bus_config_t busConfig {};
 		busConfig.i2c_port = I2C_NUM_0;
-		busConfig.sda_io_num = static_cast<gpio_num_t>(sdaPin);
-		busConfig.scl_io_num = static_cast<gpio_num_t>(sclPin);
+		busConfig.sda_io_num = static_cast<gpio_num_t>(_SDAPin);
+		busConfig.scl_io_num = static_cast<gpio_num_t>(_SCLPin);
 		busConfig.clk_source = I2C_CLK_SRC_DEFAULT;
 		busConfig.glitch_ignore_cnt = 7;
 		busConfig.flags.enable_internal_pullup = true;
@@ -149,42 +169,18 @@ namespace YOBA::system {
 
 		i2c_device_config_t deviceConfig {};
 		deviceConfig.dev_addr_length = I2C_ADDR_BIT_LEN_7;
-		deviceConfig.device_address = slaveAddress;
-		deviceConfig.scl_speed_hz = frequency;
+		deviceConfig.device_address = _address;
+		deviceConfig.scl_speed_hz = _frequencyHz;
 
 		ESP_ERROR_CHECK(i2c_master_bus_add_device(_busHandle, &deviceConfig, &_deviceHandle));
 	}
 
-	void I2C::setMutex(const SemaphoreHandle_t value) {
-		_mutex = value;
+	bool I2CDevice::read(const std::span<uint8_t> data) const {
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_receive(_deviceHandle, data.data(), data.size(), 1'000));
 	}
 
-	bool I2C::read(uint8_t* buffer, const size_t length) {
-		if (_mutex)
-			xSemaphoreTake(_mutex, portMAX_DELAY);
-
-		const auto error = i2c_master_receive(_deviceHandle, buffer, length, -1);
-
-		if (_mutex)
-			xSemaphoreGive(_mutex);
-
-		ESP_ERROR_CHECK_WITHOUT_ABORT(error);
-
-		return error == ESP_OK;
-	}
-
-	bool I2C::write(const uint8_t* buffer, const size_t length) {
-		if (_mutex)
-			xSemaphoreTake(_mutex, portMAX_DELAY);
-
-		const auto error = i2c_master_transmit(_deviceHandle, buffer, length, -1);
-
-		if (_mutex)
-			xSemaphoreGive(_mutex);
-
-		ESP_ERROR_CHECK_WITHOUT_ABORT(error);
-
-		return error == ESP_OK;
+	bool I2CDevice::write(const std::span<const uint8_t> data) const {
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit(_deviceHandle, data.data(), data.size(), 1'000));
 	}
 }
 

@@ -5,7 +5,7 @@
 #include <cmath>
 
 #include <YOBA/hardware/HID.h>
-#include <YOBA/main/events/event.h>
+#include <YOBA/core/events/event.h>
 
 namespace YOBA {
 	// -------------------------------- Value changed event --------------------------------

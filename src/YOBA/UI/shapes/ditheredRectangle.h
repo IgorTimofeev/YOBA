@@ -1,8 +1,8 @@
 #pragma once
 
 #include "shape.h"
-#include <YOBA/main/color.h>
-#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/core/color.h>
+#include <YOBA/rendering/renderer.h>
 
 namespace YOBA {
 	class DitheredRectangleShape : public Shape {

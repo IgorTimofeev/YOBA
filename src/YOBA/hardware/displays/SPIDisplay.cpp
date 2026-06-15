@@ -4,81 +4,61 @@
 namespace YOBA {
 	SPIDisplay::SPIDisplay(
 		const uint8_t mosiPin,
-		const uint8_t misoPin,
 		const uint8_t sckPin,
 		const int8_t ssPin,
 		const uint8_t dcPin,
 		const int8_t rstPin,
-		const uint32_t frequency
+		const uint32_t frequencyHz
 	) :
-		mosiPin(mosiPin),
-		misoPin(misoPin),
-		sckPin(sckPin),
-		ssPin(ssPin),
-		dcPin(dcPin),
-		rstPin(rstPin),
-		frequency(frequency)
+		_SPIDevice(
+			mosiPin,
+			sckPin,
+			ssPin,
+			dcPin,
+			frequencyHz
+		),
+		_rstPin(rstPin)
 	{
 
 	}
 
 	void SPIDisplay::setup() {
-		RenderTarget::setup();
-
-		// Non-SPI GPIO
-
-		// Data/command pin
-		system::GPIO::setMode(dcPin, system::GPIO::PinMode::output);
-		setDataCommandPin(true);
+		RenderingTarget::setup();
 
 		// Reset pin
-		if (rstPin >= 0) {
-			system::GPIO::setMode(rstPin, system::GPIO::PinMode::output);
+		if (_rstPin >= 0) {
+			system::GPIO::setMode(_rstPin, system::GPIO::pinMode::output);
 
 			toggleResetPin();
 		}
 
 		// SPI
-		system::SPI::setup(mosiPin, sckPin, ssPin, frequency);
-	}
-
-	void SPIDisplay::writeData(const uint8_t data) {
-		system::SPI::write(data);
-	}
-
-	void SPIDisplay::writeData(const uint8_t* data, const size_t length) {
-		system::SPI::write(data, length);
+		_SPIDevice.setup();
 	}
 
 	void SPIDisplay::writeCommand(const uint8_t command) {
-		setDataCommandPin(false);
-		writeData(command);
-		setDataCommandPin(true);
+		_SPIDevice.setCommandMode(true);
+		_SPIDevice.write(command);
+		_SPIDevice.setCommandMode(false);
 	}
 
-	void SPIDisplay::writeCommandAndData(const uint8_t command, const uint8_t data) {
-		writeCommand(command);
-		writeData(data);
+	void SPIDisplay::writeData(const uint8_t data) {
+		_SPIDevice.write(data);
 	}
 
-	void SPIDisplay::writeCommandAndData(const uint8_t command, const uint8_t *data, const size_t length) {
-		writeCommand(command);
-		writeData(data, length);
-	}
-
-	void SPIDisplay::setDataCommandPin(const bool value) const {
-		system::GPIO::write(dcPin, value);
+	void SPIDisplay::writeData(const std::span<uint8_t> data) {
+		_SPIDevice.write(data);
 	}
 
 	void SPIDisplay::setResetPin(const bool value) const {
-		system::GPIO::write(rstPin, value);
+		system::GPIO::write(_rstPin, value);
 	}
 
 	void SPIDisplay::toggleResetPin() {
 		setResetPin(false);
-		system::delayUs(100'000);
+		system::delayMs(100);
 
 		setResetPin(true);
-		system::delayUs(100'000);
+		system::delayMs(100);
 	}
 }

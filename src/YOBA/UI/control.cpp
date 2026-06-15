@@ -2,8 +2,8 @@
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/application.h>
 
-#include <YOBA/main/events/pointerEvent.h>
-#include <YOBA/main/events/pinchEvent.h>
+#include <YOBA/core/events/pointerEvent.h>
+#include <YOBA/core/events/pinchEvent.h>
 
 namespace YOBA {
 	void Control::handleEvent(Event* event, const Rectangle& parentBounds, const bool callHandlers) {

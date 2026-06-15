@@ -5,7 +5,6 @@
 namespace YOBA {
 	ST7789Display::ST7789Display(
 		const uint8_t mosiPin,
-		const uint8_t misoPin,
 		const uint8_t sckPin,
 		const int8_t ssPin,
 		const uint8_t dcPin,
@@ -13,10 +12,10 @@ namespace YOBA {
 		const uint32_t SPIFrequency,
 
 		const Size& size,
-		const ViewportRotation rotation,
+		const Rotation rotation,
 		const ColorModel colorModel
 	) :
-		RenderTarget(
+		RenderingTarget(
 			size,
 			rotation,
 			PixelOrder::YX,
@@ -24,7 +23,6 @@ namespace YOBA {
 		),
 		SPIDisplay(
 			mosiPin,
-			misoPin,
 			sckPin,
 			ssPin,
 			dcPin,
@@ -41,7 +39,7 @@ namespace YOBA {
 		uint8_t data[14];
 
 		this->writeCommand(ST7789_SLPOUT);   // Sleep out
-		system::delayUs(120);
+		system::delayMs(120);
 
 		this->writeCommand(ST7789_NORON);    // Normal display mode on
 
@@ -52,15 +50,18 @@ namespace YOBA {
 		// JLX240 display datasheet
 		data[0] = 0x0A;
 		data[1] = 0x82;
-		this->writeCommandAndData(0xB6, data, 2);
+		this->writeCommand(0xB6);
+		this->writeData({ data, 2 });
 
 		data[0] = 0x00;
 		data[1] = 0xE0; // 5 to 6-bit conversion: r0 = r5, b0 = b5
-		this->writeCommandAndData(ST7789_RAMCTRL, data, 2);
+		this->writeCommand(ST7789_RAMCTRL);
+		this->writeData({ data, 2 });
 
-		this->writeCommandAndData(ST7789_COLMOD, 0x55);
+		this->writeCommand(ST7789_COLMOD);
+		this->writeData(0x55);
 
-		system::delayUs(10);
+		system::delayMs(10);
 
 		//--------------------------------ST7789V Frame rate setting----------------------------------//
 
@@ -69,32 +70,41 @@ namespace YOBA {
 		data[2] = 0x00;
 		data[3] = 0x33;
 		data[4] = 0x33;
-		this->writeCommandAndData(ST7789_PORCTRL, data, 5);
+		this->writeCommand(ST7789_PORCTRL);
+		this->writeData({ data, 5 });
 
 		// Voltages: VGH / VGL
-		this->writeCommandAndData(ST7789_GCTRL, 0x35);
+		this->writeCommand(ST7789_GCTRL);
+		this->writeData(0x35);
 
 		//---------------------------------ST7789V Power setting--------------------------------------//
 
 		// JLX240 display datasheet
-		this->writeCommandAndData(ST7789_VCOMS, 0x28);
+		this->writeCommand(ST7789_VCOMS);
+		this->writeData(0x28);
 
-		this->writeCommandAndData(ST7789_LCMCTRL, 0x0C);
+		this->writeCommand(ST7789_LCMCTRL);
+		this->writeData(0x0C);
 
 		data[0] = 0x01;
 		data[1] = 0xFF;
-		this->writeCommandAndData(ST7789_VDVVRHEN, data, 2);
+		this->writeCommand(ST7789_VDVVRHEN);
+		this->writeData({ data, 2 });
 
 		// voltage VRHS
-		this->writeCommandAndData(ST7789_VRHS, 0x10);
+		this->writeCommand(ST7789_VRHS);
+		this->writeData(0x10);
 
-		this->writeCommandAndData(ST7789_VDVSET, 0x20);
+		this->writeCommand(ST7789_VDVSET);
+		this->writeData(0x20);
 
-		this->writeCommandAndData(ST7789_FRCTR2, 0x0f);
+		this->writeCommand(ST7789_FRCTR2);
+		this->writeData(0x0f);
 
 		data[0] = 0xa4;
 		data[1] = 0xa1;
-		this->writeCommandAndData(ST7789_PWCTRL1, data, 2);
+		this->writeCommand(ST7789_PWCTRL1);
+		this->writeData({ data, 2 });
 
 		//--------------------------------ST7789V gamma setting---------------------------------------//
 
@@ -112,7 +122,8 @@ namespace YOBA {
 		data[11] = 0x12;
 		data[12] = 0x14;
 		data[13] = 0x17;
-		this->writeCommandAndData(ST7789_PVGAMCTRL, data, 14);
+		this->writeCommand(ST7789_PVGAMCTRL);
+		this->writeData({ data, 14 });
 
 		data[0] = 0xd0;
 		data[1] = 0x00;
@@ -128,7 +139,8 @@ namespace YOBA {
 		data[11] = 0x17;
 		data[12] = 0x1b;
 		data[13] = 0x1e;
-		this->writeCommandAndData(ST7789_NVGAMCTRL, data, 14);
+		this->writeCommand(ST7789_NVGAMCTRL);
+		this->writeData({ data, 14 });
 
 		this->writeCommand(ST7789_INVOFF);
 
@@ -136,21 +148,23 @@ namespace YOBA {
 		data[1] = 0x00;
 		data[2] = 0x00;
 		data[3] = 0xEF;
-		this->writeCommandAndData(ST7789_CASET, data, 4);
+		this->writeCommand(ST7789_CASET);
+		this->writeData({ data, 4 });
 
 		data[0] = 0x00;
 		data[1] = 0x00;
 		data[2] = 0x01;
 		data[3] = 0x3F;
-		this->writeCommandAndData(ST7789_RASET, data, 4);
+		this->writeCommand(ST7789_RASET);
+		this->writeData({ data, 4 });
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		system::delayUs(120);
+		system::delayMs(120);
 	}
 
 	void ST7789Display::onRotationChanged() {
-		RenderTarget::onRotationChanged();
+		RenderingTarget::onRotationChanged();
 
 		writeMADCTLCommand();
 	}
@@ -159,18 +173,18 @@ namespace YOBA {
 		uint8_t data = MADCTL_BGR;
 
 		switch (getRotation()) {
-			case ViewportRotation::clockwise0:
+			case Rotation::none:
 				break;
 
-			case ViewportRotation::clockwise90:
+			case Rotation::clockwise90:
 				data |= MADCTL_MX | MADCTL_MY | MADCTL_MV;
 				break;
 
-			case ViewportRotation::clockwise180:
+			case Rotation::clockwise180:
 				data |= MADCTL_MY;
 				break;
 
-			case ViewportRotation::clockwise270:
+			case Rotation::clockwise270:
 				data |= MADCTL_MV;
 				break;
 
@@ -178,10 +192,11 @@ namespace YOBA {
 				break;
 		}
 
-		this->writeCommandAndData(MADCTL, data);
+		this->writeCommand(MADCTL);
+		this->writeData(data);
 	}
 
-	void ST7789Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
+	void ST7789Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
 		// Column Address Set
@@ -189,26 +204,29 @@ namespace YOBA {
 		data[1] = bounds.getX() & 0xff; //Start Col Low
 		data[2] = bounds.getX2() >> 8; //End Col High
 		data[3] = bounds.getX2() & 0xff; //End Col Low
-		writeCommandAndData(0x2A, data, 4);
+		this->writeCommand(0x2A);
+		this->writeData({ data, 4});
 
 		//Page address set
 		data[0] = bounds.getY() >> 8; //Start page high
 		data[1] = bounds.getY() & 0xff; // Start page low
 		data[2] = bounds.getY2() >> 8; // End page high
 		data[3] = bounds.getY2() & 0xff; // End page low
-		writeCommandAndData(0x2B, data, 4);
+		this->writeCommand(0x2B);
+		this->writeData({ data, 4});
 
 		// Memory write
-		writeCommandAndData(0x2C, source, length);
+		this->writeCommand(0x2C);
+		this->writeData(pixelBuffer);
 	}
 
 	void ST7789Display::turnOff() {
 		this->writeCommand(ST7789_DISPOFF);
-		system::delayUs(120);
+		system::delayMs(120);
 	}
 
 	void ST7789Display::turnOn() {
 		this->writeCommand(ST7789_DISPON);
-		system::delayUs(120);
+		system::delayMs(120);
 	}
 }

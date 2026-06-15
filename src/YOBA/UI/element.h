@@ -4,13 +4,13 @@
 #include <limits>
 
 #include <YOBA/system.h>
-#include <YOBA/main/alignment.h>
-#include <YOBA/main/margin.h>
-#include <YOBA/main/rectangle.h>
-#include <YOBA/main/events/event.h>
-#include <YOBA/main/size.h>
-#include <YOBA/main/transform.h>
-#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/core/alignment.h>
+#include <YOBA/core/margin.h>
+#include <YOBA/core/rectangle.h>
+#include <YOBA/core/events/event.h>
+#include <YOBA/core/size.h>
+#include <YOBA/core/transform.h>
+#include <YOBA/rendering/renderer.h>
 
 namespace YOBA {
 	class Event;

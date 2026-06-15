@@ -5,7 +5,6 @@
 namespace YOBA {
 	GC9A01Display::GC9A01Display(
 		const uint8_t mosiPin,
-		const uint8_t misoPin,
 		const uint8_t sckPin,
 		const int8_t ssPin,
 		const uint8_t dcPin,
@@ -13,10 +12,10 @@ namespace YOBA {
 		const uint32_t SPIFrequency,
 
 		const Size& size,
-		const ViewportRotation rotation,
+		const Rotation rotation,
 		const ColorModel colorModel
 	) :
-		RenderTarget(
+		RenderingTarget(
 			size,
 			rotation,
 			PixelOrder::XY,
@@ -24,7 +23,6 @@ namespace YOBA {
 		),
 		SPIDisplay(
 			mosiPin,
-			misoPin,
 			sckPin,
 			ssPin,
 			dcPin,
@@ -39,9 +37,9 @@ namespace YOBA {
 		SPIDisplay::setup();
 
 		// Software reset
-		if (rstPin < 0) {
-			writeCommand(GC9A01A_SWRESET);
-			system::delayUs(150);
+		if (_rstPin < 0) {
+			writeCommand(SWRESET);
+			system::delayMs(150);
 		}
 
 	    writeCommand(0xEF);
@@ -283,7 +281,7 @@ namespace YOBA {
 	    writeCommand(0x35);
 	    writeCommand(0x21);
 
-		writeCommand(GC9A01A_GAMMA1);
+		writeCommand(GAMMA1);
 		writeData(0x45);
 		writeData(0x09);
 		writeData(0x08);
@@ -291,7 +289,7 @@ namespace YOBA {
 		writeData(0x26);
 		writeData(0x2a);
 
-		writeCommand(GC9A01A_GAMMA2);
+		writeCommand(GAMMA2);
 		writeData(0x43);
 		writeData(0x70);
 		writeData(0x72);
@@ -299,7 +297,7 @@ namespace YOBA {
 		writeData(0x37);
 		writeData(0x6f);
 
-		writeCommand(GC9A01A_GAMMA3);
+		writeCommand(GAMMA3);
 		writeData(0x45);
 		writeData(0x09);
 		writeData(0x08);
@@ -307,7 +305,7 @@ namespace YOBA {
 		writeData(0x26);
 		writeData(0x2a);
 
-		writeCommand(GC9A01A_GAMMA4);
+		writeCommand(GAMMA4);
 		writeData(0x43);
 		writeData(0x70);
 		writeData(0x72);
@@ -315,32 +313,33 @@ namespace YOBA {
 		writeData(0x37);
 		writeData(0x6f);
 
-	    writeCommand(GC9A01A_SLPOUT);
-	    system::delayUs(120);
+	    writeCommand(SLPOUT);
+	    system::delayMs(120);
 	}
 
 	void GC9A01Display::writeMADCTLCommand() {
-		uint8_t data;
+		uint8_t data = 0;
 
 		switch (getRotation()) {
-			case ViewportRotation::clockwise0:
+			case Rotation::none:
 				data = MADCTL_MX | MADCTL_BGR;
 				break;
-			case ViewportRotation::clockwise90:
+			case Rotation::clockwise90:
 				data = MADCTL_MV | MADCTL_BGR;
 				break;
-			case ViewportRotation::clockwise180:
+			case Rotation::clockwise180:
 				data = MADCTL_MY | MADCTL_BGR;
 				break;
-			case ViewportRotation::clockwise270:
+			case Rotation::clockwise270:
 				data = MADCTL_MX | MADCTL_MY | MADCTL_MV | MADCTL_BGR;
 				break;
 		}
 
-		writeCommandAndData(GC9A01A_MADCTL, &data, 1);
+		writeCommand(MADCTL);
+		writeData(data);
 	}
 
-	void GC9A01Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
+	void GC9A01Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
 		writeCommand(COL_ADDR_SET);
@@ -348,25 +347,26 @@ namespace YOBA {
 		data[1] = bounds.getX() & 0xFF;
 		data[2] = (bounds.getX2() >> 8) & 0xFF;
 		data[3] = bounds.getX2() & 0xFF;
-		writeData(data, sizeof(data));
+		writeData({ data, 4 });
 
 		writeCommand(ROW_ADDR_SET);
 		data[0] = (bounds.getY() >> 8) & 0xFF;
 		data[1] = bounds.getY() & 0xFF;
 		data[2] = (bounds.getY2() >> 8) & 0xFF;
 		data[3] = bounds.getY2() & 0xFF;
-		writeData(data, sizeof(data));
+		writeData({ data, 4 });
 
 		// Memory write
-		writeCommandAndData(MEM_WR, source, length);
+		writeCommand(MEM_WR);
+		writeData(pixelBuffer);
 	}
 
 	void GC9A01Display::turnOn() {
-		writeCommand(GC9A01A_DISPON);
-		system::delayUs(20);
+		writeCommand(DISPON);
+		system::delayMs(20);
 	}
 
 	void GC9A01Display::turnOff() {
-		writeCommand(GC9A01A_DISPOFF);
+		writeCommand(DISPOFF);
 	}
 }

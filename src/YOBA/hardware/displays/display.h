@@ -1,10 +1,10 @@
 #pragma once
 
-#include <YOBA/main/rendering/renderTarget.h>
+#include <YOBA/rendering/renderTarget.h>
 
 namespace YOBA {
 	// Maybe will be used in future
-	class Display : public virtual RenderTarget {
+	class Display : public virtual RenderingTarget {
 		public:
 			~Display() override = 0;
 	};

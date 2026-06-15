@@ -3,9 +3,9 @@
 #include <functional>
 
 #include <YOBA/UI/control.h>
-#include <YOBA/main/color.h>
-#include <YOBA/main/rendering/renderer.h>
-#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/core/color.h>
+#include <YOBA/rendering/renderer.h>
+#include <YOBA/core/events/pointerEvent.h>
 #include <YOBA/UI/traits/textElement.h>
 #include <YOBA/UI/traits/fontElement.h>
 #include <YOBA/UI/traits/cornerRadiusElement.h>

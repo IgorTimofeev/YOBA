@@ -2,7 +2,7 @@
 
 #include "sceneElement.h"
 
-#include <YOBA/main/color.h>
+#include <YOBA/core/color.h>
 
 namespace YOBA::spatial {
 	class Line : public SceneElement {

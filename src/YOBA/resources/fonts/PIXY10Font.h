@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <YOBA/main/font.h>
+#include <YOBA/core/font.h>
 
 namespace YOBA {
 	class PIXY10Font : public Font {

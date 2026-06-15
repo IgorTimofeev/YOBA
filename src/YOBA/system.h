@@ -8,7 +8,7 @@
 	#endif
 
 #elif defined(ESP_PLATFORM)
-	#define YOBA_SYSTEM_ESPIDF
+	#define YOBA_SYSTEM_ESP_IDF
 
 	#include <YOBA/system/ESP-IDF.h>
 

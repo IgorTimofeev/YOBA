@@ -1,8 +1,8 @@
 #pragma once
 
 #include <YOBA/UI/control.h>
-#include <YOBA/main/rectangle.h>
-#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/core/rectangle.h>
+#include <YOBA/rendering/renderer.h>
 
 #include <YOBA/UI/spatial/sceneElement.h>
 

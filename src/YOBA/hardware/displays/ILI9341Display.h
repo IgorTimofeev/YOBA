@@ -1,9 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
+
 #include <YOBA/hardware/displays/SPIDisplay.h>
 #include <YOBA/hardware/displays/invertibleDisplay.h>
-#include <YOBA/main/rectangle.h>
+#include <YOBA/core/rectangle.h>
 
 namespace YOBA {
 	class ILI9341Display : public SPIDisplay, public InvertibleDisplay {
@@ -13,7 +15,6 @@ namespace YOBA {
 			// ESP-IDF: 60 MHz
 			ILI9341Display(
 				uint8_t mosiPin,
-				uint8_t misoPin,
 				uint8_t sckPin,
 				int8_t ssPin,
 				uint8_t dcPin,
@@ -21,13 +22,13 @@ namespace YOBA {
 				uint32_t SPIFrequency,
 
 				const Size& size = Size(240, 320),
-				ViewportRotation rotation = ViewportRotation::clockwise0,
+				Rotation rotation = Rotation::none,
 				ColorModel colorModel = ColorModel::RGB565
 			);
 
 			void setup() override;
 			void setInverted(bool value) override;
-			void writePixels(const Rectangle& bounds, uint8_t* source, size_t length) override;
+			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 
 			void turnOn();
 			void turnOff();
@@ -36,18 +37,16 @@ namespace YOBA {
 			void onRotationChanged() override;
 
 		private:
-			enum class Command : uint8_t {
-				COLMOD = 0x3A,
+			constexpr static uint8_t COLMOD = 0x3A;
 
-				/* MY, MX, MV, ML, BGR, MH, X, X */
-				MADCTL = 0x36,
-				MADCTL_MY = 0x80,
-				MADCTL_MX = 0x40,
-				MADCTL_MV = 0x20,
-				MADCTL_ML = 0x10,
-				MADCTL_BGR = 0x08,
-				MADCTL_MH = 0x04,
-			};
+			/* MY, MX, MV, ML, BGR, MH, X, X */
+			constexpr static uint8_t MADCTL = 0x36;
+			constexpr static uint8_t MADCTL_MY = 0x80;
+			constexpr static uint8_t MADCTL_MX = 0x40;
+			constexpr static uint8_t MADCTL_MV = 0x20;
+			constexpr static uint8_t MADCTL_ML = 0x10;
+			constexpr static uint8_t MADCTL_BGR = 0x08;
+			constexpr static uint8_t MADCTL_MH = 0x04;
 
 			void writeMADCTLCommand();
 	};

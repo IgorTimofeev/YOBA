@@ -3,7 +3,7 @@
 #include <optional>
 #include <functional>
 
-#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/core/events/pointerEvent.h>
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/traits/valueElement.h>
 

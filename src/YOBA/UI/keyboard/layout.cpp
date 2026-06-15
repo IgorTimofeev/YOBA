@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include <YOBA/main/math.h>
+#include <YOBA/core/math.h>
 #include <YOBA/UI/keyboard/layout.h>
 #include <YOBA/UI/keyboard/keyboard.h>
 #include <YOBA/UI/application.h>

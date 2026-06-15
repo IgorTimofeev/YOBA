@@ -2,7 +2,7 @@
 #include <YOBA/UI/keyboard/keyboard.h>
 #include <YOBA/UI/keyboard/controller.h>
 
-#include <YOBA/main/events/keyEvent.h>
+#include <YOBA/core/events/keyEvent.h>
 #include <YOBA/UI/application.h>
 
 namespace YOBA {

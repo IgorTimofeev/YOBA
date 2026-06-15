@@ -1,6 +1,6 @@
 #include <YOBA/UI/scrollView.h>
-#include <YOBA/main/events/pointerEvent.h>
-#include <YOBA/main/events/scrollIntoViewEvent.h>
+#include <YOBA/core/events/pointerEvent.h>
+#include <YOBA/core/events/scrollIntoViewEvent.h>
 
 #include "application.h"
 #include "esp_log.h"

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
+
 #include "SPIDisplay.h"
 #include <YOBA/hardware/displays/contrastDisplay.h>
 #include <YOBA/hardware/displays/invertibleDisplay.h>
-#include <YOBA/main/size.h>
-#include <YOBA/main/rectangle.h>
+#include <YOBA/core/size.h>
+#include <YOBA/core/rectangle.h>
 
 namespace YOBA {
 	class SH1106Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
@@ -14,7 +16,6 @@ namespace YOBA {
 			// ESP-IDF: to be investigated
 			SH1106Display(
 				uint8_t mosiPin,
-				uint8_t misoPin,
 				uint8_t sckPin,
 				int8_t ssPin,
 				uint8_t dcPin,
@@ -23,7 +24,7 @@ namespace YOBA {
 			);
 
 			void setup() override;
-			void writePixels(const Rectangle& bounds, uint8_t* source, size_t length) override;
+			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;
 

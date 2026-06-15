@@ -3,8 +3,8 @@
 #include <optional>
 #include <functional>
 
-#include <YOBA/main/rendering/renderer.h>
-#include <YOBA/main/key.h>
+#include <YOBA/rendering/renderer.h>
+#include <YOBA/core/key.h>
 
 #include <YOBA/UI/traits/cornerRadiusElement.h>
 #include <YOBA/UI/traits/textElement.h>

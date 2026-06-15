@@ -1,16 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
+
 #include <YOBA/hardware/displays/SPIDisplay.h>
 #include <YOBA/hardware/displays/invertibleDisplay.h>
-#include <YOBA/main/rectangle.h>
+#include <YOBA/core/rectangle.h>
 
 namespace YOBA {
 	class ST7789Display : public SPIDisplay {
 		public:
 			ST7789Display(
 				uint8_t mosiPin,
-				uint8_t misoPin,
 				uint8_t sckPin,
 				int8_t ssPin,
 				uint8_t dcPin,
@@ -18,12 +19,12 @@ namespace YOBA {
 				uint32_t SPIFrequency,
 
 				const Size& size = Size(240, 320),
-				ViewportRotation rotation = ViewportRotation::clockwise0,
+				Rotation rotation = Rotation::none,
 				ColorModel colorModel = ColorModel::RGB565
 			);
 
 			void setup() override;
-			void writePixels(const Rectangle& bounds, uint8_t* source, size_t length) override;
+			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 
 			void turnOn();
 			void turnOff();

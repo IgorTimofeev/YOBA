@@ -1,6 +1,6 @@
 #pragma once
 
-#include <YOBA/main/rendering/renderer.h>
+#include <YOBA/rendering/renderer.h>
 #include <YOBA/UI/layout.h>
 #include <YOBA/UI/traits/backgroundColorElement.h>
 #include <YOBA/hardware/HID.h>
@@ -21,7 +21,7 @@ namespace YOBA {
 			// renderTarget.setup();
 			// renderer->setTarget(&renderTarget);
 			// application->setRenderer(&renderer);
-			void setup(RenderTarget* renderTarget, Renderer* renderer);
+			void setup(RenderingTarget* renderTarget, Renderer* renderer);
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
@@ -30,7 +30,7 @@ namespace YOBA {
 			// application.setRenderer(&renderer);
 			//
 			// application.addHID(&hid);
-			void setup(RenderTarget* renderTarget, Renderer* renderer, HID* hid);
+			void setup(RenderingTarget* renderTarget, Renderer* renderer, HID* hid);
 
 			virtual void tick();
 			virtual void render();

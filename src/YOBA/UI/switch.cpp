@@ -1,5 +1,5 @@
 #include <YOBA/UI/switch.h>
-#include <YOBA/main/events/pointerEvent.h>
+#include <YOBA/core/events/pointerEvent.h>
 
 namespace YOBA {
 	Switch::Switch(const bool checked) {

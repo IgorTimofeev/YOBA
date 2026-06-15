@@ -9,33 +9,41 @@
 #include "FT6336UTouchPanel.h"
 #include <YOBA/system.h>
 #include <YOBA/UI/application.h>
-#include <YOBA/main/events/pointerEvent.h>
-#include <YOBA/main/events/pinchEvent.h>
+#include <YOBA/core/events/pointerEvent.h>
+#include <YOBA/core/events/pinchEvent.h>
 
 namespace YOBA {
-	FT6336UTouchPanel::FT6336UTouchPanel(const uint8_t sdaPin, const uint8_t sclPin, const int8_t rstPin, const uint8_t intPin) :
-		_sdaPin(sdaPin),
-		_sclPin(sclPin),
-		_rstPin(rstPin),
-		_intPin(intPin)
+	FT6336UTouchPanel::FT6336UTouchPanel(
+		const uint8_t SCLPin,
+		const uint8_t SDAPin,
+		const int8_t RSTPin,
+		const uint8_t INTPin
+	) :
+		_I2CDevice(
+			SCLPin,
+			SDAPin,
+			I2C_ADDR_FT6336U,
+			400000
+		),
+		_RSTPin(RSTPin),
+		_INTPin(INTPin)
 	{
 
 	}
 
 	void FT6336UTouchPanel::setup() {
-		// I2C
-		system::I2C::setup(_sdaPin, _sclPin, I2C_ADDR_FT6336U, 400000);
+		_I2CDevice.setup();
 
 		// Interrupt
-		system::GPIO::setMode(_intPin, system::GPIO::PinMode::input);
-		system::GPIO::addInterruptHandler(_intPin, interruptHandler, this);
+		system::GPIO::setMode(_INTPin, system::GPIO::pinMode::input);
+		system::GPIO::addInterruptHandler(_INTPin, interruptHandler, this);
 
 		// Reset
-		if (_rstPin >= 0) {
-			system::GPIO::setMode(_rstPin, system::GPIO::PinMode::output);
-			system::GPIO::write(_rstPin, false);
-			system::delayUs(10'000);
-			system::GPIO::write(_rstPin, true);
+		if (_RSTPin >= 0) {
+			system::GPIO::setMode(_RSTPin, system::GPIO::pinMode::output);
+			system::GPIO::write(_RSTPin, false);
+			system::delayMs(10);
+			system::GPIO::write(_RSTPin, true);
 		}
 
 		// Do we need some delay? Hmmm
@@ -247,22 +255,22 @@ namespace YOBA {
 		return readByte(FT6336U_ADDR_STATE);
 	}
 
-	uint8_t FT6336UTouchPanel::readByte(const uint8_t addr) {
+	uint8_t FT6336UTouchPanel::readByte(const uint8_t addr) const {
 		uint8_t buffer = addr;
 
-		system::I2C::write(&buffer, 1);
-		system::I2C::read(&buffer, 1);
+		_I2CDevice.write({ &buffer, 1 });
+		_I2CDevice.read({ &buffer, 1 });
 
 		return buffer;
 	}
 
 	void FT6336UTouchPanel::writeByte(const uint8_t addr, const uint8_t data) {
-		const uint8_t buffer[2] = {
+		const uint8_t buffer[2] {
 			addr,
 			data
 		};
 
-		system::I2C::write(buffer, 2);
+		_I2CDevice.write({ buffer, 2 });
 	}
 
 	// ------------------------------------------------------------------------
@@ -271,14 +279,14 @@ namespace YOBA {
 		static_cast<FT6336UTouchPanel*>(args)->_interrupted = true;
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint1(const RenderTarget* renderTarget) {
+	Point FT6336UTouchPanel::readOrientedPoint1(const RenderingTarget* renderTarget) {
 		return renderTarget->orientPoint(Point(
 			read_touch1_x(),
 			read_touch1_y()
 		));
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint2(const RenderTarget* renderTarget) {
+	Point FT6336UTouchPanel::readOrientedPoint2(const RenderingTarget* renderTarget) {
 		return renderTarget->orientPoint(Point(
 			read_touch2_x(),
 			read_touch2_y()

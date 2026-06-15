@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <YOBA/main.h>
+#include <YOBA/core.h>
 namespace YOBA {
 	class unscii8ThinFont : public Font {
 		public:

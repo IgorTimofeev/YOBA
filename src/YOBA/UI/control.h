@@ -1,7 +1,7 @@
 #pragma once
 
 #include <YOBA/UI/element.h>
-#include <YOBA/main/events/event.h>
+#include <YOBA/core/events/event.h>
 
 namespace YOBA {
 	class Control : public virtual Element {

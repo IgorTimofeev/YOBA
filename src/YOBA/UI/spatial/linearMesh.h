@@ -2,7 +2,7 @@
 
 #include "mesh.h"
 
-#include <YOBA/main/color.h>
+#include <YOBA/core/color.h>
 
 namespace YOBA::spatial {
 	class LinearMesh : public Mesh {

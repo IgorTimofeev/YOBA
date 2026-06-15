@@ -2,10 +2,10 @@
 
 #include <vector>
 #include <YOBA/UI/element.h>
-#include <YOBA/main/rendering/renderer.h>
-#include <YOBA/main/rectangle.h>
-#include <YOBA/main/size.h>
-#include <YOBA/main/events/event.h>
+#include <YOBA/rendering/renderer.h>
+#include <YOBA/core/rectangle.h>
+#include <YOBA/core/size.h>
+#include <YOBA/core/events/event.h>
 #include <iterator>
 
 namespace YOBA {

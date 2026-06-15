@@ -5,7 +5,6 @@
 namespace YOBA {
 	ILI9341Display::ILI9341Display(
 		const uint8_t mosiPin,
-		const uint8_t misoPin,
 		const uint8_t sckPin,
 		const int8_t ssPin,
 		const uint8_t dcPin,
@@ -13,10 +12,10 @@ namespace YOBA {
 		const uint32_t SPIFrequency,
 
 		const Size& size,
-		const ViewportRotation rotation,
+		const Rotation rotation,
 		const ColorModel colorModel
 	) :
-		RenderTarget(
+		RenderingTarget(
 			size,
 			rotation,
 			PixelOrder::YX,
@@ -24,7 +23,6 @@ namespace YOBA {
 		),
 		SPIDisplay(
 			mosiPin,
-			misoPin,
 			sckPin,
 			ssPin,
 			dcPin,
@@ -44,7 +42,8 @@ namespace YOBA {
 		b[0] = 0x00;
 		b[1] = 0x83;
 		b[2] = 0x30;
-		this->writeCommandAndData(0xCF, b, 3);
+		this->writeCommand(0xCF);
+		this->writeData({ b, 3 });
 
 		// Power on sequence control,
 		// cp1 keeps 1 frame, 1st frame enable
@@ -54,7 +53,8 @@ namespace YOBA {
 		b[1] = 0x03;
 		b[2] = 0x12;
 		b[3] = 0x81;
-		this->writeCommandAndData(0xED, b, 4);
+		this->writeCommand(0xED);
+		this->writeData({ b, 4 });
 
 		// Driver timing control A,
 		// non-overlap=default +1
@@ -63,7 +63,8 @@ namespace YOBA {
 		b[0] = 0x85;
 		b[1] = 0x01;
 		b[2] = 0x79;
-		this->writeCommandAndData(0xE8, b, 3);
+		this->writeCommand(0xE8);
+		this->writeData({ b, 3 });
 
 		// Power control A, Vcore=1.6V, DDVDH=5.6V
 		b[0] = 0x39;
@@ -71,29 +72,36 @@ namespace YOBA {
 		b[2] = 0x00;
 		b[3] = 0x34;
 		b[4] = 0x02;
-		this->writeCommandAndData(0xCB, b, 5);
+		this->writeCommand(0xCB);
+		this->writeData({ b, 5 });
 
 		// Pump ratio control, DDVDH=2xVCl
-		this->writeCommandAndData(0xF7, 0x20);
+		this->writeCommand(0xF7);
+		this->writeData(0x20);
 
 		// Driver timing control, all=0 unit
 		b[0] = 0x00;
 		b[1] = 0x00;
-		this->writeCommandAndData(0xEA, b, 2);
+		this->writeCommand(0xEA);
+		this->writeData({ b, 2 });
 
 		// Power control 1, GVDD=4.75V
-		this->writeCommandAndData(0xC0, 0x26);
+		this->writeCommand(0xC0);
+		this->writeData(0x26);
 
 		// Power control 2, DDVDH=VCl*2, VGH=VCl*7, VGL=-VCl*3
-		this->writeCommandAndData(0xC1, 0x11);
+		this->writeCommand(0xC1);
+		this->writeData(0x11);
 
 		// VCOM control 1, VCOMH=4.025V, VCOML=-0.950V
 		b[0] = 0x35;
 		b[1] = 0x3E;
-		this->writeCommandAndData(0xC5, b, 2);
+		this->writeCommand(0xC5);
+		this->writeData({ b, 2 });
 
 		// VCOM control 2, VCOMH=VMH-2, VCOML=VML-2
-		this->writeCommandAndData(0xC7, 0xBE);
+		this->writeCommand(0xC7);
+		this->writeData(0xBE);
 
 		// Memory access control
 		writeMADCTLCommand();
@@ -104,18 +112,22 @@ namespace YOBA {
 		// Color model
 		// 101 - 16 bits per pixel
 		// 110 - 18 bits per pixel
-		this->writeCommandAndData(static_cast<uint8_t>(Command::COLMOD), getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
+		this->writeCommand(COLMOD);
+		this->writeData(getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
 
 		// Frame rate control, f=fosc, 70Hz fps
 		b[0] = 0x00;
 		b[1] = 0x1B;
-		this->writeCommandAndData(0xB1, b, 2);
+		this->writeCommand(0xB1);
+		this->writeData({ b, 2 });
 
 		// Enable 3G, disabled
-		this->writeCommandAndData(0xF2, 0x08);
+		this->writeCommand(0xF2);
+		this->writeData(0x08);
 
 		// Gamma set, curve 1
-		this->writeCommandAndData(0x26, 0x01);
+		this->writeCommand(0x26);
+		this->writeData(0x01);
 
 		// Positive gamma correction
 		b[0] = 0x0F;
@@ -133,7 +145,8 @@ namespace YOBA {
 		b[12] = 0x00;
 		b[13] = 0x00;
 		b[15] = 0x00;
-		this->writeCommandAndData(0xE0, b, 16);
+		this->writeCommand(0xE0);
+		this->writeData({ b, 16 });
 
 		// Negative gamma correction
 		b[0] = 0x00;
@@ -151,42 +164,49 @@ namespace YOBA {
 		b[12] = 0x3F;
 		b[13] = 0x3F;
 		b[15] = 0x0F;
-		this->writeCommandAndData(0xE1, b, 16);
+		this->writeCommand(0xE1);
+		this->writeData({ b, 16 });
 
 		// Column address set, SC=0, EC=0xEF
 		b[0] = 0x00;
 		b[1] = 0x00;
 		b[2] = 0x00;
 		b[3] = 0xEF;
-		this->writeCommandAndData(0x2A, b, 4);
+		this->writeCommand(0x2A);
+		this->writeData({ b, 4 });
 
 		// Page address set, SP=0, EP=0x013F
 		b[0] = 0x00;
 		b[1] = 0x00;
 		b[2] = 0x01;
 		b[3] = 0x3f;
-		this->writeCommandAndData(0x2B, b, 4);
+		this->writeCommand(0x2B);
+		this->writeData({ b, 4 });
 
 		// Memory write
 		this->writeCommand(0x2C);
 
 		// Entry mode set, Low vol detect disabled, normal display
-		this->writeCommandAndData(0xB7, 0x07);
+		this->writeCommand(0xB7);
+		this->writeData(0x07);
 
 		// Display function control
 		b[0] = 0x0A;
 		b[1] = 0x82;
 		b[2] = 0x27;
 		b[3] = 0x00;
-		this->writeCommandAndData(0xB6, b, 4);
+		this->writeCommand(0xB6);
+		this->writeData({ b, 4 });
 
 		// Sleep out
-		this->writeCommandAndData(0x11, 0x00);
-		system::delayUs(5'000);
+		this->writeCommand(0x11);
+		this->writeData(0x00);
+
+		system::delayMs(5);
 	}
 
 	void ILI9341Display::onRotationChanged() {
-		RenderTarget::onRotationChanged();
+		RenderingTarget::onRotationChanged();
 
 		writeMADCTLCommand();
 	}
@@ -196,33 +216,34 @@ namespace YOBA {
 	}
 
 	void ILI9341Display::writeMADCTLCommand() {
-		auto data = static_cast<uint8_t>(Command::MADCTL_BGR);
+		auto data = MADCTL_BGR;
 
 		switch (getRotation()) {
-			case ViewportRotation::clockwise0:
-				data |= static_cast<uint8_t>(Command::MADCTL_MX);
+			case Rotation::none:
+				data |= MADCTL_MX;
 				break;
 
-			case ViewportRotation::clockwise90:
-				data |= static_cast<uint8_t>(Command::MADCTL_MX) | static_cast<uint8_t>(Command::MADCTL_MY) | static_cast<uint8_t>(Command::MADCTL_MV);
+			case Rotation::clockwise90:
+				data |= MADCTL_MX | MADCTL_MY | MADCTL_MV;
 				break;
 
-			case ViewportRotation::clockwise180:
-				data |= static_cast<uint8_t>(Command::MADCTL_MY);
+			case Rotation::clockwise180:
+				data |= MADCTL_MY;
 				break;
 
-			case ViewportRotation::clockwise270:
-				data |= static_cast<uint8_t>(Command::MADCTL_MV);
+			case Rotation::clockwise270:
+				data |= MADCTL_MV;
 				break;
 
 			default:
 				break;
 		}
 
-		this->writeCommandAndData(static_cast<uint8_t>(Command::MADCTL), data);
+		this->writeCommand(MADCTL);
+		this->writeData(data);
 	}
 
-	void ILI9341Display::writePixels(const Rectangle& bounds, uint8_t* source, size_t length) {
+	void ILI9341Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
 //		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
@@ -232,17 +253,20 @@ namespace YOBA {
 		data[1] = bounds.getX() & 0xff; //Start Col Low
 		data[2] = bounds.getX2() >> 8; //End Col High
 		data[3] = bounds.getX2() & 0xff; //End Col Low
-		writeCommandAndData(0x2A, data, 4);
+		this->writeCommand(0x2A);
+		this->writeData({ data, 4 });
 
 		//Page address set
 		data[0] = bounds.getY() >> 8; //Start page high
 		data[1] = bounds.getY() & 0xff; // Start page low
 		data[2] = bounds.getY2() >> 8; // End page high
 		data[3] = bounds.getY2() & 0xff; // End page low
-		writeCommandAndData(0x2B, data, 4);
+		this->writeCommand(0x2B);
+		this->writeData({ data, 4 });
 
 		// Memory write
-		writeCommandAndData(0x2C, source, length);
+		this->writeCommand(0x2C);
+		this->writeData(pixelBuffer);
 	}
 
 	void ILI9341Display::turnOff() {

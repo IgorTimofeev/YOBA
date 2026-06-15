@@ -9,10 +9,12 @@
 #pragma once
 
 #include <cstdint>
+
+#include <YOBA/system.h>
+#include <YOBA/core/vector2.h>
+#include <YOBA/rendering/renderTarget.h>
 #include "touchPanel.h"
 #include "touchPoint.h"
-#include <YOBA/main/vector2.h>
-#include <YOBA/main/rendering/renderTarget.h>
 
 namespace YOBA {
 	#define I2C_ADDR_FT6336U 0x38
@@ -80,7 +82,7 @@ namespace YOBA {
 
 	class FT6336UTouchPanel : public TouchPanel {
 		public:
-			FT6336UTouchPanel(uint8_t sdaPin, uint8_t sclPin, int8_t rstPin, uint8_t intPin);
+			FT6336UTouchPanel(uint8_t SCLPin, uint8_t SDAPin, int8_t RSTPin, uint8_t INTPin);
 
 			void setup();
 			void tick() override;
@@ -138,12 +140,12 @@ namespace YOBA {
 			uint8_t read_state();
 
 		private:
-			uint8_t _sdaPin;
-			uint8_t _sclPin;
-			int8_t _rstPin;
-			uint8_t _intPin;
+			system::I2CDevice _I2CDevice;
 
-			uint8_t readByte(uint8_t addr);
+			int8_t _RSTPin;
+			uint8_t _INTPin;
+
+			uint8_t readByte(uint8_t addr) const;
 			void writeByte(uint8_t addr, uint8_t data);
 
 			volatile bool _interrupted = false;
@@ -158,7 +160,7 @@ namespace YOBA {
 
 			static void interruptHandler(void* args);
 
-			Point readOrientedPoint1(const RenderTarget* renderTarget);
-			Point readOrientedPoint2(const RenderTarget* renderTarget);
+			Point readOrientedPoint1(const RenderingTarget* renderTarget);
+			Point readOrientedPoint2(const RenderingTarget* renderTarget);
 	};
 }

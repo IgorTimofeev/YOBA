@@ -7,7 +7,7 @@
 #include <YOBA/UI/layout.h>
 
 #include <YOBA/UI/keyboard/button.h>
-#include <YOBA/main/key.h>
+#include <YOBA/core/key.h>
 #include <YOBA/UI/layout.h>
 
 namespace YOBA {
