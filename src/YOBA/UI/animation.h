@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <esp_log.h>
 #include <functional>
 
 #include <YOBA/core/size.h>

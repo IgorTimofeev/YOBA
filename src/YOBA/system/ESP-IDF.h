@@ -22,15 +22,15 @@ namespace YOBA::system {
 
 	class GPIO {
 		public:
-			enum class pinMode : uint8_t {
+			enum class PinMode : uint8_t {
 				input,
 				output
 			};
 
-			static void setMode(uint8_t pin, pinMode mode);
+			static void setMode(uint8_t pin, PinMode mode);
 			static bool read(uint8_t pin);
 			static void write(uint8_t pin, bool value);
-			static void addInterruptHandler(uint8_t pin, const gpio_isr_t& callback, void* args);
+			static void addInterruptHandler(uint8_t pin, void(*callback)(void* arg), void* args);
 	};
 
 	class SPIDevice {

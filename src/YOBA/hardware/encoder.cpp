@@ -26,8 +26,8 @@ namespace YOBA {
 	}
 
 	void Encoder::setup() {
-		system::GPIO::setMode(_aPin, system::GPIO::pinMode::input);
-		system::GPIO::setMode(_bPin, system::GPIO::pinMode::input);
+		system::GPIO::setMode(_aPin, system::GPIO::PinMode::input);
+		system::GPIO::setMode(_bPin, system::GPIO::PinMode::input);
 
 		system::GPIO::addInterruptHandler(_aPin, ABInterruptHandler, this);
 		system::GPIO::addInterruptHandler(_bPin, ABInterruptHandler, this);
@@ -116,7 +116,7 @@ namespace YOBA {
 	void PushButtonEncoder::setup() {
 		Encoder::setup();
 
-		system::GPIO::setMode(_swPin, system::GPIO::pinMode::input);
+		system::GPIO::setMode(_swPin, system::GPIO::PinMode::input);
 		system::GPIO::addInterruptHandler(_swPin, swInterruptHandler, this);
 		readPressed();
 	}

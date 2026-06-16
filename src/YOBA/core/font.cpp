@@ -1,7 +1,5 @@
 #include "font.h"
 
-#include <esp_log.h>
-
 #include "utf-8.h"
 
 namespace YOBA {

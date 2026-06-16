@@ -1,7 +1,5 @@
 #include "application.h"
 
-#include <esp_log.h>
-
 #include <YOBA/UI/element.h>
 #include "animation.h"
 

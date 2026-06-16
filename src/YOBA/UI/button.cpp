@@ -1,7 +1,5 @@
 #include "button.h"
 
-#include <esp_log.h>
-
 #include "application.h"
 
 namespace YOBA {

@@ -7,14 +7,14 @@ namespace YOBA {
 	class Size {
 		public:
 			constexpr Size(const uint16_t width, const uint16_t height) :
-				width(width),
-				height(height)
+				_width(width),
+				_height(height)
 			{
 			
 			}
 			
 			constexpr Size(const uint16_t uniformValue) : Size(uniformValue, uniformValue) {
-			
+
 			}
 			
 			constexpr Size() : Size(0, 0) {
@@ -50,7 +50,7 @@ namespace YOBA {
 			bool operator!=(const Size& rhs) const;
 
 		private:
-			uint16_t width;
-			uint16_t height;
+			uint16_t _width;
+			uint16_t _height;
 	};
 }

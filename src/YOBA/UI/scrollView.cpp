@@ -3,7 +3,6 @@
 #include <YOBA/core/events/scrollIntoViewEvent.h>
 
 #include "application.h"
-#include "esp_log.h"
 
 namespace YOBA {
 	ScrollView::ScrollView() {

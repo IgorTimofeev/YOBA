@@ -35,12 +35,12 @@ namespace YOBA {
 		_I2CDevice.setup();
 
 		// Interrupt
-		system::GPIO::setMode(_INTPin, system::GPIO::pinMode::input);
+		system::GPIO::setMode(_INTPin, system::GPIO::PinMode::input);
 		system::GPIO::addInterruptHandler(_INTPin, interruptHandler, this);
 
 		// Reset
 		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::pinMode::output);
+			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
 			system::GPIO::write(_RSTPin, false);
 			system::delayMs(10);
 			system::GPIO::write(_RSTPin, true);
@@ -264,7 +264,7 @@ namespace YOBA {
 		return buffer;
 	}
 
-	void FT6336UTouchPanel::writeByte(const uint8_t addr, const uint8_t data) {
+	void FT6336UTouchPanel::writeByte(const uint8_t addr, const uint8_t data) const {
 		const uint8_t buffer[2] {
 			addr,
 			data
@@ -279,15 +279,15 @@ namespace YOBA {
 		static_cast<FT6336UTouchPanel*>(args)->_interrupted = true;
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint1(const RenderingTarget* renderingTarget) {
-		return renderingTarget->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint1(const RenderingTarget* target) {
+		return target->applyRotation(Point(
 			read_touch1_x(),
 			read_touch1_y()
 		));
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint2(const RenderingTarget* renderingTarget) {
-		return renderingTarget->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint2(const RenderingTarget* target) {
+		return target->applyRotation(Point(
 			read_touch2_x(),
 			read_touch2_y()
 		));
@@ -300,11 +300,10 @@ namespace YOBA {
 		_interrupted = false;
 
 		const auto application = Application::getCurrent();
+		const auto renderingTarget = application->getRenderer()->getTarget();
 
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;
-
-		const auto renderingTarget = application->getRenderer()->getTarget();
 
 		if (isDown1) {
 			if (isDown2) {

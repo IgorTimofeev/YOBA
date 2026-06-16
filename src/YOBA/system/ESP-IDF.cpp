@@ -5,8 +5,6 @@
 #include <cstdio>
 #include <cstring>
 #include <esp_timer.h>
-#include <unordered_map>
-#include <functional>
 #include <limits>
 
 #include "freertos/FreeRTOS.h"
@@ -38,10 +36,10 @@ namespace YOBA::system {
 
 	// -------------------------------- GPIO --------------------------------
 
-	void GPIO::setMode(const uint8_t pin, const pinMode mode) {
+	void GPIO::setMode(const uint8_t pin, const PinMode mode) {
 		gpio_config_t config {};
 		config.pin_bit_mask = 1ULL << pin;
-		config.mode = mode == pinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT;
+		config.mode = mode == PinMode::input ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT;
 		config.pull_up_en = GPIO_PULLUP_ENABLE;
 		config.pull_down_en = GPIO_PULLDOWN_DISABLE;
 		config.intr_type = GPIO_INTR_DISABLE;
@@ -57,7 +55,7 @@ namespace YOBA::system {
 		gpio_set_level(static_cast<gpio_num_t>(pin), value);
 	}
 
-	void GPIO::addInterruptHandler(uint8_t pin, const gpio_isr_t& callback, void* args) {
+	void GPIO::addInterruptHandler(uint8_t pin, void(*callback)(void* arg), void* args) {
 		gpio_install_isr_service(0);
 		gpio_set_intr_type(static_cast<gpio_num_t>(pin), GPIO_INTR_ANYEDGE);
 		gpio_isr_handler_add(static_cast<gpio_num_t>(pin), callback, args);
@@ -77,7 +75,7 @@ namespace YOBA::system {
 
 	void SPIDevice::setup() {
 		// GPIO
-		GPIO::setMode(_SSPin, GPIO::pinMode::output);
+		GPIO::setMode(_SSPin, GPIO::PinMode::output);
 		GPIO::write(_SSPin, true);
 
 		// Bus
@@ -103,7 +101,7 @@ namespace YOBA::system {
 
 		// Data / command pin behavior
 		if (_DCPin != GPIO_NUM_NC) {
-			GPIO::setMode(_DCPin, GPIO::pinMode::output);
+			GPIO::setMode(_DCPin, GPIO::PinMode::output);
 			GPIO::write(_DCPin, true);
 
 			interfaceConfig.pre_cb = [](spi_transaction_t* transaction) {

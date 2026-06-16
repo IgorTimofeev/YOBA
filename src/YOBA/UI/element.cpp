@@ -2,8 +2,6 @@
 
 #include <assert.h>
 #include <algorithm>
-#include <esp_log.h>
-#include <esp_debug_helpers.h>
 
 #include <YOBA/UI/animation.h>
 #include <YOBA/UI/layout.h>

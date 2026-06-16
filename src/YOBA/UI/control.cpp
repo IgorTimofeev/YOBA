@@ -1,4 +1,3 @@
-#include <esp_log.h>
 #include <YOBA/UI/control.h>
 #include <YOBA/UI/application.h>
 

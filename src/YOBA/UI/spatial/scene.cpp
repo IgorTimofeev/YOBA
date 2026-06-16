@@ -1,7 +1,5 @@
 #include "scene.h"
 
-#include <esp_log.h>
-
 namespace YOBA::spatial {
 	void Scene::onRender(Renderer* renderer, const Rectangle& bounds) {
 		const auto projectionPlaneDistance = getProjectionPlaneDistance();

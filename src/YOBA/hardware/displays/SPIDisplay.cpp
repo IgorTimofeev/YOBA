@@ -27,7 +27,7 @@ namespace YOBA {
 
 		// Reset pin
 		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::pinMode::output);
+			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
 
 			toggleResetPin();
 		}

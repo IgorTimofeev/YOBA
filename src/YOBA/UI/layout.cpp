@@ -1,6 +1,5 @@
 #include "layout.h"
 #include <algorithm>
-#include <esp_log.h>
 
 #include <YOBA/UI/application.h>
 #include <YOBA/core/events/pointerEvent.h>

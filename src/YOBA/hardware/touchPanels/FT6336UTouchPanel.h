@@ -146,9 +146,10 @@ namespace YOBA {
 			uint8_t _INTPin;
 
 			uint8_t readByte(uint8_t addr) const;
-			void writeByte(uint8_t addr, uint8_t data);
+			void writeByte(uint8_t addr, uint8_t data) const;
 
 			volatile bool _interrupted = false;
+			static void interruptHandler(void* args);
 
 			TouchPoint _touchPoints[2] {
 				TouchPoint(),
@@ -158,9 +159,7 @@ namespace YOBA {
 			bool _wasTouched = false;
 			bool _wasPinched = false;
 
-			static void interruptHandler(void* args);
-
-			Point readOrientedPoint1(const RenderingTarget* renderingTarget);
-			Point readOrientedPoint2(const RenderingTarget* renderingTarget);
+			Point readOrientedPoint1(const RenderingTarget* target);
+			Point readOrientedPoint2(const RenderingTarget* target);
 	};
 }

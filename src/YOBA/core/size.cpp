@@ -2,27 +2,27 @@
 
 namespace YOBA {
 	uint16_t Size::getWidth() const {
-		return width;
+		return _width;
 	}
 
 	void Size::setWidth(const uint16_t value) {
-		width = value;
+		_width = value;
 	}
 
 	uint16_t Size::getHeight() const {
-		return height;
+		return _height;
 	}
 
 	void Size::setHeight(const uint16_t value) {
-		height = value;
+		_height = value;
 	}
 
 	uint16_t Size::getXCenter() const {
-		return width / 2;
+		return _width / 2;
 	}
 
 	uint16_t Size::getYCenter() const {
-		return height / 2;
+		return _height / 2;
 	}
 
 	Point Size::getCenter() const {
@@ -33,7 +33,7 @@ namespace YOBA {
 	}
 
 	uint32_t Size::getSquare() const {
-		return width * height;
+		return _width * _height;
 	}
 
 	Size Size::interpolate(const Size& to, const float& position) const {
@@ -44,7 +44,7 @@ namespace YOBA {
 	}
 
 	bool Size::operator==(const Size& rhs) const {
-		return width == rhs.width && height == rhs.height;
+		return _width == rhs._width && _height == rhs._height;
 	}
 
 	bool Size::operator!=(const Size& rhs) const {
