@@ -1,6 +1,6 @@
 #pragma once
 
-// Render targets
+// Rendering targets
 #include <YOBA/rendering/renderingTarget.h>
 
 // Renderers
