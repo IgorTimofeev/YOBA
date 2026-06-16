@@ -22,14 +22,14 @@ namespace YOBA {
 		 invalidate();
 	}
 
-	void Application::setup(RenderingTarget* renderTarget, Renderer* renderer) {
-		renderTarget->setup();
-		renderer->setTarget(renderTarget);
+	void Application::setup(RenderingTarget* renderingTarget, Renderer* renderer) {
+		renderingTarget->setup();
+		renderer->setTarget(renderingTarget);
 		setRenderer(renderer);
 	}
 
-	void Application::setup(RenderingTarget* renderTarget, Renderer* renderer, HID* hid) {
-		setup(renderTarget, renderer);
+	void Application::setup(RenderingTarget* renderingTarget, Renderer* renderer, HID* hid) {
+		setup(renderingTarget, renderer);
 
 		addHID(hid);
 	}

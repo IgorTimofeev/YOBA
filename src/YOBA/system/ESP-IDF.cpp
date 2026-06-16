@@ -15,6 +15,7 @@
 #include "sdkconfig.h"
 #include "driver/spi_master.h"
 #include "driver/i2c_master.h"
+#include <esp_heap_caps.h>
 
 namespace YOBA::system {
 	// -------------------------------- System --------------------------------
@@ -25,6 +26,14 @@ namespace YOBA::system {
 
 	uint64_t getTimeUs() {
 		return static_cast<uint64_t>(esp_timer_get_time());
+	}
+
+	void reallocate(uint8_t*& buffer, const size_t length) {
+		if (buffer)
+			heap_caps_free(buffer);
+
+		buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA));
+		assert(buffer != nullptr && "Failed to allocate memory");
 	}
 
 	// -------------------------------- GPIO --------------------------------

@@ -18,19 +18,19 @@ namespace YOBA {
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
-			// renderTarget.setup();
-			// renderer->setTarget(&renderTarget);
+			// renderingTarget.setup();
+			// renderer->setTarget(&renderingTarget);
 			// application->setRenderer(&renderer);
-			void setup(RenderingTarget* renderTarget, Renderer* renderer);
+			void setup(RenderingTarget* renderingTarget, Renderer* renderer);
 
 			// Shorthand method for convenient initialization, and it's equivalent to:
 			//
-			// renderTarget.setup();
-			// renderer->setTarget(&renderTarget);
+			// renderingTarget.setup();
+			// renderer->setTarget(&renderingTarget);
 			// application.setRenderer(&renderer);
 			//
 			// application.addHID(&hid);
-			void setup(RenderingTarget* renderTarget, Renderer* renderer, HID* hid);
+			void setup(RenderingTarget* renderingTarget, Renderer* renderer, HID* hid);
 
 			virtual void tick();
 			virtual void render();

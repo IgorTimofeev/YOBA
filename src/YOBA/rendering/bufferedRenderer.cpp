@@ -1,27 +1,11 @@
 #include <YOBA/rendering/bufferedRenderer.h>
-
-#ifdef ESP_PLATFORM
-	#include <esp_heap_caps.h>
-#endif
+#include <YOBA/system.h>
 
 namespace YOBA {
 	void BufferedRenderer::reallocatePixelBuffer() {
-		if (_pixelBuffer) {
-			#ifdef ESP_PLATFORM
-				heap_caps_free(_pixelBuffer);
-			#else
-				delete _pixelBuffer;
-			#endif
-		}
-
 		_pixelBufferLength = computePixelBufferLength();
 
-		#ifdef ESP_PLATFORM
-			_pixelBuffer = static_cast<uint8_t*>(heap_caps_malloc(_pixelBufferLength, MALLOC_CAP_DMA));
-			assert(_pixelBuffer != nullptr);
-		#else
-			_pixelBuffer = new uint8_t[_pixelBufferLength];
-		#endif
+		system::reallocate(_pixelBuffer, _pixelBufferLength);
 	}
 
 	void BufferedRenderer::updateFromTarget() {

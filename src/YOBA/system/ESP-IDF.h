@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <functional>
 #include <span>
+#include <assert.h>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
@@ -15,8 +16,9 @@
 
 namespace YOBA::system {
 	void delayMs(uint32_t duration);
-
 	uint64_t getTimeUs();
+
+	void reallocate(uint8_t*& buffer, const size_t length);
 
 	class GPIO {
 		public:

@@ -2,11 +2,9 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <YOBA/rendering/transactionalBufferedRenderer.h>
 
-#ifdef ESP_PLATFORM
-	#include <esp_heap_caps.h>
-#endif
+#include <YOBA/rendering/transactionalBufferedRenderer.h>
+#include <YOBA/system.h>
 
 namespace YOBA {
 	template<typename TIndex, typename TValue>
@@ -30,11 +28,11 @@ namespace YOBA {
 			uint8_t* getPalette() const;
 
 		protected:
+			uint8_t* _paletteBuffer = nullptr;
+			TIndex _paletteColorCount;
+
 			uint8_t* _paletteIndicesBuffer = nullptr;
 			size_t _paletteIndicesBufferLength = 0;
-
-			uint8_t* _palette = nullptr;
-			TIndex _paletteColorCount;
 
 			void updateFromTarget() override;
 			virtual size_t computePaletteIndicesBufferLength() const = 0;
@@ -63,17 +61,7 @@ namespace YOBA {
 			return;
 
 		_paletteIndicesBufferLength = computePaletteIndicesBufferLength();
-
-		#ifdef ESP_PLATFORM
-			if (_paletteIndicesBuffer)
-				heap_caps_free(_paletteIndicesBuffer);
-
-			_paletteIndicesBuffer = static_cast<uint8_t*>(heap_caps_malloc(_paletteIndicesBufferLength, MALLOC_CAP_DMA));
-			assert(_paletteIndicesBuffer != nullptr);
-		#else
-			delete _paletteIndicesBuffer;
-			_paletteIndicesBuffer = new uint8_t[_paletteIndicesBufferLength];
-		#endif
+		system::reallocate(_paletteIndicesBuffer, _paletteIndicesBufferLength);
 	}
 
 	template<typename TIndex, typename TValue>
@@ -81,28 +69,18 @@ namespace YOBA {
 		if (!getTarget())
 			return;
 
-		const size_t paletteLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
-
-		#ifdef ESP_PLATFORM
-			if (_palette)
-				heap_caps_free(_palette);
-
-			_palette = static_cast<uint8_t*>(heap_caps_malloc(paletteLength, MALLOC_CAP_DMA));
-			assert(_palette != nullptr);
-		#else
-			delete _palette;
-			_palette = new uint8_t[paletteLength];
-		#endif
+		const size_t paletteBufferLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
+		system::reallocate(_paletteBuffer, paletteBufferLength);
 	}
 
 	template<typename TIndex, typename TValue>
 	TValue PaletteRenderer<TIndex, TValue>::getPaletteValue(TIndex index) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565:
-				return *(reinterpret_cast<TValue*>(_palette) + index);
+				return *(reinterpret_cast<TValue*>(_paletteBuffer) + index);
 
 			case ColorModel::RGB666:
-				return *(reinterpret_cast<TValue*>(_palette) + index);
+				return *(reinterpret_cast<TValue*>(_paletteBuffer) + index);
 
 			default:
 				return 0;
@@ -113,15 +91,15 @@ namespace YOBA {
 	void PaletteRenderer<TIndex, TValue>::setPaletteValue(TIndex index, TValue value) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565: {
-				reinterpret_cast<TValue*>(_palette)[index] = value;
+				reinterpret_cast<TValue*>(_paletteBuffer)[index] = value;
 				break;
 			}
 			case ColorModel::RGB666: {
-				reinterpret_cast<TValue*>(_palette)[index] = value;
+				reinterpret_cast<TValue*>(_paletteBuffer)[index] = value;
 				break;
 			}
 			default:
-				_palette[index] = 0;
+				_paletteBuffer[index] = 0;
 				break;
 		}
 	}
@@ -181,7 +159,7 @@ namespace YOBA {
 
 	template<typename TIndex, typename TValue>
 	uint8_t* PaletteRenderer<TIndex, TValue>::getPalette() const {
-		return _palette;
+		return _paletteBuffer;
 	}
 
 	template<typename TIndex, typename TValue>

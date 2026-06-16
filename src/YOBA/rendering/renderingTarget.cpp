@@ -1,6 +1,6 @@
-#include "renderTarget.h"
-#include <YOBA/core/rectangle.h>
+#include <YOBA/rendering/renderingTarget.h>
 #include <YOBA/rendering/renderer.h>
+#include <YOBA/core/rectangle.h>
 
 namespace YOBA {
 	RenderingTarget::RenderingTarget(

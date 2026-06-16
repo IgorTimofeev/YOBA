@@ -12,7 +12,7 @@
 
 #include <YOBA/system.h>
 #include <YOBA/core/vector2.h>
-#include <YOBA/rendering/renderTarget.h>
+#include <YOBA/rendering/renderingTarget.h>
 #include "touchPanel.h"
 #include "touchPoint.h"
 
@@ -160,7 +160,7 @@ namespace YOBA {
 
 			static void interruptHandler(void* args);
 
-			Point readOrientedPoint1(const RenderingTarget* renderTarget);
-			Point readOrientedPoint2(const RenderingTarget* renderTarget);
+			Point readOrientedPoint1(const RenderingTarget* renderingTarget);
+			Point readOrientedPoint2(const RenderingTarget* renderingTarget);
 	};
 }

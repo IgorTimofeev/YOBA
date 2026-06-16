@@ -1,7 +1,7 @@
 #pragma once
 
 // Render targets
-#include <YOBA/rendering/renderTarget.h>
+#include <YOBA/rendering/renderingTarget.h>
 
 // Renderers
 #include <YOBA/rendering/renderer.h>

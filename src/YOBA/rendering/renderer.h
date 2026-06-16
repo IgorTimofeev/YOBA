@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <YOBA/rendering/renderTarget.h>
+#include <YOBA/rendering/renderingTarget.h>
 #include <YOBA/core/size.h>
 #include <YOBA/core/rectangle.h>
 #include <YOBA/core/color.h>
@@ -71,6 +71,9 @@ namespace YOBA {
 			virtual void flush() = 0;
 
 		protected:
+			RenderingTarget* _target = nullptr;
+			Rectangle _viewport {};
+
 			virtual void updateFromTarget();
 			virtual void clearNative(const Color* color) = 0;
 			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
@@ -80,9 +83,6 @@ namespace YOBA {
 			virtual void renderImageNative(const Point& point, const Image* image) = 0;
 
 		private:
-			RenderingTarget* _target = nullptr;
-			Rectangle _viewport {};
-
 			static Point getCatmullRomPoint(const Point* points, size_t index, float t, float tension);
 
 			static float fastAtan2(const float y, const float x);

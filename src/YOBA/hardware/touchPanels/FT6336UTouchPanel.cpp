@@ -279,15 +279,15 @@ namespace YOBA {
 		static_cast<FT6336UTouchPanel*>(args)->_interrupted = true;
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint1(const RenderingTarget* renderTarget) {
-		return renderTarget->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint1(const RenderingTarget* renderingTarget) {
+		return renderingTarget->orientPoint(Point(
 			read_touch1_x(),
 			read_touch1_y()
 		));
 	}
 
-	Point FT6336UTouchPanel::readOrientedPoint2(const RenderingTarget* renderTarget) {
-		return renderTarget->orientPoint(Point(
+	Point FT6336UTouchPanel::readOrientedPoint2(const RenderingTarget* renderingTarget) {
+		return renderingTarget->orientPoint(Point(
 			read_touch2_x(),
 			read_touch2_y()
 		));
@@ -304,14 +304,14 @@ namespace YOBA {
 		const auto isDown1 = read_touch1_event() == 2;
 		const auto isDown2 = read_touch2_event() == 2;
 
-		const auto renderTarget = application->getRenderer()->getTarget();
+		const auto renderingTarget = application->getRenderer()->getTarget();
 
 		if (isDown1) {
 			if (isDown2) {
 				// Pinch drag
 				if (_wasPinched) {
-					const auto& point1 = readOrientedPoint1(renderTarget);
-					const auto& point2 = readOrientedPoint2(renderTarget);
+					const auto& point1 = readOrientedPoint1(renderingTarget);
+					const auto& point2 = readOrientedPoint2(renderingTarget);
 
 					if (
 						point1 != _touchPoints[0].getPosition()
@@ -334,10 +334,10 @@ namespace YOBA {
 					_wasPinched = true;
 
 					_touchPoints[0].setDown(true);
-					_touchPoints[0].setPosition(readOrientedPoint1(renderTarget));
+					_touchPoints[0].setPosition(readOrientedPoint1(renderingTarget));
 
 					_touchPoints[1].setDown(true);
-					_touchPoints[1].setPosition(readOrientedPoint2(renderTarget));
+					_touchPoints[1].setPosition(readOrientedPoint2(renderingTarget));
 
 					auto event = PinchDownEvent(
 						_touchPoints[0].getPosition(),
@@ -353,7 +353,7 @@ namespace YOBA {
 					_wasPinched = false;
 
 					_touchPoints[1].setDown(false);
-					_touchPoints[1].setPosition(readOrientedPoint2(renderTarget));
+					_touchPoints[1].setPosition(readOrientedPoint2(renderingTarget));
 
 					auto event = PinchUpEvent(
 						_touchPoints[0].getPosition(),
@@ -364,7 +364,7 @@ namespace YOBA {
 				}
 				// Touch drag
 				else if (_wasTouched) {
-					const auto& point1 = readOrientedPoint1(renderTarget);
+					const auto& point1 = readOrientedPoint1(renderingTarget);
 
 					if (point1 != _touchPoints[0].getPosition()) {
 						_touchPoints[0].setPosition(point1);
@@ -381,7 +381,7 @@ namespace YOBA {
 					_wasTouched = true;
 
 					_touchPoints[0].setDown(true);
-					_touchPoints[0].setPosition(readOrientedPoint1(renderTarget));
+					_touchPoints[0].setPosition(readOrientedPoint1(renderingTarget));
 
 					auto event = PointerDownEvent(
 						_touchPoints[0].getPosition()
@@ -397,7 +397,7 @@ namespace YOBA {
 				_wasPinched = false;
 
 				_touchPoints[1].setDown(false);
-				_touchPoints[1].setPosition(readOrientedPoint2(renderTarget));
+				_touchPoints[1].setPosition(readOrientedPoint2(renderingTarget));
 
 				auto event = PinchUpEvent(
 					_touchPoints[0].getPosition(),
@@ -412,7 +412,7 @@ namespace YOBA {
 				_wasTouched = false;
 
 				_touchPoints[0].setDown(false);
-				_touchPoints[0].setPosition(readOrientedPoint1(renderTarget));
+				_touchPoints[0].setPosition(readOrientedPoint1(renderingTarget));
 
 				auto event = PointerUpEvent(
 					_touchPoints[0].getPosition()

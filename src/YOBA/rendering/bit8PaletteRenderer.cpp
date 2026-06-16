@@ -7,7 +7,10 @@ namespace YOBA {
 	}
 
 	size_t Bit8PaletteRenderer::computePixelBufferLength() const {
-		return getTarget()->getSize().getWidth() * getTransactionViewportHeight() * Color::getBytesPerModel(getTarget()->getColorModel());
+		return
+			getTarget()->getSize().getWidth()
+			* getTransactionViewportHeight()
+			* Color::getBytesPerModel(getTarget()->getColorModel());
 	}
 
 	size_t Bit8PaletteRenderer::computePaletteIndicesBufferLength() const {

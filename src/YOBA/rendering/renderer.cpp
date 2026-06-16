@@ -769,7 +769,7 @@ namespace YOBA {
 	}
 
 	void Renderer::renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve, const float tension) {
-		assert(pointsLength >= 4 && "At least 4 points required");
+		assert(pointsLength >= 4 && 1);
 
 		Point pointPrev {};
 		bool pizda = false;
