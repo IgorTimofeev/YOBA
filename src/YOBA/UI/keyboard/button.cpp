@@ -57,6 +57,7 @@ namespace YOBA {
 		else {
 			setDefaultBackgroundColor(_keyboard->getDisabledKeyBackgroundColor());
 			setDefaultTextColor(_keyboard->getDisabledKeyTextColor());
+			setEnabled(false);
 		}
 	}
 
@@ -288,7 +289,7 @@ namespace YOBA {
 	bool PeriodKeyboardButton::canBeEnabled() {
 		const auto options = getKeyboard()->getLayoutOptions();
 
-		return !(options & KeyboardLayoutOptions::numeric) || options & KeyboardLayoutOptions::allowDecimal;
+		return !(options & KeyboardLayoutOptions::numeric) || options & KeyboardLayoutOptions::allowFractional;
 	}
 
 	// ----------------------------- NumericSignMinusKeyboardButton -----------------------------

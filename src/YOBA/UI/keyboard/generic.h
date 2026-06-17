@@ -16,13 +16,14 @@ namespace YOBA {
 		caps
 	};
 
+	// I love C++
 	namespace KeyboardLayoutOptions {
 		enum : uint8_t {
 			text = 0b0000'0001,
 			numeric = 0b0000'0010,
 
 			allowSigned = 0b0000'1000,
-			allowDecimal = 0b0001'0000
+			allowFractional = 0b0001'0000
 		};
 	}
 }

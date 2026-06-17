@@ -89,8 +89,8 @@ namespace YOBA {
 			if (color) {
 				renderer->renderText(
 					Point(
-						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + getContentMargin().getLeft() - getContentMargin().getRight(),
-						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + getContentMargin().getTop() - getContentMargin().getBottom()
+						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + _contentMargin.getLeft() - _contentMargin.getRight(),
+						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + _contentMargin.getTop() - _contentMargin.getBottom()
 					),
 					font,
 					color,
