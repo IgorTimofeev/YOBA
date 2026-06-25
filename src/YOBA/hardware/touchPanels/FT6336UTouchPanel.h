@@ -149,7 +149,7 @@ namespace YOBA {
 			void writeByte(uint8_t addr, uint8_t data) const;
 
 			volatile bool _interrupted = false;
-			static void interruptHandler(void* args);
+			static IRAM_ATTR void interruptHandler(void* args);
 
 			TouchPoint _touchPoints[2] {
 				TouchPoint(),

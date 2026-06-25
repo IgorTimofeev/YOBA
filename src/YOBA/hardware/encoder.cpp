@@ -59,8 +59,8 @@ namespace YOBA {
 		_minimumDelta = value;
 	}
 
-	void Encoder::ABInterruptHandler(void* args) {
-		static_cast<Encoder*>(args)->readAB();
+	void Encoder::ABInterruptHandler(void* arg) {
+		static_cast<Encoder*>(arg)->readAB();
 	}
 
 	void Encoder::readAB() {

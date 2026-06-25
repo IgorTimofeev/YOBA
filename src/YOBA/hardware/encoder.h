@@ -7,6 +7,8 @@
 #include <YOBA/hardware/HID.h>
 #include <YOBA/core/events/event.h>
 
+#include "esp_attr.h"
+
 namespace YOBA {
 	// -------------------------------- Value changed event --------------------------------
 
@@ -81,8 +83,8 @@ namespace YOBA {
 			int16_t _value = 0;
 			uint16_t _minimumDelta = 0;
 
-			static void ABInterruptHandler(void* args);
-			void readAB();
+			static IRAM_ATTR void ABInterruptHandler(void* arg);
+			IRAM_ATTR void readAB();
 	};
 
 	// -------------------------------- Push down event --------------------------------
