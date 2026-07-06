@@ -14,7 +14,7 @@
 #include <YOBA/hardware/touchPanels/FT6336UTouchPanel.h>
 
 namespace YOBA {
-	FT6336UTouchPanel::FT6336UTouchPanel(
+	void FT6336UTouchPanel::setup(
 		const uint8_t SDAPin,
 		const uint8_t SCLPin,
 		const int8_t RSTPin,
@@ -22,27 +22,23 @@ namespace YOBA {
 
 		const uint8_t I2CAddress,
 		const uint32_t I2CFrequencyHz
-	) :
-		_I2CDevice(
+	) {
+		_I2CDevice.setup(
 			SDAPin,
 			SCLPin,
 			I2CAddress,
 			I2CFrequencyHz
-		),
-		_RSTPin(RSTPin),
-		_INTPin(INTPin)
-	{
-
-	}
-
-	void FT6336UTouchPanel::setup() {
-		_I2CDevice.setup();
+		);
 
 		// Interrupt
+		_INTPin = INTPin;
+
 		system::GPIO::setMode(_INTPin, system::GPIO::PinMode::input);
 		system::GPIO::addInterruptHandler(_INTPin, interruptHandler, this);
 
 		// Reset
+		_RSTPin = RSTPin;
+
 		if (_RSTPin >= 0) {
 			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
 			system::GPIO::write(_RSTPin, false);
@@ -243,7 +239,7 @@ namespace YOBA {
 		writeByte(ADDR_G_MODE, mode == FT6336UGMode::pollingMode ? 0 : 1);
 	}
 
-	uint8_t FT6336UTouchPanel::readPwrmode() const {
+	uint8_t FT6336UTouchPanel::readPWRMode() const {
 		return readByte(ADDR_POWER_MODE);
 	}
 

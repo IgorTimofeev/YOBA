@@ -150,21 +150,17 @@ namespace YOBA::system {
 
 	// -------------------------------- I2C --------------------------------
 
-	I2CDevice::I2CDevice(
+	void I2CDevice::setup(
 		const uint8_t SDAPin,
 		const uint8_t SCLPin,
 		const uint16_t address,
 		const uint32_t frequencyHz
-	) :
-		_SCLPin(SCLPin),
-		_SDAPin(SDAPin),
-		_address(address),
-		_frequencyHz(frequencyHz)
-	{
+	) {
+		_SCLPin = SCLPin;
+		_SDAPin = SDAPin;
+		_address = address;
+		_frequencyHz = frequencyHz;
 
-	}
-
-	void I2CDevice::setup() {
 		i2c_master_bus_config_t busConfig {};
 		busConfig.i2c_port = I2C_NUM_0;
 		busConfig.sda_io_num = static_cast<gpio_num_t>(_SDAPin);

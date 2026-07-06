@@ -62,22 +62,21 @@ namespace YOBA::system {
 
 	class I2CDevice {
 		public:
-			I2CDevice(
+			void setup(
 				const uint8_t SDAPin,
 				const uint8_t SCLPin,
 				const uint16_t address,
 				const uint32_t frequencyHz
 			);
 
-			void setup();
 			bool read(const std::span<uint8_t> data) const;
 			bool write(const std::span<const uint8_t> data) const;
 
 		private:
-			uint8_t _SCLPin;
-			uint8_t _SDAPin;
-			uint16_t _address;
-			uint32_t _frequencyHz;
+			uint8_t _SCLPin = 0;
+			uint8_t _SDAPin = 0;
+			uint16_t _address = 0;
+			uint32_t _frequencyHz = 0;
 
 			i2c_master_bus_handle_t _busHandle {};
 			i2c_master_dev_handle_t _deviceHandle {};

@@ -34,7 +34,9 @@ namespace YOBA {
 
 	class FT6336UTouchPanel : public TouchPanel {
 		public:
-			FT6336UTouchPanel(
+			constexpr static uint8_t defaultI2CAddress = 0x38;
+
+			void setup(
 				uint8_t SDAPin,
 				uint8_t SCLPin,
 				int8_t RSTPin,
@@ -44,9 +46,6 @@ namespace YOBA {
 				uint32_t I2CFrequencyHz = 400'000
 			);
 
-			constexpr static uint8_t defaultI2CAddress = 0x38;
-
-			void setup();
 			void tick() override;
 
 			FT6336UDeviceMode readDeviceMode() const;
@@ -95,17 +94,16 @@ namespace YOBA {
 			uint8_t readChipID() const;
 			FT6336UGMode readGMode() const;
 			void writeGMode(FT6336UGMode mode) const;
-			uint8_t readPwrmode() const;
+			uint8_t readPWRMode() const;
 			uint8_t readFirmwareID() const;
 			uint8_t readFocaltechID() const;
 			uint8_t readReleaseCodeID() const;
 			uint8_t readState() const;
 
 		private:
-			system::I2CDevice _I2CDevice;
-
-			int8_t _RSTPin;
-			uint8_t _INTPin;
+			system::I2CDevice _I2CDevice {};
+			int8_t _RSTPin = 0;
+			uint8_t _INTPin = 0;
 
 			uint8_t readByte(uint8_t addr) const;
 			void writeByte(uint8_t addr, uint8_t data) const;
