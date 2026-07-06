@@ -1,7 +1,7 @@
 
 # YOBA | Your Breathtaking Application
 
-An independent and hardcore UI framework written on modern C++ for embedded devices.
+An independent and hardcore UI framework written on modern C++ for embedded devices
 
 # Features
 
@@ -13,25 +13,34 @@ An independent and hardcore UI framework written on modern C++ for embedded devi
 - Compact image & font format with a nice [tool](https://github.com/IgorTimofeev/YobaResourceConverter)
 to convert your dick pics into production-ready projects
 - A clear distinction between UI, renderers and rendering targets (screens, desktop windows, etc.),
-all of which can be used independently
+all of which can be used separately
 - Monochrome, RGB 565/666/888 & indexed colors support
 - Out-of-box drivers for the most popular displays like ILI9341, ST7789, ST7565, GC9A01, and SH1106
 - HAL for any MCU integration
 
+# Showcase
+
+<img width="300" src="https://github.com/user-attachments/assets/00eda8cc-0ebe-4b26-ac73-c90a9fe2989c" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/2a639a4d-81ce-419f-bcd4-6178148a0e56" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/e161327c-f554-4642-8cea-95da666df3de" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/0005fa8d-2c2a-4fc8-a503-70154f87916f" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/7675db07-ebf1-4d8d-9e49-9c949582b9e3" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/22ea362e-30ea-4723-b947-de339feda69b" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/33cd6ce1-6bd5-45f8-8d2a-9499d2e68c04" alt=".!."/>
+<img width="300" src="https://github.com/user-attachments/assets/fff71020-69b0-4988-950f-6b571254c380" alt=".!."/>
+
 # Installation
 
-## ESP-IDF:
+### ESP-IDF:
 
 First, you must enable RTTI (run-time type information), since complex components like combo boxes and
-selectors use `dynamic_cast`. On ESP-IDF RTTI is disabled by default to save some flash memory,
-but since we’re using an entire UI framework, a few bytes is a ridiculously small price
-to pay for such immense power. RTTI itself can be enabled via 
-
+selectors use `dynamic_cast`. RTTI is disabled by default on ESP-IDF to save some flash memory,
+but since we’re using a fucking UI framework, a few bytes is a ridiculously small price
+to pay for such immense power. RTTI itself can be enabled via
 
 `idf.py menuconfig` > `Compiler options` > `Enable C++ run-time type info (RTTI)`
 
-After this you can clone library and integrate it into your project.
-The wise path to do this is using submodules:
+After that, you can clone the library into your project. It would be wise to use submodules to do this:
 
 `git submodule add https://github.com/IgorTimofeev/YOBA.git components/YOBA`
 
@@ -52,16 +61,86 @@ idf_component_register(
 include_directories(.)
 ```
 
-# Showcase
+# Direct rendering
 
-<img width="400" src="https://github.com/user-attachments/assets/00eda8cc-0ebe-4b26-ac73-c90a9fe2989c"/>
-<img width="400" src="https://github.com/user-attachments/assets/2a639a4d-81ce-419f-bcd4-6178148a0e56"/>
-<img width="400" src="https://github.com/user-attachments/assets/e161327c-f554-4642-8cea-95da666df3de"/>
-<img width="400" src="https://github.com/user-attachments/assets/0005fa8d-2c2a-4fc8-a503-70154f87916f"/>
-<img width="400" src="https://github.com/user-attachments/assets/7675db07-ebf1-4d8d-9e49-9c949582b9e3"/>
-<img width="400" src="https://github.com/user-attachments/assets/22ea362e-30ea-4723-b947-de339feda69b"/>
-<img width="400" src="https://github.com/user-attachments/assets/33cd6ce1-6bd5-45f8-8d2a-9499d2e68c04"/>
-<img width="400" src="https://github.com/user-attachments/assets/fff71020-69b0-4988-950f-6b571254c380"/>
+```c++
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <esp_timer.h>
+
+#include <YOBA/core.h>
+#include "YOBA/rendering.h"
+#include <YOBA/UI.h>
+
+#include <YOBA/hardware/displays/ILI9341Display.h>
+#include <YOBA/resources/fonts/unscii16Font.h>
+
+using namespace YOBA;
+
+// Choosing display driver to render our stuff
+ILI9341Display display {
+	GPIO_NUM_23,
+	GPIO_NUM_18,
+	GPIO_NUM_17,
+	GPIO_NUM_16,
+	GPIO_NUM_NC,
+	60'000'000
+};
+
+// Choosing renderer
+RGB565Renderer renderer {};
+
+// Defining some fonts & colors to use
+constexpr static Unscii16Font font {};
+constexpr static uint8_t fontScale = 3;
+
+constexpr static RGB565Color backgroundColor = RGB888Color(0xFFFFFF).toRGB565BE();
+constexpr static RGB565Color textColor = RGB888Color(0x000000).toRGB565BE();
+
+extern "C" void app_main(void) {
+	// Initializing display
+	display.setup();
+
+	// Assigning display as rendering target
+	renderer.setTarget(&display);
+
+	// Display is turned off by default to prevent random memory garbage to be shown
+    // So we should at least turn it on
+	display.turnOn();
+
+	while (true) {
+		// Clearing display with solid color
+		renderer.clear(&backgroundColor);
+
+		// Creating a string with current uptime that looks like 00:12
+		const auto uptimeMicroseconds = esp_timer_get_time();
+		const auto uptimeMinutes = uptimeMicroseconds / 60'000'000;
+		const auto uptimeSeconds = uptimeMicroseconds % 60'000'000 / 1'000'000;
+
+		char text[24];
+		std::snprintf(text, sizeof(text), "%02lld:%02lld", uptimeMinutes, uptimeSeconds);
+
+		// Rendering current uptime on center of display
+		renderer.renderText(
+			display.getSize().getCenter() - font.getSize(text, fontScale).getCenter(),
+			&font,
+			&textColor,
+			text,
+			fontScale
+		);
+
+		// Sending pixel data to display
+		renderer.flush();
+
+		// Waiting for a while to achieve ~30 FPS
+		vTaskDelay(pdMS_TO_TICKS(1000 / 30));
+	}
+}
+```
+
+# Result
+
+<img width="300" src="https://github.com/user-attachments/assets/8e86f467-7826-44c1-a4ab-6aca1dbe8930" alt=".!."/>
 
 # Tselyebnov, M. D.
 <img width="2400" height="2400" alt="517616031-76ed9af3-53a3-4d2d-b944-3c228edfec81-1" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
