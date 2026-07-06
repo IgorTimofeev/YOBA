@@ -3,35 +3,27 @@
 #include <cstdint>
 
 namespace YOBA {
-	ST7565Display::ST7565Display(
+	void ST7565Display::setup(
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
 		const uint8_t DCPin,
 		const int8_t RSTPin,
 		const uint32_t SPIFrequency
-	) :
-		RenderingTarget(
-			Size(128, 64),
-			Rotation::none,
-			PixelOrder::XNormalYReversed,
-			ColorModel::monochrome
-		),
-		SPIDisplay(
+	) {
+		SPIDisplay::setup(
 			MOSIPin,
 			SCKPin,
 			SSPin,
 			DCPin,
 			RSTPin,
-			SPIFrequency
-		),
-		ContrastDisplay()
-	{
+			SPIFrequency,
 
-	}
-
-	void ST7565Display::setup() {
-		SPIDisplay::setup();
+			Size(128, 64),
+			Rotation::none,
+			PixelOrder::XNormalYReversed,
+			ColorModel::monochrome
+		);
 
 		// LCD bias select
 		writeCommand(static_cast<uint8_t>(Command::SET_BIAS_7));

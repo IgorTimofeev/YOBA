@@ -3,7 +3,7 @@
 #include <cstring>
 
 namespace YOBA {
-	ST7789Display::ST7789Display(
+	void ST7789Display::setup(
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
@@ -14,27 +14,20 @@ namespace YOBA {
 		const Size& size,
 		const Rotation rotation,
 		const ColorModel colorModel
-	) :
-		RenderingTarget(
-			size,
-			rotation,
-			PixelOrder::YNormalXNormal,
-			colorModel
-		),
-		SPIDisplay(
+	) {
+		SPIDisplay::setup(
 			MOSIPin,
 			SCKPin,
 			SSPin,
 			DCPin,
 			RSTPin,
-			SPIFrequency
-		)
-	{
+			SPIFrequency,
 
-	}
-
-	void ST7789Display::setup() {
-		SPIDisplay::setup();
+			size,
+			rotation,
+			PixelOrder::YNormalXNormal,
+			colorModel
+		);
 
 		uint8_t data[14];
 

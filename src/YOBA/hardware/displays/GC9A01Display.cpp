@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace YOBA {
-	GC9A01Display::GC9A01Display(
+	void GC9A01Display::setup(
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
@@ -14,27 +14,20 @@ namespace YOBA {
 		const Size& size,
 		const Rotation rotation,
 		const ColorModel colorModel
-	) :
-		RenderingTarget(
-			size,
-			rotation,
-			PixelOrder::XNormalYNormal,
-			colorModel
-		),
-		SPIDisplay(
+	) {
+		SPIDisplay::setup(
 			MOSIPin,
 			SCKPin,
 			SSPin,
 			DCPin,
 			RSTPin,
-			SPIFrequency
-		)
-	{
+			SPIFrequency,
 
-	}
-
-	void GC9A01Display::setup() {
-		SPIDisplay::setup();
+			size,
+			rotation,
+			PixelOrder::XNormalYNormal,
+			colorModel
+		);
 
 		// Software reset
 		if (_RSTPin < 0) {

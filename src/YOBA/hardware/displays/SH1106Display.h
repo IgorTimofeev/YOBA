@@ -12,18 +12,15 @@
 namespace YOBA {
 	class SH1106Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
 		public:
-			// Arduino: 80 MHz
-			// ESP-IDF: to be investigated
-			SH1106Display(
-				uint8_t MOSIPin,
-				uint8_t SCKPin,
-				int8_t SSPin,
-				uint8_t DCPin,
-				int8_t RSTPin,
-				uint32_t SPIFrequency
+			void setup(
+				const uint8_t MOSIPin,
+				const uint8_t SCKPin,
+				const int8_t SSPin,
+				const uint8_t DCPin,
+				const int8_t RSTPin,
+				const uint32_t SPIFrequencyHz
 			);
 
-			void setup() override;
 			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;

@@ -63,17 +63,20 @@ namespace YOBA::system {
 
 	// -------------------------------- SPI --------------------------------
 
-	SPIDevice::SPIDevice(const uint8_t MOSIPin, const uint8_t SCKPin, const int8_t SSPin, const int8_t DCPin, const uint32_t frequencyHz) :
-		_MOSIPin(MOSIPin),
-		_SCKPin(SCKPin),
-		_SSPin(SSPin),
-		_DCPin(DCPin),
-		_frequencyHz(frequencyHz)
-	{
+	void SPIDevice::setup(
+		const uint8_t MOSIPin,
+		const uint8_t SCKPin,
+		const int8_t SSPin,
+		const int8_t DCPin,
 
-	}
+		const uint32_t frequencyHz
+	) {
+		_MOSIPin = MOSIPin;
+		_SCKPin = SCKPin;
+		_SSPin = SSPin;
+		_DCPin = DCPin;
+		_frequencyHz = frequencyHz;
 
-	void SPIDevice::setup() {
 		// GPIO
 		GPIO::setMode(_SSPin, GPIO::PinMode::output);
 		GPIO::write(_SSPin, true);

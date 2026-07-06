@@ -10,7 +10,7 @@
 namespace YOBA {
 	class ILI9341Display : public SPIDisplay, public InvertibleDisplay {
 		public:
-			ILI9341Display(
+			void setup(
 				uint8_t MOSIPin,
 				uint8_t SCKPin,
 				int8_t SSPin,
@@ -23,7 +23,6 @@ namespace YOBA {
 				ColorModel colorModel = ColorModel::RGB565
 			);
 
-			void setup() override;
 			void setInverted(bool value) override;
 			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 

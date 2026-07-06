@@ -16,22 +16,6 @@ namespace YOBA {
 
 			explicit Application();
 
-			// Shorthand method for convenient initialization, and it's equivalent to:
-			//
-			// renderingTarget.setup();
-			// renderer->setTarget(&renderingTarget);
-			// application->setRenderer(&renderer);
-			void setup(RenderingTarget* renderingTarget, Renderer* renderer);
-
-			// Shorthand method for convenient initialization, and it's equivalent to:
-			//
-			// renderingTarget.setup();
-			// renderer->setTarget(&renderingTarget);
-			// application.setRenderer(&renderer);
-			//
-			// application.addHID(&hid);
-			void setup(RenderingTarget* renderingTarget, Renderer* renderer, HID* hid);
-
 			virtual void tick();
 			virtual void render();
 

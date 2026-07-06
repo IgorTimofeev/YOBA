@@ -9,22 +9,25 @@
 namespace YOBA {
 	class SPIDisplay : public virtual Display {
 		public:
-			SPIDisplay(
-				uint8_t MOSIPin,
-				uint8_t SCKPin,
-				int8_t SSPin,
-				uint8_t DCPin,
-				int8_t RSTPin,
-				uint32_t SPIFrequencyHz
-			);
-
 			~SPIDisplay() override = default;
 
-			void setup() override;
+			void setup(
+				const uint8_t MOSIPin,
+				const uint8_t SCKPin,
+				const int8_t SSPin,
+				const uint8_t DCPin,
+				const int8_t RSTPin,
+				const uint32_t SPIFrequencyHz,
+
+				const Size& size,
+				const Rotation rotation,
+				const PixelOrder pixelOrder,
+				const ColorModel colorModel
+			);
 
 		protected:
-			system::SPIDevice _SPIDevice;
-			int8_t _RSTPin;
+			system::SPIDevice _SPIDevice {};
+			int8_t _RSTPin = 0;
 
 			void setResetPin(bool value) const;
 
@@ -34,5 +37,8 @@ namespace YOBA {
 
 			virtual void toggleResetPin();
 
+		private:
+			// No one should call this anymore
+			using RenderingTarget::setup;
 	};
 }

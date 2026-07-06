@@ -36,16 +36,15 @@ namespace YOBA {
 		friend class Renderer;
 
 		public:
-			RenderingTarget(
+			virtual ~RenderingTarget();
+
+			void setup(
 				const Size& size,
 				Rotation rotation,
 				PixelOrder pixelOrder,
 				ColorModel colorModel
 			);
 
-			virtual ~RenderingTarget();
-
-			virtual void setup();
 			virtual void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) = 0;
 
 			PixelOrder getPixelOrder() const;
@@ -65,11 +64,11 @@ namespace YOBA {
 			virtual void onRotationChanged();
 
 		private:
-			const Size _defaultSize;
-			Size _size;
+			Size _defaultSize {};
+			Size _size {};
 			Rotation _rotation = Rotation::none;
-			PixelOrder _pixelOrder;
-			ColorModel _colorModel;
+			PixelOrder _pixelOrder = PixelOrder::XNormalYNormal;
+			ColorModel _colorModel = ColorModel::RGB565;
 			Renderer* _renderer = nullptr;
 
 			void updateSizeFromRotation();

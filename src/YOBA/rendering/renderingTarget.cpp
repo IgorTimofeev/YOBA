@@ -3,27 +3,23 @@
 #include <YOBA/core/rectangle.h>
 
 namespace YOBA {
-	RenderingTarget::RenderingTarget(
-		const Size& size,
-		const Rotation rotation,
-		const PixelOrder pixelOrder,
-		const ColorModel colorModel
-	) :
-		_defaultSize(size),
-		_size(size),
-		_rotation(rotation),
-		_pixelOrder(pixelOrder),
-		_colorModel(colorModel)
-	{
-		updateSizeFromRotation();
-	}
-
 	RenderingTarget::~RenderingTarget() {
 
 	}
 
-	void RenderingTarget::setup() {
+	void RenderingTarget::setup(
+		const Size& size,
+		const Rotation rotation,
+		const PixelOrder pixelOrder,
+		const ColorModel colorModel
+	) {
+		_defaultSize = size;
+		_size = size;
+		_rotation = rotation;
+		_pixelOrder = pixelOrder;
+		_colorModel = colorModel;
 
+		updateSizeFromRotation();
 	}
 
 	PixelOrder RenderingTarget::getPixelOrder() const {

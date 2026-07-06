@@ -20,18 +20,6 @@ namespace YOBA {
 		 invalidate();
 	}
 
-	void Application::setup(RenderingTarget* renderingTarget, Renderer* renderer) {
-		renderingTarget->setup();
-		renderer->setTarget(renderingTarget);
-		setRenderer(renderer);
-	}
-
-	void Application::setup(RenderingTarget* renderingTarget, Renderer* renderer, HID* hid) {
-		setup(renderingTarget, renderer);
-
-		addHID(hid);
-	}
-
 	void Application::invalidateLayout() {
 		_layoutInvalidated = true;
 	}

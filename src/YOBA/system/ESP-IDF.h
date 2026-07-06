@@ -35,27 +35,25 @@ namespace YOBA::system {
 
 	class SPIDevice {
 		public:
-			SPIDevice(
+			void setup(
 				const uint8_t MOSIPin,
 				const uint8_t SCKPin,
 				const int8_t SSPin,
 				const int8_t DCPin,
-
 				const uint32_t frequencyHz
 			);
 
-			void setup();
 			bool write(const uint8_t data);
 			bool write(const std::span<const uint8_t> data);
 
 			void setCommandMode(const bool value);
 
 		private:
-			uint8_t _MOSIPin;
-			uint8_t _SCKPin;
-			int8_t _SSPin;
-			int8_t _DCPin;
-			uint32_t _frequencyHz;
+			uint8_t _MOSIPin {};
+			uint8_t _SCKPin {};
+			int8_t _SSPin {};
+			int8_t _DCPin {};
+			uint32_t _frequencyHz {};
 
 			spi_device_handle_t _deviceHandle {};
 

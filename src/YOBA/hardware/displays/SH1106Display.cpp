@@ -3,35 +3,27 @@
 #include "SH1106Display.h"
 
 namespace YOBA {
-	SH1106Display::SH1106Display(
+	void SH1106Display::setup(
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
 		const uint8_t DCPin,
 		const int8_t RSTPin,
-		const uint32_t SPIFrequency
-	) :
-		RenderingTarget(
-			Size(128, 64),
-			Rotation::none,
-			PixelOrder::XNormalYNormal,
-			ColorModel::monochrome
-		),
-		SPIDisplay(
+		const uint32_t SPIFrequencyHz
+	) {
+		SPIDisplay::setup(
 			MOSIPin,
 			SCKPin,
 			SSPin,
 			DCPin,
 			RSTPin,
-			SPIFrequency
-		),
-		ContrastDisplay()
-	{
+			SPIFrequencyHz,
 
-	}
-
-	void SH1106Display::setup() {
-		SPIDisplay::setup();
+			Size(128, 64),
+			Rotation::none,
+			PixelOrder::XNormalYNormal,
+			ColorModel::monochrome
+		);
 
 		writeCommand(static_cast<uint8_t>(Command::displayOff));
 		writeCommand(static_cast<uint8_t>(Command::setDisplayClockDiv));

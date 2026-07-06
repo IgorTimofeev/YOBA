@@ -2,30 +2,29 @@
 #include <YOBA/system.h>
 
 namespace YOBA {
-	SPIDisplay::SPIDisplay(
+	void SPIDisplay::setup(
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
 		const uint8_t DCPin,
 		const int8_t RSTPin,
-		const uint32_t SPIFrequencyHz
-	) :
-		_SPIDevice(
-			MOSIPin,
-			SCKPin,
-			SSPin,
-			DCPin,
-			SPIFrequencyHz
-		),
-		_RSTPin(RSTPin)
-	{
+		const uint32_t SPIFrequencyHz,
 
-	}
-
-	void SPIDisplay::setup() {
-		RenderingTarget::setup();
+		const Size& size,
+		const Rotation rotation,
+		const PixelOrder pixelOrder,
+		const ColorModel colorModel
+	) {
+		RenderingTarget::setup(
+			size,
+			rotation,
+			pixelOrder,
+			colorModel
+		);
 
 		// Reset pin
+		_RSTPin = RSTPin;
+
 		if (_RSTPin >= 0) {
 			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
 
@@ -33,7 +32,13 @@ namespace YOBA {
 		}
 
 		// SPI
-		_SPIDevice.setup();
+		_SPIDevice.setup(
+			MOSIPin,
+			SCKPin,
+			SSPin,
+			DCPin,
+			SPIFrequencyHz
+		);
 	}
 
 	void SPIDisplay::writeCommand(const uint8_t command) {

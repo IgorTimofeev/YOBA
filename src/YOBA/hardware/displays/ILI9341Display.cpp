@@ -3,7 +3,7 @@
 #include <cstring>
 
 namespace YOBA {
-	ILI9341Display::ILI9341Display(
+	void ILI9341Display::setup(
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
@@ -14,27 +14,20 @@ namespace YOBA {
 		const Size& size,
 		const Rotation rotation,
 		const ColorModel colorModel
-	) :
-		RenderingTarget(
-			size,
-			rotation,
-			PixelOrder::YNormalXNormal,
-			colorModel
-		),
-		SPIDisplay(
+	) {
+		SPIDisplay::setup(
 			MOSIPin,
 			SCKPin,
 			SSPin,
 			DCPin,
 			RSTPin,
-			SPIFrequencyHz
-		)
-	{
+			SPIFrequencyHz,
 
-	}
-
-	void ILI9341Display::setup() {
-		SPIDisplay::setup();
+			size,
+			rotation,
+			PixelOrder::YNormalXNormal,
+			colorModel
+		);
 
 		uint8_t b[16];
 
