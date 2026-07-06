@@ -15,7 +15,7 @@ namespace YOBA {
 				int8_t SSPin,
 				uint8_t DCPin,
 				int8_t RSTPin,
-				uint32_t frequencyHz
+				uint32_t SPIFrequencyHz
 			);
 
 			~SPIDisplay() override = default;

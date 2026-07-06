@@ -119,7 +119,7 @@ namespace YOBA {
 	void PaletteRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const RGB888Color& color) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565:
-				setPaletteValue(index, color.toRGB565().getValue());
+				setPaletteValue(index, color.toRGB565BE().getValue());
 				break;
 
 			case ColorModel::RGB666:

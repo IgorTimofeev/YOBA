@@ -8,14 +8,14 @@ namespace YOBA {
 		const int8_t SSPin,
 		const uint8_t DCPin,
 		const int8_t RSTPin,
-		const uint32_t frequencyHz
+		const uint32_t SPIFrequencyHz
 	) :
 		_SPIDevice(
 			MOSIPin,
 			SCKPin,
 			SSPin,
 			DCPin,
-			frequencyHz
+			SPIFrequencyHz
 		),
 		_RSTPin(RSTPin)
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "cstdlib"
+#include <cstdlib>
+#include <bit>
 
 namespace YOBA {
 	enum class ColorModel : uint8_t {
@@ -51,31 +52,6 @@ namespace YOBA {
 			ColorModel _model;
 	};
 
-	// -------------------------------- HSB --------------------------------
-
-	class HSBColor : Color {
-		public:
-			constexpr HSBColor(const float h, const float s, const float b) : Color(ColorModel::HSB), h(h), s(s), b(b) {
-			
-			}
-
-			RGB888Color toRgb888() const;
-
-			float getH() const;
-			void setH(float h);
-
-			float getS() const;
-			void setS(float s);
-
-			float getB() const;
-			void setB(float b);
-
-		private:
-			float h = 0;
-			float s = 0;
-			float b = 0;
-	};
-
 	// -------------------------------- ValueColor --------------------------------
 
 	template<typename TValue>
@@ -89,7 +65,7 @@ namespace YOBA {
 				return _value;
 			}
 			
-			void setValue(TValue value) {
+			constexpr void setValue(TValue value) {
 				this->_value = value;
 			}
 
@@ -142,9 +118,9 @@ namespace YOBA {
 		public:
 			constexpr RGB888Color(const uint8_t r, const uint8_t g, const uint8_t b) :
 				Color(ColorModel::RGB888),
-				r(r),
-				g(g),
-				b(b)
+				_r(r),
+				_g(g),
+				_b(b)
 			{
 			
 			}
@@ -161,20 +137,45 @@ namespace YOBA {
 			
 			}
 
-			uint8_t getR() const;
-			void setR(uint8_t r);
+			constexpr uint8_t getR() const {
+				return _r;
+			}
 
-			uint8_t getG() const;
-			void setG(uint8_t g);
+			constexpr void setR(const uint8_t r) {
+				_r = r;
+			}
 
-			uint8_t getB() const;
-			void setB(uint8_t b);
+			constexpr uint8_t getG() const {
+				return _g;
+			}
 
-			uint32_t toUint32() const;
+			constexpr void setG(const uint8_t g) {
+				_g = g;
+			}
 
-			constexpr RGB565Color toRGB565() const {
-				return RGB565Color(r >> 3 << 3 | g >> 5 | g >> 2 << 13 | b >> 3 << 8);
-				//		return Rgb565Color(((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3));
+			constexpr uint8_t getB() const {
+				return _b;
+			}
+
+			constexpr void setB(const uint8_t b) {
+				_b = b;
+			}
+
+			constexpr uint32_t toUint32() const {
+				return _r << 16 | _g << 8 | _b;
+			}
+
+			// RRRRRGGG GGGBBBBB
+			constexpr RGB565Color toRGB565LE() const {
+				return { toUint16RGB565LE() };
+			}
+
+			// GGGBBBBB RRRRRGGG
+			//
+			// Most of the displays expects you to send them colors in retarded big-endian format
+			// So it's 99.99% you should use this method
+			constexpr RGB565Color toRGB565BE() const {
+				return { std::byteswap(toUint16RGB565LE()) };
 			}
 
 			RGB666Color toRGB666() const;
@@ -183,9 +184,13 @@ namespace YOBA {
 			void interpolateTo(const RGB888Color& second, float position);
 
 		private:
-			uint8_t r = 0;
-			uint8_t g = 0;
-			uint8_t b = 0;
+			uint8_t _r = 0;
+			uint8_t _g = 0;
+			uint8_t _b = 0;
+
+			constexpr uint16_t toUint16RGB565LE() const {
+				return ((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3);
+			}
 	};
 
 	// -------------------------------- PaletteColor --------------------------------
@@ -201,18 +206,17 @@ namespace YOBA {
 			
 			}
 			
-			TIndex getIndex() const {
+			constexpr TIndex getIndex() const {
 				return _index;
 			}
 			
-			void setIndex(TIndex value) {
+			constexpr void setIndex(TIndex value) {
 				_index = value;
 			}
 		
 		private:
 			TIndex _index;
 	};
-
 
 	// -------------------------------- Bit8PaletteColor --------------------------------
 
@@ -226,4 +230,65 @@ namespace YOBA {
 			
 			}
 	};
+
+	// -------------------------------- HSBColor --------------------------------
+
+	class HSBColor : Color {
+		public:
+			constexpr HSBColor(const float h, const float s, const float b) : Color(ColorModel::HSB), _h(h), _s(s), _b(b) {
+
+			}
+
+			constexpr float getH() const {
+				return _h;
+			}
+
+			constexpr void setH(const float h) {
+				_h = h;
+			}
+
+			constexpr float getS() const {
+				return _s;
+			}
+
+			constexpr void setS(const float s) {
+				_s = s;
+			}
+
+			constexpr float getB() const {
+				return _b;
+			}
+
+			constexpr void setB(const float b) {
+				_b = b;
+			}
+
+			constexpr RGB888Color toRGB888() const {
+				const auto hueSector = _h * 6.0f;
+				const auto hueSectorIntegerPart = static_cast<uint8_t>(hueSector);
+				const auto hueSectorFractionalPart = hueSector - static_cast<float>(hueSectorIntegerPart);
+
+				const auto p = static_cast<uint8_t>(255.0f * _b * (1 - _s));
+				const auto q = static_cast<uint8_t>(255.0f * _b * (1 - hueSectorFractionalPart * _s));
+				const auto t = static_cast<uint8_t>(255.0f * _b * (1 - (1 - hueSectorFractionalPart) * _s));
+				const auto v = static_cast<uint8_t>(255.0f * _b);
+
+				switch (hueSectorIntegerPart) {
+					case 1: return { q, v, p };
+					case 2: return { p, v, t};
+					case 3: return { p, q, v };
+					case 4: return { t, p, v };
+					case 5: return { v, p, q };
+					default: return { v, t, p };
+				}
+			}
+
+		private:
+			float _h = 0;
+			float _s = 0;
+			float _b = 0;
+	};
+
+
+
 }

@@ -9,7 +9,7 @@ namespace YOBA {
 		const int8_t SSPin,
 		const uint8_t DCPin,
 		const int8_t RSTPin,
-		const uint32_t SPIFrequency,
+		const uint32_t SPIFrequencyHz,
 
 		const Size& size,
 		const Rotation rotation,
@@ -27,7 +27,7 @@ namespace YOBA {
 			SSPin,
 			DCPin,
 			RSTPin,
-			SPIFrequency
+			SPIFrequencyHz
 		)
 	{
 
@@ -211,11 +211,12 @@ namespace YOBA {
 		writeMADCTLCommand();
 	}
 
-	void ILI9341Display::setInverted(bool value) {
+	void ILI9341Display::setInverted(const bool value) {
 		this->writeCommand(value ? 0x21 : 0x20);
 	}
 
 	void ILI9341Display::writeMADCTLCommand() {
+		// LMAO seems like ILI9341 has reverse color order by default for some reason
 		auto data = MADCTL_BGR;
 
 		switch (getRotation()) {

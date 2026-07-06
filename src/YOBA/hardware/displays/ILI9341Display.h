@@ -10,16 +10,13 @@
 namespace YOBA {
 	class ILI9341Display : public SPIDisplay, public InvertibleDisplay {
 		public:
-			// Recommended SPI frequencies:
-			// Arduino: 40 MHz
-			// ESP-IDF: 60 MHz
 			ILI9341Display(
 				uint8_t MOSIPin,
 				uint8_t SCKPin,
 				int8_t SSPin,
 				uint8_t DCPin,
 				int8_t RSTPin,
-				uint32_t SPIFrequency,
+				uint32_t SPIFrequencyHz = 60'000'000,
 
 				const Size& size = Size(240, 320),
 				Rotation rotation = Rotation::none,
