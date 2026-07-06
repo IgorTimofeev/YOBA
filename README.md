@@ -1,7 +1,56 @@
 
 # YOBA | Your Breathtaking Application
 
-A comprehensive and fully independent UI framework written on modern C++ for embedded devices
+An independent and hardcore UI framework written on modern C++ for embedded devices.
+
+# Features
+
+- Classic OOP-based approach without bullshit
+- Tons of components like buttons, sliders, switches, text fields & scroll views
+- Fully automatic layouts
+- Animations & rendering transforms
+- Event system for external peripherals like touch screens & keyboards with possibility to create custom ones
+- Compact image & font format with a nice [tool](https://github.com/IgorTimofeev/YobaResourceConverter)
+to convert your dick pics into production-ready projects
+- A clear distinction between UI, renderers and rendering targets (screens, desktop windows, etc.),
+all of which can be used independently
+- Monochrome, RGB 565/666/888 & indexed colors support
+- Out-of-box drivers for the most popular displays like ILI9341, ST7789, ST7565, GC9A01, and SH1106
+- HAL for any MCU integration
+
+# Installation
+
+## ESP-IDF:
+
+First, you must enable RTTI (run-time type information), since complex components like combo boxes and
+selectors use `dynamic_cast`. On ESP-IDF RTTI is disabled by default to save some flash memory,
+but since we’re using an entire UI framework, a few bytes is a ridiculously small price
+to pay for such immense power. RTTI itself can be enabled via 
+
+
+`idf.py menuconfig` > `Compiler options` > `Enable C++ run-time type info (RTTI)`
+
+After this you can clone library and integrate it into your project.
+The wise path to do this is using submodules:
+
+`git submodule add https://github.com/IgorTimofeev/YOBA.git components/YOBA`
+
+Don't forget to add `YOBA` component to your `CMakeLists.txt`. It should look like this:
+
+```cmake
+file(GLOB_RECURSE my_sources
+    "*.*"
+)
+
+idf_component_register(
+    SRCS ${my_sources}
+    INCLUDE_DIRS "."
+    REQUIRES
+        YOBA
+)
+
+include_directories(.)
+```
 
 # Showcase
 

@@ -13,6 +13,7 @@
 #include <YOBA/core/margin.h>
 #include <YOBA/core/transform.h>
 #include <YOBA/core/color.h>
+#include <YOBA/core/text.h>
 #include <YOBA/core/glyph.h>
 #include <YOBA/core/font.h>
 #include <YOBA/core/gradient.h>

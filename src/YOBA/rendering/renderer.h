@@ -89,6 +89,6 @@ namespace YOBA {
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
-			inline void renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, uint8_t fontScale);
+			void renderGlyph(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const Glyph* glyph, uint8_t fontScale);
 	};
 }

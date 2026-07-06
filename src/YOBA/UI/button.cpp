@@ -90,7 +90,7 @@ namespace YOBA {
 				renderer->renderText(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + _contentMargin.getLeft() - _contentMargin.getRight(),
-						bounds.getYCenter() - font->getHeight(getFontScale()) / 2 + _contentMargin.getTop() - _contentMargin.getBottom()
+						bounds.getYCenter() - font->getLineHeight(getFontScale()) / 2 + _contentMargin.getTop() - _contentMargin.getBottom()
 					),
 					font,
 					color,

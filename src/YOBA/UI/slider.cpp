@@ -176,7 +176,7 @@ namespace YOBA {
 			height += _tickOffset + _bigTickLineLength;
 
 			if (_tickLabelFont) {
-				height += _tickLabelOffset + _tickLabelFont->getHeight();
+				height += _tickLabelOffset + _tickLabelFont->getLineHeight();
 			}
 		}
 		else {

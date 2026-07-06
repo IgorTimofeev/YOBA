@@ -13,108 +13,108 @@ namespace YOBA {
 				_glyphs,
 				_bitmap
 			) {
-
+				
 			}
-
+	
 		private:
 			constexpr static VariableWidthGlyph _glyphs[95] = {
-				VariableWidthGlyph(0, 5), //
-				VariableWidthGlyph(55, 2), // !
-				VariableWidthGlyph(77, 5), // "
-				VariableWidthGlyph(132, 6), // #
-				VariableWidthGlyph(198, 6), // $
-				VariableWidthGlyph(264, 6), // %
-				VariableWidthGlyph(330, 6), // &
-				VariableWidthGlyph(396, 3), // '
-				VariableWidthGlyph(429, 3), // (
-				VariableWidthGlyph(462, 3), // )
-				VariableWidthGlyph(495, 4), // *
-				VariableWidthGlyph(539, 4), // +
-				VariableWidthGlyph(583, 3), // ,
-				VariableWidthGlyph(616, 4), // -
-				VariableWidthGlyph(660, 2), // .
-				VariableWidthGlyph(682, 6), // /
-				VariableWidthGlyph(748, 6), // 0
-				VariableWidthGlyph(814, 3), // 1
-				VariableWidthGlyph(847, 6), // 2
-				VariableWidthGlyph(913, 6), // 3
-				VariableWidthGlyph(979, 6), // 4
-				VariableWidthGlyph(1045, 6), // 5
-				VariableWidthGlyph(1111, 6), // 6
-				VariableWidthGlyph(1177, 6), // 7
-				VariableWidthGlyph(1243, 6), // 8
-				VariableWidthGlyph(1309, 6), // 9
-				VariableWidthGlyph(1375, 2), // :
-				VariableWidthGlyph(1397, 3), // ;
-				VariableWidthGlyph(1430, 3), // <
-				VariableWidthGlyph(1463, 4), // =
-				VariableWidthGlyph(1507, 3), // >
-				VariableWidthGlyph(1540, 5), // ?
-				VariableWidthGlyph(1595, 8), // @
-				VariableWidthGlyph(1683, 6), // A
-				VariableWidthGlyph(1749, 6), // B
-				VariableWidthGlyph(1815, 6), // C
-				VariableWidthGlyph(1881, 6), // D
-				VariableWidthGlyph(1947, 6), // E
-				VariableWidthGlyph(2013, 6), // F
-				VariableWidthGlyph(2079, 6), // G
-				VariableWidthGlyph(2145, 6), // H
-				VariableWidthGlyph(2211, 2), // I
-				VariableWidthGlyph(2233, 6), // J
-				VariableWidthGlyph(2299, 6), // K
-				VariableWidthGlyph(2365, 6), // L
-				VariableWidthGlyph(2431, 6), // M
-				VariableWidthGlyph(2497, 6), // N
-				VariableWidthGlyph(2563, 6), // O
-				VariableWidthGlyph(2629, 6), // P
-				VariableWidthGlyph(2695, 6), // Q
-				VariableWidthGlyph(2761, 6), // R
-				VariableWidthGlyph(2827, 6), // S
-				VariableWidthGlyph(2893, 6), // T
-				VariableWidthGlyph(2959, 6), // U
-				VariableWidthGlyph(3025, 6), // V
-				VariableWidthGlyph(3091, 6), // W
-				VariableWidthGlyph(3157, 6), // X
-				VariableWidthGlyph(3223, 6), // Y
-				VariableWidthGlyph(3289, 6), // Z
-				VariableWidthGlyph(3355, 3), // [
-				VariableWidthGlyph(3388, 6), // Backslash
-				VariableWidthGlyph(3454, 3), // ]
-				VariableWidthGlyph(3487, 4), // ^
-				VariableWidthGlyph(3531, 4), // _
-				VariableWidthGlyph(3575, 3), // `
-				VariableWidthGlyph(3608, 6), // a
-				VariableWidthGlyph(3674, 6), // b
-				VariableWidthGlyph(3740, 6), // c
-				VariableWidthGlyph(3806, 6), // d
-				VariableWidthGlyph(3872, 6), // e
-				VariableWidthGlyph(3938, 6), // f
-				VariableWidthGlyph(4004, 6), // g
-				VariableWidthGlyph(4070, 6), // h
-				VariableWidthGlyph(4136, 2), // i
-				VariableWidthGlyph(4158, 6), // j
-				VariableWidthGlyph(4224, 6), // k
-				VariableWidthGlyph(4290, 6), // l
-				VariableWidthGlyph(4356, 6), // m
-				VariableWidthGlyph(4422, 6), // n
-				VariableWidthGlyph(4488, 6), // o
-				VariableWidthGlyph(4554, 6), // p
-				VariableWidthGlyph(4620, 6), // q
-				VariableWidthGlyph(4686, 6), // r
-				VariableWidthGlyph(4752, 6), // s
-				VariableWidthGlyph(4818, 6), // t
-				VariableWidthGlyph(4884, 6), // u
-				VariableWidthGlyph(4950, 6), // v
-				VariableWidthGlyph(5016, 6), // w
-				VariableWidthGlyph(5082, 6), // x
-				VariableWidthGlyph(5148, 6), // y
-				VariableWidthGlyph(5214, 6), // z
-				VariableWidthGlyph(5280, 4), // {
-				VariableWidthGlyph(5324, 2), // |
-				VariableWidthGlyph(5346, 4), // }
-				VariableWidthGlyph(5390, 6) // ~
+				{ 0, 5 }, //  
+				{ 55, 2 }, // !
+				{ 77, 5 }, // "
+				{ 132, 6 }, // #
+				{ 198, 6 }, // $
+				{ 264, 6 }, // %
+				{ 330, 6 }, // &
+				{ 396, 3 }, // '
+				{ 429, 3 }, // (
+				{ 462, 3 }, // )
+				{ 495, 4 }, // *
+				{ 539, 4 }, // +
+				{ 583, 3 }, // ,
+				{ 616, 4 }, // -
+				{ 660, 2 }, // .
+				{ 682, 6 }, // /
+				{ 748, 6 }, // 0
+				{ 814, 3 }, // 1
+				{ 847, 6 }, // 2
+				{ 913, 6 }, // 3
+				{ 979, 6 }, // 4
+				{ 1045, 6 }, // 5
+				{ 1111, 6 }, // 6
+				{ 1177, 6 }, // 7
+				{ 1243, 6 }, // 8
+				{ 1309, 6 }, // 9
+				{ 1375, 2 }, // :
+				{ 1397, 3 }, // ;
+				{ 1430, 3 }, // <
+				{ 1463, 4 }, // =
+				{ 1507, 3 }, // >
+				{ 1540, 5 }, // ?
+				{ 1595, 8 }, // @
+				{ 1683, 6 }, // A
+				{ 1749, 6 }, // B
+				{ 1815, 6 }, // C
+				{ 1881, 6 }, // D
+				{ 1947, 6 }, // E
+				{ 2013, 6 }, // F
+				{ 2079, 6 }, // G
+				{ 2145, 6 }, // H
+				{ 2211, 2 }, // I
+				{ 2233, 6 }, // J
+				{ 2299, 6 }, // K
+				{ 2365, 6 }, // L
+				{ 2431, 6 }, // M
+				{ 2497, 6 }, // N
+				{ 2563, 6 }, // O
+				{ 2629, 6 }, // P
+				{ 2695, 6 }, // Q
+				{ 2761, 6 }, // R
+				{ 2827, 6 }, // S
+				{ 2893, 6 }, // T
+				{ 2959, 6 }, // U
+				{ 3025, 6 }, // V
+				{ 3091, 6 }, // W
+				{ 3157, 6 }, // X
+				{ 3223, 6 }, // Y
+				{ 3289, 6 }, // Z
+				{ 3355, 3 }, // [
+				{ 3388, 6 }, // Backslash
+				{ 3454, 3 }, // ]
+				{ 3487, 4 }, // ^
+				{ 3531, 4 }, // _
+				{ 3575, 3 }, // `
+				{ 3608, 6 }, // a
+				{ 3674, 6 }, // b
+				{ 3740, 6 }, // c
+				{ 3806, 6 }, // d
+				{ 3872, 6 }, // e
+				{ 3938, 6 }, // f
+				{ 4004, 6 }, // g
+				{ 4070, 6 }, // h
+				{ 4136, 2 }, // i
+				{ 4158, 6 }, // j
+				{ 4224, 6 }, // k
+				{ 4290, 6 }, // l
+				{ 4356, 6 }, // m
+				{ 4422, 6 }, // n
+				{ 4488, 6 }, // o
+				{ 4554, 6 }, // p
+				{ 4620, 6 }, // q
+				{ 4686, 6 }, // r
+				{ 4752, 6 }, // s
+				{ 4818, 6 }, // t
+				{ 4884, 6 }, // u
+				{ 4950, 6 }, // v
+				{ 5016, 6 }, // w
+				{ 5082, 6 }, // x
+				{ 5148, 6 }, // y
+				{ 5214, 6 }, // z
+				{ 5280, 4 }, // {
+				{ 5324, 2 }, // |
+				{ 5346, 4 }, // }
+				{ 5390, 6 } // ~
 			};
-
+	
 			constexpr static uint8_t _bitmap[682] = {
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0x22, 0x00, 0x00, 0xA0, 0x0A, 0x00, 0x00, 0x00,
 				0x00, 0x00, 0x80, 0xF2, 0x29, 0x9F, 0x02, 0x00, 0x00, 0x00, 0x10, 0x4E, 0xE0, 0x40, 0x0F, 0x01,
@@ -158,7 +158,7 @@ namespace YOBA {
 				0x04, 0x00, 0x00, 0x00, 0x00, 0x44, 0x51, 0xB5, 0x45, 0x00, 0x00, 0x00, 0x00, 0x10, 0x29, 0x84,
 				0x12, 0x01, 0x00, 0x00, 0x00, 0x40, 0xA4, 0x10, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x1F, 0x42,
 				0x08, 0x1F, 0x00, 0x00, 0x00, 0x60, 0x12, 0x62, 0x00, 0x00, 0x54, 0x05, 0x00, 0xC0, 0x08, 0xC9,
-				0x00, 0x00, 0x00, 0x00, 0x80, 0x50, 0x21, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x80, 0x50, 0x21, 0x00, 0x00, 0x00, 
 			};
 	};
 }

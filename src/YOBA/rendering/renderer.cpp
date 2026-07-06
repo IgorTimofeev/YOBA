@@ -953,19 +953,23 @@ namespace YOBA {
 				point.getX(),
 				point.getY(),
 				Font::missingGlyphWidth * fontScale,
-				font->getHeight() * fontScale
+				font->getLineHeight() * fontScale
 			),
 			color
 		);
 	}
 
-	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const Glyph* glyph, const uint8_t fontScale) {
-		auto bitIndex = glyph->getBitmapIndex();
+	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const Glyph* glyph, const uint8_t fontScale) {
+		auto bitIndex =
+			font->isConstantGlyphWidth()
+			? (codepoint - font->getFromCodepoint()) * (font->getConstantGlyphWidth() * font->getLineHeight())
+			: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getBitmapIndex();
+
 		uint8_t bitmapByte;
 
 		// Non-scaled fonts can be drawn a little bit faster
 		if (fontScale == 1) {
-			for (uint8_t j = 0; j < font->getHeight(); j++) {
+			for (uint8_t j = 0; j < font->getLineHeight(); j++) {
 				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
@@ -981,7 +985,7 @@ namespace YOBA {
 				x = point.getX(),
 				y = point.getY();
 
-			for (uint8_t j = 0; j < font->getHeight(); j++) {
+			for (uint8_t j = 0; j < font->getLineHeight(); j++) {
 				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
@@ -1005,7 +1009,7 @@ namespace YOBA {
 		if (
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getHeight(fontScale) < viewport.getY()
+			|| point.getY() + font->getLineHeight(fontScale) < viewport.getY()
 			|| !color
 		)
 			return;
@@ -1020,6 +1024,7 @@ namespace YOBA {
 				point,
 				font,
 				color,
+				codepoint,
 				glyph,
 				fontScale
 			);
@@ -1037,7 +1042,7 @@ namespace YOBA {
 		if (
 			point.getX() > viewportX2
 			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getHeight(fontScale) < viewport.getY()
+			|| point.getY() + font->getLineHeight(fontScale) < viewport.getY()
 			|| !color
 		)
 			return;
@@ -1048,7 +1053,8 @@ namespace YOBA {
 
 		while (charIndex < text.length()) {
 			// Trying to find glyph matched to char
-			const auto glyph = font->getGlyph(UTF8::nextCodepoint(text, charIndex));
+			const auto codepoint = UTF8::nextCodepoint(text, charIndex);
+			const auto glyph = font->getGlyph(codepoint);
 
 			// If glyph was found in bitmap & can be rendered as "human-readable"
 			// For example, U+007F "DE" symbol often has zero width in some fonts
@@ -1058,12 +1064,10 @@ namespace YOBA {
 				// Rendering current glyph only if it's in viewport
 				if (x2 > viewport.getX()) {
 					renderGlyph(
-						Point(
-							x,
-							point.getY()
-						),
+						Point(x, point.getY()),
 						font,
 						color,
+						codepoint,
 						glyph,
 						fontScale
 					);

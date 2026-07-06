@@ -1,7 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include "vector2.h"
+
+#include <YOBA/core/vector2.h>
 
 namespace YOBA {
 	class Size {

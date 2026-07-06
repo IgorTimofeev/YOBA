@@ -13,108 +13,108 @@ namespace YOBA {
 				_glyphs,
 				_bitmap
 			) {
-
+				
 			}
-
+	
 		private:
-			constexpr static Glyph _glyphs[95] = {
-				Glyph(0), //
-				Glyph(60), // !
-				Glyph(120), // "
-				Glyph(180), // #
-				Glyph(240), // $
-				Glyph(300), // %
-				Glyph(360), // &
-				Glyph(420), // '
-				Glyph(480), // (
-				Glyph(540), // )
-				Glyph(600), // *
-				Glyph(660), // +
-				Glyph(720), // ,
-				Glyph(780), // -
-				Glyph(840), // .
-				Glyph(900), // /
-				Glyph(960), // 0
-				Glyph(1020), // 1
-				Glyph(1080), // 2
-				Glyph(1140), // 3
-				Glyph(1200), // 4
-				Glyph(1260), // 5
-				Glyph(1320), // 6
-				Glyph(1380), // 7
-				Glyph(1440), // 8
-				Glyph(1500), // 9
-				Glyph(1560), // :
-				Glyph(1620), // ;
-				Glyph(1680), // <
-				Glyph(1740), // =
-				Glyph(1800), // >
-				Glyph(1860), // ?
-				Glyph(1920), // @
-				Glyph(1980), // A
-				Glyph(2040), // B
-				Glyph(2100), // C
-				Glyph(2160), // D
-				Glyph(2220), // E
-				Glyph(2280), // F
-				Glyph(2340), // G
-				Glyph(2400), // H
-				Glyph(2460), // I
-				Glyph(2520), // J
-				Glyph(2580), // K
-				Glyph(2640), // L
-				Glyph(2700), // M
-				Glyph(2760), // N
-				Glyph(2820), // O
-				Glyph(2880), // P
-				Glyph(2940), // Q
-				Glyph(3000), // R
-				Glyph(3060), // S
-				Glyph(3120), // T
-				Glyph(3180), // U
-				Glyph(3240), // V
-				Glyph(3300), // W
-				Glyph(3360), // X
-				Glyph(3420), // Y
-				Glyph(3480), // Z
-				Glyph(3540), // [
-				Glyph(3600), // Backslash
-				Glyph(3660), // ]
-				Glyph(3720), // ^
-				Glyph(3780), // _
-				Glyph(3840), // `
-				Glyph(3900), // a
-				Glyph(3960), // b
-				Glyph(4020), // c
-				Glyph(4080), // d
-				Glyph(4140), // e
-				Glyph(4200), // f
-				Glyph(4260), // g
-				Glyph(4320), // h
-				Glyph(4380), // i
-				Glyph(4440), // j
-				Glyph(4500), // k
-				Glyph(4560), // l
-				Glyph(4620), // m
-				Glyph(4680), // n
-				Glyph(4740), // o
-				Glyph(4800), // p
-				Glyph(4860), // q
-				Glyph(4920), // r
-				Glyph(4980), // s
-				Glyph(5040), // t
-				Glyph(5100), // u
-				Glyph(5160), // v
-				Glyph(5220), // w
-				Glyph(5280), // x
-				Glyph(5340), // y
-				Glyph(5400), // z
-				Glyph(5460), // {
-				Glyph(5520), // |
-				Glyph(5580), // }
-				Glyph(5640) // ~
+			constexpr static ConstantWidthGlyph _glyphs[95] = {
+				{}, //  
+				{}, // !
+				{}, // "
+				{}, // #
+				{}, // $
+				{}, // %
+				{}, // &
+				{}, // '
+				{}, // (
+				{}, // )
+				{}, // *
+				{}, // +
+				{}, // ,
+				{}, // -
+				{}, // .
+				{}, // /
+				{}, // 0
+				{}, // 1
+				{}, // 2
+				{}, // 3
+				{}, // 4
+				{}, // 5
+				{}, // 6
+				{}, // 7
+				{}, // 8
+				{}, // 9
+				{}, // :
+				{}, // ;
+				{}, // <
+				{}, // =
+				{}, // >
+				{}, // ?
+				{}, // @
+				{}, // A
+				{}, // B
+				{}, // C
+				{}, // D
+				{}, // E
+				{}, // F
+				{}, // G
+				{}, // H
+				{}, // I
+				{}, // J
+				{}, // K
+				{}, // L
+				{}, // M
+				{}, // N
+				{}, // O
+				{}, // P
+				{}, // Q
+				{}, // R
+				{}, // S
+				{}, // T
+				{}, // U
+				{}, // V
+				{}, // W
+				{}, // X
+				{}, // Y
+				{}, // Z
+				{}, // [
+				{}, // Backslash
+				{}, // ]
+				{}, // ^
+				{}, // _
+				{}, // `
+				{}, // a
+				{}, // b
+				{}, // c
+				{}, // d
+				{}, // e
+				{}, // f
+				{}, // g
+				{}, // h
+				{}, // i
+				{}, // j
+				{}, // k
+				{}, // l
+				{}, // m
+				{}, // n
+				{}, // o
+				{}, // p
+				{}, // q
+				{}, // r
+				{}, // s
+				{}, // t
+				{}, // u
+				{}, // v
+				{}, // w
+				{}, // x
+				{}, // y
+				{}, // z
+				{}, // {
+				{}, // |
+				{}, // }
+				{} // ~
 			};
-
+	
 			constexpr static uint8_t _bitmap[713] = {
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x10, 0x04, 0x41, 0x00, 0x04, 0x01, 0x00, 0xDB,
 				0xB6, 0x01, 0x00, 0x00, 0x00, 0x00, 0xB0, 0x6D, 0xDF, 0xB6, 0x7D, 0xDB, 0x06, 0x00, 0x1C, 0x37,
@@ -160,7 +160,7 @@ namespace YOBA {
 				0x7D, 0xDB, 0x06, 0x00, 0x00, 0xB0, 0x11, 0xC4, 0xB6, 0x6D, 0x00, 0x00, 0x00, 0xDB, 0xB6, 0x7D,
 				0x18, 0x06, 0x00, 0x00, 0xF0, 0x71, 0xDC, 0xF0, 0x7D, 0x00, 0xC0, 0x71, 0xC4, 0x71, 0x10, 0x1C,
 				0x07, 0x00, 0x04, 0x41, 0x10, 0x04, 0x41, 0x10, 0x00, 0x70, 0x1C, 0x04, 0xC7, 0x11, 0xC7, 0x01,
-				0x00, 0x00, 0x80, 0x7D, 0xDF, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x80, 0x7D, 0xDF, 0x00, 0x00, 0x00, 0x00, 
 			};
 	};
 }

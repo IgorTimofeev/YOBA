@@ -54,7 +54,7 @@ namespace YOBA {
 		if (!font)
 			return;
 
-		const auto fontHeight = font->getHeight(getFontScale());
+		const auto fontHeight = font->getLineHeight(getFontScale());
 		const auto& text = getText();
 
 		// Placeholder

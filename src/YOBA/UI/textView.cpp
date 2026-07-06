@@ -1,4 +1,5 @@
 #include <YOBA/UI/textView.h>
+#include <YOBA/core/text.h>
 
 namespace YOBA {
 	TextView::TextView(const Font* font, const Color* foreground) {
@@ -39,7 +40,8 @@ namespace YOBA {
 
 			_wrappedLines.clear();
 
-			font->wrap(
+			Text::wrap(
+				font,
 				getText(),
 				getFontScale(),
 				availableSize.getWidth(),
@@ -47,7 +49,7 @@ namespace YOBA {
 					if (width > result.getWidth())
 						result.setWidth(width);
 
-					result.setHeight(result.getHeight() + font->getHeight(getFontScale()));
+					result.setHeight(result.getHeight() + font->getLineHeight(getFontScale()));
 
 					_wrappedLines.push_back(line);
 				}
@@ -58,7 +60,7 @@ namespace YOBA {
 
 		return {
 			font->getWidth(getText(), getFontScale()),
-			font->getHeight(getFontScale())
+			font->getLineHeight(getFontScale())
 		};
 	}
 
@@ -85,7 +87,7 @@ namespace YOBA {
 					getFontScale()
 				);
 
-				position.setY(position.getY() + font->getHeight(getFontScale()));
+				position.setY(position.getY() + font->getLineHeight(getFontScale()));
 			}
 		}
 		else {

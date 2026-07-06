@@ -20,9 +20,9 @@ namespace YOBA {
 				const Size& size,
 				const uint8_t* bitmap
 			) :
-				flags(flags),
-				size(size),
-				bitmap(bitmap)
+				_flags(flags),
+				_size(size),
+				_bitmap(bitmap)
 			{
 			
 			}
@@ -32,8 +32,8 @@ namespace YOBA {
 			const uint8_t* getBitmap() const;
 
 		private:
-			const uint8_t flags;
-			const Size size;
-			const uint8_t* bitmap;
+			const uint8_t _flags;
+			const Size _size;
+			const uint8_t* _bitmap;
 	};
 }

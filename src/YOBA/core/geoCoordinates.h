@@ -9,15 +9,15 @@
 namespace YOBA {
 	class GeoCoordinates {
 		public:
-			GeoCoordinates(const float latitude, const float longitude, const float altitude) : latitude(latitude), longitude(longitude), altitude(altitude) {
+			constexpr GeoCoordinates(const float latitude, const float longitude, const float altitude) : latitude(latitude), longitude(longitude), altitude(altitude) {
 
 			}
 
-			GeoCoordinates() : GeoCoordinates(0, 0, 0) {
+			constexpr GeoCoordinates() : GeoCoordinates(0, 0, 0) {
 
 			}
 
-			explicit GeoCoordinates(const Vector3F& cartesian, const float radius) {
+			GeoCoordinates(const Vector3F& cartesian, const float radius) {
 				const float length = cartesian.getLength();
 
 				latitude = std::asinf(cartesian.getZ() / length);
@@ -25,7 +25,7 @@ namespace YOBA {
 				altitude = length - radius;
 			}
 
-			explicit GeoCoordinates(const Vector3F& cartesian) : GeoCoordinates(cartesian, equatorialRadiusMeters) {
+			GeoCoordinates(const Vector3F& cartesian) : GeoCoordinates(cartesian, equatorialRadiusMeters) {
 
 			}
 

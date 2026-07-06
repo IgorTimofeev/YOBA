@@ -5,29 +5,34 @@
 namespace YOBA {
 	class Glyph {
 		public:
-			constexpr explicit Glyph(const uint32_t bitmapIndex) :  bitmapIndex(bitmapIndex) {
+			constexpr Glyph() {
 
 			}
+	};
 
-			uint32_t getBitmapIndex() const {
-				return bitmapIndex;
+	class ConstantWidthGlyph : public Glyph {
+		public:
+			constexpr ConstantWidthGlyph() {
+
 			}
-
-		private:
-			uint32_t bitmapIndex;
 	};
 
 	class VariableWidthGlyph : public Glyph {
 		public:
-			constexpr VariableWidthGlyph(const uint32_t bitmapIndex, const uint8_t width) : Glyph(bitmapIndex), width(width) {
+			constexpr VariableWidthGlyph(const uint32_t bitmapIndex, const uint8_t width) : _bitmapIndex(bitmapIndex), _width(width) {
 
 			}
 
-			uint8_t getWidth() const {
-				return width;
+			constexpr uint32_t getBitmapIndex() const {
+				return _bitmapIndex;
+			}
+
+			constexpr uint8_t getWidth() const {
+				return _width;
 			}
 
 		private:
-			const uint8_t width = 0;
+			const uint32_t _bitmapIndex;
+			const uint8_t _width = 0;
 	};
 }

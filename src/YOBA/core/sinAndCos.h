@@ -6,15 +6,15 @@
 namespace YOBA {
 	class SinAndCos {
 		public:
-			explicit SinAndCos() : _sin(0), _cos(0) {
+			constexpr SinAndCos() : _sin(0), _cos(0) {
 
 			}
 
-			explicit SinAndCos(const float angleDeg) : _sin(std::sinf(angleDeg)), _cos(std::cosf(angleDeg)) {
+			constexpr SinAndCos(const float angleDeg) : _sin(std::sinf(angleDeg)), _cos(std::cosf(angleDeg)) {
 
 			}
 
-			float getSin() const {
+			constexpr float getSin() const {
 				return _sin;
 			}
 
@@ -22,7 +22,7 @@ namespace YOBA {
 				_sin = sin;
 			}
 
-			float getCos() const {
+			constexpr float getCos() const {
 				return _cos;
 			}
 

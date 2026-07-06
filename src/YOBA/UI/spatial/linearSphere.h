@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "linearMesh.h"
 
 namespace YOBA::spatial {
