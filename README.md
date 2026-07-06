@@ -61,7 +61,11 @@ idf_component_register(
 include_directories(.)
 ```
 
-# Direct rendering
+## Direct rendering
+
+You can easily reject all these trendy OOP features and render your interface directly with minimal overhead.
+Of course this approach is equivalent to voluntary castration for complex UIs, but it's perfectly reasonable
+for simple applications:
 
 ```c++
 #include <freertos/FreeRTOS.h>
@@ -77,68 +81,69 @@ include_directories(.)
 
 using namespace YOBA;
 
-// Choosing display driver to render our stuff
+// Choosing display driver to render our stuff. Replace GPIOs with yours
 ILI9341Display display {
-	GPIO_NUM_23,
-	GPIO_NUM_18,
-	GPIO_NUM_17,
-	GPIO_NUM_16,
-	GPIO_NUM_NC,
-	60'000'000
+    GPIO_NUM_23,
+    GPIO_NUM_18,
+    GPIO_NUM_17,
+    GPIO_NUM_16,
+    GPIO_NUM_NC,
+    60'000'000
 };
 
-// Choosing renderer
+// RGB565 is a good compromise between RAM/performance
 RGB565Renderer renderer {};
 
-// Defining some fonts & colors to use
+// Using one of standart fonts
 constexpr static Unscii16Font font {};
 constexpr static uint8_t fontScale = 3;
 
+// Defining some colors
 constexpr static RGB565Color backgroundColor = RGB888Color(0xFFFFFF).toRGB565BE();
 constexpr static RGB565Color textColor = RGB888Color(0x000000).toRGB565BE();
 
 extern "C" void app_main(void) {
-	// Initializing display
-	display.setup();
+    // Initializing display
+    display.setup();
 
-	// Assigning display as rendering target
-	renderer.setTarget(&display);
+    // Assigning display as rendering target
+    renderer.setTarget(&display);
 
-	// Display is turned off by default to prevent random memory garbage to be shown
+    // Display is turned off by default to prevent random memory garbage to be shown
     // So we should at least turn it on
-	display.turnOn();
+    display.turnOn();
 
-	while (true) {
-		// Clearing display with solid color
-		renderer.clear(&backgroundColor);
+    while (true) {
+        // Clearing display with solid color
+        renderer.clear(&backgroundColor);
 
-		// Creating a string with current uptime that looks like 00:12
-		const auto uptimeMicroseconds = esp_timer_get_time();
-		const auto uptimeMinutes = uptimeMicroseconds / 60'000'000;
-		const auto uptimeSeconds = uptimeMicroseconds % 60'000'000 / 1'000'000;
+        // Creating a string with current uptime that looks like 00:12
+        const auto uptimeMicroseconds = esp_timer_get_time();
+        const auto uptimeMinutes = uptimeMicroseconds / 60'000'000;
+        const auto uptimeSeconds = uptimeMicroseconds % 60'000'000 / 1'000'000;
 
-		char text[24];
-		std::snprintf(text, sizeof(text), "%02lld:%02lld", uptimeMinutes, uptimeSeconds);
+        char text[24];
+        std::snprintf(text, sizeof(text), "%02lld:%02lld", uptimeMinutes, uptimeSeconds);
 
-		// Rendering current uptime on center of display
-		renderer.renderText(
-			display.getSize().getCenter() - font.getSize(text, fontScale).getCenter(),
-			&font,
-			&textColor,
-			text,
-			fontScale
-		);
+        // Rendering current uptime on center of display
+        renderer.renderText(
+            display.getSize().getCenter() - font.getSize(text, fontScale).getCenter(),
+            &font,
+            &textColor,
+            text,
+            fontScale
+        );
 
-		// Sending pixel data to display
-		renderer.flush();
+        // Sending pixel data to display
+        renderer.flush();
 
-		// Waiting for a while to achieve ~30 FPS
-		vTaskDelay(pdMS_TO_TICKS(1000 / 30));
-	}
+        // Waiting for a while to achieve ~30 FPS
+        vTaskDelay(pdMS_TO_TICKS(1000 / 30));
+    }
 }
 ```
 
-# Result
+### Result
 
 <img width="300" src="https://github.com/user-attachments/assets/8e86f467-7826-44c1-a4ab-6aca1dbe8930" alt=".!."/>
 
