@@ -129,7 +129,7 @@ namespace YOBA::system {
 		transaction.length = 8;
 		transaction.user = this;
 
-		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction));
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
 	}
 
 	bool SPIDevice::write(const std::span<const uint8_t> data) {
@@ -138,7 +138,7 @@ namespace YOBA::system {
 		transaction.tx_buffer = data.data();
 		transaction.user = this;
 
-		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction));
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
 	}
 
 	void SPIDevice::setCommandMode(const bool value) {
@@ -148,8 +148,8 @@ namespace YOBA::system {
 	// -------------------------------- I2C --------------------------------
 
 	I2CDevice::I2CDevice(
-		const uint8_t SCLPin,
 		const uint8_t SDAPin,
+		const uint8_t SCLPin,
 		const uint16_t address,
 		const uint32_t frequencyHz
 	) :
@@ -183,11 +183,11 @@ namespace YOBA::system {
 	}
 
 	bool I2CDevice::read(const std::span<uint8_t> data) const {
-		return ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_receive(_deviceHandle, data.data(), data.size(), 1'000));
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_receive(_deviceHandle, data.data(), data.size(), 1'000)) == ESP_OK;
 	}
 
 	bool I2CDevice::write(const std::span<const uint8_t> data) const {
-		return ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit(_deviceHandle, data.data(), data.size(), 1'000));
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit(_deviceHandle, data.data(), data.size(), 1'000)) == ESP_OK;
 	}
 }
 

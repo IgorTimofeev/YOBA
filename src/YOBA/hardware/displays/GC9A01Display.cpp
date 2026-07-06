@@ -18,7 +18,7 @@ namespace YOBA {
 		RenderingTarget(
 			size,
 			rotation,
-			PixelOrder::XY,
+			PixelOrder::XNormalYNormal,
 			colorModel
 		),
 		SPIDisplay(

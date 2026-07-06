@@ -17,127 +17,89 @@
 #include "touchPoint.h"
 
 namespace YOBA {
-	#define I2C_ADDR_FT6336U 0x38
+	enum class FT6336UGMode : uint8_t {
+		pollingMode,
+		triggerMode
+	};
 
-	// Touch Parameter
-	#define FT6336U_PRES_DOWN 0x2
-	#define FT6336U_COORD_UD  0x1
+	enum class FT6336UCtrlMode : uint8_t {
+		keepActiveMode,
+		switchToMonitorMode
+	};
 
-	// Registers
-	#define FT6336U_ADDR_DEVICE_MODE 	0x00
-	typedef enum {
-		working_mode = 0b000,
-		factory_mode = 0b100,
-	} DEVICE_MODE_Enum;
-	#define FT6336U_ADDR_GESTURE_ID     0x01
-	#define FT6336U_ADDR_TD_STATUS 		0x02
-
-	#define FT6336U_ADDR_TOUCH1_EVENT 	0x03
-	#define FT6336U_ADDR_TOUCH1_ID 		0x05
-	#define FT6336U_ADDR_TOUCH1_X 		0x03
-	#define FT6336U_ADDR_TOUCH1_Y 		0x05
-	#define FT6336U_ADDR_TOUCH1_WEIGHT  0x07
-	#define FT6336U_ADDR_TOUCH1_MISC    0x08
-
-	#define FT6336U_ADDR_TOUCH2_EVENT 	0x09
-	#define FT6336U_ADDR_TOUCH2_ID 		0x0B
-	#define FT6336U_ADDR_TOUCH2_X 		0x09
-	#define FT6336U_ADDR_TOUCH2_Y 		0x0B
-	#define FT6336U_ADDR_TOUCH2_WEIGHT  0x0D
-	#define FT6336U_ADDR_TOUCH2_MISC    0x0E
-
-	#define FT6336U_ADDR_THRESHOLD          0x80
-	#define FT6336U_ADDR_FILTER_COE         0x85
-	#define FT6336U_ADDR_CTRL               0x86
-	typedef enum {
-		keep_active_mode = 0,
-		switch_to_monitor_mode = 1,
-	} CTRL_MODE_Enum;
-	#define FT6336U_ADDR_TIME_ENTER_MONITOR 0x87
-	#define FT6336U_ADDR_ACTIVE_MODE_RATE   0x88
-	#define FT6336U_ADDR_MONITOR_MODE_RATE  0x89
-
-	#define FT6336U_ADDR_RADIAN_VALUE           0x91
-	#define FT6336U_ADDR_OFFSET_LEFT_RIGHT      0x92
-	#define FT6336U_ADDR_OFFSET_UP_DOWN         0x93
-	#define FT6336U_ADDR_DISTANCE_LEFT_RIGHT    0x94
-	#define FT6336U_ADDR_DISTANCE_UP_DOWN       0x95
-	#define FT6336U_ADDR_DISTANCE_ZOOM          0x96
-
-	#define FT6336U_ADDR_LIBRARY_VERSION_H  0xA1
-	#define FT6336U_ADDR_LIBRARY_VERSION_L  0xA2
-	#define FT6336U_ADDR_CHIP_ID            0xA3
-	#define FT6336U_ADDR_G_MODE             0xA4
-	typedef enum {
-		pollingMode = 0,
-		triggerMode = 1,
-	} G_MODE_Enum;
-	#define FT6336U_ADDR_POWER_MODE         0xA5
-	#define FT6336U_ADDR_FIRMARE_ID         0xA6
-	#define FT6336U_ADDR_FOCALTECH_ID       0xA8
-	#define FT6336U_ADDR_RELEASE_CODE_ID    0xAF
-	#define FT6336U_ADDR_STATE              0xBC
-
-	class Application;
+	enum class FT6336UDeviceMode : uint8_t {
+		workingMode,
+		factoryMode
+	};
 
 	class FT6336UTouchPanel : public TouchPanel {
 		public:
-			FT6336UTouchPanel(uint8_t SCLPin, uint8_t SDAPin, int8_t RSTPin, uint8_t INTPin);
+			FT6336UTouchPanel(
+				uint8_t SDAPin,
+				uint8_t SCLPin,
+				int8_t RSTPin,
+				uint8_t INTPin,
+
+				uint8_t I2CAddress = defaultI2CAddress,
+				uint32_t I2CFrequencyHz = 400'000
+			);
+
+			constexpr static uint8_t defaultI2CAddress = 0x38;
 
 			void setup();
 			void tick() override;
 
-			uint8_t read_device_mode();
-			void write_device_mode(DEVICE_MODE_Enum);
-			uint8_t read_gesture_id();
-			uint8_t read_td_status();
-			uint8_t read_touch_number();
-			uint16_t read_touch1_x();
-			uint16_t read_touch1_y();
-			uint8_t read_touch1_event();
-			uint8_t read_touch1_id();
-			uint8_t read_touch1_weight();
-			uint8_t read_touch1_misc();
-			uint16_t read_touch2_x();
-			uint16_t read_touch2_y();
-			uint8_t read_touch2_event();
-			uint8_t read_touch2_id();
-			uint8_t read_touch2_weight();
-			uint8_t read_touch2_misc();
+			FT6336UDeviceMode readDeviceMode() const;
+			void writeDeviceMode(FT6336UDeviceMode) const;
+			uint8_t readGestureID() const;
+			uint8_t readTDStatus() const;
+			uint8_t readTouchNumber() const;
+			uint16_t readTouch1X() const;
+			uint16_t readTouch1Y() const;
+			uint8_t readTouch1Event() const;
+			uint8_t readTouch1ID() const;
+			uint8_t readTouch1Weight() const;
+			uint8_t readTouch1Misc() const;
+			uint16_t readTouch2X() const;
+			uint16_t readTouch2Y() const;
+			uint8_t readTouch2Event() const;
+			uint8_t readTouch2ID() const;
+			uint8_t readTouch2Weight() const;
+			uint8_t readTouch2Misc() const;
 
 			// Mode Parameter Register
-			uint8_t read_touch_threshold();
-			uint8_t read_filter_coefficient();
-			uint8_t read_ctrl_mode();
-			void write_ctrl_mode(CTRL_MODE_Enum mode);
-			uint8_t read_time_period_enter_monitor();
-			uint8_t read_active_rate();
-			uint8_t read_monitor_rate();
+			uint8_t readTouchThreshold() const;
+			uint8_t readFilterCoefficient() const;
+			FT6336UCtrlMode readCtrlMode() const;
+			void writeCtrlMode(FT6336UCtrlMode mode) const;
+			uint8_t readTimePeriodEnterMonitor() const;
+			uint8_t readActiveRate() const;
+			uint8_t readMonitorRate() const;
 
-			// Gestrue Parameter Register
-			uint8_t read_radian_value();
-			void write_radian_value(uint8_t val);
-			uint8_t read_offset_left_right();
-			void write_offset_left_right(uint8_t val);
-			uint8_t read_offset_up_down();
-			void write_offset_up_down(uint8_t val);
-			uint8_t read_distance_left_right();
-			void write_distance_left_right(uint8_t val);
-			uint8_t read_distance_up_down();
-			void write_distance_up_down(uint8_t val);
-			uint8_t read_distance_zoom();
-			void write_distance_zoom(uint8_t val);
+			// Gesture Parameter Register
+			uint8_t readRadianValue() const;
+			void writeRadianValue(uint8_t val) const;
+			uint8_t readOffsetLeftRight() const;
+			void writeOffsetLeftRight(uint8_t val) const;
+			uint8_t readOffsetUpDown() const;
+			void writeOffsetUpDown(uint8_t val) const;
+			uint8_t readDistanceLeftRight() const;
+			void writeDistanceLeftRight(uint8_t val) const;
+			uint8_t readDistanceUpDown() const;
+			void writeDistanceUpDown(uint8_t val) const;
+			uint8_t readDistanceZoom() const;
+			void writeDistanceZoom(uint8_t val) const;
 
 			// System Information
-			uint16_t read_library_version();
-			uint8_t read_chip_id();
-			uint8_t read_g_mode();
-			void write_g_mode(G_MODE_Enum mode);
-			uint8_t read_pwrmode();
-			uint8_t read_firmware_id();
-			uint8_t read_focaltech_id();
-			uint8_t read_release_code_id();
-			uint8_t read_state();
+			uint16_t readLibraryVersion() const;
+			uint8_t readChipID() const;
+			FT6336UGMode readGMode() const;
+			void writeGMode(FT6336UGMode mode) const;
+			uint8_t readPwrmode() const;
+			uint8_t readFirmwareID() const;
+			uint8_t readFocaltechID() const;
+			uint8_t readReleaseCodeID() const;
+			uint8_t readState() const;
 
 		private:
 			system::I2CDevice _I2CDevice;
@@ -152,14 +114,62 @@ namespace YOBA {
 			static IRAM_ATTR void interruptHandler(void* args);
 
 			TouchPoint _touchPoints[2] {
-				TouchPoint(),
-				TouchPoint()
+				{},
+				{}
 			};
 
 			bool _wasTouched = false;
 			bool _wasPinched = false;
 
-			Point readOrientedPoint1(const RenderingTarget* target);
-			Point readOrientedPoint2(const RenderingTarget* target);
+			Point readOrientedPoint1(const RenderingTarget* target) const;
+			Point readOrientedPoint2(const RenderingTarget* target) const;
+			
+			// Touch Parameter
+			constexpr static uint8_t PRES_DOWN = 0x02;
+			constexpr static uint8_t COORD_UD  = 0x01;
+
+			// Registers
+			constexpr static uint8_t ADDR_DEVICE_MODE 	= 0x00;
+			constexpr static uint8_t ADDR_GESTURE_ID     = 0x01;
+			constexpr static uint8_t ADDR_TD_STATUS 		= 0x02;
+
+			constexpr static uint8_t ADDR_TOUCH1_EVENT 	= 0x03;
+			constexpr static uint8_t ADDR_TOUCH1_ID 		= 0x05;
+			constexpr static uint8_t ADDR_TOUCH1_X 		= 0x03;
+			constexpr static uint8_t ADDR_TOUCH1_Y 		= 0x05;
+			constexpr static uint8_t ADDR_TOUCH1_WEIGHT  = 0x07;
+			constexpr static uint8_t ADDR_TOUCH1_MISC    = 0x08;
+
+			constexpr static uint8_t ADDR_TOUCH2_EVENT 	= 0x09;
+			constexpr static uint8_t ADDR_TOUCH2_ID 		= 0x0B;
+			constexpr static uint8_t ADDR_TOUCH2_X 		= 0x09;
+			constexpr static uint8_t ADDR_TOUCH2_Y 		= 0x0B;
+			constexpr static uint8_t ADDR_TOUCH2_WEIGHT  = 0x0D;
+			constexpr static uint8_t ADDR_TOUCH2_MISC    = 0x0E;
+
+			constexpr static uint8_t ADDR_THRESHOLD          = 0x80;
+			constexpr static uint8_t ADDR_FILTER_COE         = 0x85;
+			constexpr static uint8_t ADDR_CTRL               = 0x86;
+			constexpr static uint8_t ADDR_TIME_ENTER_MONITOR = 0x87;
+			constexpr static uint8_t ADDR_ACTIVE_MODE_RATE   = 0x88;
+			constexpr static uint8_t ADDR_MONITOR_MODE_RATE  = 0x89;
+
+			constexpr static uint8_t ADDR_RADIAN_VALUE           = 0x91;
+			constexpr static uint8_t ADDR_OFFSET_LEFT_RIGHT      = 0x92;
+			constexpr static uint8_t ADDR_OFFSET_UP_DOWN         = 0x93;
+			constexpr static uint8_t ADDR_DISTANCE_LEFT_RIGHT    = 0x94;
+			constexpr static uint8_t ADDR_DISTANCE_UP_DOWN       = 0x95;
+			constexpr static uint8_t ADDR_DISTANCE_ZOOM          = 0x96;
+
+			constexpr static uint8_t ADDR_LIBRARY_VERSION_H  = 0xA1;
+			constexpr static uint8_t ADDR_LIBRARY_VERSION_L  = 0xA2;
+			constexpr static uint8_t ADDR_CHIP_ID            = 0xA3;
+			constexpr static uint8_t ADDR_G_MODE             = 0xA4;
+
+			constexpr static uint8_t ADDR_POWER_MODE         = 0xA5;
+			constexpr static uint8_t ADDR_FIRMARE_ID         = 0xA6;
+			constexpr static uint8_t ADDR_FOCALTECH_ID       = 0xA8;
+			constexpr static uint8_t ADDR_RELEASE_CODE_ID    = 0xAF;
+			constexpr static uint8_t ADDR_STATE              = 0xBC;
 	};
 }

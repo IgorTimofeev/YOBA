@@ -18,7 +18,7 @@ namespace YOBA {
 
 	void MonochromeRenderer::renderPixelNative(const Point& point, const Color* color) {
 		switch (getTarget()->getPixelOrder()) {
-			case PixelOrder::XY: {
+			case PixelOrder::XNormalYNormal: {
 				if (reinterpret_cast<const MonochromeColor*>(color)->getValue()) {
 					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (point.getY() & 7));
 				}
@@ -28,7 +28,7 @@ namespace YOBA {
 
 				break;
 			}
-			case PixelOrder::XYReversed: {
+			case PixelOrder::XNormalYReversed: {
 				if (reinterpret_cast<const MonochromeColor*>(color)->getValue()) {
 					getPixelBuffer()[point.getX() + (point.getY() / 8) * getTarget()->getSize().getWidth()] |= (1 << (7 - (point.getY() % 8)));
 				}

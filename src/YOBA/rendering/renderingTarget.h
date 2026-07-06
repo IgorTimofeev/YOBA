@@ -17,17 +17,17 @@ namespace YOBA {
 	};
 
 	enum class PixelOrder : uint8_t {
-		XY,
-		YX,
+		XNormalYNormal,
+		YNormalXNormal,
 
-		XYReversed,
-		YXReversed,
+		XNormalYReversed,
+		YNormalXReversed,
 
-		XReversedY,
-		XReversedX,
+		XReversedYNormal,
+		YReversedXNormal,
 
 		XReversedYReversed,
-		XReversedXReversed
+		YReversedXReversed
 	};
 
 	class Renderer;

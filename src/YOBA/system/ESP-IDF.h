@@ -65,8 +65,8 @@ namespace YOBA::system {
 	class I2CDevice {
 		public:
 			I2CDevice(
-				const uint8_t SCLPin,
 				const uint8_t SDAPin,
+				const uint8_t SCLPin,
 				const uint16_t address,
 				const uint32_t frequencyHz
 			);
