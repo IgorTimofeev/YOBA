@@ -29,11 +29,9 @@ all of which can be used separately
 <img width="300" src="https://github.com/user-attachments/assets/33cd6ce1-6bd5-45f8-8d2a-9499d2e68c04" alt=".!."/>
 <img width="300" src="https://github.com/user-attachments/assets/fff71020-69b0-4988-950f-6b571254c380" alt=".!."/>
 
-# Installation
+# Installation on ESP-IDF:
 
-### ESP-IDF:
-
-First, you must enable RTTI (run-time type information), since complex components like combo boxes and
+First, you must enable RTTI (run-time type information), since complex components like keyboard and
 selectors use `dynamic_cast`. RTTI is disabled by default on ESP-IDF to save some flash memory,
 but since we’re using a fucking UI framework, a few bytes is a ridiculously small price
 to pay for such immense power. RTTI itself can be enabled via
@@ -61,7 +59,9 @@ idf_component_register(
 include_directories(.)
 ```
 
-## Direct rendering
+# Code examples
+
+### Direct rendering
 
 You can easily reject all these trendy OOP features and render your interface directly with minimal overhead.
 Of course this approach is equivalent to voluntary castration for complex UIs, but it's perfectly reasonable
@@ -153,4 +153,4 @@ extern "C" void app_main(void) {
 <img width="300" src="https://github.com/user-attachments/assets/8e86f467-7826-44c1-a4ab-6aca1dbe8930" alt=".!."/>
 
 # Tselyebnov, M. D.
-<img width="2400" height="2400" alt="517616031-76ed9af3-53a3-4d2d-b944-3c228edfec81-1" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
+<img width="1200" alt="517616031-76ed9af3-53a3-4d2d-b944-3c228edfec81-1" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
