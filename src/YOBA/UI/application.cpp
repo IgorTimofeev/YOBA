@@ -64,8 +64,8 @@ namespace YOBA {
 		// Root element size should match render target size
 		setSize(_renderer->getTarget()->getSize());
 
-		// Resetting viewport just in case if some UI element broke it
-		_renderer->resetViewport();
+		// Resetting clipping just in case if some UI element broke it
+		_renderer->resetClip();
 
 		// Handling input from HIDs like touchscreens, rotary encoders, etc.
 		auto time = system::getTimeUs();

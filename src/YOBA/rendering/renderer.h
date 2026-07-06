@@ -19,11 +19,10 @@ namespace YOBA {
 			RenderingTarget* getTarget() const;
 			void setTarget(RenderingTarget* value);
 
-			const Rectangle& getViewport() const;
-			void setViewport(const Rectangle& viewport);
-			Rectangle pushViewport(const Rectangle& bounds);
-			void popViewport(const Rectangle& bounds);
-			void resetViewport();
+			const Rectangle& getClip() const;
+			void setClip(const Rectangle& bounds);
+			Rectangle pushClip(const Rectangle& bounds);
+			void resetClip();
 
 			void clear(const Color* color);
 			void renderPixel(const Point& point, const Color* color);
@@ -72,7 +71,7 @@ namespace YOBA {
 
 		protected:
 			RenderingTarget* _target = nullptr;
-			Rectangle _viewport {};
+			Rectangle _clip {};
 
 			virtual void updateFromTarget();
 			virtual void clearNative(const Color* color) = 0;

@@ -22,7 +22,7 @@ namespace YOBA {
 		_target = value;
 		_target->_renderer = this;
 
-		resetViewport();
+		resetClip();
 
 		updateFromTarget();
 	}
@@ -31,35 +31,31 @@ namespace YOBA {
 
 	}
 
-	const Rectangle& Renderer::getViewport() const {
-		return _viewport;
+	const Rectangle& Renderer::getClip() const {
+		return _clip;
 	}
 
-	void Renderer::setViewport(const Rectangle& viewport) {
-		_viewport = viewport;
+	void Renderer::setClip(const Rectangle& bounds) {
+		_clip = bounds;
 	}
 
-	Rectangle Renderer::pushViewport(const Rectangle& bounds) {
-		const auto oldViewport = _viewport;
+	Rectangle Renderer::pushClip(const Rectangle& bounds) {
+		const auto oldClipBounds = _clip;
 
-		if (_viewport.intersects(bounds)) {
-			_viewport = _viewport.getIntersection(bounds);
+		if (_clip.intersects(bounds)) {
+			_clip = _clip.getIntersection(bounds);
 		}
 		else {
-			_viewport = { 0, 0, 0, 0 };
+			_clip = { 0, 0, 0, 0 };
 		}
 
-		return oldViewport;
+		return oldClipBounds;
 	}
 
-	void Renderer::popViewport(const Rectangle& bounds) {
-		_viewport = bounds;
-	}
-
-	void Renderer::resetViewport() {
-		_viewport.setX(0);
-		_viewport.setX(0);
-		_viewport.setSize(_target->getSize());
+	void Renderer::resetClip() {
+		_clip.setX(0);
+		_clip.setX(0);
+		_clip.setSize(_target->getSize());
 	}
 
 	// -------------------------------- Native rendering --------------------------------
@@ -69,59 +65,59 @@ namespace YOBA {
 	}
 
 	void Renderer::renderPixel(const Point& point, const Color* color) {
-		if (!getViewport().contains(point))
+		if (!getClip().contains(point))
 			return;
 
 		renderPixelNative(point, color);
 	}
 
 	void Renderer::renderHorizontalLine(const Point& point, uint16_t length, const Color* color) {
-		const auto& viewport = getViewport();
+		const auto& clip = getClip();
 
 		if (
 			length == 0
-			|| point.getX() > viewport.getX2()
-			|| point.getX() + length < viewport.getX()
+			|| point.getX() > clip.getX2()
+			|| point.getX() + length < clip.getX()
 
-			|| point.getY() < viewport.getY()
-			|| point.getY() > viewport.getY2()
+			|| point.getY() < clip.getY()
+			|| point.getY() > clip.getY2()
 			)
 			return;
 
-		const uint16_t x1 = std::max(point.getX(), viewport.getX());
-		const uint16_t x2 = std::min(point.getX() + length - 1, viewport.getX2());
+		const uint16_t x1 = std::max(point.getX(), clip.getX());
+		const uint16_t x2 = std::min(point.getX() + length - 1, clip.getX2());
 		length = x2 - x1 + 1;
 
 		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
 	}
 
 	void Renderer::renderVerticalLine(const Point& point, uint16_t length, const Color* color) {
-		const auto& viewport = getViewport();
+		const auto& clip = getClip();
 
 		if (
 			length == 0
-			|| point.getX() < viewport.getX()
-			|| point.getX() > viewport.getX2()
+			|| point.getX() < clip.getX()
+			|| point.getX() > clip.getX2()
 
-			|| point.getY() > viewport.getY2()
-			|| point.getY() + length < viewport.getY()
+			|| point.getY() > clip.getY2()
+			|| point.getY() + length < clip.getY()
 		)
 			return;
 
-		const uint16_t y1 = std::max(point.getY(), viewport.getY());
-		const uint16_t y2 = std::min(point.getY() + length - 1, viewport.getY2());
+		const uint16_t y1 = std::max(point.getY(), clip.getY());
+		const uint16_t y2 = std::min(point.getY() + length - 1, clip.getY2());
 		length = y2 - y1 + 1;
 
 		renderVerticalLineNative(Point(point.getX(), y1), length, color);
 	}
 
 	void Renderer::renderFilledRectangle(const Rectangle& bounds, const Color* color) {
-		const auto& viewport = getViewport();
+		const auto& clip = getClip();
 
-		if (bounds.haveZeroSize() || !viewport.intersects(bounds))
+		if (bounds.haveZeroSize() || !clip.intersects(bounds))
 			return;
 
-		const auto& intersection = viewport.getIntersection(bounds);
+		const auto& intersection = clip.getIntersection(bounds);
 
 		if (intersection.getWidth() > 1 || intersection.getHeight() > 1) {
 			renderFilledRectangleNative(intersection, color);
@@ -159,7 +155,7 @@ namespace YOBA {
 	}
 
 	void Renderer::renderImage(const Point& point, const Image* image) {
-		if (getViewport().intersects(Rectangle(point, image->getSize())))
+		if (getClip().intersects(Rectangle(point, image->getSize())))
 			renderImageNative(point, image);
 	}
 
@@ -325,16 +321,16 @@ namespace YOBA {
 		}
 		// Meh...
 		else {
-			const auto& viewport = getViewport();
-			const auto viewportX2 = viewport.getX2();
-			const auto viewportY2 = viewport.getY2();
+			const auto& clip = getClip();
+			const auto clipX2 = clip.getX2();
+			const auto clipY2 = clip.getY2();
 
 			if (
-				(from.getX() < viewport.getX() && to.getX() < viewport.getX())
-				|| (from.getX() > viewportX2 && to.getX() > viewportX2)
+				(from.getX() < clip.getX() && to.getX() < clip.getX())
+				|| (from.getX() > clipX2 && to.getX() > clipX2)
 
-				|| (from.getY() < viewport.getY() && to.getY() < viewport.getY())
-				|| (from.getY() > viewportY2 && to.getY() > viewportY2)
+				|| (from.getY() < clip.getY() && to.getY() < clip.getY())
+				|| (from.getY() > clipY2 && to.getY() > clipY2)
 			)
 				return;
 
@@ -1003,13 +999,13 @@ namespace YOBA {
 	}
 
 	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t fontScale) {
-		const auto& viewport = getViewport();
-		const auto viewportX2 = viewport.getX2();
+		const auto& clip = getClip();
+		const auto clipX2 = clip.getX2();
 
 		if (
-			point.getX() > viewportX2
-			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getLineHeight(fontScale) < viewport.getY()
+			point.getX() > clipX2
+			|| point.getY() > clip.getY2()
+			|| point.getY() + font->getLineHeight(fontScale) < clip.getY()
 			|| !color
 		)
 			return;
@@ -1017,7 +1013,7 @@ namespace YOBA {
 		const auto glyph = font->getGlyph(codepoint);
 
 		if (glyph) {
-			if (point.getX() + font->getWidth(glyph, fontScale) < viewport.getX())
+			if (point.getX() + font->getWidth(glyph, fontScale) < clip.getX())
 				return;
 
 			renderGlyph(
@@ -1035,14 +1031,14 @@ namespace YOBA {
 	}
 
 	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::string_view text, const uint8_t fontScale) {
-		const auto& viewport = getViewport();
-		const auto viewportX2 = viewport.getX2();
+		const auto& clip = getClip();
+		const auto clipX2 = clip.getX2();
 
-		// Skipping rendering if text is obviously not in viewport
+		// Skipping rendering if text is obviously not in clip region
 		if (
-			point.getX() > viewportX2
-			|| point.getY() > viewport.getY2()
-			|| point.getY() + font->getLineHeight(fontScale) < viewport.getY()
+			point.getX() > clipX2
+			|| point.getY() > clip.getY2()
+			|| point.getY() + font->getLineHeight(fontScale) < clip.getY()
 			|| !color
 		)
 			return;
@@ -1061,8 +1057,8 @@ namespace YOBA {
 			if (glyph && font->getWidth(glyph) > 0) {
 				const int32_t x2 = x + font->getWidth(glyph, fontScale);
 
-				// Rendering current glyph only if it's in viewport
-				if (x2 > viewport.getX()) {
+				// Rendering current glyph only if it's in clip region
+				if (x2 > clip.getX()) {
 					renderGlyph(
 						Point(x, point.getY()),
 						font,
@@ -1081,8 +1077,8 @@ namespace YOBA {
 				x += Font::missingGlyphWidth * fontScale;
 			}
 
-			// Stopping rendering if next glyphs will not be in viewport
-			if (x > viewportX2)
+			// Stopping rendering if next glyphs will not be in clip region
+			if (x > clipX2)
 				break;
 		}
 	}

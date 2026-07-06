@@ -279,13 +279,13 @@ namespace YOBA {
 
 	void Element::render(Renderer* renderer, const Rectangle& bounds) {
 		if (_clipToBounds) {
-			// Copying viewport to restore it after render pass
-			const auto previousViewport = renderer->pushViewport(_layoutBounds);
+			// Copying clip region to restore it after render pass
+			const auto oldClip = renderer->pushClip(_layoutBounds);
 
 			onRender(renderer, _renderBounds);
 
-			// Restoring viewport
-			renderer->popViewport(previousViewport);
+			// Restoring clip region
+			renderer->setClip(oldClip);
 		}
 		else {
 			onRender(renderer, _renderBounds);

@@ -92,7 +92,7 @@ namespace YOBA {
 				if (!textColor)
 					return;
 
-				const auto oldViewport = renderer->pushViewport(Rectangle(
+				const auto oldClip = renderer->pushClip(Rectangle(
 					bounds.getX() + _textMargin,
 					bounds.getY(),
 					bounds.getWidth() - _textMargin * 2,
@@ -116,7 +116,7 @@ namespace YOBA {
 					textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
 				}
 
-				renderer->popViewport(oldViewport);
+				renderer->setClip(oldClip);
 			}
 
 			// Cursor
