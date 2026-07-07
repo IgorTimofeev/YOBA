@@ -1,4 +1,4 @@
-#include <YOBA/UI/stackLayout.h>
+#include <YOBA/UI/StackLayout.hpp>
 
 namespace YOBA {
 	StackLayout::StackLayout(const Orientation orientation) {

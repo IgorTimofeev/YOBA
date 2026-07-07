@@ -1,4 +1,4 @@
-#include <YOBA/UI/relativeStackLayout.h>
+#include <YOBA/UI/RelativeStackLayout.hpp>
 
 namespace YOBA {
 	RelativeStackLayout::RelativeStackLayout(): StackLayout() {

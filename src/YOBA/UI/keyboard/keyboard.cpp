@@ -1,5 +1,5 @@
-#include <YOBA/UI/keyboard/keyboard.h>
-#include <YOBA/UI/keyboard/layout.h>
+#include <YOBA/UI/Keyboard/Keyboard.hpp>
+#include <YOBA/UI/Keyboard/Layout.hpp>
 
 namespace YOBA {
 	// ----------------------------- Keyboard -----------------------------

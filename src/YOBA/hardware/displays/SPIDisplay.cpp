@@ -1,5 +1,5 @@
-#include "SPIDisplay.h"
-#include <YOBA/system.h>
+#include <YOBA/Hardware/Displays/SPIDisplay.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void SPIDisplay::setup(

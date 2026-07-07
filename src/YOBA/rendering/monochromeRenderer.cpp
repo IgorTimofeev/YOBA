@@ -1,4 +1,4 @@
-#include "monochromeRenderer.h"
+#include <YOBA/Rendering/MonochromeRenderer.hpp>
 
 namespace YOBA {
 	size_t MonochromeRenderer::computePixelBufferLength() const {

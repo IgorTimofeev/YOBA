@@ -1,4 +1,4 @@
-#include <YOBA/core/events/scrollIntoViewEvent.h>
+#include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
 
 namespace YOBA {
 	ScrollIntoViewEvent::ScrollIntoViewEvent(const Element* element) : Event(typeID), _element(element) {

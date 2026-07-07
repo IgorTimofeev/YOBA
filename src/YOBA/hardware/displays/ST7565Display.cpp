@@ -1,6 +1,7 @@
-#include "ST7565Display.h"
-#include <YOBA/system.h>
 #include <cstdint>
+
+#include <YOBA/Hardware/Displays/ST7565Display.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void ST7565Display::setup(

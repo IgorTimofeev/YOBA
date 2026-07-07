@@ -1,6 +1,5 @@
-#include "color.h"
-
-#include "math.h"
+#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Math.hpp>
 
 namespace YOBA {
 	ColorModel Color::getModel() const {

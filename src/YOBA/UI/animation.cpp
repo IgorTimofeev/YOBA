@@ -1,7 +1,6 @@
-#include "animation.h"
-
-#include <YOBA/system.h>
-#include <YOBA/UI/application.h>
+#include <YOBA/UI/Animation.hpp>
+#include <YOBA/System.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	// -------------------------------- Animation --------------------------------

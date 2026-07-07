@@ -1,5 +1,5 @@
-#include <YOBA/UI/textView.h>
-#include <YOBA/core/text.h>
+#include <YOBA/UI/TextView.hpp>
+#include <YOBA/Core/Text.hpp>
 
 namespace YOBA {
 	TextView::TextView(const Font* font, const Color* foreground) {

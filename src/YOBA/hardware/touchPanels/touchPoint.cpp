@@ -1,4 +1,4 @@
-#include "touchPoint.h"
+#include <YOBA/Hardware/TouchPanels/TouchPoint.hpp>
 
 namespace YOBA {
 	const Point& TouchPoint::getPosition() const {

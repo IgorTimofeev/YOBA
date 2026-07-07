@@ -1,0 +1,52 @@
+#pragma once
+
+#include <YOBA/UI/Element.hpp>
+
+namespace YOBA {
+	class HorizontalAndVerticalSpacingElement : public virtual Element {
+		public:
+			uint16_t getHorizontalSpacing() const {
+				return _horizontalSpacing;
+			}
+
+			void setHorizontalSpacing(const uint16_t value) {
+				if (value == _horizontalSpacing)
+					return;
+
+				_horizontalSpacing = value;
+
+				invalidate();
+			}
+
+			uint16_t getVerticalSpacing() const {
+				return _verticalSpacing;
+			}
+
+			void setVerticalSpacing(const uint16_t value) {
+				if (value == _verticalSpacing)
+					return;
+
+				_verticalSpacing = value;
+
+				invalidate();
+			}
+
+			void setSpacing(const uint16_t horizontal, const uint16_t vertical) {
+				if (horizontal == _horizontalSpacing && vertical == _verticalSpacing)
+					return;
+
+				_horizontalSpacing = horizontal;
+				_verticalSpacing = vertical;
+
+				invalidate();
+			}
+
+			void setSpacing(const uint16_t uniformValue) {
+				setSpacing(uniformValue, uniformValue);
+			}
+
+		private:
+			int32_t _horizontalSpacing = 0;
+			int32_t _verticalSpacing = 0;
+	};
+}

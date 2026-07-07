@@ -1,9 +1,9 @@
 #include <cstdint>
 
-#include <YOBA/core/math.h>
-#include <YOBA/UI/keyboard/layout.h>
-#include <YOBA/UI/keyboard/keyboard.h>
-#include <YOBA/UI/application.h>
+#include <YOBA/Core/Math.hpp>
+#include <YOBA/UI/Keyboard/Layout.hpp>
+#include <YOBA/UI/Keyboard/Keyboard.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	KeyboardLayout::KeyboardLayout(const std::vector<std::vector<KeyboardButton*>>& keys) : _buttons(keys) {

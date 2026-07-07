@@ -1,8 +1,8 @@
 #include <algorithm>
 
-#include <YOBA/core/math.h>
-#include <YOBA/UI/slider.h>
-#include <YOBA/core/events/pinchEvent.h>
+#include <YOBA/Core/Math.hpp>
+#include <YOBA/UI/Slider.hpp>
+#include <YOBA/Core/Events/PinchEvent.hpp>
 
 namespace YOBA {
 	const Color* Slider::getTrackColor() const {

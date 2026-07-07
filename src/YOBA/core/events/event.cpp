@@ -1,4 +1,4 @@
-#include "event.h"
+#include <YOBA/Core/Events/Event.hpp>
 
 namespace YOBA {
 	Event::Event(const uint16_t typeID) {

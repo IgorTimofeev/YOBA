@@ -1,6 +1,7 @@
-#include "ST7789Display.h"
-#include <YOBA/system.h>
 #include <cstring>
+
+#include <YOBA/Hardware/Displays/ST7789Display.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void ST7789Display::setup(

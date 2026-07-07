@@ -1,4 +1,4 @@
-#include "margin.h"
+#include <YOBA/Core/Margin.hpp>
 
 namespace YOBA {
 	Margin::Margin(const int32_t left, const int32_t top, const int32_t right, const int32_t bottom) : left(left), top(top), right(right), bottom(bottom) {

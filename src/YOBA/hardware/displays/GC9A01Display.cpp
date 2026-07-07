@@ -1,6 +1,7 @@
-#include "GC9A01Display.h"
-#include <YOBA/system.h>
 #include <cstdint>
+
+#include <YOBA/Hardware/Displays/GC9A01Display.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void GC9A01Display::setup(

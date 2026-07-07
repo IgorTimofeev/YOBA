@@ -1,10 +1,10 @@
-#include <YOBA/UI/textField.h>
-#include <YOBA/UI/application.h>
-#include <YOBA/core/events/keyEvent.h>
-#include <YOBA/core/events/scrollIntoViewEvent.h>
-#include <YOBA/UI/keyboard/controller.h>
-#include <YOBA/core/events/pointerEvent.h>
-#include <YOBA/core/events/pinchEvent.h>
+#include <YOBA/UI/TextField.hpp>
+#include <YOBA/UI/Application.hpp>
+#include <YOBA/Core/Events/KeyEvent.hpp>
+#include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
+#include <YOBA/UI/Keyboard/Controller.hpp>
+#include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/PinchEvent.hpp>
 
 namespace YOBA {
 	void TextField::onTick() {

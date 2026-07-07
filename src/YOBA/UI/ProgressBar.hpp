@@ -1,0 +1,23 @@
+#pragma once
+
+#include <YOBA/UI/Control.hpp>
+#include <YOBA/UI/Traits/CornerRadiusElement.hpp>
+#include <YOBA/UI/Traits/ValueElement.hpp>
+
+namespace YOBA {
+	class ProgressBar : public Control, public CornerRadiusElement, public ValueElement<float> {
+		public:
+			const Color* getTrackColor() const;
+			void setTrackColor(const Color* value);
+
+			const Color* getFillColor() const;
+			void setFillColor(const Color* value);
+
+		protected:
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
+
+		private:
+			const Color* _trackColor = nullptr;
+			const Color* _fillColor = nullptr;
+	};
+}

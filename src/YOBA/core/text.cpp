@@ -1,5 +1,5 @@
-#include <YOBA/core/text.h>
-#include <YOBA/core/utf-8.h>
+#include <YOBA/Core/Text.hpp>
+#include <YOBA/Core/UTF-8.hpp>
 
 namespace YOBA {
 	void Text::wrap(

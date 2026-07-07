@@ -1,5 +1,5 @@
-#include "bit8PaletteRenderer.h"
-#include <YOBA/core/rectangle.h>
+#include <YOBA/Rendering/Bit8PaletteRenderer.hpp>
+#include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
 	Bit8PaletteRenderer::Bit8PaletteRenderer(const uint8_t paletteLength) : PaletteRenderer(paletteLength) {

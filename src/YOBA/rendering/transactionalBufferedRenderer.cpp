@@ -1,4 +1,4 @@
-#include <YOBA/rendering/transactionalBufferedRenderer.h>
+#include <YOBA/Rendering/TransactionalBufferedRenderer.hpp>
 
 namespace YOBA {
 	uint16_t TransactionalBufferedRenderer::computeTransactionViewportHeight() const {

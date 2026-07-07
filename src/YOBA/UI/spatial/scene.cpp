@@ -1,4 +1,4 @@
-#include "scene.h"
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	void Scene::onRender(Renderer* renderer, const Rectangle& bounds) {

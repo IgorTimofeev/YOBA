@@ -1,5 +1,5 @@
-#include <YOBA/rendering/bufferedRenderer.h>
-#include <YOBA/system.h>
+#include <YOBA/Rendering/BufferedRenderer.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void BufferedRenderer::reallocatePixelBuffer() {

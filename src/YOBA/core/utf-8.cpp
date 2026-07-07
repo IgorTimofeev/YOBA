@@ -1,4 +1,4 @@
-#include <YOBA/core/utf-8.h>
+#include <YOBA/Core/UTF-8.hpp>
 
 namespace YOBA {
 	uint32_t UTF8::nextCodepoint(const std::string_view str, size_t& index) {

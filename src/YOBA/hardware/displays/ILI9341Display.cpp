@@ -1,6 +1,7 @@
-#include "ILI9341Display.h"
-#include <YOBA/system.h>
 #include <cstring>
+
+#include <YOBA/Hardware/Displays/ILI9341Display.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void ILI9341Display::setup(

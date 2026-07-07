@@ -6,12 +6,12 @@
 */
 /**************************************************************************/
 
-#include <YOBA/system.h>
-#include <YOBA/UI/application.h>
-#include <YOBA/core/events/pointerEvent.h>
-#include <YOBA/core/events/pinchEvent.h>
+#include <YOBA/System.hpp>
+#include <YOBA/UI/Application.hpp>
+#include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/PinchEvent.hpp>
 
-#include <YOBA/hardware/touchPanels/FT6336UTouchPanel.h>
+#include <YOBA/Hardware/TouchPanels/FT6336UTouchPanel.hpp>
 
 namespace YOBA {
 	void FT6336UTouchPanel::setup(

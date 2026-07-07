@@ -1,4 +1,4 @@
-#include <YOBA/UI/imageView.h>
+#include <YOBA/UI/ImageView.hpp>
 
 namespace YOBA {
 	ImageView::ImageView(const Image* image) {

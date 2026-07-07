@@ -1,6 +1,5 @@
-#include "button.h"
-
-#include "application.h"
+#include <YOBA/UI/Button.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	void Button::onEvent(Event* event) {

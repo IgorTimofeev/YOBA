@@ -1,7 +1,6 @@
-#include "encoder.h"
-
-#include <YOBA/system.h>
-#include <YOBA/UI/application.h>
+#include <YOBA/Hardware/Encoder.hpp>
+#include <YOBA/System.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	// -------------------------------- Value changed event --------------------------------

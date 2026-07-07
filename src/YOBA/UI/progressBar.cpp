@@ -1,4 +1,4 @@
-#include <YOBA/UI/progressBar.h>
+#include <YOBA/UI/ProgressBar.hpp>
 
 namespace YOBA {
 	const Color* ProgressBar::getTrackColor() const {

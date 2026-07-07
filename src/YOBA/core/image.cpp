@@ -1,4 +1,4 @@
-#include "image.h"
+#include <YOBA/Core/Image.hpp>
 
 namespace YOBA {
 	uint8_t Image::getFlags() const {

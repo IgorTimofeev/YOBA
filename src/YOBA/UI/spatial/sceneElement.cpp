@@ -1,5 +1,5 @@
-#include "sceneElement.h"
-#include "scene.h"
+#include <YOBA/UI/Spatial/SceneElement.hpp>
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	bool SceneElement::isVisible() const {

@@ -1,4 +1,4 @@
-#include "gradient.h"
+#include <YOBA/Core/Gradient.hpp>
 
 namespace YOBA {
 	GradientStop::GradientStop(const float position, const RGB888Color& color) :

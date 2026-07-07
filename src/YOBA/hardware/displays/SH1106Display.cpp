@@ -1,6 +1,8 @@
 #include <cstdint>
-#include <YOBA/system.h>
-#include "SH1106Display.h"
+
+
+#include <YOBA/Hardware/Displays/SH1106Display.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	void SH1106Display::setup(

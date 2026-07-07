@@ -1,9 +1,9 @@
-#include <YOBA/UI/keyboard/button.h>
-#include <YOBA/UI/keyboard/keyboard.h>
-#include <YOBA/UI/keyboard/controller.h>
+#include <YOBA/UI/Keyboard/Button.hpp>
+#include <YOBA/UI/Keyboard/Keyboard.hpp>
+#include <YOBA/UI/Keyboard/Controller.hpp>
 
-#include <YOBA/core/events/keyEvent.h>
-#include <YOBA/UI/application.h>
+#include <YOBA/Core/Events/KeyEvent.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	// ----------------------------- KeyboardButton -----------------------------

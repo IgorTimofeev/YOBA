@@ -1,4 +1,4 @@
-#include <YOBA/system.h>
+#include <YOBA/System.hpp>
 
 #ifdef YOBA_SYSTEM_ESP_IDF
 
@@ -7,12 +7,12 @@
 #include <esp_timer.h>
 #include <limits>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "driver/gpio.h"
-#include "sdkconfig.h"
-#include "driver/spi_master.h"
-#include "driver/i2c_master.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <driver/gpio.h>
+#include <sdkconfig.h>
+#include <driver/spi_master.h>
+#include <driver/i2c_master.h>
 #include <esp_heap_caps.h>
 
 namespace YOBA::system {

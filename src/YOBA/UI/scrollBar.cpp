@@ -1,4 +1,4 @@
-#include <YOBA/UI/scrollBar.h>
+#include <YOBA/UI/ScrollBar.hpp>
 
 namespace YOBA {
 	uint16_t ScrollBar::getPosition() const {

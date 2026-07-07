@@ -1,5 +1,5 @@
-#include "line.h"
-#include "scene.h"
+#include <YOBA/UI/Spatial/Line.hpp>
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	Line::Line(const Vector3F& from, const Vector3F& to, const Color* color) : _color(color) {

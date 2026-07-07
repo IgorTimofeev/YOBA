@@ -1,7 +1,7 @@
-#include <YOBA/core/events/screenEvent.h>
+#include <YOBA/Core/Events/ScreenEvent.hpp>
 
-#include <YOBA/core/events/pinchEvent.h>
-#include <YOBA/core/events/pointerEvent.h>
+#include <YOBA/Core/Events/PinchEvent.hpp>
+#include <YOBA/Core/Events/PointerEvent.hpp>
 
 namespace YOBA {
 	ScreenEvent::ScreenEvent(const uint16_t typeID) : Event(typeID) {

@@ -1,5 +1,5 @@
-#include "linearSphere.h"
-#include "scene.h"
+#include <YOBA/UI/Spatial/LinearSphere.hpp>
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	LinearSphere::LinearSphere(const Vector3F& center, const float radius, const uint16_t latitudeSegments, const uint16_t longitudeSegments, const Color* color) {

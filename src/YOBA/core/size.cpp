@@ -1,4 +1,4 @@
-#include "size.h"
+#include <YOBA/Core/Size.hpp>
 
 namespace YOBA {
 	uint16_t Size::getWidth() const {

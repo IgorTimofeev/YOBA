@@ -1,8 +1,8 @@
-#include "renderer.h"
-
 #include <cassert>
-#include <YOBA/core/math.h>
-#include <YOBA/core/utf-8.h>
+
+#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Core/Math.hpp>
+#include <YOBA/Core/UTF-8.hpp>
 
 namespace YOBA {
 	RenderingTarget* Renderer::getTarget() const {

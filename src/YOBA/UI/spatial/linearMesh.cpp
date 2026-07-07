@@ -1,5 +1,5 @@
-#include "linearMesh.h"
-#include "scene.h"
+#include <YOBA/UI/Spatial/LinearMesh.hpp>
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	void LinearMesh::onRender(Renderer* renderer, const Scene& scene, const Vector3F* projectedVertices) {

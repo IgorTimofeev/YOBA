@@ -1,10 +1,9 @@
-#include "layout.h"
 #include <algorithm>
 
-#include <YOBA/UI/application.h>
-#include <YOBA/core/events/pointerEvent.h>
-#include <YOBA/core/events/pinchEvent.h>
-
+#include <YOBA/UI/Layout.hpp>
+#include <YOBA/UI/Application.hpp>
+#include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/PinchEvent.hpp>
 
 namespace YOBA {
 	void Layout::onTick() {

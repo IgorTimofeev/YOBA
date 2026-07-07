@@ -1,8 +1,8 @@
-#include <YOBA/UI/scrollView.h>
-#include <YOBA/core/events/pointerEvent.h>
-#include <YOBA/core/events/scrollIntoViewEvent.h>
+#include <YOBA/UI/ScrollView.hpp>
+#include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
 
-#include "application.h"
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	ScrollView::ScrollView() {

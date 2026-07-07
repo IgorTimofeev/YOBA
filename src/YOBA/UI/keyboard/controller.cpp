@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include <YOBA/UI/keyboard/controller.h>
-#include <YOBA/UI/application.h>
+#include <YOBA/UI/Keyboard/Controller.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	KeyboardControllerLayout::KeyboardControllerLayout() {

@@ -1,6 +1,5 @@
-#include "font.h"
-
-#include "utf-8.h"
+#include <YOBA/Core/Font.hpp>
+#include <YOBA/Core/UTF-8.hpp>
 
 namespace YOBA {
 	uint16_t Font::getWidth(const std::string_view text) const {

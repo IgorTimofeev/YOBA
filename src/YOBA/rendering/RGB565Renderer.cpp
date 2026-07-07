@@ -1,6 +1,7 @@
-#include "RGB565Renderer.h"
-#include <YOBA/core/rectangle.h>
 #include <string.h>
+
+#include <YOBA/Rendering/RGB565Renderer.hpp>
+#include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
 	size_t RGB565Renderer::computePixelBufferLength() const {

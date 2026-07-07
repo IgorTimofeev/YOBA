@@ -1,5 +1,5 @@
-#include "mesh.h"
-#include "scene.h"
+#include <YOBA/UI/Spatial/Mesh.hpp>
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	const Vector3F* Mesh::getVertices() {

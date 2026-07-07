@@ -1,5 +1,5 @@
-#include "linearCube.h"
-#include "scene.h"
+#include <YOBA/UI/Spatial/LinearCube.hpp>
+#include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {
 	LinearCube::LinearCube(const Vector3F& center, const float size, const Color* color) {

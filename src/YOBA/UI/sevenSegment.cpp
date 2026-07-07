@@ -1,4 +1,4 @@
-#include <YOBA/UI/sevenSegment.h>
+#include <YOBA/UI/SevenSegment.hpp>
 
 namespace YOBA {
 	uint8_t SevenSegment::getSegmentThickness() const {

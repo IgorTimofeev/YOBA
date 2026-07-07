@@ -1,12 +1,12 @@
-#include <YOBA/UI/element.h>
+#include <YOBA/UI/Element.hpp>
 
 #include <assert.h>
 #include <algorithm>
 
-#include <YOBA/UI/animation.h>
-#include <YOBA/UI/layout.h>
-#include <YOBA/UI/application.h>
-#include <YOBA/core/events/scrollIntoViewEvent.h>
+#include <YOBA/UI/Animation.hpp>
+#include <YOBA/UI/Layout.hpp>
+#include <YOBA/UI/Application.hpp>
+#include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
 
 namespace YOBA {
 	Element::~Element() {

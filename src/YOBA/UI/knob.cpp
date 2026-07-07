@@ -1,4 +1,4 @@
-#include "knob.h"
+#include <YOBA/UI/Knob.hpp>
 
 namespace YOBA {
 	void Knob::onRender(Renderer* renderer, const Rectangle& bounds) {

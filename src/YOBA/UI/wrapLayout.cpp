@@ -1,4 +1,4 @@
-#include <YOBA/UI/wrapLayout.h>
+#include <YOBA/UI/WrapLayout.hpp>
 
 namespace YOBA {
 	Size WrapLayout::onMeasure(const Size& availableSize) {
