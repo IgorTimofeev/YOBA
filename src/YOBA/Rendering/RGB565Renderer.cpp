@@ -67,14 +67,14 @@ namespace YOBA {
 	}
 
 	void RGB565Renderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getFlags() & ImageFlags::RGB565))
+		if (!(image->getFlags() & ImageOptions::RGB565))
 			return;
 
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
 		const size_t pixelBufferScanlineLength = _target->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
-		if (image->getFlags() & ImageFlags::alpha1Bit) {
+		if (image->getFlags() & ImageOptions::alpha1Bit) {
 			auto bitmapPtr = image->getBitmap();
 
 			uint8_t bitmapBitIndex = 0;

@@ -6,7 +6,7 @@
 
 namespace YOBA {
 	// I love C++
-	namespace ImageFlags {
+	namespace ImageOptions {
 		enum : uint8_t {
 			RGB565 = 0b0000'0001,
 			palette8Bit = 0b0000'0010,
@@ -17,11 +17,11 @@ namespace YOBA {
 	class Image {
 		public:
 			constexpr Image(
-				const uint8_t flags,
+				const uint8_t options,
 				const Size& size,
 				const uint8_t* bitmap
 			) :
-				_flags(flags),
+				_options(options),
 				_size(size),
 				_bitmap(bitmap)
 			{
@@ -33,7 +33,7 @@ namespace YOBA {
 			const uint8_t* getBitmap() const;
 
 		private:
-			const uint8_t _flags;
+			const uint8_t _options;
 			const Size _size;
 			const uint8_t* _bitmap;
 	};

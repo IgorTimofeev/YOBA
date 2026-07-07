@@ -2,7 +2,7 @@
 
 namespace YOBA {
 	uint8_t Image::getFlags() const {
-		return _flags;
+		return _options;
 	}
 
 	const Size& Image::getSize() const {

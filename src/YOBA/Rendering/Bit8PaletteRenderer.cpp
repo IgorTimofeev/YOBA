@@ -113,7 +113,7 @@ namespace YOBA {
 	}
 
 	void Bit8PaletteRenderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getFlags() & ImageFlags::palette8Bit))
+		if (!(image->getFlags() & ImageOptions::palette8Bit))
 			return;
 
 		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
@@ -122,7 +122,7 @@ namespace YOBA {
 		const auto scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
-		if (image->getFlags() & ImageFlags::alpha1Bit) {
+		if (image->getFlags() & ImageOptions::alpha1Bit) {
 			uint8_t bitmapBitIndex = 0;
 
 			// 0000 0000|0000 0000
