@@ -1,6 +1,8 @@
 #pragma once
 
-#include <optional>
+#include <cstdint>
+#include <vector>
+#include <functional>
 
 #include <YOBA/UI/Keyboard/Generic.hpp>
 #include <YOBA/UI/Layout.hpp>

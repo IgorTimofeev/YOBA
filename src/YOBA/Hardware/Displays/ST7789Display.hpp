@@ -1,5 +1,9 @@
 #pragma once
 
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstdint>
 #include <span>
 
@@ -148,3 +152,5 @@ namespace YOBA {
 			constexpr static uint8_t ST7789_PROMACT		= 0xFE;      // Program action
 	};
 }
+
+#endif

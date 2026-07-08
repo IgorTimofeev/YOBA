@@ -1,5 +1,8 @@
 #pragma once
 
+#include <numbers>
+#include <vector>
+
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Rendering/Renderer.hpp>

@@ -1,7 +1,10 @@
 #include <YOBA/UI/RelativeStackLayout.hpp>
 
 namespace YOBA {
-	RelativeStackLayout::RelativeStackLayout(): StackLayout() {
+	// RETARD ALERT!!!
+	// Don't use parent constructor without arguments like RelativeStackLayout : StackLayout()
+	// Access violation will be thrown otherwise
+	RelativeStackLayout::RelativeStackLayout() {
 
 	}
 

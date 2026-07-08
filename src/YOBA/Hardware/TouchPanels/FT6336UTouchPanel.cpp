@@ -7,6 +7,10 @@
 /**************************************************************************/
 
 #include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
+#include <YOBA/System.hpp>
 #include <YOBA/UI/Application.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/Core/Events/PinchEvent.hpp>
@@ -426,3 +430,5 @@ namespace YOBA {
 		}
 	}
 }
+
+#endif

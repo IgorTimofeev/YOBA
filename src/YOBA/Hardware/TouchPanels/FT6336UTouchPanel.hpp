@@ -8,8 +8,10 @@
 
 #pragma once
 
-#include <cstdint>
+#include <YOBA/System.hpp>
 
+#if defined(YOBA_SYSTEM_MCU)
+#include <cstdint>
 
 #include <YOBA/Hardware/TouchPanels/TouchPanel.hpp>
 #include <YOBA/Hardware/TouchPanels/TouchPoint.hpp>
@@ -173,3 +175,5 @@ namespace YOBA {
 			constexpr static uint8_t ADDR_STATE              = 0xBC;
 	};
 }
+
+#endif

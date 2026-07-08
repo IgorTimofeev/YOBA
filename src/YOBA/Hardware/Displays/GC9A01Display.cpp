@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstdint>
 
 #include <YOBA/Hardware/Displays/GC9A01Display.hpp>
@@ -364,3 +368,5 @@ namespace YOBA {
 		writeCommand(DISPOFF);
 	}
 }
+
+#endif

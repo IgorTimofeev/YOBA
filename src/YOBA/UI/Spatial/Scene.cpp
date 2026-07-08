@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <YOBA/UI/Spatial/Scene.hpp>
 
 namespace YOBA::spatial {

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstdint>
 #include <span>
 
@@ -47,3 +51,5 @@ namespace YOBA {
 			void writeMADCTLCommand();
 	};
 }
+
+#endif

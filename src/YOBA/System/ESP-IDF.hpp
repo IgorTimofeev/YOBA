@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_ESP_IDF)
+
 #pragma once
 
 #include <cstdint>
@@ -82,3 +86,5 @@ namespace YOBA::system {
 			i2c_master_dev_handle_t _deviceHandle {};
 	};
 }
+
+#endif

@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstdint>
 
 #include <YOBA/Hardware/Displays/ST7565Display.hpp>
@@ -94,3 +98,5 @@ namespace YOBA {
 		writeCommand(static_cast<uint8_t>(value ? Command::SET_DISP_REVERSE : Command::SET_DISP_NORMAL));
 	}
 }
+
+#endif

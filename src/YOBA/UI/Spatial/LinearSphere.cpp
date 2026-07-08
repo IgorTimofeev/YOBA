@@ -1,3 +1,5 @@
+#include <numbers>
+
 #include <YOBA/UI/Spatial/LinearSphere.hpp>
 #include <YOBA/UI/Spatial/Scene.hpp>
 

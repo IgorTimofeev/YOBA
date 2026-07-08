@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <YOBA/Hardware/Displays/SPIDisplay.hpp>
 #include <YOBA/System.hpp>
 
@@ -67,3 +71,5 @@ namespace YOBA {
 		system::delayMs(100);
 	}
 }
+
+#endif

@@ -1,5 +1,8 @@
-#include <cstdint>
+#include <YOBA/System.hpp>
 
+#if defined(YOBA_SYSTEM_MCU)
+
+#include <cstdint>
 
 #include <YOBA/Hardware/Displays/SH1106Display.hpp>
 #include <YOBA/System.hpp>
@@ -82,3 +85,5 @@ namespace YOBA {
 		writeCommand(static_cast<uint8_t>(value ? Command::invertDisplay : Command::normalDisplay));
 	}
 }
+
+#endif

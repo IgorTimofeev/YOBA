@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <YOBA/Hardware/Encoder.hpp>
 #include <YOBA/System.hpp>
 #include <YOBA/UI/Application.hpp>
@@ -152,3 +156,5 @@ namespace YOBA {
 		return _pressed;
 	}
 }
+
+#endif
