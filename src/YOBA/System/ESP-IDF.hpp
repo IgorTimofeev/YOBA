@@ -1,8 +1,8 @@
+#pragma once
+
 #include <YOBA/System.hpp>
 
 #if defined(YOBA_SYSTEM_ESP_IDF)
-
-#pragma once
 
 #include <cstdint>
 #include <functional>

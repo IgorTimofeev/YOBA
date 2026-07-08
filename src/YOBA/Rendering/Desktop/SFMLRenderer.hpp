@@ -1,8 +1,8 @@
+#pragma once
+
 #include <YOBA/System.hpp>
 
 #if defined(YOBA_SYSTEM_WINDOWS)
-
-#pragma once
 
 #include <YOBA/Rendering/Renderer.hpp>
 #include <YOBA/Rendering/Desktop/SFMLRenderingTarget.hpp>
