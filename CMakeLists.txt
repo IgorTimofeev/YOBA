@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+file(GLOB_RECURSE YOBA_SOURCES
+    "src/*.cpp"
+)
 
 if(ESP_PLATFORM)
-    file(GLOB_RECURSE YOBA_SOURCES
-        "src/*.*"
-    )
-
     idf_component_register(
         SRCS ${YOBA_SOURCES}
         INCLUDE_DIRS src
@@ -16,4 +18,10 @@ if(ESP_PLATFORM)
     )
 
     return()
+
+else()
+    project(YOBA)
+
+    add_library(YOBA ${YOBA_SOURCES})
+    target_include_directories(YOBA PUBLIC src)
 endif()

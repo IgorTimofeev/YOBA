@@ -1,5 +1,9 @@
 #pragma once
 
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <functional>
 #include <cstdint>
 #include <cmath>
@@ -125,3 +129,5 @@ namespace YOBA {
 			static void swInterruptHandler(void* args);
 	};
 }
+
+#endif

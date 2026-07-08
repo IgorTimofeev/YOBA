@@ -4,6 +4,7 @@
 #include <YOBA/UI/Application.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/Core/Events/PinchEvent.hpp>
+#include <cstdint>
 
 namespace YOBA {
 	void Layout::onTick() {
@@ -128,7 +129,7 @@ namespace YOBA {
 	}
 
 	void Layout::insertChildFromEnd(const size_t offset, Element* child) {
-		const auto index = static_cast<ssize_t>(_children.size()) - static_cast<ssize_t>(offset);
+		const auto index = static_cast<int32_t>(_children.size()) - static_cast<int32_t>(offset);
 		insertChild(index >= 0 ? index : 0, child);
 	}
 

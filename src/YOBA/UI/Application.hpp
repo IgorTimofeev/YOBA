@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+#include <vector>
+
 #include <YOBA/Rendering/Renderer.hpp>
 #include <YOBA/UI/Layout.hpp>
 #include <YOBA/UI/Traits/BackgroundColorElement.hpp>
@@ -45,6 +48,18 @@ namespace YOBA {
 
 			Element* getCapturedElement() const;
 			void setCapturedElement(Element* element);
+
+			bool isLayoutInvalidated() const {
+				return _layoutInvalidated;
+			}
+
+			bool isRenderInvalidated() const {
+				return _renderInvalidated;
+			}
+
+			bool isInvalidated() const {
+				return _layoutInvalidated || _renderInvalidated;
+			}
 
 		protected:
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;

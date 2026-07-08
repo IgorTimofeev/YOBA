@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstring>
 
 #include <YOBA/Hardware/Displays/ILI9341Display.hpp>
@@ -272,3 +276,5 @@ namespace YOBA {
 		this->writeCommand(0x29);
 	}
 }
+
+#endif

@@ -161,11 +161,11 @@ namespace YOBA {
 		invalidate();
 	}
 
-	const std::function<std::string_view(float)>& Slider::getTickLabelBuilder() const {
+	const std::function<std::string(float)>& Slider::getTickLabelBuilder() const {
 		return _tickLabelBuilder;
 	}
 
-	void Slider::setTickLabelBuilder(const std::function<std::string_view(float)>& value) {
+	void Slider::setTickLabelBuilder(const std::function<std::string(float)>& value) {
 		_tickLabelBuilder = value;
 	}
 
@@ -343,11 +343,11 @@ namespace YOBA {
 		setValue(_minimumValue + static_cast<float>(localX) / bounds.getWidth() * (_maximumValue - _minimumValue));
 	}
 
-	std::string_view Slider::percentTickLabelBuilder(const float value) {
+	std::string Slider::percentTickLabelBuilder(const float value) {
 		return std::to_string(static_cast<int32_t>(std::round(value * 100.0f)));
 	}
 
-	std::string_view Slider::int32TickLabelBuilder(const float value) {
+	std::string Slider::int32TickLabelBuilder(const float value) {
 		return std::to_string(static_cast<int32_t>(std::round(value)));
 	}
 }

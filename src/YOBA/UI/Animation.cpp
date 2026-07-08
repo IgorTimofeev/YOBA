@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include <YOBA/UI/Animation.hpp>
 #include <YOBA/System.hpp>
 #include <YOBA/UI/Application.hpp>

@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstring>
 
 #include <YOBA/Hardware/Displays/ST7789Display.hpp>
@@ -224,3 +228,5 @@ namespace YOBA {
 		system::delayMs(120);
 	}
 }
+
+#endif

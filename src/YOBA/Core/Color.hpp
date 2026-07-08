@@ -21,7 +21,7 @@ namespace YOBA {
 			
 			}
 			
-			virtual ~Color() = default;
+			constexpr virtual ~Color() = default;
 
 			ColorModel getModel() const;
 

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <YOBA/System.hpp>
+
+#if defined(YOBA_SYSTEM_MCU)
+
 #include <cstdint>
 #include <span>
 
@@ -94,3 +98,5 @@ namespace YOBA {
 			constexpr static uint8_t MADCTL_MH = 0x04;  ///< LCD refresh right to left
 	};
 }
+
+#endif

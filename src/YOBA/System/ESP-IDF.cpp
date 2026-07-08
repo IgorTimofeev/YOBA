@@ -1,6 +1,6 @@
 #include <YOBA/System.hpp>
 
-#ifdef YOBA_SYSTEM_ESP_IDF
+#if defined(YOBA_SYSTEM_ESP_IDF)
 
 #include <cstdio>
 #include <cstring>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/UI/Element.hpp>
 
 namespace YOBA {

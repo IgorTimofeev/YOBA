@@ -67,7 +67,7 @@ namespace YOBA {
 			*/
 			void renderText(const Point& point, const Font* font, const Color* color, std::string_view text, uint8_t fontScale = 1);
 
-			virtual void flush() = 0;
+			virtual void flush();
 
 		protected:
 			RenderingTarget* _target = nullptr;

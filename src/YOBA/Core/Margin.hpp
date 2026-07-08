@@ -6,7 +6,7 @@ namespace YOBA {
 	class Margin {
 		public:
 			Margin() = default;
-			explicit Margin(int32_t uniformValue);
+			Margin(int32_t uniformValue);
 			Margin(int32_t horizontal, int32_t vertical);
 			Margin(int32_t left, int32_t top, int32_t right, int32_t bottom);
 

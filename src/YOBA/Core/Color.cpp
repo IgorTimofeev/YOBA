@@ -59,8 +59,8 @@ namespace YOBA {
 
 	RGB888Color MonochromeColor::toRGB888() const {
 		return
-			_value > 0
-			? RGB888Color(0xFf, 0xFF, 0xFF)
+			_value
+			? RGB888Color(0xFF, 0xFF, 0xFF)
 			: RGB888Color(0x00, 0x00, 0x00);
 	}
 

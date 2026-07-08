@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <algorithm>
 
 #include <YOBA/Core/Vector2.hpp>
 #include <YOBA/Core/Size.hpp>
@@ -206,9 +207,7 @@ namespace YOBA {
 			uint16_t _width = 0;
 			uint16_t _height = 0;
 	};
-
-	constexpr Rectangle Rectangle::invalidValue = { -1, -1, 0, 0 };
-
+	
 	// TODO: remove this in other projects
 	using Bounds = Rectangle;
 }

@@ -1082,4 +1082,8 @@ namespace YOBA {
 				break;
 		}
 	}
+
+	void Renderer::flush() {
+
+	}
 }
