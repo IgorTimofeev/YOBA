@@ -1,7 +1,7 @@
 #include <YOBA/Core/Image.hpp>
 
 namespace YOBA {
-	uint8_t Image::getFlags() const {
+	uint8_t Image::getOptions() const {
 		return _options;
 	}
 

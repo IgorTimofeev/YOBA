@@ -10,7 +10,7 @@
 #include <YOBA/Core/Events/Event.hpp>
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Transform.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
 	class Event;

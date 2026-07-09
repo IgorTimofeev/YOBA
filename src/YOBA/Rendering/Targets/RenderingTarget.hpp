@@ -36,7 +36,7 @@ namespace YOBA {
 		friend class Renderer;
 
 		public:
-			virtual ~RenderingTarget();
+			virtual ~RenderingTarget() = default;
 
 			void setup(
 				const Size& size,
@@ -45,7 +45,7 @@ namespace YOBA {
 				ColorModel colorModel
 			);
 
-			virtual void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) = 0;
+			virtual void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) = 0;
 
 			PixelOrder getPixelOrder() const;
 			ColorModel getColorModel() const;

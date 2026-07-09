@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <YOBA/Rendering/RGB565Renderer.hpp>
+#include <YOBA/Rendering/Renderers/RGB565Renderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
@@ -14,7 +14,7 @@ namespace YOBA {
 		const size_t transactionBufferLength = size.getWidth() * _transactionViewportHeight * 2;
 
 		for (uint16_t y = 0; y < size.getHeight(); y += _transactionViewportHeight) {
-			_target->writePixels(
+			_target->flush(
 				Rectangle(0, y, size.getWidth(), getTransactionViewportHeight()),
 				{ transactionBufferPtr, transactionBufferLength }
 			);
@@ -67,14 +67,14 @@ namespace YOBA {
 	}
 
 	void RGB565Renderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getFlags() & ImageOptions::RGB565))
+		if (!(image->getOptions() & ImageOptions::RGB565))
 			return;
 
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
 		const size_t pixelBufferScanlineLength = _target->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
-		if (image->getFlags() & ImageOptions::alpha1Bit) {
+		if (image->getOptions() & ImageOptions::alpha1Bit) {
 			auto bitmapPtr = image->getBitmap();
 
 			uint8_t bitmapBitIndex = 0;

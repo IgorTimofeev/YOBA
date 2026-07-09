@@ -5,7 +5,7 @@
 
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/Core/Rectangle.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 #include <YOBA/UI/Spatial/sceneElement.hpp>
 

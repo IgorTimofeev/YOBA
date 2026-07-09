@@ -2,7 +2,7 @@
 
 #include <YOBA/UI/Shapes/Shape.hpp>
 #include <YOBA/Core/Color.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
 	class DitheredRectangleShape : public Shape {

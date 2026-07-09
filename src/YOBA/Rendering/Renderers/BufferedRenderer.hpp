@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {

@@ -1,4 +1,4 @@
-#include <YOBA/Rendering/MonochromeRenderer.hpp>
+#include <YOBA/Rendering/Renderers/MonochromeRenderer.hpp>
 
 namespace YOBA {
 	size_t MonochromeRenderer::computePixelBufferLength() const {
@@ -6,7 +6,7 @@ namespace YOBA {
 	}
 
 	void MonochromeRenderer::flush() {
-		getTarget()->writePixels(
+		getTarget()->flush(
 			Rectangle(getTarget()->getSize()),
 			{ getPixelBuffer(), getPixelBufferLength() }
 		);

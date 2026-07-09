@@ -18,7 +18,7 @@
 
 #include <YOBA/System.hpp>
 #include <YOBA/Core/Vector2.hpp>
-#include <YOBA/Rendering/RenderingTarget.hpp>
+#include <YOBA/Rendering/Targets/RenderingTarget.hpp>
 
 namespace YOBA {
 	enum class FT6336UGMode : uint8_t {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <YOBA/Rendering/BufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/BufferedRenderer.hpp>
 
 namespace YOBA {
 	class TransactionalBufferedRenderer : public virtual BufferedRenderer {

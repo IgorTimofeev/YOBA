@@ -8,9 +8,12 @@ namespace YOBA {
 	// I love C++
 	namespace ImageOptions {
 		enum : uint8_t {
-			RGB565 = 0b0000'0001,
-			palette8Bit = 0b0000'0010,
-			alpha1Bit = 0b0000'0100,
+			monochrome =  0b00000001,
+			RGB565 =      0b00000010,
+			RGB666 =      0b00000100,
+			RGB888 =      0b00001000,
+			palette8Bit = 0b00010000,
+			alpha1Bit =   0b00100100,
 		};
 	}
 
@@ -28,7 +31,7 @@ namespace YOBA {
 			
 			}
 
-			uint8_t getFlags() const;
+			uint8_t getOptions() const;
 			const Size& getSize() const;
 			const uint8_t* getBitmap() const;
 

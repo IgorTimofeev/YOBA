@@ -1,12 +1,8 @@
-#include <YOBA/Rendering/RenderingTarget.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Targets/RenderingTarget.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
-	RenderingTarget::~RenderingTarget() {
-
-	}
-
 	void RenderingTarget::setup(
 		const Size& size,
 		const Rotation rotation,

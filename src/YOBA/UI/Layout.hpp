@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <YOBA/UI/Element.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Events/Event.hpp>

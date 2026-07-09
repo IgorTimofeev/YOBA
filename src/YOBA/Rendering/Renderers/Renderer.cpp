@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Core/Math.hpp>
 #include <YOBA/Core/UTF-8.hpp>
 

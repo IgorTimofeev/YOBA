@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <YOBA/Rendering/RenderingTarget.hpp>
+#include <YOBA/Rendering/Targets/RenderingTarget.hpp>
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Color.hpp>

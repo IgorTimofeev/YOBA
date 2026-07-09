@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <YOBA/Rendering/TransactionalBufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/TransactionalBufferedRenderer.hpp>
 #include <YOBA/System.hpp>
 
 namespace YOBA {

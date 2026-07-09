@@ -1,4 +1,4 @@
-#include <YOBA/Rendering/BufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/BufferedRenderer.hpp>
 #include <YOBA/System.hpp>
 
 namespace YOBA {

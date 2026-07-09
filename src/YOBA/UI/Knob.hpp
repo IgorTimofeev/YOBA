@@ -5,7 +5,7 @@
 
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/Core/Color.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/UI/Traits/BackgroundColorElement.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/Core/Math.hpp>

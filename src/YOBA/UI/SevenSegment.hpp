@@ -4,7 +4,7 @@
 #include <limits>
 
 #include <YOBA/Core/Color.hpp>
-#include <YOBA/Rendering/Renderer.hpp>
+#include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/StackLayout.hpp>
 
