@@ -10,15 +10,11 @@ namespace YOBA {
 	class Font {
 		public:
 			constexpr Font(
-				const uint32_t fromCodepoint,
-				const uint32_t toCodepoint,
 				const uint8_t constantGlyphWidth,
 				const uint8_t lineHeight,
 				const Glyph* glyphs,
 				const uint8_t* bitmap
 			) :
-				_fromCodepoint(fromCodepoint),
-				_toCodepoint(toCodepoint),
 				_constantGlyphWidth(constantGlyphWidth),
 				_lineHeight(lineHeight),
 				_glyphs(glyphs),
@@ -27,7 +23,19 @@ namespace YOBA {
 
 			}
 
+			constexpr virtual ~Font() = default;
+
 			constexpr static uint8_t missingGlyphWidth = 10;
+
+			/**
+			 * Accepts a UTF-8 codepoint and converts it to a glyph index in the corresponding array.
+			 *
+			 * This method must be implemented in the font subclasses.
+			 *
+			 * @param codepoint UTF-8 codepoint
+			 * @return Positive index of glyph if it was found in map and -1 otherwise
+			 */
+			constexpr virtual int32_t getGlyphIndex(const uint32_t codepoint) const = 0;
 
 			constexpr bool isConstantGlyphWidth() const {
 				return _constantGlyphWidth > 0;
@@ -37,37 +45,30 @@ namespace YOBA {
 				return _constantGlyphWidth;
 			}
 
-			constexpr uint32_t getFromCodepoint() const {
-				return _fromCodepoint;
-			}
-
-			constexpr uint32_t getToCodepoint() const {
-				return _toCodepoint;
-			}
-
 			constexpr const uint8_t* getBitmap() const {
 				return _bitmap;
 			}
 
-			constexpr const Glyph* getGlyph(const uint32_t codepoint) const {
+			/**
+			 * @param glyphIndex Index of glyph obtained via getGlyphIndex(codepoint)
+			 * @return Pointer to glyph that will never be nullptr.
+			 */
+			constexpr const Glyph* getGlyphByIndex(const uint32_t glyphIndex) const {
 				return
-					codepoint < _fromCodepoint || codepoint > _toCodepoint
-					? nullptr
-					: (
-						isConstantGlyphWidth()
-						? _glyphs + codepoint - _fromCodepoint
-						: reinterpret_cast<const VariableWidthGlyph*>(_glyphs) + codepoint - _fromCodepoint
-					);
+					isConstantGlyphWidth()
+					? _glyphs + glyphIndex
+					: reinterpret_cast<const VariableWidthGlyph*>(_glyphs) + glyphIndex;
 			}
+
+			/**
+			 * @param glyph Pointer to glyph whose width is to be returned. Must not be nullptr.
+			 * @return Width of glyph in pixels.
+			 */
 			constexpr uint8_t getWidth(const Glyph* glyph) const {
 				return
-					glyph
-					? (
-						isConstantGlyphWidth()
-						? _constantGlyphWidth
-						: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getWidth()
-					)
-					: missingGlyphWidth;
+					isConstantGlyphWidth()
+					? _constantGlyphWidth
+					: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getWidth();
 			}
 
 			constexpr uint8_t getWidth(const Glyph* glyph, const uint8_t scale) const {
@@ -75,7 +76,12 @@ namespace YOBA {
 			}
 
 			constexpr uint8_t getWidth(const uint32_t codepoint) const {
-				return getWidth(getGlyph(codepoint));
+				const auto glyphIndex = getGlyphIndex(codepoint);
+
+				return
+					glyphIndex >= 0
+					? getWidth(getGlyphByIndex(glyphIndex))
+					: missingGlyphWidth;
 			}
 
 			constexpr uint8_t getWidth(const uint32_t codepoint, const uint8_t scale) const {
@@ -97,8 +103,6 @@ namespace YOBA {
 			Size getSize(const std::string_view text, uint8_t scale) const;
 
 		private:
-			const uint32_t _fromCodepoint;
-			const uint32_t _toCodepoint;
 			const uint8_t _constantGlyphWidth;
 			const uint8_t _lineHeight;
 			const Glyph* _glyphs;

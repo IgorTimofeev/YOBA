@@ -4,13 +4,13 @@
 
 namespace YOBA {
 	void RenderingTarget::setup(
-		const Size& size,
+		const Size& defaultSize,
 		const Rotation rotation,
 		const PixelOrder pixelOrder,
 		const ColorModel colorModel
 	) {
-		_defaultSize = size;
-		_size = size;
+		_defaultSize = defaultSize;
+		_size = defaultSize;
 		_rotation = rotation;
 		_pixelOrder = pixelOrder;
 		_colorModel = colorModel;
@@ -30,6 +30,20 @@ namespace YOBA {
 		return _size;
 	}
 
+	void RenderingTarget::setDefaultSize(const Size& size) {
+		if (size == _defaultSize)
+			return;
+
+		_defaultSize = size;
+
+		updateSizeFromRotation();
+
+		if (_renderer)
+			_renderer->updateFromTarget();
+
+		onDefaultSizeChanged();
+	}
+
 	Rotation RenderingTarget::getRotation() const {
 		return _rotation;
 	}
@@ -40,35 +54,31 @@ namespace YOBA {
 
 		_rotation = value;
 
+		updateSizeFromRotation();
+
+		if (_renderer)
+			_renderer->updateFromTarget();
+
 		onRotationChanged();
 	}
 
 	Point RenderingTarget::applyRotation(const Point& point) const {
-//		Serial.printf("Original position: %d x %d\n", point.getX(), point.getY());
-
 		switch (getRotation()) {
 			case Rotation::none:
 				return point;
 
-			case Rotation::clockwise90: {
-				return {
-					_size.getWidth() - point.getY(),
-					point.getX()
-				};
-			}
-
-			case Rotation::clockwise180:
-				return {
-					_size.getWidth() - point.getX(),
-					_size.getHeight() - point.getY()
-				};
-
-			default: {
-				return {
-					point.getY(),
-					_size.getHeight() - point.getX()
-				};
-			}
+			case Rotation::clockwise90: return {
+				_size.getWidth() - point.getY(),
+				point.getX()
+			};
+			case Rotation::clockwise180: return {
+				_size.getWidth() - point.getX(),
+				_size.getHeight() - point.getY()
+			};
+			default: return {
+				point.getY(),
+				_size.getHeight() - point.getX()
+			};
 		}
 	}
 
@@ -87,26 +97,27 @@ namespace YOBA {
 		}
 	}
 
+	void RenderingTarget::onDefaultSizeChanged() {
+
+	}
+
 	void RenderingTarget::onRotationChanged() {
-		updateSizeFromRotation();
 
-		if (_renderer)
-			_renderer->updateFromTarget();
-	}
-
-	bool RenderingTarget::operator==(const RenderingTarget& rhs) const {
-		return
-			_rotation == rhs._rotation &&
-			_defaultSize == rhs._defaultSize &&
-			_colorModel == rhs._colorModel &&
-			_pixelOrder == rhs._pixelOrder;
-	}
-
-	bool RenderingTarget::operator!=(const RenderingTarget& rhs) const {
-		return !(rhs == *this);
 	}
 
 	Renderer* RenderingTarget::getRenderer() const {
 		return _renderer;
+	}
+
+	bool RenderingTarget::operator==(const RenderingTarget& rhs) const {
+		return
+			_rotation == rhs._rotation
+			&& _defaultSize == rhs._defaultSize
+			&& _colorModel == rhs._colorModel
+			&& _pixelOrder == rhs._pixelOrder;
+	}
+
+	bool RenderingTarget::operator!=(const RenderingTarget& rhs) const {
+		return !(rhs == *this);
 	}
 }

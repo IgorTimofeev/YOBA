@@ -39,7 +39,7 @@ namespace YOBA {
 			virtual ~RenderingTarget() = default;
 
 			void setup(
-				const Size& size,
+				const Size& defaultSize,
 				Rotation rotation,
 				PixelOrder pixelOrder,
 				ColorModel colorModel
@@ -49,7 +49,10 @@ namespace YOBA {
 
 			PixelOrder getPixelOrder() const;
 			ColorModel getColorModel() const;
+
 			const Size& getSize() const;
+
+			void setDefaultSize(const Size& size);
 
 			Rotation getRotation() const;
 			void setRotation(Rotation value);
@@ -61,6 +64,7 @@ namespace YOBA {
 			bool operator!=(const RenderingTarget& rhs) const;
 
 		protected:
+			virtual void onDefaultSizeChanged();
 			virtual void onRotationChanged();
 
 		private:

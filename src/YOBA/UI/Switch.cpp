@@ -1,9 +1,23 @@
 #include <YOBA/UI/Switch.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 
+#include "Application.hpp"
+
 namespace YOBA {
-	Switch::Switch(const bool checked) {
-		setActive(checked);
+	Switch::Switch(const bool isActive) {
+		_animation.setTarget(this);
+
+		_animation.setOnTick([this] {
+			_handlePosition = _handlePositionFrom + ((this->isActive() ? 1.0f : 0.0f) - _handlePositionFrom) * _animation.getProgress();
+
+			invalidateRender();
+		});
+
+		setActive(isActive);
+	}
+
+	Switch::Switch() : Switch(true) {
+
 	}
 
 	const Color* Switch::getTrackColor() const {
@@ -36,18 +50,54 @@ namespace YOBA {
 		invalidateRender();
 	}
 
+	uint32_t Switch::getAnimationDuration() const {
+		return _animation.getDuration();
+	}
+
+	void Switch::setAnimationDuration(const uint32_t durationUs) {
+		_animation.setDuration(durationUs);
+	}
+
+	void Switch::onEvent(Event* event) {
+		if (event->getTypeID() != PointerUpEvent::typeID)
+			return;
+
+		setActive(!isActive());
+
+		event->setHandled(true);
+	}
+
+	void Switch::onIsActiveChanged() {
+		if (Application::getCurrent()) {
+			_animation.stop();
+
+			_handlePositionFrom = _handlePosition;
+			_animation.start();
+		}
+		else {
+			_handlePosition = isActive() ? 1.f : 0.f;
+			_handlePositionFrom = _handlePosition;
+		}
+	}
+
 	void Switch::onRender(Renderer* renderer, const Rectangle& bounds) {
-		const uint16_t handleHalf = bounds.getHeight() / 2;
-		const uint16_t handleOffset = isActive() ? bounds.getWidth() - bounds.getHeight() : 0;
-		const uint16_t handleOffsetCenter = handleOffset + handleHalf;
+		const uint16_t handleWidth = bounds.getHeight();
+		const uint16_t handleWidthHalf = handleWidth / 2;
+
+		const auto handleX = static_cast<uint16_t>(
+			static_cast<float>(bounds.getWidth() - handleWidth)
+			* _handlePosition
+		);
+
+		const uint16_t handleXCenter = handleX + handleWidthHalf;
 
 		// Checked
-		if (handleOffset > 0 && _checkedColor) {
+		if (handleX > 0 && _checkedColor) {
 			renderer->renderFilledRectangle(
 				Rectangle(
 					bounds.getX(),
 					bounds.getY(),
-					handleOffsetCenter + handleHalf,
+					handleXCenter + handleWidthHalf,
 					bounds.getHeight()
 				),
 				getCornerRadius(),
@@ -56,12 +106,12 @@ namespace YOBA {
 		}
 
 		// Track
-		if (handleOffset + bounds.getHeight() < bounds.getX2() && _trackColor) {
+		if (handleX + bounds.getHeight() < bounds.getX2() && _trackColor) {
 			renderer->renderFilledRectangle(
 				Rectangle(
-					bounds.getX() + handleOffsetCenter - handleHalf,
+					bounds.getX() + handleXCenter - handleWidthHalf,
 					bounds.getY(),
-					bounds.getWidth() - handleOffsetCenter + handleHalf,
+					bounds.getWidth() - handleXCenter + handleWidthHalf,
 					bounds.getHeight()
 				),
 				getCornerRadius(),
@@ -73,23 +123,14 @@ namespace YOBA {
 		if (_handleColor) {
 			renderer->renderFilledRectangle(
 				Rectangle(
-					bounds.getX() + handleOffset,
+					bounds.getX() + handleX,
 					bounds.getY(),
-					bounds.getHeight(),
+					handleWidth,
 					bounds.getHeight()
 				),
 				getCornerRadius(),
 				_handleColor
 			);
 		}
-	}
-
-	void Switch::onEvent(Event* event) {
-		if (event->getTypeID() != PointerUpEvent::typeID)
-			return;
-
-		setActive(!isActive());
-
-		event->setHandled(true);
 	}
 }

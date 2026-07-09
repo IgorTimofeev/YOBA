@@ -3,12 +3,13 @@
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/Traits/ActiveElement.hpp>
 #include <YOBA/UI/Traits/CornerRadiusElement.hpp>
+#include <YOBA/UI/Animation.hpp>
 
 namespace YOBA {
 	class Switch : public Control, public ActiveElement, public CornerRadiusElement {
 		public:
-			Switch() = default;
-			Switch(const bool checked);
+			Switch(const bool isActive);
+			Switch();
 
 			const Color* getTrackColor() const;
 			void setTrackColor(const Color* value);
@@ -19,13 +20,22 @@ namespace YOBA {
 			const Color* getHandleColor() const;
 			void setHandleColor(const Color* value);
 
+			uint32_t getAnimationDuration() const;
+			void setAnimationDuration(const uint32_t durationUs);
+
 		protected:
-			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 			void onEvent(Event* event) override;
+			void onIsActiveChanged() override;
+			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
 			const Color* _trackColor = nullptr;
 			const Color* _checkedColor = nullptr;
 			const Color* _handleColor = nullptr;
+
+			float _handlePositionFrom = 0.0f;
+			float _handlePosition = 0.f;
+
+			ManualAnimation _animation {};
 	};
 }

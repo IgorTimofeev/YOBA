@@ -67,7 +67,7 @@ namespace YOBA {
 	}
 
 	void RGB565Renderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getOptions() & ImageOptions::RGB565))
+		if (image->getColorModel() != ColorModel::RGB565)
 			return;
 
 		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);

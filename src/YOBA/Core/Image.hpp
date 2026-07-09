@@ -8,22 +8,20 @@ namespace YOBA {
 	// I love C++
 	namespace ImageOptions {
 		enum : uint8_t {
-			monochrome =  0b00000001,
-			RGB565 =      0b00000010,
-			RGB666 =      0b00000100,
-			RGB888 =      0b00001000,
-			palette8Bit = 0b00010000,
-			alpha1Bit =   0b00100100,
+			none =        0b00000000,
+			alpha1Bit =   0b00000001,
 		};
 	}
 
 	class Image {
 		public:
 			constexpr Image(
+				const ColorModel colorModel,
 				const uint8_t options,
 				const Size& size,
 				const uint8_t* bitmap
 			) :
+				_colorModel(colorModel),
 				_options(options),
 				_size(size),
 				_bitmap(bitmap)
@@ -31,11 +29,24 @@ namespace YOBA {
 			
 			}
 
-			uint8_t getOptions() const;
-			const Size& getSize() const;
-			const uint8_t* getBitmap() const;
+			constexpr ColorModel getColorModel() const {
+				return _colorModel;
+			}
+
+			constexpr uint8_t getOptions() const {
+				return _options;
+			}
+
+			constexpr const Size& getSize() const {
+				return _size;
+			}
+
+			constexpr const uint8_t* getBitmap() const {
+				return _bitmap;
+			}
 
 		private:
+			const ColorModel _colorModel;
 			const uint8_t _options;
 			const Size _size;
 			const uint8_t* _bitmap;

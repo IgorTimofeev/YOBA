@@ -40,8 +40,8 @@ namespace YOBA {
 
 		private:
 			AnimationState _state = AnimationState::stopped;
-			uint32_t _durationUs = 0;
-			int64_t _startTimeUs = -1;
+			uint32_t _durationUs = 1'000'000;
+			uint64_t _startTimeUs = 0;
 			Element* _target = nullptr;
 
 			std::function<void(const AnimationState state)> _onStateChanged = nullptr;
@@ -51,14 +51,57 @@ namespace YOBA {
 
 	class ManualAnimation : public Animation {
 		public:
-			const std::function<void(const float progress)>& getOnProgressChanged() const;
-			void setOnProgressChanged(const std::function<void(const float progress)>& callback);
+			const std::function<void()>& getOnTick() const;
+			void setOnTick(const std::function<void()>& callback);
 
 		protected:
 			void onTick() override;
 
 		private:
-			std::function<void(const float progress)> _onProgressChanged = nullptr;
+			std::function<void()> _onTick = nullptr;
+	};
+
+	class FloatAnimation : public Animation {
+		public:
+			float getFrom() const {
+				return _from;
+			}
+
+			void setFrom(const float from) {
+				_from = from;
+			}
+
+			float getTo() const {
+				return _to;
+			}
+
+			void setTo(const float to) {
+				_to = to;
+			}
+
+			float getValue() const {
+				return _from + (_to - _from) * getProgress();
+			}
+
+			const std::function<void()>& getOnTick() const {
+				return _onTick;
+			}
+
+			void setOnTick(const std::function<void()>& callback) {
+				_onTick = callback;
+			}
+
+		protected:
+			void onTick() override {
+				if (_onTick)
+					_onTick();
+			}
+
+		private:
+			float _from = 0;
+			float _to = 1;
+
+			std::function<void()> _onTick = nullptr;
 	};
 
 	class SizeAnimation : public Animation {

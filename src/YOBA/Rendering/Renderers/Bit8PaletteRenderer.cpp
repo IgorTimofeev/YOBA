@@ -113,7 +113,7 @@ namespace YOBA {
 	}
 
 	void Bit8PaletteRenderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getOptions() & ImageOptions::palette8Bit))
+		if (image->getColorModel() != ColorModel::indexed8Bit)
 			return;
 
 		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);

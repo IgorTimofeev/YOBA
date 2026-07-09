@@ -15,15 +15,13 @@ namespace YOBA {
 
 		const auto previousTarget = _target;
 
-		if (previousTarget) {
+		if (previousTarget)
 			previousTarget->_renderer = nullptr;
-		}
 
 		_target = value;
 		_target->_renderer = this;
 
 		resetClip();
-
 		updateFromTarget();
 	}
 
@@ -955,10 +953,10 @@ namespace YOBA {
 		);
 	}
 
-	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const Glyph* glyph, const uint8_t fontScale) {
+	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const int32_t glyphIndex, const Glyph* glyph, const uint8_t fontScale) {
 		auto bitIndex =
 			font->isConstantGlyphWidth()
-			? (codepoint - font->getFromCodepoint()) * (font->getConstantGlyphWidth() * font->getLineHeight())
+			? glyphIndex * (font->getConstantGlyphWidth() * font->getLineHeight())
 			: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getBitmapIndex();
 
 		uint8_t bitmapByte;
@@ -1010,9 +1008,11 @@ namespace YOBA {
 		)
 			return;
 
-		const auto glyph = font->getGlyph(codepoint);
+		const auto glyphIndex = font->getGlyphIndex(codepoint);
 
-		if (glyph) {
+		if (glyphIndex >= 0) {
+			const auto glyph = font->getGlyphByIndex(glyphIndex);
+
 			if (point.getX() + font->getWidth(glyph, fontScale) < clip.getX())
 				return;
 
@@ -1020,7 +1020,7 @@ namespace YOBA {
 				point,
 				font,
 				color,
-				codepoint,
+				glyphIndex,
 				glyph,
 				fontScale
 			);
@@ -1050,26 +1050,36 @@ namespace YOBA {
 		while (charIndex < text.length()) {
 			// Trying to find glyph matched to char
 			const auto codepoint = UTF8::nextCodepoint(text, charIndex);
-			const auto glyph = font->getGlyph(codepoint);
+			const auto glyphIndex = font->getGlyphIndex(codepoint);
 
-			// If glyph was found in bitmap & can be rendered as "human-readable"
-			// For example, U+007F "DE" symbol often has zero width in some fonts
-			if (glyph && font->getWidth(glyph) > 0) {
-				const int32_t x2 = x + font->getWidth(glyph, fontScale);
+			// If glyph was found
+			if (glyphIndex >= 0) {
+				const auto glyph = font->getGlyphByIndex(glyphIndex);
 
-				// Rendering current glyph only if it's in clip region
-				if (x2 > clip.getX()) {
-					renderGlyph(
-						Point(x, point.getY()),
-						font,
-						color,
-						codepoint,
-						glyph,
-						fontScale
-					);
+				// If glyph can be rendered as "human-readable"
+				// For example, U+007F "DE" symbol often has zero width in some fonts
+				if (font->getWidth(glyph) > 0) {
+					const int32_t x2 = x + font->getWidth(glyph, fontScale);
+
+					// Rendering current glyph only if it's in clip region
+					if (x2 > clip.getX()) {
+						renderGlyph(
+							Point(x, point.getY()),
+							font,
+							color,
+							glyphIndex,
+							glyph,
+							fontScale
+						);
+					}
+
+					x = x2;
 				}
+				else {
+					renderMissingGlyph(Point(x, point.getY()), font, color, fontScale);
 
-				x = x2;
+					x += Font::missingGlyphWidth * fontScale;
+				}
 			}
 			else {
 				renderMissingGlyph(Point(x, point.getY()), font, color, fontScale);

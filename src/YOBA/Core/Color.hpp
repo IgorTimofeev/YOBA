@@ -5,12 +5,12 @@
 
 namespace YOBA {
 	enum class ColorModel : uint8_t {
+		monochrome,
 		RGB565,
 		RGB666,
 		RGB888,
-		monochrome,
 		HSB,
-		palette8Bit
+		indexed8Bit
 	};
 
 	class RGB888Color;
@@ -198,7 +198,7 @@ namespace YOBA {
 	template<typename TIndex>
 	class PaletteColor : public Color {
 		public:
-			constexpr PaletteColor(TIndex index) : Color(ColorModel::palette8Bit), _index(index) {
+			constexpr PaletteColor(TIndex index) : Color(ColorModel::indexed8Bit), _index(index) {
 			
 			}
 			

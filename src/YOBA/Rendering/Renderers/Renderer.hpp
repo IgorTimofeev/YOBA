@@ -74,6 +74,7 @@ namespace YOBA {
 			Rectangle _clip {};
 
 			virtual void updateFromTarget();
+
 			virtual void clearNative(const Color* color) = 0;
 			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
 			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
@@ -88,6 +89,6 @@ namespace YOBA {
 			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
 			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
-			void renderGlyph(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const Glyph* glyph, uint8_t fontScale);
+			void renderGlyph(const Point& point, const Font* font, const Color* color, int32_t glyphIndex, const Glyph* glyph, uint8_t fontScale);
 	};
 }

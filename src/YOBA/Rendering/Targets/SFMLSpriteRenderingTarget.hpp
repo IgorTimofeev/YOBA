@@ -12,14 +12,12 @@
 #include <SFML/Graphics.hpp>
 
 namespace YOBA {
-	class SFMLWindowRenderingTarget : public RenderingTarget {
+	class SFMLSpriteRenderingTarget : public RenderingTarget {
 		public:
 			void setup(
-				sf::RenderWindow* window,
 				const Size& size,
-				const float renderingScale
+				const float renderingScale = 1.0f
 			) {
-				_window = window;
 				_renderingScale = renderingScale;
 
 				RenderingTarget::setup(
@@ -37,11 +35,13 @@ namespace YOBA {
 
 				_textureBufferLength = size.getSquare() * 4;
 				system::reallocate(_textureBuffer, _textureBufferLength);
+
+				// Filling alpha
 				std::fill_n(_textureBuffer, _textureBufferLength, 255);
 			}
 
-			sf::RenderWindow* getWindow() const {
-				return _window;
+			const sf::Sprite& getSprite() const {
+				return _sprite;
 			}
 
 			float getRenderingScale() const {
@@ -55,22 +55,24 @@ namespace YOBA {
 					_textureBuffer[i]     =  pixelBufferPtr[j];
 					_textureBuffer[i + 1] =  pixelBufferPtr[j + 1];
 					_textureBuffer[i + 2] =  pixelBufferPtr[j + 2];
+
+					// Already 0xFF
 					// textureBuffer[i + 3] = 0xFF;
 				}
 
 				_texture.update(_textureBuffer);
-				_window->draw(_sprite);
 			}
 
 		private:
-			sf::RenderWindow* _window = nullptr;
-			float _renderingScale = 1;
+			float _renderingScale = 1.0f;
 
 			sf::Texture _texture {};
 			uint8_t* _textureBuffer = nullptr;
 			size_t _textureBufferLength = 0;
 
-			sf::Sprite _sprite { _texture };
+			sf::Sprite _sprite {
+				_texture
+			};
 
 			using RenderingTarget::setup;
 	};

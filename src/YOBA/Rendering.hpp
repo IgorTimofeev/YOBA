@@ -6,7 +6,7 @@
 #include <YOBA/Rendering/Targets/RenderingTarget.hpp>
 
 #if defined(YOBA_SYSTEM_DESKTOP)
-	#include <YOBA/Rendering/Targets/SFMLWindowRenderingTarget.hpp>
+	#include <YOBA/Rendering/Targets/SFMLSpriteRenderingTarget.hpp>
 #endif
 
 // Renderers

@@ -24,7 +24,10 @@ namespace YOBA {
 	}
 
 	float Animation::getProgress() const {
-		return static_cast<float>(std::min(getElapsedTime(), _durationUs)) / static_cast<float>(getDuration());
+		return
+			_startTimeUs > 0
+			? static_cast<float>(std::min(getElapsedTime(), _durationUs)) / static_cast<float>(getDuration())
+			: 0;
 	}
 
 	AnimationState Animation::getState() const {
@@ -59,7 +62,6 @@ namespace YOBA {
 		if (getState() == AnimationState::stopped)
 			return;
 
-		_startTimeUs = -1;
 		setState(AnimationState::stopped);
 	}
 
@@ -72,7 +74,6 @@ namespace YOBA {
 
 		// Completed
 		if (getElapsedTime() >= _durationUs) {
-			_startTimeUs = -1;
 			setState(AnimationState::completed);
 		}
 	}
@@ -88,17 +89,17 @@ namespace YOBA {
 
 	// -------------------------------- ManualAnimation --------------------------------
 
-	const std::function<void(const float progress)>& ManualAnimation::getOnProgressChanged() const {
-		return _onProgressChanged;
+	const std::function<void()>& ManualAnimation::getOnTick() const {
+		return _onTick;
 	}
 
-	void ManualAnimation::setOnProgressChanged(const std::function<void(const float progress)>& callback) {
-		_onProgressChanged = callback;
+	void ManualAnimation::setOnTick(const std::function<void()>& callback) {
+		_onTick = callback;
 	}
 
 	void ManualAnimation::onTick() {
-		if (_onProgressChanged)
-			_onProgressChanged(getProgress());
+		if (_onTick)
+			_onTick();
 	}
 
 	// -------------------------------- SizeAnimation --------------------------------

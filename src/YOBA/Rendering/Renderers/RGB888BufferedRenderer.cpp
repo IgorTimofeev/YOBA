@@ -118,7 +118,7 @@ namespace YOBA {
 	}
 
 	void RGB888BufferedRenderer::renderImageNative(const Point& point, const Image* image) {
-		if (!(image->getOptions() & ImageOptions::RGB888))
+		if (image->getColorModel() != ColorModel::RGB888)
 			return;
 
 		const auto& clip = getClip();

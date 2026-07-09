@@ -48,7 +48,7 @@ namespace YOBA {
 	void Application::tick() {
 		_current = this;
 
-		// Root element size should match render target size
+		// Root element size should match rendering target size
 		setSize(_renderer->getTarget()->getSize());
 
 		// Resetting clipping just in case if some UI element broke it

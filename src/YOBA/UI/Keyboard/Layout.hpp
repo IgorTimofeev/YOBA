@@ -111,7 +111,7 @@ namespace YOBA {
 			TextKeyboardButton _keyR { Key::r, "r", Key::r, "R", 0.1f };
 			TextKeyboardButton _keyT { Key::t, "t", Key::t, "T", 0.1f };
 			TextKeyboardButton _keyY { Key::y, "y", Key::y, "Y", 0.1f };
-			TextKeyboardButton _keyU { Key::u, "u", Key::u, "", 0.1f };
+			TextKeyboardButton _keyU { Key::u, "u", Key::u, "U", 0.1f };
 			TextKeyboardButton _keyI { Key::i, "i", Key::i, "I", 0.1f };
 			TextKeyboardButton _keyO { Key::o, "o", Key::o, "O", 0.1f };
 			TextKeyboardButton _keyP { Key::p, "p", Key::p, "P", 0.1f };
@@ -124,7 +124,7 @@ namespace YOBA {
 			TextKeyboardButton _keyH { Key::h, "h", Key::h, "H", 0.1f };
 			TextKeyboardButton _keyJ { Key::j, "j", Key::j, "J", 0.1f };
 			TextKeyboardButton _keyK { Key::k, "k", Key::k, "K", 0.1f };
-			TextKeyboardButton _keyL { Key::l, "l", Key::l, "", 0.1f };
+			TextKeyboardButton _keyL { Key::l, "l", Key::l, "L", 0.1f };
 
 			ShiftKeyboardButton _keyShift = { "^", "^^", "^^^", 0.15f };
 			TextKeyboardButton _keyZ { Key::z, "z", Key::z, "Z", 0.1f };
