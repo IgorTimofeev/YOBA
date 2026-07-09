@@ -7,7 +7,7 @@ namespace YOBA {
 
 		// Primary circle
 		if (getBackgroundColor()) {
-			renderer->renderFilledCircle(
+			renderer->fillCircle(
 				center,
 				radius,
 				getBackgroundColor()
@@ -16,7 +16,7 @@ namespace YOBA {
 
 		// Center circle
 		if (getMiddleColor()) {
-			renderer->renderFilledCircle(
+			renderer->fillCircle(
 				center,
 				static_cast<uint16_t>(static_cast<float>(radius) * 0.5f),
 				getMiddleColor()
@@ -29,7 +29,7 @@ namespace YOBA {
 			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 
-			renderer->renderLine(
+			renderer->strokeLine(
 				static_cast<Point>(lineStart),
 				static_cast<Point>(lineEnd),
 				getLineColor()

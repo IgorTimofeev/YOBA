@@ -10,7 +10,7 @@ An independent and hardcore UI framework written on modern C++ for embedded devi
 - Fully automatic layouts
 - Animations & rendering transforms
 - Event system for external peripherals like touch screens & keyboards with possibility to create custom events
-- Compact image & font format with a nice [tool](https://github.com/IgorTimofeev/YobaResourceConverter)
+- Compact image & font format with a nice [tool](https://github.com/IgorTimofeev/YOBAResourceConverter)
 to convert your dick pics into production-ready projects
 - A clear distinction between UI, renderers and rendering targets (screens, desktop windows, etc.),
 all of which can be used separately

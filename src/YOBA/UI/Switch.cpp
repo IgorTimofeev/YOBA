@@ -94,7 +94,7 @@ namespace YOBA {
 
 		// Checked
 		if (handleX > 0 && _checkedColor) {
-			renderer->renderFilledRectangle(
+			renderer->fillRectangle(
 				Rectangle(
 					bounds.getX(),
 					bounds.getY(),
@@ -108,7 +108,7 @@ namespace YOBA {
 
 		// Track
 		if (handleX + bounds.getHeight() < bounds.getX2() && _trackColor) {
-			renderer->renderFilledRectangle(
+			renderer->fillRectangle(
 				Rectangle(
 					bounds.getX() + handleXCenter - handleWidthHalf,
 					bounds.getY(),
@@ -122,7 +122,7 @@ namespace YOBA {
 
 		// Handle
 		if (_handleColor) {
-			renderer->renderFilledRectangle(
+			renderer->fillRectangle(
 				Rectangle(
 					bounds.getX() + handleX,
 					bounds.getY(),

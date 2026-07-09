@@ -25,47 +25,47 @@ namespace YOBA {
 			void resetClip();
 
 			void clear(const Color* color);
-			void renderPixel(const Point& point, const Color* color);
-			void renderHorizontalLine(const Point& point, uint16_t length, const Color* color);
-			void renderVerticalLine(const Point& point, uint16_t length, const Color* color);
-			void renderFilledRectangle(const Rectangle& bounds, const Color* color);
-			void renderFilledRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
+			void putPixel(const Point& point, const Color* color);
+			void strokeHorizontalLine(const Point& point, uint16_t length, const Color* color);
+			void strokeVerticalLine(const Point& point, uint16_t length, const Color* color);
+			void fillRectangle(const Rectangle& bounds, const Color* color);
+			void fillRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
 			void renderDitheredRectangle(const Rectangle& bounds, const Color* color);
-			void renderFilledQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
+			void fillQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
 
-			void renderImage(const Point& point, const Image* image);
-			void renderRectangle(const Rectangle& bounds, const Color* color);
-			void renderRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
+			void putImage(const Point& point, const Image* image);
+			void strokeRectangle(const Rectangle& bounds, const Color* color);
+			void strokeRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
 			// Thanks, AdaFruit!
-			void renderLine(const Point& from, const Point& to, const Color* color);
-			void renderLine(const Point& from, const Point& to, const Color* color, uint8_t thickness);
-			void renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
-			void renderCircle(const Point& center, uint16_t radius, const Color* color);
-			void renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
-			void renderFilledCircle(const Point& center, uint16_t radius, const Color* color);
+			void strokeLine(const Point& from, const Point& to, const Color* color);
+			void strokeLine(const Point& from, const Point& to, const Color* color, uint8_t thickness);
+			void strokeTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
+			void strokeCircle(const Point& center, uint16_t radius, const Color* color);
+			void fillTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
+			void fillCircle(const Point& center, uint16_t radius, const Color* color);
 			// Thanks, u8g2!
-			void renderArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
-			void renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve = 10, const float tension = 0.5f);
+			void strokeArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
+			void strokeCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve = 10, const float tension = 0.5f);
 
 			/**
-			* @brief Renders single char
+			* @brief Render single char
 			* @param point Position of upper-left corner of the char
 			* @param font Font with which the char will be rendered
 			* @param color Color with which the char will be rendered
 			* @param codepoint UTF-8 codepoint of char
-			* @param fontScale Scale factor of text, defaults to 1
+			* @param textScale Scale factor of text, defaults to 1
 			*/
-			void renderChar(const Point& point, const Font* font, const Color* color, uint32_t codepoint, uint8_t fontScale = 1);
+			void putText(const Point& point, const Font* font, const Color* color, uint32_t codepoint, uint8_t textScale = 1);
 
 			/**
-			* @brief Renders line of UTF-8 text
+			* @brief Render line of UTF-8 text
 			* @param point Position of upper-left corner of the first character in text
 			* @param font Font with which the text will be rendered
 			* @param color Color with which the text will be rendered
 			* @param text Text to render
-			* @param fontScale Scale factor of text, defaults to 1
+			* @param textScale Scale factor of text, defaults to 1
 			*/
-			void renderText(const Point& point, const Font* font, const Color* color, std::string_view text, uint8_t fontScale = 1);
+			void putText(const Point& point, const Font* font, const Color* color, std::string_view text, uint8_t textScale = 1);
 
 			virtual void flush();
 
@@ -76,19 +76,19 @@ namespace YOBA {
 			virtual void updateFromTarget();
 
 			virtual void clearNative(const Color* color) = 0;
-			virtual void renderPixelNative(const Point& point, const Color* color) = 0;
-			virtual void renderHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
-			virtual void renderVerticalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
-			virtual void renderFilledRectangleNative(const Rectangle& bounds, const Color* color) = 0;
-			virtual void renderImageNative(const Point& point, const Image* image) = 0;
+			virtual void putPixelNative(const Point& point, const Color* color) = 0;
+			virtual void strokeHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
+			virtual void strokeVerticalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
+			virtual void fillRectangleNative(const Rectangle& bounds, const Color* color) = 0;
+			virtual void putImageNative(const Point& point, const Image* image) = 0;
 
 		private:
+			static float getAtan2Fast(const float y, const float x);
 			static Point getCatmullRomPoint(const Point* points, size_t index, float t, float tension);
 
-			static float fastAtan2(const float y, const float x);
-			void renderRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
-			void renderFilledRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
-			void renderMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
-			void renderGlyph(const Point& point, const Font* font, const Color* color, int32_t glyphIndex, const Glyph* glyph, uint8_t fontScale);
+			void strokeRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
+			void fillRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
+			void putMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
+			void putGlyph(const Point& point, const Font* font, const Color* color, int32_t glyphIndex, const Glyph* glyph, uint8_t fontScale);
 	};
 }

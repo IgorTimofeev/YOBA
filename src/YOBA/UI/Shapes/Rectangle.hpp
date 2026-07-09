@@ -19,12 +19,12 @@ namespace YOBA {
 				auto color = getFillColor();
 
 				if (color)
-					renderer->renderFilledRectangle(bounds, getCornerRadius(), color);
+					renderer->fillRectangle(bounds, getCornerRadius(), color);
 
 				color = getBorderColor();
 
 				if (color)
-					renderer->renderRectangle(bounds, getCornerRadius(), color);
+					renderer->strokeRectangle(bounds, getCornerRadius(), color);
 			}
 	};
 }

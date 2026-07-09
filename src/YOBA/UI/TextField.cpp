@@ -30,7 +30,7 @@ namespace YOBA {
 		const auto backgroundColor = Color::select(focused, _defaultBackgroundColor, _focusedBackgroundColor);
 
 		if (backgroundColor) {
-			renderer->renderFilledRectangle(
+			renderer->fillRectangle(
 				bounds,
 				getCornerRadius(),
 				backgroundColor
@@ -41,7 +41,7 @@ namespace YOBA {
 		const auto borderColor = Color::select(focused, _defaultBorderColor, _focusedBorderColor);
 
 		if (borderColor) {
-			renderer->renderRectangle(
+			renderer->strokeRectangle(
 				bounds,
 				getCornerRadius(),
 				borderColor
@@ -63,7 +63,7 @@ namespace YOBA {
 				const auto& placeholder = getPlaceholder();
 
 				if (!placeholder.empty()) {
-					renderer->renderText(
+					renderer->putText(
 						Point(
 							bounds.getX() + _textMargin,
 							bounds.getYCenter() - fontHeight / 2
@@ -102,7 +102,7 @@ namespace YOBA {
 				for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
 					const char ch = _mask ? _mask : text[charIndex];
 
-					renderer->renderChar(
+					renderer->putText(
 						textPosition,
 						font,
 						textColor,
@@ -125,7 +125,7 @@ namespace YOBA {
 				if (_cursorPosition == text.length())
 					blinkX = textPosition.getX();
 
-				renderer->renderFilledRectangle(
+				renderer->fillRectangle(
 					Rectangle(
 						blinkX,
 						textPosition.getY() + fontHeight / 2 - _cursorSize.getHeight() / 2,

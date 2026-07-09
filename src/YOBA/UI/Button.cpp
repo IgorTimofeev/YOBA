@@ -61,7 +61,7 @@ namespace YOBA {
 		auto color = Color::select(isActive(), _defaultBackgroundColor, _activeBackgroundColor);
 
 		if (color) {
-			renderer->renderFilledRectangle(
+			renderer->fillRectangle(
 				bounds,
 				getCornerRadius(),
 				color
@@ -72,7 +72,7 @@ namespace YOBA {
 		color = Color::select(isActive(), _defaultBorderColor, _activeBorderColor);
 
 		if (color) {
-			renderer->renderRectangle(
+			renderer->strokeRectangle(
 				bounds,
 				getCornerRadius(),
 				color
@@ -86,7 +86,7 @@ namespace YOBA {
 			color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
 
 			if (color) {
-				renderer->renderText(
+				renderer->putText(
 					Point(
 						bounds.getXCenter() - font->getWidth(getText(), getFontScale()) / 2 + _contentMargin.getLeft() - _contentMargin.getRight(),
 						bounds.getYCenter() - font->getLineHeight(getFontScale()) / 2 + _contentMargin.getTop() - _contentMargin.getBottom()

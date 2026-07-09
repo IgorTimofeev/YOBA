@@ -61,7 +61,7 @@ extern "C" void app_main(void) {
         std::snprintf(text, sizeof(text), "%02lld:%02lld", uptimeMinutes, uptimeSeconds);
 
         // Rendering time on center of display
-        renderer.renderText(
+        renderer.putText(
             display.getSize().getCenter() - font.getSize(text, fontScale).getCenter(),
             &font,
             &textColor,

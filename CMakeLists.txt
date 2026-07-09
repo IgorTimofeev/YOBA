@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE YOBA_SOURCES
-    "src/*.cpp"
-)
+file(GLOB_RECURSE YOBA_SOURCES "src/*.cpp")
 
 if(ESP_PLATFORM)
     idf_component_register(

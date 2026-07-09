@@ -62,14 +62,14 @@ namespace YOBA {
 		clearNative(color);
 	}
 
-	void Renderer::renderPixel(const Point& point, const Color* color) {
+	void Renderer::putPixel(const Point& point, const Color* color) {
 		if (!getClip().contains(point))
 			return;
 
-		renderPixelNative(point, color);
+		putPixelNative(point, color);
 	}
 
-	void Renderer::renderHorizontalLine(const Point& point, uint16_t length, const Color* color) {
+	void Renderer::strokeHorizontalLine(const Point& point, uint16_t length, const Color* color) {
 		const auto& clip = getClip();
 
 		if (
@@ -86,10 +86,10 @@ namespace YOBA {
 		const uint16_t x2 = std::min(point.getX() + length - 1, clip.getX2());
 		length = x2 - x1 + 1;
 
-		renderHorizontalLineNative(Point(x1, point.getY()), length, color);
+		strokeHorizontalLineNative(Point(x1, point.getY()), length, color);
 	}
 
-	void Renderer::renderVerticalLine(const Point& point, uint16_t length, const Color* color) {
+	void Renderer::strokeVerticalLine(const Point& point, uint16_t length, const Color* color) {
 		const auto& clip = getClip();
 
 		if (
@@ -106,10 +106,10 @@ namespace YOBA {
 		const uint16_t y2 = std::min(point.getY() + length - 1, clip.getY2());
 		length = y2 - y1 + 1;
 
-		renderVerticalLineNative(Point(point.getX(), y1), length, color);
+		strokeVerticalLineNative(Point(point.getX(), y1), length, color);
 	}
 
-	void Renderer::renderFilledRectangle(const Rectangle& bounds, const Color* color) {
+	void Renderer::fillRectangle(const Rectangle& bounds, const Color* color) {
 		const auto& clip = getClip();
 
 		if (bounds.haveZeroSize() || !clip.intersects(bounds))
@@ -118,16 +118,16 @@ namespace YOBA {
 		const auto& intersection = clip.getIntersection(bounds);
 
 		if (intersection.getWidth() > 1 || intersection.getHeight() > 1) {
-			renderFilledRectangleNative(intersection, color);
+			fillRectangleNative(intersection, color);
 		}
 		else if (intersection.getWidth() == 1) {
-			renderVerticalLine(intersection.getPosition(), intersection.getHeight(), color);
+			strokeVerticalLine(intersection.getPosition(), intersection.getHeight(), color);
 		}
 		else if (intersection.getHeight() == 1) {
-			renderHorizontalLine(intersection.getPosition(), intersection.getWidth(), color);
+			strokeHorizontalLine(intersection.getPosition(), intersection.getWidth(), color);
 		}
 		else {
-			renderPixelNative(intersection.getPosition(), color);
+			putPixelNative(intersection.getPosition(), color);
 		}
 	}
 
@@ -141,28 +141,28 @@ namespace YOBA {
 
 		for (int32_t j = bounds.getY(); j <= y2; j++) {
 			for (int32_t i = odd ? bounds.getX() + step : bounds.getX(); i <= x2; i += totalSize)
-				renderPixel(Point(i, j), color);
+				putPixel(Point(i, j), color);
 
 			odd = !odd;
 		}
 	}
 
-	void Renderer::renderFilledQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color) {
-		renderFilledTriangle(topLeft, topRight, bottomRight, color);
-		renderFilledTriangle(topLeft, bottomLeft, bottomRight, color);
+	void Renderer::fillQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color) {
+		fillTriangle(topLeft, topRight, bottomRight, color);
+		fillTriangle(topLeft, bottomLeft, bottomRight, color);
 	}
 
-	void Renderer::renderImage(const Point& point, const Image* image) {
+	void Renderer::putImage(const Point& point, const Image* image) {
 		if (getClip().intersects(Rectangle(point, image->getSize())))
-			renderImageNative(point, image);
+			putImageNative(point, image);
 	}
 
 	// -------------------------------- Non-native rendering --------------------------------
 
-	void Renderer::renderFilledRectangle(const Rectangle& bounds, const uint16_t cornerRadius, const Color* color) {
+	void Renderer::fillRectangle(const Rectangle& bounds, const uint16_t cornerRadius, const Color* color) {
 		if (cornerRadius > 0) {
 			// Rect in middle
-			renderFilledRectangle(
+			fillRectangle(
 				Rectangle(
 					bounds.getX(),
 					bounds.getY() + cornerRadius,
@@ -173,7 +173,7 @@ namespace YOBA {
 			);
 
 			// 2 upper corners
-			renderFilledRoundedCorners(
+			fillRoundedCorners(
 				Point(
 					bounds.getX() + cornerRadius,
 					bounds.getY() + cornerRadius
@@ -185,7 +185,7 @@ namespace YOBA {
 			);
 
 			// And 2 lower
-			renderFilledRoundedCorners(
+			fillRoundedCorners(
 				Point(
 					bounds.getX() + cornerRadius,
 					bounds.getY() + bounds.getHeight() - cornerRadius - 1
@@ -197,28 +197,28 @@ namespace YOBA {
 			);
 		}
 		else {
-			renderFilledRectangle(bounds, color);
+			fillRectangle(bounds, color);
 		}
 	}
 
-	void Renderer::renderRectangle(const Rectangle& bounds, const Color* color) {
+	void Renderer::strokeRectangle(const Rectangle& bounds, const Color* color) {
 		if (bounds.haveZeroSize())
 			return;
 
 		if (bounds.getWidth() > 1 || bounds.getHeight() > 1) {
-			renderHorizontalLine(
+			strokeHorizontalLine(
 				bounds.getTopLeft(),
 				bounds.getWidth(),
 				color
 			);
 
-			renderHorizontalLine(
+			strokeHorizontalLine(
 				bounds.getBottomLeft(),
 				bounds.getWidth(),
 				color
 			);
 
-			renderVerticalLine(
+			strokeVerticalLine(
 				Point(
 					bounds.getX(),
 					bounds.getY() + 1
@@ -227,7 +227,7 @@ namespace YOBA {
 				color
 			);
 
-			renderVerticalLine(
+			strokeVerticalLine(
 				Point(
 					bounds.getX2(),
 					bounds.getY() + 1
@@ -237,58 +237,58 @@ namespace YOBA {
 			);
 		}
 		else {
-			renderPixel(bounds.getPosition(), color);
+			putPixel(bounds.getPosition(), color);
 		}
 	}
 
-	void Renderer::renderRectangle(const Rectangle& bounds, const uint16_t cornerRadius, const Color* color) {
+	void Renderer::strokeRectangle(const Rectangle& bounds, const uint16_t cornerRadius, const Color* color) {
 		if (cornerRadius > 0) {
-			renderHorizontalLine(
+			strokeHorizontalLine(
 				Point(bounds.getX() + cornerRadius, bounds.getY()),
 				bounds.getWidth() - cornerRadius - cornerRadius,
 				color
 			);
 
-			renderHorizontalLine(
+			strokeHorizontalLine(
 				Point(bounds.getX() + cornerRadius, bounds.getY() + bounds.getHeight() - 1),
 				bounds.getWidth() - cornerRadius - cornerRadius,
 				color
 			);
 
-			renderVerticalLine(
+			strokeVerticalLine(
 				Point(bounds.getX() , bounds.getY() + cornerRadius),
 				bounds.getHeight() - cornerRadius - cornerRadius,
 				color
 			);
 
-			renderVerticalLine(
+			strokeVerticalLine(
 				Point(bounds.getX() + bounds.getWidth() - 1, bounds.getY() + cornerRadius),
 				bounds.getHeight() - cornerRadius - cornerRadius,
 				color
 			);
 
-			renderRoundedCorners(
+			strokeRoundedCorners(
 				Point(bounds.getX() + cornerRadius, bounds.getY() + cornerRadius),
 				cornerRadius,
 				1,
 				color
 			);
 
-			renderRoundedCorners(
+			strokeRoundedCorners(
 				Point(bounds.getX() + bounds.getWidth() - cornerRadius - 1, bounds.getY() + cornerRadius),
 				cornerRadius,
 				2,
 				color
 			);
 
-			renderRoundedCorners(
+			strokeRoundedCorners(
 				Point(bounds.getX() + bounds.getWidth() - cornerRadius - 1, bounds.getY() + bounds.getHeight() - cornerRadius - 1),
 				cornerRadius,
 				4,
 				color
 			);
 
-			renderRoundedCorners(
+			strokeRoundedCorners(
 				Point(bounds.getX() + cornerRadius, bounds.getY() + bounds.getHeight() - cornerRadius - 1),
 				cornerRadius,
 				8,
@@ -296,14 +296,14 @@ namespace YOBA {
 			);
 		}
 		else {
-			renderRectangle(bounds, color);
+			strokeRectangle(bounds, color);
 		}
 	}
 
-	void Renderer::renderLine(const Point& from, const Point& to, const Color* color) {
+	void Renderer::strokeLine(const Point& from, const Point& to, const Color* color) {
 		// Vertical line
 		if (from.getX() == to.getX()) {
-			renderVerticalLine(
+			strokeVerticalLine(
 				Point(from.getX(), std::min(from.getY(), to.getY())),
 				std::abs(to.getY() - from.getY()) + 1,
 				color
@@ -311,7 +311,7 @@ namespace YOBA {
 		}
 		// Horizontal line
 		else if (from.getY() == to.getY()) {
-			renderHorizontalLine(
+			strokeHorizontalLine(
 				Point(std::min(from.getX(), to.getX()), from.getY()),
 				std::abs(to.getX() - from.getX()) + 1,
 				color
@@ -368,10 +368,10 @@ namespace YOBA {
 						partRemaining += deltaX;
 
 						if (partLength == 1) {
-							renderPixel(Point(y1, partVarFrom), color);
+							putPixel(Point(y1, partVarFrom), color);
 						}
 						else {
-							renderVerticalLine(Point(y1, partVarFrom), partLength, color);
+							strokeVerticalLine(Point(y1, partVarFrom), partLength, color);
 						}
 
 						partLength = 0;
@@ -383,7 +383,7 @@ namespace YOBA {
 				}
 
 				if (partLength > 0)
-					renderVerticalLine(Point(y1, partVarFrom), partLength, color);
+					strokeVerticalLine(Point(y1, partVarFrom), partLength, color);
 			}
 			else {
 				while (x1 <= x2) {
@@ -394,10 +394,10 @@ namespace YOBA {
 						partRemaining += deltaX;
 
 						if (partLength == 1) {
-							renderPixel(Point(partVarFrom, y1), color);
+							putPixel(Point(partVarFrom, y1), color);
 						}
 						else {
-							renderHorizontalLine(Point(partVarFrom, y1), partLength, color);
+							strokeHorizontalLine(Point(partVarFrom, y1), partLength, color);
 						}
 
 						partLength = 0;
@@ -409,16 +409,16 @@ namespace YOBA {
 				}
 
 				if (partLength > 0)
-					renderHorizontalLine(Point(partVarFrom, y1), partLength, color);
+					strokeHorizontalLine(Point(partVarFrom, y1), partLength, color);
 			}
 		}
 	}
 
-	void Renderer::renderLine(const Point& from, const Point& to, const Color* color, const uint8_t thickness) {
+	void Renderer::strokeLine(const Point& from, const Point& to, const Color* color, const uint8_t thickness) {
 		if (thickness > 1) {
 			// Same Y, horizontal line
 			if (from.getY() == to.getY()) {
-				renderFilledRectangle(
+				fillRectangle(
 					Rectangle(
 						std::min(from.getX(), to.getX()),
 						from.getY() - thickness / 2,
@@ -433,7 +433,7 @@ namespace YOBA {
 
 			// Same X, vertical line
 			if (from.getX() == to.getX()) {
-				renderFilledRectangle(
+				fillRectangle(
 					Rectangle(
 						from.getX() - thickness / 2,
 						std::min(from.getY(), to.getY()),
@@ -460,7 +460,7 @@ namespace YOBA {
 
 				for (int32_t x = p1.getX(); x <= p2.getX(); x++) {
 					const int32_t y = p1.getY() + dy * (x - p1.getX()) / dx;
-					renderVerticalLine(Point(x, y - thickness / 2), thickness, color);
+					strokeVerticalLine(Point(x, y - thickness / 2), thickness, color);
 				}
 			}
 			// Else by Y
@@ -470,23 +470,23 @@ namespace YOBA {
 
 				for (int y = p1.getY(); y <= p2.getY(); y++) {
 					const int32_t x = p1.getX() + dx * (y - p1.getY()) / dy;
-					renderHorizontalLine(Point(x - thickness / 2, y), thickness, color);
+					strokeHorizontalLine(Point(x - thickness / 2, y), thickness, color);
 				}
 			}
 		}
 		else {
-			renderLine(from, to, color);
+			strokeLine(from, to, color);
 		}
 	}
 	
-	void Renderer::renderTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
+	void Renderer::strokeTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
 		// Simple as fuck
-		renderLine(point1, point2, color);
-		renderLine(point2, point3, color);
-		renderLine(point3, point1, color);
+		strokeLine(point1, point2, color);
+		strokeLine(point2, point3, color);
+		strokeLine(point3, point1, color);
 	}
 
-	void Renderer::renderFilledTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
+	void Renderer::fillTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
 		int32_t
 			x1 = point1.getX(),
 			y1 = point1.getY(),
@@ -531,7 +531,7 @@ namespace YOBA {
 				b = x3;
 			}
 
-			renderHorizontalLine(Point(a, y1), b - a + 1, color);
+			strokeHorizontalLine(Point(a, y1), b - a + 1, color);
 
 			return;
 		}
@@ -569,7 +569,7 @@ namespace YOBA {
 			if (a > b)
 				std::swap(a, b);
 
-			renderHorizontalLine(Point(a, y), b - a + 1, color);
+			strokeHorizontalLine(Point(a, y), b - a + 1, color);
 		}
 
 		// For lower part of triangle, find scanline crossings for segments
@@ -586,101 +586,96 @@ namespace YOBA {
 			if (a > b)
 				std::swap(a, b);
 
-			renderHorizontalLine(Point(a, y), b - a + 1, color);
+			strokeHorizontalLine(Point(a, y), b - a + 1, color);
 
 			y++;
 		}
 	}
 
-	void Renderer::renderCircle(const Point& center, uint16_t radius, const Color* color) {
-		if (radius == 0)
+	void Renderer::strokeCircle(const Point& center, const uint16_t radius, const Color* color) {
+		if (!color || !radius)
 			return;
 
-		int32_t
-			f = 1 - radius,
-			ddF_y = -2 * radius,
-			ddF_x = 1,
-			xs = -1,
-			xe = 0,
-			len;
-
-		bool first = true;
-
-		do {
-			while (f < 0) {
-				++xe;
-				f += (ddF_x += 2);
-			}
-
-			f += (ddF_y += 2);
-
-			if (xe-xs > 1) {
-				if (first) {
-					len = 2 * (xe - xs) - 1;
-					renderHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
-					renderHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
-					renderVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
-					renderVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
-					first = false;
-				}
-				else {
-					len = xe - xs++;
-					renderHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
-					renderHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
-					renderHorizontalLine(Point(center.getX() + xs, center.getY() - radius), len, color);
-					renderHorizontalLine(Point(center.getX() + xs, center.getY() + radius), len, color);
-
-					renderVerticalLine(Point(center.getX() + radius, center.getY() + xs), len, color);
-					renderVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
-					renderVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
-					renderVerticalLine(Point(center.getX() - radius, center.getY() + xs), len, color);
-				}
-			}
-			else {
-				++xs;
-				renderPixel(Point(center.getX() - xe, center.getY() + radius), color);
-				renderPixel(Point(center.getX() - xe, center.getY() - radius), color);
-				renderPixel(Point(center.getX() + xs, center.getY() - radius), color);
-				renderPixel(Point(center.getX() + xs, center.getY() + radius), color);
-
-				renderPixel(Point(center.getX() + radius, center.getY() + xs), color);
-				renderPixel(Point(center.getX() + radius, center.getY() - xe), color);
-				renderPixel(Point(center.getX() - radius, center.getY() - xe), color);
-				renderPixel(Point(center.getX() - radius, center.getY() + xs), color);
-			}
-
-			xs = xe;
+		if (radius == 1) {
+			putPixel(center, color);
+			return;
 		}
-		while (xe < --radius);
-	}
-
-	void Renderer::renderFilledCircle(const Point& center, uint16_t radius, const Color* color) {
-		if (radius == 0)
-			return;
 
 		int32_t x = 0;
-		int32_t dx = 1;
-		int32_t dy = radius + radius;
-		int32_t p = -(radius >> 1);
+		int32_t y = radius;
+		int32_t d = 3 - 2 * static_cast<int32_t>(radius); // Initial decision value
 
-		renderHorizontalLine(Point(center.getX() - radius, center.getY()), dy + 1, color);
+		const auto cx = center.getX();
+		const auto cy = center.getY();
 
-		while(x < radius){
-			if (p>= 0) {
-				renderHorizontalLine(Point(center.getX() - x, center.getY() + radius), dx, color);
-				renderHorizontalLine(Point(center.getX() - x, center.getY() - radius), dx, color);
+		const auto drawOctants = [&](const int32_t px, const int32_t py) noexcept {
+			putPixel({ cx + px, cy + py }, color);
+			putPixel({ cx - px, cy + py }, color);
+			putPixel({ cx + px, cy - py }, color);
+			putPixel({ cx - px, cy - py }, color);
+			putPixel({ cx + py, cy + px }, color);
+			putPixel({ cx - py, cy + px }, color);
+			putPixel({ cx + py, cy - px }, color);
+			putPixel({ cx - py, cy - px }, color);
+		};
 
-				dy -= 2;
-				p -= dy;
-				radius--;
-			}
+		drawOctants(x, y);
 
-			dx += 2;
-			p += dx;
+		while (y >= x) {
 			x++;
 
-			renderHorizontalLine(Point(center.getX() - radius, center.getY() + x), dy + 1, color);
-			renderHorizontalLine(Point(center.getX() - radius, center.getY() - x), dy + 1, color);
+			if (d > 0) {
+				y--;
+				d += 4 * (x - y) + 10;
+			}
+			else {
+				d += 4 * x + 6;
+			}
+
+			drawOctants(x, y);
+		}
+	}
+
+	void Renderer::fillCircle(const Point& center, const uint16_t radius, const Color* color) {
+		if (!color || !radius)
+			return;
+
+		if (radius == 1) {
+			putPixel(center, color);
+			return;
+		}
+
+		int32_t x = 0;
+		int32_t y = radius;
+		int32_t d = 3 - 2 * static_cast<int32_t>(radius); // Initial decision value
+
+		const auto cx = center.getX();
+		const auto cy = center.getY();
+
+		auto drawLines = [&](const int32_t px, const int32_t py) noexcept {
+			// Upper & lower strips (connecting left & right edge)
+			strokeHorizontalLine({ cx - px, cy + py }, px * 2 + 1, color);
+			strokeHorizontalLine({ cx - px, cy - py }, px * 2 + 1, color);
+
+			// Middle strips
+			strokeHorizontalLine({ cx - py, cy + px }, py * 2 + 1, color);
+			strokeHorizontalLine({ cx - py, cy - px }, py * 2 + 1, color);
+		};
+
+		drawLines(x, y);
+
+		while (y >= x) {
+			x++;
+
+			if (d > 0) {
+				y--;
+				d += 4 * (x - y) + 10;
+			}
+			else {
+				d += 4 * x + 6;
+			}
+
+			drawLines(x, y);
 		}
 	}
 
@@ -693,12 +688,12 @@ namespace YOBA {
 	// --------+------- * x
 	//         |
 	//         |
-	void Renderer::renderArc(const Point& center, const uint16_t radius, float startAngleRad, float endAngleRad, const Color* color) {
+	void Renderer::strokeArc(const Point& center, const uint16_t radius, float startAngleRad, float endAngleRad, const Color* color) {
 		if (startAngleRad == endAngleRad) {
 			if (startAngleRad == 0)
 				return;
 
-			renderCircle(center, radius, color);
+			strokeCircle(center, radius, color);
 			return;
 		}
 
@@ -717,7 +712,7 @@ namespace YOBA {
 		int32_t d = 3 - 2 * radius;
 
 		const auto checkAngle = [startAngleRad, endAngleRad](const int32_t x1, const int32_t y1) {
-			auto angle = fastAtan2(static_cast<float>(y1), static_cast<float>(x1));
+			auto angle = getAtan2Fast(static_cast<float>(y1), static_cast<float>(x1));
 
 			while (angle < 0)
 				angle += 2 * std::numbers::pi_v<float>;
@@ -727,28 +722,28 @@ namespace YOBA {
 
 		while (x <= y) {
 			if (checkAngle(x, y))
-				renderPixel(Point(center.getX() + x, center.getY() - y), color);
+				putPixel(Point(center.getX() + x, center.getY() - y), color);
 
 			if (checkAngle(y, x))
-				renderPixel(Point(center.getX() + y, center.getY() - x), color);
+				putPixel(Point(center.getX() + y, center.getY() - x), color);
 
 			if (checkAngle(-x, y))
-				renderPixel(Point(center.getX() - x, center.getY() - y), color);
+				putPixel(Point(center.getX() - x, center.getY() - y), color);
 
 			if (checkAngle(-y, x))
-				renderPixel(Point(center.getX() - y, center.getY() - x), color);
+				putPixel(Point(center.getX() - y, center.getY() - x), color);
 
 			if (checkAngle(-x, -y))
-				renderPixel(Point(center.getX() - x, center.getY() + y), color);
+				putPixel(Point(center.getX() - x, center.getY() + y), color);
 
 			if (checkAngle(-y, -x))
-				renderPixel(Point(center.getX() - y, center.getY() + x), color);
+				putPixel(Point(center.getX() - y, center.getY() + x), color);
 
 			if (checkAngle(x, -y))
-				renderPixel(Point(center.getX() + x, center.getY() + y), color);
+				putPixel(Point(center.getX() + x, center.getY() + y), color);
 
 			if (checkAngle(y, -x))
-				renderPixel(Point(center.getX() + y, center.getY() + x), color);
+				putPixel(Point(center.getX() + y, center.getY() + x), color);
 
 			if (d < 0) {
 				d = d + 4 * x + 6;
@@ -762,7 +757,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve, const float tension) {
+	void Renderer::strokeCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve, const float tension) {
 		assert(pointsLength >= 4 && 1);
 
 		Point pointPrev {};
@@ -775,7 +770,7 @@ namespace YOBA {
 
 				// Linking to prev point
 				if (pizda)
-					renderLine(pointPrev, point, color);
+					strokeLine(pointPrev, point, color);
 
 				pointPrev = point;
 				pizda = true;
@@ -819,7 +814,7 @@ namespace YOBA {
 		};
 	}
 
-	float Renderer::fastAtan2(const float y, const float x) {
+	float Renderer::getAtan2Fast(const float y, const float x) {
 		// http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
 		// Volkan SALMA
 
@@ -846,7 +841,7 @@ namespace YOBA {
 		return angle;
 	}
 
-	void Renderer::renderRoundedCorners(const Point& center, int32_t radius, const uint8_t corner, const Color* color) {
+	void Renderer::strokeRoundedCorners(const Point& center, int32_t radius, const uint8_t corner, const Color* color) {
 		int32_t f     = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -2 * radius;
@@ -864,53 +859,53 @@ namespace YOBA {
 
 			if (xe-xs==1) {
 				if (corner & 0x1) { // left top
-					renderPixel(Point(center.getX() - xe, center.getY() - radius), color);
-					renderPixel(Point(center.getX() - radius, center.getY() - xe), color);
+					putPixel(Point(center.getX() - xe, center.getY() - radius), color);
+					putPixel(Point(center.getX() - radius, center.getY() - xe), color);
 				}
 
 				if (corner & 0x2) { // right top
-					renderPixel(Point(center.getX() + radius    , center.getY() - xe), color);
-					renderPixel(Point(center.getX() + xs + 1, center.getY() - radius), color);
+					putPixel(Point(center.getX() + radius    , center.getY() - xe), color);
+					putPixel(Point(center.getX() + xs + 1, center.getY() - radius), color);
 				}
 
 				if (corner & 0x4) { // right bottom
-					renderPixel(Point(center.getX() + xs + 1, center.getY() + radius), color);
-					renderPixel(Point(center.getX() + radius, center.getY() + xs + 1), color);
+					putPixel(Point(center.getX() + xs + 1, center.getY() + radius), color);
+					putPixel(Point(center.getX() + radius, center.getY() + xs + 1), color);
 				}
 
 				if (corner & 0x8) { // left bottom
-					renderPixel(Point(center.getX() - radius, center.getY() + xs + 1), color);
-					renderPixel(Point(center.getX() - xe, center.getY() + radius) , color);
+					putPixel(Point(center.getX() - radius, center.getY() + xs + 1), color);
+					putPixel(Point(center.getX() - xe, center.getY() + radius) , color);
 				}
 			}
 			else {
 				len = xe - xs++;
 				
 				if (corner & 0x1) { // left top
-					renderHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
-					renderVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
+					strokeHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
+					strokeVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
 				}
 
 				if (corner & 0x2) { // right top
-					renderVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
-					renderHorizontalLine(Point(center.getX() + xs, center.getY() - radius), len, color);
+					strokeVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
+					strokeHorizontalLine(Point(center.getX() + xs, center.getY() - radius), len, color);
 				}
 
 				if (corner & 0x4) { // right bottom
-					renderHorizontalLine(Point(center.getX() + xs, center.getY() + radius), len, color);
-					renderVerticalLine(Point(center.getX() + radius, center.getY() + xs), len, color);
+					strokeHorizontalLine(Point(center.getX() + xs, center.getY() + radius), len, color);
+					strokeVerticalLine(Point(center.getX() + radius, center.getY() + xs), len, color);
 				}
 
 				if (corner & 0x8) { // left bottom
-					renderVerticalLine(Point(center.getX() - radius, center.getY() + xs), len, color);
-					renderHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
+					strokeVerticalLine(Point(center.getX() - radius, center.getY() + xs), len, color);
+					strokeHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
 				}
 			}
 			xs = xe;
 		} while (xe < radius--);
 	}
 
-	void Renderer::renderFilledRoundedCorners(const Point& center, uint16_t radius, const bool upper, const int32_t delta, const Color* color) {
+	void Renderer::fillRoundedCorners(const Point& center, uint16_t radius, const bool upper, const int32_t delta, const Color* color) {
 		int32_t f = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -radius - radius;
@@ -922,7 +917,7 @@ namespace YOBA {
 				lineLength = y + y + delta;
 
 				if (lineLength > 0) {
-					renderHorizontalLine(Point(center.getX() - y, upper ? center.getY() - radius : center.getY() + radius), lineLength, color);
+					strokeHorizontalLine(Point(center.getX() - y, upper ? center.getY() - radius : center.getY() + radius), lineLength, color);
 				}
 
 				radius--;
@@ -936,13 +931,13 @@ namespace YOBA {
 			lineLength = radius + radius + delta;
 
 			if (lineLength > 0) {
-				renderHorizontalLine(Point(center.getX() - radius, upper ? center.getY() - y : center.getY() + y), lineLength, color);
+				strokeHorizontalLine(Point(center.getX() - radius, upper ? center.getY() - y : center.getY() + y), lineLength, color);
 			}
 		}
 	}
 
-	void Renderer::renderMissingGlyph(const Point& point, const Font* font, const Color* color, const uint8_t fontScale) {
-		renderRectangle(
+	void Renderer::putMissingGlyph(const Point& point, const Font* font, const Color* color, const uint8_t fontScale) {
+		strokeRectangle(
 			Rectangle(
 				point.getX(),
 				point.getY(),
@@ -953,7 +948,7 @@ namespace YOBA {
 		);
 	}
 
-	void Renderer::renderGlyph(const Point& point, const Font* font, const Color* color, const int32_t glyphIndex, const Glyph* glyph, const uint8_t fontScale) {
+	void Renderer::putGlyph(const Point& point, const Font* font, const Color* color, const int32_t glyphIndex, const Glyph* glyph, const uint8_t fontScale) {
 		auto bitIndex =
 			font->isConstantGlyphWidth()
 			? glyphIndex * (font->getConstantGlyphWidth() * font->getLineHeight())
@@ -968,7 +963,7 @@ namespace YOBA {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
-						renderPixel(Point(point.getX() + i, point.getY() + j), color);
+						putPixel(Point(point.getX() + i, point.getY() + j), color);
 
 					bitIndex++;
 				}
@@ -984,7 +979,7 @@ namespace YOBA {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
-						renderFilledRectangle(Rectangle(x, y, fontScale, fontScale), color);
+						fillRectangle(Rectangle(x, y, fontScale, fontScale), color);
 
 					bitIndex++;
 					x += fontScale;
@@ -996,14 +991,14 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderChar(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t fontScale) {
+	void Renderer::putText(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t textScale) {
 		const auto& clip = getClip();
 		const auto clipX2 = clip.getX2();
 
 		if (
 			point.getX() > clipX2
 			|| point.getY() > clip.getY2()
-			|| point.getY() + font->getLineHeight(fontScale) < clip.getY()
+			|| point.getY() + font->getLineHeight(textScale) < clip.getY()
 			|| !color
 		)
 			return;
@@ -1013,24 +1008,24 @@ namespace YOBA {
 		if (glyphIndex >= 0) {
 			const auto glyph = font->getGlyphByIndex(glyphIndex);
 
-			if (point.getX() + font->getWidth(glyph, fontScale) < clip.getX())
+			if (point.getX() + font->getWidth(glyph, textScale) < clip.getX())
 				return;
 
-			renderGlyph(
+			putGlyph(
 				point,
 				font,
 				color,
 				glyphIndex,
 				glyph,
-				fontScale
+				textScale
 			);
 		}
 		else {
-			renderMissingGlyph(point, font, color, fontScale);
+			putMissingGlyph(point, font, color, textScale);
 		}
 	}
 
-	void Renderer::renderText(const Point& point, const Font* font, const Color* color, const std::string_view text, const uint8_t fontScale) {
+	void Renderer::putText(const Point& point, const Font* font, const Color* color, const std::string_view text, const uint8_t textScale) {
 		const auto& clip = getClip();
 		const auto clipX2 = clip.getX2();
 
@@ -1038,7 +1033,7 @@ namespace YOBA {
 		if (
 			point.getX() > clipX2
 			|| point.getY() > clip.getY2()
-			|| point.getY() + font->getLineHeight(fontScale) < clip.getY()
+			|| point.getY() + font->getLineHeight(textScale) < clip.getY()
 			|| !color
 		)
 			return;
@@ -1059,32 +1054,32 @@ namespace YOBA {
 				// If glyph can be rendered as "human-readable"
 				// For example, U+007F "DE" symbol often has zero width in some fonts
 				if (font->getWidth(glyph) > 0) {
-					const int32_t x2 = x + font->getWidth(glyph, fontScale);
+					const int32_t x2 = x + font->getWidth(glyph, textScale);
 
 					// Rendering current glyph only if it's in clip region
 					if (x2 > clip.getX()) {
-						renderGlyph(
+						putGlyph(
 							Point(x, point.getY()),
 							font,
 							color,
 							glyphIndex,
 							glyph,
-							fontScale
+							textScale
 						);
 					}
 
 					x = x2;
 				}
 				else {
-					renderMissingGlyph(Point(x, point.getY()), font, color, fontScale);
+					putMissingGlyph(Point(x, point.getY()), font, color, textScale);
 
-					x += Font::missingGlyphWidth * fontScale;
+					x += Font::missingGlyphWidth * textScale;
 				}
 			}
 			else {
-				renderMissingGlyph(Point(x, point.getY()), font, color, fontScale);
+				putMissingGlyph(Point(x, point.getY()), font, color, textScale);
 
-				x += Font::missingGlyphWidth * fontScale;
+				x += Font::missingGlyphWidth * textScale;
 			}
 
 			// Stopping rendering if next glyphs will not be in clip region

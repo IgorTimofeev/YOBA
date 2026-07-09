@@ -2,7 +2,7 @@
 #include <YOBA/UI/Keyboard/Layout.hpp>
 
 namespace YOBA {
-	// ----------------------------- Keyboard -----------------------------
+	// -------------------------------- Keyboard --------------------------------
 
 	Keyboard::Keyboard() {
 		*this += &_backgroundPanel;

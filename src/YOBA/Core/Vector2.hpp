@@ -7,251 +7,184 @@ namespace YOBA {
 	template<typename T>
 	class Vector2 {
 		public:
-			Vector2(T x, T y);
-			Vector2(T both);
-			Vector2();
+			constexpr Vector2(T x, T y) : _x(x), _y(y) {
 
-			template<class TOther>
-			Vector2(const Vector2<TOther>& other);
+			}
 
-			T getX() const;
-			void setX(T value);
+			constexpr Vector2(T both) : _x(both), _y(both) {
 
-			T getY() const;
-			void setY(T value);
+			}
 
-			float getLength() const;
-			Vector2 clockwisePerpendicular() const;
-			Vector2 counterClockwisePerpendicular() const;
-			float getRotationFloat(const Vector2& point) const;
-			Vector2 rotate(float angleSin, float angleCos) const;
-			Vector2 rotate(float angleInRadians) const;
-			Vector2 normalize() const;
+			constexpr Vector2() : _x(0), _y(0) {
 
-			Vector2 operator+(const Vector2& right) const;
-			Vector2 operator+(T value) const;
-			Vector2& operator+=(const Vector2& right);
-			Vector2 operator-(const Vector2& right) const;
-			Vector2 operator-(T value) const;
-			Vector2 operator-() const;
-			Vector2& operator-=(const Vector2& right);
-			Vector2 operator*(const Vector2& right) const;
-			Vector2 operator*(T factor) const;
-			Vector2& operator*=(const Vector2& right);
-			Vector2 operator/(const Vector2& right) const;
-			Vector2 operator/(T factor) const;
-			Vector2& operator/=(const Vector2& right);
-			bool operator==(const Vector2 &right) const;
-			bool operator!=(const Vector2 &right) const;
+			}
+
+			template<typename TOther>
+			constexpr Vector2(const Vector2<TOther>& other) : Vector2(static_cast<T>(other.getX()), static_cast<T>(other.getY())) {
+
+			}
+
+			constexpr T getX() const {
+				return _x;
+			}
+
+			constexpr void setX(T value) {
+				_x = value;
+			}
+
+			constexpr T getY() const {
+				return _y;
+			}
+
+			constexpr void setY(T value) {
+				_y = value;
+			}
+
+			constexpr Vector2 clockwisePerpendicular() const {
+				return {
+					_y,
+					-_x,
+				};
+			}
+
+			constexpr Vector2 counterClockwisePerpendicular() const {
+				return {
+					-_y,
+					_x,
+				};
+			}
+
+			constexpr float getLength() const {
+				return std::sqrt(static_cast<float>(_x) * static_cast<float>(_x) + static_cast<float>(_y) * static_cast<float>(_y));
+			}
+
+			constexpr Vector2 normalize() const {
+				const auto length = getLength();
+
+				return {
+					static_cast<T>(static_cast<float>(_x) / length),
+					static_cast<T>(static_cast<float>(_y) / length)
+				};
+			}
+
+			constexpr float getRotationFloat(const Vector2& point) const {
+				return std::atan2(static_cast<float>(point._y - _y), static_cast<float>(point._x - _x));
+			}
+
+			constexpr Vector2 rotate(const float angleSin, const float angleCos) const {
+				return {
+					static_cast<T>(static_cast<float>(_x) * angleCos - static_cast<float>(_y) * angleSin),
+					static_cast<T>(static_cast<float>(_x) * angleSin + static_cast<float>(_y) * angleCos)
+				};
+			}
+
+			constexpr Vector2 rotate(const float angleInRadians) const {
+				return rotate(std::sin(angleInRadians), std::cos(angleInRadians));
+			}
+
+			constexpr Vector2 operator+(const Vector2& right) const {
+				return {
+					_x + right._x,
+					_y + right._y,
+				};
+			}
+
+			constexpr Vector2 operator+(T value) const {
+				return {
+					_x + value,
+					_y + value,
+				};
+			}
+
+			constexpr Vector2& operator+=(const Vector2& right) {
+				_x += right._x;
+				_y += right._y;
+
+				return *this;
+			}
+
+			constexpr Vector2 operator-(const Vector2& right) const {
+				return {
+					_x - right._x,
+					_y - right._y,
+				};
+			}
+
+			constexpr Vector2 operator-(T value) const {
+				return {
+					_x - value,
+					_y - value,
+				};
+			}
+
+			constexpr Vector2 operator-() const {
+				return {
+					-_x,
+					-_y
+				};
+			}
+
+			constexpr Vector2& operator-=(const Vector2& right) {
+				_x -= right._x;
+				_y -= right._y;
+
+				return *this;
+			}
+
+			constexpr Vector2 operator*(const Vector2& right) const {
+				return {
+					_x * right._x,
+					_y * right._y,
+				};
+			}
+
+			constexpr Vector2 operator*(T factor) const {
+				return {
+					_x * factor,
+					_y * factor,
+				};
+			}
+
+			constexpr Vector2& operator*=(const Vector2& right) {
+				_x *= right._x;
+				_y *= right._y;
+
+				return *this;
+			}
+
+			constexpr Vector2 operator/(const Vector2& right) const {
+				return {
+					_x / right._x,
+					_y / right._y,
+				};
+			}
+
+			constexpr Vector2 operator/(T factor) const {
+				return {
+					_x / factor,
+					_y / factor,
+				};
+			}
+
+			constexpr Vector2& operator/=(const Vector2& right) {
+				_x /= right._x;
+				_y /= right._y;
+
+				return *this;
+			}
+			
+			constexpr bool operator==(const Vector2& right) const {
+				return _x == right._x && _y == right._y;
+			}
+
+			constexpr bool operator!=(const Vector2& right) const {
+				return !operator==(right);
+			}
 
 		private:
 			T _x;
 			T _y;
 	};
-
-	template<typename T>
-	Vector2<T>::Vector2(T x, T y) : _x(x), _y(y) {
-
-	}
-
-	template<typename T>
-	Vector2<T>::Vector2(T both) : _x(both), _y(both) {
-
-	}
-
-	template<typename T>
-	Vector2<T>::Vector2() : _x(0), _y(0) {
-
-	}
-
-	template<typename T>
-	template<typename TOther>
-	Vector2<T>::Vector2(const Vector2<TOther>& other) : Vector2(static_cast<T>(other.getX()), static_cast<T>(other.getY())) {
-
-	}
-
-	template<typename T>
-	T Vector2<T>::getX() const {
-		return _x;
-	}
-
-	template<typename T>
-	void Vector2<T>::setX(T value) {
-		_x = value;
-	}
-
-	template<typename T>
-	T Vector2<T>::getY() const {
-		return _y;
-	}
-
-	template<typename T>
-	void Vector2<T>::setY(T value) {
-		_y = value;
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::clockwisePerpendicular() const {
-		return {
-			_y,
-			-_x,
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::counterClockwisePerpendicular() const {
-		return {
-			-_y,
-			_x,
-		};
-	}
-
-	template<typename T>
-	float Vector2<T>::getLength() const {
-		return std::sqrt(static_cast<float>(_x) * static_cast<float>(_x) + static_cast<float>(_y) * static_cast<float>(_y));
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::normalize() const {
-		const auto length = getLength();
-
-		return {
-			static_cast<T>(static_cast<float>(_x) / length),
-			static_cast<T>(static_cast<float>(_y) / length)
-		};
-	}
-
-	template<typename T>
-	float Vector2<T>::getRotationFloat(const Vector2& point) const {
-		return std::atan2(static_cast<float>(point._y - _y), static_cast<float>(point._x - _x));
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::rotate(const float angleSin, const float angleCos) const {
-		return {
-			static_cast<T>(static_cast<float>(_x) * angleCos - static_cast<float>(_y) * angleSin),
-			static_cast<T>(static_cast<float>(_x) * angleSin + static_cast<float>(_y) * angleCos)
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::rotate(const float angleInRadians) const {
-		return rotate(std::sin(angleInRadians), std::cos(angleInRadians));
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator+(const Vector2& right) const {
-		return {
-			_x + right._x,
-			_y + right._y,
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator+(T value) const {
-		return {
-			_x + value,
-			_y + value,
-		};
-	}
-
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator+=(const Vector2& right) {
-		_x += right._x;
-		_y += right._y;
-
-		return *this;
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator-(const Vector2& right) const {
-		return {
-			_x - right._x,
-			_y - right._y,
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator-(T value) const {
-		return {
-			_x - value,
-			_y - value,
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator-() const {
-		return {
-			-_x,
-			-_y
-		};
-	}
-
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator-=(const Vector2& right) {
-		_x -= right._x;
-		_y -= right._y;
-
-		return *this;
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator*(const Vector2<T>& right) const {
-		return {
-			_x * right._x,
-			_y * right._y,
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator*(T factor) const {
-		return {
-			_x * factor,
-			_y * factor,
-		};
-	}
-
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator*=(const Vector2& right) {
-		_x *= right._x;
-		_y *= right._y;
-
-		return *this;
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator/(const Vector2<T>& right) const {
-		return {
-			_x / right._x,
-			_y / right._y,
-		};
-	}
-
-	template<typename T>
-	Vector2<T> Vector2<T>::operator/(T factor) const {
-		return {
-			_x / factor,
-			_y / factor,
-		};
-	}
-
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator/=(const Vector2& right) {
-		_x /= right._x;
-		_y /= right._y;
-
-		return *this;
-	}
-	
-	template<typename T>
-	bool Vector2<T>::operator==(const Vector2& right) const {
-		return _x == right._x && _y == right._y;
-	}
-
-	template<typename T>
-	bool Vector2<T>::operator!=(const Vector2& right) const {
-		return !operator==(right);
-	}
 
 	using Vector2F = Vector2<float>;
 	using Vector2I = Vector2<int32_t>;

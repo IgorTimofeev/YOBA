@@ -15,7 +15,7 @@ namespace YOBA::spatial {
 			)
 				continue;
 
-			renderer->renderLine(
+			renderer->strokeLine(
 				Point(
 					static_cast<int32_t>(vertex0->getX()),
 					static_cast<int32_t>(vertex0->getY())

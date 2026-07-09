@@ -33,7 +33,7 @@ namespace YOBA {
 			std::memcpy(_pixelBuffer + copiedBytes, _pixelBuffer, _pixelBufferLength - copiedBytes);
 	}
 
-	void RGB888BufferedRenderer::renderPixelNative(const Point& point, const Color* color) {
+	void RGB888BufferedRenderer::putPixelNative(const Point& point, const Color* color) {
 		const auto pixelBufferPtr = _pixelBuffer + getPixelIndex(point) * 3;
 		const auto color8 = reinterpret_cast<const RGB888Color*>(color);
 
@@ -42,7 +42,7 @@ namespace YOBA {
 		pixelBufferPtr[2] = color8->getB();
 	}
 
-	void RGB888BufferedRenderer::renderHorizontalLineNative(const Point& point, const uint16_t length,
+	void RGB888BufferedRenderer::strokeHorizontalLineNative(const Point& point, const uint16_t length,
 		const Color* color) {
 		const auto pixel0Ptr = _pixelBuffer + getPixelIndex(point.getX(), point.getY()) * 3;
 		const auto color8 = reinterpret_cast<const RGB888Color*>(color);
@@ -68,7 +68,7 @@ namespace YOBA {
 	}
 
 	void RGB888BufferedRenderer::
-	renderVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
+	strokeVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
 		auto pixelBufferPtr = _pixelBuffer + getPixelIndex(point) * 3;
 		const uint16_t scanlineLength = (_target->getSize().getWidth() - 1) * 3;
 		const auto color8 = reinterpret_cast<const RGB888Color*>(color);
@@ -87,7 +87,7 @@ namespace YOBA {
 		}
 	}
 
-	void RGB888BufferedRenderer::renderFilledRectangleNative(const Rectangle& bounds, const Color* color) {
+	void RGB888BufferedRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
 		const auto pixel0Ptr = _pixelBuffer + getPixelIndex(bounds.getX(), bounds.getY()) * 3;
 		const auto color8 = reinterpret_cast<const RGB888Color*>(color);
 
@@ -117,7 +117,7 @@ namespace YOBA {
 			std::memcpy(pixel0Ptr + y * scanlineWidth, pixel0Ptr, boundsWidthBytes);
 	}
 
-	void RGB888BufferedRenderer::renderImageNative(const Point& point, const Image* image) {
+	void RGB888BufferedRenderer::putImageNative(const Point& point, const Image* image) {
 		if (image->getColorModel() != ColorModel::RGB888)
 			return;
 

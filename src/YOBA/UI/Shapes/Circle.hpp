@@ -19,7 +19,7 @@ namespace YOBA {
 				if (!color)
 					return;
 
-				renderer->renderFilledCircle(
+				renderer->fillCircle(
 					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
 					std::min(bounds.getWidth(), bounds.getHeight()) / 2,
 					color

@@ -8,9 +8,9 @@
 
 namespace YOBA {
 	template<typename TIndex, typename TValue>
-	class PaletteRenderer : public TransactionalBufferedRenderer {
+	class IndexedColorsTransactionalBufferedRenderer : public TransactionalBufferedRenderer {
 		public:
-			explicit PaletteRenderer(TIndex paletteColorCount);
+			explicit IndexedColorsTransactionalBufferedRenderer(TIndex paletteColorCount);
 
 			uint8_t* getPaletteIndicesBuffer() const;
 			size_t getPaletteIndicesBufferLength() const;
@@ -43,12 +43,12 @@ namespace YOBA {
 	};
 
 	template<typename TIndex, typename TValue>
-	PaletteRenderer<TIndex, TValue>::PaletteRenderer(TIndex paletteColorCount) : _paletteColorCount(paletteColorCount) {
+	IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::IndexedColorsTransactionalBufferedRenderer(TIndex paletteColorCount) : _paletteColorCount(paletteColorCount) {
 
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::updateFromTarget() {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::updateFromTarget() {
 		TransactionalBufferedRenderer::updateFromTarget();
 
 		reallocatePaletteIndicesBuffer();
@@ -56,7 +56,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::reallocatePaletteIndicesBuffer() {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::reallocatePaletteIndicesBuffer() {
 		if (!getTarget())
 			return;
 
@@ -65,7 +65,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::reallocatePalette() {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::reallocatePalette() {
 		if (!getTarget())
 			return;
 
@@ -74,7 +74,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	TValue PaletteRenderer<TIndex, TValue>::getPaletteValue(TIndex index) {
+	TValue IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPaletteValue(TIndex index) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565:
 				return *(reinterpret_cast<TValue*>(_paletteBuffer) + index);
@@ -88,7 +88,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::setPaletteValue(TIndex index, TValue value) {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::setPaletteValue(TIndex index, TValue value) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565: {
 				reinterpret_cast<TValue*>(_paletteBuffer)[index] = value;
@@ -105,7 +105,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	TIndex PaletteRenderer<TIndex, TValue>::getPaletteIndex(const Color* color) {
+	TIndex IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
 			case ColorModel::indexed8Bit:
 				return reinterpret_cast<const Bit8PaletteColor*>(color)->getIndex();
@@ -116,7 +116,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const RGB888Color& color) {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const RGB888Color& color) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565:
 				setPaletteValue(index, color.toRGB565BE().getValue());
@@ -133,7 +133,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::setPaletteColors(const std::initializer_list<RGB888Color> colors) {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::setPaletteColors(const std::initializer_list<RGB888Color> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -143,7 +143,7 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	void PaletteRenderer<TIndex, TValue>::setPaletteColors(const std::initializer_list<uint32_t> colors) {
+	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::setPaletteColors(const std::initializer_list<uint32_t> colors) {
 		uint16_t index = 0;
 
 		for (const auto& color : colors) {
@@ -153,22 +153,22 @@ namespace YOBA {
 	}
 
 	template<typename TIndex, typename TValue>
-	TIndex PaletteRenderer<TIndex, TValue>::getPaletteColorCount() const {
+	TIndex IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPaletteColorCount() const {
 		return _paletteColorCount;
 	}
 
 	template<typename TIndex, typename TValue>
-	uint8_t* PaletteRenderer<TIndex, TValue>::getPalette() const {
+	uint8_t* IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPalette() const {
 		return _paletteBuffer;
 	}
 
 	template<typename TIndex, typename TValue>
-	uint8_t* PaletteRenderer<TIndex, TValue>::getPaletteIndicesBuffer() const {
+	uint8_t* IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPaletteIndicesBuffer() const {
 		return _paletteIndicesBuffer;
 	}
 
 	template<typename TIndex, typename TValue>
-	size_t PaletteRenderer<TIndex, TValue>::getPaletteIndicesBufferLength() const {
+	size_t IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPaletteIndicesBufferLength() const {
 		return _paletteIndicesBufferLength;
 	}
 }
