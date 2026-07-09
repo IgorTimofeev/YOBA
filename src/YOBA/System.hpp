@@ -18,10 +18,9 @@
 
 	#include <YOBA/System/ESP-IDF.hpp>
 
-// Windows
+// Desktop
 #elif defined(WIN32)
 	#define YOBA_SYSTEM_DESKTOP
-	#define YOBA_SYSTEM_WINDOWS
-	
-	#include <YOBA/System/Windows.hpp>
+
+	#include <YOBA/System/Desktop.hpp>
 #endif

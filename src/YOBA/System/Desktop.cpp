@@ -1,6 +1,6 @@
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_WINDOWS)
+#if defined(YOBA_SYSTEM_DESKTOP)
 
 #include <cstdio>
 #include <chrono>
