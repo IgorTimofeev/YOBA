@@ -131,7 +131,7 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::renderDitheredRectangle(const Rectangle& bounds, const Color* color) {
+	void Renderer::fillChessPatternRectangle(const Rectangle& bounds, const Color* color) {
 		constexpr uint8_t step = 1;
 		constexpr uint16_t totalSize = step + step;
 		bool odd = true;

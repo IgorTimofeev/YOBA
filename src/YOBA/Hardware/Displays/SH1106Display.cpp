@@ -65,7 +65,7 @@ namespace YOBA {
 		writeCommand(static_cast<uint8_t>(Command::displayOn));
 	}
 
-	void SH1106Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
+	void SH1106Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		for (uint8_t page = 0; page < _pageCount; page++) {
 			writeCommand(static_cast<uint8_t>(Command::setPageAddress) | page);
 			writeCommand(static_cast<uint8_t>(Command::setColumnAddressLow) | 0);

@@ -17,7 +17,7 @@ namespace YOBA {
 				const auto color = getFillColor();
 
 				if (color)
-					renderer->renderDitheredRectangle(bounds, color);
+					renderer->fillChessPatternRectangle(bounds, color);
 			}
 	};
 }

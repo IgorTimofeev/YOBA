@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include <YOBA/Rendering/Renderers/RGB888BufferedRenderer.hpp>
 
 namespace YOBA {

@@ -62,7 +62,7 @@ namespace YOBA {
 		setContrast(0x9);
 	}
 
-	void ST7565Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
+	void ST7565Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 //		for (uint8_t page = 0; page < pageCount; page++) {
 //			writeCommand(static_cast<uint8_t>(Command::SetPageAddress) | page);
 //			writeCommand(static_cast<uint8_t>(Command::SetColumnAddressLow));

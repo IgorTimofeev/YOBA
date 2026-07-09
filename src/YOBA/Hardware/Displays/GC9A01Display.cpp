@@ -337,7 +337,7 @@ namespace YOBA {
 		writeData(data);
 	}
 
-	void GC9A01Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
+	void GC9A01Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
 		writeCommand(COL_ADDR_SET);

@@ -242,7 +242,7 @@ namespace YOBA {
 		this->writeData(data);
 	}
 
-	void ILI9341Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
+	void ILI9341Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
 //		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());

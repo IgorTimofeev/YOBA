@@ -27,7 +27,7 @@ namespace YOBA {
 				ColorModel colorModel = ColorModel::RGB565
 			);
 
-			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
+			void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 
 			void turnOn();
 			void turnOff();

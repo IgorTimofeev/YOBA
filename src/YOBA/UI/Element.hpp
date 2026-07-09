@@ -64,6 +64,8 @@ namespace YOBA {
 
 			void scrollIntoView();
 
+			bool isVisibleInLayout() const;
+
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);
 

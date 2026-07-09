@@ -69,7 +69,7 @@ namespace YOBA {
 	}
 
 	void Switch::onIsActiveChanged() {
-		if (Application::getCurrent()) {
+		if (isVisibleInLayout()) {
 			_animation.stop();
 
 			_handlePositionFrom = _handlePosition;

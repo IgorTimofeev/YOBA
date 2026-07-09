@@ -349,7 +349,7 @@ namespace YOBA {
 					PinchDownEvent event {
 						_touchPoints[0].getPosition(),
 						_touchPoints[1].getPosition()
-					;
+					};
 
 					application->pushEvent(&event);
 				}

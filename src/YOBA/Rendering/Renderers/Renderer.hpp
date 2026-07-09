@@ -30,7 +30,7 @@ namespace YOBA {
 			void strokeVerticalLine(const Point& point, uint16_t length, const Color* color);
 			void fillRectangle(const Rectangle& bounds, const Color* color);
 			void fillRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
-			void renderDitheredRectangle(const Rectangle& bounds, const Color* color);
+			void fillChessPatternRectangle(const Rectangle& bounds, const Color* color);
 			void fillQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
 
 			void putImage(const Point& point, const Image* image);

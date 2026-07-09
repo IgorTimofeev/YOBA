@@ -25,7 +25,7 @@ namespace YOBA {
 				const uint32_t SPIFrequencyHz
 			);
 
-			void writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
+			void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;
 

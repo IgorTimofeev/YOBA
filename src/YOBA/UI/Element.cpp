@@ -335,6 +335,20 @@ namespace YOBA {
 		Application::getCurrent()->pushEvent(&event);
 	}
 
+	bool Element::isVisibleInLayout() const {
+		const auto application = Application::getCurrent();
+
+		if (!application)
+			return false;
+
+		const auto renderer = application->getRenderer();
+
+		if (!renderer)
+			return false;
+
+		return renderer->getClip().intersects(getLayoutBounds());
+	}
+
 	Layout* Element::getParent() const {
 		return _parent;
 	}
@@ -524,7 +538,7 @@ namespace YOBA {
 
 	void Element::addToParent(Layout* parent) {
 		assert(_parent == nullptr && "Can't add element to parent, because it already have one");
-		assert(_parent != this && "Can't add element to itself");
+		assert(reinterpret_cast<Element*>(_parent) != this && "Can't add element to itself");
 
 		_parent = parent;
 

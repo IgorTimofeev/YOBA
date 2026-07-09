@@ -194,7 +194,7 @@ namespace YOBA {
 		this->writeData(data);
 	}
 
-	void ST7789Display::writePixels(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
+	void ST7789Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
 		// Column Address Set
