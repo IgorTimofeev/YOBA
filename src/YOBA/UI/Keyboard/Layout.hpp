@@ -137,7 +137,7 @@ namespace YOBA {
 			BackspaceKeyboardButton _keyBackspace { "<", 0.15f };
 
 			CharactersLayoutKeyboardButton _keyCharactersLayout { "123", 0.1f };
-			CyclicLayoutKeyboardButton _keyCyclicLayout { "Lang", 0.1f };
+			CyclicLayoutKeyboardButton _keyCyclicLayout { "Lng", 0.1f };
 			TextKeyboardButton _keyComma { Key::comma, ",", 0.1f };
 			SpaceKeyboardButton _keySpace  {  };
 			PeriodKeyboardButton _keyPeriod { 0.1f };
@@ -186,7 +186,7 @@ namespace YOBA {
 			BackspaceKeyboardButton _keyBackspace { "<", 1.f / 11.f };
 
 			CharactersLayoutKeyboardButton _keyCharactersLayout { "123", 0.1f };
-			CyclicLayoutKeyboardButton _keyCyclicLayout { "Lang", 0.1f };
+			CyclicLayoutKeyboardButton _keyCyclicLayout { "Lng", 0.1f };
 			TextKeyboardButton _keyComma { Key::comma, ",", 0.1f };
 			SpaceKeyboardButton _keySpace {  };
 			PeriodKeyboardButton _keyPeriod { 0.1f };

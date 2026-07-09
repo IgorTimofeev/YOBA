@@ -48,7 +48,7 @@ namespace YOBA {
 
 		const auto dps = static_cast<int16_t>(static_cast<int32_t>(_value) * static_cast<int32_t>(1'000'000) / deltaTime);
 
-		auto event = EncoderValueChangedEvent(dps);
+		EncoderValueChangedEvent event { dps };
 		application->pushEvent(&event);
 
 		_value = 0;
@@ -133,11 +133,11 @@ namespace YOBA {
 		const auto application = Application::getCurrent();
 
 		if (_pressed) {
-			auto event = PushButtonEncoderDownEvent();
+			PushButtonEncoderDownEvent event {};
 			application->pushEvent(&event);
 		}
 		else {
-			auto event = PushButtonEncoderUpEvent();
+			PushButtonEncoderUpEvent event {};
 			application->pushEvent(&event);
 		}
 

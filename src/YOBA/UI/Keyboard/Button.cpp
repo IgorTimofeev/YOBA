@@ -64,23 +64,26 @@ namespace YOBA {
 	void KeyboardButton::onIsActiveChanged() {
 		Button::onIsActiveChanged();
 
-		Application::getCurrent()->invokeLater([this] {
-			const auto key = getKeyFromCase();
+		const auto key = getKeyFromCase();
 
-			if (key == Key::none)
-				return;
+		if (key == Key::none)
+			return;
 
-			if (isActive()) {
-				auto event = KeyDownEvent(key, getTextFromCase());
+		auto active = isActive();
+		auto text = getTextFromCase();
+
+		// Copying values here, because invokeLater() will reset it
+		Application::getCurrent()->invokeLater([key, text, active] {
+			if (active) {
+				KeyDownEvent event { key, text };
 				Application::getCurrent()->pushEvent(&event);
 			}
 			else {
-				auto event = KeyUpEvent(key, getTextFromCase());
+				KeyUpEvent event { key, text };
 				Application::getCurrent()->pushEvent(&event);
 			}
 		});
 	}
-
 
 	Key KeyboardButton::getKey() const {
 		return _key;

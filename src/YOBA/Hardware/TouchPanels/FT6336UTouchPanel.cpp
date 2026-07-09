@@ -328,10 +328,10 @@ namespace YOBA {
 						_touchPoints[0].setPosition(point1);
 						_touchPoints[1].setPosition(point2);
 
-						auto event = PinchDragEvent(
+						PinchDragEvent event {
 							_touchPoints[0].getPosition(),
 							_touchPoints[1].getPosition()
-						);
+						};
 
 						application->pushEvent(&event);
 					}
@@ -346,10 +346,10 @@ namespace YOBA {
 					_touchPoints[1].setDown(true);
 					_touchPoints[1].setPosition(readOrientedPoint2(renderingTarget));
 
-					auto event = PinchDownEvent(
+					PinchDownEvent event {
 						_touchPoints[0].getPosition(),
 						_touchPoints[1].getPosition()
-					);
+					;
 
 					application->pushEvent(&event);
 				}
@@ -362,10 +362,10 @@ namespace YOBA {
 					_touchPoints[1].setDown(false);
 					_touchPoints[1].setPosition(readOrientedPoint2(renderingTarget));
 
-					auto event = PinchUpEvent(
+					PinchUpEvent event {
 						_touchPoints[0].getPosition(),
 						_touchPoints[1].getPosition()
-					);
+					};
 
 					application->pushEvent(&event);
 				}
@@ -376,9 +376,9 @@ namespace YOBA {
 					if (point1 != _touchPoints[0].getPosition()) {
 						_touchPoints[0].setPosition(point1);
 
-						auto event = PointerDragEvent(
+						PointerDragEvent event {
 							_touchPoints[0].getPosition()
-						);
+						};
 
 						application->pushEvent(&event);
 					}
@@ -390,9 +390,9 @@ namespace YOBA {
 					_touchPoints[0].setDown(true);
 					_touchPoints[0].setPosition(readOrientedPoint1(renderingTarget));
 
-					auto event = PointerDownEvent(
+					PointerDownEvent event {
 						_touchPoints[0].getPosition()
-					);
+					};
 
 					application->pushEvent(&event);
 				}
@@ -406,10 +406,10 @@ namespace YOBA {
 				_touchPoints[1].setDown(false);
 				_touchPoints[1].setPosition(readOrientedPoint2(renderingTarget));
 
-				auto event = PinchUpEvent(
+				PinchUpEvent event {
 					_touchPoints[0].getPosition(),
 					_touchPoints[1].getPosition()
-				);
+				};
 
 				application->pushEvent(&event);
 			}
@@ -421,9 +421,9 @@ namespace YOBA {
 				_touchPoints[0].setDown(false);
 				_touchPoints[0].setPosition(readOrientedPoint1(renderingTarget));
 
-				auto event = PointerUpEvent(
+				PointerUpEvent event {
 					_touchPoints[0].getPosition()
-				);
+				};
 
 				application->pushEvent(&event);
 			}
