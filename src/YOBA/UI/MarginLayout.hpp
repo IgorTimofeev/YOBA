@@ -16,6 +16,13 @@ namespace YOBA {
 			Size onMeasure(const Size& availableSize) override;
 			void onArrange(const Rectangle& bounds) override;
 
+			// void onRender(Renderer* renderer, const Rectangle& bounds) override {
+			// 	RGB888Color abc { 0xFFFFFF };
+			// 	renderer->strokeRectangle(bounds, &abc);
+			//
+			// 	Layout::onRender(renderer, bounds);
+			// }
+
 		private:
 			Margin _margin {};
 	};

@@ -22,30 +22,49 @@ namespace YOBA {
 		const auto& childrenSize = Layout::onMeasure(availableSize);
 
 		// Width
-		// auto width = static_cast<int32_t>(childrenSize.getWidth());
-		//
-		// switch (getHorizontalAlignment()) {
-		// 	case Alignment::start:
-		// 		width = width + _margin.getLeft();
-		// 		break;
-		// 	case Alignment::center:
-		// 		width = width + _margin.getLeft() + _margin.getRight();
-		// 		break;
-		// 	case Alignment::end:
-		// 		width = width + _margin.getRight();
-		// 		break;
-		// 	case Alignment::stretch:
-		// 		width = width + _margin.getLeft() + _margin.getRight();
-		// 		break;
-		// }
+		int32_t width;
 
-		auto width = static_cast<int32_t>(childrenSize.getWidth()) + _margin.getLeft() + _margin.getRight();
+		switch (getHorizontalAlignment()) {
+			case Alignment::start:
+				width = childrenSize.getWidth() + _margin.getLeft();
+				break;
+
+			case Alignment::center:
+				width = childrenSize.getWidth();
+				break;
+
+			case Alignment::end:
+				width = childrenSize.getWidth() + _margin.getRight();
+				break;
+
+			default:
+				width = childrenSize.getWidth() + _margin.getLeft() + _margin.getRight();
+				break;
+		}
 
 		if (width < 0)
 			width = 0;
 
 		// Height
-		auto height = static_cast<int32_t>(childrenSize.getHeight()) + _margin.getTop() + _margin.getBottom();
+		int32_t height;
+
+		switch (getVerticalAlignment()) {
+			case Alignment::start:
+				height = childrenSize.getHeight() + _margin.getTop();
+				break;
+
+			case Alignment::center:
+				height = childrenSize.getHeight();
+				break;
+
+			case Alignment::end:
+				height = childrenSize.getHeight() + _margin.getBottom();
+				break;
+
+			default:
+				height = childrenSize.getHeight() + _margin.getTop() + _margin.getBottom();
+				break;
+		}
 
 		if (height < 0)
 			height = 0;
@@ -65,45 +84,39 @@ namespace YOBA {
 		switch (getHorizontalAlignment()) {
 			case Alignment::start:
 				x = x + _margin.getLeft();
-				width = width - _margin.getLeft();
 				break;
 
 			case Alignment::center:
 				break;
 
 			case Alignment::end:
-				x = x - _margin.getRight();
-				width = width - _margin.getRight();
 				break;
 
-			case Alignment::stretch:
+			default:
 				x = x + _margin.getLeft();
 				width = width - _margin.getLeft() - _margin.getRight();
 				break;
 		}
 
-		switch (getHorizontalAlignment()) {
+		if (width < 0)
+			width = 0;
+
+		switch (getVerticalAlignment()) {
 			case Alignment::start:
 				y = y + _margin.getTop();
-				height = height - _margin.getTop();
 				break;
 
 			case Alignment::center:
 				break;
 
 			case Alignment::end:
-				y = y - _margin.getBottom();
-				height = height - _margin.getBottom();
 				break;
 
-			case Alignment::stretch:
+			default:
 				y = y + _margin.getTop();
 				height = height - _margin.getTop() - _margin.getBottom();
 				break;
 		}
-
-		if (width < 0)
-			width = 0;
 
 		if (height < 0)
 			height = 0;
