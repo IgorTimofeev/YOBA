@@ -9,10 +9,11 @@ namespace YOBA {
 		public:
 			CircleShape() = default;
 
-			explicit CircleShape(const Color* color) {
+			CircleShape(const Color* color) {
 				setFillColor(color);
 			}
 
+		protected:
 			void onRender(Renderer* renderer, const Rectangle& bounds) override {
 				const auto color = getFillColor();
 

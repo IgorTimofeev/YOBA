@@ -19,8 +19,8 @@ namespace YOBA {
 			// Overflow
 			if (lineWidthWithSpacing + childSize.getWidth() > availableSize.getWidth()) {
 				if (lineWidthWithSpacing > 0) {
-					width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalSpacing()));
-					height += height > 0 ? getVerticalSpacing() + lineHeight : lineHeight;
+					width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalGap()));
+					height += height > 0 ? getVerticalGap() + lineHeight : lineHeight;
 				}
 
 				lineWidthWithSpacing = childSize.getWidth();
@@ -28,7 +28,7 @@ namespace YOBA {
 			}
 			// Normal
 			else {
-				lineWidthWithSpacing += childSize.getWidth() + getHorizontalSpacing();
+				lineWidthWithSpacing += childSize.getWidth() + getHorizontalGap();
 
 				if (childSize.getHeight() > lineHeight)
 					lineHeight = childSize.getHeight();
@@ -37,8 +37,8 @@ namespace YOBA {
 
 		// Handling unprocessed line
 		if (lineWidthWithSpacing > 0) {
-			width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalSpacing()));
-			height += height > 0 ? getVerticalSpacing() + lineHeight : lineHeight;
+			width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalGap()));
+			height += height > 0 ? getVerticalGap() + lineHeight : lineHeight;
 		}
 
 		return { width, height };
@@ -58,7 +58,7 @@ namespace YOBA {
 			// Overflow
 			if (x + childSize.getWidth() > bounds.getWidth()) {
 				if (lineHeight > 0)
-					y += getVerticalSpacing() + lineHeight;
+					y += getVerticalGap() + lineHeight;
 
 				child->arrange(Rectangle(
 					bounds.getX(),
@@ -67,7 +67,7 @@ namespace YOBA {
 					childSize.getHeight()
 				));
 
-				x = childSize.getWidth() + getHorizontalSpacing();
+				x = childSize.getWidth() + getHorizontalGap();
 				lineHeight = childSize.getHeight();
 			}
 			// Normal
@@ -79,7 +79,7 @@ namespace YOBA {
 					childSize.getHeight()
 				));
 
-				x += childSize.getWidth() + getHorizontalSpacing();
+				x += childSize.getWidth() + getHorizontalGap();
 
 				if (childSize.getHeight() > lineHeight)
 					lineHeight = childSize.getHeight();

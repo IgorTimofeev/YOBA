@@ -25,23 +25,23 @@ namespace YOBA {
 			void resetClip();
 
 			void clear(const Color* color);
-			void putPixel(const Point& point, const Color* color);
-			void strokeHorizontalLine(const Point& point, uint16_t length, const Color* color);
-			void strokeVerticalLine(const Point& point, uint16_t length, const Color* color);
+			void putPixel(const Point& position, const Color* color);
+			void strokeHorizontalLine(const Point& position, uint16_t length, const Color* color);
+			void strokeVerticalLine(const Point& position, uint16_t length, const Color* color);
 			void fillRectangle(const Rectangle& bounds, const Color* color);
 			void fillRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
 			void fillChessPatternRectangle(const Rectangle& bounds, const Color* color);
 			void fillQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
 
-			void putImage(const Point& point, const Image* image);
+			void putImage(const Point& position, const Image* image);
 			void strokeRectangle(const Rectangle& bounds, const Color* color);
 			void strokeRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
 			// Thanks, AdaFruit!
 			void strokeLine(const Point& from, const Point& to, const Color* color);
 			void strokeLine(const Point& from, const Point& to, const Color* color, uint8_t thickness);
-			void strokeTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
+			void strokeTriangle(const Point& position1, const Point& position2, const Point& position3, const Color* color);
 			void strokeCircle(const Point& center, uint16_t radius, const Color* color);
-			void fillTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color);
+			void fillTriangle(const Point& position1, const Point& position2, const Point& position3, const Color* color);
 			void fillCircle(const Point& center, uint16_t radius, const Color* color);
 			// Thanks, u8g2!
 			void strokeArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
@@ -49,23 +49,23 @@ namespace YOBA {
 
 			/**
 			* @brief Render single char
-			* @param point Position of upper-left corner of the char
+			* @param position Position of upper-left corner of the char
 			* @param font Font with which the char will be rendered
 			* @param color Color with which the char will be rendered
 			* @param codepoint UTF-8 codepoint of char
 			* @param textScale Scale factor of text, defaults to 1
 			*/
-			void putText(const Point& point, const Font* font, const Color* color, uint32_t codepoint, uint8_t textScale = 1);
+			void putText(const Point& position, const Font* font, const Color* color, uint32_t codepoint, uint8_t textScale = 1);
 
 			/**
 			* @brief Render line of UTF-8 text
-			* @param point Position of upper-left corner of the first character in text
+			* @param position Position of upper-left corner of the first character in text
 			* @param font Font with which the text will be rendered
 			* @param color Color with which the text will be rendered
 			* @param text Text to render
 			* @param textScale Scale factor of text, defaults to 1
 			*/
-			void putText(const Point& point, const Font* font, const Color* color, std::string_view text, uint8_t textScale = 1);
+			void putText(const Point& position, const Font* font, const Color* color, std::string_view text, uint8_t textScale = 1);
 
 			virtual void flush();
 
@@ -76,11 +76,11 @@ namespace YOBA {
 			virtual void updateFromTarget();
 
 			virtual void clearNative(const Color* color) = 0;
-			virtual void putPixelNative(const Point& point, const Color* color) = 0;
-			virtual void strokeHorizontalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
-			virtual void strokeVerticalLineNative(const Point& point, uint16_t length, const Color* color) = 0;
+			virtual void putPixelNative(const Point& position, const Color* color) = 0;
+			virtual void strokeHorizontalLineNative(const Point& position, uint16_t length, const Color* color) = 0;
+			virtual void strokeVerticalLineNative(const Point& position, uint16_t length, const Color* color) = 0;
 			virtual void fillRectangleNative(const Rectangle& bounds, const Color* color) = 0;
-			virtual void putImageNative(const Point& point, const Image* image) = 0;
+			virtual void putImageNative(const Point& position, const Image* image) = 0;
 
 		private:
 			static float getAtan2Fast(const float y, const float x);
@@ -88,7 +88,7 @@ namespace YOBA {
 
 			void strokeRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
 			void fillRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
-			void putMissingGlyph(const Point& point, const Font* font, const Color* color, uint8_t fontScale);
-			void putGlyph(const Point& point, const Font* font, const Color* color, int32_t glyphIndex, const Glyph* glyph, uint8_t fontScale);
+			void putMissingGlyph(const Point& position, const Font* font, const Color* color, uint8_t fontScale);
+			void putGlyph(const Point& position, const Font* font, const Color* color, int32_t glyphIndex, const Glyph* glyph, uint8_t fontScale);
 	};
 }

@@ -30,6 +30,7 @@
 #include <YOBA/UI/ScrollView.hpp>
 #include <YOBA/UI/Switch.hpp>
 #include <YOBA/UI/ProgressBar.hpp>
+#include <YOBA/UI/Divider.hpp>
 
 // Layouts
 #include <YOBA/UI/StackLayout.hpp>
@@ -40,7 +41,7 @@
 #include <YOBA/UI/Shapes/Shape.hpp>
 #include <YOBA/UI/Shapes/Circle.hpp>
 #include <YOBA/UI/Shapes/Rectangle.hpp>
-#include <YOBA/UI/Shapes/DitheredRectangle.hpp>
+#include <YOBA/UI/Shapes/ChessPatternRectangle.hpp>
 
 // Keyboard
 #include <YOBA/UI/Keyboard/Button.hpp>

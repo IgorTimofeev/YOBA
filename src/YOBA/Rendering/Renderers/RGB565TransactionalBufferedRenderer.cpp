@@ -70,8 +70,7 @@ namespace YOBA {
 		if (image->getColorModel() != ColorModel::RGB565)
 			return;
 
-		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
-		const size_t pixelBufferScanlineLength = _target->getSize().getWidth() - image->getSize().getWidth();
+		const auto& clip = getClip();
 
 		// With alpha
 		if (image->getOptions() & ImageOptions::alpha1Bit) {
@@ -81,8 +80,10 @@ namespace YOBA {
 
 			// 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
 			// ---- ---- | ---- -+-- | ---- ---- | ---- -2--
-			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
-				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
+			for (uint16_t imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
+				for (uint16_t imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
+					const auto contains = clip.contains(Point(point.getX() + imageX, point.getY() + imageY));
+
 					// Non-transparent
 					if (*bitmapPtr & (1 << bitmapBitIndex)) {
 						bitmapBitIndex++;
@@ -92,17 +93,26 @@ namespace YOBA {
 							bitmapBitIndex = 0;
 							bitmapPtr++;
 
-							*pixelBufferPtr = *reinterpret_cast<const uint16_t*>(bitmapPtr);
-							pixelBufferPtr++;
-							bitmapPtr += 2;
+							if (contains) {
+								const auto pixelBufferPtr =
+									reinterpret_cast<uint16_t*>(_pixelBuffer)
+									+ getPixelIndex(point);
+
+								std::memcpy(pixelBufferPtr, bitmapPtr, 2);
+							}
 						}
 						// Dark souls
 						else {
-							*pixelBufferPtr = static_cast<uint16_t>((*reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFFFF);
+							if (contains) {
+								const auto pixelBufferPtr =
+									reinterpret_cast<uint16_t*>(_pixelBuffer)
+									+ getPixelIndex(point);
 
-							pixelBufferPtr++;
-							bitmapPtr += 2;
+								*pixelBufferPtr = static_cast<uint16_t>((*reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFFFF);
+							}
 						}
+
+						bitmapPtr += 2;
 					}
 					// Transparent
 					else {
@@ -112,27 +122,26 @@ namespace YOBA {
 							bitmapBitIndex = 0;
 							bitmapPtr++;
 						}
-
-						pixelBufferPtr++;
 					}
 				}
-
-				pixelBufferPtr += pixelBufferScanlineLength;
 			}
 		}
 		// Without
 		else {
 			auto bitmapPtr = reinterpret_cast<const uint16_t*>(image->getBitmap());
 
-			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
-				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {
-					*pixelBufferPtr = *bitmapPtr;
+			for (uint16_t imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
+				for (uint16_t imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
+					if (clip.contains(Point(point.getX() + imageX, point.getY() + imageY))) {
+						const auto pixelBufferPtr =
+							reinterpret_cast<uint16_t*>(_pixelBuffer)
+							+ getPixelIndex(point);
 
-					pixelBufferPtr++;
+						std::memcpy(pixelBufferPtr, bitmapPtr, 2);
+					}
+
 					bitmapPtr++;
 				}
-
-				pixelBufferPtr += pixelBufferScanlineLength;
 			}
 		}
 	}

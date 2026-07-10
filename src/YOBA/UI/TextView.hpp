@@ -16,6 +16,9 @@ namespace YOBA {
 			TextView(const std::string_view text);
 			TextView(const Color* foreground);
 
+			Alignment getTextAlignment() const;
+			void setTextAlignment(const Alignment value);
+
 			bool isWrappingEnabled() const;
 			void setWrappingEnabled(const bool value);
 
@@ -24,6 +27,8 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
+			Alignment _textAlignment = Alignment::start;
+
 			bool _wrappingEnabled = false;
 			std::vector<std::string_view> _wrappedLines {};
 	};

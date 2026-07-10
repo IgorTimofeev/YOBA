@@ -5,14 +5,15 @@
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
-	class DitheredRectangleShape : public Shape {
+	class ChessPatternRectangleShape : public Shape {
 		public:
-			DitheredRectangleShape() = default;
+			ChessPatternRectangleShape() = default;
 
-			explicit DitheredRectangleShape(const Color* color) {
+			ChessPatternRectangleShape(const Color* color) {
 				setFillColor(color);
 			}
 
+		protected:
 			void onRender(Renderer* renderer, const Rectangle& bounds) override {
 				const auto color = getFillColor();
 

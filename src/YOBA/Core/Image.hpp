@@ -8,8 +8,8 @@ namespace YOBA {
 	// I love C++
 	namespace ImageOptions {
 		enum : uint8_t {
-			none =        0b00000000,
-			alpha1Bit =   0b00000001,
+			none =      0b00000000,
+			alpha1Bit = 0b00000001,
 		};
 	}
 

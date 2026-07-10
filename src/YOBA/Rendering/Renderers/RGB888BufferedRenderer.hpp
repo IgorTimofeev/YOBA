@@ -15,6 +15,6 @@ namespace YOBA {
 			void strokeHorizontalLineNative(const Point& point, const uint16_t length, const Color* color) override;
 			void strokeVerticalLineNative(const Point& point, const uint16_t length, const Color* color) override;
 			void fillRectangleNative(const Rectangle& bounds, const Color* color) override;
-			void putImageNative(const Point& point, const Image* image) override;
+			void putImageNative(const Point& position, const Image* image) override;
 	};
 }

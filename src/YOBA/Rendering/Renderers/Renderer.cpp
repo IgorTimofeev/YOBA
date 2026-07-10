@@ -62,51 +62,51 @@ namespace YOBA {
 		clearNative(color);
 	}
 
-	void Renderer::putPixel(const Point& point, const Color* color) {
-		if (!getClip().contains(point))
+	void Renderer::putPixel(const Point& position, const Color* color) {
+		if (!getClip().contains(position))
 			return;
 
-		putPixelNative(point, color);
+		putPixelNative(position, color);
 	}
 
-	void Renderer::strokeHorizontalLine(const Point& point, uint16_t length, const Color* color) {
+	void Renderer::strokeHorizontalLine(const Point& position, uint16_t length, const Color* color) {
 		const auto& clip = getClip();
 
 		if (
 			length == 0
-			|| point.getX() > clip.getX2()
-			|| point.getX() + length < clip.getX()
+			|| position.getX() > clip.getX2()
+			|| position.getX() + length < clip.getX()
 
-			|| point.getY() < clip.getY()
-			|| point.getY() > clip.getY2()
+			|| position.getY() < clip.getY()
+			|| position.getY() > clip.getY2()
 			)
 			return;
 
-		const uint16_t x1 = std::max(point.getX(), clip.getX());
-		const uint16_t x2 = std::min(point.getX() + length - 1, clip.getX2());
+		const uint16_t x1 = std::max(position.getX(), clip.getX());
+		const uint16_t x2 = std::min(position.getX() + length - 1, clip.getX2());
 		length = x2 - x1 + 1;
 
-		strokeHorizontalLineNative(Point(x1, point.getY()), length, color);
+		strokeHorizontalLineNative(Point(x1, position.getY()), length, color);
 	}
 
-	void Renderer::strokeVerticalLine(const Point& point, uint16_t length, const Color* color) {
+	void Renderer::strokeVerticalLine(const Point& position, uint16_t length, const Color* color) {
 		const auto& clip = getClip();
 
 		if (
 			length == 0
-			|| point.getX() < clip.getX()
-			|| point.getX() > clip.getX2()
+			|| position.getX() < clip.getX()
+			|| position.getX() > clip.getX2()
 
-			|| point.getY() > clip.getY2()
-			|| point.getY() + length < clip.getY()
+			|| position.getY() > clip.getY2()
+			|| position.getY() + length < clip.getY()
 		)
 			return;
 
-		const uint16_t y1 = std::max(point.getY(), clip.getY());
-		const uint16_t y2 = std::min(point.getY() + length - 1, clip.getY2());
+		const uint16_t y1 = std::max(position.getY(), clip.getY());
+		const uint16_t y2 = std::min(position.getY() + length - 1, clip.getY2());
 		length = y2 - y1 + 1;
 
-		strokeVerticalLineNative(Point(point.getX(), y1), length, color);
+		strokeVerticalLineNative(Point(position.getX(), y1), length, color);
 	}
 
 	void Renderer::fillRectangle(const Rectangle& bounds, const Color* color) {
@@ -152,9 +152,9 @@ namespace YOBA {
 		fillTriangle(topLeft, bottomLeft, bottomRight, color);
 	}
 
-	void Renderer::putImage(const Point& point, const Image* image) {
-		if (getClip().intersects(Rectangle(point, image->getSize())))
-			putImageNative(point, image);
+	void Renderer::putImage(const Point& position, const Image* image) {
+		if (getClip().intersects(Rectangle(position, image->getSize())))
+			putImageNative(position, image);
 	}
 
 	// -------------------------------- Non-native rendering --------------------------------
@@ -479,21 +479,21 @@ namespace YOBA {
 		}
 	}
 	
-	void Renderer::strokeTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
+	void Renderer::strokeTriangle(const Point& position1, const Point& position2, const Point& position3, const Color* color) {
 		// Simple as fuck
-		strokeLine(point1, point2, color);
-		strokeLine(point2, point3, color);
-		strokeLine(point3, point1, color);
+		strokeLine(position1, position2, color);
+		strokeLine(position2, position3, color);
+		strokeLine(position3, position1, color);
 	}
 
-	void Renderer::fillTriangle(const Point& point1, const Point& point2, const Point& point3, const Color* color) {
+	void Renderer::fillTriangle(const Point& position1, const Point& position2, const Point& position3, const Color* color) {
 		int32_t
-			x1 = point1.getX(),
-			y1 = point1.getY(),
-			x2 = point2.getX(),
-			y2 = point2.getY(),
-			x3 = point3.getX(),
-			y3 = point3.getY();
+			x1 = position1.getX(),
+			y1 = position1.getY(),
+			x2 = position2.getX(),
+			y2 = position2.getY(),
+			x3 = position3.getX(),
+			y3 = position3.getY();
 
 		// Sort coordinates by Y order (y2 >= y1 >= y0)
 		if (y1 > y2) {
@@ -936,11 +936,11 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::putMissingGlyph(const Point& point, const Font* font, const Color* color, const uint8_t fontScale) {
+	void Renderer::putMissingGlyph(const Point& position, const Font* font, const Color* color, const uint8_t fontScale) {
 		strokeRectangle(
 			Rectangle(
-				point.getX(),
-				point.getY(),
+				position.getX(),
+				position.getY(),
 				Font::missingGlyphWidth * fontScale,
 				font->getLineHeight() * fontScale
 			),
@@ -948,7 +948,7 @@ namespace YOBA {
 		);
 	}
 
-	void Renderer::putGlyph(const Point& point, const Font* font, const Color* color, const int32_t glyphIndex, const Glyph* glyph, const uint8_t fontScale) {
+	void Renderer::putGlyph(const Point& position, const Font* font, const Color* color, const int32_t glyphIndex, const Glyph* glyph, const uint8_t fontScale) {
 		auto bitIndex =
 			font->isConstantGlyphWidth()
 			? glyphIndex * (font->getConstantGlyphWidth() * font->getLineHeight())
@@ -963,7 +963,7 @@ namespace YOBA {
 					bitmapByte = font->getBitmap()[bitIndex / 8];
 
 					if ((bitmapByte >> bitIndex % 8) & 1)
-						putPixel(Point(point.getX() + i, point.getY() + j), color);
+						putPixel(Point(position.getX() + i, position.getY() + j), color);
 
 					bitIndex++;
 				}
@@ -971,8 +971,8 @@ namespace YOBA {
 		}
 		else {
 			int32_t
-				x = point.getX(),
-				y = point.getY();
+				x = position.getX(),
+				y = position.getY();
 
 			for (uint8_t j = 0; j < font->getLineHeight(); j++) {
 				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
@@ -985,20 +985,20 @@ namespace YOBA {
 					x += fontScale;
 				}
 
-				x = point.getX();
+				x = position.getX();
 				y += fontScale;
 			}
 		}
 	}
 
-	void Renderer::putText(const Point& point, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t textScale) {
+	void Renderer::putText(const Point& position, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t textScale) {
 		const auto& clip = getClip();
 		const auto clipX2 = clip.getX2();
 
 		if (
-			point.getX() > clipX2
-			|| point.getY() > clip.getY2()
-			|| point.getY() + font->getLineHeight(textScale) < clip.getY()
+			position.getX() > clipX2
+			|| position.getY() > clip.getY2()
+			|| position.getY() + font->getLineHeight(textScale) < clip.getY()
 			|| !color
 		)
 			return;
@@ -1008,11 +1008,11 @@ namespace YOBA {
 		if (glyphIndex >= 0) {
 			const auto glyph = font->getGlyphByIndex(glyphIndex);
 
-			if (point.getX() + font->getWidth(glyph, textScale) < clip.getX())
+			if (position.getX() + font->getWidth(glyph, textScale) < clip.getX())
 				return;
 
 			putGlyph(
-				point,
+				position,
 				font,
 				color,
 				glyphIndex,
@@ -1021,24 +1021,24 @@ namespace YOBA {
 			);
 		}
 		else {
-			putMissingGlyph(point, font, color, textScale);
+			putMissingGlyph(position, font, color, textScale);
 		}
 	}
 
-	void Renderer::putText(const Point& point, const Font* font, const Color* color, const std::string_view text, const uint8_t textScale) {
+	void Renderer::putText(const Point& position, const Font* font, const Color* color, const std::string_view text, const uint8_t textScale) {
 		const auto& clip = getClip();
 		const auto clipX2 = clip.getX2();
 
 		// Skipping rendering if text is obviously not in clip region
 		if (
-			point.getX() > clipX2
-			|| point.getY() > clip.getY2()
-			|| point.getY() + font->getLineHeight(textScale) < clip.getY()
+			position.getX() > clipX2
+			|| position.getY() > clip.getY2()
+			|| position.getY() + font->getLineHeight(textScale) < clip.getY()
 			|| !color
 		)
 			return;
 
-		int32_t x = point.getX();
+		int32_t x = position.getX();
 
 		size_t charIndex = 0;
 
@@ -1059,7 +1059,7 @@ namespace YOBA {
 					// Rendering current glyph only if it's in clip region
 					if (x2 > clip.getX()) {
 						putGlyph(
-							Point(x, point.getY()),
+							Point(x, position.getY()),
 							font,
 							color,
 							glyphIndex,
@@ -1071,13 +1071,13 @@ namespace YOBA {
 					x = x2;
 				}
 				else {
-					putMissingGlyph(Point(x, point.getY()), font, color, textScale);
+					putMissingGlyph(Point(x, position.getY()), font, color, textScale);
 
 					x += Font::missingGlyphWidth * textScale;
 				}
 			}
 			else {
-				putMissingGlyph(Point(x, point.getY()), font, color, textScale);
+				putMissingGlyph(Point(x, position.getY()), font, color, textScale);
 
 				x += Font::missingGlyphWidth * textScale;
 			}

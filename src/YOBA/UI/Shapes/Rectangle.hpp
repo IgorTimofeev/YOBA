@@ -11,10 +11,11 @@ namespace YOBA {
 		public:
 			RectangleShape() = default;
 
-			explicit RectangleShape(const Color* color) {
+			RectangleShape(const Color* color) {
 				setFillColor(color);
 			}
 
+		protected:
 			void onRender(Renderer* renderer, const Rectangle& bounds) override {
 				auto color = getFillColor();
 
