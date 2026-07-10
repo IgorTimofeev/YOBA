@@ -56,7 +56,6 @@ namespace YOBA {
 				if (!textColor)
 					return;
 
-				const auto& text = getText();
 				const auto textWidth = font->getWidth(getText());
 
 				renderer->putText(

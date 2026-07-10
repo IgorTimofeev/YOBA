@@ -37,6 +37,7 @@
 #include <YOBA/UI/StackLayout.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
 #include <YOBA/UI/WrapLayout.hpp>
+#include <YOBA/UI/MarginLayout.hpp>
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>
