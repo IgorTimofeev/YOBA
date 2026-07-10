@@ -6,7 +6,6 @@
 namespace YOBA {
 	Switch::Switch(const bool isActive) {
 		_animation.setDuration(250'000);
-		_animation.setTarget(this);
 
 		_animation.setOnTick([this] {
 			_handlePosition = _handlePositionFrom + ((this->isActive() ? 1.0f : 0.0f) - _handlePositionFrom) * _animation.getProgress();

@@ -153,7 +153,7 @@ namespace YOBA {
 				uint16_t max
 			);
 
-			static void computeBoundsShit(
+			static void computeArrangeShit(
 				Alignment alignment,
 				int32_t boundsStart,
 				uint16_t boundsSize,

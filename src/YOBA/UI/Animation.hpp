@@ -27,11 +27,8 @@ namespace YOBA {
 			uint32_t getElapsedTime() const;
 			float getProgress() const;
 
-			Element* getTarget() const;
-			void setTarget(Element* target);
-
-			void start();
-			void stop();
+			virtual void start();
+			virtual void stop();
 			void tick();
 
 		protected:
@@ -42,11 +39,21 @@ namespace YOBA {
 			AnimationState _state = AnimationState::stopped;
 			uint32_t _durationUs = 1'000'000;
 			uint64_t _startTimeUs = 0;
-			Element* _target = nullptr;
 
 			std::function<void(const AnimationState state)> _onStateChanged = nullptr;
 
 			void setState(AnimationState state);
+	};
+
+	class TargetAnimation : public Animation {
+		public:
+			void start() override;
+
+			Element* getTarget() const;
+			void setTarget(Element* target);
+
+		private:
+			Element* _target = nullptr;
 	};
 
 	class ManualAnimation : public Animation {
@@ -104,7 +111,7 @@ namespace YOBA {
 			std::function<void()> _onTick = nullptr;
 	};
 
-	class SizeAnimation : public Animation {
+	class SizeAnimation : public TargetAnimation {
 		public:
 			const Size& getFrom() const;
 			void setFrom(const Size& from);
@@ -124,7 +131,7 @@ namespace YOBA {
 			Size _computedTo {};
 	};
 
-	class ScaleTransformAnimation : public Animation {
+	class ScaleTransformAnimation : public TargetAnimation {
 		public:
 			ScaleTransform* getTransform() const;
 			void setTransform(ScaleTransform* transform);

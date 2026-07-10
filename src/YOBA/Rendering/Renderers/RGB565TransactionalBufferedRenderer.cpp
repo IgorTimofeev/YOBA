@@ -78,8 +78,6 @@ namespace YOBA {
 
 			uint8_t bitmapBitIndex = 0;
 
-			// 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
-			// ---- ---- | ---- -+-- | ---- ---- | ---- -2--
 			for (uint16_t imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
 				for (uint16_t imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
 					const auto contains = clip.contains(Point(point.getX() + imageX, point.getY() + imageY));

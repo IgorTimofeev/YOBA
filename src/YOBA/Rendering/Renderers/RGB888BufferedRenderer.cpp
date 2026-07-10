@@ -148,8 +148,6 @@ namespace YOBA {
 			bool containsYX;
 			uint32_t value24Bit;
 
-			// 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
-			// ---- ---- | ---- -+-- | ---- ---- | ---- -2--
 			for (imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
 				containsY = y >= clipY1 && y <= clipY2;
 

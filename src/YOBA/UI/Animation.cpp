@@ -33,17 +33,8 @@ namespace YOBA {
 	AnimationState Animation::getState() const {
 		return _state;
 	}
-	Element* Animation::getTarget() const {
-		return _target;
-	}
-
-	void Animation::setTarget(Element* target) {
-		_target = target;
-	}
 
 	void Animation::start() {
-		assert(!!_target && "Target couldn't be nullptr");
-
 		if (getState() == AnimationState::started)
 			return;
 
@@ -85,6 +76,22 @@ namespace YOBA {
 
 		if (_onStateChanged)
 			_onStateChanged(_state);
+	}
+
+	// -------------------------------- TargetAnimation --------------------------------
+
+	void TargetAnimation::start() {
+		assert(!!_target && "Target couldn't be nullptr");
+
+		Animation::start();
+	}
+
+	Element* TargetAnimation::getTarget() const {
+		return _target;
+	}
+
+	void TargetAnimation::setTarget(Element* target) {
+		_target = target;
 	}
 
 	// -------------------------------- ManualAnimation --------------------------------

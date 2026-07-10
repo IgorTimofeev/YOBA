@@ -31,6 +31,7 @@
 #include <YOBA/UI/Switch.hpp>
 #include <YOBA/UI/ProgressBar.hpp>
 #include <YOBA/UI/Divider.hpp>
+#include <YOBA/UI/Badge.hpp>
 
 // Layouts
 #include <YOBA/UI/StackLayout.hpp>

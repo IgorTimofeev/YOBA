@@ -105,7 +105,7 @@ namespace YOBA {
 						0
 					)),
 
-				availableSize.getHeight() == Size::computed
+			availableSize.getHeight() == Size::computed
 					? Size::computed
 					: static_cast<uint16_t>(std::max<int32_t>(
 						static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
@@ -134,7 +134,7 @@ namespace YOBA {
 		));
 	}
 
-	void Element::computeBoundsShit(
+	void Element::computeArrangeShit(
 		const Alignment alignment,
 		const int32_t boundsStart,
 		const uint16_t boundsSize,
@@ -205,7 +205,10 @@ namespace YOBA {
 					newSize = static_cast<int32_t>(desiredSize);
 				}
 
-				newSize = newSize - marginStart - marginEnd;
+				newSize = newSize - marginStart;
+
+				if (marginEnd > 0)
+					newSize -= marginEnd;
 
 				if (newSize < 0)
 					newSize = 0;
@@ -226,7 +229,7 @@ namespace YOBA {
 		int32_t newSize = 0;
 
 		// Horizontal
-		computeBoundsShit(
+		computeArrangeShit(
 			getHorizontalAlignment(),
 			bounds.getX(),
 			bounds.getWidth(),
@@ -245,7 +248,7 @@ namespace YOBA {
 		newBounds.setWidth(newSize);
 
 		// Vertical
-		computeBoundsShit(
+		computeArrangeShit(
 			getVerticalAlignment(),
 			bounds.getY(),
 			bounds.getHeight(),
