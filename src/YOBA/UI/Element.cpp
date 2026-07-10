@@ -56,24 +56,6 @@ namespace YOBA {
 
 	}
 
-	uint16_t Element::computeMeasureShit(
-		const uint16_t size,
-		const uint16_t desiredSize,
-		const uint16_t min,
-		const uint16_t max
-	) {
-		int32_t newSize = 0;
-
-		if (size == Size::computed) {
-			newSize = desiredSize;
-		}
-		else {
-			newSize = size;
-		}
-
-		return std::clamp<int32_t>(newSize, min, max);
-	}
-
 	void Element::onBoundsChanged() {
 
 	}
@@ -85,28 +67,18 @@ namespace YOBA {
 	void Element::measure(const Size& availableSize) {
 		const auto& size = getSize();
 
-		_measuredSize = onMeasure(Size(
-			availableSize.getWidth() == Size::computed
-				? Size::computed
-				: availableSize.getWidth(),
-
-			availableSize.getHeight() == Size::computed
-				? Size::computed
-				: availableSize.getHeight()
-		));
+		_measuredSize = onMeasure(availableSize);
 
 		// Horizontal
-		_measuredSize.setWidth(computeMeasureShit(
-			size.getWidth(),
-			_measuredSize.getWidth(),
+		_measuredSize.setWidth(std::clamp<int32_t>(
+			size.getWidth() == Size::computed ? _measuredSize.getWidth() : size.getWidth(),
 			_minSize.getWidth(),
 			_maxSize.getWidth()
 		));
 
 		// Vertical
-		_measuredSize.setHeight(computeMeasureShit(
-			size.getHeight(),
-			_measuredSize.getHeight(),
+		_measuredSize.setHeight(std::clamp<int32_t>(
+			size.getHeight() == Size::computed ? _measuredSize.getHeight() : size.getHeight(),
 			_minSize.getHeight(),
 			_maxSize.getHeight()
 		));
@@ -121,50 +93,29 @@ namespace YOBA {
 		const uint16_t desiredSize,
 
 		int32_t& newPosition,
-		int32_t& newSize
+		uint16_t& newSize
 	) {
 		switch (alignment) {
 			case Alignment::start:
 				newSize = static_cast<int32_t>(desiredSize);
-
-				if (newSize < 0)
-					newSize = 0;
-
 				newPosition = boundsStart;
 
 				break;
 
 			case Alignment::center:
 				newSize = static_cast<int32_t>(desiredSize);
-				
-				if (newSize < 0)
-					newSize = 0;
-
 				newPosition = boundsStart + boundsSize / 2 - newSize / 2;
 
 				break;
 
 			case Alignment::end:
 				newSize = static_cast<int32_t>(desiredSize);
-				
-				if (newSize < 0)
-					newSize = 0;
-
 				newPosition = boundsStart + boundsSize - newSize;
 
 				break;
 
 			case Alignment::stretch:
-				if (size == Size::computed) {
-					newSize = boundsSize;
-				}
-				else {
-					newSize = static_cast<int32_t>(desiredSize);
-				}
-
-				if (newSize < 0)
-					newSize = 0;
-
+				newSize = size == Size::computed ? boundsSize : static_cast<int32_t>(desiredSize);
 				newPosition = boundsStart;
 
 				break;
@@ -175,9 +126,9 @@ namespace YOBA {
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
 
-		Rectangle newBounds;
+		Rectangle newBounds {};
 		int32_t newPosition = 0;
-		int32_t newSize = 0;
+		uint16_t newSize = 0;
 
 		// Horizontal
 		computeArrangeShit(

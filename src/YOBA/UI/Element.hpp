@@ -139,13 +139,6 @@ namespace YOBA {
 			void removeFromParent(Layout* parent);
 			void setPointerOver(bool value);
 
-			static uint16_t computeMeasureShit(
-				uint16_t size,
-				uint16_t desiredSize,
-				uint16_t min,
-				uint16_t max
-			);
-
 			static void computeArrangeShit(
 				Alignment alignment,
 				int32_t boundsStart,
@@ -154,7 +147,7 @@ namespace YOBA {
 				uint16_t desiredSize,
 
 				int32_t& newPosition,
-				int32_t& newSize
+				uint16_t& newSize
 			);
 
 			virtual void handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) = 0;
