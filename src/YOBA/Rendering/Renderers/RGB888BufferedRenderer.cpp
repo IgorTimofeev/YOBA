@@ -123,19 +123,38 @@ namespace YOBA {
 		if (image->getColorModel() != ColorModel::RGB888)
 			return;
 
+		auto x = position.getX();
+		auto y = position.getY();
+
+		uint16_t imageY;
+		uint16_t imageX;
+
+		bool containsY;
+
 		const auto& clip = getClip();
+		const auto clipX1 = clip.getX();
+		const auto clipY1 = clip.getY();
+		const auto clipX2 = clip.getX2();
+		const auto clipY2 = clip.getY2();
+
+		auto pixelBufferPtr = _pixelBuffer + getPixelIndex(x, y) * 3;
+		const auto pixelBufferScanlineLength = (getTarget()->getSize().getWidth() - image->getSize().getWidth()) * 3;
+
+		auto bitmapPtr = image->getBitmap();
 
 		// With alpha
 		if (image->getOptions() & ImageOptions::alpha1Bit) {
-			auto bitmapPtr = image->getBitmap();
-
 			uint8_t bitmapBitIndex = 0;
+			bool containsYX;
+			uint32_t value24Bit;
 
 			// 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
 			// ---- ---- | ---- -+-- | ---- ---- | ---- -2--
-			for (uint16_t imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
-				for (uint16_t imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
-					const auto contains = clip.contains(Point(position.getX() + imageX, position.getY() + imageY));
+			for (imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
+				containsY = y >= clipY1 && y <= clipY2;
+
+				for (imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
+					containsYX = containsY && x >= clipX1 && x <= clipX2;
 
 					// Non-transparent
 					if (*bitmapPtr & (1 << bitmapBitIndex)) {
@@ -146,25 +165,13 @@ namespace YOBA {
 							bitmapBitIndex = 0;
 							bitmapPtr++;
 
-							if (contains) {
-								const auto pixelBufferPtr =
-									_pixelBuffer
-									+ getPixelIndex({ position.getX() + imageX, position.getY() + imageY })
-									* 3;
-
+							if (containsYX)
 								std::memcpy(pixelBufferPtr, bitmapPtr, 3);
-							}
 						}
 						// Dark souls
 						else {
-							if (contains) {
-								const auto pixelBufferPtr =
-									_pixelBuffer
-									+ getPixelIndex({ position.getX() + imageX, position.getY() + imageY })
-									* 3;
-
-								const auto value24Bit =
-									(*reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex) & 0xFFFFFF;
+							if (containsYX) {
+								value24Bit = *reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex;
 
 								std::memcpy(pixelBufferPtr, &value24Bit, 3);
 							}
@@ -181,26 +188,37 @@ namespace YOBA {
 							bitmapPtr++;
 						}
 					}
+
+					x++;
+
+					pixelBufferPtr += 3;
 				}
+
+				x = position.getX();
+				y++;
+
+				pixelBufferPtr += pixelBufferScanlineLength;
 			}
 		}
 		// Without
 		else {
-			auto bitmapPtr = image->getBitmap();
+			for (imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
+				containsY = y >= clipY1 && y <= clipY2;
 
-			for (uint16_t imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
-				for (uint16_t imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
-					if (clip.contains(Point(position.getX() + imageX, position.getY() + imageY))) {
-						const auto pixelBufferPtr =
-							_pixelBuffer
-							+ getPixelIndex({ position.getX() + imageX, position.getY() + imageY })
-							* 3;
-
+				for (imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
+					if (containsY && x >= clipX1 && x <= clipX2)
 						std::memcpy(pixelBufferPtr, bitmapPtr, 3);
-					}
 
+					x++;
+
+					pixelBufferPtr += 3;
 					bitmapPtr += 3;
 				}
+
+				x = position.getX();
+				y++;
+
+				pixelBufferPtr += pixelBufferScanlineLength;
 			}
 		}
 	}

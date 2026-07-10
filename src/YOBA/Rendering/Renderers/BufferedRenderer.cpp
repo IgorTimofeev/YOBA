@@ -22,11 +22,11 @@ namespace YOBA {
 		return _pixelBufferLength;
 	}
 
-	size_t BufferedRenderer::getPixelIndex(const uint16_t x, const uint16_t y) const {
+	int32_t BufferedRenderer::getPixelIndex(const int32_t x, const int32_t y) const {
 		return y * getTarget()->getSize().getWidth() + x;
 	}
 
-	size_t BufferedRenderer::getPixelIndex(const Point& point) const {
+	int32_t BufferedRenderer::getPixelIndex(const Point& point) const {
 		return getPixelIndex(point.getX(), point.getY());
 	}
 }

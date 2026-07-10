@@ -11,8 +11,15 @@ namespace YOBA {
 			uint8_t* getPixelBuffer() const;
 			size_t getPixelBufferLength() const;
 
-			size_t getPixelIndex(uint16_t x, uint16_t y) const;
-			size_t getPixelIndex(const Point& point) const;
+			int32_t getPixelIndex(const int32_t x, const int32_t y) const;
+			int32_t getPixelIndex(const Point& point) const;
+
+			// int32_t getPixelIndexSigned(const int32_t x, const int32_t y) const {
+			// 	if (x >= 0 && y >= 0)
+			// 		return getPixelIndex(x, y);
+			//
+			//
+			// }
 
 		protected:
 			uint8_t* _pixelBuffer = nullptr;
