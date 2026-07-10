@@ -5,7 +5,7 @@
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/Core/Color.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
-#include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Margin.hpp>
 #include <YOBA/UI/Traits/TextElement.hpp>
 #include <YOBA/UI/Traits/FontElement.hpp>
 #include <YOBA/UI/Traits/CornerRadiusElement.hpp>

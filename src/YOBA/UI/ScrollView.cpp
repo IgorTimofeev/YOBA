@@ -10,9 +10,11 @@ namespace YOBA {
 
 		_horizontalScrollBar.setOrientation(Orientation::horizontal);
 		_horizontalScrollBar.setAlignment(Alignment::stretch, Alignment::end);
+		_horizontalScrollBarMarginLayout += &_horizontalScrollBar;
 
 		_verticalScrollBar.setOrientation(Orientation::vertical);
 		_verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
+		_verticalScrollBarMarginLayout += &_verticalScrollBar;
 
 		setScrollBarSize(3);
 		setScrollBarOffset(3);
@@ -59,8 +61,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::setScrollBarOffset(const uint16_t value) {
-		_horizontalScrollBar.setMargin(Margin(value, 0, value, value));
-		_verticalScrollBar.setMargin(Margin(0, value, value, value));
+		_horizontalScrollBarMarginLayout.setMargin(Margin(value, 0, value, value));
+		_verticalScrollBarMarginLayout.setMargin(Margin(0, value, value, value));
 	}
 
 	void ScrollView::setScrollBarSize(const uint16_t value) {
@@ -144,8 +146,8 @@ namespace YOBA {
 				_contentMeasuredSize.setHeight(elementSize.getHeight());
 		}
 
-		_horizontalScrollBar.measure(availableSize);
-		_verticalScrollBar.measure(availableSize);
+		_horizontalScrollBarMarginLayout.measure(availableSize);
+		_verticalScrollBarMarginLayout.measure(availableSize);
 
 		return _contentMeasuredSize;
 	}
@@ -201,20 +203,21 @@ namespace YOBA {
 			if (element->isVisible())
 				element->arrange(_contentBounds);
 
-		const auto& processScrollBar = [&bounds](ScrollBar& bar, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
+		const auto& processScrollBar = [&bounds](MarginLayout& marginLayout, ScrollBar& bar, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 			bar.setContentSize(contentSize);
 			bar.setViewportSize(viewportSize);
 
-			bar.setVisible(
+			marginLayout.setVisible(
 				mode == ScrollMode::enabled
 				|| (mode == ScrollMode::computed && contentSize > viewportSize)
 			);
 
-			if (bar.isVisible())
-				bar.arrange(bounds);
+			if (marginLayout.isVisible())
+				marginLayout.arrange(bounds);
 		};
 
 		processScrollBar(
+			_horizontalScrollBarMarginLayout,
 			_horizontalScrollBar,
 			_horizontalScrollMode,
 			_contentBounds.getWidth(),
@@ -222,6 +225,7 @@ namespace YOBA {
 		);
 
 		processScrollBar(
+			_verticalScrollBarMarginLayout,
 			_verticalScrollBar,
 			_verticalScrollMode,
 			_contentBounds.getHeight(),
@@ -250,13 +254,13 @@ namespace YOBA {
 	void ScrollView::onRender(Renderer* renderer, const Rectangle& bounds) {
 		Layout::onRender(renderer, bounds);
 
-		const auto& processScrollBar = [&bounds, renderer](ScrollBar& bar) {
-			if (bar.isVisible())
-				bar.render(renderer, bounds);
+		const auto& processScrollBar = [&bounds, renderer](MarginLayout& marginLayout) {
+			if (marginLayout.isVisible())
+				marginLayout.render(renderer, bounds);
 		};
 
-		processScrollBar(_horizontalScrollBar);
-		processScrollBar(_verticalScrollBar);
+		processScrollBar(_horizontalScrollBarMarginLayout);
+		processScrollBar(_verticalScrollBarMarginLayout);
 	}
 
 	void ScrollView::onCaptureChanged() {

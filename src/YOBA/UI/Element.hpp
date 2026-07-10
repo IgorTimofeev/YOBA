@@ -5,7 +5,6 @@
 
 #include <YOBA/System.hpp>
 #include <YOBA/Core/Alignment.hpp>
-#include <YOBA/Core/Margin.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Events/Event.hpp>
 #include <YOBA/Core/Size.hpp>
@@ -78,9 +77,6 @@ namespace YOBA {
 			bool getClipToBounds() const;
 			void setClipToBounds(bool value);
 
-			const Margin& getMargin() const;
-			void setMargin(const Margin& value);
-
 			const Size& getSize() const;
 			void setSize(const Size& value);
 			void setWidth(uint16_t value);
@@ -131,7 +127,6 @@ namespace YOBA {
 			Size _maxSize { Size::computed, Size::computed };
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
-			Margin _margin = Margin::zero;
 			Layout* _parent = nullptr;
 
 			Transform* _renderTransform = nullptr;
@@ -147,8 +142,6 @@ namespace YOBA {
 			static uint16_t computeMeasureShit(
 				uint16_t size,
 				uint16_t desiredSize,
-				int32_t marginStartClamped,
-				int32_t marginEndClamped,
 				uint16_t min,
 				uint16_t max
 			);
@@ -159,8 +152,6 @@ namespace YOBA {
 				uint16_t boundsSize,
 				uint16_t size,
 				uint16_t desiredSize,
-				int32_t marginStart,
-				int32_t marginEnd,
 
 				int32_t& newPosition,
 				int32_t& newSize

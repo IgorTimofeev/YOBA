@@ -1,5 +1,6 @@
 #include <YOBA/UI/Button.hpp>
 #include <YOBA/UI/Application.hpp>
+#include <YOBA/Core/Events/PointerEvent.hpp>
 
 namespace YOBA {
 	void Button::onEvent(Event* event) {
