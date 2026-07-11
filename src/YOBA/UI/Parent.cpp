@@ -17,7 +17,7 @@ namespace YOBA {
 
 		const auto isPointer = PointerEvent::isPointer(event);
 		const auto isPinch = PinchEvent::isPinch(event);
-		auto currentBounds = getRenderBounds();
+		auto currentBounds = getRenderingBounds();
 
 		if (isPointer || isPinch) {
 			bool callHandlersOnThis;

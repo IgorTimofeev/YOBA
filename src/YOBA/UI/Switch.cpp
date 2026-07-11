@@ -1,7 +1,6 @@
 #include <YOBA/UI/Switch.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
-
-#include "Application.hpp"
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	Switch::Switch(const bool isActive) {

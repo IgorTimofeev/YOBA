@@ -1,6 +1,6 @@
 #include <YOBA/UI/Application.hpp>
 #include <YOBA/UI/Element.hpp>
-#include <YOBA/UI/Animation.hpp>
+#include <YOBA/UI/Animations/Animation.hpp>
 
 namespace YOBA {
 	Application* Application::_current = nullptr;

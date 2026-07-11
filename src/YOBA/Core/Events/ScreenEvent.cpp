@@ -1,7 +1,7 @@
 #include <YOBA/Core/Events/ScreenEvent.hpp>
-
 #include <YOBA/Core/Events/PinchEvent.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/MouseWheelEvent.hpp>
 
 namespace YOBA {
 	ScreenEvent::ScreenEvent(const uint16_t typeID) : Event(typeID) {
@@ -16,6 +16,8 @@ namespace YOBA {
 
 			|| event->getTypeID() == PinchDownEvent::typeID
 			|| event->getTypeID() == PinchDragEvent::typeID
-			|| event->getTypeID() == PinchUpEvent::typeID;
+			|| event->getTypeID() == PinchUpEvent::typeID
+
+			|| event->getTypeID() == MouseWheelEvent::typeID;
 	}
 }

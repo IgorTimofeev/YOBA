@@ -2,7 +2,21 @@
 
 // Elements
 #include <YOBA/UI/Element.hpp>
-#include <YOBA/UI/Animation.hpp>
+
+// Animations
+#include <YOBA/UI/Animations/Animation.hpp>
+#include <YOBA/UI/Animations/CallbackAnimation.hpp>
+#include <YOBA/UI/Animations/FloatAnimation.hpp>
+#include <YOBA/UI/Animations/TargetAnimation.hpp>
+#include <YOBA/UI/Animations/ScaleTransformAnimation.hpp>
+#include <YOBA/UI/Animations/SizeAnimation.hpp>
+
+// Transforms
+#include <YOBA/UI/Transforms/Transform.hpp>
+#include <YOBA/UI/Transforms/TransformGroup.hpp>
+#include <YOBA/UI/Transforms/TranslateTransform.hpp>
+#include <YOBA/UI/Transforms/ScaleTransform.hpp>
+#include <YOBA/UI/Transforms/MarginTransform.hpp>
 
 // Parents
 #include <YOBA/UI/Parent.hpp>

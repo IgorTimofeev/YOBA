@@ -45,7 +45,7 @@ namespace YOBA {
 		}
 		else if (event->getTypeID() == PointerDragEvent::typeID) {
 			const auto oldAngle = _angle;
-			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getRenderBounds().getCenter()) - toRadians(90);
+			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getRenderingBounds().getCenter()) - toRadians(90);
 
 			if (_onRotate)
 				_onRotate(oldAngle, _angle);

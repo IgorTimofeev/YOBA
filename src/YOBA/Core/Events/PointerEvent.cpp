@@ -1,4 +1,5 @@
 #include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/MouseWheelEvent.hpp>
 
 namespace YOBA {
 	PointerEvent::PointerEvent(const uint16_t typeID, const Point& position) :
@@ -20,7 +21,9 @@ namespace YOBA {
 		return
 			event->getTypeID() == PointerDownEvent::typeID
 			|| event->getTypeID() == PointerDragEvent::typeID
-			|| event->getTypeID() == PointerUpEvent::typeID;
+			|| event->getTypeID() == PointerUpEvent::typeID
+
+			|| event->getTypeID() == MouseWheelEvent::typeID;
 	}
 
 	PointerDownEvent::PointerDownEvent(const Point& position) : PointerEvent(

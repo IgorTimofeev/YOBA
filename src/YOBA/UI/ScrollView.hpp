@@ -2,6 +2,7 @@
 
 #include <YOBA/UI/Decorator.hpp>
 #include <YOBA/UI/ScrollBar.hpp>
+#include <YOBA/UI/Transforms/MarginTransform.hpp>
 
 namespace YOBA {
 	enum class ScrollMode : uint8_t {
@@ -48,7 +49,10 @@ namespace YOBA {
 			void onEventAfterChild(Event* event) override;
 
 		private:
+			MarginTransform _horizontalTransform {};
 			ScrollBar _horizontalScrollBar {};
+
+			MarginTransform _verticalTransform {};
 			ScrollBar _verticalScrollBar {};
 
 			ScrollMode _horizontalScrollMode = ScrollMode::disabled;

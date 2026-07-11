@@ -332,7 +332,7 @@ namespace YOBA {
 	}
 
 	void Slider::updateValueFromEvent(const PointerEvent* event) {
-		const auto& bounds = getRenderBounds();
+		const auto& bounds = getRenderingBounds();
 
 		const auto localX = std::clamp<int32_t>(
 			event->getPosition().getX() - bounds.getX(),

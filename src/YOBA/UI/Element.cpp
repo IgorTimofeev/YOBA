@@ -3,9 +3,10 @@
 #include <assert.h>
 #include <algorithm>
 
-#include <YOBA/UI/Animation.hpp>
+#include <YOBA/UI/Animations/Animation.hpp>
 #include <YOBA/UI/Layout.hpp>
 #include <YOBA/UI/Application.hpp>
+#include <YOBA/UI/Transforms/Transform.hpp>
 #include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
 
 namespace YOBA {
@@ -64,95 +65,29 @@ namespace YOBA {
 
 	}
 
-	uint16_t Element::computeMeasureShit(
-		const uint16_t size,
-		const uint16_t desiredSize,
-		const int32_t marginStartClamped,
-		const int32_t marginEndClamped,
-		const uint16_t min,
-		const uint16_t max
-	) {
-		int32_t newSize = 0;
-
-		if (size == Size::computed) {
-			newSize = static_cast<int32_t>(desiredSize);
-		}
-		else {
-			newSize = size;
-		}
-
-		newSize = newSize + marginStartClamped + marginEndClamped;
-
-		return std::clamp<int32_t>(newSize, min, max);
-	}
 
 	void Element::measure(const Size& availableSize) {
 		const auto& size = getSize();
-		const auto& margin = getMargin();
 
-		// Reducing available size with margins
-		// Negative margin values must NOT impact element size on measure
-		const auto marginLeftClamped = std::max<int32_t>(margin.getLeft(), 0);
-		const auto marginTopClamped = std::max<int32_t>(margin.getTop(), 0);
-		const auto marginRightClamped = std::max<int32_t>(margin.getRight(), 0);
-		const auto marginBottomClamped = std::max<int32_t>(margin.getBottom(), 0);
-
-		_measuredSize = onMeasure(Size(
-			availableSize.getWidth() == Size::computed
-				? Size::computed
-				: static_cast<uint16_t>(std::max<int32_t>(
-					static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
-					0
-				)),
-
-			availableSize.getHeight() == Size::computed
-				? Size::computed
-				: static_cast<uint16_t>(std::max<int32_t>(
-					static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
-					0
-				))
-		));
-
-		//
-		// auto avail = Size(
-		// 	availableSize.getWidth() == Size::computed
-		// 		? Size::computed
-		// 		: static_cast<uint16_t>(std::max<int32_t>(
-		// 			static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
-		// 			0
-		// 		)),
-		//
-		// 	availableSize.getHeight() == Size::computed
-		// 		? Size::computed
-		// 		: static_cast<uint16_t>(std::max<int32_t>(
-		// 			static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
-		// 			0
-		// 		))
-		// );
-		//
-		// auto availBounds = Bounds(avail);
-		//
-		// if (_layoutTransform)
-		// 	availBounds = _layoutTransform->apply(availBounds);
-		//
-		// _measuredSize = onMeasure(availBounds.getSize());
+		if (_layoutTransform) {
+			_measuredSize = _layoutTransform->processAvailableSizeBeforeMeasure(this, availableSize);
+			_measuredSize = onMeasure(_measuredSize);
+			_measuredSize = _layoutTransform->processMeasuredSizeAfterMeasure(this, _measuredSize);
+		}
+		else {
+			_measuredSize = onMeasure(availableSize);
+		}
 
 		// Horizontal
-		_measuredSize.setWidth(computeMeasureShit(
-			size.getWidth(),
-			_measuredSize.getWidth(),
-			marginLeftClamped,
-			marginRightClamped,
+		_measuredSize.setWidth(std::clamp<int32_t>(
+			size.getWidth() == Size::computed ? _measuredSize.getWidth() : size.getWidth(),
 			_minSize.getWidth(),
 			_maxSize.getWidth()
 		));
 
 		// Vertical
-		_measuredSize.setHeight(computeMeasureShit(
-			size.getHeight(),
-			_measuredSize.getHeight(),
-			marginTopClamped,
-			marginBottomClamped,
+		_measuredSize.setHeight(std::clamp<int32_t>(
+			size.getHeight() == Size::computed ? _measuredSize.getHeight() : size.getHeight(),
 			_minSize.getHeight(),
 			_maxSize.getHeight()
 		));
@@ -166,91 +101,43 @@ namespace YOBA {
 		const uint16_t size,
 		const uint16_t measuredSize,
 
-		const int32_t marginStart,
-		const int32_t marginEnd,
-
 		int32_t& newPosition,
-		int32_t& newSize
+		uint16_t& newSize
 	) {
 		switch (alignment) {
 			case Alignment::start:
-				newSize = static_cast<int32_t>(measuredSize);
-
-				if (marginStart > 0)
-					newSize -= marginStart;
-
-				if (marginEnd > 0)
-					newSize -= marginEnd;
-
-				if (newSize < 0)
-					newSize = 0;
-
-				newPosition = boundsStart + marginStart;
+				newSize = measuredSize;
+				newPosition = boundsStart;
 
 				break;
 
 			case Alignment::center:
-				newSize = static_cast<int32_t>(measuredSize);
-
-				if (marginStart > 0)
-					newSize -= marginStart;
-
-				if (marginEnd > 0)
-					newSize -= marginEnd;
-
-				if (newSize < 0)
-					newSize = 0;
-
-				newPosition = boundsStart + marginStart - marginEnd + boundsSize / 2 - newSize / 2;
+				newSize = measuredSize;
+				newPosition = boundsStart + boundsSize / 2 - newSize / 2;
 
 				break;
 
 			case Alignment::end:
-				newSize = static_cast<int32_t>(measuredSize);
-
-				if (marginStart > 0)
-					newSize -= marginStart;
-
-				if (marginEnd > 0)
-					newSize -= marginEnd;
-
-				if (newSize < 0)
-					newSize = 0;
-
-				newPosition = boundsStart + boundsSize - marginEnd - newSize;
+				newSize = measuredSize;
+				newPosition = boundsStart + boundsSize - newSize;
 
 				break;
 
 			case Alignment::stretch:
-				if (size == Size::computed) {
-					newSize = boundsSize;
-				}
-				else {
-					newSize = static_cast<int32_t>(measuredSize);
-				}
-
-				newSize = newSize - marginStart;
-
-				if (marginEnd > 0)
-					newSize -= marginEnd;
-
-				if (newSize < 0)
-					newSize = 0;
-
-				newPosition = boundsStart + marginStart;
+				newSize = size == Size::computed ? boundsSize : measuredSize;
+				newPosition = boundsStart;
 
 				break;
 		}
 	}
 
 	void Element::arrange(const Rectangle& bounds) {
-		const auto& margin = getMargin();
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
 
-		Rectangle newBounds;
+		Rectangle newBounds {};
 		int32_t newPosition = 0;
-		int32_t newSize = 0;
+		uint16_t newSize = 0;
 
 		// Horizontal
 		computeArrangeShit(
@@ -260,9 +147,6 @@ namespace YOBA {
 
 			size.getWidth(),
 			measuredSize.getWidth(),
-
-			margin.getLeft(),
-			margin.getRight(),
 
 			newPosition,
 			newSize
@@ -280,9 +164,6 @@ namespace YOBA {
 			size.getHeight(),
 			measuredSize.getHeight(),
 
-			margin.getTop(),
-			margin.getBottom(),
-
 			newPosition,
 			newSize
 		);
@@ -293,13 +174,13 @@ namespace YOBA {
 		// Applying layout transform if it presents
 		_layoutBounds =
 			_layoutTransform
-			? _layoutTransform->apply(newBounds)
+			? _layoutTransform->processLayoutBoundsOnArrange(this, newBounds)
 			: newBounds;
 
 		// Applying rendering transform if it presents
-		_renderBounds =
+		_renderingBounds =
 			_renderingTransform
-			? _renderingTransform->apply(_layoutBounds)
+			? _renderingTransform->processRenderingBoundsOnArrange(this, _layoutBounds)
 			: _layoutBounds;
 
 		onBoundsChanged();
@@ -312,13 +193,13 @@ namespace YOBA {
 			// Copying clip region to restore it after render pass
 			const auto oldClip = renderer->pushClip(_layoutBounds);
 
-			onRender(renderer, _renderBounds);
+			onRender(renderer, _renderingBounds);
 
 			// Restoring clip region
 			renderer->setClip(oldClip);
 		}
 		else {
-			onRender(renderer, _renderBounds);
+			onRender(renderer, _renderingBounds);
 		}
 	}
 
@@ -391,8 +272,8 @@ namespace YOBA {
 		return _layoutBounds;
 	}
 
-	const Rectangle& Element::getRenderBounds() const {
-		return _renderBounds;
+	const Rectangle& Element::getRenderingBounds() const {
+		return _renderingBounds;
 	}
 
 	Transform* Element::getLayoutTransform() const {
@@ -534,19 +415,6 @@ namespace YOBA {
 
 	Alignment Element::getHorizontalAlignment() const {
 		return _horizontalAlignment;
-	}
-
-	const Margin& Element::getMargin() const {
-		return _margin;
-	}
-
-	void Element::setMargin(const Margin& value) {
-		if (value == _margin)
-			return;
-
-		_margin = value;
-
-		invalidate();
 	}
 
 	void Element::invalidateRender() {

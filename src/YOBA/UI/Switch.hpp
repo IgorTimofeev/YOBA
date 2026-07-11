@@ -3,7 +3,7 @@
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/Traits/ActiveElement.hpp>
 #include <YOBA/UI/Traits/CornerRadiusElement.hpp>
-#include <YOBA/UI/Animation.hpp>
+#include <YOBA/UI/Animations/CallbackAnimation.hpp>
 
 namespace YOBA {
 	class Switch : public Control, public ActiveElement, public CornerRadiusElement {
@@ -36,6 +36,6 @@ namespace YOBA {
 			float _handlePositionFrom = 0.0f;
 			float _handlePosition = 0.f;
 
-			ManualAnimation _animation {};
+			CallbackAnimation _animation {};
 	};
 }

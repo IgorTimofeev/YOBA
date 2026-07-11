@@ -1,5 +1,6 @@
 #include <YOBA/UI/ScrollView.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/Core/Events/MouseWheelEvent.hpp>
 #include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
 
 #include <YOBA/UI/Application.hpp>
@@ -11,10 +12,12 @@ namespace YOBA {
 		// Horizontal
 		_horizontalScrollBar.setOrientation(Orientation::horizontal);
 		_horizontalScrollBar.setAlignment(Alignment::stretch, Alignment::end);
+		_horizontalScrollBar.setLayoutTransform(&_horizontalTransform);
 
 		// Vertical
 		_verticalScrollBar.setOrientation(Orientation::vertical);
 		_verticalScrollBar.setAlignment(Alignment::end, Alignment::stretch);
+		_verticalScrollBar.setLayoutTransform(&_verticalTransform);
 
 		setScrollBarSize(3);
 		setScrollBarOffset(3);
@@ -61,8 +64,7 @@ namespace YOBA {
 	}
 
 	void ScrollView::setScrollBarOffset(const uint16_t value) {
-		_horizontalScrollBar.setMargin(Margin(value, 0, value, value));
-		_verticalScrollBar.setMargin(Margin(0, value, value, value));
+		_verticalTransform.setMargin({ 0, value, value, value });
 	}
 
 	void ScrollView::setScrollBarSize(const uint16_t value) {
@@ -85,8 +87,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::scrollTo(const Element* element) {
-		const auto& elementBounds = element->getRenderBounds();
-		const auto& bounds = getRenderBounds();
+		const auto& elementBounds = element->getRenderingBounds();
+		const auto& bounds = getRenderingBounds();
 
 		// Horizontal
 		if (elementBounds.getX() < bounds.getX()) {
@@ -106,8 +108,8 @@ namespace YOBA {
 	}
 
 	void ScrollView::scrollToCenter(const Element* element) {
-		const auto& elementBounds = element->getRenderBounds();
-		const auto& bounds = getRenderBounds();
+		const auto& elementBounds = element->getRenderingBounds();
+		const auto& bounds = getRenderingBounds();
 
 		const auto elementCenter = elementBounds.getCenter();
 		const auto center = bounds.getCenter();
@@ -239,7 +241,7 @@ namespace YOBA {
 			return;
 
 		// FR FR 100% need to scroll
-		if (!bounds.contains(_scrollIntoViewLaterTo->getRenderBounds())) {
+		if (!bounds.contains(_scrollIntoViewLaterTo->getRenderingBounds())) {
 			scrollToCenter(_scrollIntoViewLaterTo);
 
 			// 2nd arrange pass
@@ -291,6 +293,11 @@ namespace YOBA {
 					}
 				}
 			}
+		}
+		else if (event->getTypeID() == MouseWheelEvent::typeID) {
+			const auto mouseWheelEvent = reinterpret_cast<MouseWheelEvent*>(event);
+
+			scrollVerticallyBy(-mouseWheelEvent->getDelta());
 		}
 		else if (event->getTypeID() == ScrollIntoViewEvent::typeID) {
 			_scrollIntoViewLaterTo = reinterpret_cast<ScrollIntoViewEvent*>(event)->getElement();

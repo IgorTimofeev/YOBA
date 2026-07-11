@@ -9,7 +9,7 @@
 namespace YOBA {
 	class Rectangle {
 		public:
-			constexpr Rectangle(const int32_t x, const int32_t y, const int32_t width, const int32_t height) :
+			constexpr Rectangle(const int32_t x, const int32_t y, const uint16_t width, const uint16_t height) :
 				_x(x),
 				_y(y),
 				_width(width),

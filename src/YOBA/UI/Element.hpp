@@ -9,7 +9,6 @@
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Events/Event.hpp>
 #include <YOBA/Core/Size.hpp>
-#include <YOBA/Core/Transform.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
@@ -24,6 +23,7 @@ namespace YOBA {
 	class Parent;
 	class Layout;
 	class Decorator;
+	class Transform;
 
 	class Element {
 		friend Application;
@@ -96,12 +96,9 @@ namespace YOBA {
 			void setMinWidth(uint16_t value);
 			void setMinHeight(uint16_t value);
 
-			const Margin& getMargin() const;
-			void setMargin(const Margin& value);
-
 			const Size& getMeasuredSize() const;
 			const Rectangle& getLayoutBounds() const;
-			const Rectangle& getRenderBounds() const;
+			const Rectangle& getRenderingBounds() const;
 
 			Transform* getRenderingTransform() const;
 			void setRenderingTransform(Transform* transform);
@@ -137,7 +134,6 @@ namespace YOBA {
 			Size _maxSize { Size::computed, Size::computed };
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
-			Margin _margin = Margin::zero;
 			Parent* _parent = nullptr;
 
 			Transform* _layoutTransform = nullptr;
@@ -145,20 +141,11 @@ namespace YOBA {
 
 			Size _measuredSize {};
 			Rectangle _layoutBounds {};
-			Rectangle _renderBounds {};
+			Rectangle _renderingBounds {};
 
 			void addToParent(Parent* parent);
 			void removeFromParent(Parent* parent);
 			void setPointerOver(bool value);
-
-			static uint16_t computeMeasureShit(
-				uint16_t size,
-				uint16_t desiredSize,
-				int32_t marginStartClamped,
-				int32_t marginEndClamped,
-				uint16_t min,
-				uint16_t max
-			);
 
 			static void computeArrangeShit(
 				Alignment alignment,
@@ -166,11 +153,8 @@ namespace YOBA {
 				uint16_t boundsSize,
 				uint16_t size,
 				uint16_t measuredSize,
-				int32_t marginStart,
-				int32_t marginEnd,
-
 				int32_t& newPosition,
-				int32_t& newSize
+				uint16_t& newSize
 			);
 
 			virtual void handleEvent(Event* event, const Rectangle& parentBounds, const bool callHandlers) = 0;
