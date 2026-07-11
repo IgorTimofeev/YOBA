@@ -1,11 +1,19 @@
 #pragma once
 
-// Main
+// Elements
 #include <YOBA/UI/Element.hpp>
-#include <YOBA/UI/Control.hpp>
-#include <YOBA/UI/Layout.hpp>
-#include <YOBA/UI/Application.hpp>
 #include <YOBA/UI/Animation.hpp>
+
+// Parents
+#include <YOBA/UI/Parent.hpp>
+#include <YOBA/UI/Layout.hpp>
+#include <YOBA/UI/Decorator.hpp>
+
+// Layouts
+#include <YOBA/UI/Application.hpp>
+#include <YOBA/UI/StackLayout.hpp>
+#include <YOBA/UI/RelativeStackLayout.hpp>
+#include <YOBA/UI/WrapLayout.hpp>
 
 // Traits
 #include <YOBA/UI/Traits/BorderElement.hpp>
@@ -18,7 +26,8 @@
 #include <YOBA/UI/Traits/ActiveElement.hpp>
 #include <YOBA/UI/Traits/ValueElement.hpp>
 
-// Elements
+// Controls
+#include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/Selector.hpp>
 #include <YOBA/UI/Button.hpp>
 #include <YOBA/UI/SevenSegment.hpp>
@@ -32,12 +41,6 @@
 #include <YOBA/UI/ProgressBar.hpp>
 #include <YOBA/UI/Divider.hpp>
 #include <YOBA/UI/Badge.hpp>
-
-// Layouts
-#include <YOBA/UI/StackLayout.hpp>
-#include <YOBA/UI/RelativeStackLayout.hpp>
-#include <YOBA/UI/WrapLayout.hpp>
-#include <YOBA/UI/MarginLayout.hpp>
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>

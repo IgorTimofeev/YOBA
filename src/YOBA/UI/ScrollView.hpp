@@ -1,7 +1,6 @@
 #pragma once
 
-#include <YOBA/UI/Layout.hpp>
-#include <YOBA/UI/MarginLayout.hpp>
+#include <YOBA/UI/Decorator.hpp>
 #include <YOBA/UI/ScrollBar.hpp>
 
 namespace YOBA {
@@ -12,7 +11,7 @@ namespace YOBA {
 		disabled
 	};
 
-	class ScrollView : public Layout {
+	class ScrollView : public Decorator {
 		public:
 			ScrollView();
 
@@ -45,14 +44,11 @@ namespace YOBA {
 			void onArrange(const Rectangle& bounds) override;
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 			void onCaptureChanged() override;
-			void onEventBeforeChildren(Event* event) override;
-			void onEventAfterChildren(Event* event) override;
+			void onEventBeforeChild(Event* event) override;
+			void onEventAfterChild(Event* event) override;
 
 		private:
-			MarginLayout _horizontalScrollBarMarginLayout {};
 			ScrollBar _horizontalScrollBar {};
-
-			MarginLayout _verticalScrollBarMarginLayout {};
 			ScrollBar _verticalScrollBar {};
 
 			ScrollMode _horizontalScrollMode = ScrollMode::disabled;

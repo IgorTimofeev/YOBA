@@ -5,10 +5,21 @@
 namespace YOBA {
 	class Margin {
 		public:
-			Margin() = default;
-			Margin(int32_t uniformValue);
-			Margin(int32_t horizontal, int32_t vertical);
-			Margin(int32_t left, int32_t top, int32_t right, int32_t bottom);
+			constexpr Margin(const int32_t left, const int32_t top, const int32_t right, const int32_t bottom) : _left(left), _top(top), _right(right), _bottom(bottom) {
+
+			}
+
+			constexpr Margin(const int32_t horizontal, const int32_t vertical) : _left(horizontal), _top(vertical), _right(horizontal), _bottom(vertical) {
+
+			}
+
+			constexpr Margin(const int32_t uniformValue) : _left(uniformValue), _top(uniformValue), _right(uniformValue), _bottom(uniformValue) {
+
+			}
+
+			constexpr Margin() : _left(0), _top(0), _right(0), _bottom(0) {
+
+			}
 
 			static Margin zero;
 
@@ -31,9 +42,9 @@ namespace YOBA {
 			bool operator!=(const Margin& rhs) const;
 
 		private:
-			int32_t left = 0;
-			int32_t top = 0;
-			int32_t right = 0;
-			int32_t bottom = 0;
+			int32_t _left;
+			int32_t _top;
+			int32_t _right;
+			int32_t _bottom;
 	};
 }

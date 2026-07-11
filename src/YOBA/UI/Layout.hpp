@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <YOBA/UI/Element.hpp>
+#include <YOBA/UI/Parent.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Size.hpp>
@@ -9,7 +10,7 @@
 #include <iterator>
 
 namespace YOBA {
-	class Layout : public virtual Element {
+	class Layout : public virtual Parent {
 		public:
 			size_t getChildrenCount() const;
 			size_t getIndexOfChild(Element* element);
@@ -41,9 +42,6 @@ namespace YOBA {
 
 			virtual void onEventBeforeChildren(Event* event);
 			virtual void onEventAfterChildren(Event* event);
-
-			virtual void onChildAdded(Element* child);
-			virtual void onChildRemoved(Element* child);
 
 		private:
 			std::vector<Element*> _children {};

@@ -68,7 +68,7 @@ namespace YOBA {
 	}
 
 	void Switch::onIsActiveChanged() {
-		if (isVisibleInLayout()) {
+		if (isVisibleOnTarget()) {
 			_animation.stop();
 
 			_handlePositionFrom = _handlePosition;

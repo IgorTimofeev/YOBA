@@ -64,21 +64,71 @@ namespace YOBA {
 
 	}
 
+	uint16_t Element::computeMeasureShit(
+		const uint16_t size,
+		const uint16_t desiredSize,
+		const int32_t marginStartClamped,
+		const int32_t marginEndClamped,
+		const uint16_t min,
+		const uint16_t max
+	) {
+		int32_t newSize = 0;
+
+		if (size == Size::computed) {
+			newSize = static_cast<int32_t>(desiredSize);
+		}
+		else {
+			newSize = size;
+		}
+
+		newSize = newSize + marginStartClamped + marginEndClamped;
+
+		return std::clamp<int32_t>(newSize, min, max);
+	}
+
 	void Element::measure(const Size& availableSize) {
 		const auto& size = getSize();
+		const auto& margin = getMargin();
 
-		_measuredSize = onMeasure(availableSize);
+		// Reducing available size with margins
+		// Negative margin values must NOT impact element size on measure
+		const auto marginLeftClamped = std::max<int32_t>(margin.getLeft(), 0);
+		const auto marginTopClamped = std::max<int32_t>(margin.getTop(), 0);
+		const auto marginRightClamped = std::max<int32_t>(margin.getRight(), 0);
+		const auto marginBottomClamped = std::max<int32_t>(margin.getBottom(), 0);
+
+		_measuredSize = onMeasure(Size(
+			availableSize.getWidth() == Size::computed
+				? Size::computed
+				: static_cast<uint16_t>(std::max<int32_t>(
+					static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
+					0
+				)),
+
+			availableSize.getHeight() == Size::computed
+				? Size::computed
+				: static_cast<uint16_t>(std::max<int32_t>(
+					static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
+					0
+				))
+		));
 
 		// Horizontal
-		_measuredSize.setWidth(std::clamp<int32_t>(
-			size.getWidth() == Size::computed ? _measuredSize.getWidth() : size.getWidth(),
+		_measuredSize.setWidth(computeMeasureShit(
+			size.getWidth(),
+			_measuredSize.getWidth(),
+			marginLeftClamped,
+			marginRightClamped,
 			_minSize.getWidth(),
 			_maxSize.getWidth()
 		));
 
 		// Vertical
-		_measuredSize.setHeight(std::clamp<int32_t>(
-			size.getHeight() == Size::computed ? _measuredSize.getHeight() : size.getHeight(),
+		_measuredSize.setHeight(computeMeasureShit(
+			size.getHeight(),
+			_measuredSize.getHeight(),
+			marginTopClamped,
+			marginBottomClamped,
 			_minSize.getHeight(),
 			_maxSize.getHeight()
 		));
@@ -90,54 +140,105 @@ namespace YOBA {
 		const uint16_t boundsSize,
 		
 		const uint16_t size,
-		const uint16_t desiredSize,
+		const uint16_t measuredSize,
+
+		const int32_t marginStart,
+		const int32_t marginEnd,
 
 		int32_t& newPosition,
-		uint16_t& newSize
+		int32_t& newSize
 	) {
 		switch (alignment) {
 			case Alignment::start:
-				newSize = static_cast<int32_t>(desiredSize);
-				newPosition = boundsStart;
+				newSize = static_cast<int32_t>(measuredSize);
+
+				if (marginStart > 0)
+					newSize -= marginStart;
+
+				if (marginEnd > 0)
+					newSize -= marginEnd;
+
+				if (newSize < 0)
+					newSize = 0;
+
+				newPosition = boundsStart + marginStart;
 
 				break;
 
 			case Alignment::center:
-				newSize = static_cast<int32_t>(desiredSize);
-				newPosition = boundsStart + boundsSize / 2 - newSize / 2;
+				newSize = static_cast<int32_t>(measuredSize);
+
+				if (marginStart > 0)
+					newSize -= marginStart;
+
+				if (marginEnd > 0)
+					newSize -= marginEnd;
+
+				if (newSize < 0)
+					newSize = 0;
+
+				newPosition = boundsStart + marginStart - marginEnd + boundsSize / 2 - newSize / 2;
 
 				break;
 
 			case Alignment::end:
-				newSize = static_cast<int32_t>(desiredSize);
-				newPosition = boundsStart + boundsSize - newSize;
+				newSize = static_cast<int32_t>(measuredSize);
+
+				if (marginStart > 0)
+					newSize -= marginStart;
+
+				if (marginEnd > 0)
+					newSize -= marginEnd;
+
+				if (newSize < 0)
+					newSize = 0;
+
+				newPosition = boundsStart + boundsSize - marginEnd - newSize;
 
 				break;
 
 			case Alignment::stretch:
-				newSize = size == Size::computed ? boundsSize : static_cast<int32_t>(desiredSize);
-				newPosition = boundsStart;
+				if (size == Size::computed) {
+					newSize = boundsSize;
+				}
+				else {
+					newSize = static_cast<int32_t>(measuredSize);
+				}
+
+				newSize = newSize - marginStart;
+
+				if (marginEnd > 0)
+					newSize -= marginEnd;
+
+				if (newSize < 0)
+					newSize = 0;
+
+				newPosition = boundsStart + marginStart;
 
 				break;
 		}
 	}
 
 	void Element::arrange(const Rectangle& bounds) {
+		const auto& margin = getMargin();
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
 
-		Rectangle newBounds {};
+		Rectangle newBounds;
 		int32_t newPosition = 0;
-		uint16_t newSize = 0;
+		int32_t newSize = 0;
 
 		// Horizontal
 		computeArrangeShit(
 			getHorizontalAlignment(),
 			bounds.getX(),
 			bounds.getWidth(),
-			
+
 			size.getWidth(),
 			measuredSize.getWidth(),
+
+			margin.getLeft(),
+			margin.getRight(),
 
 			newPosition,
 			newSize
@@ -151,9 +252,12 @@ namespace YOBA {
 			getVerticalAlignment(),
 			bounds.getY(),
 			bounds.getHeight(),
-			
+
 			size.getHeight(),
 			measuredSize.getHeight(),
+
+			margin.getTop(),
+			margin.getBottom(),
 
 			newPosition,
 			newSize
@@ -164,7 +268,7 @@ namespace YOBA {
 
 		_layoutBounds = newBounds;
 
-		// Applying rendering transform if it presents
+		// Applying rendering transform if it present
 		// TODO: find a way to put this into render pass, because the only reason it's being calculated during arranging is FUCKING SCROLLVIEW
 		_renderBounds =
 			_renderTransform
@@ -234,7 +338,7 @@ namespace YOBA {
 		Application::getCurrent()->pushEvent(&event);
 	}
 
-	bool Element::isVisibleInLayout() const {
+	bool Element::isVisibleOnTarget() const {
 		const auto application = Application::getCurrent();
 
 		if (!application)
@@ -248,7 +352,7 @@ namespace YOBA {
 		return renderer->getClip().intersects(getLayoutBounds());
 	}
 
-	Layout* Element::getParent() const {
+	Parent* Element::getParent() const {
 		return _parent;
 	}
 
@@ -389,6 +493,19 @@ namespace YOBA {
 		return _horizontalAlignment;
 	}
 
+	const Margin& Element::getMargin() const {
+		return _margin;
+	}
+
+	void Element::setMargin(const Margin& value) {
+		if (value == _margin)
+			return;
+
+		_margin = value;
+
+		invalidate();
+	}
+
 	void Element::invalidateRender() {
 		const auto application = Application::getCurrent();
 
@@ -422,7 +539,7 @@ namespace YOBA {
 		_clipToBounds = value;
 	}
 
-	void Element::addToParent(Layout* parent) {
+	void Element::addToParent(Parent* parent) {
 		assert(_parent == nullptr && "Can't add element to parent, because it already have one");
 		assert(_parent != this && "Can't add element to itself");
 
@@ -431,7 +548,7 @@ namespace YOBA {
 		onAddedToParent(parent);
 	}
 
-	void Element::removeFromParent(Layout* parent) {
+	void Element::removeFromParent(Parent* parent) {
 		assert(parent == _parent && "Can't remove element from parent that's not related to it");
 
 		_parent = nullptr;
@@ -439,11 +556,11 @@ namespace YOBA {
 		onRemovedFromParent(parent);
 	}
 
-	void Element::onAddedToParent(Layout* parent) {
+	void Element::onAddedToParent(Parent* parent) {
 
 	}
 
-	void Element::onRemovedFromParent(Layout* parent) {
+	void Element::onRemovedFromParent(Parent* parent) {
 
 	}
 

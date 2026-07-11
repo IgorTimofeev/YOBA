@@ -5,6 +5,7 @@
 
 #include <YOBA/System.hpp>
 #include <YOBA/Core/Alignment.hpp>
+#include <YOBA/Core/Margin.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Events/Event.hpp>
 #include <YOBA/Core/Size.hpp>
@@ -20,11 +21,15 @@ namespace YOBA {
 	class TargetAnimation;
 	class Application;
 	class Control;
+	class Parent;
 	class Layout;
+	class Decorator;
 
 	class Element {
 		friend Application;
+		friend Parent;
 		friend Layout;
+		friend Decorator;
 		friend Control;
 
 		public:
@@ -41,7 +46,7 @@ namespace YOBA {
 			virtual void invalidateLayout();
 			virtual void invalidate();
 
-			Layout* getParent() const;
+			Parent* getParent() const;
 
 			bool isVisible() const;
 			void setVisible(bool value);
@@ -62,8 +67,7 @@ namespace YOBA {
 			void setCaptured(bool state);
 
 			void scrollIntoView();
-
-			bool isVisibleInLayout() const;
+			bool isVisibleOnTarget() const;
 
 			Alignment getHorizontalAlignment() const;
 			void setHorizontalAlignment(Alignment value);
@@ -92,6 +96,9 @@ namespace YOBA {
 			void setMinWidth(uint16_t value);
 			void setMinHeight(uint16_t value);
 
+			const Margin& getMargin() const;
+			void setMargin(const Margin& value);
+
 			const Size& getMeasuredSize() const;
 			const Rectangle& getLayoutBounds() const;
 			const Rectangle& getRenderBounds() const;
@@ -100,8 +107,8 @@ namespace YOBA {
 			void setRenderTransform(Transform* transform);
 
 		protected:
-			virtual void onAddedToParent(Layout* parent);
-			virtual void onRemovedFromParent(Layout* parent);
+			virtual void onAddedToParent(Parent* parent);
+			virtual void onRemovedFromParent(Parent* parent);
 
 			virtual void onFocusChanged();
 			virtual void onCaptureChanged();
@@ -127,7 +134,8 @@ namespace YOBA {
 			Size _maxSize { Size::computed, Size::computed };
 			Alignment _horizontalAlignment = Alignment::stretch;
 			Alignment _verticalAlignment = Alignment::stretch;
-			Layout* _parent = nullptr;
+			Margin _margin = Margin::zero;
+			Parent* _parent = nullptr;
 
 			Transform* _renderTransform = nullptr;
 
@@ -135,21 +143,32 @@ namespace YOBA {
 			Rectangle _layoutBounds {};
 			Rectangle _renderBounds {};
 
-			void addToParent(Layout* parent);
-			void removeFromParent(Layout* parent);
+			void addToParent(Parent* parent);
+			void removeFromParent(Parent* parent);
 			void setPointerOver(bool value);
+
+			static uint16_t computeMeasureShit(
+				uint16_t size,
+				uint16_t desiredSize,
+				int32_t marginStartClamped,
+				int32_t marginEndClamped,
+				uint16_t min,
+				uint16_t max
+			);
 
 			static void computeArrangeShit(
 				Alignment alignment,
 				int32_t boundsStart,
 				uint16_t boundsSize,
 				uint16_t size,
-				uint16_t desiredSize,
+				uint16_t measuredSize,
+				int32_t marginStart,
+				int32_t marginEnd,
 
 				int32_t& newPosition,
-				uint16_t& newSize
+				int32_t& newSize
 			);
 
-			virtual void handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) = 0;
+			virtual void handleEvent(Event* event, const Rectangle& parentBounds, const bool callHandlers) = 0;
 	};
 }

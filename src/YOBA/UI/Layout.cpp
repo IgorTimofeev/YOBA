@@ -288,22 +288,29 @@ namespace YOBA {
 	}
 
 	Size Layout::onMeasure(const Size& availableSize) {
-		auto result = Size();
+		uint16_t width = 0;
+		uint16_t height = 0;
+
+		Size measuredSize;
 
 		for (const auto child : _children) {
 			if (!child->isVisible())
 				continue;
 
 			child->measure(availableSize);
+			measuredSize = child->getMeasuredSize();
 
-			if (child->getMeasuredSize().getWidth() > result.getWidth())
-				result.setWidth(child->getMeasuredSize().getWidth());
+			if (measuredSize.getWidth() > width)
+				width = measuredSize.getWidth();
 
-			if (child->getMeasuredSize().getHeight() > result.getHeight())
-				result.setHeight(child->getMeasuredSize().getHeight());
+			if (measuredSize.getHeight() > height)
+				height = measuredSize.getHeight();
 		}
 
-		return result;
+		return {
+			width,
+			height
+		};
 	}
 
 	void Layout::onArrange(const Rectangle& bounds) {
@@ -328,13 +335,5 @@ namespace YOBA {
 
 	std::vector<Element*>::iterator Layout::end() {
 		return _children.end();
-	}
-
-	void Layout::onChildAdded(Element* child) {
-
-	}
-
-	void Layout::onChildRemoved(Element* child) {
-
 	}
 }

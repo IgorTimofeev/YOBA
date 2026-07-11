@@ -33,8 +33,8 @@ namespace YOBA {
 				const auto textWidth = font->getWidth(getText());
 
 				return {
-					static_cast<uint16_t>(std::max<int32_t>(textWidth + _textMargin.getLeft() + _textMargin.getRight(), 0)),
-					font->getLineHeight()
+					static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(textWidth) + _textMargin.getLeft() + _textMargin.getRight(), 0)),
+					static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(font->getLineHeight()) + _textMargin.getTop() + _textMargin.getBottom(), 0))
 				};
 			}
 
@@ -45,6 +45,7 @@ namespace YOBA {
 					return;
 
 				renderer->fillRectangle(bounds, getCornerRadius(), fillColor);
+				// renderer->fillRectangle(bounds, fillColor);
 
 				const auto font = getFont();
 
