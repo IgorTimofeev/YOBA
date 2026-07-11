@@ -4,6 +4,10 @@
 
 namespace YOBA {
 	class Parent : public virtual Element {
+		public:
+			virtual Parent& operator+=(Element* child) = 0;
+			virtual Parent& operator-=(Element* child) = 0;
+
 		protected:
 			virtual void onChildAdded(Element* child);
 			virtual void onChildRemoved(Element* child);

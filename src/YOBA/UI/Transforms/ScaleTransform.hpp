@@ -20,11 +20,6 @@ namespace YOBA {
 			const Vector2F& getOrigin() const;
 			void setOrigin(const Vector2F& origin);
 
-			Size processAvailableSizeBeforeMeasure(const Element* element, const Size& availableSize) override;
-			Size processMeasuredSizeAfterMeasure(const Element* element, const Size& measuredSize) override;
-			Rectangle processLayoutBoundsOnArrange(const Element* element, const Rectangle& bounds) override;
-			Rectangle processRenderingBoundsOnArrange(const Element* element, const Rectangle& bounds) override;
-
 		private:
 			Vector2F _scale;
 			Vector2F _origin;

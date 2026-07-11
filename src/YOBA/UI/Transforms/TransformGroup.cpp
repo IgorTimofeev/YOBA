@@ -9,51 +9,16 @@ namespace YOBA {
 
 	}
 
-	Size TransformGroup::processAvailableSizeBeforeMeasure(const Element* element, const Size& availableSize) {
-		if (_transforms.empty())
-			return availableSize;
+	// Size TransformGroup::processAvailableSizeBeforeMeasure(const Element* element, const Size& availableSize) {
+	// 	if (_transforms.empty())
+	// 		return availableSize;
+	//
+	// 	Size result = availableSize;
+	//
+	// 	for (const auto transform : _transforms)
+	// 		result = transform->processAvailableSizeBeforeMeasure(element, result);
+	//
+	// 	return result;
+	// }
 
-		Size result = availableSize;
-
-		for (const auto transform : _transforms)
-			result = transform->processAvailableSizeBeforeMeasure(element, result);
-
-		return result;
-	}
-
-	Size TransformGroup::processMeasuredSizeAfterMeasure(const Element* element, const Size& measuredSize) {
-		if (_transforms.empty())
-			return measuredSize;
-
-		Size result = measuredSize;
-
-		for (const auto transform : _transforms)
-			result = transform->processMeasuredSizeAfterMeasure(element, result);
-
-		return result;
-	}
-
-	Rectangle TransformGroup::processLayoutBoundsOnArrange(const Element* element, const Rectangle& bounds) {
-		if (_transforms.empty())
-			return bounds;
-
-		Bounds result = bounds;
-
-		for (const auto transform : _transforms)
-			result = transform->processLayoutBoundsOnArrange(element, result);
-
-		return result;
-	}
-
-	Rectangle TransformGroup::processRenderingBoundsOnArrange(const Element* element, const Rectangle& bounds) {
-		if (_transforms.empty())
-			return bounds;
-
-		Bounds result = bounds;
-
-		for (const auto transform : _transforms)
-			result = transform->processRenderingBoundsOnArrange(element, result);
-
-		return result;
-	}
 }

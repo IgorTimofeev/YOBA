@@ -133,13 +133,13 @@ namespace YOBA {
 		return getChildAt(index);
 	}
 
-	Layout& Layout::operator+=(Element* child) {
+	Parent& Layout::operator+=(Element* child) {
 		addChild(child);
 
 		return *this;
 	}
 
-	Layout& Layout::operator-=(Element* child) {
+	Parent& Layout::operator-=(Element* child) {
 		removeChild(child);
 
 		return *this;

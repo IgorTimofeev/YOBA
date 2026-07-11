@@ -15,8 +15,8 @@ namespace YOBA {
 
 			bool hasChild() const;
 
-			Decorator& operator+=(Element* child);
-			Decorator& operator-=(Element*);
+			Parent& operator+=(Element* child) override;
+			Parent& operator-=(Element*) override;
 
 		protected:
 			void onTick() override;

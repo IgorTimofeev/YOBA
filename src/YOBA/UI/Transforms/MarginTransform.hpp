@@ -14,9 +14,9 @@ namespace YOBA {
 			const Margin& getMargin() const;
 			void setMargin(const Margin& value);
 
-			Size processAvailableSizeBeforeMeasure(const Element* element, const Size& availableSize) override;
-			Size processMeasuredSizeAfterMeasure(const Element* element, const Size& measuredSize) override;
-			Rectangle processLayoutBoundsOnArrange(const Element* element, const Rectangle& bounds) override;
+			Rectangle computeLayoutBoundsOnArrange(Element* element, const Rectangle& parentBounds) override;
+			Size computeAvailableSizeBeforeMeasure(Element* element, const Size& availableSize) override;
+			Size computeMeasuredSizeAfterMeasure(Element* element, const Size& measuredSize) override;
 
 		private:
 			Margin _margin;

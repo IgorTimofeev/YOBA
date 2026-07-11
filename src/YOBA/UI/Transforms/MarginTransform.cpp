@@ -17,7 +17,7 @@ namespace YOBA {
 		_margin = value;
 	}
 
-	Size MarginTransform::processAvailableSizeBeforeMeasure(const Element* element, const Size& availableSize) {
+	Size MarginTransform::computeAvailableSizeBeforeMeasure(Element* element, const Size& availableSize) {
 		// Shinking down available size for children if size is explicitly known (non-computed)
 
 		// Horizontal
@@ -46,65 +46,168 @@ namespace YOBA {
 		};
 	}
 
-	Size MarginTransform::processMeasuredSizeAfterMeasure(const Element* element, const Size& measuredSize) {
-		// Expanding up total measured size
+	Size MarginTransform::computeMeasuredSizeAfterMeasure(Element* element, const Size& measuredSize) {
+		const auto computeMeasureShit = [](
+			const uint16_t size,
+			const uint16_t desiredSize,
+			const int32_t marginStartClamped,
+			const int32_t marginEndClamped
+		) {
+			int32_t newSize = 0;
+
+			if (size == Size::computed) {
+				newSize = static_cast<int32_t>(desiredSize);
+			}
+			else {
+				newSize = size;
+			}
+
+			newSize = newSize + marginStartClamped + marginEndClamped;
+
+			return newSize;
+		};
+
+		const auto& size = element->getSize();
+
 		return Size(
-			measuredSize.getWidth() + _margin.getLeft() + _margin.getRight(),
-			measuredSize.getHeight() + _margin.getTop() + _margin.getBottom()
+			computeMeasureShit(
+				size.getWidth(),
+				measuredSize.getWidth(),
+				_margin.getLeft(),
+				_margin.getRight()
+			),
+			computeMeasureShit(
+				size.getHeight(),
+				measuredSize.getHeight(),
+				_margin.getTop(),
+				_margin.getBottom()
+			)
 		);
 	}
 
-	Rectangle MarginTransform::processLayoutBoundsOnArrange(const Element* element, const Rectangle& bounds) {
-		int32_t x = bounds.getX();
-		int32_t y = bounds.getY();
-		int32_t width = bounds.getWidth();
-		int32_t height = bounds.getHeight();
+		Rectangle MarginTransform::computeLayoutBoundsOnArrange(Element* element, const Rectangle& parentBounds) {
+		int32_t x = parentBounds.getX();
+		int32_t y = parentBounds.getY();
+		int32_t width = parentBounds.getWidth();
+		int32_t height = parentBounds.getHeight();
 
-		switch (element->getHorizontalAlignment()) {
-			case Alignment::start:
-				x = x + _margin.getLeft();
-				break;
+		const auto computeArrangeShit = [](
+			const Alignment alignment,
+			const int32_t boundsStart,
+			const uint16_t boundsSize,
 
-			case Alignment::center:
-				x = x + _margin.getLeft() - _margin.getRight();
-				break;
+			const uint16_t size,
+			const uint16_t measuredSize,
 
-			case Alignment::end:
-				x = x - _margin.getRight();
-				break;
+			const int32_t marginStart,
+			const int32_t marginEnd,
 
-			default:
-				x = x + _margin.getLeft();
-				width = width - _margin.getLeft() - _margin.getRight();
+			int32_t& newPosition,
+			int32_t& newSize
+		) {
+			switch (alignment) {
+				case Alignment::start:
+					newSize = static_cast<int32_t>(measuredSize);
 
-				if (width < 0)
-					width = 0;
+					if (marginStart > 0)
+						newSize -= marginStart;
 
-				break;
-		}
+					if (marginEnd > 0)
+						newSize -= marginEnd;
 
-		switch (element->getVerticalAlignment()) {
-			case Alignment::start:
-				y = y + _margin.getTop();
-				break;
+					if (newSize < 0)
+						newSize = 0;
 
-			case Alignment::center:
-				y = y + _margin.getTop() - _margin.getBottom();
-				break;
+					newPosition = boundsStart + marginStart;
 
-			case Alignment::end:
-				y = y - _margin.getBottom();
-				break;
+					break;
 
-			default:
-				y = y + _margin.getTop();
-				height = height - _margin.getTop() - _margin.getBottom();
+				case Alignment::center:
+					newSize = static_cast<int32_t>(measuredSize);
 
-				if (height < 0)
-					height = 0;
+					if (marginStart > 0)
+						newSize -= marginStart;
 
-				break;
-		}
+					if (marginEnd > 0)
+						newSize -= marginEnd;
+
+					if (newSize < 0)
+						newSize = 0;
+
+					newPosition = boundsStart + marginStart - marginEnd + boundsSize / 2 - newSize / 2;
+
+					break;
+
+				case Alignment::end:
+					newSize = static_cast<int32_t>(measuredSize);
+
+					if (marginStart > 0)
+						newSize -= marginStart;
+
+					if (marginEnd > 0)
+						newSize -= marginEnd;
+
+					if (newSize < 0)
+						newSize = 0;
+
+					newPosition = boundsStart + boundsSize - marginEnd - newSize;
+
+					break;
+
+				case Alignment::stretch:
+					if (size == Size::computed) {
+						newSize = boundsSize;
+					}
+					else {
+						newSize = static_cast<int32_t>(measuredSize);
+					}
+
+					newSize = newSize - marginStart;
+
+					if (marginEnd > 0)
+						newSize -= marginEnd;
+
+					if (newSize < 0)
+						newSize = 0;
+
+					newPosition = boundsStart + marginStart;
+
+					break;
+			}
+		};
+
+		const auto& size = element->getSize();
+		const auto& measuredSize = element->getMeasuredSize();
+
+		computeArrangeShit(
+			element->getHorizontalAlignment(),
+			parentBounds.getX(),
+			parentBounds.getWidth(),
+
+			size.getWidth(),
+			measuredSize.getWidth(),
+
+			_margin.getLeft(),
+			_margin.getRight(),
+
+			x,
+			width
+		);
+
+		computeArrangeShit(
+			element->getVerticalAlignment(),
+			parentBounds.getY(),
+			parentBounds.getHeight(),
+
+			size.getHeight(),
+			measuredSize.getHeight(),
+
+			_margin.getTop(),
+			_margin.getBottom(),
+
+			y,
+			height
+		);
 
 		return {
 			x,

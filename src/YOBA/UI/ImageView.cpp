@@ -27,6 +27,9 @@ namespace YOBA {
 	}
 
 	void ImageView::onRender(Renderer* renderer, const Rectangle& bounds) {
+		auto pizda  = RGB888Color(0xFFFF00).toRGB565BE();
+		renderer->strokeRectangle(bounds, &pizda);
+
 		if (!getImage())
 			return;
 

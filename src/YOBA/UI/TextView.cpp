@@ -73,6 +73,9 @@ namespace YOBA {
 	}
 
 	void TextView::onRender(Renderer* renderer, const Rectangle& bounds) {
+		auto pizda  = RGB888Color(0xFF0000).toRGB565BE();
+		renderer->strokeRectangle(bounds, &pizda);
+
 		const auto font = getFont();
 
 		if (!font)

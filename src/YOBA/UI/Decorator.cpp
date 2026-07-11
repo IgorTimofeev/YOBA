@@ -25,13 +25,13 @@ namespace YOBA {
 		return !!_child;
 	}
 
-	Decorator& Decorator::operator+=(Element* child) {
+	Parent& Decorator::operator+=(Element* child) {
 		setChild(child);
 
 		return *this;
 	}
 
-	Decorator& Decorator::operator-=(Element*) {
+	Parent& Decorator::operator-=(Element*) {
 		setChild(nullptr);
 
 		return *this;

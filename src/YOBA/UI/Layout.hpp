@@ -32,8 +32,8 @@ namespace YOBA {
 			std::vector<Element*>::iterator end();
 
 			Element* operator[](size_t index) const;
-			Layout& operator+=(Element* child);
-			Layout& operator-=(Element* child);
+			Parent& operator+=(Element* child) override;
+			Parent& operator-=(Element* child) override;
 
 		protected:
 			void onTick() override;

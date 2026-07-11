@@ -12,10 +12,18 @@ namespace YOBA {
 		public:
 			virtual ~Transform() = default;
 
-			virtual Size processAvailableSizeBeforeMeasure(const Element* element, const Size& availableSize);
-			virtual Size processMeasuredSizeAfterMeasure(const Element* element, const Size& measuredSize);
+			virtual Size computeAvailableSizeBeforeMeasure(Element* element, const Size& availableSize) {
+				return availableSize;
+			}
 
-			virtual Rectangle processLayoutBoundsOnArrange(const Element* element, const Rectangle& bounds);
-			virtual Rectangle processRenderingBoundsOnArrange(const Element* element, const Rectangle& bounds);
+			virtual Size computeMeasuredSizeAfterMeasure(Element* element, const Size& measuredSize) {
+				return measuredSize;
+			}
+
+			virtual Rectangle computeLayoutBoundsOnArrange(Element* element, const Rectangle& parentBounds) {
+				return element->defaultComputeLayoutBoundsOnArrange(parentBounds);
+			}
+
+			virtual Rectangle computeRenderingBounds(Element* element, const Rectangle& parentBounds);
 	};
 }

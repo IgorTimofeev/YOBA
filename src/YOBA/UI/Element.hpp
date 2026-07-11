@@ -38,7 +38,7 @@ namespace YOBA {
 			virtual ~Element();
 
 			void measure(const Size& availableSize);
-			void arrange(const Rectangle& bounds);
+			void arrange(const Rectangle& parentBounds);
 			void render(Renderer* renderer, const Rectangle& bounds);
 
 			bool isPointerOver() const;
@@ -106,6 +106,8 @@ namespace YOBA {
 			Transform* getLayoutTransform() const;
 			void setLayoutTransform(Transform* transform);
 
+			Rectangle defaultComputeLayoutBoundsOnArrange(const Rectangle& parentBounds) const;
+
 		protected:
 			virtual void onAddedToParent(Parent* parent);
 			virtual void onRemovedFromParent(Parent* parent);
@@ -147,14 +149,14 @@ namespace YOBA {
 			void removeFromParent(Parent* parent);
 			void setPointerOver(bool value);
 
-			static void computeArrangeShit(
+			static void computeDefaultArrangeShit(
 				Alignment alignment,
 				int32_t boundsStart,
 				uint16_t boundsSize,
 				uint16_t size,
 				uint16_t measuredSize,
 				int32_t& newPosition,
-				uint16_t& newSize
+				int32_t& newSize
 			);
 
 			virtual void handleEvent(Event* event, const Rectangle& parentBounds, const bool callHandlers) = 0;

@@ -17,12 +17,12 @@ namespace YOBA {
 		_offset = value;
 	}
 
-	Rectangle TranslateTransform::processLayoutBoundsOnArrange(const Element* element, const Rectangle& bounds) {
+	Rectangle TranslateTransform::computeLayoutBoundsOnArrange(Element* element, const Rectangle& parentBounds) {
 		return {
-			bounds.getX() + _offset.getX(),
-			bounds.getY() + _offset.getY(),
-			bounds.getWidth(),
-			bounds.getHeight()
+			parentBounds.getX() + _offset.getX(),
+			parentBounds.getY() + _offset.getY(),
+			parentBounds.getWidth(),
+			parentBounds.getHeight()
 		};
 	}
 }

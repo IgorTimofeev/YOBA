@@ -65,35 +65,39 @@ namespace YOBA {
 
 	}
 
-
 	void Element::measure(const Size& availableSize) {
-		const auto& size = getSize();
-
 		if (_layoutTransform) {
-			_measuredSize = _layoutTransform->processAvailableSizeBeforeMeasure(this, availableSize);
+			_measuredSize = _layoutTransform->computeAvailableSizeBeforeMeasure(this, availableSize);
 			_measuredSize = onMeasure(_measuredSize);
-			_measuredSize = _layoutTransform->processMeasuredSizeAfterMeasure(this, _measuredSize);
+			_measuredSize = _layoutTransform->computeMeasuredSizeAfterMeasure(this, _measuredSize);
 		}
 		else {
 			_measuredSize = onMeasure(availableSize);
+
+			const auto& size = getSize();
+
+			if (size.getWidth() != Size::computed)
+				_measuredSize.setWidth(size.getWidth());
+
+			if (size.getHeight() != Size::computed)
+				_measuredSize.setWidth(size.getHeight());
 		}
 
-		// Horizontal
+		// Min / max clamping
 		_measuredSize.setWidth(std::clamp<int32_t>(
-			size.getWidth() == Size::computed ? _measuredSize.getWidth() : size.getWidth(),
+			_measuredSize.getWidth(),
 			_minSize.getWidth(),
 			_maxSize.getWidth()
 		));
 
-		// Vertical
 		_measuredSize.setHeight(std::clamp<int32_t>(
-			size.getHeight() == Size::computed ? _measuredSize.getHeight() : size.getHeight(),
+			 _measuredSize.getHeight(),
 			_minSize.getHeight(),
 			_maxSize.getHeight()
 		));
 	}
 
-	void Element::computeArrangeShit(
+	void Element::computeDefaultArrangeShit(
 		const Alignment alignment,
 		const int32_t boundsStart,
 		const uint16_t boundsSize,
@@ -102,85 +106,89 @@ namespace YOBA {
 		const uint16_t measuredSize,
 
 		int32_t& newPosition,
-		uint16_t& newSize
+		int32_t& newSize
 	) {
 		switch (alignment) {
 			case Alignment::start:
 				newSize = measuredSize;
 				newPosition = boundsStart;
-
 				break;
 
 			case Alignment::center:
 				newSize = measuredSize;
 				newPosition = boundsStart + boundsSize / 2 - newSize / 2;
-
 				break;
 
 			case Alignment::end:
 				newSize = measuredSize;
 				newPosition = boundsStart + boundsSize - newSize;
-
 				break;
 
 			case Alignment::stretch:
 				newSize = size == Size::computed ? boundsSize : measuredSize;
 				newPosition = boundsStart;
-
 				break;
 		}
+
+		if (newSize < 0)
+			newSize = 0;
 	}
 
-	void Element::arrange(const Rectangle& bounds) {
+	Rectangle Element::defaultComputeLayoutBoundsOnArrange(const Rectangle& parentBounds) const {
+		int32_t x = 0;
+		int32_t y = 0;
+		int32_t width = 0;
+		int32_t height = 0;
+
 		const auto& measuredSize = getMeasuredSize();
 		const auto& size = getSize();
 
-		Rectangle newBounds {};
-		int32_t newPosition = 0;
-		uint16_t newSize = 0;
-
 		// Horizontal
-		computeArrangeShit(
+		computeDefaultArrangeShit(
 			getHorizontalAlignment(),
-			bounds.getX(),
-			bounds.getWidth(),
+			parentBounds.getX(),
+			parentBounds.getWidth(),
 
 			size.getWidth(),
 			measuredSize.getWidth(),
 
-			newPosition,
-			newSize
+			x,
+			width
 		);
 
-		newBounds.setX(newPosition);
-		newBounds.setWidth(newSize);
-
 		// Vertical
-		computeArrangeShit(
+		computeDefaultArrangeShit(
 			getVerticalAlignment(),
-			bounds.getY(),
-			bounds.getHeight(),
+			parentBounds.getY(),
+			parentBounds.getHeight(),
 
 			size.getHeight(),
 			measuredSize.getHeight(),
 
-			newPosition,
-			newSize
+			y,
+			height
 		);
 
-		newBounds.setY(newPosition);
-		newBounds.setHeight(newSize);
+		return {
+			x,
+			y,
+			static_cast<uint16_t>(width),
+			static_cast<uint16_t>(height)
+		};
+	}
 
-		// Applying layout transform if it presents
-		_layoutBounds =
-			_layoutTransform
-			? _layoutTransform->processLayoutBoundsOnArrange(this, newBounds)
-			: newBounds;
+	void Element::arrange(const Rectangle& parentBounds) {
+		if (_layoutTransform) {
+			_layoutBounds = _layoutTransform->computeLayoutBoundsOnArrange(this, parentBounds);
+		}
+		else {
+			_layoutBounds = defaultComputeLayoutBoundsOnArrange(parentBounds);
+		}
 
 		// Applying rendering transform if it presents
 		_renderingBounds =
 			_renderingTransform
-			? _renderingTransform->processRenderingBoundsOnArrange(this, _layoutBounds)
+			? _renderingTransform->computeRenderingBounds(this, _layoutBounds)
 			: _layoutBounds;
 
 		onBoundsChanged();
