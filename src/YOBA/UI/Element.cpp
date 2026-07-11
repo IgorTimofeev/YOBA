@@ -66,16 +66,30 @@ namespace YOBA {
 	}
 
 	void Element::measure(const Size& availableSize) {
+		const auto& size = getSize();
+
 		if (_layoutTransform) {
+			// Processing available size
 			_measuredSize = _layoutTransform->processAvailableSizeForMeasure(this, availableSize);
+
+			// Measuring
 			_measuredSize = onMeasure(_measuredSize);
+
+			// Setting explicit dimensions
+			if (size.getWidth() != Size::computed)
+				_measuredSize.setWidth(size.getWidth());
+
+			if (size.getHeight() != Size::computed)
+				_measuredSize.setHeight(size.getHeight());
+
+			// Processing measured size
 			_measuredSize = _layoutTransform->processMeasuredSize(this, _measuredSize);
 		}
 		else {
+			// Measuring
 			_measuredSize = onMeasure(availableSize);
 
-			const auto& size = getSize();
-
+			// Setting explicit dimensions
 			if (size.getWidth() != Size::computed)
 				_measuredSize.setWidth(size.getWidth());
 
@@ -83,7 +97,7 @@ namespace YOBA {
 				_measuredSize.setHeight(size.getHeight());
 		}
 
-		// Min / max clamping
+		// Clamping to min / max dimensions
 		_measuredSize.setWidth(std::clamp<int32_t>(
 			_measuredSize.getWidth(),
 			_minSize.getWidth(),

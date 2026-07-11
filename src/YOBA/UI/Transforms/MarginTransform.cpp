@@ -18,7 +18,7 @@ namespace YOBA {
 	}
 
 	Size MarginTransform::processAvailableSizeForMeasure(Element* element, const Size& availableSize) {
-		// Shinking down available size for children if size is explicitly known (non-computed)
+		// Reducing available size for children if size itself is explicitly known (non-computed)
 
 		// Horizontal
 		int32_t width = availableSize.getWidth();
@@ -47,24 +47,15 @@ namespace YOBA {
 	}
 
 	Size MarginTransform::processMeasuredSize(Element* element, const Size& measuredSize) {
-		const auto& size = element->getSize();
-
+		// Adding margin to measured size
 		return Size(
-			(
-				size.getWidth() == Size::computed
-				? static_cast<int32_t>(measuredSize.getWidth())
-				: size.getWidth()
-			) + _margin.getLeft() + _margin.getRight(),
-
-			(
-				size.getHeight() == Size::computed
-				? static_cast<int32_t>(measuredSize.getHeight())
-				: size.getHeight()
-			) + _margin.getTop() + _margin.getBottom()
+			static_cast<int32_t>(measuredSize.getWidth()) + _margin.getLeft() + _margin.getRight(),
+			static_cast<int32_t>(measuredSize.getHeight()) + _margin.getTop() + _margin.getBottom()
 		);
 	}
 
 	Rectangle MarginTransform::processLayoutBounds(Element* element, const Rectangle& layoutBounds) {
+		// Translating by margin & removing it from size
 		return {
 			layoutBounds.getX() + _margin.getLeft(),
 			layoutBounds.getY() + _margin.getTop(),
