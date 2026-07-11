@@ -113,6 +113,30 @@ namespace YOBA {
 				))
 		));
 
+		//
+		// auto avail = Size(
+		// 	availableSize.getWidth() == Size::computed
+		// 		? Size::computed
+		// 		: static_cast<uint16_t>(std::max<int32_t>(
+		// 			static_cast<int32_t>(availableSize.getWidth()) - marginLeftClamped - marginRightClamped,
+		// 			0
+		// 		)),
+		//
+		// 	availableSize.getHeight() == Size::computed
+		// 		? Size::computed
+		// 		: static_cast<uint16_t>(std::max<int32_t>(
+		// 			static_cast<int32_t>(availableSize.getHeight()) - marginTopClamped - marginBottomClamped,
+		// 			0
+		// 		))
+		// );
+		//
+		// auto availBounds = Bounds(avail);
+		//
+		// if (_layoutTransform)
+		// 	availBounds = _layoutTransform->apply(availBounds);
+		//
+		// _measuredSize = onMeasure(availBounds.getSize());
+
 		// Horizontal
 		_measuredSize.setWidth(computeMeasureShit(
 			size.getWidth(),
@@ -266,13 +290,16 @@ namespace YOBA {
 		newBounds.setY(newPosition);
 		newBounds.setHeight(newSize);
 
-		_layoutBounds = newBounds;
+		// Applying layout transform if it presents
+		_layoutBounds =
+			_layoutTransform
+			? _layoutTransform->apply(newBounds)
+			: newBounds;
 
-		// Applying rendering transform if it present
-		// TODO: find a way to put this into render pass, because the only reason it's being calculated during arranging is FUCKING SCROLLVIEW
+		// Applying rendering transform if it presents
 		_renderBounds =
-			_renderTransform
-			? _renderTransform->apply(_layoutBounds)
+			_renderingTransform
+			? _renderingTransform->apply(_layoutBounds)
 			: _layoutBounds;
 
 		onBoundsChanged();
@@ -368,12 +395,28 @@ namespace YOBA {
 		return _renderBounds;
 	}
 
-	Transform* Element::getRenderTransform() const {
-		return _renderTransform;
+	Transform* Element::getLayoutTransform() const {
+		return _layoutTransform;
 	}
 
-	void Element::setRenderTransform(Transform* transform) {
-		_renderTransform = transform;
+	void Element::setLayoutTransform(Transform* transform) {
+		if (transform == _layoutTransform)
+			return;
+
+		_layoutTransform = transform;
+
+		invalidate();
+	}
+
+	Transform* Element::getRenderingTransform() const {
+		return _renderingTransform;
+	}
+
+	void Element::setRenderingTransform(Transform* transform) {
+		if (transform == _renderingTransform)
+			return;
+
+		_renderingTransform = transform;
 
 		invalidate();
 	}

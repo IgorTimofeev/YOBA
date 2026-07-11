@@ -14,16 +14,12 @@ namespace YOBA {
 			element->onTick();
 	}
 
-	void Layout::onEventBeforeChildren(Event* event) {
-
-	}
-
-	void Layout::onEventAfterChildren(Event* event) {
-
-	}
-
 	size_t Layout::getChildrenCount() const {
 		return _children.size();
+	}
+
+	bool Layout::hasChildren() const {
+		return !_children.empty();
 	}
 
 	size_t Layout::getIndexOfChild(Element* element) {
@@ -149,142 +145,55 @@ namespace YOBA {
 		return *this;
 	}
 
-	void Layout::handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) {
-		// ESP_LOGI("layout.handleEvent()", "callHandlers: %d", callHandlers);
+	void Layout::onEventBeforeChildren(Event* event) {
 
-		const auto isPointer = PointerEvent::isPointer(event);
-		const auto isPinch = PinchEvent::isPinch(event);
-		auto currentBounds = getRenderBounds();
+	}
 
-		if (isPointer || isPinch) {
-			bool callCurrentHandlers;
+	void Layout::onEventAfterChildren(Event* event) {
 
-			if (isVisible() && isVisibleForPointerEvents() && isEnabled()) {
-				bool contains;
+	}
 
-				if (parentBounds.intersects(currentBounds)) {
-					currentBounds = parentBounds.getIntersection(currentBounds);
+	void Layout::onParentHandleEventBeforeChildren(Event* event) {
+		onEventBeforeChildren(event);
+	}
 
-					if (isPointer) {
-						contains = currentBounds.contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
-					}
-					else {
-						const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-						contains = currentBounds.contains(pinchEvent->getPosition1()) && currentBounds.contains(pinchEvent->getPosition2());
-					}
-				}
-				else {
-					contains = false;
-					currentBounds = Rectangle::invalidValue;
-				}
+	void Layout::onParentHandlePointerEventForChildren(Event* event, const Rectangle& bounds, bool callHandlers) {
+		if (getChildrenCount() == 0)
+			return;
 
-				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+		size_t i = getChildrenCount() - 1;
 
-				setPointerOver(
-					event->getTypeID() != PointerUpEvent::typeID
-					&& event->getTypeID() != PinchUpEvent::typeID
-					&& contains
-					&& (
-						!capturedElement
-						|| capturedElement == this
-					)
-				);
-
-				if (isEnabled()) {
-					callCurrentHandlers =
-						callHandlers
-						&& (
-							(
-								contains
-								&& !capturedElement
-							)
-							|| capturedElement == this
-						);
-				}
-				else {
-					callHandlers = false;
-					callCurrentHandlers = false;
-				}
-			}
-			else {
-				setPointerOver(false);
-
-				callHandlers = false;
-				callCurrentHandlers = false;
-			}
-
-			// Before children
-			if (callCurrentHandlers) {
-				onEventBeforeChildren(event);
-
-				if (event->isHandled()) {
-					callHandlers = false;
-					callCurrentHandlers = false;
-				}
-			}
-
-			// Children
-			if (getChildrenCount() > 0) {
-				size_t i = getChildrenCount() - 1;
-
-				while (true) {
-					_children[i]->handleEvent(event, currentBounds, callHandlers);
-
-					if (event->isHandled()) {
-						callHandlers = false;
-						callCurrentHandlers = false;
-					}
-
-					if (i == 0)
-						break;
-
-					i--;
-				}
-			}
-
-			// After children
-			if (callCurrentHandlers)
-				onEventAfterChildren(event);
-		}
-		else {
-			if (!isVisible() || !isEnabled())
-				return;
-
-			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
-			const auto callHandlersOnThis = callHandlers && (!capturedElement || capturedElement == this);
-
-			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 1: %d", callHandlersOnThis);
-
-			// Before
-			if (callHandlersOnThis)
-				onEventBeforeChildren(event);
+		while (true) {
+			_children[i]->handleEvent(event, bounds, callHandlers);
 
 			if (event->isHandled())
+				callHandlers = false;
+
+			if (i == 0)
+				break;
+
+			i--;
+		}
+	}
+
+	void Layout::onParentHandleEventForChildren(Event* event, const Rectangle& bounds, const bool callHandlers) {
+		if (getChildrenCount() == 0)
+			return;
+
+		size_t i = getChildrenCount() - 1;
+
+		while (true) {
+			_children[i]->handleEvent(event, bounds, callHandlers);
+
+			if (event->isHandled() || i == 0)
 				return;
 
-			// Children
-			if (getChildrenCount() > 0) {
-				size_t i = getChildrenCount() - 1;
-
-				while (true) {
-					_children[i]->handleEvent(event, currentBounds, callHandlers);
-
-					if (event->isHandled())
-						return;
-
-					if (i == 0)
-						break;
-
-					i--;
-				}
-			}
-
-			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 2: %d", callHandlersOnThis);
-
-			// After
-			if (callHandlersOnThis)
-				onEventAfterChildren(event);
+			i--;
 		}
+	}
+
+	void Layout::onParentHandleEventAfterChildren(Event* event) {
+		onEventAfterChildren(event);
 	}
 
 	Size Layout::onMeasure(const Size& availableSize) {

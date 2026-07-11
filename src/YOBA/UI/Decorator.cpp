@@ -4,121 +4,96 @@
 #include <YOBA/Core/Events/PinchEvent.hpp>
 
 namespace YOBA {
-	void Decorator::handleEvent(Event* event, const Rectangle& parentBounds, bool callHandlers) {
-		const auto isPointer = PointerEvent::isPointer(event);
-		const auto isPinch = PinchEvent::isPinch(event);
-		auto currentBounds = getRenderBounds();
+	Element* Decorator::getChild() const {
+		return _child;
+	}
 
-		if (isPointer || isPinch) {
-			bool callHandlersOnThis;
+	void Decorator::setChild(Element* child) {
+		if (child == _child)
+			return;
 
-			if (isVisible() && isVisibleForPointerEvents() && isEnabled()) {
-				bool contains;
+		if (_child)
+			onChildRemoved(_child);
 
-				if (parentBounds.intersects(currentBounds)) {
-					currentBounds = parentBounds.getIntersection(currentBounds);
+		_child = child;
 
-					if (isPointer) {
-						contains = currentBounds.contains(reinterpret_cast<PointerEvent*>(event)->getPosition());
-					}
-					else {
-						const auto pinchEvent = reinterpret_cast<PinchEvent*>(event);
-						contains = currentBounds.contains(pinchEvent->getPosition1()) && currentBounds.contains(pinchEvent->getPosition2());
-					}
-				}
-				else {
-					contains = false;
-					currentBounds = Rectangle::invalidValue;
-				}
+		if (_child)
+			onChildAdded(child);
+	}
 
-				const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
+	bool Decorator::hasChild() const {
+		return !!_child;
+	}
 
-				setPointerOver(
-					event->getTypeID() != PointerUpEvent::typeID
-					&& event->getTypeID() != PinchUpEvent::typeID
-					&& contains
-					&& (
-						!capturedElement
-						|| capturedElement == this
-					)
-				);
+	Decorator& Decorator::operator+=(Element* child) {
+		setChild(child);
 
-				if (isEnabled()) {
-					callHandlersOnThis =
-						callHandlers
-						&& (
-							(
-								contains
-								&& !capturedElement
-							)
-							|| capturedElement == this
-						);
-				}
-				else {
-					callHandlers = false;
-					callHandlersOnThis = false;
-				}
-			}
-			else {
-				setPointerOver(false);
+		return *this;
+	}
 
-				callHandlers = false;
-				callHandlersOnThis = false;
-			}
+	Decorator& Decorator::operator-=(Element*) {
+		setChild(nullptr);
 
-			// Before children
-			if (callHandlersOnThis) {
-				onEventBeforeChild(event);
+		return *this;
+	}
 
-				if (event->isHandled()) {
-					callHandlers = false;
-					callHandlersOnThis = false;
-				}
-			}
+	void Decorator::onTick() {
+		if (!_child)
+			return;
 
-			// Children
-			if (_child) {
-				_child->handleEvent(event, currentBounds, callHandlers);
+		_child->onTick();
+	}
 
-				if (event->isHandled()) {
-					callHandlers = false;
-					callHandlersOnThis = false;
-				}
-			}
+	Size Decorator::onMeasure(const Size& availableSize) {
+		if (!_child || !_child->isVisible())
+			return {};
 
-			// After children
-			if (callHandlersOnThis)
-				onEventAfterChild(event);
-		}
-		else {
-			if (!isVisible() || !isEnabled())
-				return;
+		_child->measure(availableSize);
 
-			const auto capturedElement = Application::getCurrent() ? Application::getCurrent()->getCapturedElement() : nullptr;
-			const auto callHandlersOnThis = callHandlers && (!capturedElement || capturedElement == this);
+		return _child->getMeasuredSize();
+	}
 
-			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 1: %d", callHandlersOnThis);
+	void Decorator::onArrange(const Rectangle& bounds) {
+		if (!_child || !_child->isVisible())
+			return;
 
-			// Before
-			if (callHandlersOnThis)
-				onEventBeforeChild(event);
+		_child->arrange(bounds);
+	}
 
-			if (event->isHandled())
-				return;
+	void Decorator::onRender(Renderer* renderer, const Rectangle& bounds) {
+		if (!_child || !_child->isVisible())
+			return;
 
-			// Children
-			if (_child) {
-				_child->handleEvent(event, currentBounds, callHandlers);
+		_child->onRender(renderer, bounds);
+	}
 
-				if (event->isHandled())
-					return;
-			}
+	void Decorator::onEventBeforeChild(Event* event) {
 
-			// ESP_LOGI("layout.handleEvent()", "callHandlersOnThis 2: %d", callHandlersOnThis);
+	}
 
-			// After
-			if (callHandlersOnThis)
-				onEventAfterChild(event);
-		}
+	void Decorator::onEventAfterChild(Event* event) {
+
+	}
+
+	void Decorator::onParentHandleEventBeforeChildren(Event* event) {
+		onEventBeforeChild(event);
+	}
+
+	void Decorator::onParentHandlePointerEventForChildren(Event* event, const Rectangle& bounds, const bool callHandlers) {
+		if (!_child)
+			return;
+
+		_child->handleEvent(event, bounds, callHandlers);
+	}
+
+	void Decorator::onParentHandleEventForChildren(Event* event, const Rectangle& bounds, const bool callHandlers) {
+		if (!_child)
+			return;
+
+		_child->handleEvent(event, bounds, callHandlers);
+	}
+
+	void Decorator::onParentHandleEventAfterChildren(Event* event) {
+		onEventAfterChild(event);
 	}
 }

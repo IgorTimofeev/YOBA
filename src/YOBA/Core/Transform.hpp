@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include <YOBA/Core/Vector2.hpp>
+#include <YOBA/Core/Margin.hpp>
 
 namespace YOBA {
 	class Transform {
@@ -73,5 +74,67 @@ namespace YOBA {
 		private:
 			Vector2F _scale;
 			Vector2F _origin;
+	};
+
+	class TranslateTransform : public Transform {
+		public:
+			TranslateTransform(const Point& value) : _value(value) {
+
+			}
+
+			TranslateTransform() : _value(Point(0, 0)) {
+
+			}
+
+			const Point& getValue() const {
+				return _value;
+			}
+
+			void setValue(const Point& value) {
+				_value = value;
+			}
+
+			Rectangle apply(const Rectangle& bounds) override {
+				return {
+					bounds.getX() + _value.getX(),
+					bounds.getY() + _value.getY(),
+					bounds.getWidth(),
+					bounds.getHeight()
+				};
+			}
+
+		private:
+			Point _value;
+	};
+
+	class MarginTransform : public Transform {
+		public:
+			MarginTransform(const Margin& value) : _value(value) {
+
+			}
+
+			MarginTransform() : _value(Margin(0)) {
+
+			}
+
+			const Margin& getValue() const {
+				return _value;
+			}
+
+			void setValue(const Margin& value) {
+				_value = value;
+			}
+
+			Rectangle apply(const Rectangle& bounds) override {
+				return {
+					bounds.getX() + _value.getLeft(),
+					bounds.getY() + _value.getTop(),
+					bounds.getWidth() - _value.getLeft() - _value.getRight(),
+					bounds.getHeight() - _value.getTop() - _value.getBottom()
+				};
+			}
+
+		private:
+			Margin _value;
 	};
 }

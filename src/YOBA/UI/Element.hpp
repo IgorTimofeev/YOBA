@@ -103,8 +103,11 @@ namespace YOBA {
 			const Rectangle& getLayoutBounds() const;
 			const Rectangle& getRenderBounds() const;
 
-			Transform* getRenderTransform() const;
-			void setRenderTransform(Transform* transform);
+			Transform* getRenderingTransform() const;
+			void setRenderingTransform(Transform* transform);
+
+			Transform* getLayoutTransform() const;
+			void setLayoutTransform(Transform* transform);
 
 		protected:
 			virtual void onAddedToParent(Parent* parent);
@@ -137,7 +140,8 @@ namespace YOBA {
 			Margin _margin = Margin::zero;
 			Parent* _parent = nullptr;
 
-			Transform* _renderTransform = nullptr;
+			Transform* _layoutTransform = nullptr;
+			Transform* _renderingTransform = nullptr;
 
 			Size _measuredSize {};
 			Rectangle _layoutBounds {};
