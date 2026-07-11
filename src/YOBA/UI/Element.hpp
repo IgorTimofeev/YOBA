@@ -106,8 +106,6 @@ namespace YOBA {
 			Transform* getLayoutTransform() const;
 			void setLayoutTransform(Transform* transform);
 
-			Rectangle defaultComputeLayoutBoundsOnArrange(const Rectangle& parentBounds) const;
-
 		protected:
 			virtual void onAddedToParent(Parent* parent);
 			virtual void onRemovedFromParent(Parent* parent);

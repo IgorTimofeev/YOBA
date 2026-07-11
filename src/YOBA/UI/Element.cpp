@@ -67,9 +67,9 @@ namespace YOBA {
 
 	void Element::measure(const Size& availableSize) {
 		if (_layoutTransform) {
-			_measuredSize = _layoutTransform->computeAvailableSizeBeforeMeasure(this, availableSize);
+			_measuredSize = _layoutTransform->processAvailableSizeForMeasure(this, availableSize);
 			_measuredSize = onMeasure(_measuredSize);
-			_measuredSize = _layoutTransform->computeMeasuredSizeAfterMeasure(this, _measuredSize);
+			_measuredSize = _layoutTransform->processMeasuredSize(this, _measuredSize);
 		}
 		else {
 			_measuredSize = onMeasure(availableSize);
@@ -80,7 +80,7 @@ namespace YOBA {
 				_measuredSize.setWidth(size.getWidth());
 
 			if (size.getHeight() != Size::computed)
-				_measuredSize.setWidth(size.getHeight());
+				_measuredSize.setHeight(size.getHeight());
 		}
 
 		// Min / max clamping
@@ -134,16 +134,14 @@ namespace YOBA {
 			newSize = 0;
 	}
 
-	Rectangle Element::defaultComputeLayoutBoundsOnArrange(const Rectangle& parentBounds) const {
-		int32_t x = 0;
-		int32_t y = 0;
-		int32_t width = 0;
-		int32_t height = 0;
-
-		const auto& measuredSize = getMeasuredSize();
+	void Element::arrange(const Rectangle& parentBounds) {
 		const auto& size = getSize();
+		const auto& measuredSize = getMeasuredSize();
 
 		// Horizontal
+		int32_t newPosition = parentBounds.getX();
+		int32_t newSize = parentBounds.getWidth();
+
 		computeDefaultArrangeShit(
 			getHorizontalAlignment(),
 			parentBounds.getX(),
@@ -152,11 +150,17 @@ namespace YOBA {
 			size.getWidth(),
 			measuredSize.getWidth(),
 
-			x,
-			width
+			newPosition,
+			newSize
 		);
 
+		_layoutBounds.setX(newPosition);
+		_layoutBounds.setWidth(static_cast<uint16_t>(newSize));
+
 		// Vertical
+		newPosition = parentBounds.getY();
+		newSize = parentBounds.getHeight();
+
 		computeDefaultArrangeShit(
 			getVerticalAlignment(),
 			parentBounds.getY(),
@@ -165,25 +169,16 @@ namespace YOBA {
 			size.getHeight(),
 			measuredSize.getHeight(),
 
-			y,
-			height
+			newPosition,
+			newSize
 		);
 
-		return {
-			x,
-			y,
-			static_cast<uint16_t>(width),
-			static_cast<uint16_t>(height)
-		};
-	}
+		_layoutBounds.setY(newPosition);
+		_layoutBounds.setHeight(static_cast<uint16_t>(newSize));
 
-	void Element::arrange(const Rectangle& parentBounds) {
-		if (_layoutTransform) {
-			_layoutBounds = _layoutTransform->computeLayoutBoundsOnArrange(this, parentBounds);
-		}
-		else {
-			_layoutBounds = defaultComputeLayoutBoundsOnArrange(parentBounds);
-		}
+		// Applying layout transform if it presents
+		if (_layoutTransform)
+			_layoutBounds = _layoutTransform->processLayoutBounds(this, _layoutBounds);
 
 		// Applying rendering transform if it presents
 		_renderingBounds =

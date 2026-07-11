@@ -12,6 +12,10 @@ namespace YOBA {
 			TransformGroup(const std::span<Transform*> transforms);
 			TransformGroup();
 
+			Size processAvailableSizeForMeasure(Element* element, const Size& availableSize) override;
+			Size processMeasuredSize(Element* element, const Size& measuredSize) override;
+			Rectangle processLayoutBounds(Element* element, const Rectangle& layoutBounds) override;
+
 		private:
 			std::span<Transform*> _transforms;
 	};

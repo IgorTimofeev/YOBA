@@ -20,6 +20,8 @@ namespace YOBA {
 			const Vector2F& getOrigin() const;
 			void setOrigin(const Vector2F& origin);
 
+			Rectangle processLayoutBounds(Element* element, const Rectangle& layoutBounds) override;
+
 		private:
 			Vector2F _scale;
 			Vector2F _origin;

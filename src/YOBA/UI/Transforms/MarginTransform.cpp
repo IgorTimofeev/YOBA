@@ -17,7 +17,7 @@ namespace YOBA {
 		_margin = value;
 	}
 
-	Size MarginTransform::computeAvailableSizeBeforeMeasure(Element* element, const Size& availableSize) {
+	Size MarginTransform::processAvailableSizeForMeasure(Element* element, const Size& availableSize) {
 		// Shinking down available size for children if size is explicitly known (non-computed)
 
 		// Horizontal
@@ -46,174 +46,30 @@ namespace YOBA {
 		};
 	}
 
-	Size MarginTransform::computeMeasuredSizeAfterMeasure(Element* element, const Size& measuredSize) {
-		const auto computeMeasureShit = [](
-			const uint16_t size,
-			const uint16_t desiredSize,
-			const int32_t marginStartClamped,
-			const int32_t marginEndClamped
-		) {
-			int32_t newSize = 0;
-
-			if (size == Size::computed) {
-				newSize = static_cast<int32_t>(desiredSize);
-			}
-			else {
-				newSize = size;
-			}
-
-			newSize = newSize + marginStartClamped + marginEndClamped;
-
-			return newSize;
-		};
-
+	Size MarginTransform::processMeasuredSize(Element* element, const Size& measuredSize) {
 		const auto& size = element->getSize();
 
 		return Size(
-			computeMeasureShit(
-				size.getWidth(),
-				measuredSize.getWidth(),
-				_margin.getLeft(),
-				_margin.getRight()
-			),
-			computeMeasureShit(
-				size.getHeight(),
-				measuredSize.getHeight(),
-				_margin.getTop(),
-				_margin.getBottom()
-			)
+			(
+				size.getWidth() == Size::computed
+				? static_cast<int32_t>(measuredSize.getWidth())
+				: size.getWidth()
+			) + _margin.getLeft() + _margin.getRight(),
+
+			(
+				size.getHeight() == Size::computed
+				? static_cast<int32_t>(measuredSize.getHeight())
+				: size.getHeight()
+			) + _margin.getTop() + _margin.getBottom()
 		);
 	}
 
-		Rectangle MarginTransform::computeLayoutBoundsOnArrange(Element* element, const Rectangle& parentBounds) {
-		int32_t x = parentBounds.getX();
-		int32_t y = parentBounds.getY();
-		int32_t width = parentBounds.getWidth();
-		int32_t height = parentBounds.getHeight();
-
-		const auto computeArrangeShit = [](
-			const Alignment alignment,
-			const int32_t boundsStart,
-			const uint16_t boundsSize,
-
-			const uint16_t size,
-			const uint16_t measuredSize,
-
-			const int32_t marginStart,
-			const int32_t marginEnd,
-
-			int32_t& newPosition,
-			int32_t& newSize
-		) {
-			switch (alignment) {
-				case Alignment::start:
-					newSize = static_cast<int32_t>(measuredSize);
-
-					if (marginStart > 0)
-						newSize -= marginStart;
-
-					if (marginEnd > 0)
-						newSize -= marginEnd;
-
-					if (newSize < 0)
-						newSize = 0;
-
-					newPosition = boundsStart + marginStart;
-
-					break;
-
-				case Alignment::center:
-					newSize = static_cast<int32_t>(measuredSize);
-
-					if (marginStart > 0)
-						newSize -= marginStart;
-
-					if (marginEnd > 0)
-						newSize -= marginEnd;
-
-					if (newSize < 0)
-						newSize = 0;
-
-					newPosition = boundsStart + marginStart - marginEnd + boundsSize / 2 - newSize / 2;
-
-					break;
-
-				case Alignment::end:
-					newSize = static_cast<int32_t>(measuredSize);
-
-					if (marginStart > 0)
-						newSize -= marginStart;
-
-					if (marginEnd > 0)
-						newSize -= marginEnd;
-
-					if (newSize < 0)
-						newSize = 0;
-
-					newPosition = boundsStart + boundsSize - marginEnd - newSize;
-
-					break;
-
-				case Alignment::stretch:
-					if (size == Size::computed) {
-						newSize = boundsSize;
-					}
-					else {
-						newSize = static_cast<int32_t>(measuredSize);
-					}
-
-					newSize = newSize - marginStart;
-
-					if (marginEnd > 0)
-						newSize -= marginEnd;
-
-					if (newSize < 0)
-						newSize = 0;
-
-					newPosition = boundsStart + marginStart;
-
-					break;
-			}
-		};
-
-		const auto& size = element->getSize();
-		const auto& measuredSize = element->getMeasuredSize();
-
-		computeArrangeShit(
-			element->getHorizontalAlignment(),
-			parentBounds.getX(),
-			parentBounds.getWidth(),
-
-			size.getWidth(),
-			measuredSize.getWidth(),
-
-			_margin.getLeft(),
-			_margin.getRight(),
-
-			x,
-			width
-		);
-
-		computeArrangeShit(
-			element->getVerticalAlignment(),
-			parentBounds.getY(),
-			parentBounds.getHeight(),
-
-			size.getHeight(),
-			measuredSize.getHeight(),
-
-			_margin.getTop(),
-			_margin.getBottom(),
-
-			y,
-			height
-		);
-
+	Rectangle MarginTransform::processLayoutBounds(Element* element, const Rectangle& layoutBounds) {
 		return {
-			x,
-			y,
-			static_cast<uint16_t>(width),
-			static_cast<uint16_t>(height)
+			layoutBounds.getX() + _margin.getLeft(),
+			layoutBounds.getY() + _margin.getTop(),
+			static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(layoutBounds.getWidth()) - _margin.getLeft() - _margin.getRight(), 0)),
+			static_cast<uint16_t>(std::max<int32_t>(static_cast<int32_t>(layoutBounds.getHeight()) - _margin.getTop() - _margin.getBottom(), 0))
 		};
 	}
 }

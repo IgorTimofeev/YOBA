@@ -13,7 +13,7 @@ namespace YOBA {
 			const Point& getOffset() const;
 			void setOffset(const Point& value);
 
-			Rectangle computeLayoutBoundsOnArrange(Element* element, const Rectangle& parentBounds) override;
+			Rectangle processLayoutBounds(Element* element, const Rectangle& layoutBounds) override;
 
 		private:
 			Point _offset;
