@@ -1,3 +1,6 @@
+#include <cstdio>
+#include <cstring>
+
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <esp_timer.h>

@@ -37,29 +37,15 @@ namespace YOBA {
 
 			void invokeLater(const std::function<void()>& func);
 
-			uint32_t getTickDeltaTime() const;
-			uint32_t getLayoutDeltaTime() const;
-			uint32_t getRenderDeltaTime() const;
-			uint32_t getFlushDeltaTime() const;
-			uint32_t getHIDTickDeltaTime() const;
-
 			Element* getFocusedElement() const;
 			void setFocusedElement(Element* element);
 
 			Element* getCapturedElement() const;
 			void setCapturedElement(Element* element);
 
-			bool isLayoutInvalidated() const {
-				return _layoutInvalidated;
-			}
-
-			bool isRenderInvalidated() const {
-				return _renderInvalidated;
-			}
-
-			bool isInvalidated() const {
-				return _layoutInvalidated || _renderInvalidated;
-			}
+			bool isLayoutInvalidated() const;
+			bool isRenderInvalidated() const;
+			bool isInvalidated() const;
 
 		protected:
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;
@@ -76,11 +62,5 @@ namespace YOBA {
 			std::vector<Animation*> _animations {};
 			std::vector<HID*> _HIDs {};
 			std::vector<std::function<void()>> _functionsToInvokeLater {};
-
-			uint32_t _HIDTickDeltaTime = 0;
-			uint32_t _tickDeltaTime = 0;
-			uint32_t _layoutDeltaTime = 0;
-			uint32_t _renderDeltaTime = 0;
-			uint32_t _flushDeltaTime = 0;
 	};
 }

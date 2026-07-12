@@ -55,16 +55,10 @@ namespace YOBA {
 		_renderer->resetClip();
 
 		// Handling input from HIDs like touchscreens, rotary encoders, etc.
-		auto time = system::getTimeUs();
-
 		for (const auto hid : _HIDs)
 			hid->tick();
-		
-		_HIDTickDeltaTime = system::getTimeUs() - time;
 
 		// Handling onTick() of children
-		time = system::getTimeUs();
-
 		onTick();
 
 		// Running functions that were scheduled to be invoked later in UI thread
@@ -93,17 +87,11 @@ namespace YOBA {
 				}
 			}
 		}
-
-		_tickDeltaTime = system::getTimeUs() - time;
 	}
 
 	void Application::render() {
-		uint64_t time;
-
 		// Layout pass
 		if (_layoutInvalidated) {
-			time = system::getTimeUs();
-
 			// Measuring size of children
 			measure(getSize());
 
@@ -111,27 +99,17 @@ namespace YOBA {
 			arrange(Rectangle(getSize()));
 
 			_layoutInvalidated = false;
-
-			_layoutDeltaTime = system::getTimeUs() - time;
 		}
 
 		// Render pass
 		if (_renderInvalidated) {
 			// Rendering children
-			time = system::getTimeUs();
-
 			Layout::render(_renderer, getLayoutBounds());
 
-			_renderDeltaTime = system::getTimeUs() - time;
-
 			// Flushing screen buffer
-			time = system::getTimeUs();
-
 			_renderer->flush();
 
 			_renderInvalidated = false;
-
-			_flushDeltaTime = system::getTimeUs() - time;
 		}
 	}
 
@@ -159,6 +137,18 @@ namespace YOBA {
 			_capturedElement->onCaptureChanged();
 
 		invalidate();
+	}
+
+	bool Application::isLayoutInvalidated() const {
+		return _layoutInvalidated;
+	}
+
+	bool Application::isRenderInvalidated() const {
+		return _renderInvalidated;
+	}
+
+	bool Application::isInvalidated() const {
+		return _layoutInvalidated || _renderInvalidated;
 	}
 
 	Element* Application::getFocusedElement() const {
@@ -193,30 +183,10 @@ namespace YOBA {
 		_functionsToInvokeLater.push_back(func);
 	}
 
-	uint32_t Application::getTickDeltaTime() const {
-		return _tickDeltaTime;
-	}
-
-	uint32_t Application::getLayoutDeltaTime() const {
-		return _layoutDeltaTime;
-	}
-
-	uint32_t Application::getRenderDeltaTime() const {
-		return _renderDeltaTime;
-	}
-
-	uint32_t Application::getFlushDeltaTime() const {
-		return _flushDeltaTime;
-	}
-
 	void Application::onRender(Renderer* renderer, const Rectangle& bounds) {
 		if (getBackgroundColor())
 			renderer->clear(getBackgroundColor());
 
 		Layout::onRender(renderer, bounds);
-	}
-
-	uint32_t Application::getHIDTickDeltaTime() const {
-		return _HIDTickDeltaTime;
 	}
 }
