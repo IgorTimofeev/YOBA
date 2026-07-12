@@ -17,6 +17,7 @@
 #include <YOBA/Core/Font.hpp>
 #include <YOBA/Core/Gradient.hpp>
 #include <YOBA/Core/Image.hpp>
+#include <YOBA/Core/UTF-8.hpp>
 
 // Events
 #include <YOBA/Core/Events/Event.hpp>

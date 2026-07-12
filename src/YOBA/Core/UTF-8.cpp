@@ -66,16 +66,58 @@ namespace YOBA {
 		return 0xFFFD;
 	}
 
+	bool UTF8::isStartOfNewChar(const char ch) {
+		// If byte doesn't start with 10xxxxxx, i.e. it's not a continuation byte - then it fr start of a new char
+		return (static_cast<uint8_t>(ch) & 0b1100'0000) != 0b1000'0000;
+	}
+
+	void UTF8::nextChar(const std::string_view str, size_t& index) {
+		if (str.length() == 0)
+			return;
+
+		do {
+			index++;
+		}
+		while (index < str.length() && !isStartOfNewChar(str[index]));
+	}
+
 	uint32_t UTF8::getLength(const std::string_view str) {
 		size_t length = 0;
 
-		for (const auto ch : str) {
-			// If byte doesn't start with 10xxxxxx, i.e. it's not a continuation byte - then it fr start of a new char
-			if ((static_cast<uint8_t>(ch) & 0b1100'0000) != 0b1000'0000) {
+		for (size_t i = 0; i < str.length(); i++) {
+			if (isStartOfNewChar(str[i])) {
 				length++;
 			}
 		}
 
 		return length;
+	}
+
+	std::string_view UTF8::substring(const std::string_view text, const size_t offset, const size_t count) {
+		// Skipping for start of substring
+		size_t charIndex = 0;
+		size_t counter = 0;
+
+		while (counter < offset && charIndex < text.length()) {
+			nextChar(text, charIndex);
+			counter++;
+		}
+
+		const auto offsetPtr = text.data() + charIndex;
+
+		// Skipping for requested count
+		counter = 0;
+
+		while (counter < count && charIndex < text.length()) {
+			nextChar(text, charIndex);
+			counter++;
+		}
+
+		auto countPtr = text.data() + charIndex;
+
+		return {
+			offsetPtr,
+			static_cast<size_t>(countPtr - offsetPtr)
+		};
 	}
 }

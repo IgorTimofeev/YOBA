@@ -5,6 +5,7 @@
 #include <YOBA/UI/Keyboard/Controller.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/Core/Events/PinchEvent.hpp>
+#include <YOBA/Core/UTF-8.hpp>
 
 namespace YOBA {
 	void TextField::onTick() {
@@ -78,6 +79,8 @@ namespace YOBA {
 		}
 		// Text & cursor
 		else {
+			const auto textLength = UTF8::getLength(text);
+
 			auto textPosition = Point(
 				bounds.getX() + _textMargin - _scrollPosition,
 				bounds.getYCenter() - fontHeight / 2
@@ -99,21 +102,37 @@ namespace YOBA {
 					bounds.getHeight()
 				));
 
-				for (size_t charIndex = 0; charIndex < text.length(); charIndex++) {
-					const char ch = _mask ? _mask : text[charIndex];
+				size_t charIndex = 0;
+				size_t codepointIndex = 0;
 
-					renderer->putText(
-						textPosition,
-						font,
-						getFontScale(),
-						textColor,
-						ch
-					);
+				while (charIndex < text.length()) {
+					const auto codepoint = UTF8::nextCodepoint(text, charIndex);
 
-					if (charIndex == _cursorPosition)
+					if (_mask) {
+						renderer->putText(
+							textPosition,
+							font,
+							getFontScale(),
+							textColor,
+							_mask
+						);
+					}
+					else {
+						renderer->putText(
+							textPosition,
+							font,
+							getFontScale(),
+							textColor,
+							codepoint
+						);
+					}
+
+					textPosition.setX(textPosition.getX() + font->getWidth(codepoint, getFontScale()));
+
+					codepointIndex++;
+
+					if (codepointIndex == _cursorPosition)
 						blinkX = textPosition.getX();
-
-					textPosition.setX(textPosition.getX() + font->getWidth(ch, getFontScale()));
 				}
 
 				renderer->setClip(oldClip);
@@ -122,7 +141,7 @@ namespace YOBA {
 			// Cursor
 			if (_cursorBlinkState && _cursorColor) {
 				// End of text
-				if (_cursorPosition == text.length())
+				if (_cursorPosition == textLength)
 					blinkX = textPosition.getX();
 
 				renderer->fillRectangle(
@@ -206,6 +225,7 @@ namespace YOBA {
 			return;
 
 		const auto text = getText();
+		const auto textLength = UTF8::getLength(text);
 		const auto& bounds = getRenderingBounds();
 		const int32_t boundsXWithoutMargin = bounds.getX() + _textMargin;
 		const uint16_t boundsWidthWithoutMargin = bounds.getWidth() - _textMargin * 2;
@@ -214,14 +234,22 @@ namespace YOBA {
 		size_t cursorPosition;
 		int32_t cursorX;
 
-		const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, &text](const int32_t targetX) {
+		const auto& computeCursorPositionFor = [this, &boundsXWithoutMargin, font, &cursorPosition, &cursorX, text](const int32_t targetX) {
 			cursorX = boundsXWithoutMargin - _scrollPosition;
 			cursorPosition = 0;
 
-			for (size_t i = 0; i < text.length(); i++) {
+			size_t charIndex = 0;
+
+			while (charIndex < text.length()) {
+				const auto codepoint = UTF8::nextCodepoint(text, charIndex);
+
 				if (cursorX < targetX) {
 					cursorPosition++;
-					cursorX += font->getWidth(_mask ? _mask : text[i]);
+
+					cursorX +=
+						_mask
+						? font->getWidth(_mask)
+						: font->getWidth(codepoint);
 				}
 				else {
 					break;
@@ -250,8 +278,11 @@ namespace YOBA {
 		else if (_lastTouchX > boundsX2WithoutMargin) {
 			computeCursorPositionFor(boundsX2WithoutMargin);
 
-			if (cursorPosition < text.length()) {
-				const int32_t pizda = cursorX + font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale()) - boundsWidthWithoutMargin;
+			if (cursorPosition < textLength) {
+				const int32_t pizda =
+					cursorX
+					+ font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale())
+					- boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;
 
@@ -270,13 +301,13 @@ namespace YOBA {
 
 	void TextField::insert(const std::string_view value) {
 		const auto text = getText();
-		const auto cursorPosition = getCursorPosition();
+		const auto textLength = UTF8::getLength(text);
 
 		// ABCDE
 		// -----
 
 		// Start
-		if (cursorPosition == 0) {
+		if (_cursorPosition == 0) {
 			if (text.empty()) {
 				setText(value);
 			}
@@ -285,35 +316,35 @@ namespace YOBA {
 			}
 		}
 		// End
-		else if (cursorPosition == text.length()) {
+		else if (_cursorPosition == textLength) {
 			setText(std::string(text) + std::string(value));
 		}
 		// Middle
 		else {
-			setText(std::string(text.substr(0, cursorPosition)) + std::string(value) + std::string(text.substr(cursorPosition)));
+			setText(std::string(UTF8::substring(text, 0, _cursorPosition)) + std::string(value) + std::string(UTF8::substring(text, _cursorPosition)));
 		}
 
-		setCursorPosition(getCursorPosition() + value.length());
+		setCursorPosition(_cursorPosition + UTF8::getLength(value));
 	}
 
 	void TextField::backspace() {
 		const auto text = getText();
-		const auto cursorPosition = getCursorPosition();
+		const auto textLength = UTF8::getLength(text);
 
 		// Start
-		if (cursorPosition == 0)
+		if (_cursorPosition == 0)
 			return;
 
 		// End
-		if (cursorPosition == text.length()) {
+		if (_cursorPosition == textLength) {
 			if (!text.empty()) {
-				setText(text.substr(0, text.length() - 1));
+				setText(UTF8::substring(text, 0, textLength - 1));
 			}
 		}
 		// 1
-		else if (cursorPosition == 1) {
-			if (text.length() > 1) {
-				setText(text.substr(1));
+		else if (_cursorPosition == 1) {
+			if (textLength > 1) {
+				setText(UTF8::substring(text, 1));
 			}
 			else if (!text.empty()) {
 				setText(std::string());
@@ -321,10 +352,10 @@ namespace YOBA {
 		}
 		// Middle
 		else {
-			setText(std::string(text.substr(0, cursorPosition - 1)) + std::string(text.substr(cursorPosition)));
+			setText(std::string(UTF8::substring(text, 0, _cursorPosition - 1)) + std::string(UTF8::substring(text, _cursorPosition)));
 		}
 
-		setCursorPosition(getCursorPosition() - 1);
+		setCursorPosition(_cursorPosition - 1);
 	}
 
 	void TextField::setOnInput(const std::function<void(Key, std::optional<std::string_view>)>& callback) {
@@ -338,7 +369,7 @@ namespace YOBA {
 	void TextField::setCursorPosition(const size_t value) {
 		_cursorPosition = value;
 
-		const auto textLength = getText().length();
+		const auto textLength = UTF8::getLength(getText());
 
 		if (_cursorPosition > textLength)
 			_cursorPosition = textLength;
@@ -404,7 +435,7 @@ namespace YOBA {
 	}
 
 	void TextField::setCursorToEnd() {
-		setCursorPosition(getText().length());
+		setCursorPosition(UTF8::getLength(getText()));
 	}
 
 	void TextField::onFocusChanged() {
