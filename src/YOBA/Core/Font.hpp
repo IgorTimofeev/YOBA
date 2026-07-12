@@ -49,10 +49,8 @@ namespace YOBA {
 				return _bitmap;
 			}
 
-			/**
-			 * @param glyphIndex Index of glyph obtained via getGlyphIndex(codepoint)
-			 * @return Pointer to glyph that will never be nullptr.
-			 */
+			/// @param glyphIndex Index of glyph obtained via getGlyphIndex(codepoint)
+			/// @return Pointer to glyph that will never be nullptr.
 			constexpr const Glyph* getGlyphByIndex(const uint32_t glyphIndex) const {
 				return
 					isConstantGlyphWidth()
@@ -60,10 +58,19 @@ namespace YOBA {
 					: reinterpret_cast<const VariableWidthGlyph*>(_glyphs) + glyphIndex;
 			}
 
-			/**
-			 * @param glyph Pointer to glyph whose width is to be returned. Must not be nullptr.
-			 * @return Width of glyph in pixels.
-			 */
+			/// Returns bitmap bit index of glyph
+			/// @param glyphIndex Glyph index in glyphs array
+			/// @param glyph Glyph itself
+			/// @return
+			constexpr uint32_t getBitmapBitIndex(const uint32_t glyphIndex, const Glyph* glyph) const {
+				return
+					isConstantGlyphWidth()
+					? glyphIndex * (getConstantGlyphWidth() * getLineHeight())
+					: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getBitmapBitIndex();
+			}
+
+			/// @param glyph Pointer to glyph whose width is to be returned. Must not be nullptr.
+			/// @return Width of glyph in pixels.
 			constexpr uint8_t getWidth(const Glyph* glyph) const {
 				return
 					isConstantGlyphWidth()

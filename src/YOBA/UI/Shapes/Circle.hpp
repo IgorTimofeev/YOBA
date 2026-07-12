@@ -21,7 +21,7 @@ namespace YOBA {
 					return;
 
 				renderer->fillCircle(
-					Point(bounds.getX() + bounds.getXCenter(), bounds.getY() + bounds.getYCenter() / 2),
+					bounds.getCenter(),
 					std::min(bounds.getWidth(), bounds.getHeight()) / 2,
 					color
 				);

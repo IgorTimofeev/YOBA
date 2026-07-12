@@ -93,9 +93,9 @@ namespace YOBA {
 						bounds.getYCenter() - font->getLineHeight(getFontScale()) / 2 + _contentMargin.getTop() - _contentMargin.getBottom()
 					),
 					font,
+					getFontScale(),
 					color,
-					getText(),
-					getFontScale()
+					getText()
 				);
 			}
 		}

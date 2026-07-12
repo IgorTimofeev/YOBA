@@ -65,9 +65,9 @@ namespace YOBA {
 						bounds.getYCenter() - font->getLineHeight() / 2
 					),
 					font,
+					getFontScale(),
 					textColor,
-					getText(),
-					getFontScale()
+					getText()
 				);
 			}
 

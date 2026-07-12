@@ -17,7 +17,6 @@ if(ESP_PLATFORM)
     )
 
     return()
-
 else()
     project(YOBA)
 

@@ -173,25 +173,23 @@ namespace YOBA {
 			);
 
 			// 2 upper corners
-			fillRoundedCorners(
+			fillUpperRoundedCorners(
 				Point(
 					bounds.getX() + cornerRadius,
 					bounds.getY() + cornerRadius
 				),
 				cornerRadius,
-				true,
 				bounds.getWidth() - cornerRadius - cornerRadius,
 				color
 			);
 
 			// And 2 lower
-			fillRoundedCorners(
+			fillLowerRoundedCorners(
 				Point(
 					bounds.getX() + cornerRadius,
 					bounds.getY() + bounds.getHeight() - cornerRadius - 1
 				),
 				cornerRadius,
-				false,
 				bounds.getWidth() - cornerRadius - cornerRadius,
 				color
 			);
@@ -490,8 +488,10 @@ namespace YOBA {
 		int32_t
 			x1 = position1.getX(),
 			y1 = position1.getY(),
+
 			x2 = position2.getX(),
 			y2 = position2.getY(),
+
 			x3 = position3.getX(),
 			y3 = position3.getY();
 
@@ -592,8 +592,8 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::strokeCircle(const Point& center, const uint16_t radius, const Color* color) {
-		if (!color || !radius)
+	void Renderer::strokeCircle(const Point& center, uint16_t radius, const Color* color) {
+		if (radius == 0 || !color)
 			return;
 
 		if (radius == 1) {
@@ -601,43 +601,68 @@ namespace YOBA {
 			return;
 		}
 
-		int32_t x = 0;
-		int32_t y = radius;
-		int32_t d = 3 - 2 * static_cast<int32_t>(radius); // Initial decision value
+		int32_t
+			f = 1 - radius,
+			ddF_y = -2 * radius,
+			ddF_x = 1,
+			xs = -1,
+			xe = 0,
+			len;
 
-		const auto cx = center.getX();
-		const auto cy = center.getY();
+		bool first = true;
 
-		const auto drawOctants = [&](const int32_t px, const int32_t py) noexcept {
-			putPixel({ cx + px, cy + py }, color);
-			putPixel({ cx - px, cy + py }, color);
-			putPixel({ cx + px, cy - py }, color);
-			putPixel({ cx - px, cy - py }, color);
-			putPixel({ cx + py, cy + px }, color);
-			putPixel({ cx - py, cy + px }, color);
-			putPixel({ cx + py, cy - px }, color);
-			putPixel({ cx - py, cy - px }, color);
-		};
+		do {
+			while (f < 0) {
+				++xe;
+				f += (ddF_x += 2);
+			}
 
-		drawOctants(x, y);
+			f += (ddF_y += 2);
 
-		while (y >= x) {
-			x++;
+			if (xe-xs > 1) {
+				if (first) {
+					len = 2 * (xe - xs) - 1;
+					strokeHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
+					strokeHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
 
-			if (d > 0) {
-				y--;
-				d += 4 * (x - y) + 10;
+					strokeVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
+					strokeVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
+
+					first = false;
+				}
+				else {
+					len = xe - xs++;
+					strokeHorizontalLine(Point(center.getX() - xe, center.getY() + radius), len, color);
+					strokeHorizontalLine(Point(center.getX() - xe, center.getY() - radius), len, color);
+					strokeHorizontalLine(Point(center.getX() + xs, center.getY() - radius), len, color);
+					strokeHorizontalLine(Point(center.getX() + xs, center.getY() + radius), len, color);
+
+					strokeVerticalLine(Point(center.getX() + radius, center.getY() + xs), len, color);
+					strokeVerticalLine(Point(center.getX() + radius, center.getY() - xe), len, color);
+					strokeVerticalLine(Point(center.getX() - radius, center.getY() - xe), len, color);
+					strokeVerticalLine(Point(center.getX() - radius, center.getY() + xs), len, color);
+				}
 			}
 			else {
-				d += 4 * x + 6;
+				++xs;
+				putPixel(Point(center.getX() - xe, center.getY() + radius), color);
+				putPixel(Point(center.getX() - xe, center.getY() - radius), color);
+				putPixel(Point(center.getX() + xs, center.getY() - radius), color);
+				putPixel(Point(center.getX() + xs, center.getY() + radius), color);
+
+				putPixel(Point(center.getX() + radius, center.getY() + xs), color);
+				putPixel(Point(center.getX() + radius, center.getY() - xe), color);
+				putPixel(Point(center.getX() - radius, center.getY() - xe), color);
+				putPixel(Point(center.getX() - radius, center.getY() + xs), color);
 			}
 
-			drawOctants(x, y);
+			xs = xe;
 		}
+		while (xe < --radius);
 	}
 
-	void Renderer::fillCircle(const Point& center, const uint16_t radius, const Color* color) {
-		if (!color || !radius)
+	void Renderer::fillCircle(const Point& center, uint16_t radius, const Color* color) {
+		if (radius == 0 || !color)
 			return;
 
 		if (radius == 1) {
@@ -646,36 +671,28 @@ namespace YOBA {
 		}
 
 		int32_t x = 0;
-		int32_t y = radius;
-		int32_t d = 3 - 2 * static_cast<int32_t>(radius); // Initial decision value
+		int32_t dx = 1;
+		int32_t dy = radius + radius;
+		int32_t p = -(radius >> 1);
 
-		const auto cx = center.getX();
-		const auto cy = center.getY();
+		strokeHorizontalLine(Point(center.getX() - radius, center.getY()), dy + 1, color);
 
-		auto drawLines = [&](const int32_t px, const int32_t py) noexcept {
-			// Upper & lower strips (connecting left & right edge)
-			strokeHorizontalLine({ cx - px, cy + py }, px * 2 + 1, color);
-			strokeHorizontalLine({ cx - px, cy - py }, px * 2 + 1, color);
+		while(x < radius){
+			if (p>= 0) {
+				strokeHorizontalLine(Point(center.getX() - x, center.getY() + radius), dx, color);
+				strokeHorizontalLine(Point(center.getX() - x, center.getY() - radius), dx, color);
 
-			// Middle strips
-			strokeHorizontalLine({ cx - py, cy + px }, py * 2 + 1, color);
-			strokeHorizontalLine({ cx - py, cy - px }, py * 2 + 1, color);
-		};
+				dy -= 2;
+				p -= dy;
+				radius--;
+			}
 
-		drawLines(x, y);
-
-		while (y >= x) {
+			dx += 2;
+			p += dx;
 			x++;
 
-			if (d > 0) {
-				y--;
-				d += 4 * (x - y) + 10;
-			}
-			else {
-				d += 4 * x + 6;
-			}
-
-			drawLines(x, y);
+			strokeHorizontalLine(Point(center.getX() - radius, center.getY() + x), dy + 1, color);
+			strokeHorizontalLine(Point(center.getX() - radius, center.getY() - x), dy + 1, color);
 		}
 	}
 
@@ -905,7 +922,7 @@ namespace YOBA {
 		} while (xe < radius--);
 	}
 
-	void Renderer::fillRoundedCorners(const Point& center, uint16_t radius, const bool upper, const int32_t delta, const Color* color) {
+	void Renderer::fillUpperRoundedCorners(const Point& center, uint16_t radius, const int32_t delta, const Color* color) {
 		int32_t f = 1 - radius;
 		int32_t ddF_x = 1;
 		int32_t ddF_y = -radius - radius;
@@ -917,7 +934,7 @@ namespace YOBA {
 				lineLength = y + y + delta;
 
 				if (lineLength > 0) {
-					strokeHorizontalLine(Point(center.getX() - y, upper ? center.getY() - radius : center.getY() + radius), lineLength, color);
+					strokeHorizontalLine(Point(center.getX() - y, center.getY() - radius), lineLength, color);
 				}
 
 				radius--;
@@ -931,12 +948,43 @@ namespace YOBA {
 			lineLength = radius + radius + delta;
 
 			if (lineLength > 0) {
-				strokeHorizontalLine(Point(center.getX() - radius, upper ? center.getY() - y : center.getY() + y), lineLength, color);
+				strokeHorizontalLine(Point(center.getX() - radius, center.getY() - y), lineLength, color);
 			}
 		}
 	}
 
-	void Renderer::putMissingGlyph(const Point& position, const Font* font, const Color* color, const uint8_t fontScale) {
+	void Renderer::fillLowerRoundedCorners(const Point& center, uint16_t radius, const int32_t delta, const Color* color) {
+		int32_t f = 1 - radius;
+		int32_t ddF_x = 1;
+		int32_t ddF_y = -radius - radius;
+		int32_t y = 0;
+		int32_t lineLength;
+
+		while (y < radius) {
+			if (f >= 0) {
+				lineLength = y + y + delta;
+
+				if (lineLength > 0) {
+					strokeHorizontalLine(Point(center.getX() - y, center.getY() + radius), lineLength, color);
+				}
+
+				radius--;
+				ddF_y += 2;
+				f += ddF_y;
+			}
+
+			y++;
+			ddF_x += 2;
+			f += ddF_x;
+			lineLength = radius + radius + delta;
+
+			if (lineLength > 0) {
+				strokeHorizontalLine(Point(center.getX() - radius, center.getY() + y), lineLength, color);
+			}
+		}
+	}
+
+	void Renderer::putMissingGlyph(const Point& position, const Font* font, const uint8_t fontScale, const Color* color) {
 		strokeRectangle(
 			Rectangle(
 				position.getX(),
@@ -948,57 +996,67 @@ namespace YOBA {
 		);
 	}
 
-	void Renderer::putGlyph(const Point& position, const Font* font, const Color* color, const int32_t glyphIndex, const Glyph* glyph, const uint8_t fontScale) {
-		auto bitIndex =
-			font->isConstantGlyphWidth()
-			? glyphIndex * (font->getConstantGlyphWidth() * font->getLineHeight())
-			: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getBitmapIndex();
+	void Renderer::putGlyph(const Point& position, const Font* font, const uint8_t fontScale, const Color* color, const int32_t glyphIndex, const Glyph* glyph) {
+		auto bitIndex = font->getBitmapBitIndex(glyphIndex, glyph);
 
-		uint8_t bitmapByte;
+		auto bitmapPtr = font->getBitmap() + (bitIndex / 8);
+		bitIndex = bitIndex % 8;
+
+		const int32_t x1 = position.getX();
+		const int32_t y1 = position.getY();
 
 		// Non-scaled fonts can be drawn a little bit faster
 		if (fontScale == 1) {
-			for (uint8_t j = 0; j < font->getLineHeight(); j++) {
-				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
-					bitmapByte = font->getBitmap()[bitIndex / 8];
+			const int32_t x2 = x1 + font->getWidth(glyph);
+			const int32_t y2 = y1 + font->getLineHeight();
 
-					if ((bitmapByte >> bitIndex % 8) & 1)
-						putPixel(Point(position.getX() + i, position.getY() + j), color);
+			for (int32_t y = y1; y < y2; y++) {
+				for (int32_t x = x1; x < x2; x++) {
+					if ((*bitmapPtr >> bitIndex) & 1)
+						putPixel(Point(x, y), color);
 
 					bitIndex++;
+
+					if (bitIndex > 7) {
+						bitIndex = 0;
+						bitmapPtr++;
+					}
 				}
 			}
 		}
+		// SLOWMO
 		else {
-			int32_t
-				x = position.getX(),
-				y = position.getY();
+			const int32_t x2 = x1 + font->getWidth(glyph) * fontScale;
+			const int32_t y2 = y1 + font->getLineHeight() * fontScale;
 
-			for (uint8_t j = 0; j < font->getLineHeight(); j++) {
-				for (uint8_t i = 0; i < font->getWidth(glyph); i++) {
-					bitmapByte = font->getBitmap()[bitIndex / 8];
-
-					if ((bitmapByte >> bitIndex % 8) & 1)
+			for (int32_t y = y1; y < y2; y += fontScale) {
+				for (int32_t x = x1; x < x2; x += fontScale) {
+					if ((*bitmapPtr >> bitIndex) & 1)
 						fillRectangle(Rectangle(x, y, fontScale, fontScale), color);
 
 					bitIndex++;
-					x += fontScale;
-				}
 
-				x = position.getX();
-				y += fontScale;
+					if (bitIndex > 7) {
+						bitIndex = 0;
+						bitmapPtr++;
+					}
+				}
 			}
 		}
 	}
 
-	void Renderer::putText(const Point& position, const Font* font, const Color* color, const uint32_t codepoint, const uint8_t textScale) {
+	void Renderer::putText(const Point& position, const Font* font, const Color* color, const uint32_t codepoint) {
+		putText(position, font, 1, color, codepoint);
+	}
+
+	void Renderer::putText(const Point& position, const Font* font, const uint8_t fontScale, const Color* color, const uint32_t codepoint) {
 		const auto& clip = getClip();
 		const auto clipX2 = clip.getX2();
 
 		if (
 			position.getX() > clipX2
 			|| position.getY() > clip.getY2()
-			|| position.getY() + font->getLineHeight(textScale) < clip.getY()
+			|| position.getY() + font->getLineHeight(fontScale) < clip.getY()
 			|| !color
 		)
 			return;
@@ -1008,24 +1066,24 @@ namespace YOBA {
 		if (glyphIndex >= 0) {
 			const auto glyph = font->getGlyphByIndex(glyphIndex);
 
-			if (position.getX() + font->getWidth(glyph, textScale) < clip.getX())
+			if (position.getX() + font->getWidth(glyph, fontScale) < clip.getX())
 				return;
 
 			putGlyph(
 				position,
 				font,
+				fontScale,
 				color,
 				glyphIndex,
-				glyph,
-				textScale
+				glyph
 			);
 		}
 		else {
-			putMissingGlyph(position, font, color, textScale);
+			putMissingGlyph(position, font, fontScale, color);
 		}
 	}
 
-	void Renderer::putText(const Point& position, const Font* font, const Color* color, const std::string_view text, const uint8_t textScale) {
+	void Renderer::putText(const Point& position, const Font* font, const uint8_t fontScale, const Color* color, const std::string_view text) {
 		const auto& clip = getClip();
 		const auto clipX2 = clip.getX2();
 
@@ -1033,59 +1091,71 @@ namespace YOBA {
 		if (
 			position.getX() > clipX2
 			|| position.getY() > clip.getY2()
-			|| position.getY() + font->getLineHeight(textScale) < clip.getY()
+			|| position.getY() + font->getLineHeight(fontScale) < clip.getY()
 			|| !color
 		)
 			return;
 
-		int32_t x = position.getX();
-
 		size_t charIndex = 0;
+
+		auto x = position.getX();
+		const auto y = position.getY();
+
+		uint32_t codepoint;
+		int32_t glyphIndex;
+		const Glyph* glyph;
+		int32_t glyphX2;
+		uint8_t glyphWidth;
 
 		while (charIndex < text.length()) {
 			// Trying to find glyph matched to char
-			const auto codepoint = UTF8::nextCodepoint(text, charIndex);
-			const auto glyphIndex = font->getGlyphIndex(codepoint);
+			codepoint = UTF8::nextCodepoint(text, charIndex);
+			glyphIndex = font->getGlyphIndex(codepoint);
 
 			// If glyph was found
 			if (glyphIndex >= 0) {
-				const auto glyph = font->getGlyphByIndex(glyphIndex);
+				glyph = font->getGlyphByIndex(glyphIndex);
+				glyphWidth = font->getWidth(glyph, fontScale);
 
 				// If glyph can be rendered as "human-readable"
 				// For example, U+007F "DE" symbol often has zero width in some fonts
-				if (font->getWidth(glyph) > 0) {
-					const int32_t x2 = x + font->getWidth(glyph, textScale);
+				if (glyphWidth > 0) {
+					glyphX2 = x + glyphWidth;
 
 					// Rendering current glyph only if it's in clip region
-					if (x2 > clip.getX()) {
+					if (glyphX2 > clip.getX()) {
 						putGlyph(
-							Point(x, position.getY()),
+							Point(x, y),
 							font,
+							fontScale,
 							color,
 							glyphIndex,
-							glyph,
-							textScale
+							glyph
 						);
 					}
 
-					x = x2;
+					x = glyphX2;
 				}
 				else {
-					putMissingGlyph(Point(x, position.getY()), font, color, textScale);
+					putMissingGlyph(Point(x, y), font, fontScale, color);
 
-					x += Font::missingGlyphWidth * textScale;
+					x += Font::missingGlyphWidth * fontScale;
 				}
 			}
 			else {
-				putMissingGlyph(Point(x, position.getY()), font, color, textScale);
+				putMissingGlyph(Point(x, y), font, fontScale, color);
 
-				x += Font::missingGlyphWidth * textScale;
+				x += Font::missingGlyphWidth * fontScale;
 			}
 
 			// Stopping rendering if next glyphs will not be in clip region
 			if (x > clipX2)
 				break;
 		}
+	}
+
+	void Renderer::putText(const Point& position, const Font* font, const Color* color, const std::string_view text) {
+		putText(position, font, 1, color, text);
 	}
 
 	void Renderer::flush() {

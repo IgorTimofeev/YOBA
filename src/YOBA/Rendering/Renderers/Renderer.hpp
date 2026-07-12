@@ -53,9 +53,18 @@ namespace YOBA {
 			* @param font Font with which the char will be rendered
 			* @param color Color with which the char will be rendered
 			* @param codepoint UTF-8 codepoint of char
-			* @param textScale Scale factor of text, defaults to 1
 			*/
-			void putText(const Point& position, const Font* font, const Color* color, uint32_t codepoint, uint8_t textScale = 1);
+			void putText(const Point& position, const Font* font, const Color* color, uint32_t codepoint);
+
+			/**
+			* @brief Render single char
+			* @param position Position of upper-left corner of the char
+			* @param font Font with which the char will be rendered
+			* @param fontScale Scale factor of font
+			* @param color Color with which the char will be rendered
+			* @param codepoint UTF-8 codepoint of char
+			*/
+			void putText(const Point& position, const Font* font, const uint8_t fontScale, const Color* color, uint32_t codepoint);
 
 			/**
 			* @brief Render line of UTF-8 text
@@ -63,9 +72,18 @@ namespace YOBA {
 			* @param font Font with which the text will be rendered
 			* @param color Color with which the text will be rendered
 			* @param text Text to render
-			* @param textScale Scale factor of text, defaults to 1
 			*/
-			void putText(const Point& position, const Font* font, const Color* color, std::string_view text, uint8_t textScale = 1);
+			void putText(const Point& position, const Font* font, const Color* color, std::string_view text);
+
+			/**
+			* @brief Render line of UTF-8 text
+			* @param position Position of upper-left corner of the first character in text
+			* @param font Font with which the text will be rendered
+			* @param fontScale Scale factor of font
+			* @param color Color with which the text will be rendered
+			* @param text Text to render
+			*/
+			void putText(const Point& position, const Font* font, const uint8_t fontScale, const Color* color, std::string_view text);
 
 			virtual void flush();
 
@@ -87,8 +105,9 @@ namespace YOBA {
 			static Point getCatmullRomPoint(const Point* points, size_t index, float t, float tension);
 
 			void strokeRoundedCorners(const Point& center, int32_t radius, uint8_t corner, const Color* color);
-			void fillRoundedCorners(const Point& center, uint16_t radius, bool upper, int32_t delta, const Color* color);
-			void putMissingGlyph(const Point& position, const Font* font, const Color* color, uint8_t fontScale);
-			void putGlyph(const Point& position, const Font* font, const Color* color, int32_t glyphIndex, const Glyph* glyph, uint8_t fontScale);
+			void fillUpperRoundedCorners(const Point& center, uint16_t radius, int32_t delta, const Color* color);
+			void fillLowerRoundedCorners(const Point& center, uint16_t radius, int32_t delta, const Color* color);
+			void putMissingGlyph(const Point& position, const Font* font, uint8_t fontScale, const Color* color);
+			void putGlyph(const Point& position, const Font* font, uint8_t fontScale, const Color* color, int32_t glyphIndex, const Glyph* glyph);
 	};
 }

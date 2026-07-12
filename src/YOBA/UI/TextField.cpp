@@ -69,9 +69,9 @@ namespace YOBA {
 							bounds.getYCenter() - fontHeight / 2
 						),
 						font,
+						getFontScale(),
 						_placeholderColor,
-						placeholder,
-						getFontScale()
+						placeholder
 					);
 				}
 			}
@@ -105,9 +105,9 @@ namespace YOBA {
 					renderer->putText(
 						textPosition,
 						font,
+						getFontScale(),
 						textColor,
-						ch,
-						getFontScale()
+						ch
 					);
 
 					if (charIndex == _cursorPosition)

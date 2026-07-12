@@ -14,11 +14,9 @@ namespace YOBA::system {
 	}
 
 	uint64_t getTimeUs() {
-		using namespace std::chrono;
-
 		static auto startTime = std::chrono::system_clock::now();
 
-		return duration_cast<microseconds>(system_clock::now() - startTime).count();
+		return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - startTime).count();
 	}
 
 	void reallocate(uint8_t*& buffer, const size_t length) {

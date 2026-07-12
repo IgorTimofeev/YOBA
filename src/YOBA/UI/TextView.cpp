@@ -99,9 +99,9 @@ namespace YOBA {
 								y
 							},
 							font,
+							getFontScale(),
 							color,
-							line,
-							getFontScale()
+							line
 						);
 
 						y += font->getLineHeight(getFontScale());
@@ -112,9 +112,9 @@ namespace YOBA {
 					renderer->putText(
 						bounds.getPosition(),
 						font,
+						getFontScale(),
 						color,
-						getText(),
-						getFontScale()
+						getText()
 					);
 				}
 
@@ -133,9 +133,9 @@ namespace YOBA {
 								y
 							},
 							font,
+							getFontScale(),
 							color,
-							line,
-							getFontScale()
+							line
 						);
 
 						y += font->getLineHeight(getFontScale());
@@ -148,9 +148,9 @@ namespace YOBA {
 							bounds.getY()
 						},
 						font,
+						getFontScale(),
 						color,
-						getText(),
-						getFontScale()
+						getText()
 					);
 				}
 
@@ -170,9 +170,9 @@ namespace YOBA {
 								y
 							},
 							font,
+							getFontScale(),
 							color,
-							line,
-							getFontScale()
+							line
 						);
 
 						y += font->getLineHeight(getFontScale());
@@ -185,9 +185,9 @@ namespace YOBA {
 							bounds.getY()
 						},
 						font,
+						getFontScale(),
 						color,
-						getText(),
-						getFontScale()
+						getText()
 					);
 				}
 
