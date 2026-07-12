@@ -20,14 +20,14 @@ namespace YOBA {
 			lineWidth = 0,
 			spaceLineWidth = 0;
 
-		uint32_t codepoint;
-
 		// 01234567
 		// He pizd
 		size_t charIndex = 0;
+		uint32_t codepoint;
+		size_t codepointIndex = 0;
 
 		while (charIndex < text.length()) {
-			codepoint = UTF8::nextCodepoint(text, charIndex);
+			UTF8::nextCodepoint(text, charIndex, codepoint);
 
 			switch (codepoint) {
 				// Retarded char, should skip
@@ -35,13 +35,13 @@ namespace YOBA {
 				// Line ending, should wrap
 				case '\n': {
 					if (lineWidth > 0) {
-						lineHandler(text.substr(lineFrom, charIndex - 1 - lineFrom), lineWidth);
+						lineHandler(UTF8::substring(text, lineFrom, codepointIndex - 1 - lineFrom), lineWidth);
 					}
 					else {
 						lineHandler(std::string(), 0);
 					}
 
-					lineFrom = charIndex - 1 + 1;
+					lineFrom = codepointIndex - 1 + 1;
 
 					spaceAt = 0;
 					spaceLineWidth = 0;
@@ -58,20 +58,20 @@ namespace YOBA {
 						// Whitespace on end of line
 						if (codepoint == ' ') {
 							if (lineWidth > 0)
-								lineHandler(text.substr(lineFrom, charIndex - 1 - lineFrom), lineWidth);
+								lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
 
-							lineFrom = charIndex - 1 + 1;
+							lineFrom = codepointIndex - 1 + 1;
 
 							spaceAt = 0;
 							spaceLineWidth = 0;
 							lineWidth = 0;
 						}
-						// Any char on end of  line
+						// Any char on end of line
 						else {
 							// There was whitespace in the middle
 							if (spaceAt > lineFrom) {
 								if (spaceLineWidth > 0)
-									lineHandler(text.substr(lineFrom, spaceAt - lineFrom), spaceLineWidth);
+									lineHandler(UTF8::substring(text, lineFrom, spaceAt - lineFrom + 1), spaceLineWidth);
 
 								lineFrom = spaceAt + 1;
 								lineWidth = lineWidth - spaceLineWidth - spaceWidth + charWidth;
@@ -82,9 +82,9 @@ namespace YOBA {
 							// Ugly case, cutting line into 2 parts
 							else {
 								if (lineWidth > 0)
-									lineHandler(text.substr(lineFrom, charIndex - 1 - lineFrom), lineWidth);
+									lineHandler(UTF8::substring(text, lineFrom, codepointIndex - 1 - lineFrom), lineWidth);
 
-								lineFrom = charIndex - 1;
+								lineFrom = codepointIndex - 1;
 
 								spaceAt = 0;
 								spaceLineWidth = 0;
@@ -98,14 +98,14 @@ namespace YOBA {
 						if (codepoint == ' ') {
 							// Line contains something
 							if (lineWidth > 0) {
-								spaceAt = charIndex - 1;
+								spaceAt = codepointIndex - 1;
 								spaceLineWidth = lineWidth;
 								lineWidth += charWidth;
 								spaceWidth = charWidth;
 							}
 							// Start of line
 							else {
-								lineFrom = charIndex - 1 + 1;
+								lineFrom = codepointIndex - 1 + 1;
 
 								spaceAt = 0;
 								spaceLineWidth = 0;
@@ -121,11 +121,13 @@ namespace YOBA {
 					break;
 				}
 			}
+
+			codepointIndex++;
 		}
 
 		// Remaining non-wrapped part
 		if (lineWidth > 0) {
-			lineHandler(text.substr(lineFrom), lineWidth);
+			lineHandler(UTF8::substring(text, lineFrom), lineWidth);
 		}
 	}
 }

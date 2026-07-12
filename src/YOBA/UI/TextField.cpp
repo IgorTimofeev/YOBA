@@ -104,9 +104,10 @@ namespace YOBA {
 
 				size_t charIndex = 0;
 				size_t codepointIndex = 0;
+				uint32_t codepoint;
 
 				while (charIndex < text.length()) {
-					const auto codepoint = UTF8::nextCodepoint(text, charIndex);
+					UTF8::nextCodepoint(text, charIndex, codepoint);
 
 					if (_mask) {
 						renderer->putText(
@@ -239,9 +240,10 @@ namespace YOBA {
 			cursorPosition = 0;
 
 			size_t charIndex = 0;
+			uint32_t codepoint;
 
 			while (charIndex < text.length()) {
-				const auto codepoint = UTF8::nextCodepoint(text, charIndex);
+				UTF8::nextCodepoint(text, charIndex, codepoint);
 
 				if (cursorX < targetX) {
 					cursorPosition++;

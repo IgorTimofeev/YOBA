@@ -1109,7 +1109,7 @@ namespace YOBA {
 
 		while (charIndex < text.length()) {
 			// Trying to find glyph matched to char
-			codepoint = UTF8::nextCodepoint(text, charIndex);
+			UTF8::nextCodepoint(text, charIndex, codepoint);
 			glyphIndex = font->getGlyphIndex(codepoint);
 
 			// If glyph was found
