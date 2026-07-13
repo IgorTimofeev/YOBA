@@ -30,7 +30,16 @@ namespace YOBA::system {
 		if (buffer)
 			heap_caps_free(buffer);
 
-		buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA));
+		size_t alignment = 0;
+
+		#if CONFIG_SPIRAM
+			// Should give us safe maximum
+			alignment = CONFIG_MMU_PAGE_SIZE;
+		#else
+			alignment = 4;
+		#endif
+
+		buffer = static_cast<uint8_t*>(heap_caps_aligned_alloc(alignment, length, MALLOC_CAP_DMA));
 		assert(buffer != nullptr && "Failed to allocate memory");
 	}
 
