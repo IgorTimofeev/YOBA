@@ -205,14 +205,31 @@ namespace YOBA {
 		if (child && child->isVisible())
 			child->arrange(_contentBounds);
 
-		const auto& processScrollBar = [&bounds](ScrollBar& bar, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
+		const auto& processScrollBar = [&bounds, this](ScrollBar& bar, const ScrollMode mode, const uint16_t contentSize, const uint16_t viewportSize) {
 			bar.setContentSize(contentSize);
 			bar.setViewportSize(viewportSize);
 
-			bar.setVisible(
-				mode == ScrollMode::enabled
-				|| (mode == ScrollMode::computed && contentSize > viewportSize)
-			);
+			switch (mode) {
+				case ScrollMode::enabledOnInteraction:
+					bar.setVisible(isCaptured() && contentSize > viewportSize);
+					break;
+
+				case ScrollMode::enabledOnOverflow:
+					bar.setVisible(contentSize > viewportSize);
+					break;
+
+				case ScrollMode::enabledAlways:
+					bar.setVisible(true);
+					break;
+
+				case ScrollMode::enabledAndHidden:
+					bar.setVisible(false);
+					break;
+
+				case ScrollMode::disabled:
+					bar.setVisible(false);
+					break;
+			}
 
 			if (bar.isVisible())
 				bar.arrange(bounds);

@@ -35,14 +35,13 @@ namespace YOBA {
 				// Line ending, should wrap
 				case '\n': {
 					if (lineWidth > 0) {
-						lineHandler(UTF8::substring(text, lineFrom, codepointIndex - 1 - lineFrom), lineWidth);
+						lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
 					}
 					else {
 						lineHandler(std::string(), 0);
 					}
 
-					lineFrom = codepointIndex - 1 + 1;
-
+					lineFrom = codepointIndex + 1;
 					spaceAt = 0;
 					spaceLineWidth = 0;
 					lineWidth = 0;
@@ -60,8 +59,7 @@ namespace YOBA {
 							if (lineWidth > 0)
 								lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
 
-							lineFrom = codepointIndex - 1 + 1;
-
+							lineFrom = codepointIndex + 1;
 							spaceAt = 0;
 							spaceLineWidth = 0;
 							lineWidth = 0;
@@ -71,21 +69,19 @@ namespace YOBA {
 							// There was whitespace in the middle
 							if (spaceAt > lineFrom) {
 								if (spaceLineWidth > 0)
-									lineHandler(UTF8::substring(text, lineFrom, spaceAt - lineFrom + 1), spaceLineWidth);
+									lineHandler(UTF8::substring(text, lineFrom, spaceAt - lineFrom), spaceLineWidth);
 
 								lineFrom = spaceAt + 1;
 								lineWidth = lineWidth - spaceLineWidth - spaceWidth + charWidth;
-
 								spaceAt = 0;
 								spaceLineWidth = 0;
 							}
 							// Ugly case, cutting line into 2 parts
 							else {
 								if (lineWidth > 0)
-									lineHandler(UTF8::substring(text, lineFrom, codepointIndex - 1 - lineFrom), lineWidth);
+									lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
 
-								lineFrom = codepointIndex - 1;
-
+								lineFrom = codepointIndex;
 								spaceAt = 0;
 								spaceLineWidth = 0;
 								lineWidth = 0;
@@ -98,15 +94,14 @@ namespace YOBA {
 						if (codepoint == ' ') {
 							// Line contains something
 							if (lineWidth > 0) {
-								spaceAt = codepointIndex - 1;
+								spaceAt = codepointIndex;
 								spaceLineWidth = lineWidth;
 								lineWidth += charWidth;
 								spaceWidth = charWidth;
 							}
 							// Start of line
 							else {
-								lineFrom = codepointIndex - 1 + 1;
-
+								lineFrom = codepointIndex + 1;
 								spaceAt = 0;
 								spaceLineWidth = 0;
 								lineWidth = 0;

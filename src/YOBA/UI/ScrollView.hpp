@@ -6,9 +6,11 @@
 
 namespace YOBA {
 	enum class ScrollMode : uint8_t {
-		computed,
-		enabled,
-		hidden,
+		enabledOnInteraction,
+		enabledOnOverflow,
+		enabledAlways,
+		enabledAndHidden,
+
 		disabled
 	};
 
@@ -56,7 +58,7 @@ namespace YOBA {
 			ScrollBar _verticalScrollBar {};
 
 			ScrollMode _horizontalScrollMode = ScrollMode::disabled;
-			ScrollMode _verticalScrollMode = ScrollMode::computed;
+			ScrollMode _verticalScrollMode = ScrollMode::enabledOnInteraction;
 
 			Size _contentMeasuredSize {};
 			Rectangle _contentBounds {};
