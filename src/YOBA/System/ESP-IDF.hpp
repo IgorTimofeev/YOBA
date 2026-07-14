@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <functional>
 #include <span>
-#include <assert.h>
+#include <cassert>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>

@@ -247,7 +247,7 @@ namespace YOBA {
 			float tickXF = bounds.getX() + handleWidthHalf;
 			float tickValue = _minimumValue;
 			const auto tickValueInterval = (_maximumValue - _minimumValue) / _tickCount;
-			const auto tickPixelInterval = static_cast<float>(bounds.getWidth() - handleWidthHalf) / _tickCount;
+			const auto tickPixelInterval = static_cast<float>(bounds.getWidth() - _handleSize.getWidth()) / _tickCount;
 
 			for (uint16_t tickIndex = 0; tickIndex < _tickCount + 1; tickIndex++) {
 				const auto isBig = tickIndex % _bigTickStep == 0;

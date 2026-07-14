@@ -5,8 +5,6 @@
 #include <YOBA/UI/Layout.hpp>
 #include <YOBA/UI/Traits/ActiveElement.hpp>
 
-#include "Selector.hpp"
-
 namespace YOBA {
 	class SelectorItem;
 
@@ -19,6 +17,11 @@ namespace YOBA {
 			int32_t getIndexOfItem(SelectorItem* item) const;
 
 			void addItem(SelectorItem* item) const;
+			void insertItem(const size_t index, SelectorItem* item) const;
+
+			void removeItem(SelectorItem* item) const;
+			void removeItemAt(const size_t index) const;
+
 			void removeItems();
 			void removeAndDeleteItems();
 
@@ -27,7 +30,8 @@ namespace YOBA {
 
 			void setSelectedIndex(int32_t index);
 
-			void setItemsLayout(Layout* layout);
+			Layout* getItemLayout(const Layout* layout) const;
+			void setItemLayout(Layout* layout);
 
 			void setOnSelectionChanged(const std::function<void()>& onSelectionChanged);
 

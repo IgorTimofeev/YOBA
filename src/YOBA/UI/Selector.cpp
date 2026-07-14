@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include <YOBA/UI/Selector.hpp>
 #include <YOBA/UI/ElementImplementation.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
@@ -10,38 +12,35 @@ namespace YOBA {
 	}
 
 	SelectorItem* Selector::getItemAt(const size_t index) const {
-		return
-			_itemLayout
-			? dynamic_cast<SelectorItem*>((*_itemLayout)[index])
-			: nullptr;
+		return dynamic_cast<SelectorItem*>((*_itemLayout)[index]);
 	}
 
 	int32_t Selector::getIndexOfItem(SelectorItem* item) const {
-		return
-			_itemLayout
-			? _itemLayout->getIndexOfChild(item)
-			: -1;
+		return _itemLayout->getIndexOfChild(item);
 	}
 
 	void Selector::addItem(SelectorItem* item) const {
-		if (!_itemLayout)
-			return;
-
 		*_itemLayout += item;
 	}
 
-	void Selector::removeItems() {
-		if (!_itemLayout)
-			return;
+	void Selector::insertItem(const size_t index, SelectorItem* item) const {
+		_itemLayout->insertChild(index, item);
+	}
 
+	void Selector::removeItem(SelectorItem* item) const {
+		_itemLayout->removeChild(item);
+	}
+
+	void Selector::removeItemAt(const size_t index) const {
+		_itemLayout->removeChildAt(index);
+	}
+
+	void Selector::removeItems() {
 		_itemLayout->removeChildren();
 		setSelectedIndex(-1);
 	}
 
 	void Selector::removeAndDeleteItems() {
-		if (!_itemLayout)
-			return;
-
 		_itemLayout->removeAndDeleteChildren();
 		setSelectedIndex(-1);
 	}
@@ -58,7 +57,7 @@ namespace YOBA {
 	}
 
 	void Selector::setSelectedIndex(const int32_t index) {
-		if (index == _selectedIndex || !_itemLayout)
+		if (index == _selectedIndex)
 			return;
 
 		_selectedIndex = index;
@@ -80,15 +79,21 @@ namespace YOBA {
 		invalidate();
 	}
 
+	Layout* Selector::getItemLayout(const Layout* layout) const {
+		return _itemLayout;
+	}
+
 	void Selector::onSelectionChanged() {
 
 	}
 
 	size_t Selector::getItemCount() const {
-		return _itemLayout ? _itemLayout->getChildrenCount() : 0;
+		return _itemLayout->getChildrenCount();
 	}
 
-	void Selector::setItemsLayout(Layout *layout) {
+	void Selector::setItemLayout(Layout *layout) {
+		assert(layout != nullptr && "Value can not be null");
+
 		_itemLayout = layout;
 	}
 
