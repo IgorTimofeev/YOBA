@@ -6,9 +6,9 @@
 #include <YOBA/Core.hpp>
 
 namespace YOBA {
-	class Unscii1616Font : public Font {
+	class Unscii16Font : public Font {
 		public:
-			constexpr Unscii1616Font() : Font(
+			constexpr Unscii16Font() : Font(
 				8,
 				18,
 				_glyphs,
