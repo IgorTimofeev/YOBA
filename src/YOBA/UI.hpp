@@ -62,7 +62,7 @@
 #include <YOBA/UI/Shapes/Shape.hpp>
 #include <YOBA/UI/Shapes/CircularShape.hpp>
 #include <YOBA/UI/Shapes/RectangularShape.hpp>
-#include <YOBA/UI/Shapes/ChessPatternRectangle.hpp>
+#include <YOBA/UI/Shapes/ChessPatternRectangularShape.hpp>
 
 // Keyboard
 #include <YOBA/UI/Keyboard/Button.hpp>

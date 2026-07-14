@@ -5,11 +5,11 @@
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
-	class ChessPatternRectangleShape : public Shape {
+	class ChessPatternRectangularShape : public Shape {
 		public:
-			ChessPatternRectangleShape() = default;
+			ChessPatternRectangularShape() = default;
 
-			ChessPatternRectangleShape(const Color* color) {
+			ChessPatternRectangularShape(const Color* color) {
 				setFillColor(color);
 			}
 

@@ -94,7 +94,7 @@ namespace YOBA {
 			
 			}
 
-			constexpr RGB565Color(const RGB565Color& value) : ValueColor(ColorModel::RGB565, value._value) {
+			constexpr RGB565Color() : ValueColor(ColorModel::RGB565, 0) {
 
 			}
 
@@ -288,7 +288,4 @@ namespace YOBA {
 			float _s = 0;
 			float _b = 0;
 	};
-
-
-
 }
