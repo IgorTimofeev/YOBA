@@ -1066,7 +1066,7 @@ namespace YOBA {
 		if (glyphIndex >= 0) {
 			const auto glyph = font->getGlyphByIndex(glyphIndex);
 
-			if (position.getX() + font->getWidth(glyph, fontScale) < clip.getX())
+			if (position.getX() + font->getWidth(fontScale, glyph) < clip.getX())
 				return;
 
 			putGlyph(
@@ -1115,7 +1115,7 @@ namespace YOBA {
 			// If glyph was found
 			if (glyphIndex >= 0) {
 				glyph = font->getGlyphByIndex(glyphIndex);
-				glyphWidth = font->getWidth(glyph, fontScale);
+				glyphWidth = font->getWidth(fontScale, glyph);
 
 				// If glyph can be rendered as "human-readable"
 				// For example, U+007F "DE" symbol often has zero width in some fonts

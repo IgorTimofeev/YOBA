@@ -5,11 +5,11 @@
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
-	class CircleShape : public Shape {
+	class CircularShape : public Shape {
 		public:
-			CircleShape() = default;
+			CircularShape() = default;
 
-			CircleShape(const Color* color) {
+			CircularShape(const Color* color) {
 				setFillColor(color);
 			}
 

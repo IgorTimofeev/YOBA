@@ -3,7 +3,7 @@
 #include <vector>
 
 #include <YOBA/UI/Keyboard/Button.hpp>
-#include <YOBA/UI/Shapes/Rectangle.hpp>
+#include <YOBA/UI/Shapes/RectangularShape.hpp>
 #include <YOBA/UI/Layout.hpp>
 
 #include <YOBA/UI/Keyboard/Button.hpp>

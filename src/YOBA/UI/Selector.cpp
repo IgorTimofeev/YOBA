@@ -1,4 +1,5 @@
 #include <YOBA/UI/Selector.hpp>
+#include <YOBA/UI/ElementImplementation.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 
 namespace YOBA {
@@ -22,11 +23,10 @@ namespace YOBA {
 			: -1;
 	}
 
-	void Selector::addItem(SelectorItem* item) {
+	void Selector::addItem(SelectorItem* item) const {
 		if (!_itemLayout)
 			return;
 
-		item->setSelector(this);
 		*_itemLayout += item;
 	}
 
@@ -63,8 +63,13 @@ namespace YOBA {
 
 		_selectedIndex = index;
 
+		SelectorItem* item;
+
 		for (size_t i = 0; i < getItemCount(); i++) {
-			getItemAt(i)->setActive(i == _selectedIndex);
+			item = getItemAt(i);
+
+			if (item)
+				item->setActive(i == _selectedIndex);
 		}
 
 		onSelectionChanged();
@@ -93,6 +98,10 @@ namespace YOBA {
 
 	// -------------------------------- SelectorItem --------------------------------
 
+	void SelectorItem::onAddedToParent(Parent* parent) {
+		_selectorUpdated = false;
+	}
+
 	void SelectorItem::onEventBeforeChildren(Event* event) {
 		if (event->getTypeID() != PointerUpEvent::typeID)
 			return;
@@ -105,11 +114,15 @@ namespace YOBA {
 		event->setHandled(true);
 	}
 
-	Selector* SelectorItem::getSelector() const {
-		return _selector;
-	}
+	Selector* SelectorItem::getSelector() {
+		if (_selectorUpdated)
+			return _selector;
 
-	void SelectorItem::setSelector(Selector *value) {
-		_selector = value;
+		_selector = findParent<Selector>();
+
+		if (_selector)
+			_selectorUpdated = true;
+
+		return _selector;
 	}
 }

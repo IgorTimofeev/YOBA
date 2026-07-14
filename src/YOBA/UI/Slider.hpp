@@ -8,7 +8,7 @@
 #include <YOBA/UI/Traits/ValueElement.hpp>
 
 namespace YOBA {
-	class Slider : public Control,public ValueElement<float> {
+	class Slider : public Control, public ValueElement<float> {
 		public:
 			const Color* getTrackColor() const;
 			void setTrackColor(const Color* value);
@@ -64,6 +64,9 @@ namespace YOBA {
 			const Font* getTickLabelFont() const;
 			void setTickLabelFont(const Font* value);
 
+			uint8_t getTickLabelFontScale() const;
+			void setTickLabelFontScale(const uint8_t value);
+
 			const std::function<std::string(float)>& getTickLabelBuilder() const;
 			void setTickLabelBuilder(const std::function<std::string(float)>& value);
 
@@ -103,6 +106,7 @@ namespace YOBA {
 
 			uint8_t _tickLabelOffset = 2;
 			const Font* _tickLabelFont = nullptr;
+			uint8_t _tickLabelFontScale = 1;
 			std::function<std::string(float)> _tickLabelBuilder = percentTickLabelBuilder;
 
 			void updateValueFromEvent(const PointerEvent* event);

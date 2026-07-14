@@ -15,7 +15,7 @@ namespace YOBA {
 		return width;
 	}
 
-	uint16_t Font::getWidth(const std::string_view text, const uint8_t scale) const {
+	uint16_t Font::getWidth(const uint8_t scale, const std::string_view text) const {
 		return getWidth(text) * scale;
 	}
 
@@ -26,10 +26,10 @@ namespace YOBA {
 		};
 	}
 
-	Size Font::getSize(const std::string_view text, const uint8_t scale) const {
+	Size Font::getSize(const uint8_t fontScale, const std::string_view text) const {
 		return {
-			getWidth(text, scale),
-			getLineHeight(scale)
+			getWidth(fontScale, text),
+			getLineHeight(fontScale)
 		};
 	}
 }

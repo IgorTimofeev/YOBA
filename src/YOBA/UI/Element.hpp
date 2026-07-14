@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <limits>
+#include <concepts>
 
 #include <YOBA/System.hpp>
 #include <YOBA/Core/Alignment.hpp>
@@ -13,9 +14,6 @@
 
 namespace YOBA {
 	class Event;
-}
-
-namespace YOBA {
 	class Animation;
 	class TargetAnimation;
 	class Application;
@@ -47,6 +45,10 @@ namespace YOBA {
 			virtual void invalidate();
 
 			Parent* getParent() const;
+
+			template <typename T>
+			requires std::derived_from<T, Parent>
+			T* findParent() const;
 
 			bool isVisible() const;
 			void setVisible(bool value);

@@ -15,14 +15,14 @@ namespace YOBA {
 			size_t getChildrenCount() const;
 			bool hasChildren() const;
 
-			size_t getIndexOfChild(Element* element);
+			int32_t getIndexOfChild(Element* element);
 			Element* getChildAt(size_t index) const;
 
 			void addChild(Element* child);
 			void insertChild(size_t index, Element* child);
 			void insertChildFromEnd(size_t offset, Element* child);
 
-			void removeChildAt(int index);
+			void removeChildAt(int32_t index);
 			void removeChild(Element* child);
 			void removeChildren();
 			void moveChildrenTo(Layout* layout);

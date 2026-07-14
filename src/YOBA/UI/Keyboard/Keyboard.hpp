@@ -7,7 +7,7 @@
 #include <YOBA/UI/Keyboard/Generic.hpp>
 #include <YOBA/UI/Layout.hpp>
 #include <YOBA/UI/Traits/FontElement.hpp>
-#include <YOBA/UI/Shapes/Rectangle.hpp>
+#include <YOBA/UI/Shapes/RectangularShape.hpp>
 
 namespace YOBA {
 	class Keyboard;
@@ -106,7 +106,7 @@ namespace YOBA {
 			std::function<KeyboardLayout*()> _charactersLayoutBuilder = nullptr;
 			std::function<KeyboardLayout*()> _numericLayoutBuilder = nullptr;
 
-			RectangleShape _backgroundPanel {};
+			RectangularShape _backgroundPanel {};
 
 			uint8_t _horizontalKeySpacing = 1;
 			uint8_t _verticalKeySpacing = 1;

@@ -288,12 +288,12 @@ namespace YOBA {
 	}
 
 	void ScrollView::onEventBeforeChild(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
-			_lastTouchPosition = reinterpret_cast<PointerDownEvent*>(event)->getPosition();
+		if (const auto pointerDownEvent = event->as<PointerDownEvent>()) {
+			_lastTouchPosition = pointerDownEvent->getPosition();
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
+		else if (const auto pointerDragEvent = event->as<PointerDragEvent>()) {
 			if (_lastTouchPosition.getX() >= 0) {
-				const auto position = reinterpret_cast<PointerDragEvent*>(event)->getPosition();
+				const auto position = pointerDragEvent->getPosition();
 				const auto pointerDelta = position - _lastTouchPosition;
 
 				if (isCaptured()) {
@@ -311,13 +311,11 @@ namespace YOBA {
 				}
 			}
 		}
-		else if (event->getTypeID() == MouseWheelEvent::typeID) {
-			const auto mouseWheelEvent = reinterpret_cast<MouseWheelEvent*>(event);
-
+		else if (const auto mouseWheelEvent = event->as<MouseWheelEvent>()) {
 			scrollVerticallyBy(-mouseWheelEvent->getDelta());
 		}
-		else if (event->getTypeID() == ScrollIntoViewEvent::typeID) {
-			_scrollIntoViewLaterTo = reinterpret_cast<ScrollIntoViewEvent*>(event)->getElement();
+		else if (const auto scrollIntoViewEvent = event->as<ScrollIntoViewEvent>()) {
+			_scrollIntoViewLaterTo = scrollIntoViewEvent->getElement();
 
 			event->setHandled(true);
 		}

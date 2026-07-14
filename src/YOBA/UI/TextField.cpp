@@ -128,7 +128,7 @@ namespace YOBA {
 						);
 					}
 
-					textPosition.setX(textPosition.getX() + font->getWidth(codepoint, getFontScale()));
+					textPosition.setX(textPosition.getX() + font->getWidth(getFontScale(), codepoint));
 
 					codepointIndex++;
 
@@ -269,7 +269,7 @@ namespace YOBA {
 				cursorPosition--;
 
 				if (_scrollPosition > 0) {
-					const auto previousCharWidth = font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale());
+					const auto previousCharWidth = font->getWidth(getFontScale(), _mask ? _mask : text[cursorPosition]);
 
 					_scrollPosition = cursorX > previousCharWidth ? cursorX - previousCharWidth : 0;
 				}
@@ -283,7 +283,7 @@ namespace YOBA {
 			if (cursorPosition < textLength) {
 				const int32_t pizda =
 					cursorX
-					+ font->getWidth(_mask ? _mask : text[cursorPosition], getFontScale())
+					+ font->getWidth(getFontScale(), _mask ? _mask : text[cursorPosition])
 					- boundsWidthWithoutMargin;
 
 				_scrollPosition = pizda > 0 ? pizda : 0;

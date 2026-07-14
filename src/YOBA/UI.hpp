@@ -2,6 +2,7 @@
 
 // Elements
 #include <YOBA/UI/Element.hpp>
+#include <YOBA/UI/ElementImplementation.hpp>
 
 // Animations
 #include <YOBA/UI/Animations/Animation.hpp>
@@ -58,8 +59,8 @@
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>
-#include <YOBA/UI/Shapes/Circle.hpp>
-#include <YOBA/UI/Shapes/Rectangle.hpp>
+#include <YOBA/UI/Shapes/CircularShape.hpp>
+#include <YOBA/UI/Shapes/RectangularShape.hpp>
 #include <YOBA/UI/Shapes/ChessPatternRectangle.hpp>
 
 // Keyboard

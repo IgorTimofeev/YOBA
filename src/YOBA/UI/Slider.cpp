@@ -161,6 +161,19 @@ namespace YOBA {
 		invalidate();
 	}
 
+	uint8_t Slider::getTickLabelFontScale() const {
+		return _tickLabelFontScale;
+	}
+
+	void Slider::setTickLabelFontScale(const uint8_t value) {
+		if (value == _tickLabelFontScale)
+			return;
+
+		_tickLabelFontScale = value;
+
+		invalidate();
+	}
+
 	const std::function<std::string(float)>& Slider::getTickLabelBuilder() const {
 		return _tickLabelBuilder;
 	}
@@ -176,7 +189,7 @@ namespace YOBA {
 			height += _tickOffset + _bigTickLineLength;
 
 			if (_tickLabelFont) {
-				height += _tickLabelOffset + _tickLabelFont->getLineHeight();
+				height += _tickLabelOffset + _tickLabelFont->getLineHeight(_tickLabelFontScale);
 			}
 		}
 		else {
@@ -257,15 +270,16 @@ namespace YOBA {
 						textX = static_cast<int32_t>(tickXF);
 					}
 					else if (tickIndex < _tickCount) {
-						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) / 2);
+						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(_tickLabelFontScale, text)) / 2);
 					}
 					else {
-						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(text)) + 1);
+						textX = static_cast<int32_t>(tickXF - static_cast<float>(_tickLabelFont->getWidth(_tickLabelFontScale, text)) + 1);
 					}
 
 					renderer->putText(
 						Point(textX, tickY + lineLength + _tickLabelOffset),
 						_tickLabelFont,
+						_tickLabelFontScale,
 						_tickColor,
 						text
 					);

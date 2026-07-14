@@ -78,8 +78,8 @@ namespace YOBA {
 					: reinterpret_cast<const VariableWidthGlyph*>(glyph)->getWidth();
 			}
 
-			constexpr uint8_t getWidth(const Glyph* glyph, const uint8_t scale) const {
-				return getWidth(glyph) * scale;
+			constexpr uint8_t getWidth(const uint8_t fontScale, const Glyph* glyph) const {
+				return getWidth(glyph) * fontScale;
 			}
 
 			constexpr uint8_t getWidth(const uint32_t codepoint) const {
@@ -91,23 +91,23 @@ namespace YOBA {
 					: missingGlyphWidth;
 			}
 
-			constexpr uint8_t getWidth(const uint32_t codepoint, const uint8_t scale) const {
-				return getWidth(codepoint) * scale;
+			constexpr uint8_t getWidth(const uint8_t fontScale, const uint32_t codepoint) const {
+				return getWidth(codepoint) * fontScale;
 			}
 
 			uint16_t getWidth(std::string_view text) const;
-			uint16_t getWidth(std::string_view text, uint8_t scale) const;
+			uint16_t getWidth(uint8_t scale, std::string_view text) const;
 
 			constexpr uint8_t getLineHeight() const {
 				return _lineHeight;
 			}
 
-			constexpr uint8_t getLineHeight(const uint8_t scale) const {
-				return _lineHeight * scale;
+			constexpr uint8_t getLineHeight(const uint8_t fontScale) const {
+				return _lineHeight * fontScale;
 			}
 
 			Size getSize(const std::string_view text) const;
-			Size getSize(const std::string_view text, uint8_t scale) const;
+			Size getSize(uint8_t fontScale, const std::string_view text) const;
 
 		private:
 			const uint8_t _constantGlyphWidth;

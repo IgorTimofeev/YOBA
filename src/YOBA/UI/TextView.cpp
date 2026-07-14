@@ -67,7 +67,7 @@ namespace YOBA {
 		}
 
 		return {
-			font->getWidth(getText(), getFontScale()),
+			font->getWidth(getFontScale(), getText()),
 			font->getLineHeight(getFontScale())
 		};
 	}
@@ -124,12 +124,12 @@ namespace YOBA {
 				const auto x2 = bounds.getX2();
 
 				if (_wrappingEnabled) {
-					auto y = bounds.getX();
+					auto y = bounds.getY();
 
 					for (const auto line : _wrappedLines) {
 						renderer->putText(
 							{
-								x2 - font->getWidth(line, getFontScale()) + 1,
+								x2 - font->getWidth(getFontScale(), line) + 1,
 								y
 							},
 							font,
@@ -144,7 +144,7 @@ namespace YOBA {
 				else {
 					renderer->putText(
 						{
-							bounds.getX2() - font->getWidth(getText(), getFontScale()) + 1,
+							bounds.getX2() - font->getWidth(getFontScale(), getText()) + 1,
 							bounds.getY()
 						},
 						font,
@@ -166,7 +166,7 @@ namespace YOBA {
 					for (const auto line : _wrappedLines) {
 						renderer->putText(
 							{
-								xCenter - font->getWidth(line, getFontScale()) / 2,
+								xCenter - font->getWidth(getFontScale(), line) / 2,
 								y
 							},
 							font,
@@ -181,7 +181,7 @@ namespace YOBA {
 				else {
 					renderer->putText(
 						{
-							xCenter - font->getWidth(getText(), getFontScale()) / 2,
+							xCenter - font->getWidth(getFontScale(), getText()) / 2,
 							bounds.getY()
 						},
 						font,

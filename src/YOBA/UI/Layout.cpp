@@ -22,7 +22,7 @@ namespace YOBA {
 		return !_children.empty();
 	}
 
-	size_t Layout::getIndexOfChild(Element* element) {
+	int32_t Layout::getIndexOfChild(Element* element) {
 		const auto iterator = std::ranges::find(_children, element);
 
 		if (iterator == _children.end())
@@ -31,7 +31,7 @@ namespace YOBA {
 		return iterator - _children.begin();
 	}
 
-	void Layout::removeChildAt(const int index) {
+	void Layout::removeChildAt(const int32_t index) {
 		const auto child = _children[index];
 
 		_children.erase(_children.begin() + index);

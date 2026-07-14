@@ -48,7 +48,7 @@ namespace YOBA {
 				}
 				// Any char
 				default: {
-					codepointWidth = font->getWidth(codepoint, scale);
+					codepointWidth = font->getWidth(scale, codepoint);
 
 					// Line doesn't fit, should wrap
 					if (lineWidth + codepointWidth > availableWidth) {
