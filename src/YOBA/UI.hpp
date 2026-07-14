@@ -34,6 +34,7 @@
 #include <YOBA/UI/Traits/BorderElement.hpp>
 #include <YOBA/UI/Traits/CornerRadiusElement.hpp>
 #include <YOBA/UI/Traits/TextElement.hpp>
+#include <YOBA/UI/Traits/TextAlignmentElement.hpp>
 #include <YOBA/UI/Traits/FontElement.hpp>
 #include <YOBA/UI/Traits/FontScaleElement.hpp>
 #include <YOBA/UI/Traits/GapElement.hpp>

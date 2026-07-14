@@ -15,14 +15,6 @@ namespace YOBA {
 		setTextColor(foreground);
 	}
 
-	Alignment TextView::getTextAlignment() const {
-		return _textAlignment;
-	}
-
-	void TextView::setTextAlignment(const Alignment value) {
-		_textAlignment = value;
-	}
-
 	bool TextView::isWrappingEnabled() const {
 		return _wrappingEnabled;
 	}
@@ -86,7 +78,7 @@ namespace YOBA {
 		if (!color)
 			return;
 
-		switch (_textAlignment) {
+		switch (getTextAlignment()) {
 			case Alignment::start: {
 				if (_wrappingEnabled) {
 					const auto x = bounds.getX();

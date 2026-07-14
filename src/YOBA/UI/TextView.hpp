@@ -8,16 +8,15 @@
 #include <YOBA/UI/Traits/FontElement.hpp>
 #include <YOBA/UI/Traits/FontScaleElement.hpp>
 
+#include "Traits/TextAlignmentElement.hpp"
+
 namespace YOBA {
-	class TextView : public Control, public TextElement, public FontElement, public FontScaleElement, public TextColorElement {
+	class TextView : public Control, public TextElement, public TextAlignmentElement, public FontElement, public FontScaleElement, public TextColorElement {
 		public:
 			TextView() = default;
 			TextView(const Font* font, const Color* foreground);
 			TextView(const std::string_view text);
 			TextView(const Color* foreground);
-
-			Alignment getTextAlignment() const;
-			void setTextAlignment(const Alignment value);
 
 			bool isWrappingEnabled() const;
 			void setWrappingEnabled(const bool value);
@@ -27,8 +26,6 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
-			Alignment _textAlignment = Alignment::start;
-
 			bool _wrappingEnabled = false;
 			std::vector<std::string_view> _wrappedLines {};
 	};
