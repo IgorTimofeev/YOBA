@@ -12,7 +12,7 @@ namespace YOBA {
 				const Font* font,
 				const std::string_view text,
 				const uint8_t scale,
-				const uint16_t maxWidth,
+				const uint16_t availableWidth,
 				const std::function<void(std::string_view, uint16_t width)>& lineHandler
 			);
 	};

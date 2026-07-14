@@ -1,6 +1,14 @@
 #include <YOBA/UI/WrapLayout.hpp>
 
 namespace YOBA {
+	WrapLayout::WrapLayout(const uint16_t horizontalGap, const uint16_t verticalGap) {
+		setGap(horizontalGap, verticalGap);
+	}
+
+	WrapLayout::WrapLayout(const uint16_t gap) {
+		setGap(gap);
+	}
+
 	Size WrapLayout::onMeasure(const Size& availableSize) {
 		uint16_t
 		width = 0,

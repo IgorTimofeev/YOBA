@@ -6,14 +6,14 @@ namespace YOBA {
 		const Font* font,
 		const std::string_view text,
 		const uint8_t scale,
-		const uint16_t maxWidth,
+		const uint16_t availableWidth,
 		const std::function<void(std::string_view, uint16_t width)>& lineHandler
 	) {
 		size_t charIndex = 0;
-		uint8_t charWidth;
+		size_t nextCharIndex = 0;
 
 		uint32_t codepoint;
-		size_t codepointIndex = 0;
+		uint8_t codepointWidth;
 
 		size_t lineCharIndex = 0;
 		uint16_t lineWidth = 0;
@@ -23,8 +23,8 @@ namespace YOBA {
 		uint16_t breakingCharLineWidth = 0;
 		bool breakingCharSkip = false;
 
-		while (charIndex < text.length()) {
-			UTF8::nextCodepoint(text, charIndex, codepoint);
+		while (nextCharIndex < text.length()) {
+			UTF8::nextCodepoint(text, nextCharIndex, codepoint);
 
 			switch (codepoint) {
 				// Retarded char, should skip
@@ -32,13 +32,13 @@ namespace YOBA {
 				// Line ending, should wrap
 				case '\n': {
 					if (lineWidth > 0) {
-						lineHandler(UTF8::substring(text, lineCharIndex, codepointIndex - lineCharIndex), lineWidth);
+						lineHandler(std::string_view(text.data() + lineCharIndex, charIndex - lineCharIndex), lineWidth);
 					}
 					else {
-						lineHandler(std::string(), 0);
+						lineHandler(std::string_view(text.data(), 0), 0);
 					}
 
-					lineCharIndex = codepointIndex + 1;
+					lineCharIndex = charIndex + 1;
 					lineWidth = 0;
 
 					breakingCharIndex = 0;
@@ -48,17 +48,18 @@ namespace YOBA {
 				}
 				// Any char
 				default: {
-					charWidth = font->getWidth(codepoint, scale);
+					codepointWidth = font->getWidth(codepoint, scale);
 
 					// Line doesn't fit, should wrap
-					if (lineWidth + charWidth > maxWidth) {
+					if (lineWidth + codepointWidth > availableWidth) {
 						switch (codepoint) {
 							// Whitespace
-							case ' ': {
+							case ' ':
+							case '\t': {
 								if (lineWidth > 0)
-									lineHandler(UTF8::substring(text, lineCharIndex, codepointIndex - lineCharIndex), lineWidth);
+									lineHandler(std::string_view(text.data() + lineCharIndex, charIndex - lineCharIndex), lineWidth);
 
-								lineCharIndex = codepointIndex + 1;
+								lineCharIndex = charIndex + 1;
 								lineWidth = 0;
 
 								breakingCharIndex = 0;
@@ -71,10 +72,10 @@ namespace YOBA {
 								// There was breaking char somewhere
 								if (breakingCharIndex > lineCharIndex) {
 									if (breakingCharLineWidth > 0)
-										lineHandler(UTF8::substring(text, lineCharIndex, breakingCharIndex - lineCharIndex + (breakingCharSkip ? 0 : 1)), breakingCharLineWidth);
+										lineHandler(std::string_view(text.data() + lineCharIndex, breakingCharIndex - lineCharIndex + (breakingCharSkip ? 0 : 1)), breakingCharLineWidth);
 
 									lineCharIndex = breakingCharIndex + 1;
-									lineWidth = lineWidth - breakingCharLineWidth - breakingCharWidth + charWidth;
+									lineWidth = lineWidth - breakingCharLineWidth - breakingCharWidth + codepointWidth;
 
 									breakingCharIndex = 0;
 									breakingCharLineWidth = 0;
@@ -82,9 +83,9 @@ namespace YOBA {
 								// Ugly case, cutting line into 2 parts
 								else {
 									if (lineWidth > 0)
-										lineHandler(UTF8::substring(text, lineCharIndex, codepointIndex - lineCharIndex), lineWidth);
+										lineHandler(std::string_view(text.data() + lineCharIndex, charIndex - lineCharIndex), lineWidth);
 
-									lineCharIndex = codepointIndex;
+									lineCharIndex = charIndex;
 									lineWidth = 0;
 
 									breakingCharIndex = 0;
@@ -100,20 +101,21 @@ namespace YOBA {
 						switch (codepoint) {
 							// Breaking char
 							case ' ':
+							case '\t':
 							case '-': {
-								breakingCharSkip = codepoint == ' ';
+								breakingCharSkip = codepoint != '-';
 
 								// Line contains something
 								if (lineWidth > 0) {
-									breakingCharIndex = codepointIndex;
+									breakingCharIndex = charIndex;
 									breakingCharLineWidth = lineWidth;
-									breakingCharWidth = charWidth;
+									breakingCharWidth = codepointWidth;
 
-									lineWidth += charWidth;
+									lineWidth += codepointWidth;
 								}
 								// Start of line, no need to start from breaking char
 								else if (breakingCharSkip) {
-									lineCharIndex = codepointIndex + 1;
+									lineCharIndex = charIndex + 1;
 									lineWidth = 0;
 
 									breakingCharIndex = 0;
@@ -124,7 +126,7 @@ namespace YOBA {
 							}
 							// Any char
 							default: {
-								lineWidth += charWidth;
+								lineWidth += codepointWidth;
 
 								break;
 							}
@@ -135,12 +137,12 @@ namespace YOBA {
 				}
 			}
 
-			codepointIndex++;
+			charIndex = nextCharIndex;
 		}
 
 		// Remaining non-wrapped part
 		if (lineWidth > 0) {
-			lineHandler(UTF8::substring(text, lineCharIndex), lineWidth);
+			lineHandler(std::string_view(text.data() + lineCharIndex, text.length() - lineCharIndex), lineWidth);
 		}
 	}
 }
