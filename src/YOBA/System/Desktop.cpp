@@ -13,9 +13,9 @@ namespace YOBA::system {
 		std::this_thread::sleep_for(std::chrono::milliseconds(duration));
 	}
 
-	uint64_t getTimeUs() {
-		static auto startTime = std::chrono::system_clock::now();
+	static auto startTime = std::chrono::system_clock::now();
 
+	uint64_t getTimeUs() {
 		return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - startTime).count();
 	}
 

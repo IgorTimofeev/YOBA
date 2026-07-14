@@ -9,22 +9,19 @@ namespace YOBA {
 		const uint16_t maxWidth,
 		const std::function<void(std::string_view, uint16_t width)>& lineHandler
 	) {
-		size_t
-			lineFrom = 0,
-			spaceAt = 0;
-
+		size_t charIndex = 0;
 		uint8_t charWidth;
 
-		uint16_t
-			spaceWidth = 0,
-			lineWidth = 0,
-			spaceLineWidth = 0;
-
-		// 01234567
-		// He pizd
-		size_t charIndex = 0;
 		uint32_t codepoint;
 		size_t codepointIndex = 0;
+
+		size_t lineCharIndex = 0;
+		uint16_t lineWidth = 0;
+
+		size_t breakingCharIndex = 0;
+		uint16_t breakingCharWidth = 0;
+		uint16_t breakingCharLineWidth = 0;
+		bool breakingCharSkip = false;
 
 		while (charIndex < text.length()) {
 			UTF8::nextCodepoint(text, charIndex, codepoint);
@@ -35,16 +32,17 @@ namespace YOBA {
 				// Line ending, should wrap
 				case '\n': {
 					if (lineWidth > 0) {
-						lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
+						lineHandler(UTF8::substring(text, lineCharIndex, codepointIndex - lineCharIndex), lineWidth);
 					}
 					else {
 						lineHandler(std::string(), 0);
 					}
 
-					lineFrom = codepointIndex + 1;
-					spaceAt = 0;
-					spaceLineWidth = 0;
+					lineCharIndex = codepointIndex + 1;
 					lineWidth = 0;
+
+					breakingCharIndex = 0;
+					breakingCharLineWidth = 0;
 
 					break;
 				}
@@ -54,62 +52,82 @@ namespace YOBA {
 
 					// Line doesn't fit, should wrap
 					if (lineWidth + charWidth > maxWidth) {
-						// Whitespace on end of line
-						if (codepoint == ' ') {
-							if (lineWidth > 0)
-								lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
-
-							lineFrom = codepointIndex + 1;
-							spaceAt = 0;
-							spaceLineWidth = 0;
-							lineWidth = 0;
-						}
-						// Any char on end of line
-						else {
-							// There was whitespace in the middle
-							if (spaceAt > lineFrom) {
-								if (spaceLineWidth > 0)
-									lineHandler(UTF8::substring(text, lineFrom, spaceAt - lineFrom), spaceLineWidth);
-
-								lineFrom = spaceAt + 1;
-								lineWidth = lineWidth - spaceLineWidth - spaceWidth + charWidth;
-								spaceAt = 0;
-								spaceLineWidth = 0;
-							}
-							// Ugly case, cutting line into 2 parts
-							else {
+						switch (codepoint) {
+							// Whitespace
+							case ' ': {
 								if (lineWidth > 0)
-									lineHandler(UTF8::substring(text, lineFrom, codepointIndex - lineFrom), lineWidth);
+									lineHandler(UTF8::substring(text, lineCharIndex, codepointIndex - lineCharIndex), lineWidth);
 
-								lineFrom = codepointIndex;
-								spaceAt = 0;
-								spaceLineWidth = 0;
+								lineCharIndex = codepointIndex + 1;
 								lineWidth = 0;
+
+								breakingCharIndex = 0;
+								breakingCharLineWidth = 0;
+
+								break;
+							}
+							// Any char
+							default: {
+								// There was breaking char somewhere
+								if (breakingCharIndex > lineCharIndex) {
+									if (breakingCharLineWidth > 0)
+										lineHandler(UTF8::substring(text, lineCharIndex, breakingCharIndex - lineCharIndex + (breakingCharSkip ? 0 : 1)), breakingCharLineWidth);
+
+									lineCharIndex = breakingCharIndex + 1;
+									lineWidth = lineWidth - breakingCharLineWidth - breakingCharWidth + charWidth;
+
+									breakingCharIndex = 0;
+									breakingCharLineWidth = 0;
+								}
+								// Ugly case, cutting line into 2 parts
+								else {
+									if (lineWidth > 0)
+										lineHandler(UTF8::substring(text, lineCharIndex, codepointIndex - lineCharIndex), lineWidth);
+
+									lineCharIndex = codepointIndex;
+									lineWidth = 0;
+
+									breakingCharIndex = 0;
+									breakingCharLineWidth = 0;
+								}
+
+								break;
 							}
 						}
 					}
 					// Line fits
 					else {
-						// Whitespace
-						if (codepoint == ' ') {
-							// Line contains something
-							if (lineWidth > 0) {
-								spaceAt = codepointIndex;
-								spaceLineWidth = lineWidth;
+						switch (codepoint) {
+							// Breaking char
+							case ' ':
+							case '-': {
+								breakingCharSkip = codepoint == ' ';
+
+								// Line contains something
+								if (lineWidth > 0) {
+									breakingCharIndex = codepointIndex;
+									breakingCharLineWidth = lineWidth;
+									breakingCharWidth = charWidth;
+
+									lineWidth += charWidth;
+								}
+								// Start of line, no need to start from breaking char
+								else if (breakingCharSkip) {
+									lineCharIndex = codepointIndex + 1;
+									lineWidth = 0;
+
+									breakingCharIndex = 0;
+									breakingCharLineWidth = 0;
+								}
+
+								break;
+							}
+							// Any char
+							default: {
 								lineWidth += charWidth;
-								spaceWidth = charWidth;
+
+								break;
 							}
-							// Start of line
-							else {
-								lineFrom = codepointIndex + 1;
-								spaceAt = 0;
-								spaceLineWidth = 0;
-								lineWidth = 0;
-							}
-						}
-						// Any char
-						else {
-							lineWidth += charWidth;
 						}
 					}
 
@@ -122,7 +140,7 @@ namespace YOBA {
 
 		// Remaining non-wrapped part
 		if (lineWidth > 0) {
-			lineHandler(UTF8::substring(text, lineFrom), lineWidth);
+			lineHandler(UTF8::substring(text, lineCharIndex), lineWidth);
 		}
 	}
 }

@@ -29,12 +29,12 @@ namespace YOBA {
 		invalidateRender();
 	}
 
-	const Color* Switch::getCheckedColor() const {
-		return _checkedColor;
+	const Color* Switch::getActiveColor() const {
+		return _activeColor;
 	}
 
-	void Switch::setCheckedColor(const Color* value) {
-		_checkedColor = value;
+	void Switch::setActiveColor(const Color* value) {
+		_activeColor = value;
 
 		invalidateRender();
 	}
@@ -91,7 +91,7 @@ namespace YOBA {
 		const uint16_t handleXCenter = handleX + handleWidthHalf;
 
 		// Checked
-		if (handleX > 0 && _checkedColor) {
+		if (handleX > 0 && _activeColor) {
 			renderer->fillRectangle(
 				Rectangle(
 					bounds.getX(),
@@ -100,7 +100,7 @@ namespace YOBA {
 					bounds.getHeight()
 				),
 				getCornerRadius(),
-				_checkedColor
+				_activeColor
 			);
 		}
 

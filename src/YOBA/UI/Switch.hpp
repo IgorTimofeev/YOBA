@@ -14,8 +14,8 @@ namespace YOBA {
 			const Color* getTrackColor() const;
 			void setTrackColor(const Color* value);
 
-			const Color* getCheckedColor() const;
-			void setCheckedColor(const Color* value);
+			const Color* getActiveColor() const;
+			void setActiveColor(const Color* value);
 
 			const Color* getHandleColor() const;
 			void setHandleColor(const Color* value);
@@ -30,7 +30,7 @@ namespace YOBA {
 
 		private:
 			const Color* _trackColor = nullptr;
-			const Color* _checkedColor = nullptr;
+			const Color* _activeColor = nullptr;
 			const Color* _handleColor = nullptr;
 
 			float _handlePositionFrom = 0.0f;
