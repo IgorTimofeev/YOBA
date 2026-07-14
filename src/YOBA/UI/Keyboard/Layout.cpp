@@ -42,7 +42,7 @@ namespace YOBA {
 			layout
 			? Size(
 				availableSize.getWidth(),
-				(_keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing()) * layout->getButtons().size() - _keyboard->getVerticalKeySpacing()
+				(_keyboard->getKeyHeight() + _keyboard->getVerticalKeyGap()) * layout->getButtons().size() - _keyboard->getVerticalKeyGap()
 			)
 			: Size();
 	}
@@ -62,9 +62,9 @@ namespace YOBA {
 			if (rowButtonCount == 0)
 				return;
 
-			const uint16_t totalSpacing = _keyboard->getHorizontalKeySpacing() * (rowButtonCount - 1);
-			const uint16_t availableWidthWithoutSpacing = bounds.getWidth() - totalSpacing;
-			float defaultWidthWithoutSpacing = 0;
+			const uint16_t totalGap = _keyboard->getHorizontalKeyGap() * (rowButtonCount - 1);
+			const uint16_t availableWidthWithoutGap = bounds.getWidth() - totalGap;
+			float defaultWidthWithoutGap = 0;
 			uint8_t stretchedCount = 0;
 			KeyboardButton* button;
 			float buttonWidth;
@@ -78,25 +78,25 @@ namespace YOBA {
 					stretchedCount++;
 				}
 				else {
-					defaultWidthWithoutSpacing += buttonWidth * static_cast<float>(availableWidthWithoutSpacing);
+					defaultWidthWithoutGap += buttonWidth * static_cast<float>(availableWidthWithoutGap);
 				}
 			}
 
 			float stretchedWidth;
 			int32_t localX;
 
-			const float defaultWidthWithSpacing = defaultWidthWithoutSpacing + static_cast<float>(totalSpacing);
+			const float defaultWidthWithGap = defaultWidthWithoutGap + static_cast<float>(totalGap);
 
 			// 1 is for float rounding correction
-			const auto rowIsFullOfDefaultKeys = defaultWidthWithSpacing >= static_cast<float>(bounds.getWidth() - 1);
+			const auto rowIsFullOfDefaultKeys = defaultWidthWithGap >= static_cast<float>(bounds.getWidth() - 1);
 
 			if (stretchedCount > 0) {
-				stretchedWidth = (static_cast<float>(availableWidthWithoutSpacing) - defaultWidthWithoutSpacing) / static_cast<float>(stretchedCount);
+				stretchedWidth = (static_cast<float>(availableWidthWithoutGap) - defaultWidthWithoutGap) / static_cast<float>(stretchedCount);
 				localX = bounds.getX();
 			}
 			else {
 				stretchedWidth = 0;
-				localX = bounds.getXCenter() - static_cast<int32_t>(defaultWidthWithSpacing / 2);
+				localX = bounds.getXCenter() - static_cast<int32_t>(defaultWidthWithGap / 2);
 			}
 
 			for (size_t i = buttonIndexFrom; i < buttonIndexTo; i++) {
@@ -110,7 +110,7 @@ namespace YOBA {
 					? (
 						buttonWidth == KeyboardButton::stretched
 						? std::round(stretchedWidth)
-						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
+						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutGap))
 					)
 					// Last
 					: (
@@ -118,7 +118,7 @@ namespace YOBA {
 						// Stretching to end
 						? static_cast<float>(bounds.getWidth() - localX)
 						// Using desired key size
-						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutSpacing))
+						: std::round(buttonWidth * static_cast<float>(availableWidthWithoutGap))
 					);
 
 				button->arrange(Rectangle(
@@ -128,7 +128,7 @@ namespace YOBA {
 					_keyboard->getKeyHeight()
 				));
 
-				localX += static_cast<uint16_t>(buttonWidth) + _keyboard->getHorizontalKeySpacing();
+				localX += static_cast<uint16_t>(buttonWidth) + _keyboard->getHorizontalKeyGap();
 			}
 		};
 
@@ -138,7 +138,7 @@ namespace YOBA {
 			if (button->getRow() > rowIndex) {
 				arrangeRow(i);
 
-				y += _keyboard->getKeyHeight() + _keyboard->getVerticalKeySpacing();
+				y += _keyboard->getKeyHeight() + _keyboard->getVerticalKeyGap();
 				buttonIndexFrom = i;
 				rowButtonCount = 0;
 				rowIndex++;

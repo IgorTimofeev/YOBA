@@ -53,11 +53,11 @@ namespace YOBA {
 			const Color* getActionKeyTextColor() const;
 			void setActionKeyTextColor(const Color* actionButtonSecondaryColor);
 
-			uint8_t getHorizontalKeySpacing() const;
-			void setHorizontalKeySpacing(uint8_t horizontalKeySpacing);
+			uint8_t getHorizontalKeyGap() const;
+			void setHorizontalKeyGap(uint8_t value);
 
-			uint8_t getVerticalKeySpacing() const;
-			void setVerticalKeySpacing(uint8_t value);
+			uint8_t getVerticalKeyGap() const;
+			void setVerticalKeyGap(uint8_t value);
 
 			uint8_t getKeyCornerRadius() const;
 			void setKeyCornerRadius(uint8_t value);
@@ -108,8 +108,8 @@ namespace YOBA {
 
 			RectangularShape _backgroundPanel {};
 
-			uint8_t _horizontalKeySpacing = 1;
-			uint8_t _verticalKeySpacing = 1;
+			uint8_t _horizontalKeyGap = 1;
+			uint8_t _verticalKeyGap = 1;
 			uint16_t _keyHeight = 25;
 
 			void deleteLayoutAndUIElements();

@@ -108,20 +108,20 @@ namespace YOBA {
 		setLayout(_cyclicLayoutBuilders[_cyclicLayoutIndex]());
 	}
 
-	uint8_t Keyboard::getHorizontalKeySpacing() const {
-		return _horizontalKeySpacing;
+	uint8_t Keyboard::getHorizontalKeyGap() const {
+		return _horizontalKeyGap;
 	}
 
-	void Keyboard::setHorizontalKeySpacing(const uint8_t horizontalKeySpacing) {
-		_horizontalKeySpacing = horizontalKeySpacing;
+	void Keyboard::setHorizontalKeyGap(const uint8_t value) {
+		_horizontalKeyGap = value;
 	}
 
-	uint8_t Keyboard::getVerticalKeySpacing() const {
-		return _verticalKeySpacing;
+	uint8_t Keyboard::getVerticalKeyGap() const {
+		return _verticalKeyGap;
 	}
 
-	void Keyboard::setVerticalKeySpacing(const uint8_t value) {
-		_verticalKeySpacing = value;
+	void Keyboard::setVerticalKeyGap(const uint8_t value) {
+		_verticalKeyGap = value;
 	}
 
 	uint16_t Keyboard::getKeyHeight() const {

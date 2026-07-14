@@ -11,10 +11,10 @@ namespace YOBA {
 
 	Size WrapLayout::onMeasure(const Size& availableSize) {
 		uint16_t
-		width = 0,
-		height = 0,
-		lineWidthWithSpacing = 0,
-		lineHeight = 0;
+			width = 0,
+			height = 0,
+			lineWidthWithGap = 0,
+			lineHeight = 0;
 
 		for (const auto child : *this) {
 			child->measure({
@@ -25,18 +25,18 @@ namespace YOBA {
 			const auto& childSize = child->getMeasuredSize();
 
 			// Overflow
-			if (lineWidthWithSpacing + childSize.getWidth() > availableSize.getWidth()) {
-				if (lineWidthWithSpacing > 0) {
-					width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalGap()));
+			if (lineWidthWithGap + childSize.getWidth() > availableSize.getWidth()) {
+				if (lineWidthWithGap > 0) {
+					width = std::max(width, static_cast<uint16_t>(lineWidthWithGap - getHorizontalGap()));
 					height += height > 0 ? getVerticalGap() + lineHeight : lineHeight;
 				}
 
-				lineWidthWithSpacing = childSize.getWidth();
+				lineWidthWithGap = childSize.getWidth();
 				lineHeight = childSize.getHeight();
 			}
 			// Normal
 			else {
-				lineWidthWithSpacing += childSize.getWidth() + getHorizontalGap();
+				lineWidthWithGap += childSize.getWidth() + getHorizontalGap();
 
 				if (childSize.getHeight() > lineHeight)
 					lineHeight = childSize.getHeight();
@@ -44,8 +44,8 @@ namespace YOBA {
 		}
 
 		// Handling unprocessed line
-		if (lineWidthWithSpacing > 0) {
-			width = std::max(width, static_cast<uint16_t>(lineWidthWithSpacing - getHorizontalGap()));
+		if (lineWidthWithGap > 0) {
+			width = std::max(width, static_cast<uint16_t>(lineWidthWithGap - getHorizontalGap()));
 			height += height > 0 ? getVerticalGap() + lineHeight : lineHeight;
 		}
 

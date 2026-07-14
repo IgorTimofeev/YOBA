@@ -26,11 +26,11 @@ namespace YOBA {
 			uint8_t getDigitCount() const;
 			void setDigitCount(uint8_t value);
 
-			uint8_t getDigitSpacing() const;
-			void setDigitSpacing(uint8_t value);
+			uint8_t getDigitGap() const;
+			void setDigitGap(uint8_t value);
 
-			uint8_t getDecimalSeparatorSpacing() const;
-			void setDecimalSeparatorSpacing(uint8_t value);
+			uint8_t getDecimalSeparatorGap() const;
+			void setDecimalSeparatorGap(uint8_t value);
 
 			uint8_t getDecimalSeparatorIndex() const;
 			void setDecimalSeparatorIndex(uint8_t value);
@@ -54,8 +54,8 @@ namespace YOBA {
 		private:
 			int32_t _value = 0;
 			uint8_t _digitCount = 1;
-			uint8_t _digitSpacing = 3;
-			uint8_t _decimalSeparatorSpacing = 2;
+			uint8_t _digitGap = 3;
+			uint8_t _decimalSeparatorGap = 2;
 			uint8_t _decimalSeparatorIndex = decimalSeparatorDisabled;
 			uint8_t _segmentThickness = 3;
 			uint8_t _segmentLength = 9;

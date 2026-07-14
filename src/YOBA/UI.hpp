@@ -2,7 +2,7 @@
 
 // Elements
 #include <YOBA/UI/Element.hpp>
-#include <YOBA/UI/ElementImplementation.hpp>
+#include <YOBA/UI/ElementAndParent.hpp>
 
 // Animations
 #include <YOBA/UI/Animations/Animation.hpp>

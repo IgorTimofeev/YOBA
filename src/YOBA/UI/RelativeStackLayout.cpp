@@ -12,11 +12,11 @@ namespace YOBA {
 
 	}
 
-	RelativeStackLayout::RelativeStackLayout(const uint16_t spacing): StackLayout(spacing) {
+	RelativeStackLayout::RelativeStackLayout(const uint16_t gap): StackLayout(gap) {
 
 	}
 
-	RelativeStackLayout::RelativeStackLayout(const Orientation orientation, const uint16_t spacing): StackLayout(orientation, spacing) {
+	RelativeStackLayout::RelativeStackLayout(const Orientation orientation, const uint16_t gap): StackLayout(orientation, gap) {
 
 	}
 
@@ -45,21 +45,21 @@ namespace YOBA {
 		auto result = Size();
 
 		size_t
-		visibleCount = 0,
-		relativeIndex = 0,
-		relativeCount = 0;
+			visibleCount = 0,
+			relativeIndex = 0,
+			relativeCount = 0;
 
 		uint16_t
-		autoSizeSum = 0,
-		availableSizeWithoutSpacing,
-		availableSizeForRelativeElements,
-		childSize;
+			autoSizeSum = 0,
+			availableSizeWithoutGap,
+			availableSizeForRelativeElements,
+			childSize;
 
 		uint32_t usedRelativeSize = 0;
 
 		float
-		childRelativeSize,
-		relativeSizesSum = 0;
+			childRelativeSize,
+			relativeSizesSum = 0;
 
 		Size childMeasuredSize;
 
@@ -87,14 +87,14 @@ namespace YOBA {
 					visibleCount++;
 				}
 
-				availableSizeWithoutSpacing =
+				availableSizeWithoutGap =
 				visibleCount < 2
 					? availableSize.getWidth()
 					: availableSize.getWidth() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
-					availableSizeWithoutSpacing >= autoSizeSum
-					? availableSizeWithoutSpacing - autoSizeSum
+					availableSizeWithoutGap >= autoSizeSum
+					? availableSizeWithoutGap - autoSizeSum
 					: 0;
 
 				// 2nd loop, measuring relative-sized children & computing total layout size
@@ -162,14 +162,14 @@ namespace YOBA {
 					visibleCount++;
 				}
 
-				availableSizeWithoutSpacing =
+				availableSizeWithoutGap =
 					visibleCount < 2
 					? availableSize.getHeight()
 					: availableSize.getHeight() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
-					availableSizeWithoutSpacing >= autoSizeSum
-					? availableSizeWithoutSpacing - autoSizeSum
+					availableSizeWithoutGap >= autoSizeSum
+					? availableSizeWithoutGap - autoSizeSum
 					: 0;
 
 				// 2nd loop, measuring relative-sized children & computing total layout size
@@ -224,22 +224,22 @@ namespace YOBA {
 
 	void RelativeStackLayout::onArrange(const Rectangle& bounds) {
 		size_t
-		visibleCount = 0,
-		relativeCount = 0,
-		relativeIndex = 0;
+			visibleCount = 0,
+			relativeCount = 0,
+			relativeIndex = 0;
 
 		uint16_t
-		autoSizeSum = 0,
-		availableSizeWithoutSpacing,
-		availableSizeForRelativeElements,
-		childSize;
+			autoSizeSum = 0,
+			availableSizeWithoutGap,
+			availableSizeForRelativeElements,
+			childSize;
 
 		uint32_t
-		usedRelativeSize = 0;
+			usedRelativeSize = 0;
 
 		float
-		childRelativeSize,
-		relativeSizesSum = 0;
+			childRelativeSize,
+			relativeSizesSum = 0;
 
 		int32_t position;
 
@@ -264,14 +264,14 @@ namespace YOBA {
 					visibleCount++;
 				}
 
-				availableSizeWithoutSpacing =
+				availableSizeWithoutGap =
 				visibleCount < 2
 					? bounds.getWidth()
 					: bounds.getWidth() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
-				availableSizeWithoutSpacing >= autoSizeSum
-					? availableSizeWithoutSpacing - autoSizeSum
+				availableSizeWithoutGap >= autoSizeSum
+					? availableSizeWithoutGap - autoSizeSum
 					: 0;
 
 				position = bounds.getX();
@@ -334,14 +334,14 @@ namespace YOBA {
 					visibleCount++;
 				}
 
-				availableSizeWithoutSpacing =
+				availableSizeWithoutGap =
 				visibleCount < 2
 					? bounds.getHeight()
 					: bounds.getHeight() - (visibleCount - 1) * getGap();
 
 				availableSizeForRelativeElements =
-				availableSizeWithoutSpacing >= autoSizeSum
-					? availableSizeWithoutSpacing - autoSizeSum
+				availableSizeWithoutGap >= autoSizeSum
+					? availableSizeWithoutGap - autoSizeSum
 					: 0;
 
 				position = bounds.getY();

@@ -41,22 +41,22 @@ namespace YOBA {
 		invalidate();
 	}
 
-	uint8_t SevenSegment::getDigitSpacing() const {
-		return _digitSpacing;
+	uint8_t SevenSegment::getDigitGap() const {
+		return _digitGap;
 	}
 
-	void SevenSegment::setDigitSpacing(const uint8_t value) {
-		_digitSpacing = value;
+	void SevenSegment::setDigitGap(const uint8_t value) {
+		_digitGap = value;
 
 		invalidate();
 	}
 
-	uint8_t SevenSegment::getDecimalSeparatorSpacing() const {
-		return _decimalSeparatorSpacing;
+	uint8_t SevenSegment::getDecimalSeparatorGap() const {
+		return _decimalSeparatorGap;
 	}
 
-	void SevenSegment::setDecimalSeparatorSpacing(const uint8_t value) {
-		_decimalSeparatorSpacing = value;
+	void SevenSegment::setDecimalSeparatorGap(const uint8_t value) {
+		_decimalSeparatorGap = value;
 
 		invalidate();
 	}
@@ -107,8 +107,8 @@ namespace YOBA {
 		return {
 			static_cast<uint16_t>(
 				_decimalSeparatorIndex == decimalSeparatorDisabled
-					? getDigitWidth() * getDigitCount() + getDigitSpacing() * (getDigitCount() - 1)
-					: getDigitWidth() * getDigitCount() + getDigitSpacing() * std::max(getDigitCount() - 2, 0) + getDecimalSeparatorSpacing() * 2 + getSegmentThickness()
+					? getDigitWidth() * getDigitCount() + getDigitGap() * (getDigitCount() - 1)
+					: getDigitWidth() * getDigitCount() + getDigitGap() * std::max(getDigitCount() - 2, 0) + getDecimalSeparatorGap() * 2 + getSegmentThickness()
 			),
 			getDigitHeight()
 		};
@@ -116,7 +116,7 @@ namespace YOBA {
 
 	void SevenSegment::onRender(Renderer* renderer, const Rectangle& bounds) {
 		auto position = Point(
-			bounds.getX() + (getDigitWidth() + getDigitSpacing()) * (getDigitCount() - 1),
+			bounds.getX() + (getDigitWidth() + getDigitGap()) * (getDigitCount() - 1),
 			bounds.getY()
 		);
 
@@ -166,14 +166,14 @@ namespace YOBA {
 			// Decimal separator
 			if (i == _decimalSeparatorIndex) {
 				renderer->fillRectangle(
-					Rectangle(position.getX() - _decimalSeparatorSpacing - 1, bounds.getY2() - _segmentThickness + 1, _segmentThickness, _segmentThickness),
+					Rectangle(position.getX() - _decimalSeparatorGap - 1, bounds.getY2() - _segmentThickness + 1, _segmentThickness, _segmentThickness),
 					_activeColor
 				);
 
-				position.setX(position.getX() - getDigitWidth() - _decimalSeparatorSpacing * 2 - _segmentThickness);
+				position.setX(position.getX() - getDigitWidth() - _decimalSeparatorGap * 2 - _segmentThickness);
 			}
 			else {
-				position.setX(position.getX() - getDigitWidth() - getDigitSpacing());
+				position.setX(position.getX() - getDigitWidth() - getDigitGap());
 			}
 		}
 	}

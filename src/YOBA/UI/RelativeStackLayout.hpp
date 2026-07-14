@@ -9,8 +9,8 @@ namespace YOBA {
 		public:
 			RelativeStackLayout();
 			RelativeStackLayout(const Orientation orientation);
-			RelativeStackLayout(const uint16_t spacing);
-			RelativeStackLayout(const Orientation orientation, const uint16_t spacing);
+			RelativeStackLayout(const uint16_t gap);
+			RelativeStackLayout(const Orientation orientation, const uint16_t gap);
 
 			constexpr static float autoSize = -1;
 
