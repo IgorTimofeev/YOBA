@@ -20,6 +20,7 @@ namespace YOBA {
 			explicit Application();
 
 			virtual void tick();
+			virtual void updateLayout();
 			virtual void render();
 
 			void invalidateLayout() override;

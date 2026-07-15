@@ -61,7 +61,7 @@ namespace YOBA {
 		// Handling onTick() of children
 		onTick();
 
-		// Running functions that were scheduled to be invoked later in UI thread
+		// Invoking functions that were scheduled to be invoked later in UI thread
 		if (!_functionsToInvokeLater.empty()) {
 			for (const auto& task : _functionsToInvokeLater)
 				task();
@@ -71,8 +71,10 @@ namespace YOBA {
 
 		// Handling animations
 		if (!_animations.empty()) {
+			Animation* animation;
+
 			for (size_t i = 0; i < _animations.size(); i++) {
-				const auto animation = _animations[i];
+				animation = _animations[i];
 
 				animation->tick();
 
@@ -89,28 +91,30 @@ namespace YOBA {
 		}
 	}
 
+	void Application::updateLayout() {
+		if (!_layoutInvalidated)
+			return;
+
+		// Measuring size of children
+		measure(getSize());
+
+		// Arranging children & computing their bounds
+		arrange(Rectangle(getSize()));
+
+		_layoutInvalidated = false;
+	}
+
 	void Application::render() {
-		// Layout pass
-		if (_layoutInvalidated) {
-			// Measuring size of children
-			measure(getSize());
+		if (!_renderInvalidated)
+			return;
 
-			// Arranging children & computing their bounds
-			arrange(Rectangle(getSize()));
+		// Rendering children
+		Layout::render(_renderer, getLayoutBounds());
 
-			_layoutInvalidated = false;
-		}
+		// Flushing screen buffer
+		_renderer->flush();
 
-		// Render pass
-		if (_renderInvalidated) {
-			// Rendering children
-			Layout::render(_renderer, getLayoutBounds());
-
-			// Flushing screen buffer
-			_renderer->flush();
-
-			_renderInvalidated = false;
-		}
+		_renderInvalidated = false;
 	}
 
 	void Application::pushEvent(Event* event) {
