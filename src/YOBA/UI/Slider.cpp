@@ -322,7 +322,7 @@ namespace YOBA {
 	}
 
 	void Slider::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+		if (event->is<PointerDownEvent>()) {
 			setCaptured(true);
 
 			if (isFocused()) {
@@ -334,12 +334,12 @@ namespace YOBA {
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
+		else if (event->is<PointerDragEvent>()) {
 			updateValueFromEvent(reinterpret_cast<PointerDragEvent*>(event));
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event->is<PointerUpEvent>()) {
 			setCaptured(false);
 			event->setHandled(true);
 		}

@@ -88,7 +88,7 @@ namespace YOBA {
 				}
 
 				availableSizeWithoutGap =
-				visibleCount < 2
+					visibleCount < 2
 					? availableSize.getWidth()
 					: availableSize.getWidth() - (visibleCount - 1) * getGap();
 

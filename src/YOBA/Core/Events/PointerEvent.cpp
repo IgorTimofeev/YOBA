@@ -19,11 +19,11 @@ namespace YOBA {
 
 	bool PointerEvent::isPointer(const Event* event) {
 		return
-			event->getTypeID() == PointerDownEvent::typeID
-			|| event->getTypeID() == PointerDragEvent::typeID
-			|| event->getTypeID() == PointerUpEvent::typeID
+			event->is<PointerDownEvent>()
+			|| event->is<PointerDragEvent>()
+			|| event->is<PointerUpEvent>()
 
-			|| event->getTypeID() == MouseWheelEvent::typeID;
+			|| event->is<MouseWheelEvent>();
 	}
 
 	PointerDownEvent::PointerDownEvent(const Point& position) : PointerEvent(

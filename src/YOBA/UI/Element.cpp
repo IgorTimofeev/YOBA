@@ -68,14 +68,24 @@ namespace YOBA {
 	void Element::measure(const Size& availableSize) {
 		const auto& size = getSize();
 
+		const Size explicitlyCorrectedAvailableSize {
+			size.getWidth() == Size::computed
+				? availableSize.getWidth()
+				: std::min<uint16_t>(size.getWidth(), availableSize.getWidth()),
+
+			size.getHeight() == Size::computed
+				? availableSize.getHeight()
+				: std::min<uint16_t>(size.getHeight(), availableSize.getHeight())
+		};
+
 		if (_layoutTransform) {
 			// Processing available size
-			_measuredSize = _layoutTransform->processAvailableSizeForMeasure(this, availableSize);
+			_measuredSize = _layoutTransform->processAvailableSizeForMeasure(this, explicitlyCorrectedAvailableSize);
 
 			// Measuring
 			_measuredSize = onMeasure(_measuredSize);
 
-			// Setting explicit dimensions
+			// Checking for explicitly set dimensions
 			if (size.getWidth() != Size::computed)
 				_measuredSize.setWidth(size.getWidth());
 
@@ -87,9 +97,9 @@ namespace YOBA {
 		}
 		else {
 			// Measuring
-			_measuredSize = onMeasure(availableSize);
+			_measuredSize = onMeasure(explicitlyCorrectedAvailableSize);
 
-			// Setting explicit dimensions
+			// Checking for explicitly set dimensions
 			if (size.getWidth() != Size::computed)
 				_measuredSize.setWidth(size.getWidth());
 
@@ -332,10 +342,18 @@ namespace YOBA {
 		invalidate();
 	}
 
+	uint16_t Element::getWidth() const {
+		return _size.getWidth();
+	}
+
 	void Element::setWidth(const uint16_t value) {
 		_size.setWidth(value);
 
 		invalidate();
+	}
+
+	uint16_t Element::getHeight() const {
+		return _size.getHeight();
 	}
 
 	void Element::setHeight(const uint16_t value) {

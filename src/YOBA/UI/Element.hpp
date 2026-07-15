@@ -85,7 +85,15 @@ namespace YOBA {
 
 			const Size& getSize() const;
 			void setSize(const Size& value);
+
+			/// @brief Shorthand for getSize().getWidth()
+			uint16_t getWidth() const;
+			/// @brief Shorthand for getSize().setWidth(value)
 			void setWidth(uint16_t value);
+
+			/// @brief Shorthand for getSize().getHeight()
+			uint16_t getHeight() const;
+			/// @brief Shorthand for getSize().setHeight(value)
 			void setHeight(uint16_t value);
 
 			const Size& getMaxSize() const;

@@ -38,12 +38,12 @@ namespace YOBA {
 	}
 
 	void Knob::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+		if (event->is<PointerDownEvent>()) {
 			setCaptured(true);
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
+		else if (event->is<PointerDragEvent>()) {
 			const auto oldAngle = _angle;
 			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getRenderingBounds().getCenter()) - toRadians(90);
 
@@ -52,7 +52,7 @@ namespace YOBA {
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event->is<PointerUpEvent>()) {
 			setCaptured(false);
 
 			event->setHandled(true);

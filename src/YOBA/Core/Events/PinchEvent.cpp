@@ -27,9 +27,9 @@ namespace YOBA {
 
 	bool PinchEvent::isPinch(const Event* event) {
 		return
-			event->getTypeID() == PinchDownEvent::typeID
-			|| event->getTypeID() == PinchDragEvent::typeID
-			|| event->getTypeID() == PinchUpEvent::typeID;
+			event->is<PinchDownEvent>()
+			|| event->is<PinchDragEvent>()
+			|| event->is<PinchUpEvent>();
 	}
 
 	void PinchEvent::setPosition2(const Point& position2) {

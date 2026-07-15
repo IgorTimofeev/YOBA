@@ -4,7 +4,7 @@
 
 namespace YOBA {
 	void Button::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+		if (event->is<PointerDownEvent>()) {
 			// ESP_LOGI("Button", "PointerDownEvent");
 
 			_pointerWasDown = true;
@@ -14,7 +14,7 @@ namespace YOBA {
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event->is<PointerUpEvent>()) {
 			// ESP_LOGI("Button", "PointerUpEvent");
 			// ESP_LOGI("Button", "isCaptured(): %d", isCaptured());
 			// ESP_LOGI("Button", "isPointerOver(): %d", isPointerOver());

@@ -159,7 +159,7 @@ namespace YOBA {
 	}
 
 	void TextField::onEvent(Event* event) {
-		if (event->getTypeID() == PointerDownEvent::typeID) {
+		if (event->is<PointerDownEvent>()) {
 			setFocused(true);
 			setCaptured(true);
 
@@ -169,19 +169,19 @@ namespace YOBA {
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerDragEvent::typeID) {
+		else if (event->is<PointerDragEvent>()) {
 			_lastTouchX = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getX();
 
 			applyContinuousScroll();
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == PointerUpEvent::typeID) {
+		else if (event->is<PointerUpEvent>()) {
 			setCaptured(false);
 
 			event->setHandled(true);
 		}
-		else if (event->getTypeID() == KeyUpEvent::typeID) {
+		else if (event->is<KeyUpEvent>()) {
 			if (!isFocused())
 				return;
 			

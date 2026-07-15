@@ -322,7 +322,7 @@ namespace YOBA {
 	}
 
 	void ScrollView::onEventAfterChild(Event* event) {
-		if (event->getTypeID() == PointerUpEvent::typeID) {
+		if (event->is<PointerUpEvent>()) {
 			setCaptured(false);
 		}
 	}
