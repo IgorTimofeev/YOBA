@@ -13,6 +13,7 @@ namespace YOBA {
 		friend class Element;
 		friend class Control;
 		friend class Layout;
+		friend class Animation;
 
 		public:
 			static Application* getCurrent();
@@ -27,9 +28,6 @@ namespace YOBA {
 			void invalidateRender() override;
 			void invalidate() override;
 			void pushEvent(Event* event);
-
-			void addAnimation(Animation* animation);
-			void removeAnimation(Animation* animation);
 
 			Renderer* getRenderer() const;
 			void setRenderer(Renderer* value);
@@ -63,5 +61,8 @@ namespace YOBA {
 			std::vector<Animation*> _animations {};
 			std::vector<HID*> _HIDs {};
 			std::vector<std::function<void()>> _functionsToInvokeLater {};
+
+			void addAnimation(Animation* animation);
+			void removeAnimation(Animation* animation);
 	};
 }

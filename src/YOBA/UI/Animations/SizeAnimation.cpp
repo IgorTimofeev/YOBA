@@ -1,11 +1,7 @@
-#include <cassert>
-
 #include <YOBA/UI/Animations/SizeAnimation.hpp>
-
 #include "YOBA/UI/Application.hpp"
 
 namespace YOBA {
-
 	const Size& SizeAnimation::getFrom() const {
 		return _from;
 	}
@@ -23,57 +19,40 @@ namespace YOBA {
 	}
 
 	void SizeAnimation::onStateChanged(const AnimationState state) {
-		switch (state) {
-			case AnimationState::stopped: {
+		if (state != AnimationState::started)
+			return;
 
-				break;
-			}
-			case AnimationState::started: {
-				Application::getCurrent()->updateLayout();
+		Application::getCurrent()->updateLayout();
 
-				const auto& oldSize = getTarget()->getLayoutBounds().getSize();
+		const auto& layoutBounds = getTarget()->getLayoutBounds();
 
-				// Measuring
-				getTarget()->setSize( { Size::computed, Size::computed });
-				getTarget()->measure({ Size::computed, Size::computed });
-				const auto& measuredSize = getTarget()->getMeasuredSize();
+		// Computing
 
-				// Computing
+		// From
+		_computedFrom.setWidth(
+			_from.getWidth() == Size::computed
+				? layoutBounds.getWidth()
+				: _from.getWidth()
+		);
 
-				// From
-				_computedFrom.setWidth(
-					_from.getWidth() == Size::computed
-						? oldSize.getWidth()
-						: _from.getWidth()
-				);
+		_computedFrom.setHeight(
+			_from.getHeight() == Size::computed
+				? layoutBounds.getHeight()
+				: _from.getHeight()
+		);
 
-				_computedFrom.setHeight(
-					_from.getHeight() == Size::computed
-						? oldSize.getHeight()
-						: _from.getHeight()
-				);
+		// To
+		_computedTo.setWidth(
+			_to.getWidth() == Size::computed
+				? layoutBounds.getWidth()
+				: _to.getWidth()
+		);
 
-				// To
-				_computedTo.setWidth(
-					_to.getWidth() == Size::computed
-						? measuredSize.getWidth()
-						: _to.getWidth()
-				);
-
-				_computedTo.setHeight(
-					_to.getHeight() == Size::computed
-						? measuredSize.getHeight()
-						: _to.getHeight()
-				);
-
-				break;
-			}
-			case AnimationState::completed: {
-				getTarget()->setSize(_to);
-
-				break;
-			}
-		}
+		_computedTo.setHeight(
+			_to.getHeight() == Size::computed
+				? layoutBounds.getHeight()
+				: _to.getHeight()
+		);
 	}
 
 	void SizeAnimation::onTick() {

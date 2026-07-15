@@ -22,7 +22,11 @@ namespace YOBA {
 	float Animation::getProgress() const {
 		return
 			_startTimeUs > 0
-			? static_cast<float>(std::min(getElapsedTime(), _durationUs)) / static_cast<float>(getDuration())
+			? (
+				_durationUs > 0
+				? static_cast<float>(std::min(getElapsedTime(), _durationUs)) / static_cast<float>(_durationUs)
+				: 1
+			)
 			: 0;
 	}
 
@@ -31,22 +35,34 @@ namespace YOBA {
 	}
 
 	void Animation::start() {
-		if (getState() == AnimationState::started)
+		if (_state == AnimationState::started)
 			return;
 
-		const auto application = Application::getCurrent();
+		// Continuous
+		if (_durationUs > 0) {
+			const auto application = Application::getCurrent();
 
-		if (!application)
-			return;
+			if (!application)
+				return;
 
-		application->addAnimation(this);
+			application->addAnimation(this);
 
-		_startTimeUs = system::getTimeUs();
-		setState(AnimationState::started);
+			_startTimeUs = system::getTimeUs();
+
+			setState(AnimationState::started);
+		}
+		// Instantaneous
+		else {
+			_startTimeUs = system::getTimeUs();
+
+			setState(AnimationState::started);
+			onTick();
+			setState(AnimationState::completed);
+		}
 	}
 
 	void Animation::stop() {
-		if (getState() == AnimationState::stopped)
+		if (_state == AnimationState::stopped)
 			return;
 
 		setState(AnimationState::stopped);
@@ -57,9 +73,11 @@ namespace YOBA {
 	}
 
 	void Animation::tick() {
+		if (_state != AnimationState::started)
+			return;
+
 		onTick();
 
-		// Completed
 		if (getElapsedTime() >= _durationUs) {
 			setState(AnimationState::completed);
 		}

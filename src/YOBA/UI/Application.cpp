@@ -63,8 +63,9 @@ namespace YOBA {
 
 		// Invoking functions that were scheduled to be invoked later in UI thread
 		if (!_functionsToInvokeLater.empty()) {
-			for (const auto& task : _functionsToInvokeLater)
-				task();
+			// Using indexed loop in case of SOMEONE decide to call .invokeLater() in another .invokeLater() callback
+			for (size_t i = 0; i < _functionsToInvokeLater.size(); i++)
+				_functionsToInvokeLater[i]();
 
 			_functionsToInvokeLater.clear();
 		}

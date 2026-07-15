@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include <YOBA/UI/Animations/FloatAnimation.hpp>
 
 namespace YOBA {
