@@ -131,19 +131,30 @@ namespace YOBA {
 		}
 	}
 
-	void Renderer::fillChessPatternRectangle(const Rectangle& bounds, const Color* color) {
-		constexpr uint8_t step = 1;
-		constexpr uint16_t totalSize = step + step;
-		bool odd = true;
-
+	// #-#-#-#-
+	// -#-#-#-#
+	void Renderer::fillChessPatternRectangle(const Rectangle& bounds, const Color* color, const uint8_t filledStep, const uint8_t transparentStep) {
 		const auto x2 = bounds.getX2();
 		const auto y2 = bounds.getY2();
+		auto odd = true;
 
-		for (int32_t j = bounds.getY(); j <= y2; j++) {
-			for (int32_t i = odd ? bounds.getX() + step : bounds.getX(); i <= x2; i += totalSize)
-				putPixel(Point(i, j), color);
+		if (filledStep == 1 && transparentStep == 1) {
+			for (int32_t y = bounds.getY(); y <= y2; y++) {
+				for (int32_t x = odd ? bounds.getX() + filledStep : bounds.getX(); x <= x2; x += 2)
+					putPixel(Point(x, y), color);
 
-			odd = !odd;
+				odd = !odd;
+			}
+		}
+		else {
+			const auto totalSize = filledStep + transparentStep;
+
+			for (int32_t y = bounds.getY(); y <= y2; y++) {
+				for (int32_t x = odd ? bounds.getX() + filledStep / 2 : bounds.getX(); x <= x2; x += totalSize)
+					strokeHorizontalLine(Point(x, y), filledStep, color);
+
+				odd = !odd;
+			}
 		}
 	}
 
