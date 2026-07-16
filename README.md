@@ -35,7 +35,7 @@ all of which can be used separately
 # ESP-IDF installation
 
 First, you must enable RTTI (run-time type information), since complex components like keyboard and
-selectors use `dynamic_cast`. RTTI is disabled by default on ESP-IDF to save some flash memory,
+selectors utilize multi-inheritance and `dynamic_cast`. RTTI is disabled by default on ESP-IDF to save some flash memory,
 but since we’re using a fucking UI framework, a few bytes is a ridiculously small price
 to pay for such immense power. RTTI itself can be enabled via
 
@@ -48,15 +48,12 @@ After that, you can clone the library into your project. It would be wise to use
 Don't forget to add `YOBA` component to your `CMakeLists.txt`. It should look like this:
 
 ```cmake
-file(GLOB_RECURSE my_sources
-    "*.cpp"
-)
+file(GLOB_RECURSE my_sources "*.cpp")
 
 idf_component_register(
     SRCS ${my_sources}
     INCLUDE_DIRS "."
-    REQUIRES
-        YOBA
+    REQUIRES YOBA
 )
 
 include_directories(.)
@@ -66,54 +63,9 @@ include_directories(.)
 
 Since `YOBA` is hardware-independent, I thought it would be fun to add support for running it on Windows and Linux.
 And [SFML](https://github.com/sfml/sfml) is perfect for such shit!
-Just clone an [example project](https://github.com/IgorTimofeev/YOBASFMLExample) and run it with your favourite IDE:
+Just clone an [example project](https://github.com/IgorTimofeev/YOBASFMLExample) and play around in your favourite IDE:
 
 `git clone https://github.com/IgorTimofeev/YOBASFMLExample.git`
 
-Alternatively, you can add `YOBA` as dependency by yourself:
-
-`git submodule add https://github.com/IgorTimofeev/YOBA.git lib/YOBA`
-
-Next, configure your` CMakeLists.txt` so that it looks something like this:
-
-```cmake
-cmake_minimum_required(VERSION 3.28)
-project(YOBADesktopDemo LANGUAGES CXX)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Main
-file(GLOB_RECURSE MAIN_SOURCES
-    "src/*.cpp"
-)
-
-add_executable(main ${MAIN_SOURCES})
-target_compile_features(main PRIVATE cxx_std_23)
-
-# SFML
-include(FetchContent)
-FetchContent_Declare(
-    SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 3.1.0
-    GIT_SHALLOW ON
-    EXCLUDE_FROM_ALL
-    SYSTEM
-)
-FetchContent_MakeAvailable(SFML)
-
-target_link_libraries(main PRIVATE SFML::Graphics)
-
-# YOBA
-add_subdirectory(lib/YOBA)
-target_link_libraries(main PRIVATE YOBA)
-
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
-
-```
-
-
 # Tselyebnov, M. D.
-<img width="1200" alt="517616031-76ed9af3-53a3-4d2d-b944-3c228edfec81-1" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
+<img width="1200" alt="feet" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
