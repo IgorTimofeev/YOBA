@@ -1,7 +1,6 @@
-#include <numbers>
-
 #include <YOBA/UI/Spatial/LinearSphere.hpp>
 #include <YOBA/UI/Spatial/Scene.hpp>
+#include <YOBA/Core/Math.hpp>
 
 namespace YOBA::spatial {
 	LinearSphere::LinearSphere(const Vector3F& center, const float radius, const uint16_t latitudeSegments, const uint16_t longitudeSegments, const Color* color) {
@@ -17,10 +16,10 @@ namespace YOBA::spatial {
 
 		// Middle vertices
 		for (uint16_t latitudeSegment = 0; latitudeSegment < latitudeSegments; latitudeSegment++) {
-			const auto latitude = static_cast<float>(latitudeSegment) / static_cast<float>(latitudeSegments) * std::numbers::pi_v<float>;
+			const auto latitude = static_cast<float>(latitudeSegment) / static_cast<float>(latitudeSegments) * Math::pi;
 
 			for (uint16_t longitudeSegment = 0; longitudeSegment < longitudeSegments; longitudeSegment++) {
-				const auto longitude = static_cast<float>(longitudeSegment) / static_cast<float>(longitudeSegments) * std::numbers::pi_v<float> * 2.f;
+				const auto longitude = static_cast<float>(longitudeSegment) / static_cast<float>(longitudeSegments) * Math::twoPi;
 
 				_vertices.push_back(center + Vector3F(
 					radius * std::sin(latitude) * std::cos(longitude),

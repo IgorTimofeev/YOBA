@@ -41,6 +41,7 @@
 #include <YOBA/UI/Traits/OrientationElement.hpp>
 #include <YOBA/UI/Traits/ActiveElement.hpp>
 #include <YOBA/UI/Traits/ValueElement.hpp>
+#include <YOBA/UI/Traits/ThicknessElement.hpp>
 
 // Controls
 #include <YOBA/UI/Control.hpp>
@@ -55,6 +56,7 @@
 #include <YOBA/UI/ScrollView.hpp>
 #include <YOBA/UI/Switch.hpp>
 #include <YOBA/UI/ProgressBar.hpp>
+#include <YOBA/UI/Spinner.hpp>
 #include <YOBA/UI/Divider.hpp>
 #include <YOBA/UI/Badge.hpp>
 

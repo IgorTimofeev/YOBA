@@ -40,11 +40,23 @@ namespace YOBA {
 			void strokeLine(const Point& from, const Point& to, const Color* color);
 			void strokeLine(const Point& from, const Point& to, const Color* color, uint8_t thickness);
 			void strokeTriangle(const Point& position1, const Point& position2, const Point& position3, const Color* color);
-			void strokeCircle(const Point& center, uint16_t radius, const Color* color);
+			void strokeCircle(const Point& center, const uint16_t radius, const Color* color);
+			void strokeCircle(const Point& center, const uint16_t outerRadius, const uint16_t thickness, const Color* color);
+
 			void fillTriangle(const Point& position1, const Point& position2, const Point& position3, const Color* color);
 			void fillCircle(const Point& center, uint16_t radius, const Color* color);
-			// Thanks, u8g2!
-			void strokeArc(const Point& center, uint16_t radius, float startAngleRad, float endAngleRad, const Color* color);
+
+			/// @brief Strokes arc counter-clockwise, started from <b>x = 1, y = 0</b>
+			/// @code
+			///        y
+			///        | <- )
+			///        |      )
+			/// -------+------ * x
+			///        |
+			///        |
+			/// @endcode
+			void strokeArc(const Point& center, uint16_t radius, float fromAngleRad, float arcMeasureRad, const Color* color);
+			void strokeArc(const Point& center, uint16_t outerRadius, uint16_t thickness, float fromAngleRad, float arcMeasureRad, const Color* color);
 			void strokeCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve = 10, const float tension = 0.5f);
 
 			/**

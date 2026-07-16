@@ -5,26 +5,6 @@
 #include <YOBA/Core/Events/PinchEvent.hpp>
 
 namespace YOBA {
-	const Color* Slider::getTrackColor() const {
-		return _trackColor;
-	}
-
-	void Slider::setTrackColor(const Color* value) {
-		_trackColor = value;
-
-		Element::invalidateRender();
-	}
-
-	const Color* Slider::getFillColor() const {
-		return _fillColor;
-	}
-
-	void Slider::setFillColor(const Color* value) {
-		_fillColor = value;
-
-		Element::invalidateRender();
-	}
-
 	const Color* Slider::getHandleColor() const {
 		return _handleColor;
 	}
@@ -214,7 +194,7 @@ namespace YOBA {
 			+ static_cast<uint16_t>(valueFactor * static_cast<float>(bounds.getWidth() - _handleSize.getWidth()));
 
 		// Fill
-		if (getValue() > 0 && _fillColor) {
+		if (getValue() > 0 && getFillColor()) {
 			renderer->fillRectangle(
 				Rectangle(
 					bounds.getX(),
@@ -223,12 +203,12 @@ namespace YOBA {
 					_trackSize
 				),
 				_trackCornerRadius,
-				_fillColor
+				getFillColor()
 			);
 		}
 
 		// Track
-		if (_trackColor) {
+		if (getTrackColor()) {
 			renderer->fillRectangle(
 				Rectangle(
 					bounds.getX() + handleCenterLocal,
@@ -237,7 +217,7 @@ namespace YOBA {
 					_trackSize
 				),
 				_trackCornerRadius,
-				_trackColor
+				getTrackColor()
 			);
 		}
 

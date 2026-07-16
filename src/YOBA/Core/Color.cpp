@@ -50,9 +50,9 @@ namespace YOBA {
 	}
 
 	void RGB888Color::interpolateTo(const RGB888Color &second, const float position) {
-		_r = static_cast<uint8_t>(interpolate(static_cast<float>(_r), static_cast<float>(second._r), position));
-		_g = static_cast<uint8_t>(interpolate(static_cast<float>(_g), static_cast<float>(second._g), position));
-		_b = static_cast<uint8_t>(interpolate(static_cast<float>(_b), static_cast<float>(second._b), position));
+		_r = static_cast<uint8_t>(Math::interpolate(_r, second._r, position));
+		_g = static_cast<uint8_t>(Math::interpolate(_g, second._g, position));
+		_b = static_cast<uint8_t>(Math::interpolate(_b, second._b, position));
 	}
 
 	// -------------------------------- MonochromeColor --------------------------------

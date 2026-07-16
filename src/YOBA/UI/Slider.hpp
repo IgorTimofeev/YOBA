@@ -6,16 +6,12 @@
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/Traits/ValueElement.hpp>
+#include <YOBA/UI/Traits/TrackColorElement.hpp>
+#include <YOBA/UI/Traits/FillColorElement.hpp>
 
 namespace YOBA {
-	class Slider : public Control, public ValueElement<float> {
+	class Slider : public Control, public TrackColorElement, public FillColorElement, public ValueElement<float> {
 		public:
-			const Color* getTrackColor() const;
-			void setTrackColor(const Color* value);
-
-			const Color* getFillColor() const;
-			void setFillColor(const Color* value);
-
 			const Color* getHandleColor() const;
 			void setHandleColor(const Color* value);
 
@@ -86,10 +82,6 @@ namespace YOBA {
 			// Track
 			uint8_t _trackSize = 4;
 			uint8_t _trackCornerRadius = 2;
-			const Color* _trackColor = nullptr;
-
-			// Fill
-			const Color* _fillColor = nullptr;
 
 			// Handle
 			Size _handleSize {8, 8 };

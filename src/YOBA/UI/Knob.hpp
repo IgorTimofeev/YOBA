@@ -33,7 +33,7 @@ namespace YOBA {
 
 		private:
 			float _angle = 0;
-			float _angleStep = toRadians(10);
+			float _angleStep = Math::toRadians(10);
 			const Color* _lineColor = nullptr;
 			const Color* _middleColor = nullptr;
 			std::function<void(float, float)> _onRotate = nullptr;

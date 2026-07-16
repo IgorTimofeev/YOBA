@@ -672,6 +672,71 @@ namespace YOBA {
 		while (xe < --radius);
 	}
 
+	void Renderer::strokeCircle(const Point& center, const uint16_t outerRadius, const uint16_t thickness, const Color* color) {
+		if (thickness == 0) {
+			return;
+		}
+		else if (thickness == 1) {
+			strokeCircle(center, outerRadius, color);
+			return;
+		}
+
+		const int32_t innerRadius = static_cast<int32_t>(outerRadius) - thickness;
+
+		if (innerRadius <= 0) {
+			fillCircle(center, outerRadius, color);
+			return;
+		}
+
+		if (!color)
+			return;
+
+		// Квадраты радиусов для проверки условий (чтобы избежать sqrt)
+		const int32_t outerRadiusSq = static_cast<int32_t>(outerRadius) * outerRadius;
+		const int32_t innerRadiusSq = innerRadius * innerRadius;
+
+		// Начальные X-координаты для верхних/нижних точек (y = 0)
+		int16_t xOut = outerRadius;
+		int16_t xIn = innerRadius;
+
+		// Идем строго по строкам от центральной оси Y вверх и вниз
+		for (int16_t y = 0; y <= outerRadius; ++y) {
+			const int32_t ySq = static_cast<int32_t>(y) * y;
+
+			// Корректируем внешнюю границу X для текущего Y
+			while (xOut >= 0 && (static_cast<int32_t>(xOut) * xOut + ySq) > outerRadiusSq) {
+				xOut--;
+			}
+
+			// Корректируем внутреннюю границу X для текущего Y
+			while (xIn >= 0 && (static_cast<int32_t>(xIn) * xIn + ySq) > innerRadiusSq) {
+				xIn--;
+			}
+
+			// Левая граница закраски — сразу за внутренним радиусом, правая — внешний радиус
+			const int16_t xLeftBoundary = xIn + 1;
+			const int16_t xRightBoundary = xOut;
+
+			if (xLeftBoundary <= xRightBoundary) {
+				const uint16_t length = xRightBoundary - xLeftBoundary + 1;
+
+				// 1. Отрисовка строки в верхней половине (+y)
+				// Правый сектор
+				strokeHorizontalLine(Point{static_cast<int16_t>(center.getX() + xLeftBoundary), static_cast<int16_t>(center.getY() + y)}, length, color);
+				// Левый сектор (зеркально)
+				strokeHorizontalLine(Point{static_cast<int16_t>(center.getX() - xRightBoundary), static_cast<int16_t>(center.getY() + y)}, length, color);
+
+				// 2. Отрисовка строки в нижней половине (-y) — пропускаем y=0, чтобы не дублировать центр
+				if (y > 0) {
+					// Правый сектор
+					strokeHorizontalLine(Point{static_cast<int16_t>(center.getX() + xLeftBoundary), static_cast<int16_t>(center.getY() - y)}, length, color);
+					// Левый сектор (зеркально)
+					strokeHorizontalLine(Point{static_cast<int16_t>(center.getX() - xRightBoundary), static_cast<int16_t>(center.getY() - y)}, length, color);
+				}
+			}
+		}
+	}
+
 	void Renderer::fillCircle(const Point& center, uint16_t radius, const Color* color) {
 		if (radius == 0 || !color)
 			return;
@@ -707,84 +772,201 @@ namespace YOBA {
 		}
 	}
 
-	// Counter-clockwise, started from middle right. For example, in a unit circle,
-	// drawing will start from x = 1, y = 0:
-	//
-	//         y
-	//         |  <- )
-	//         |       )
-	// --------+------- * x
-	//         |
-	//         |
-	void Renderer::strokeArc(const Point& center, const uint16_t radius, float startAngleRad, float endAngleRad, const Color* color) {
-		if (startAngleRad == endAngleRad) {
-			if (startAngleRad == 0)
-				return;
+	void Renderer::strokeArc(const Point& center, const uint16_t radius, float fromAngleRad,  float arcMeasureRad, const Color* color) {
+		// Nothing to draw
+		if (arcMeasureRad <= 0)
+			return;
 
+		if (arcMeasureRad > Math::twoPi)
+			arcMeasureRad = Math::twoPi;
+
+		// 360 deg circle
+		if (arcMeasureRad == Math::twoPi) {
 			strokeCircle(center, radius, color);
 			return;
 		}
 
-		// Normalizing
-		while (startAngleRad < 0)
-			startAngleRad += 2 * std::numbers::pi_v<float>;
+		// Normalizing angles
+		fromAngleRad = Math::normalizeAngleRad2Pi(fromAngleRad);
+		const auto toAngleRad = Math::normalizeAngleRad2Pi(fromAngleRad + arcMeasureRad);
+		const auto arcMeasureGreaterPi = arcMeasureRad > Math::pi;
 
-		while (endAngleRad < 0)
-			endAngleRad += 2 * std::numbers::pi_v<float>;
+		// Computing trigonometric values only once
+		const auto cosFrom = std::cosf(fromAngleRad);
+		const auto sinFrom = std::sinf(fromAngleRad);
+		const auto cosTo = std::cosf(toAngleRad);
+		const auto sinTo = std::sinf(toAngleRad);
 
-		if (endAngleRad < startAngleRad)
-			std::swap(startAngleRad, endAngleRad);
+		// Bresenham's algorithm
+		int16_t x = 0;
+		int16_t y = radius;
+		int16_t d = 3 - 2 * radius;
 
-		int32_t x = 0;
-		int32_t y = radius;
-		int32_t d = 3 - 2 * radius;
+		const auto isPointInArc = [&](const int16_t dx, const int16_t dy) noexcept {
+			const auto dyF = static_cast<float>(dy);
+			const auto dxF = -static_cast<float>(dx);
 
-		const auto checkAngle = [startAngleRad, endAngleRad](const int32_t x1, const int32_t y1) {
-			auto angle = getAtan2Fast(static_cast<float>(y1), static_cast<float>(x1));
+			// Cross product with the initial angle vectors (CCW)
+			const auto gteFrom = dxF * sinFrom - dyF * cosFrom >= 0.0f;
+			const auto lteTo = dxF * sinTo - dyF * cosTo <= 0.0f;
 
-			while (angle < 0)
-				angle += 2 * std::numbers::pi_v<float>;
-
-			return angle >= startAngleRad && angle <= endAngleRad;
+			// If sweep angle > 180 deg
+			return
+				arcMeasureGreaterPi
+				? gteFrom || lteTo
+				: gteFrom && lteTo;
 		};
 
+		auto checkAndPutPixel = [&](const int16_t dx, const int16_t dy) noexcept {
+			if (isPointInArc(dx, dy)) {
+				putPixel({ center.getX() + dx, center.getY() + dy }, color);
+			}
+		};
+
+		// 8 octants at once
 		while (x <= y) {
-			if (checkAngle(x, y))
-				putPixel(Point(center.getX() + x, center.getY() - y), color);
+			checkAndPutPixel(y, -x);
+			checkAndPutPixel(y, x);
 
-			if (checkAngle(y, x))
-				putPixel(Point(center.getX() + y, center.getY() - x), color);
+			checkAndPutPixel(x, -y);
+			checkAndPutPixel(-x, -y);
 
-			if (checkAngle(-x, y))
-				putPixel(Point(center.getX() - x, center.getY() - y), color);
+			checkAndPutPixel(-y, -x);
+			checkAndPutPixel(-y, x);
 
-			if (checkAngle(-y, x))
-				putPixel(Point(center.getX() - y, center.getY() - x), color);
+			checkAndPutPixel(x, y);
+			checkAndPutPixel(-x, y);
 
-			if (checkAngle(-x, -y))
-				putPixel(Point(center.getX() - x, center.getY() + y), color);
-
-			if (checkAngle(-y, -x))
-				putPixel(Point(center.getX() - y, center.getY() + x), color);
-
-			if (checkAngle(x, -y))
-				putPixel(Point(center.getX() + x, center.getY() + y), color);
-
-			if (checkAngle(y, -x))
-				putPixel(Point(center.getX() + y, center.getY() + x), color);
-
-			if (d < 0) {
-				d = d + 4 * x + 6;
+			if (d >= 0) {
+				d += 4 * (x - y) + 10;
+				y--;
 			}
 			else {
-				d = d + 4 * (x - y) + 10;
-				y--;
+				d += 4 * x + 6;
 			}
 
 			x++;
 		}
 	}
 
+	void Renderer::strokeArc(const Point& center, const uint16_t outerRadius, const uint16_t thickness, float fromAngleRad, float arcMeasureRad, const Color* color) {
+		// Nothing to draw
+		if (thickness == 0) {
+		    return;
+	    }
+		// Simple non-THICC arc
+		else if (thickness == 1) {
+			strokeArc(center, outerRadius, fromAngleRad, arcMeasureRad, color);
+			return;
+		}
+
+		if (arcMeasureRad <= 0)
+			return;
+
+		if (arcMeasureRad > Math::twoPi)
+			arcMeasureRad = Math::twoPi;
+
+		if (arcMeasureRad == Math::twoPi) {
+			strokeCircle(center, outerRadius, color);
+			return;
+		}
+
+		fromAngleRad = Math::normalizeAngleRad2Pi(fromAngleRad);
+		const auto toAngleRad = Math::normalizeAngleRad2Pi(fromAngleRad + arcMeasureRad);
+		const auto arcMeasureGreaterPi = arcMeasureRad > Math::pi;
+
+	    const int32_t innerRadius = static_cast<int32_t>(outerRadius) - thickness;
+	    const int32_t outerRadiusSq = static_cast<int32_t>(outerRadius) * outerRadius;
+	    const int32_t innerRadiusSq = innerRadius * innerRadius;
+
+	    const float cosFrom = std::cos(fromAngleRad);
+	    const float sinFrom = std::sin(fromAngleRad);
+	    const float cosTo = std::cos(toAngleRad);
+	    const float sinTo = std::sin(toAngleRad);
+
+	    int16_t xOut = outerRadius;
+	    int16_t xIn = innerRadius;
+
+		const auto isPointInArc = [&](const int16_t dx, const int16_t dy) noexcept {
+			const auto dyF = static_cast<float>(dy);
+			const auto dxF = -static_cast<float>(dx);
+
+			const auto gteFrom = dxF * sinFrom - dyF * cosFrom >= 0.0f;
+			const auto lteTo = dxF * sinTo - dyF * cosTo <= 0.0f;
+
+			return
+				arcMeasureGreaterPi
+				? gteFrom || lteTo
+				: gteFrom && lteTo;
+		};
+
+	    for (int16_t y = 0; y <= outerRadius; ++y) {
+	        const int32_t ySq = static_cast<int32_t>(y) * y;
+
+	        while (xOut >= 0 && (static_cast<int32_t>(xOut) * xOut + ySq) > outerRadiusSq) {
+	            xOut--;
+	        }
+	        while (xIn >= 0 && (static_cast<int32_t>(xIn) * xIn + ySq) > innerRadiusSq) {
+	            xIn--;
+	        }
+
+	        int16_t xLeftBoundary = xIn + 1;
+	        int16_t xRightBoundary = xOut;
+
+	        if (xLeftBoundary <= xRightBoundary) {
+	            const auto drawSegmentInRow = [&](const int16_t ySign) noexcept {
+	                const int16_t currentY = center.getY() + y * ySign;
+	                int16_t startX = -1;
+	                uint16_t length = 0;
+
+	               const auto flushSegment = [&] noexcept {
+	                    if (length > 0) {
+	                        strokeHorizontalLine({ startX, currentY }, length, color);
+	                        length = 0;
+	                        startX = -1;
+	                    }
+	                };
+
+	            	// Right circle side (center + x)
+	                for (int16_t x = xLeftBoundary; x <= xRightBoundary; ++x) {
+	                    if (isPointInArc(x, y * ySign)) {
+	                        if (startX == -1)
+	                        	startX = center.getX() + x;
+
+	                        length++;
+	                    }
+	                	else {
+	                        flushSegment();
+	                    }
+	                }
+	                flushSegment();
+
+	            	// Left circle side (center - x)
+	                for (int16_t x = xRightBoundary; x >= xLeftBoundary; --x) {
+	                    if (isPointInArc(-x, y * ySign)) {
+	                        if (startX == -1)
+	                        	startX = center.getX() - x;
+
+	                        length++;
+	                    }
+	                	else {
+	                        flushSegment();
+	                    }
+	                }
+	                flushSegment();
+	            };
+
+	            // Upper circle row (y + 1)
+	            drawSegmentInRow(1);
+
+	        	// Lower circle row (y - 1) EXCEPT y = 0 (already drawn in upper)
+	            if (y > 0) {
+	                drawSegmentInRow(-1);
+	            }
+	        }
+	    }
+	}
+	
 	void Renderer::strokeCatmullRomSpline(const Point* points, const size_t pointsLength, const Color* color, const uint16_t segmentsPerCurve, const float tension) {
 		assert(pointsLength >= 4 && 1);
 
@@ -846,8 +1028,8 @@ namespace YOBA {
 		// http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
 		// Volkan SALMA
 
-		constexpr float ONEQTR_PI = std::numbers::pi_v<float> / 4.0;
-		constexpr float THRQTR_PI = 3.0 * std::numbers::pi_v<float> / 4.0;
+		constexpr float ONEQTR_PI = Math::pi / 4.0;
+		constexpr float THRQTR_PI = 3.0 * Math::pi / 4.0;
 
 		float r, angle;
 		const float abs_y = std::fabs(y) + 1e-10f;      // kludge to prevent 0/0 condition

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <numbers>
 #include <vector>
 
+#include <YOBA/Core/Math.hpp>
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
@@ -52,7 +52,7 @@ namespace YOBA::spatial {
 			Vector3F _cameraRotation {};
 
 			// 90 deg by default
-			float _FOV = std::numbers::pi_v<float> / 2.f;
+			float _FOV = Math::halfPi;
 
 			float _nearPlaneDistance = 0.1f;
 			float _farPlaneDistance = 1000.f;

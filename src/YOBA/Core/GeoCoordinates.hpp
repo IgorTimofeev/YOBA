@@ -2,8 +2,8 @@
 
 #include <cstdint>
 #include <cmath>
-#include <numbers>
 
+#include <YOBA/Core/Math.hpp>
 #include <YOBA/Core/Vector3.hpp>
 
 namespace YOBA {
@@ -30,9 +30,9 @@ namespace YOBA {
 			}
 
 			constexpr static float equatorialRadiusMeters = 6378137.f;
-			constexpr static float equatorialLengthMeters = 2.f * std::numbers::pi_v<float> * equatorialRadiusMeters;
-			constexpr static float equatorialRadiansPerMeter = 2.f * std::numbers::pi_v<float> / equatorialLengthMeters;
-			constexpr static float equatorialMetersPerRadian = equatorialLengthMeters / (2.f * std::numbers::pi_v<float>);
+			constexpr static float equatorialLengthMeters = Math::twoPi * equatorialRadiusMeters;
+			constexpr static float equatorialRadiansPerMeter = Math::twoPi / equatorialLengthMeters;
+			constexpr static float equatorialMetersPerRadian = equatorialLengthMeters / Math::twoPi;
 
 			Vector3F toCartesian(float radius) const {
 				radius += altitude;

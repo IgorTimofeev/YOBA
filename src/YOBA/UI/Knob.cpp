@@ -26,7 +26,7 @@ namespace YOBA {
 		// Line
 		if (getLineColor()) {
 			const auto centerF = static_cast<Vector2F>(center);
-			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - toRadians(90));
+			const auto lineEnd = centerF + Vector2F(radius, 0).rotate(_angle - Math::toRadians(90));
 			const auto lineStart = centerF + (lineEnd - centerF) * 0.8f;
 
 			renderer->strokeLine(
@@ -45,7 +45,7 @@ namespace YOBA {
 		}
 		else if (event->is<PointerDragEvent>()) {
 			const auto oldAngle = _angle;
-			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getRenderingBounds().getCenter()) - toRadians(90);
+			_angle = reinterpret_cast<PointerDragEvent*>(event)->getPosition().getRotationFloat(getRenderingBounds().getCenter()) - Math::toRadians(90);
 
 			if (_onRotate)
 				_onRotate(oldAngle, _angle);
