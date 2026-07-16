@@ -134,4 +134,29 @@ namespace YOBA {
 	constexpr RGB565Color HSBColor::toRGB565BE() const {
 		return toRGB888().toRGB565BE();
 	}
+
+	constexpr void HSBColor::toModel(const ColorModel targetModel, const std::function<void(const Color* color)>& convertedColorHandler) const {
+		switch (targetModel) {
+			case ColorModel::RGB565: {
+				const auto color = toRGB565BE();
+				convertedColorHandler(&color);
+
+				break;
+			}
+			case ColorModel::RGB888: {
+				const auto color = toRGB888();
+				convertedColorHandler(&color);
+
+				break;
+			}
+			case ColorModel::ARGB: {
+				const auto color = toARGB();
+				convertedColorHandler(&color);
+
+				break;
+			}
+			default:
+				break;
+		}
+	}
 }

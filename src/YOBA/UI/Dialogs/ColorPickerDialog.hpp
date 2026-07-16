@@ -6,13 +6,7 @@
 namespace YOBA {
 	class ColorPickerDialog : public TitleStackLayoutBottomSheetDialog {
 		public:
-			ColorPickerDialog() {
-				titleTextView.setText("Choose color");
-
-				// Color palette
-				colorPalette.setHeight(130);
-				contentStackLayout += &colorPalette;
-			}
+			ColorPickerDialog();
 
 			ColorPalette colorPalette {};
 	};

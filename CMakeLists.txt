@@ -82,7 +82,14 @@ set(YOBA_SOURCES
 	src/YOBA/UI/TextField.cpp
 	src/YOBA/UI/TextView.cpp
 	src/YOBA/UI/WrapLayout.cpp
+	src/YOBA/UI/ColorPalette.cpp
+	src/YOBA/UI/ColorPicker.cpp
+	src/YOBA/UI/Dialogs/Dialog.cpp
+	src/YOBA/UI/Dialogs/BottomSlidingDialog.cpp
+	src/YOBA/UI/Dialogs/ColorPickerDialog.cpp
 )
+
+#file(GLOB_RECURSE YOBA_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 
 if(ESP_PLATFORM)
 	idf_component_register(

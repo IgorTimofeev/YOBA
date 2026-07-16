@@ -2,22 +2,14 @@
 
 #include <YOBA/UI/Dialogs/Dialog.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
+#include <YOBA/UI/TextView.hpp>
+#include <YOBA/UI/Shapes/RectangularShape.hpp>
 #include <YOBA/UI/Transforms/MarginTransform.hpp>
 
 namespace YOBA {
 	class BottomSheetDialog : public RelativeStackLayout {
 		public:
-			BottomSheetDialog() {
-				// Overlay
-				*this += &overlayShape;
-
-				// Content and background
-				setAutoSize(&contentAndBackgroundLayout);
-				*this += &contentAndBackgroundLayout;
-
-				// Background
-				contentAndBackgroundLayout += &backgroundRectangle;
-			}
+			BottomSheetDialog();
 
 			DialogOverlayShape overlayShape {};
 
@@ -27,15 +19,7 @@ namespace YOBA {
 
 	class StackBottomSheetDialog : public BottomSheetDialog {
 		public:
-			StackBottomSheetDialog() {
-				// Content layout
-				contentStackLayout.setGap(10);
-
-				contentLayoutMarginTransform.setMargin({ 15 });
-				contentStackLayout.setLayoutTransform(&contentLayoutMarginTransform);
-
-				contentAndBackgroundLayout += &contentStackLayout;
-			}
+			StackBottomSheetDialog();
 
 			MarginTransform contentLayoutMarginTransform {};
 			StackLayout contentStackLayout {};
@@ -43,9 +27,7 @@ namespace YOBA {
 
 	class TitleStackLayoutBottomSheetDialog : public StackBottomSheetDialog {
 		public:
-			TitleStackLayoutBottomSheetDialog() {
-				contentStackLayout += &titleTextView;
-			}
+			TitleStackLayoutBottomSheetDialog();
 
 			TextView titleTextView {};
 	};

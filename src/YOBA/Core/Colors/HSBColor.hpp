@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/Core/Colors/Color.hpp>
 
 namespace YOBA {
@@ -15,7 +17,7 @@ namespace YOBA {
 
 			}
 
-			constexpr HSBColor() : HSBColor(0, 1.f, 1.f) {
+			constexpr HSBColor() : HSBColor(0.0f, 1.f, 1.f) {
 
 			}
 
@@ -74,6 +76,7 @@ namespace YOBA {
 			constexpr RGB888Color toRGB888() const;
 			constexpr ARGBColor toARGB() const;
 			constexpr RGB565Color toRGB565BE() const;
+			constexpr void toModel(const ColorModel targetModel, const std::function<void(const Color* color)>& convertedColorHandler) const;
 
 		private:
 			float _h = 0;

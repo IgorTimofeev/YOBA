@@ -120,10 +120,10 @@ namespace YOBA {
 		if (intersection.getWidth() > 1 || intersection.getHeight() > 1) {
 			fillRectangleNative(intersection, color);
 		}
-		else if (intersection.getWidth() == 1) {
+		else if (intersection.getWidth() == 1 && intersection.getHeight() > 1) {
 			strokeVerticalLine(intersection.getPosition(), intersection.getHeight(), color);
 		}
-		else if (intersection.getHeight() == 1) {
+		else if (intersection.getWidth() > 1 && intersection.getHeight() == 1) {
 			strokeHorizontalLine(intersection.getPosition(), intersection.getWidth(), color);
 		}
 		else {

@@ -60,6 +60,7 @@
 #include <YOBA/UI/Divider.hpp>
 #include <YOBA/UI/Badge.hpp>
 #include <YOBA/UI/ColorPalette.hpp>
+#include <YOBA/UI/ColorPicker.hpp>
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>
