@@ -35,7 +35,7 @@ namespace YOBA {
 				_b = b;
 			}
 
-			RGB888Color toRGB888() const;
+			constexpr RGB888Color toRGB888() const;
 
 		private:
 			float _h = 0;

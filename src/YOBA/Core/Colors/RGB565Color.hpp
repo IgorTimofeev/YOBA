@@ -15,6 +15,6 @@ namespace YOBA {
 
 			}
 
-			RGB888Color toRGB888LE() const;
+			constexpr RGB888Color toRGB888LE() const;
 	};
 }
