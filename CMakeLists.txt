@@ -12,7 +12,6 @@ set(YOBA_SOURCES
 	src/YOBA/Core/Events/ScreenEvent.cpp
 	src/YOBA/Core/Events/ScrollIntoViewEvent.cpp
 	src/YOBA/Core/Font.cpp
-	src/YOBA/Core/Gradient.cpp
 	src/YOBA/Core/Margin.cpp
 	src/YOBA/Core/Rectangle.cpp
 	src/YOBA/Core/Size.cpp

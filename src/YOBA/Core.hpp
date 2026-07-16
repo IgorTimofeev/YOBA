@@ -15,7 +15,6 @@
 #include <YOBA/Core/Text.hpp>
 #include <YOBA/Core/Glyph.hpp>
 #include <YOBA/Core/Font.hpp>
-#include <YOBA/Core/Gradient.hpp>
 #include <YOBA/Core/Image.hpp>
 #include <YOBA/Core/UTF-8.hpp>
 

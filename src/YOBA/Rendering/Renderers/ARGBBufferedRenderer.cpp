@@ -40,7 +40,12 @@ namespace YOBA {
 		const auto pixelBufferPtr = _pixelBuffer + getPixelIndex(point) * 3;
 		const auto argbColor = reinterpret_cast<const ARGBColor*>(color);
 
-		if (argbColor->getA() < 0xFF) {
+		if (argbColor->getA() == 0xFF) {
+			pixelBufferPtr[0] = argbColor->getR();
+			pixelBufferPtr[1] = argbColor->getG();
+			pixelBufferPtr[2] = argbColor->getB();
+		}
+		else {
 			RGB888Color::blend(
 				pixelBufferPtr[0],
 				pixelBufferPtr[1],
@@ -52,34 +57,13 @@ namespace YOBA {
 				argbColor->getB()
 			);
 		}
-		else {
-			pixelBufferPtr[0] = argbColor->getR();
-			pixelBufferPtr[1] = argbColor->getG();
-			pixelBufferPtr[2] = argbColor->getB();
-		}
 	}
 
 	void ARGBBufferedRenderer::strokeHorizontalLineNative(const Point& point, const uint16_t length, const Color* color) {
 		const auto argbColor = reinterpret_cast<const ARGBColor*>(color);
 		auto pixelBufferPtr = _pixelBuffer + getPixelIndex(point.getX(), point.getY()) * 3;
 
-		if (argbColor->getA() < 0xFF) {
-			for (size_t x = 0; x < length; ++x) {
-				RGB888Color::blend(
-					pixelBufferPtr[0],
-					pixelBufferPtr[1],
-					pixelBufferPtr[2],
-
-					argbColor->getA(),
-					argbColor->getR(),
-					argbColor->getG(),
-					argbColor->getB()
-				);
-
-				pixelBufferPtr += 3;
-			}
-		}
-		else {
+		if (argbColor->getA() == 0xFF) {
 			// 1st pixel
 			pixelBufferPtr[0] = argbColor->getR();
 			pixelBufferPtr[1] = argbColor->getG();
@@ -99,6 +83,22 @@ namespace YOBA {
 			if (copiedBytes < lengthBytes)
 				std::memcpy(pixelBufferPtr + copiedBytes, pixelBufferPtr, lengthBytes - copiedBytes);
 		}
+		else {
+			for (size_t x = 0; x < length; ++x) {
+				RGB888Color::blend(
+					pixelBufferPtr[0],
+					pixelBufferPtr[1],
+					pixelBufferPtr[2],
+
+					argbColor->getA(),
+					argbColor->getR(),
+					argbColor->getG(),
+					argbColor->getB()
+				);
+
+				pixelBufferPtr += 3;
+			}
+		}
 	}
 
 	void ARGBBufferedRenderer::strokeVerticalLineNative(const Point& point, const uint16_t length, const Color* color) {
@@ -106,7 +106,16 @@ namespace YOBA {
 		const uint16_t scanlineLength = (_target->getSize().getWidth() - 1) * 3;
 		const auto argbColor = reinterpret_cast<const ARGBColor*>(color);
 
-		if (argbColor->getA() < 0xFF) {
+		if (argbColor->getA() == 0xFF) {
+			for (size_t i = 0; i < length; i++) {
+				pixelBufferPtr[0] = argbColor->getR();
+				pixelBufferPtr[1] = argbColor->getG();
+				pixelBufferPtr[2] = argbColor->getB();
+
+				pixelBufferPtr += 3 + scanlineLength;
+			}
+		}
+		else {
 			for (size_t i = 0; i < length; i++) {
 				RGB888Color::blend(
 					pixelBufferPtr[0],
@@ -122,46 +131,13 @@ namespace YOBA {
 				pixelBufferPtr += 3 + scanlineLength;
 			}
 		}
-		else {
-			for (size_t i = 0; i < length; i++) {
-				pixelBufferPtr[0] = argbColor->getR();
-				pixelBufferPtr[1] = argbColor->getG();
-				pixelBufferPtr[2] = argbColor->getB();
-
-				pixelBufferPtr += 3 + scanlineLength;
-			}
-		}
 	}
 
 	void ARGBBufferedRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
 		auto pixelBufferPtr = _pixelBuffer + getPixelIndex(bounds.getX(), bounds.getY()) * 3;
 		const auto argbColor = reinterpret_cast<const ARGBColor*>(color);
 
-		if (argbColor->getA() < 0xFF) {
-			const auto scanlineLength = (_target->getSize().getWidth() - bounds.getWidth()) * 3;
-
-			RGB888Color blended;
-
-			for (size_t y = 0; y < bounds.getHeight(); y++) {
-				for (size_t x = 0; x < bounds.getWidth(); x++) {
-					RGB888Color::blend(
-						pixelBufferPtr[0],
-						pixelBufferPtr[1],
-						pixelBufferPtr[2],
-
-						argbColor->getA(),
-						argbColor->getR(),
-						argbColor->getG(),
-						argbColor->getB()
-					);
-
-					pixelBufferPtr += 3;
-				}
-
-				pixelBufferPtr += scanlineLength;
-			}
-		}
-		else {
+		if (argbColor->getA() == 0xFF) {
 			// 1st pixel
 			pixelBufferPtr[0] = argbColor->getR();
 			pixelBufferPtr[1] = argbColor->getG();
@@ -187,10 +163,32 @@ namespace YOBA {
 			for (size_t y = 1; y < bounds.getHeight(); ++y)
 				std::memcpy(pixelBufferPtr + y * scanlineWidth, pixelBufferPtr, boundsWidthBytes);
 		}
+		else {
+			const auto scanlineLength = (_target->getSize().getWidth() - bounds.getWidth()) * 3;
+
+			for (size_t y = 0; y < bounds.getHeight(); y++) {
+				for (size_t x = 0; x < bounds.getWidth(); x++) {
+					RGB888Color::blend(
+						pixelBufferPtr[0],
+						pixelBufferPtr[1],
+						pixelBufferPtr[2],
+
+						argbColor->getA(),
+						argbColor->getR(),
+						argbColor->getG(),
+						argbColor->getB()
+					);
+
+					pixelBufferPtr += 3;
+				}
+
+				pixelBufferPtr += scanlineLength;
+			}
+		}
 	}
 
 	void ARGBBufferedRenderer::putImageNative(const Point& position, const Image* image) {
-		if (image->getColorModel() != ColorModel::RGB888)
+		if (image->getColorModel() != ColorModel::ARGB)
 			return;
 
 		auto x = position.getX();
@@ -213,10 +211,12 @@ namespace YOBA {
 		auto bitmapPtr = image->getBitmap();
 
 		// With alpha
-		if (image->getOptions() & ImageOptions::alpha1Bit) {
+		if (image->getOptions() & ImageOptions::alpha8Bit) {
 			uint8_t bitmapBitIndex = 0;
 			bool containsYX;
+			uint8_t alpha;
 			uint32_t value24Bit;
+			uint8_t* value24BitPtr;
 
 			for (imageY = 0; imageY < image->getSize().getHeight(); imageY++) {
 				containsY = y >= clipY1 && y <= clipY2;
@@ -224,30 +224,47 @@ namespace YOBA {
 				for (imageX = 0; imageX < image->getSize().getWidth(); imageX++) {
 					containsYX = containsY && x >= clipX1 && x <= clipX2;
 
-					// Non-transparent
+					// 0x00 => alpha < 0xFF
 					if (*bitmapPtr & (1 << bitmapBitIndex)) {
 						bitmapBitIndex++;
 
-						// Easy
 						if (bitmapBitIndex > 7) {
 							bitmapBitIndex = 0;
 							bitmapPtr++;
-
-							if (containsYX)
-								std::memcpy(pixelBufferPtr, bitmapPtr, 3);
 						}
-						// Dark souls
-						else {
-							if (containsYX) {
-								value24Bit = *reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex;
 
+						// Decoding alpha value
+						alpha = *reinterpret_cast<const uint16_t*>(bitmapPtr) >> bitmapBitIndex;
+						bitmapPtr++;
+
+						if (containsYX) {
+							value24Bit = *reinterpret_cast<const uint32_t*>(bitmapPtr) >> bitmapBitIndex;
+
+							// )))
+							if (alpha == 0xFF) {
 								std::memcpy(pixelBufferPtr, &value24Bit, 3);
+							}
+							// (((
+							else {
+								value24BitPtr = reinterpret_cast<uint8_t*>(&value24Bit);
+
+								RGB888Color::blend(
+									pixelBufferPtr[0],
+									pixelBufferPtr[1],
+									pixelBufferPtr[2],
+
+									alpha,
+									value24BitPtr[0],
+									value24BitPtr[1],
+									value24BitPtr[2]
+								);
 							}
 						}
 
 						bitmapPtr += 3;
 					}
-					// Transparent
+					// alpha == 0xFF
+					// Pixel can be safely skipped
 					else {
 						bitmapBitIndex++;
 
