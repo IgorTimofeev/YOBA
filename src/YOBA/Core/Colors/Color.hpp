@@ -9,10 +9,12 @@ namespace YOBA {
 		RGB565,
 		RGB666,
 		RGB888,
-		ARGB8888,
+		ARGB,
 		HSB,
 		indexed8
 	};
+
+	#pragma pack(push, 1)
 
 	class Color {
 		public:
@@ -20,8 +22,6 @@ namespace YOBA {
 
 			}
 			
-			constexpr virtual ~Color() = default;
-
 			constexpr ColorModel getModel() const {
 				return _model;
 			}
@@ -35,7 +35,7 @@ namespace YOBA {
 					case ColorModel::RGB888:
 						return 3;
 
-					case ColorModel::ARGB8888:
+					case ColorModel::ARGB:
 						return 4;
 
 					default:
@@ -55,7 +55,7 @@ namespace YOBA {
 					case ColorModel::RGB888:
 						return pixelCount * 3;
 
-					case ColorModel::ARGB8888:
+					case ColorModel::ARGB:
 						return pixelCount * 4;
 
 					default:
@@ -86,4 +86,6 @@ namespace YOBA {
 		private:
 			ColorModel _model;
 	};
+
+	#pragma pack(pop)
 }

@@ -5,8 +5,12 @@
 namespace YOBA {
 	class RGB888Color;
 
+	#pragma pack(push, 1)
+
 	class HSBColor : public Color {
 		public:
+			friend RGB888Color;
+
 			constexpr HSBColor(const float h, const float s, const float b) : Color(ColorModel::HSB), _h(h), _s(s), _b(b) {
 
 			}
@@ -42,4 +46,6 @@ namespace YOBA {
 			float _s = 0;
 			float _b = 0;
 	};
+
+	#pragma pack(pop)
 }

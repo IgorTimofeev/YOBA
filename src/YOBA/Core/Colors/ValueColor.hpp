@@ -3,6 +3,8 @@
 #include <YOBA/Core/Colors/Color.hpp>
 
 namespace YOBA {
+	#pragma pack(push, 1)
+
 	template<typename TValue>
 	class ValueColor : public Color {
 		public:
@@ -21,4 +23,6 @@ namespace YOBA {
 		protected:
 			TValue _value;
 	};
+
+	#pragma pack(pop)
 }

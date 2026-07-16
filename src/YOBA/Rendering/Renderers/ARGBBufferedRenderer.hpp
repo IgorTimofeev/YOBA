@@ -3,7 +3,7 @@
 #include <YOBA/Rendering/Renderers/BufferedRenderer.hpp>
 
 namespace YOBA {
-	class RGB888BufferedRenderer : public BufferedRenderer {
+	class ARGBBufferedRenderer : public BufferedRenderer {
 		public:
 			void flush() override;
 

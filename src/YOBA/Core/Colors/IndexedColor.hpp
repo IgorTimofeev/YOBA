@@ -3,6 +3,8 @@
 #include <YOBA/Core/Colors/Color.hpp>
 
 namespace YOBA {
+	#pragma pack(push, 1)
+
 	template<typename TIndex>
 	class IndexedColor : public Color {
 		public:
@@ -36,4 +38,6 @@ namespace YOBA {
 
 			}
 	};
+
+	#pragma pack(pop)
 }

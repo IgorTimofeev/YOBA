@@ -17,4 +17,4 @@
 #include <YOBA/Rendering/Renderers/IndexedColors8TransactionalBufferedRenderer.hpp>
 #include <YOBA/Rendering/Renderers/RGB565TransactionalBufferedRenderer.hpp>
 #include <YOBA/Rendering/Renderers/MonochromeBufferedRenderer.hpp>
-#include <YOBA/Rendering/Renderers/RGB888BufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/ARGBBufferedRenderer.hpp>

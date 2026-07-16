@@ -6,6 +6,7 @@
 #include <YOBA/Core/Colors/RGB565Color.hpp>
 #include <YOBA/Core/Colors/RGB666Color.hpp>
 #include <YOBA/Core/Colors/RGB888Color.hpp>
+#include <YOBA/Core/Colors/ARGBColor.hpp>
 #include <YOBA/Core/Colors/HSBColor.hpp>
 #include <YOBA/Core/Math.hpp>
 
@@ -57,21 +58,44 @@ namespace YOBA {
 		return MonochromeColor(_r > 0 || _g > 0 || _b > 0);
 	}
 
-	constexpr RGB888Color RGB888Color::interpolateTo(const RGB888Color& second, const float position) const {
-		return {
-			static_cast<uint8_t>(Math::interpolate(_r, second._r, position)),
-			static_cast<uint8_t>(Math::interpolate(_g, second._g, position)),
-			static_cast<uint8_t>(Math::interpolate(_b, second._b, position))
-		};
+	constexpr void RGB888Color::interpolateTo(const RGB888Color& second, const float position) {
+		_r = static_cast<uint8_t>(Math::interpolate(_r, second._r, position));
+		_g = static_cast<uint8_t>(Math::interpolate(_g, second._g, position));
+		_b = static_cast<uint8_t>(Math::interpolate(_b, second._b, position));
 	}
 
 	constexpr uint16_t RGB888Color::toUint16RGB565LE() const {
 		return ((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3);
 	}
 
-	// -------------------------------- ARGB8888 --------------------------------
+	constexpr void RGB888Color::blendWith(const ARGBColor& overlayColor) {
+		blend(
+			_r,
+			_g,
+			_b,
 
+			overlayColor._a,
+			overlayColor._r,
+			overlayColor._g,
+			overlayColor._b
+		);
+	}
 
+	// -------------------------------- ARGB --------------------------------
+
+	constexpr void ARGBColor::blendWith(const ARGBColor& overlayColor) {
+		blend(
+			_a,
+			_r,
+			_g,
+			_b,
+
+			overlayColor._a,
+			overlayColor._r,
+			overlayColor._g,
+			overlayColor._b
+		);
+	}
 
 	// -------------------------------- HSB --------------------------------
 

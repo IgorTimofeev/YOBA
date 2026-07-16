@@ -10,6 +10,7 @@ namespace YOBA {
 		enum : uint8_t {
 			none =      0b00000000,
 			alpha1Bit = 0b00000001,
+			alpha8Bit = 0b00000010,
 		};
 	}
 
