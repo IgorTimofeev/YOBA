@@ -5,11 +5,11 @@
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 
 namespace YOBA {
-	class ChessPatternRectangularShape : public Shape {
+	class OverlayShape : public Shape {
 		public:
-			ChessPatternRectangularShape() = default;
+			OverlayShape() = default;
 
-			ChessPatternRectangularShape(const Color* color) {
+			OverlayShape(const Color* color) {
 				setFillColor(color);
 			}
 
@@ -17,8 +17,17 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Rectangle& bounds) override {
 				const auto color = getFillColor();
 
-				if (color)
+				if (!color)
+					return;
+
+				// Full rich bitch VIP alpha-blending
+				if (color->getModel() == ColorModel::ARGB) {
+					renderer->fillRectangle(bounds, color);
+				}
+				// Simulating alpha-blending via chess pattern
+				else {
 					renderer->fillChessPatternRectangle(bounds, color, 1, 1);
+				}
 			}
 	};
 }

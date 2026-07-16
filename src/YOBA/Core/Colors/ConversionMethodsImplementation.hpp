@@ -100,22 +100,38 @@ namespace YOBA {
 	// -------------------------------- HSB --------------------------------
 
 	constexpr RGB888Color HSBColor::toRGB888() const {
-		const auto hueSector = _h * 6.0f;
-		const auto hueSectorIntegerPart = static_cast<uint8_t>(hueSector);
-		const auto hueSectorFractionalPart = hueSector - static_cast<float>(hueSectorIntegerPart);
+		RGB888Color result {};
 
-		const auto p = static_cast<uint8_t>(255.0f * _b * (1 - _s));
-		const auto q = static_cast<uint8_t>(255.0f * _b * (1 - hueSectorFractionalPart * _s));
-		const auto t = static_cast<uint8_t>(255.0f * _b * (1 - (1 - hueSectorFractionalPart) * _s));
-		const auto v = static_cast<uint8_t>(255.0f * _b);
+		toRGB888(
+			_h,
+			_s,
+			_b,
 
-		switch (hueSectorIntegerPart) {
-			case 1: return { q, v, p };
-			case 2: return { p, v, t};
-			case 3: return { p, q, v };
-			case 4: return { t, p, v };
-			case 5: return { v, p, q };
-			default: return { v, t, p };
-		}
+			result._r,
+			result._g,
+			result._b
+		);
+
+		return result;
+	}
+
+	constexpr ARGBColor HSBColor::toARGB() const {
+		ARGBColor result {};
+
+		toRGB888(
+			_h,
+			_s,
+			_b,
+
+			result._r,
+			result._g,
+			result._b
+		);
+
+		return result;
+	}
+
+	constexpr RGB565Color HSBColor::toRGB565BE() const {
+		return toRGB888().toRGB565BE();
 	}
 }

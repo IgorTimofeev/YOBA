@@ -207,7 +207,4 @@ namespace YOBA {
 			uint16_t _width = 0;
 			uint16_t _height = 0;
 	};
-	
-	// TODO: remove this in other projects
-	using Bounds = Rectangle;
 }

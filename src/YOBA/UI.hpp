@@ -59,15 +59,21 @@
 #include <YOBA/UI/Spinner.hpp>
 #include <YOBA/UI/Divider.hpp>
 #include <YOBA/UI/Badge.hpp>
+#include <YOBA/UI/ColorPalette.hpp>
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>
 #include <YOBA/UI/Shapes/CircularShape.hpp>
 #include <YOBA/UI/Shapes/RectangularShape.hpp>
-#include <YOBA/UI/Shapes/ChessPatternRectangularShape.hpp>
+#include <YOBA/UI/Shapes/OverlayShape.hpp>
 
 // Keyboard
 #include <YOBA/UI/Keyboard/Button.hpp>
 #include <YOBA/UI/Keyboard/Layout.hpp>
 #include <YOBA/UI/Keyboard/Keyboard.hpp>
 #include <YOBA/UI/Keyboard/Controller.hpp>
+
+// Dialogs
+#include <YOBA/UI/Dialogs/Dialog.hpp>
+#include <YOBA/UI/Dialogs/BottomSlidingDialog.hpp>
+#include <YOBA/UI/Dialogs/ColorPickerDialog.hpp>

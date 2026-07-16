@@ -7,6 +7,7 @@ namespace YOBA {
 	class RGB565Color;
 	class RGB666Color;
 	class ARGBColor;
+	class HSBColor;
 
 	#pragma pack(push, 1)
 
@@ -16,6 +17,7 @@ namespace YOBA {
 			friend RGB565Color;
 			friend RGB666Color;
 			friend ARGBColor;
+			friend HSBColor;
 
 			constexpr RGB888Color(const uint8_t r, const uint8_t g, const uint8_t b) :
 				Color(ColorModel::RGB888),

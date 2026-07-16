@@ -24,7 +24,7 @@ namespace YOBA {
 					size,
 					Rotation::none,
 					PixelOrder::XNormalYNormal,
-					ColorModel::RGB888
+					ColorModel::ARGB
 				);
 
 				if (!_texture.resize(sf::Vector2u(size.getWidth(), size.getHeight())))
