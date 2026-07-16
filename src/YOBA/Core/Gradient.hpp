@@ -3,7 +3,7 @@
 #include <vector>
 #include <cmath>
 
-#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Colors.hpp>
 
 namespace YOBA {
 	class GradientStop {

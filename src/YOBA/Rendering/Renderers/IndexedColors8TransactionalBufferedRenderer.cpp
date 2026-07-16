@@ -1,23 +1,23 @@
-#include <YOBA/Rendering/Renderers/Bit8IndexedColorsTransactionalBufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/IndexedColors8TransactionalBufferedRenderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
-	Bit8IndexedColorsTransactionalBufferedRenderer::Bit8IndexedColorsTransactionalBufferedRenderer(const uint8_t paletteLength) : IndexedColorsTransactionalBufferedRenderer(paletteLength) {
+	IndexedColors8TransactionalBufferedRenderer::IndexedColors8TransactionalBufferedRenderer(const uint8_t paletteLength) : IndexedColorsTransactionalBufferedRenderer(paletteLength) {
 
 	}
 
-	size_t Bit8IndexedColorsTransactionalBufferedRenderer::computePixelBufferLength() const {
+	size_t IndexedColors8TransactionalBufferedRenderer::computePixelBufferLength() const {
 		return
 			getTarget()->getSize().getWidth()
 			* getTransactionViewportHeight()
 			* Color::getBytesPerModel(getTarget()->getColorModel());
 	}
 
-	size_t Bit8IndexedColorsTransactionalBufferedRenderer::computePaletteIndicesBufferLength() const {
+	size_t IndexedColors8TransactionalBufferedRenderer::computePaletteIndicesBufferLength() const {
 		return getTarget()->getSize().getSquare();
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::flush() {
+	void IndexedColors8TransactionalBufferedRenderer::flush() {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565: {
 				const auto& size = getTarget()->getSize();
@@ -78,19 +78,19 @@ namespace YOBA {
 		}
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::clearNative(const Color* color) {
+	void IndexedColors8TransactionalBufferedRenderer::clearNative(const Color* color) {
 		std::memset(_paletteIndicesBuffer, getPaletteIndex(color), _paletteIndicesBufferLength);
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::putPixelNative(const Point& point, const Color* color) {
+	void IndexedColors8TransactionalBufferedRenderer::putPixelNative(const Point& point, const Color* color) {
 		_paletteIndicesBuffer[getPixelIndex(point)] = getPaletteIndex(color);
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::strokeHorizontalLineNative(const Point& point, const uint16_t width, const Color* color) {
+	void IndexedColors8TransactionalBufferedRenderer::strokeHorizontalLineNative(const Point& point, const uint16_t width, const Color* color) {
 		std::memset(_paletteIndicesBuffer + getPixelIndex(point), getPaletteIndex(color), width);
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::strokeVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
+	void IndexedColors8TransactionalBufferedRenderer::strokeVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
@@ -101,7 +101,7 @@ namespace YOBA {
 		}
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
+	void IndexedColors8TransactionalBufferedRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(bounds.getPosition());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
@@ -112,8 +112,8 @@ namespace YOBA {
 		}
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::putImageNative(const Point& point, const Image* image) {
-		if (image->getColorModel() != ColorModel::indexed8Bit)
+	void IndexedColors8TransactionalBufferedRenderer::putImageNative(const Point& point, const Image* image) {
+		if (image->getColorModel() != ColorModel::indexed8)
 			return;
 
 		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
@@ -182,7 +182,7 @@ namespace YOBA {
 		}
 	}
 
-	void Bit8IndexedColorsTransactionalBufferedRenderer::setOpenComputersPaletteColors() {
+	void IndexedColors8TransactionalBufferedRenderer::setOpenComputersPaletteColors() {
 		constexpr uint8_t reds = 6;
 		constexpr uint8_t greens = 8;
 		constexpr uint8_t blues = 5;

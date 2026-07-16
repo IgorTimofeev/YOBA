@@ -1,7 +1,7 @@
 #pragma once
 
 #include <YOBA/UI/Shapes/Shape.hpp>
-#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Colors.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/UI/Traits/BorderElement.hpp>
 #include <YOBA/UI/Traits/CornerRadiusElement.hpp>

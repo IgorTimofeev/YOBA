@@ -11,7 +11,7 @@
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Margin.hpp>
-#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Colors.hpp>
 #include <YOBA/Core/Text.hpp>
 #include <YOBA/Core/Glyph.hpp>
 #include <YOBA/Core/Font.hpp>

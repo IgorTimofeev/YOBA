@@ -5,7 +5,7 @@
 #include <YOBA/Rendering/Targets/RenderingTarget.hpp>
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Rectangle.hpp>
-#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Colors.hpp>
 #include <YOBA/Core/Image.hpp>
 #include <YOBA/Core/Font.hpp>
 

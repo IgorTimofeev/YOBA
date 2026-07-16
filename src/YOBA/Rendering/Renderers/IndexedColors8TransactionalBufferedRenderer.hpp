@@ -3,9 +3,9 @@
 #include <YOBA/Rendering/Renderers/IndexedColorsTransactionalBufferedRenderer.hpp>
 
 namespace YOBA {
-	class Bit8IndexedColorsTransactionalBufferedRenderer : public IndexedColorsTransactionalBufferedRenderer<uint8_t, uint16_t> {
+	class IndexedColors8TransactionalBufferedRenderer : public IndexedColorsTransactionalBufferedRenderer<uint8_t, uint16_t> {
 		public:
-			explicit Bit8IndexedColorsTransactionalBufferedRenderer(uint8_t paletteLength);
+			explicit IndexedColors8TransactionalBufferedRenderer(uint8_t paletteLength);
 
 			void flush() override;
 

@@ -107,8 +107,8 @@ namespace YOBA {
 	template<typename TIndex, typename TValue>
 	TIndex IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::getPaletteIndex(const Color* color) {
 		switch (color->getModel()) {
-			case ColorModel::indexed8Bit:
-				return reinterpret_cast<const Bit8PaletteColor*>(color)->getIndex();
+			case ColorModel::indexed8:
+				return reinterpret_cast<const Indexed8Color*>(color)->getIndex();
 
 			default:
 				return 0;

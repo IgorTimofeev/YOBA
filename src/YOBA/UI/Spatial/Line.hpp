@@ -1,7 +1,7 @@
 #pragma once
 
 #include <YOBA/UI/Spatial/SceneElement.hpp>
-#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Colors.hpp>
 
 namespace YOBA::spatial {
 	class Line : public SceneElement {

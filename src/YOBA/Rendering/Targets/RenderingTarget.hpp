@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <span>
 
-#include <YOBA/Core/Color.hpp>
+#include <YOBA/Core/Colors.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Core/Vector2.hpp>
 #include <YOBA/Core/Size.hpp>
