@@ -62,6 +62,7 @@
 #include <YOBA/UI/Badge.hpp>
 #include <YOBA/UI/HSBColorPalette.hpp>
 #include <YOBA/UI/ColorPicker.hpp>
+#include <YOBA/UI/TextAndSwitch.hpp>
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>
