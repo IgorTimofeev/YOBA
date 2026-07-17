@@ -258,12 +258,12 @@ namespace YOBA {
 			return;
 
 		// FR FR 100% need to scroll
-		if (!bounds.contains(_scrollIntoViewLaterTo->getRenderingBounds())) {
+		// if (!bounds.contains(_scrollIntoViewLaterTo->getLayoutBounds())) {
 			scrollToCenter(_scrollIntoViewLaterTo);
 
 			// 2nd arrange pass
 			onArrangePass(bounds);
-		}
+		// }
 
 		_scrollIntoViewLaterTo = nullptr;
 	}

@@ -45,6 +45,7 @@ namespace YOBA {
 			virtual void invalidate();
 
 			Parent* getParent() const;
+			void removeFromParent();
 
 			template <typename T>
 			requires std::derived_from<T, Parent>

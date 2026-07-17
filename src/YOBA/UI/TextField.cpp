@@ -525,7 +525,7 @@ namespace YOBA {
 		return _placeholder;
 	}
 
-	void TextField::setPlaceholder(const std::string_view& value) {
+	void TextField::setPlaceholder(const std::string_view value) {
 		_placeholder = value;
 
 		invalidate();

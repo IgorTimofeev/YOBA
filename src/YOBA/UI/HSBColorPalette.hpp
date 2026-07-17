@@ -9,7 +9,7 @@
 #include <YOBA/Core/Events/PointerEvent.hpp>
 
 namespace YOBA {
-	class PaletteSelector : public Control {
+	class HSBColorPaletteSelector : public Control {
 		public:
 			uint8_t getPixelSize() const;
 			void setPixelSize(const uint8_t pixelSize);
@@ -34,7 +34,7 @@ namespace YOBA {
 			std::function<void()> _onValueChanged = nullptr;
 	};
 
-	class ColorPaletteSBSelector : public PaletteSelector {
+	class HSBColorPaletteSBSelector : public HSBColorPaletteSelector {
 		public:
 			float getHue() const;
 			void setHue(const float hue);
@@ -50,14 +50,14 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
-			float _hue = 0;
-			float _selectedSaturation = 0;
-			float _selectedBrightness = 0;
+			float _hue = 0.0f;
+			float _selectedSaturation = 1.0f;
+			float _selectedBrightness = 1.0f;
 
 			const uint16_t _handleSize = 5;
 	};
 
-	class ColorPaletteHSelector : public PaletteSelector {
+	class HSBColorPaletteHSelector : public HSBColorPaletteSelector {
 		public:
 			float getSelectedHue() const;
 			void setSelectedHue(const float value);
@@ -67,13 +67,13 @@ namespace YOBA {
 			void onRender(Renderer* renderer, const Rectangle& bounds) override;
 
 		private:
-			float _selectedHue = 0;
+			float _selectedHue = 0.0f;
 			uint16_t _handleWidth = 3;
 	};
 
-	class ColorPalette : public RelativeStackLayout {
+	class HSBColorPalette : public RelativeStackLayout {
 		public:
-			ColorPalette();
+			HSBColorPalette();
 
 			const Color* getHandleColor() const;
 			void setHandleColor(const Color* value);
@@ -84,14 +84,14 @@ namespace YOBA {
 			HSBColor getSelectedColor() const;
 			void setSelectedColor(const HSBColor& value);
 
-			const std::function<void()>& getOnValueChanged() const;
-			void setOnValueChanged(const std::function<void()>& onValueChanged);
+			const std::function<void()>& getOnSelectedColorChanged() const;
+			void setOnSelectedColorChanged(const std::function<void()>& value);
 
 		private:
-			ColorPaletteSBSelector _SBSelector {};
-			ColorPaletteHSelector _HSelector {};
+			HSBColorPaletteSBSelector _SBSelector {};
+			HSBColorPaletteHSelector _HSelector {};
 
-			std::function<void()> _onValueChanged = nullptr;
+			std::function<void()> _onSelectedColorChanged = nullptr;
 
 			void onAnySelectorValueChanged() const;
 	};

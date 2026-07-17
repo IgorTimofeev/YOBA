@@ -1,35 +1,35 @@
 #pragma once
 
-#include <YOBA/UI/ColorPalette.hpp>
+#include <YOBA/UI/HSBColorPalette.hpp>
 
 namespace YOBA {
-	uint8_t PaletteSelector::getPixelSize() const {
+	uint8_t HSBColorPaletteSelector::getPixelSize() const {
 		return _pixelSize;
 	}
 
-	void PaletteSelector::setPixelSize(const uint8_t pixelSize) {
+	void HSBColorPaletteSelector::setPixelSize(const uint8_t pixelSize) {
 		_pixelSize = pixelSize;
 	}
 
-	const Color* PaletteSelector::getHandleColor() const {
+	const Color* HSBColorPaletteSelector::getHandleColor() const {
 		return _handleColor;
 	}
 
-	void PaletteSelector::setHandleColor(const Color* value) {
+	void HSBColorPaletteSelector::setHandleColor(const Color* value) {
 		_handleColor = value;
 
 		invalidateRender();
 	}
 
-	const std::function<void()>& PaletteSelector::getOnValueChanged() const {
+	const std::function<void()>& HSBColorPaletteSelector::getOnValueChanged() const {
 		return _onValueChanged;
 	}
 
-	void PaletteSelector::setOnValueChanged(const std::function<void()>& onValueChanged) {
+	void HSBColorPaletteSelector::setOnValueChanged(const std::function<void()>& onValueChanged) {
 		_onValueChanged = onValueChanged;
 	}
 
-	void PaletteSelector::onEvent(Event* event) {
+	void HSBColorPaletteSelector::onEvent(Event* event) {
 		Control::onEvent(event);
 
 		if (const auto pointerDownEvent = event->as<PointerDownEvent>()) {
@@ -45,51 +45,61 @@ namespace YOBA {
 		}
 	}
 
-	void PaletteSelector::invokeOnValueChanged() const {
+	void HSBColorPaletteSelector::invokeOnValueChanged() const {
 		if (_onValueChanged)
 			_onValueChanged();
 	}
 
-	float ColorPaletteSBSelector::getHue() const {
+	float HSBColorPaletteSBSelector::getHue() const {
 		return _hue;
 	}
 
-	void ColorPaletteSBSelector::setHue(const float hue) {
+	void HSBColorPaletteSBSelector::setHue(const float hue) {
 		_hue = hue;
 	}
 
-	float ColorPaletteSBSelector::getSelectedSaturation() const {
+	float HSBColorPaletteSBSelector::getSelectedSaturation() const {
 		return _selectedSaturation;
 	}
 
-	void ColorPaletteSBSelector::setSelectedSaturation(const float value) {
-		_selectedSaturation = std::clamp<float>(value, 0.0f, 1.0f);
+	void HSBColorPaletteSBSelector::setSelectedSaturation(float value) {
+		value = std::clamp<float>(value, 0.0f, 1.0f);
+
+		if (value == _selectedSaturation)
+			return;
+
+		_selectedSaturation = value;
 
 		invokeOnValueChanged();
 
 		invalidate();
 	}
 
-	float ColorPaletteSBSelector::getSelectedBrightness() const {
+	float HSBColorPaletteSBSelector::getSelectedBrightness() const {
 		return _selectedBrightness;
 	}
 
-	void ColorPaletteSBSelector::setSelectedBrightness(const float value) {
-		_selectedBrightness = std::clamp<float>(value, 0.0f, 1.0f);
+	void HSBColorPaletteSBSelector::setSelectedBrightness(float value) {
+		value = std::clamp<float>(value, 0.0f, 1.0f);
+
+		if (value == _selectedBrightness)
+			return;
+
+		_selectedBrightness = value;
 
 		invokeOnValueChanged();
 
 		invalidate();
 	}
 
-	void ColorPaletteSBSelector::onPointerEvent(const Point& position) {
+	void HSBColorPaletteSBSelector::onPointerEvent(const Point& position) {
 		const auto& bounds = getLayoutBounds();
 
 		setSelectedSaturation(static_cast<float>(position.getX() - bounds.getX()) / static_cast<float>(bounds.getWidth()));
-		setSelectedBrightness(static_cast<float>(position.getY() - bounds.getY()) / static_cast<float>(bounds.getHeight()));
+		setSelectedBrightness(static_cast<float>(bounds.getHeight() - (position.getY() - bounds.getY())) / static_cast<float>(bounds.getHeight()));
 	}
 
-	void ColorPaletteSBSelector::onRender(Renderer* renderer, const Rectangle& bounds) {
+	void HSBColorPaletteSBSelector::onRender(Renderer* renderer, const Rectangle& bounds) {
 		// Palette
 		{
 			const auto oldClip = renderer->pushClip(bounds);
@@ -129,10 +139,11 @@ namespace YOBA {
 			renderer->strokeCircle(
 				{
 					bounds.getX()
-					+ static_cast<int32_t>(_selectedSaturation * static_cast<float>(bounds.getWidth())),
+						+ static_cast<int32_t>(_selectedSaturation * static_cast<float>(bounds.getWidth())),
 
 					bounds.getY()
-					+ static_cast<int32_t>(_selectedBrightness * static_cast<float>(bounds.getHeight()))
+						+ bounds.getHeight()
+						- static_cast<int32_t>(_selectedBrightness * static_cast<float>(bounds.getHeight()))
 				},
 				_handleSize,
 				getHandleColor()
@@ -140,25 +151,30 @@ namespace YOBA {
 		}
 	}
 
-	float ColorPaletteHSelector::getSelectedHue() const {
+	float HSBColorPaletteHSelector::getSelectedHue() const {
 		return _selectedHue;
 	}
 
-	void ColorPaletteHSelector::setSelectedHue(const float value) {
-		_selectedHue = std::clamp<float>(value, 0.0f, 1.0f);
+	void HSBColorPaletteHSelector::setSelectedHue(float value) {
+		value = std::clamp<float>(value, 0.0f, 1.0f);
+
+		if (value == _selectedHue)
+			return;
+
+		_selectedHue = value;
 
 		invokeOnValueChanged();
 
 		invalidate();
 	}
 
-	void ColorPaletteHSelector::onPointerEvent(const Point& position) {
+	void HSBColorPaletteHSelector::onPointerEvent(const Point& position) {
 		const auto& bounds = getLayoutBounds();
 
 		setSelectedHue(static_cast<float>(position.getX() - bounds.getX()) / static_cast<float>(bounds.getWidth()));
 	}
 
-	void ColorPaletteHSelector::onRender(Renderer* renderer, const Rectangle& bounds) {
+	void HSBColorPaletteHSelector::onRender(Renderer* renderer, const Rectangle& bounds) {
 		// Palette
 		{
 			const auto oldClip = renderer->pushClip(bounds);
@@ -203,7 +219,7 @@ namespace YOBA {
 		}
 	}
 
-	ColorPalette::ColorPalette() {
+	HSBColorPalette::HSBColorPalette() {
 		setGap(10);
 
 		// Saturation & brightness
@@ -226,25 +242,25 @@ namespace YOBA {
 		*this += &_HSelector;
 	}
 
-	const Color* ColorPalette::getHandleColor() const {
+	const Color* HSBColorPalette::getHandleColor() const {
 		return _HSelector.getHandleColor();
 	}
 
-	void ColorPalette::setHandleColor(const Color* value) {
+	void HSBColorPalette::setHandleColor(const Color* value) {
 		_HSelector.setHandleColor(value);
 		_SBSelector.setHandleColor(value);
 	}
 
-	uint8_t ColorPalette::getPixelSize() const {
+	uint8_t HSBColorPalette::getPixelSize() const {
 		return _HSelector.getPixelSize();
 	}
 
-	void ColorPalette::setPixelSize(const uint8_t value) {
+	void HSBColorPalette::setPixelSize(const uint8_t value) {
 		_HSelector.setPixelSize(value);
 		_SBSelector.setPixelSize(value);
 	}
 
-	HSBColor ColorPalette::getSelectedColor() const {
+	HSBColor HSBColorPalette::getSelectedColor() const {
 		return {
 			_SBSelector.getHue(),
 			_SBSelector.getSelectedSaturation(),
@@ -252,7 +268,7 @@ namespace YOBA {
 		};
 	}
 
-	void ColorPalette::setSelectedColor(const HSBColor& value) {
+	void HSBColorPalette::setSelectedColor(const HSBColor& value) {
 		_SBSelector.setHue(value.getH());
 		_SBSelector.setSelectedSaturation(value.getS());
 		_SBSelector.setSelectedBrightness(value.getB());
@@ -260,16 +276,16 @@ namespace YOBA {
 		_HSelector.setSelectedHue(value.getH());
 	}
 
-	const std::function<void()>& ColorPalette::getOnValueChanged() const {
-		return _onValueChanged;
+	const std::function<void()>& HSBColorPalette::getOnSelectedColorChanged() const {
+		return _onSelectedColorChanged;
 	}
 
-	void ColorPalette::setOnValueChanged(const std::function<void()>& onValueChanged) {
-		_onValueChanged = onValueChanged;
+	void HSBColorPalette::setOnSelectedColorChanged(const std::function<void()>& value) {
+		_onSelectedColorChanged = value;
 	}
 
-	void ColorPalette::onAnySelectorValueChanged() const {
-		if (_onValueChanged)
-			_onValueChanged();
+	void HSBColorPalette::onAnySelectorValueChanged() const {
+		if (_onSelectedColorChanged)
+			_onSelectedColorChanged();
 	}
 }

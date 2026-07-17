@@ -2,6 +2,7 @@
 
 #include <YOBA/UI/Dialogs/Dialog.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
+#include <YOBA/UI/ScrollView.hpp>
 #include <YOBA/UI/TextView.hpp>
 #include <YOBA/UI/Shapes/RectangularShape.hpp>
 #include <YOBA/UI/Transforms/MarginTransform.hpp>
@@ -13,19 +14,21 @@ namespace YOBA {
 
 			DialogOverlayShape overlayShape {};
 
-			Layout contentAndBackgroundLayout {};
-			RectangularShape backgroundRectangle {};
+			Layout backgroundAndContentLayout {};
+			RectangularShape backgroundShape {};
 	};
 
-	class StackBottomSheetDialog : public BottomSheetDialog {
+	class StackLayoutBottomSheetDialog : public BottomSheetDialog {
 		public:
-			StackBottomSheetDialog();
+			StackLayoutBottomSheetDialog();
 
-			MarginTransform contentLayoutMarginTransform {};
+			ScrollView contentScrollView {};
+
+			MarginTransform contentStackLayoutMarginTransform {};
 			StackLayout contentStackLayout {};
 	};
 
-	class TitleStackLayoutBottomSheetDialog : public StackBottomSheetDialog {
+	class TitleStackLayoutBottomSheetDialog : public StackLayoutBottomSheetDialog {
 		public:
 			TitleStackLayoutBottomSheetDialog();
 

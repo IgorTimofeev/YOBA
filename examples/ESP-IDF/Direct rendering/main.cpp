@@ -19,15 +19,15 @@ ILI9341Display display {};
 
 // Choosing renderer that is suitable for our display. RGB565 is a good compromise between RAM/performance,
 // in our case it will allocate 320 * 240 * 2 = 150 KiB of heap for pixel buffer
-RGB565Renderer renderer {};
+RGB565TransactionalBufferedRenderer renderer {};
 
 // Using one of default fonts
 constexpr static Unscii16Font font {};
 constexpr static uint8_t fontScale = 3;
 
 // Defining some colors
-constexpr static RGB565Color backgroundColor = RGB888Color(0xFFFFFF).toRGB565BE();
-constexpr static RGB565Color textColor = RGB888Color(0x000000).toRGB565BE();
+constexpr static RGB565Color backgroundColor = RGB888Color(0xFFFFFF).toRGB565();
+constexpr static RGB565Color textColor = RGB888Color(0x000000).toRGB565();
 
 extern "C" void app_main(void) {
     // Initializing display - replace GPIOs with yours
@@ -65,11 +65,11 @@ extern "C" void app_main(void) {
 
         // Rendering time on center of display
         renderer.putText(
-            display.getSize().getCenter() - font.getSize(text, fontScale).getCenter(),
+            display.getSize().getCenter() - font.getSize(fontScale, text).getCenter(),
             &font,
+            fontScale,
             &textColor,
-            text,
-            fontScale
+            text
         );
 
         // Flushing pixel buffer into display

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <YOBA/Core/Colors/Color.hpp>
 
 namespace YOBA {
@@ -68,19 +70,8 @@ namespace YOBA {
 				return (_r << 16) | (_g << 8) | _b;
 			}
 
-			// RRRRRGGG GGGBBBBB
-			constexpr RGB565Color toRGB565LE() const;
-
-			// GGGBBBBB RRRRRGGG
-			//
-			// Most of the displays expects you to send them colors in retarded big-endian format
-			// So it's 99.99% you should use this method
-			constexpr RGB565Color toRGB565BE() const;
-
-			constexpr RGB666Color toRGB666() const;
-			constexpr MonochromeColor toMonochrome() const;
-			constexpr void interpolateTo(const RGB888Color& second, const float position);
-			constexpr void blendWith(const ARGBColor& overlayColor);
+			constexpr void interpolate(const RGB888Color& second, const float position);
+			constexpr void blend(const ARGBColor& overlayColor);
 
 			constexpr static void blend(
 				uint8_t& r1,
@@ -112,12 +103,73 @@ namespace YOBA {
 				b1 = static_cast<uint8_t>((b1 * invertedAlpha + b2 * a2 + 128) >> 8);
 			}
 
+			// RRRRRGGG GGGBBBBB
+			constexpr MonochromeColor toMonochrome() const;
+			constexpr RGB565Color toRGB565() const;
+			constexpr RGB666Color toRGB666() const;
+			constexpr ARGBColor toARGB() const;
+
+			constexpr static void toHSB(
+				const uint8_t red,
+				const uint8_t green,
+				const uint8_t blue,
+
+				float& hue,
+				float& saturation,
+				float& brightness
+			) {
+				const auto redF = static_cast<float>(red) / 255.0f;
+				const auto greenF = static_cast<float>(green) / 255.0f;
+				const auto blueF = static_cast<float>(blue) / 255.0f;
+
+				hue = 0;
+
+				// Max of r/g/b
+				brightness =
+					redF > greenF
+					? redF > blueF ? redF : blueF
+					: greenF > blueF ? greenF : blueF;
+
+				// Max - min of r/g/b
+				const auto delta =
+					brightness - (
+						redF < greenF
+						? redF < blueF ? redF : blueF
+						: greenF < blueF ? greenF : blueF
+					);
+
+				saturation = brightness == 0 ? 0 : delta / brightness;
+
+				if (saturation == 0)
+					return;
+
+				// Determining hue sector
+				if (redF == brightness) {
+					hue = (greenF - blueF) / delta;
+				}
+				else if (greenF == brightness) {
+					hue = 2 + (blueF - redF) / delta;
+				}
+				else if (blueF == brightness) {
+					hue = 4 + (redF - greenF) / delta;
+				}
+
+				// Sector to hue
+				hue *= 1.0f / 6.0f;
+
+				// For cases like R = MAX & B > G
+				if (hue < 0)
+					hue += 1.0f;
+			}
+
+			constexpr HSBColor toHSB() const;
+
+			constexpr void toModel(const ColorModel targetModel, const std::function<void(const Color* color)>& convertedColorHandler) const;
+
 		private:
 			uint8_t _r = 0;
 			uint8_t _g = 0;
 			uint8_t _b = 0;
-
-			constexpr uint16_t toUint16RGB565LE() const;
 	};
 
 	using RGBColor = RGB888Color;

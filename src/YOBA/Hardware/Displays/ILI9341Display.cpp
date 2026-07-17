@@ -215,6 +215,8 @@ namespace YOBA {
 
 	void ILI9341Display::writeMADCTLCommand() {
 		// LMAO seems like ILI9341 has reverse color order by default for some reason
+		// I.e. without this flag it will interpret 0xRRGGBB color as 0xBBGGRR
+		// But it should work the other way around... wtf
 		auto data = MADCTL_BGR;
 
 		switch (getRotation()) {
@@ -247,16 +249,16 @@ namespace YOBA {
 
 //		ESP_LOGI("ILI", "Bounds: %ld x %ld x %d x %d", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 
-		// Column Address Set
-		data[0] = bounds.getX() >> 8; //Start Col High
-		data[1] = bounds.getX() & 0xff; //Start Col Low
-		data[2] = bounds.getX2() >> 8; //End Col High
-		data[3] = bounds.getX2() & 0xff; //End Col Low
+		// Column address set
+		data[0] = bounds.getX() >> 8; // Start col high
+		data[1] = bounds.getX() & 0xff; // Start col low
+		data[2] = bounds.getX2() >> 8; // End col high
+		data[3] = bounds.getX2() & 0xff; // End col low
 		this->writeCommand(0x2A);
 		this->writeData({ data, 4 });
 
-		//Page address set
-		data[0] = bounds.getY() >> 8; //Start page high
+		// Page address set
+		data[0] = bounds.getY() >> 8; // Start page high
 		data[1] = bounds.getY() & 0xff; // Start page low
 		data[2] = bounds.getY2() >> 8; // End page high
 		data[3] = bounds.getY2() & 0xff; // End page low

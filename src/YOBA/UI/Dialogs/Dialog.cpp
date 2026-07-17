@@ -1,8 +1,9 @@
 #pragma once
 
-#include <YOBA/UI/Dialogs/Dialog.hpp>
 #include <YOBA/Core/Events/ScreenEvent.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
+#include <YOBA/UI/Dialogs/Dialog.hpp>
+#include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
 	const std::function<void()>& DialogOverlayShape::getOnPointerEvent() const {

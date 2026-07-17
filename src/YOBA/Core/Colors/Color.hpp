@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdlib>
-#include <bit>
 
 namespace YOBA {
 	enum class ColorModel : uint8_t {

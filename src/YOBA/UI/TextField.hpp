@@ -29,7 +29,7 @@ namespace YOBA {
 			void setMask(char mask);
 
 			std::string_view getPlaceholder() const;
-			void setPlaceholder(const std::string_view& value);
+			void setPlaceholder(const std::string_view value);
 
 			const uint16_t& getTextMargin() const;
 			void setTextMargin(const uint16_t& textMargin);

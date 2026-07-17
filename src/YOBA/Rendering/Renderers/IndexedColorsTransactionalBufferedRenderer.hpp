@@ -119,7 +119,7 @@ namespace YOBA {
 	void IndexedColorsTransactionalBufferedRenderer<TIndex, TValue>::setPaletteColor(TIndex index, const RGB888Color& color) {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565:
-				setPaletteValue(index, color.toRGB565BE().getValue());
+				setPaletteValue(index, color.toRGB565().getValue());
 				break;
 
 			case ColorModel::RGB666:

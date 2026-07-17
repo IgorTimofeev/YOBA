@@ -78,8 +78,6 @@ namespace YOBA {
 				return (_r << 24) | (_r << 16) | (_g << 8) | _b;
 			}
 
-			constexpr void blendWith(const ARGBColor& overlayColor);
-
 			constexpr static void blend(
 				uint8_t& a1,
 				uint8_t& r1,
@@ -112,6 +110,8 @@ namespace YOBA {
 				g1 = static_cast<uint8_t>((g1 * invertedAlpha + g2 * a2 + 128) >> 8);
 				b1 = static_cast<uint8_t>((b1 * invertedAlpha + b2 * a2 + 128) >> 8);
 			}
+
+			constexpr void blend(const ARGBColor& overlayColor);
 
 		private:
 			uint8_t _a = 0;

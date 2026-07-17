@@ -46,36 +46,36 @@ namespace YOBA {
 			}
 
 			constexpr static void toRGB888(
-				const float hsbH,
-				const float hsbS,
-				const float hsbB,
+				const float hue,
+				const float saturation,
+				const float brightness,
 
-				uint8_t& rgbR,
-				uint8_t& rgbG,
-				uint8_t& rgbB
+				uint8_t& red,
+				uint8_t& green,
+				uint8_t& blue
 			) {
-				const auto hueSector = hsbH * 6.0f;
+				const auto hueSector = hue * 6.0f;
 				const auto hueSectorIntegerPart = static_cast<uint8_t>(hueSector);
 				const auto hueSectorFractionalPart = hueSector - static_cast<float>(hueSectorIntegerPart);
 
-				const auto p = static_cast<uint8_t>(255.0f * hsbB * (1 - hsbS));
-				const auto q = static_cast<uint8_t>(255.0f * hsbB * (1 - hueSectorFractionalPart * hsbS));
-				const auto t = static_cast<uint8_t>(255.0f * hsbB * (1 - (1 - hueSectorFractionalPart) * hsbS));
-				const auto v = static_cast<uint8_t>(255.0f * hsbB);
+				const auto p = static_cast<uint8_t>(255.0f * brightness * (1 - saturation));
+				const auto q = static_cast<uint8_t>(255.0f * brightness * (1 - hueSectorFractionalPart * saturation));
+				const auto t = static_cast<uint8_t>(255.0f * brightness * (1 - (1 - hueSectorFractionalPart) * saturation));
+				const auto v = static_cast<uint8_t>(255.0f * brightness);
 
 				switch (hueSectorIntegerPart) {
-					case 1:  rgbR = q, rgbG = v, rgbB = p; return;
-					case 2:  rgbR = p, rgbG = v, rgbB = t; return;
-					case 3:  rgbR = p, rgbG = q, rgbB = v; return;
-					case 4:  rgbR = t, rgbG = p, rgbB = v; return;
-					case 5:  rgbR = v, rgbG = p, rgbB = q; return;
-					default: rgbR = v, rgbG = t, rgbB = p; return;
+					case 1:  red = q, green = v, blue = p; return;
+					case 2:  red = p, green = v, blue = t; return;
+					case 3:  red = p, green = q, blue = v; return;
+					case 4:  red = t, green = p, blue = v; return;
+					case 5:  red = v, green = p, blue = q; return;
+					default: red = v, green = t, blue = p; return;
 				}
 			}
 
 			constexpr RGB888Color toRGB888() const;
 			constexpr ARGBColor toARGB() const;
-			constexpr RGB565Color toRGB565BE() const;
+			constexpr RGB565Color toRGB565() const;
 			constexpr void toModel(const ColorModel targetModel, const std::function<void(const Color* color)>& convertedColorHandler) const;
 
 		private:

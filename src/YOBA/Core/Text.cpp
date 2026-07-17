@@ -145,4 +145,62 @@ namespace YOBA {
 			lineHandler(std::string_view(text.data() + lineCharIndex, text.length() - lineCharIndex), lineWidth);
 		}
 	}
+
+	bool Text::containsIgnoreCase(std::string_view haystack, std::string_view needle) {
+		return !std::ranges::search(
+			haystack,
+			needle,
+			[](const char a, const char b) {
+				return std::tolower(a) == std::tolower(b);
+			}
+		).empty();
+	}
+
+	bool Text::tryParseInt32(const std::string_view text, int32_t& result) {
+		char* endPtr;
+		result = std::strtol(text.data(), &endPtr, 10);
+
+		return endPtr != text.data();
+	}
+
+	bool Text::tryParseFloat(const std::string_view text, float& result) {
+		char* endPtr;
+		result = std::strtof(text.data(), &endPtr);
+
+		return endPtr != text.data();
+	}
+
+	bool Text::tryParseHex(const std::string_view text, int32_t& result) {
+		char* endPtr;
+		result = std::strtol(text.data(), &endPtr, 16);
+
+		return endPtr != text.data();
+	}
+
+	int32_t Text::tryParseInt32Or(const std::string_view text, const int32_t fallbackValue) {
+		int32_t result = 0;
+
+		if (!tryParseInt32(text, result))
+			result = fallbackValue;
+
+		return result;
+	}
+
+	float Text::tryParseFloatOr(const std::string_view text, const float fallbackValue) {
+		float result = 0;
+
+		if (!tryParseFloat(text, result))
+			result = fallbackValue;
+
+		return result;
+	}
+
+	int32_t Text::tryParseHexOr(const std::string_view text, const int32_t fallbackValue) {
+		int32_t result = 0;
+
+		if (!tryParseHex(text, result))
+			result = fallbackValue;
+
+		return result;
+	}
 }

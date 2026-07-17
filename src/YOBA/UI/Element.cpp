@@ -291,6 +291,13 @@ namespace YOBA {
 		return _parent;
 	}
 
+	void Element::removeFromParent() {
+		if (!_parent)
+			return;
+
+		*_parent -= this;
+	}
+
 	const Size& Element::getMeasuredSize() const {
 		return _measuredSize;
 	}

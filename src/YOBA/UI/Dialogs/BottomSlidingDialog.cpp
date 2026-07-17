@@ -8,21 +8,24 @@ namespace YOBA {
 		*this += &overlayShape;
 
 		// Content and background
-		setAutoSize(&contentAndBackgroundLayout);
-		*this += &contentAndBackgroundLayout;
+		setAutoSize(&backgroundAndContentLayout);
+		*this += &backgroundAndContentLayout;
 
 		// Background
-		contentAndBackgroundLayout += &backgroundRectangle;
+		backgroundAndContentLayout += &backgroundShape;
 	}
 
-	StackBottomSheetDialog::StackBottomSheetDialog() {
-		// Content layout
+	StackLayoutBottomSheetDialog::StackLayoutBottomSheetDialog() {
+		// Scroll view
+		backgroundAndContentLayout += &contentScrollView;
+
+		// Content stack layout
 		contentStackLayout.setGap(10);
 
-		contentLayoutMarginTransform.setMargin({ 15 });
-		contentStackLayout.setLayoutTransform(&contentLayoutMarginTransform);
+		contentStackLayoutMarginTransform.setMargin({ 15 });
+		contentStackLayout.setLayoutTransform(&contentStackLayoutMarginTransform);
 
-		contentAndBackgroundLayout += &contentStackLayout;
+		contentScrollView += &contentStackLayout;
 	}
 
 	TitleStackLayoutBottomSheetDialog::TitleStackLayoutBottomSheetDialog() {

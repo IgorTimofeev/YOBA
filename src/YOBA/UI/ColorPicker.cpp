@@ -4,11 +4,27 @@
 #include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
-	const HSBColor& ColorPicker::getSelectedColor() const {
+	const Color* ColorPicker::getDefaultBorerColor() const {
+		return _defaultBorerColor;
+	}
+
+	void ColorPicker::setDefaultBorerColor(const Color* value) {
+		_defaultBorerColor = value;
+	}
+
+	const Color* ColorPicker::getActiveBorerColor() const {
+		return _activeBorerColor;
+	}
+
+	void ColorPicker::setActiveBorerColor(const Color* value) {
+		_activeBorerColor = value;
+	}
+
+	const RGB888Color& ColorPicker::getSelectedColor() const {
 		return _selectedColor;
 	}
 
-	void ColorPicker::setSelectedColor(const HSBColor& selectedColor) {
+	void ColorPicker::setSelectedColor(const RGB888Color& selectedColor) {
 		_selectedColor = selectedColor;
 
 		onSelectedColorChanged();
@@ -17,12 +33,20 @@ namespace YOBA {
 			_onSelectedColorChanged();
 	}
 
-	const std::function<ColorPickerDialog*()>& ColorPicker::getDialogBuilder() const {
-		return _dialogBuilder;
+	const std::function<ColorPickerDialog*()>& ColorPicker::getDialogOpener() const {
+		return _dialogOpener;
 	}
 
-	void ColorPicker::setDialogBuilder(const std::function<ColorPickerDialog*()>& value) {
-		_dialogBuilder = value;
+	void ColorPicker::setDialogOpener(const std::function<ColorPickerDialog*()>& value) {
+		_dialogOpener = value;
+	}
+
+	const std::function<void(ColorPickerDialog*)>& ColorPicker::getDialogCloser() const {
+		return _dialogCloser;
+	}
+
+	void ColorPicker::setDialogCloser(const std::function<void(ColorPickerDialog*)>& dialogCloser) {
+		_dialogCloser = dialogCloser;
 	}
 
 	const std::function<void()>& ColorPicker::getOnSelectedColorChanged() const {
@@ -37,13 +61,26 @@ namespace YOBA {
 		Control::onEvent(event);
 
 		if (event->is<PointerDownEvent>()) {
-			setCaptured(true);
+			setActive(true);
+			setFocused(true);
+
+			event->setHandled(true);
 		}
 		else if (event->is<PointerUpEvent>()) {
-			setCaptured(false);
+			setActive(false);
+			setFocused(false);
 
-			showDialog();
+			openDialog();
+
+			event->setHandled(true);
 		}
+	}
+
+	void ColorPicker::onPointerOverChanged() {
+		if (isPointerOver())
+			return;
+
+		setActive(false);
 	}
 
 	void ColorPicker::onRender(Renderer* renderer, const Rectangle& bounds) {
@@ -57,41 +94,31 @@ namespace YOBA {
 				);
 			}
 		);
+
+		const auto borderColor = isActive() ? _activeBorerColor : _defaultBorerColor;
+
+		if (borderColor) {
+			renderer->strokeRectangle(bounds, getCornerRadius(), borderColor);
+		}
 	}
 
 	void ColorPicker::onSelectedColorChanged() {
 
 	}
 
-	void ColorPicker::showDialog() {
-		if (_dialog || !_dialogBuilder)
+	void ColorPicker::openDialog() {
+		if (!_dialogOpener)
 			return;
 
-		_dialog = _dialogBuilder();
+		const auto dialog = _dialogOpener();
 
-		_dialog->colorPalette.setSelectedColor(_selectedColor);
+		dialog->setSelectedColor(_selectedColor.toHSB());
 
-		_dialog->colorPalette.setOnValueChanged([this] {
-			setSelectedColor(_dialog->colorPalette.getSelectedColor());
+		dialog->setOnConfirm([this, dialog] {
+			setSelectedColor(dialog->getSelectedColor().toRGB888());
+
+			if (_dialogCloser)
+				_dialogCloser(dialog);
 		});
-
-		_dialog->overlayShape.setOnPointerEvent([this] {
-			Application::getCurrent()->invokeLater([this] {
-				hideDialog();
-			});
-		});
-
-		*Application::getCurrent() += _dialog;
-	}
-
-	void ColorPicker::hideDialog() {
-		if (!_dialog)
-			return;
-
-		*Application::getCurrent() -= _dialog;
-
-		delete _dialog;
-
-		_dialog = nullptr;
 	}
 }

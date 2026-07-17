@@ -82,7 +82,7 @@ set(YOBA_SOURCES
 	src/YOBA/UI/TextField.cpp
 	src/YOBA/UI/TextView.cpp
 	src/YOBA/UI/WrapLayout.cpp
-	src/YOBA/UI/ColorPalette.cpp
+        src/YOBA/UI/HSBColorPalette.cpp
 	src/YOBA/UI/ColorPicker.cpp
 	src/YOBA/UI/Dialogs/Dialog.cpp
 	src/YOBA/UI/Dialogs/BottomSlidingDialog.cpp

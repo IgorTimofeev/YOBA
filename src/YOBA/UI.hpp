@@ -29,6 +29,7 @@
 #include <YOBA/UI/StackLayout.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
 #include <YOBA/UI/WrapLayout.hpp>
+#include <YOBA/UI/Titler.hpp>
 
 // Traits
 #include <YOBA/UI/Traits/BorderElement.hpp>
@@ -59,7 +60,7 @@
 #include <YOBA/UI/Spinner.hpp>
 #include <YOBA/UI/Divider.hpp>
 #include <YOBA/UI/Badge.hpp>
-#include <YOBA/UI/ColorPalette.hpp>
+#include <YOBA/UI/HSBColorPalette.hpp>
 #include <YOBA/UI/ColorPicker.hpp>
 
 // Shapes
