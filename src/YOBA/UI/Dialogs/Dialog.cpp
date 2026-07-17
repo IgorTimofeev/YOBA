@@ -1,5 +1,3 @@
-#pragma once
-
 #include <YOBA/Core/Events/ScreenEvent.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/UI/Dialogs/Dialog.hpp>

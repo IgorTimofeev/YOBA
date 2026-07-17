@@ -1,5 +1,3 @@
-#pragma once
-
 #include <YOBA/UI/Spinner.hpp>
 #include <YOBA/System.hpp>
 #include <YOBA/Core/Math.hpp>

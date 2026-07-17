@@ -1,5 +1,3 @@
-#pragma once
-
 #include <YOBA/UI/ColorPicker.hpp>
 #include <YOBA/UI/Application.hpp>
 

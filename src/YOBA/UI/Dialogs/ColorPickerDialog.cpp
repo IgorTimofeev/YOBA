@@ -1,5 +1,3 @@
-#pragma once
-
 #include <algorithm>
 #include <cmath>
 
@@ -104,7 +102,7 @@ namespace YOBA {
 		const auto uintColor = colorPalette.getSelectedColor().toRGB888().toUint32();
 
 		char text[32];
-		std::snprintf(text, sizeof(text), "%06X", uintColor);
+		std::snprintf(text, sizeof(text), "%06lX", uintColor);
 
 		hexTextField.setText(text);
 	}

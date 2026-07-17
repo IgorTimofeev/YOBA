@@ -1,5 +1,3 @@
-#pragma once
-
 #include <YOBA/UI/HSBColorPalette.hpp>
 
 namespace YOBA {

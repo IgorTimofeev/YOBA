@@ -71,7 +71,7 @@ namespace YOBA {
 	}
 
 	constexpr RGB565Color RGB888Color::toRGB565() const {
-		return RGB565Color(((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3));
+		return RGB565Color(std::byteswap<uint16_t>(((_r & 0b11111000) << 8) | ((_g & 0b11111100) << 3) | (_b >> 3)));
 	}
 
 	constexpr RGB666Color RGB888Color::toRGB666() const {

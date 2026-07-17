@@ -21,10 +21,6 @@ namespace YOBA {
 
 			}
 
-			constexpr void swapEndianness() {
-				_value = std::byteswap(_value);
-			}
-
 			constexpr RGB888Color toRGB888() const;
 	};
 

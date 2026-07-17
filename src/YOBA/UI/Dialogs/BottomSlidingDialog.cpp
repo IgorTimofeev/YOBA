@@ -1,5 +1,3 @@
-#pragma once
-
 #include <YOBA/UI/Dialogs/BottomSlidingDialog.hpp>
 
 namespace YOBA {
