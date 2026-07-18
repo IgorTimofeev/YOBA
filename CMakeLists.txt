@@ -97,10 +97,10 @@ if(ESP_PLATFORM)
 	SRCS ${YOBA_SOURCES}
 	INCLUDE_DIRS src
 	REQUIRES
-	esp_timer
-	esp_driver_spi
-	esp_driver_gpio
-	esp_driver_i2c
+	  esp_timer
+	  esp_driver_spi
+	  esp_driver_gpio
+	  esp_driver_i2c
   )
 
   return()

@@ -62,6 +62,8 @@ namespace YOBA {
 		// xRad - deltaS
 		_fromAngleRad = _fromAngleRad + static_cast<float>(system::getTimeUs() - _tickTime) * _rotationSpeedRadPerSecond / 1'000'000.f;
 
+		invalidateRender();
+
 		_tickTime = system::getTimeUs();
 	}
 

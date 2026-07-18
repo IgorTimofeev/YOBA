@@ -6,18 +6,18 @@ An independent and hardcore UI framework written on modern C++ for embedded devi
 # Features
 
 - Classic OOP-based approach without bullshit
-- Tons of components like buttons, sliders, switches, text fields & scroll views
+- Tons of components like buttons, sliders, switches, spinners, text fields & scroll views
 - Fully automatic layouts
 - Animations & rendering transforms
-- Event system for external peripherals like touch screens & keyboards with possibility to create custom events
+- Event system for external peripherals like touch screens & keyboards
 - Compact image & font format with a nice [tool](https://github.com/IgorTimofeev/YOBAResourceConverter)
 to convert your dick pics into production-ready projects
 - A clear distinction between UI, renderers and rendering targets (screens, desktop windows, etc.),
 all of which can be used separately
-- Monochrome, RGB 565/666/888 & indexed colors support
+- Monochrome, RGB 565/666/888, ARGB & indexed colors support
 - Out-of-box drivers for the most popular displays like ILI9341, ST7789, ST7565, GC9A01, and SH1106
 - HAL for easy integration of third-party MCUs
-- [SFML](https://github.com/sfml/sfml) support for cross-platform desktop testing
+- [SFML](https://github.com/sfml/sfml) support for cross-platform testing
 
 # Showcase
 

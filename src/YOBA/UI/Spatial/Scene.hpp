@@ -7,7 +7,7 @@
 #include <YOBA/Core/Rectangle.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 
-#include <YOBA/UI/Spatial/sceneElement.hpp>
+#include <YOBA/UI/Spatial/SceneElement.hpp>
 
 namespace YOBA::spatial {
 	class Scene : public Control {

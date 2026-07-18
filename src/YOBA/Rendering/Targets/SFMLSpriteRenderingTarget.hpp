@@ -12,6 +12,10 @@
 #include <SFML/Graphics.hpp>
 
 namespace YOBA {
+	/**
+	* @brief Encapsulates SFML sprite that will be used by YOBA for flushing pixel data.
+	* The sprite itself can be rendered later via <b>window.draw()</b>
+	*/
 	class SFMLSpriteRenderingTarget : public RenderingTarget {
 		public:
 			void setup(
