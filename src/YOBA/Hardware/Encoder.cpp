@@ -1,6 +1,6 @@
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_MCU)
+#if defined(YOBA_SYSTEM_GPIO)
 
 #include <YOBA/Hardware/Encoder.hpp>
 #include <YOBA/System.hpp>

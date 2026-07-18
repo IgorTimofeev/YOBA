@@ -8,7 +8,7 @@
 
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_MCU)
+#if defined(YOBA_SYSTEM_I2C)
 
 #include <YOBA/System.hpp>
 #include <YOBA/UI/Application.hpp>

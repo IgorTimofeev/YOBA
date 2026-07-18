@@ -1,6 +1,6 @@
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_MCU)
+#if defined(YOBA_SYSTEM_SPI)
 
 #include <YOBA/Hardware/Displays/SPIDisplay.hpp>
 #include <YOBA/System.hpp>

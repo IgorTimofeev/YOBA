@@ -6,10 +6,10 @@
 #include <esp_timer.h>
 
 #include <YOBA/Core.hpp>
+#include <YOBA/Hardware.hpp>
 #include <YOBA/Rendering.hpp>
 #include <YOBA/UI.hpp>
 
-#include <YOBA/Hardware/Displays/ILI9341Display.hpp>
 #include <YOBA/Resources/Fonts/Unscii16Font.hpp>
 
 using namespace YOBA;
@@ -19,7 +19,7 @@ ILI9341Display display {};
 
 // Choosing renderer that is suitable for our display. RGB565 is a good compromise between RAM/performance,
 // in our case it will allocate 320 * 240 * 2 = 150 KiB of heap for pixel buffer
-RGB565TransactionalBufferedRenderer renderer {};
+RGB565BufferedRenderer renderer {};
 
 // Using one of default fonts
 constexpr static Unscii16Font font {};

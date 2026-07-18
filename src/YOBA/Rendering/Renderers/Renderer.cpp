@@ -1350,8 +1350,4 @@ namespace YOBA {
 	void Renderer::putText(const Point& position, const Font* font, const Color* color, const std::string_view text) {
 		putText(position, font, 1, color, text);
 	}
-
-	void Renderer::flush() {
-
-	}
 }

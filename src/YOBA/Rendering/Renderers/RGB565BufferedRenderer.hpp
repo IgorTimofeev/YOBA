@@ -1,9 +1,9 @@
 #pragma once
 
-#include <YOBA/Rendering/Renderers/TransactionalBufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/BufferedRenderer.hpp>
 
 namespace YOBA {
-	class RGB565TransactionalBufferedRenderer : public TransactionalBufferedRenderer {
+	class RGB565BufferedRenderer : public BufferedRenderer {
 		public:
 			void flush() override;
 

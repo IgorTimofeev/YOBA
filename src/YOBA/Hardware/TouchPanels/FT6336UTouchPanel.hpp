@@ -10,7 +10,8 @@
 
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_MCU)
+#if defined(YOBA_SYSTEM_I2C)
+
 #include <cstdint>
 
 #include <YOBA/Hardware/TouchPanels/TouchPanel.hpp>

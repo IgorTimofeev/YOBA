@@ -97,7 +97,10 @@ namespace YOBA {
 			*/
 			void putText(const Point& position, const Font* font, const uint8_t fontScale, const Color* color, std::string_view text);
 
-			virtual void flush();
+			/**
+			* @brief Sends pixel data to assigned <b>RenderingTarget</b>
+			*/
+			virtual void flush() = 0;
 
 		protected:
 			RenderingTarget* _target = nullptr;

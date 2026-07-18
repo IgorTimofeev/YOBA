@@ -2,7 +2,7 @@
 
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_DESKTOP)
+#if defined(YOBA_SYSTEM_SFML)
 
 #include <cstdint>
 #include <span>
@@ -18,8 +18,6 @@ namespace YOBA {
 				const Size& size,
 				const float renderingScale = 1.0f
 			) {
-				_renderingScale = renderingScale;
-
 				RenderingTarget::setup(
 					size,
 					Rotation::none,
@@ -31,7 +29,7 @@ namespace YOBA {
 					return;
 
 				_sprite.setTexture(_texture, true);
-				_sprite.setScale({ _renderingScale, _renderingScale });
+				_sprite.setScale({ renderingScale, renderingScale });
 
 				_textureBufferLength = size.getSquare() * 4;
 				system::reallocate(_textureBuffer, _textureBufferLength);
@@ -45,7 +43,7 @@ namespace YOBA {
 			}
 
 			float getRenderingScale() const {
-				return _renderingScale;
+				return _sprite.getScale().x;
 			}
 
 			void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override {
@@ -64,8 +62,6 @@ namespace YOBA {
 			}
 
 		private:
-			float _renderingScale = 1.0f;
-
 			sf::Texture _texture {};
 			uint8_t* _textureBuffer = nullptr;
 			size_t _textureBufferLength = 0;
