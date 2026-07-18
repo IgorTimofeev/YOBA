@@ -47,7 +47,6 @@
 // Controls
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/Selector.hpp>
-#include <YOBA/UI/Button.hpp>
 #include <YOBA/UI/SevenSegment.hpp>
 #include <YOBA/UI/Slider.hpp>
 #include <YOBA/UI/Knob.hpp>
@@ -63,6 +62,9 @@
 #include <YOBA/UI/HSBColorPalette.hpp>
 #include <YOBA/UI/ColorPicker.hpp>
 #include <YOBA/UI/TextAndSwitch.hpp>
+#include <YOBA/UI/Buttons/Button.hpp>
+#include <YOBA/UI/Buttons/TextButton.hpp>
+#include <YOBA/UI/Buttons/ImageButton.hpp>
 
 // Shapes
 #include <YOBA/UI/Shapes/Shape.hpp>

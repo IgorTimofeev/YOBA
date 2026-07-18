@@ -1,4 +1,4 @@
-#include <YOBA/UI/Button.hpp>
+#include <YOBA/UI/Buttons/Button.hpp>
 #include <YOBA/UI/Application.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 
@@ -30,7 +30,7 @@ namespace YOBA {
 				}
 
 				callOnClick();
-				
+
 				_pointerWasDown = false;
 			}
 
@@ -79,28 +79,6 @@ namespace YOBA {
 				color
 			);
 		}
-
-		// Text
-		const auto font = getFont();
-
-		if (font) {
-			color = Color::select(isActive(), _defaultTextColor, _activeTextColor);
-
-			if (color) {
-				renderer->putText(
-					Point(
-						bounds.getXCenter() - font->getWidth(getFontScale(), getText()) / 2 + _contentMargin.getLeft() - _contentMargin.getRight(),
-						bounds.getYCenter() - font->getLineHeight(getFontScale()) / 2 + _contentMargin.getTop() - _contentMargin.getBottom()
-					),
-					font,
-					getFontScale(),
-					color,
-					getText()
-				);
-			}
-		}
-
-		Element::onRender(renderer, bounds);
 	}
 
 	bool Button::isToggle() const {
@@ -119,28 +97,12 @@ namespace YOBA {
 		_activeBackgroundColor = value;
 	}
 
-	const Color* Button::getActiveTextColor() const {
-		return _activeTextColor;
-	}
-
-	void Button::setActiveTextColor(const Color* value) {
-		_activeTextColor = value;
-	}
-
 	const Color* Button::getDefaultBackgroundColor() const {
 		return _defaultBackgroundColor;
 	}
 
 	void Button::setDefaultBackgroundColor(const Color* value) {
 		_defaultBackgroundColor = value;
-	}
-
-	const Color* Button::getDefaultTextColor() const {
-		return _defaultTextColor;
-	}
-
-	void Button::setDefaultTextColor(const Color* value) {
-		_defaultTextColor = value;
 	}
 
 	const Color* Button::getDefaultBorderColor() const {
@@ -168,16 +130,6 @@ namespace YOBA {
 
 		if (_onClick)
 			_onClick();
-	}
-
-	const Margin& Button::getContentMargin() const {
-		return _contentMargin;
-	}
-
-	void Button::setContentMargin(const Margin& contentMargin) {
-		_contentMargin = contentMargin;
-
-		invalidate();
 	}
 
 	void Button::setOnClick(const std::function<void()>& onClick) {

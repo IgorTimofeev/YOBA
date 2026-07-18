@@ -7,7 +7,7 @@
 #include <YOBA/UI/RelativeStackLayout.hpp>
 #include <YOBA/UI/TextField.hpp>
 #include <YOBA/UI/Titler.hpp>
-#include <YOBA/UI/Button.hpp>
+#include <YOBA/UI/Buttons/TextButton.hpp>
 
 namespace YOBA {
 	class ColorPickerDialog : public TitleStackLayoutBottomSheetDialog {
@@ -33,7 +33,7 @@ namespace YOBA {
 			TextField hexTextField {};
 			Titler hexTitler { "HEX", &hexTextField };
 
-			Button confirmButton {};
+			TextButton confirmButton {};
 
 			const std::function<void()>& getOnConfirm() const;
 			void setOnConfirm(const std::function<void()>& value);

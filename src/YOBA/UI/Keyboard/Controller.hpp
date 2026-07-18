@@ -5,7 +5,6 @@
 #include <YOBA/UI/Keyboard/Keyboard.hpp>
 
 #include <YOBA/UI/Layout.hpp>
-#include <YOBA/UI/Button.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
 
 namespace YOBA {

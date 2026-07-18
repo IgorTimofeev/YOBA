@@ -3,14 +3,13 @@
 #include <optional>
 
 #include <YOBA/Core/Key.hpp>
-#include <YOBA/UI/Button.hpp>
-#include <YOBA/UI/RelativeStackLayout.hpp>
+#include <YOBA/UI/Buttons/TextButton.hpp>
 #include <YOBA/UI/Keyboard/Generic.hpp>
 
 namespace YOBA {
 	class Keyboard;
 
-	class KeyboardButton : public Button {
+	class KeyboardButton : public TextButton {
 		public:
 			KeyboardButton(
 				KeyboardKeyType type,

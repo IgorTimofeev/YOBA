@@ -62,7 +62,7 @@ namespace YOBA {
 	}
 
 	void KeyboardButton::onIsActiveChanged() {
-		Button::onIsActiveChanged();
+		TextButton::onIsActiveChanged();
 
 		const auto key = getKeyFromCase();
 

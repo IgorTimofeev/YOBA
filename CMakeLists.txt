@@ -60,7 +60,9 @@ set(YOBA_SOURCES
   src/YOBA/UI/Transforms/TransformGroup.cpp
   src/YOBA/UI/Transforms/TranslateTransform.cpp
   src/YOBA/UI/Application.cpp
-  src/YOBA/UI/Button.cpp
+  src/YOBA/UI/Buttons/Button.cpp
+  src/YOBA/UI/Buttons/TextButton.cpp
+  src/YOBA/UI/Buttons/ImageButton.cpp
   src/YOBA/UI/Control.cpp
   src/YOBA/UI/Decorator.cpp
   src/YOBA/UI/Divider.cpp
