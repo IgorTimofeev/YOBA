@@ -9,7 +9,7 @@ namespace YOBA {
 		titleTextView.setText("Choose color");
 
 		// Color palette
-		colorPalette.setOnSelectedColorChanged([this] {
+		colorPalette.setOnColorSelected([this] {
 			toHSBTextFields();
 			toHEXTextField();
 		});
@@ -24,10 +24,8 @@ namespace YOBA {
 			textField.setKeyboardLayoutOptions(KeyboardLayoutOptions::numeric);
 
 			textField.setOnInput([this](const auto key, const auto text) {
-				if (key != Key::enter)
-					return;
-
 				fromHSBTextFields();
+				toHEXTextField();
 			});
 
 			textFieldRow += &titler;
@@ -41,12 +39,11 @@ namespace YOBA {
 		hexTextField.setKeyboardLayoutOptions(KeyboardLayoutOptions::text);
 
 		hexTextField.setOnInput([this](const auto key, const auto text) {
-			if (key != Key::enter)
-				return;
-
 			const auto uintColor = Text::tryParseHexOr(hexTextField.getText(), 0);
 
 			colorPalette.setSelectedColor(RGB888Color(uintColor).toHSB());
+
+			toHSBTextFields();
 		});
 
 		textFieldRow += &hexTitler;

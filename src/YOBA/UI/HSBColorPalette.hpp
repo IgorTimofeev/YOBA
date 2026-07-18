@@ -17,21 +17,21 @@ namespace YOBA {
 			const Color* getHandleColor() const;
 			void setHandleColor(const Color* value);
 
-			const std::function<void()>& getOnValueChanged() const;
-			void setOnValueChanged(const std::function<void()>& onValueChanged);
+			const std::function<void()>& getOnValueSelected() const;
+			void setOnValueSelected(const std::function<void()>& value);
 
 		protected:
 			void onEvent(Event* event) override;
 
 			virtual void onPointerEvent(const Point& position) = 0;
 
-			void invokeOnValueChanged() const;
+			void invokeOnValueSelected() const;
 
 		private:
 			uint8_t _pixelSize = 4;
 			const Color* _handleColor = nullptr;
 
-			std::function<void()> _onValueChanged = nullptr;
+			std::function<void()> _onValueSelected = nullptr;
 	};
 
 	class HSBColorPaletteSBSelector : public HSBColorPaletteSelector {
@@ -84,15 +84,15 @@ namespace YOBA {
 			HSBColor getSelectedColor() const;
 			void setSelectedColor(const HSBColor& value);
 
-			const std::function<void()>& getOnSelectedColorChanged() const;
-			void setOnSelectedColorChanged(const std::function<void()>& value);
+			const std::function<void()>& getOnColorSelected() const;
+			void setOnColorSelected(const std::function<void()>& value);
 
 		private:
 			HSBColorPaletteSBSelector _SBSelector {};
 			HSBColorPaletteHSelector _HSelector {};
 
-			std::function<void()> _onSelectedColorChanged = nullptr;
+			std::function<void()> _onColorSelected = nullptr;
 
-			void onAnySelectorValueChanged() const;
+			void onAnySelectorValueSelected() const;
 	};
 }
