@@ -29,7 +29,7 @@ set(YOBA_SOURCES
   src/YOBA/Hardware/Encoder.cpp
   src/YOBA/Rendering/Renderers/ARGBBufferedRenderer.cpp
   src/YOBA/Rendering/Renderers/BufferedRenderer.cpp
-  src/YOBA/Rendering/Renderers/IndexedColors8TBufferedRenderer.cpp
+  src/YOBA/Rendering/Renderers/Indexed8BufferedRenderer.cpp
   src/YOBA/Rendering/Renderers/MonochromeBufferedRenderer.cpp
   src/YOBA/Rendering/Renderers/Renderer.cpp
   src/YOBA/Rendering/Renderers/RGB565BufferedRenderer.cpp

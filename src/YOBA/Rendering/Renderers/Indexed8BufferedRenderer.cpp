@@ -1,23 +1,23 @@
-#include <YOBA/Rendering/Renderers/IndexedColors8TBufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/Indexed8BufferedRenderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
-	IndexedColors8TBufferedRenderer::IndexedColors8TBufferedRenderer(const uint8_t paletteLength) : IndexedColorsBufferedRenderer(paletteLength) {
+	Indexed8BufferedRenderer::Indexed8BufferedRenderer(const uint8_t paletteLength) : IndexedBufferedRenderer(paletteLength) {
 
 	}
 
-	size_t IndexedColors8TBufferedRenderer::computePixelBufferLength() const {
+	size_t Indexed8BufferedRenderer::computePixelBufferLength() const {
 		return
 			getTarget()->getSize().getWidth()
 			* getFlushingChunkHeight()
 			* Color::getBytesPerModel(getTarget()->getColorModel());
 	}
 
-	size_t IndexedColors8TBufferedRenderer::computePaletteIndicesBufferLength() const {
+	size_t Indexed8BufferedRenderer::computePaletteIndicesBufferLength() const {
 		return getTarget()->getSize().getSquare();
 	}
 
-	void IndexedColors8TBufferedRenderer::flush() {
+	void Indexed8BufferedRenderer::flush() {
 		switch (getTarget()->getColorModel()) {
 			case ColorModel::RGB565: {
 				const auto& size = getTarget()->getSize();
@@ -78,19 +78,19 @@ namespace YOBA {
 		}
 	}
 
-	void IndexedColors8TBufferedRenderer::clearNative(const Color* color) {
+	void Indexed8BufferedRenderer::clearNative(const Color* color) {
 		std::memset(_paletteIndicesBuffer, getPaletteIndex(color), _paletteIndicesBufferLength);
 	}
 
-	void IndexedColors8TBufferedRenderer::putPixelNative(const Point& point, const Color* color) {
+	void Indexed8BufferedRenderer::putPixelNative(const Point& point, const Color* color) {
 		_paletteIndicesBuffer[getPixelIndex(point)] = getPaletteIndex(color);
 	}
 
-	void IndexedColors8TBufferedRenderer::strokeHorizontalLineNative(const Point& point, const uint16_t width, const Color* color) {
+	void Indexed8BufferedRenderer::strokeHorizontalLineNative(const Point& point, const uint16_t width, const Color* color) {
 		std::memset(_paletteIndicesBuffer + getPixelIndex(point), getPaletteIndex(color), width);
 	}
 
-	void IndexedColors8TBufferedRenderer::strokeVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
+	void Indexed8BufferedRenderer::strokeVerticalLineNative(const Point& point, const uint16_t height, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
@@ -101,7 +101,7 @@ namespace YOBA {
 		}
 	}
 
-	void IndexedColors8TBufferedRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
+	void Indexed8BufferedRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
 		uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(bounds.getPosition());
 		const uint16_t scanlineLength = getTarget()->getSize().getWidth();
 		const auto paletteIndex = getPaletteIndex(color);
@@ -112,7 +112,7 @@ namespace YOBA {
 		}
 	}
 
-	void IndexedColors8TBufferedRenderer::putImageNative(const Point& point, const Image* image) {
+	void Indexed8BufferedRenderer::putImageNative(const Point& point, const Image* image) {
 		if (image->getColorModel() != ColorModel::indexed8)
 			return;
 
@@ -182,7 +182,7 @@ namespace YOBA {
 		}
 	}
 
-	void IndexedColors8TBufferedRenderer::setOpenComputersPaletteColors() {
+	void Indexed8BufferedRenderer::setOpenComputersPaletteColors() {
 		constexpr uint8_t reds = 6;
 		constexpr uint8_t greens = 8;
 		constexpr uint8_t blues = 5;

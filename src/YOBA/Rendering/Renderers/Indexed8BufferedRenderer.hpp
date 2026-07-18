@@ -1,11 +1,11 @@
 #pragma once
 
-#include <YOBA/Rendering/Renderers/IndexedColorsBufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/IndexedBufferedRenderer.hpp>
 
 namespace YOBA {
-	class IndexedColors8TBufferedRenderer : public IndexedColorsBufferedRenderer<uint8_t, uint16_t> {
+	class Indexed8BufferedRenderer : public IndexedBufferedRenderer<uint8_t, uint16_t> {
 		public:
-			explicit IndexedColors8TBufferedRenderer(uint8_t paletteLength);
+			explicit Indexed8BufferedRenderer(uint8_t paletteLength);
 
 			void flush() override;
 
