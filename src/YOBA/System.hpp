@@ -23,10 +23,15 @@
 
 		#include <YOBA/System/Arduino/ESP.hpp>
 	#endif
+
 // Desktop
 #elif defined(WIN32)
 	#define YOBA_SYSTEM_DESKTOP
-	#define YOBA_SYSTEM_SFML
 
 	#include <YOBA/System/Desktop.hpp>
+#endif
+
+// SFML
+#if __has_include(<SFML/Config.hpp>)
+	#define YOBA_SYSTEM_SFML
 #endif

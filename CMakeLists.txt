@@ -34,6 +34,7 @@ set(YOBA_SOURCES
   src/YOBA/Rendering/Renderers/Renderer.cpp
   src/YOBA/Rendering/Renderers/RGB565BufferedRenderer.cpp
   src/YOBA/Rendering/Targets/RenderingTarget.cpp
+  src/YOBA/Rendering/Targets/SFMLSpriteRenderingTarget.cpp
   src/YOBA/System/Desktop.cpp
   src/YOBA/System/ESP-IDF.cpp
   src/YOBA/UI/Animations/Animation.cpp
@@ -92,6 +93,7 @@ set(YOBA_SOURCES
 
 #file(GLOB_RECURSE YOBA_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 
+# ESP-IDF
 if(ESP_PLATFORM)
   idf_component_register(
 	SRCS ${YOBA_SOURCES}
@@ -104,9 +106,16 @@ if(ESP_PLATFORM)
   )
 
   return()
+
+# Desktop
 else()
   project(YOBA)
 
   add_library(YOBA ${YOBA_SOURCES})
   target_include_directories(YOBA PUBLIC src)
+
+  # Checking if SFML is available
+  if(TARGET SFML::Graphics)
+	target_link_libraries(YOBA PUBLIC SFML::Graphics)
+  endif()
 endif()
