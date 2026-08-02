@@ -76,6 +76,9 @@ namespace YOBA {
 
 	void ColorPickerDialog::setSelectedColor(const HSBColor& value) {
 		colorPalette.setSelectedColor(value);
+
+		toHSBTextFields();
+		toHEXTextField();
 	}
 
 	void ColorPickerDialog::toHSBTextFields() {

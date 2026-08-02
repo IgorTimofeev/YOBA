@@ -10,4 +10,4 @@
 #include <YOBA/Core/Colors/HSBColor.hpp>
 #include <YOBA/Core/Colors/IndexedColor.hpp>
 
-#include <YOBA/Core/Colors/ConversionMethodsImplementation.hpp>
+#include <YOBA/Core/Colors/Implementation.hpp>
