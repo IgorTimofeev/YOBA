@@ -9,10 +9,6 @@ namespace YOBA {
 		return _current;
 	}
 
-	Application::Application() {
-
-	}
-
 	void Application::setRenderer(Renderer* value) {
 		_renderer = value;
 

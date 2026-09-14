@@ -18,8 +18,6 @@ namespace YOBA {
 		public:
 			static Application* getCurrent();
 
-			explicit Application();
-
 			virtual void tick();
 			virtual void updateLayout();
 			virtual void render();
