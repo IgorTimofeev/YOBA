@@ -1,4 +1,5 @@
 #include <YOBA/UI/Animations/SizeAnimation.hpp>
+
 #include "YOBA/UI/Application.hpp"
 
 namespace YOBA {
@@ -22,35 +23,40 @@ namespace YOBA {
 		if (state != AnimationState::started)
 			return;
 
-		Application::getCurrent()->updateLayout();
-
-		const auto& layoutBounds = getTarget()->getLayoutBounds();
+		const auto application = Application::getCurrent();
+		const auto target = getTarget();
 
 		// Computing
 
 		// From
+		const auto& oldBounds = target->getLayoutBounds();
+
 		_computedFrom.setWidth(
 			_from.getWidth() == Size::computed
-				? layoutBounds.getWidth()
+				? oldBounds.getWidth()
 				: _from.getWidth()
 		);
 
 		_computedFrom.setHeight(
 			_from.getHeight() == Size::computed
-				? layoutBounds.getHeight()
+				? oldBounds.getHeight()
 				: _from.getHeight()
 		);
 
 		// To
+		target->setSize(_to);
+		application->updateLayout();
+		const auto& newBounds = target->getLayoutBounds();
+
 		_computedTo.setWidth(
 			_to.getWidth() == Size::computed
-				? layoutBounds.getWidth()
+				? newBounds.getWidth()
 				: _to.getWidth()
 		);
 
 		_computedTo.setHeight(
 			_to.getHeight() == Size::computed
-				? layoutBounds.getHeight()
+				? newBounds.getHeight()
 				: _to.getHeight()
 		);
 	}
