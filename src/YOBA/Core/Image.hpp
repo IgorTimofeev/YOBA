@@ -90,6 +90,10 @@ namespace YOBA {
 				constexpr SFMLImage() : Image(ImageType::SFML) {
 
 				}
+
+				constexpr SFMLImage(sf::Sprite* sprite) : SFMLImage() {
+					setSprite(sprite);
+				}
 				
 				const Size& getSize() const override {
 					return _size;
