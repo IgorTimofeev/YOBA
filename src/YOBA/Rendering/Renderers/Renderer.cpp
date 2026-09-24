@@ -45,7 +45,7 @@ namespace YOBA {
 		fillRectangleNative(Rectangle(position.getX(), position.getY(), 1, length), color);
 	}
 
-	void Renderer::putImageNative(const Point& position, const Image* image) {
+	void Renderer::putImageNative(const Rectangle& bounds, const Image* image) {
 
 	}
 
@@ -183,9 +183,9 @@ namespace YOBA {
 		fillTriangle(topLeft, bottomLeft, bottomRight, color);
 	}
 
-	void Renderer::putImage(const Point& position, const Image* image) {
-		if (getClip().intersects(Rectangle(position, image->getSize())))
-			putImageNative(position, image);
+	void Renderer::putImage(const Rectangle& bounds, const Image* image) {
+		if (getClip().intersects(bounds))
+			putImageNative(bounds, image);
 	}
 
 	// -------------------------------- Non-native rendering --------------------------------

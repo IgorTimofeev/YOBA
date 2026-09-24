@@ -66,16 +66,18 @@ namespace YOBA {
 		}
 	}
 
-	void RGB565BufferedRenderer::putImageNative(const Point& point, const Image* image) {
-		if (image->getColorModel() != ColorModel::RGB565)
+	void RGB565BufferedRenderer::putImageNative(const Rectangle& bounds, const Image* image) {
+		const auto embeddedImage = reinterpret_cast<const EmbeddedImage*>(image);
+
+		if (embeddedImage->getColorModel() != ColorModel::RGB565)
 			return;
 
-		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point);
+		auto pixelBufferPtr = reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(bounds.getPosition());
 		const size_t pixelBufferScanlineLength = _target->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
-		if (image->getOptions() & ImageOptions::alpha1Bit) {
-			auto bitmapPtr = image->getBitmap();
+		if (embeddedImage->getOptions() & EmbeddedImageOptions::alpha1Bit) {
+			auto bitmapPtr = embeddedImage->getBitmap();
 
 			uint8_t bitmapBitIndex = 0;
 
@@ -122,7 +124,7 @@ namespace YOBA {
 		}
 		// Without
 		else {
-			auto bitmapPtr = reinterpret_cast<const uint16_t*>(image->getBitmap());
+			auto bitmapPtr = reinterpret_cast<const uint16_t*>(embeddedImage->getBitmap());
 
 			for (uint16_t y = 0; y < image->getSize().getHeight(); y++) {
 				for (uint16_t x = 0; x < image->getSize().getWidth(); x++) {

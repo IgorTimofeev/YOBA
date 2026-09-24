@@ -13,8 +13,8 @@
 
 namespace YOBA {
 	/**
-	* @brief Encapsulates sf::RenderTexture that will be used by YOBA for flushing pixel data.
-	* The texture itself can be rendered later via <b>window.draw()</b>
+	* @brief Encapsulates sf::Sprite that will be used by YOBA for flushing pixel data.
+	* The sprite itself can be rendered later via <b>window.draw()</b>
 	*/
 	class SFMLRenderingTarget : public RenderingTarget {
 		public:

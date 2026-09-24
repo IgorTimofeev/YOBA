@@ -46,7 +46,9 @@ namespace YOBA {
 	}
 
 	void SFMLRenderingTarget::updateTextureSize() {
-		_renderTexture.resize(sf::Vector2u(getSize().getWidth(), getSize().getHeight()));
+		if (_renderTexture.resize(sf::Vector2u(getSize().getWidth(), getSize().getHeight()))) {
+
+		}
 	}
 }
 

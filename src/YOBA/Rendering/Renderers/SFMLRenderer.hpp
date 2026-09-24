@@ -12,11 +12,10 @@ namespace YOBA {
 	class SFMLRenderer : public virtual Renderer {
 		public:
 			void flush() override;
-			void putSprite(const Point& position, sf::Sprite* sprite) const;
 
 		protected:
 			void fillRectangleNative(const Rectangle& bounds, const Color* color) override;
-			void putImageNative(const Point& position, const Image* image) override;
+			void putImageNative(const Rectangle& bounds, const Image* image) override;
 
 		private:
 

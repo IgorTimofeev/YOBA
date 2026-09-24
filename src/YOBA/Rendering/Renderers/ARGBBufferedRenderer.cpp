@@ -187,12 +187,14 @@ namespace YOBA {
 		}
 	}
 
-	void ARGBBufferedRenderer::putImageNative(const Point& position, const Image* image) {
-		if (image->getColorModel() != ColorModel::ARGB)
+	void ARGBBufferedRenderer::putImageNative(const Rectangle& bounds, const Image* image) {
+		const auto embeddedImage = reinterpret_cast<const EmbeddedImage*>(image);
+
+		if (embeddedImage->getColorModel() != ColorModel::ARGB)
 			return;
 
-		auto x = position.getX();
-		auto y = position.getY();
+		auto x = bounds.getX();
+		auto y = bounds.getY();
 
 		uint16_t imageY;
 		uint16_t imageX;
@@ -208,10 +210,10 @@ namespace YOBA {
 		auto pixelBufferPtr = _pixelBuffer + getPixelIndex(x, y) * 3;
 		const auto pixelBufferScanlineLength = (getTarget()->getSize().getWidth() - image->getSize().getWidth()) * 3;
 
-		auto bitmapPtr = image->getBitmap();
+		auto bitmapPtr = embeddedImage->getBitmap();
 
 		// With alpha
-		if (image->getOptions() & ImageOptions::alpha8Bit) {
+		if (embeddedImage->getOptions() & EmbeddedImageOptions::alpha8Bit) {
 			uint8_t bitmapBitIndex = 0;
 			bool containsYX;
 			uint8_t alpha;
@@ -279,7 +281,7 @@ namespace YOBA {
 					pixelBufferPtr += 3;
 				}
 
-				x = position.getX();
+				x = bounds.getX();
 				y++;
 
 				pixelBufferPtr += pixelBufferScanlineLength;
@@ -300,7 +302,7 @@ namespace YOBA {
 					bitmapPtr += 3;
 				}
 
-				x = position.getX();
+				x = bounds.getX();
 				y++;
 
 				pixelBufferPtr += pixelBufferScanlineLength;

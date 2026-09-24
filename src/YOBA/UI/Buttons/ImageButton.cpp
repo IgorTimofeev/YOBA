@@ -38,7 +38,7 @@ namespace YOBA {
 			return;
 
 		renderer->putImage(
-			bounds.getCenter() - image->getSize().getCenter(),
+			Rectangle(bounds.getCenter() - image->getSize().getCenter(), image->getSize()),
 			image
 		);
 	}

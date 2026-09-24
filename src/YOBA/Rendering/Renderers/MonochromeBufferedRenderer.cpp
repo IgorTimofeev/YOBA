@@ -63,7 +63,7 @@ namespace YOBA {
 		}
 	}
 
-	void MonochromeBufferedRenderer::putImageNative(const Point& point, const Image* image) {
+	void MonochromeBufferedRenderer::putImageNative(const Rectangle& bounds, const Image* image) {
 
 	}
 }

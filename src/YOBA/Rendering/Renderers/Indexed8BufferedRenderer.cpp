@@ -112,17 +112,19 @@ namespace YOBA {
 		}
 	}
 
-	void Indexed8BufferedRenderer::putImageNative(const Point& point, const Image* image) {
-		if (image->getColorModel() != ColorModel::indexed8)
+	void Indexed8BufferedRenderer::putImageNative(const Rectangle& bounds, const Image* image) {
+		const auto embeddedImage = reinterpret_cast<const EmbeddedImage*>(image);
+
+		if (embeddedImage->getColorModel() != ColorModel::indexed8)
 			return;
 
-		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(point);
-		auto bitmapPtr = image->getBitmap();
+		auto paletteIndicesBufferPtr = _paletteIndicesBuffer + getPixelIndex(bounds.getPosition());
+		auto bitmapPtr = embeddedImage->getBitmap();
 
 		const auto scanlineLength = getTarget()->getSize().getWidth() - image->getSize().getWidth();
 
 		// With alpha
-		if (image->getOptions() & ImageOptions::alpha1Bit) {
+		if (embeddedImage->getOptions() & EmbeddedImageOptions::alpha1Bit) {
 			uint8_t bitmapBitIndex = 0;
 
 			// 0000 0000|0000 0000

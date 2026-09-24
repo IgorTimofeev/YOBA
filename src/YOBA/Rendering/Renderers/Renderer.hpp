@@ -33,7 +33,7 @@ namespace YOBA {
 			void fillChessPatternRectangle(const Rectangle& bounds, const Color* color, uint8_t filledStep = 1, uint8_t transparentStep = 1);
 			void fillQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
 
-			void putImage(const Point& position, const Image* image);
+			void putImage(const Rectangle& bounds, const Image* image);
 			void strokeRectangle(const Rectangle& bounds, const Color* color);
 			void strokeRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
 			// Thanks, AdaFruit!
@@ -113,7 +113,7 @@ namespace YOBA {
 			virtual void putPixelNative(const Point& position, const Color* color);
 			virtual void strokeHorizontalLineNative(const Point& position, const uint16_t length, const Color* color);
 			virtual void strokeVerticalLineNative(const Point& position, const uint16_t length, const Color* color);
-			virtual void putImageNative(const Point& position, const Image* image);
+			virtual void putImageNative(const Rectangle& bounds, const Image* image);
 
 		private:
 			static float getAtan2Fast(const float y, const float x);

@@ -4,10 +4,38 @@
 
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Colors.hpp>
+#include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_SFML
+	#include <SFML/Graphics.hpp>
+#endif
 
 namespace YOBA {
+	enum class ImageType : uint8_t {
+		embedded,
+		SFML
+	};
+
+	class Image {
+		public:
+			constexpr Image(const ImageType& type) : _type(type) {
+			
+			}
+
+			virtual ~Image() = default;
+
+			virtual const Size& getSize() const = 0;
+
+			ImageType getType() const {
+				return _type;
+			}
+
+		private:
+			ImageType _type;
+	};
+
 	// I love C++
-	namespace ImageOptions {
+	namespace EmbeddedImageOptions {
 		enum : uint8_t {
 			none =      0b00000000,
 			alpha1Bit = 0b00000001,
@@ -15,20 +43,26 @@ namespace YOBA {
 		};
 	}
 
-	class Image {
+	class EmbeddedImage : public Image {
 		public:
-			constexpr Image(
+			constexpr EmbeddedImage(
 				const ColorModel colorModel,
 				const uint8_t options,
 				const Size& size,
 				const uint8_t* bitmap
 			) :
+				Image(ImageType::embedded),
+
 				_colorModel(colorModel),
 				_options(options),
 				_size(size),
 				_bitmap(bitmap)
 			{
-			
+
+			}
+
+			constexpr const Size& getSize() const override {
+				return _size;
 			}
 
 			constexpr ColorModel getColorModel() const {
@@ -37,10 +71,6 @@ namespace YOBA {
 
 			constexpr uint8_t getOptions() const {
 				return _options;
-			}
-
-			constexpr const Size& getSize() const {
-				return _size;
 			}
 
 			constexpr const uint8_t* getBitmap() const {
@@ -53,4 +83,31 @@ namespace YOBA {
 			const Size _size;
 			const uint8_t* _bitmap;
 	};
+
+	#ifdef YOBA_SYSTEM_SFML
+		class SFMLImage : public Image {
+			public:
+				constexpr SFMLImage(sf::Sprite* sprite) : Image(ImageType::SFML), _sprite(sprite) {
+					setSizeMatchingTexture();
+				}
+				
+				const Size& getSize() const override {
+					return _size;
+				}
+
+				sf::Sprite* getSprite() const {
+					return _sprite;
+				}
+				
+				void setSizeMatchingTexture() {
+					_size = Size(_sprite->getTexture().getSize().x, _sprite->getTexture().getSize().y);
+				}
+
+			private:
+				Size _size {};
+				
+				sf::Sprite* _sprite;
+		};
+
+	#endif
 }
