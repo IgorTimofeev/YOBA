@@ -11,6 +11,7 @@ set(YOBA_SOURCES
   src/YOBA/Core/Events/PointerEvent.cpp
   src/YOBA/Core/Events/ScreenEvent.cpp
   src/YOBA/Core/Events/ScrollIntoViewEvent.cpp
+  src/YOBA/Core/Events/SFMLEvents.cpp
   src/YOBA/Core/Font.cpp
   src/YOBA/Core/Margin.cpp
   src/YOBA/Core/Rectangle.cpp
@@ -33,8 +34,9 @@ set(YOBA_SOURCES
   src/YOBA/Rendering/Renderers/MonochromeBufferedRenderer.cpp
   src/YOBA/Rendering/Renderers/Renderer.cpp
   src/YOBA/Rendering/Renderers/RGB565BufferedRenderer.cpp
+  src/YOBA/Rendering/Renderers/SFMLRenderer.cpp
   src/YOBA/Rendering/Targets/RenderingTarget.cpp
-  src/YOBA/Rendering/Targets/SFMLSpriteRenderingTarget.cpp
+  src/YOBA/Rendering/Targets/SFMLRenderingTarget.cpp
   src/YOBA/System/Desktop.cpp
   src/YOBA/System/ESP-IDF.cpp
   src/YOBA/UI/Animations/Animation.cpp
@@ -73,6 +75,7 @@ set(YOBA_SOURCES
   src/YOBA/UI/Parent.cpp
   src/YOBA/UI/ProgressBar.cpp
   src/YOBA/UI/RelativeStackLayout.cpp
+  src/YOBA/UI/ManualLayout.cpp
   src/YOBA/UI/ScrollBar.cpp
   src/YOBA/UI/ScrollView.cpp
   src/YOBA/UI/Selector.cpp

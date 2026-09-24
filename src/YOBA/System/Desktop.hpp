@@ -2,7 +2,7 @@
 
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_DESKTOP)
+#ifdef YOBA_SYSTEM_DESKTOP
 
 #include <cstdint>
 

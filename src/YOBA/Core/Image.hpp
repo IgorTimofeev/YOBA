@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include <YOBA/Core/Size.hpp>
+#include <YOBA/Core/Colors.hpp>
 
 namespace YOBA {
 	// I love C++

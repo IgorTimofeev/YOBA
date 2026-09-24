@@ -2,7 +2,7 @@
 
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_SPI)
+#ifdef YOBA_SYSTEM_SPI
 
 #include <cstdint>
 #include <span>

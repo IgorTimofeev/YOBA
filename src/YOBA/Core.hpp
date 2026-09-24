@@ -25,3 +25,7 @@
 #include <YOBA/Core/Events/PinchEvent.hpp>
 #include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
 #include <YOBA/Core/Events/MouseWheelEvent.hpp>
+
+#ifdef YOBA_SYSTEM_SFML
+	#include <YOBA/Core/Events/SFMLEvents.hpp>
+#endif

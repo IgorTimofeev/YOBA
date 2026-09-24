@@ -33,7 +33,7 @@ namespace YOBA {
 	}
 	
 	uint16_t BufferedRenderer::computeFlushingChunkHeight() const {
-		#if defined(YOBA_SYSTEM_MCU)
+		#ifdef YOBA_SYSTEM_MCU
 			// On ESP32 S3 max transaction length is 32 kb
 
 			const auto& size = getTarget()->getSize();
@@ -51,7 +51,7 @@ namespace YOBA {
 				switch (BPM) {
 					case 1: return size.getHeight() / 4;
 					case 2: {
-						#if defined(CONFIG_IDF_TARGET_ESP32S3)
+						#ifdef CONFIG_IDF_TARGET_ESP32S3
 							return size.getHeight() / 5;
 						#else
 							return size.getHeight() / 4;

@@ -28,6 +28,7 @@
 #include <YOBA/UI/Application.hpp>
 #include <YOBA/UI/StackLayout.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
+#include <YOBA/UI/ManualLayout.hpp>
 #include <YOBA/UI/WrapLayout.hpp>
 #include <YOBA/UI/Titler.hpp>
 

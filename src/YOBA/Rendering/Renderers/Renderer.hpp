@@ -108,12 +108,12 @@ namespace YOBA {
 
 			virtual void updateFromTarget();
 
-			virtual void clearNative(const Color* color) = 0;
-			virtual void putPixelNative(const Point& position, const Color* color) = 0;
-			virtual void strokeHorizontalLineNative(const Point& position, uint16_t length, const Color* color) = 0;
-			virtual void strokeVerticalLineNative(const Point& position, uint16_t length, const Color* color) = 0;
 			virtual void fillRectangleNative(const Rectangle& bounds, const Color* color) = 0;
-			virtual void putImageNative(const Point& position, const Image* image) = 0;
+			virtual void clearNative(const Color* color);
+			virtual void putPixelNative(const Point& position, const Color* color);
+			virtual void strokeHorizontalLineNative(const Point& position, const uint16_t length, const Color* color);
+			virtual void strokeVerticalLineNative(const Point& position, const uint16_t length, const Color* color);
+			virtual void putImageNative(const Point& position, const Image* image);
 
 		private:
 			static float getAtan2Fast(const float y, const float x);

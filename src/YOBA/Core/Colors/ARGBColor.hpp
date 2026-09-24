@@ -1,6 +1,11 @@
 #pragma once
 
 #include <YOBA/Core/Colors/Color.hpp>
+#include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_SFML
+	#include <SFML/Graphics.hpp>
+#endif
 
 namespace YOBA {
 	class MonochromeColor;
@@ -77,6 +82,12 @@ namespace YOBA {
 			constexpr uint32_t toUint32() const {
 				return (_r << 24) | (_r << 16) | (_g << 8) | _b;
 			}
+
+			#ifdef YOBA_SYSTEM_SFML
+				constexpr sf::Color toSFMLColor() const {
+					return sf::Color(_r, _g, _b, _a);
+				}
+			#endif
 
 			constexpr static void blend(
 				uint8_t& a1,

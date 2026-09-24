@@ -29,6 +29,26 @@ namespace YOBA {
 
 	}
 
+	void Renderer::clearNative(const Color* color) {
+		fillRectangleNative(Rectangle(_target->getSize()), color);
+	}
+
+	void Renderer::putPixelNative(const Point& position, const Color* color) {
+		fillRectangleNative(Rectangle(position.getX(), position.getY(), 1, 1), color);
+	}
+
+	void Renderer::strokeHorizontalLineNative(const Point& position, const uint16_t length, const Color* color) {
+		fillRectangleNative(Rectangle(position.getX(), position.getY(), length, 1), color);
+	}
+
+	void Renderer::strokeVerticalLineNative(const Point& position, const uint16_t length, const Color* color) {
+		fillRectangleNative(Rectangle(position.getX(), position.getY(), 1, length), color);
+	}
+
+	void Renderer::putImageNative(const Point& position, const Image* image) {
+
+	}
+
 	const Rectangle& Renderer::getClip() const {
 		return _clip;
 	}

@@ -10,7 +10,7 @@
 
 #include <YOBA/System.hpp>
 
-#if defined(YOBA_SYSTEM_I2C)
+#ifdef YOBA_SYSTEM_I2C
 
 #include <cstdint>
 
