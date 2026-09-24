@@ -87,13 +87,19 @@ namespace YOBA {
 	#ifdef YOBA_SYSTEM_SFML
 		class SFMLImage : public Image {
 			public:
-				constexpr SFMLImage(sf::Sprite* sprite) : Image(ImageType::SFML), _sprite(sprite) {
-					setSizeMatchingTexture();
+				constexpr SFMLImage() : Image(ImageType::SFML) {
+
 				}
 				
 				const Size& getSize() const override {
 					return _size;
 				}
+
+				void setSprite(sf::Sprite* sprite) {
+					_sprite = sprite;
+
+					setSizeMatchingTexture();
+				};
 
 				sf::Sprite* getSprite() const {
 					return _sprite;
@@ -106,7 +112,7 @@ namespace YOBA {
 			private:
 				Size _size {};
 				
-				sf::Sprite* _sprite;
+				sf::Sprite* _sprite = nullptr;
 		};
 
 	#endif

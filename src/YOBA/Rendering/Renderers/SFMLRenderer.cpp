@@ -13,13 +13,18 @@ namespace YOBA {
 		_target->flush(Rectangle(_target->getSize()), std::span(&pizda, 1));
 	}
 
+	void SFMLRenderer::clearNative(const Color* color) {
+		auto& renderTexture = reinterpret_cast<SFMLRenderingTarget*>(_target)->getRenderTexture();
+		renderTexture.clear(static_cast<const ARGBColor*>(color)->toSFMLColor());
+	}
+
 	void SFMLRenderer::fillRectangleNative(const Rectangle& bounds, const Color* color) {
-		auto& texture = reinterpret_cast<SFMLRenderingTarget*>(_target)->getRenderTexture();
+		auto& renderTexture = reinterpret_cast<SFMLRenderingTarget*>(_target)->getRenderTexture();
 
 		sf::RectangleShape shape(sf::Vector2f(bounds.getWidth(), bounds.getHeight()));
 		shape.setPosition(sf::Vector2f(bounds.getX(), bounds.getY()));
 		shape.setFillColor(static_cast<const ARGBColor*>(color)->toSFMLColor());
-		texture.draw(shape);
+		renderTexture.draw(shape);
 	}
 
 	void SFMLRenderer::putImageNative(const Rectangle& bounds, const Image* image) {
@@ -34,6 +39,41 @@ namespace YOBA {
 		));
 
 		renderTexture.draw(*sfmlImage->getSprite());
+	}
+
+	void SFMLRenderer::putPixelNative(const Point& position, const Color* color) {
+		auto& renderTexture = reinterpret_cast<SFMLRenderingTarget*>(_target)->getRenderTexture();
+
+		const sf::Vertex point(
+			sf::Vector2f(position.getX(), position.getY()),
+			static_cast<const ARGBColor*>(color)->toSFMLColor()
+		);
+
+		renderTexture.draw(&point, 1, sf::PrimitiveType::Points);
+	}
+
+	void SFMLRenderer::strokeHorizontalLineNative(const Point& position, const uint16_t length, const Color* color) {
+		auto& renderTexture = reinterpret_cast<SFMLRenderingTarget*>(_target)->getRenderTexture();
+		const auto sfmlColor = static_cast<const ARGBColor*>(color)->toSFMLColor();
+
+		const std::array vertices {
+			sf::Vertex(sf::Vector2f(position.getX(), position.getY()), sfmlColor),
+			sf::Vertex(sf::Vector2f(position.getX() + length - 1, position.getY()), sfmlColor)
+		};
+
+		renderTexture.draw(vertices.data(), vertices.size(), sf::PrimitiveType::Lines);
+	}
+
+	void SFMLRenderer::strokeVerticalLineNative(const Point& position, const uint16_t length, const Color* color) {
+		auto& renderTexture = reinterpret_cast<SFMLRenderingTarget*>(_target)->getRenderTexture();
+		const auto sfmlColor = static_cast<const ARGBColor*>(color)->toSFMLColor();
+
+		const std::array vertices {
+			sf::Vertex(sf::Vector2f(position.getX(), position.getY()), sfmlColor),
+			sf::Vertex(sf::Vector2f(position.getX(), position.getY() + length - 1), sfmlColor)
+		};
+
+		renderTexture.draw(vertices.data(), vertices.size(), sf::PrimitiveType::Lines);
 	}
 }
 
