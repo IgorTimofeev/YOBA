@@ -40,14 +40,14 @@ namespace YOBA {
 				_y = value;
 			}
 
-			constexpr Vector2 clockwisePerpendicular() const {
+			constexpr Vector2 getClockwisePerpendicular() const {
 				return {
 					_y,
 					-_x,
 				};
 			}
 
-			constexpr Vector2 counterClockwisePerpendicular() const {
+			constexpr Vector2 getCounterClockwisePerpendicular() const {
 				return {
 					-_y,
 					_x,
@@ -67,7 +67,7 @@ namespace YOBA {
 				};
 			}
 
-			constexpr float getRotationFloat(const Vector2& point) const {
+			constexpr float getRotation(const Vector2& point) const {
 				return std::atan2(static_cast<float>(point._y - _y), static_cast<float>(point._x - _x));
 			}
 
