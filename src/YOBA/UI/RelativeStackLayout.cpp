@@ -26,7 +26,7 @@ namespace YOBA {
 
 	void RelativeStackLayout::setRelativeSize(const Element* child, float value) {
 		if (value == 1) {
-			tryRemoveRelativeSize(child);
+			_elementSizes.erase(child);
 		}
 		else {
 			_elementSizes.insert_or_assign(child, value);
@@ -391,10 +391,6 @@ namespace YOBA {
 	void RelativeStackLayout::onChildRemoved(Element* child) {
 		Layout::onChildRemoved(child);
 
-		tryRemoveRelativeSize(child);
-	}
-
-	void RelativeStackLayout::tryRemoveRelativeSize(const Element* child) {
 		_elementSizes.erase(child);
 	}
 }

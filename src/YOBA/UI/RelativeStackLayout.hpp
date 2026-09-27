@@ -27,7 +27,5 @@ namespace YOBA {
 
 		private:
 			std::unordered_map<const Element*, float> _elementSizes {};
-
-			void tryRemoveRelativeSize(const Element* child);
 	};
 }

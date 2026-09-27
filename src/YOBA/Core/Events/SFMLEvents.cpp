@@ -1,5 +1,3 @@
-#pragma once
-
 #include <YOBA/System.hpp>
 
 #ifdef YOBA_SYSTEM_SFML

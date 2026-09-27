@@ -47,7 +47,7 @@ namespace YOBA {
 
 			}
 
-			constexpr const Size& getSize() const override {
+			const Size& getSize() const override {
 				return _size;
 			}
 

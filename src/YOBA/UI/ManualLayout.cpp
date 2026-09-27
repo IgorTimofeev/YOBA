@@ -53,8 +53,6 @@ namespace YOBA {
 				childSize.getWidth(),
 				childSize.getHeight()
 			));
-
-			auto a = 123;
 		}
 	}
 
