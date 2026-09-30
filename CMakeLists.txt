@@ -110,7 +110,7 @@ if(ESP_PLATFORM)
 	  esp_driver_i2c
   )
 
-  return()
+  component_compile_options("-frtti")
 
 # Desktop
 else()

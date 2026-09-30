@@ -34,36 +34,26 @@ all of which can be used separately
 
 # ESP-IDF installation
 
-First, you must enable RTTI (run-time type information), since complex components like keyboard and
-selectors utilize multi-inheritance and `dynamic_cast`. RTTI is disabled by default on ESP-IDF to save some flash memory,
-but since we’re using a fucking UI framework, a few bytes is a ridiculously small price
-to pay for such immense power. RTTI itself can be enabled via
+Just clone the library into your project:
 
-`idf.py menuconfig` > `Compiler options` > `Enable C++ run-time type info (RTTI)`
+`git clone https://github.com/IgorTimofeev/YOBA.git components/YOBA`
 
-After that, you can clone the library into your project. It would be wise to use submodules to do this:
-
-`git submodule add https://github.com/IgorTimofeev/YOBA.git components/YOBA`
-
-Don't forget to add `YOBA` component to your `CMakeLists.txt`. It should look like this:
+Then add `YOBA` component to your `CMakeLists.txt`. It should look like this:
 
 ```cmake
-file(GLOB_RECURSE my_sources "*.cpp")
-
 idf_component_register(
-    SRCS ${my_sources}
+    SRCS main.cpp
     INCLUDE_DIRS "."
+    # Here
     REQUIRES YOBA
 )
-
-include_directories(.)
 ```
 
 # Desktop installation
 
 Since `YOBA` is hardware-independent, I thought it would be fun to add support for running it on Windows and Linux.
 And [SFML](https://github.com/sfml/sfml) is perfect for such shit!
-Just clone an [example project](https://github.com/IgorTimofeev/YOBASFMLExample) and play around in your favourite IDE:
+Take a look at [example project](https://github.com/IgorTimofeev/YOBASFMLExample) and play around in your favourite IDE:
 
 `git clone https://github.com/IgorTimofeev/YOBASFMLExample.git`
 

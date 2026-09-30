@@ -57,6 +57,15 @@ namespace YOBA {
 		// Handling onTick() of children
 		onTick();
 
+		// Invoking functions that were scheduled to be invoked later
+		if (!_functionsToInvokeLater.empty()) {
+			// Using indexed loop in case of SOMEONE decide to call .invokeLater() in another .invokeLater() callback
+			for (size_t i = 0; i < _functionsToInvokeLater.size(); i++)
+				_functionsToInvokeLater[i]();
+
+			_functionsToInvokeLater.clear();
+		}
+
 		// Handling animations
 		if (!_animations.empty()) {
 			Animation* animation;
@@ -76,15 +85,6 @@ namespace YOBA {
 					default: break;
 				}
 			}
-		}
-
-		// Invoking functions that were scheduled to be invoked later
-		if (!_functionsToInvokeLater.empty()) {
-			// Using indexed loop in case of SOMEONE decide to call .invokeLater() in another .invokeLater() callback
-			for (size_t i = 0; i < _functionsToInvokeLater.size(); i++)
-				_functionsToInvokeLater[i]();
-
-			_functionsToInvokeLater.clear();
 		}
 	}
 
