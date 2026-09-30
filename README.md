@@ -79,11 +79,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE YOBA)
 
 ## Examples
 
+<img width="240" alt="image" src="https://github.com/user-attachments/assets/dc882fd1-bc89-48b7-a6d3-7e8b2f1e1085" />
+
+### [Button and text](https://github.com/IgorTimofeev/YOBA-SFML-button-example)
+
+Simple push button that increases dick size
+
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/71d174fa-0d44-466a-884c-694100eaffe9" />
 
-### [Full example](https://github.com/IgorTimofeev/YOBA-SFML-full-example.git)
+### [Advanced](https://github.com/IgorTimofeev/YOBA-SFML-full-example)
 
-Themes, resources, all available controls - every darkest desire in one project. Dark souls lvl of understanding required.
+Themes, resources, all available controls - every darkest desire in one project. Dark souls lvl of understanding required
 
 # Tselyebnov, M. D.
 <img width="1200" alt="feet" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
