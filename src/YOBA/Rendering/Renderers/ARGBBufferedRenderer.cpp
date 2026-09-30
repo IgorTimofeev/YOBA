@@ -36,7 +36,7 @@ namespace YOBA {
 			std::memcpy(_pixelBuffer + copiedBytes, _pixelBuffer, _pixelBufferLength - copiedBytes);
 	}
 
-	void ARGBBufferedRenderer::putPixelNative(const Point& point, const Color* color) {
+	void ARGBBufferedRenderer::setPixelNative(const Point& point, const Color* color) {
 		const auto pixelBufferPtr = _pixelBuffer + getPixelIndex(point) * 3;
 		const auto argbColor = reinterpret_cast<const ARGBColor*>(color);
 

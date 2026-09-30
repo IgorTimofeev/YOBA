@@ -24,12 +24,12 @@ namespace YOBA {
 			Rectangle pushClip(const Rectangle& bounds);
 			void resetClip();
 
-			void clear(const Color* color);
-			void putPixel(const Point& position, const Color* color);
-			void strokeHorizontalLine(const Point& position, uint16_t length, const Color* color);
-			void strokeVerticalLine(const Point& position, uint16_t length, const Color* color);
 			void fillRectangle(const Rectangle& bounds, const Color* color);
 			void fillRectangle(const Rectangle& bounds, uint16_t cornerRadius, const Color* color);
+			void clear(const Color* color);
+			void setPixel(const Point& position, const Color* color);
+			void strokeHorizontalLine(const Point& position, uint16_t length, const Color* color);
+			void strokeVerticalLine(const Point& position, uint16_t length, const Color* color);
 			void fillChessPatternRectangle(const Rectangle& bounds, const Color* color, uint8_t filledStep = 1, uint8_t transparentStep = 1);
 			void fillQuad(const Point& topLeft, const Point& topRight, const Point& bottomRight, const Point& bottomLeft, const Color* color);
 
@@ -110,7 +110,7 @@ namespace YOBA {
 
 			virtual void fillRectangleNative(const Rectangle& bounds, const Color* color) = 0;
 			virtual void clearNative(const Color* color);
-			virtual void putPixelNative(const Point& position, const Color* color);
+			virtual void setPixelNative(const Point& position, const Color* color);
 			virtual void strokeHorizontalLineNative(const Point& position, const uint16_t length, const Color* color);
 			virtual void strokeVerticalLineNative(const Point& position, const uint16_t length, const Color* color);
 			virtual void putImageNative(const Rectangle& bounds, const Image* image);

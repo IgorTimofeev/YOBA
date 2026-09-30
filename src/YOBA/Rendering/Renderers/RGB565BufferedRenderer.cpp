@@ -31,7 +31,7 @@ namespace YOBA {
 		);
 	}
 
-	void RGB565BufferedRenderer::putPixelNative(const Point& point, const Color* color) {
+	void RGB565BufferedRenderer::setPixelNative(const Point& point, const Color* color) {
 		*(reinterpret_cast<uint16_t*>(_pixelBuffer) + getPixelIndex(point))
 			= static_cast<const RGB565Color*>(color)->getValue();
 	}

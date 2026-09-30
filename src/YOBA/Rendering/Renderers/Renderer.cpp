@@ -33,7 +33,7 @@ namespace YOBA {
 		fillRectangleNative(Rectangle(_target->getSize()), color);
 	}
 
-	void Renderer::putPixelNative(const Point& position, const Color* color) {
+	void Renderer::setPixelNative(const Point& position, const Color* color) {
 		fillRectangleNative(Rectangle(position.getX(), position.getY(), 1, 1), color);
 	}
 
@@ -82,11 +82,11 @@ namespace YOBA {
 		clearNative(color);
 	}
 
-	void Renderer::putPixel(const Point& position, const Color* color) {
+	void Renderer::setPixel(const Point& position, const Color* color) {
 		if (!getClip().contains(position))
 			return;
 
-		putPixelNative(position, color);
+		setPixelNative(position, color);
 	}
 
 	void Renderer::strokeHorizontalLine(const Point& position, uint16_t length, const Color* color) {
@@ -147,7 +147,7 @@ namespace YOBA {
 			strokeHorizontalLine(intersection.getPosition(), intersection.getWidth(), color);
 		}
 		else {
-			putPixelNative(intersection.getPosition(), color);
+			setPixelNative(intersection.getPosition(), color);
 		}
 	}
 
@@ -161,7 +161,7 @@ namespace YOBA {
 		if (filledStep == 1 && transparentStep == 1) {
 			for (int32_t y = bounds.getY(); y <= y2; y++) {
 				for (int32_t x = odd ? bounds.getX() + filledStep : bounds.getX(); x <= x2; x += 2)
-					putPixel(Point(x, y), color);
+					setPixel(Point(x, y), color);
 
 				odd = !odd;
 			}
@@ -266,7 +266,7 @@ namespace YOBA {
 			);
 		}
 		else {
-			putPixel(bounds.getPosition(), color);
+			setPixel(bounds.getPosition(), color);
 		}
 	}
 
@@ -397,7 +397,7 @@ namespace YOBA {
 						partRemaining += deltaX;
 
 						if (partLength == 1) {
-							putPixel(Point(y1, partVarFrom), color);
+							setPixel(Point(y1, partVarFrom), color);
 						}
 						else {
 							strokeVerticalLine(Point(y1, partVarFrom), partLength, color);
@@ -423,7 +423,7 @@ namespace YOBA {
 						partRemaining += deltaX;
 
 						if (partLength == 1) {
-							putPixel(Point(partVarFrom, y1), color);
+							setPixel(Point(partVarFrom, y1), color);
 						}
 						else {
 							strokeHorizontalLine(Point(partVarFrom, y1), partLength, color);
@@ -628,7 +628,7 @@ namespace YOBA {
 			return;
 
 		if (radius == 1) {
-			putPixel(center, color);
+			setPixel(center, color);
 			return;
 		}
 
@@ -676,15 +676,15 @@ namespace YOBA {
 			}
 			else {
 				++xs;
-				putPixel(Point(center.getX() - xe, center.getY() + radius), color);
-				putPixel(Point(center.getX() - xe, center.getY() - radius), color);
-				putPixel(Point(center.getX() + xs, center.getY() - radius), color);
-				putPixel(Point(center.getX() + xs, center.getY() + radius), color);
+				setPixel(Point(center.getX() - xe, center.getY() + radius), color);
+				setPixel(Point(center.getX() - xe, center.getY() - radius), color);
+				setPixel(Point(center.getX() + xs, center.getY() - radius), color);
+				setPixel(Point(center.getX() + xs, center.getY() + radius), color);
 
-				putPixel(Point(center.getX() + radius, center.getY() + xs), color);
-				putPixel(Point(center.getX() + radius, center.getY() - xe), color);
-				putPixel(Point(center.getX() - radius, center.getY() - xe), color);
-				putPixel(Point(center.getX() - radius, center.getY() + xs), color);
+				setPixel(Point(center.getX() + radius, center.getY() + xs), color);
+				setPixel(Point(center.getX() + radius, center.getY() - xe), color);
+				setPixel(Point(center.getX() - radius, center.getY() - xe), color);
+				setPixel(Point(center.getX() - radius, center.getY() + xs), color);
 			}
 
 			xs = xe;
@@ -762,7 +762,7 @@ namespace YOBA {
 			return;
 
 		if (radius == 1) {
-			putPixel(center, color);
+			setPixel(center, color);
 			return;
 		}
 
@@ -839,7 +839,7 @@ namespace YOBA {
 
 		auto checkAndPutPixel = [&](const int16_t dx, const int16_t dy) noexcept {
 			if (isPointInArc(dx, dy)) {
-				putPixel({ center.getX() + dx, center.getY() + dy }, color);
+				setPixel({ center.getX() + dx, center.getY() + dy }, color);
 			}
 		};
 
@@ -1089,23 +1089,23 @@ namespace YOBA {
 
 			if (xe-xs==1) {
 				if (corner & 0x1) { // left top
-					putPixel(Point(center.getX() - xe, center.getY() - radius), color);
-					putPixel(Point(center.getX() - radius, center.getY() - xe), color);
+					setPixel(Point(center.getX() - xe, center.getY() - radius), color);
+					setPixel(Point(center.getX() - radius, center.getY() - xe), color);
 				}
 
 				if (corner & 0x2) { // right top
-					putPixel(Point(center.getX() + radius    , center.getY() - xe), color);
-					putPixel(Point(center.getX() + xs + 1, center.getY() - radius), color);
+					setPixel(Point(center.getX() + radius    , center.getY() - xe), color);
+					setPixel(Point(center.getX() + xs + 1, center.getY() - radius), color);
 				}
 
 				if (corner & 0x4) { // right bottom
-					putPixel(Point(center.getX() + xs + 1, center.getY() + radius), color);
-					putPixel(Point(center.getX() + radius, center.getY() + xs + 1), color);
+					setPixel(Point(center.getX() + xs + 1, center.getY() + radius), color);
+					setPixel(Point(center.getX() + radius, center.getY() + xs + 1), color);
 				}
 
 				if (corner & 0x8) { // left bottom
-					putPixel(Point(center.getX() - radius, center.getY() + xs + 1), color);
-					putPixel(Point(center.getX() - xe, center.getY() + radius) , color);
+					setPixel(Point(center.getX() - radius, center.getY() + xs + 1), color);
+					setPixel(Point(center.getX() - xe, center.getY() + radius) , color);
 				}
 			}
 			else {
@@ -1226,7 +1226,7 @@ namespace YOBA {
 			for (int32_t y = y1; y < y2; y++) {
 				for (int32_t x = x1; x < x2; x++) {
 					if ((*bitmapPtr >> bitIndex) & 1)
-						putPixel(Point(x, y), color);
+						setPixel(Point(x, y), color);
 
 					bitIndex++;
 

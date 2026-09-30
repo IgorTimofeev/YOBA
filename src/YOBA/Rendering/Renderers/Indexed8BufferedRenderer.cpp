@@ -82,7 +82,7 @@ namespace YOBA {
 		std::memset(_paletteIndicesBuffer, getPaletteIndex(color), _paletteIndicesBufferLength);
 	}
 
-	void Indexed8BufferedRenderer::putPixelNative(const Point& point, const Color* color) {
+	void Indexed8BufferedRenderer::setPixelNative(const Point& point, const Color* color) {
 		_paletteIndicesBuffer[getPixelIndex(point)] = getPaletteIndex(color);
 	}
 
