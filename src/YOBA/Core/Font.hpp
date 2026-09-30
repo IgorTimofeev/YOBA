@@ -6,7 +6,19 @@
 #include <YOBA/Core/Glyph.hpp>
 #include <YOBA/Core/Size.hpp>
 
+#ifdef YOBA_SYSTEM_SFML
+	#include <SFML/Graphics.hpp>
+#endif
+
 namespace YOBA {
+	enum class FontType : uint8_t {
+		embedded,
+
+		#ifdef YOBA_SYSTEM_SFML
+			SFML,
+		#endif
+	};
+
 	class Font {
 		public:
 			constexpr Font(

@@ -2,8 +2,6 @@
 
 #include "YOBA/UI/Application.hpp"
 
-#include "esp_log.h"
-
 namespace YOBA {
 	const Size& SizeAnimation::getFrom() const {
 		return _from;
@@ -45,7 +43,7 @@ namespace YOBA {
 				: _from.getHeight()
 		);
 
-		ESP_LOGI("m", "oldBounds: %d x %d", oldBounds.getWidth(), oldBounds.getHeight());
+		// ESP_LOGI("m", "oldBounds: %d x %d", oldBounds.getWidth(), oldBounds.getHeight());
 
 		// To
 		target->setSize(_to);
@@ -64,11 +62,11 @@ namespace YOBA {
 				: _to.getHeight()
 		);
 
-		ESP_LOGI("m", "newBounds: %d x %d", newBounds.getWidth(), newBounds.getHeight());
-
-		ESP_LOGI("m", "computedFrom: %d x %d", _computedFrom.getWidth(), _computedFrom.getHeight());
-		ESP_LOGI("m", "computedTo: %d x %d", _computedTo.getWidth(), _computedTo.getHeight());
-		ESP_LOGI("m", "--------------");
+		// ESP_LOGI("m", "newBounds: %d x %d", newBounds.getWidth(), newBounds.getHeight());
+		//
+		// ESP_LOGI("m", "computedFrom: %d x %d", _computedFrom.getWidth(), _computedFrom.getHeight());
+		// ESP_LOGI("m", "computedTo: %d x %d", _computedTo.getWidth(), _computedTo.getHeight());
+		// ESP_LOGI("m", "--------------");
 	}
 
 	void SizeAnimation::onTick() {

@@ -11,15 +11,30 @@
 #endif
 
 namespace YOBA {
+	enum class ImageType : uint8_t {
+		embedded,
+
+		#ifdef YOBA_SYSTEM_SFML
+			SFML,
+		#endif
+	};
+
 	class Image {
 		public:
-			constexpr Image() {
+			constexpr Image(const ImageType type) : _type(type) {
 			
 			}
 
 			virtual ~Image() = default;
 
+			constexpr ImageType getType() const {
+				return _type;
+			}
+
 			virtual const Size& getSize() const = 0;
+
+		private:
+			const ImageType	_type;
 	};
 
 	// I love C++
@@ -39,6 +54,8 @@ namespace YOBA {
 				const Size& size,
 				const uint8_t* bitmap
 			) :
+				Image(ImageType::embedded),
+
 				_colorModel(colorModel),
 				_options(options),
 				_size(size),
@@ -73,7 +90,7 @@ namespace YOBA {
 	#ifdef YOBA_SYSTEM_SFML
 		class SFMLImage : public Image {
 			public:
-				constexpr SFMLImage() {
+				constexpr SFMLImage() : Image(ImageType::SFML) {
 
 				}
 
