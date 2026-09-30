@@ -29,16 +29,15 @@ all of which can be used separately
 <img width="320" src="https://github.com/user-attachments/assets/7675db07-ebf1-4d8d-9e49-9c949582b9e3" alt=".!."/>
 <img width="320" src="https://github.com/user-attachments/assets/22ea362e-30ea-4723-b947-de339feda69b" alt=".!."/>
 
-<img width="320" src="https://github.com/user-attachments/assets/33cd6ce1-6bd5-45f8-8d2a-9499d2e68c04" alt=".!."/>
-<img width="320" src="https://github.com/user-attachments/assets/fff71020-69b0-4988-950f-6b571254c380" alt=".!."/>
+# ESP-IDF
 
-# ESP-IDF installation
+## Installation
 
-Just clone the library into your project:
+Clone the library into your project's `components` directory:
 
 `git clone https://github.com/IgorTimofeev/YOBA.git components/YOBA`
 
-Then add `YOBA` component to your `CMakeLists.txt`. It should look like this:
+Then add `YOBA` component into `main/CMakeLists.txt`. It should look like this:
 
 ```cmake
 idf_component_register(
@@ -49,13 +48,42 @@ idf_component_register(
 )
 ```
 
-# Desktop installation
+## Examples
+
+<img width="240" alt="image" src="https://github.com/user-attachments/assets/e7c46649-bc23-43fa-9c38-e751a7b3c4d5" />
+
+### [Direct rendering](https://github.com/IgorTimofeev/YOBA-ESP-IDF-direct-rendering-example)
+
+A demonstration of displaying formatted time without using OOP. Suitable for simple projects such as timers, static images, etc.
+
+# Desktop
 
 Since `YOBA` is hardware-independent, I thought it would be fun to add support for running it on Windows and Linux.
 And [SFML](https://github.com/sfml/sfml) is perfect for such shit!
-Take a look at [example project](https://github.com/IgorTimofeev/YOBASFMLExample) and play around in your favourite IDE:
 
-`git clone https://github.com/IgorTimofeev/YOBASFMLExample.git`
+## Installation
+
+Clone the library into any directory of your project like `lib` or whatever:
+
+`git clone https://github.com/IgorTimofeev/YOBASFMLExample.git lib/YOBA`
+
+Then add `YOBA` into your `main/CMakeLists.txt`. It should look like this:
+
+```cmake
+...
+
+# YOBA
+add_subdirectory(lib/YOBA)
+target_link_libraries(${PROJECT_NAME} PRIVATE YOBA)
+```
+
+## Examples
+
+<img width="240" alt="image" src="https://github.com/user-attachments/assets/71d174fa-0d44-466a-884c-694100eaffe9" />
+
+### [Full example](https://github.com/IgorTimofeev/YOBA-SFML-full-example.git)
+
+Themes, resources, all available controls - every darkest desire in one project. Dark souls lvl of understanding required.
 
 # Tselyebnov, M. D.
 <img width="1200" alt="feet" src="https://github.com/user-attachments/assets/09623ca2-fe56-4cd6-82f6-25493bbd022c"/>
