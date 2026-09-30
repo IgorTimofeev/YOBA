@@ -24,9 +24,9 @@ all of which can be used separately
 <img width="320" src="https://github.com/user-attachments/assets/00eda8cc-0ebe-4b26-ac73-c90a9fe2989c" alt=".!."/>
 <img width="320" src="https://github.com/user-attachments/assets/2a639a4d-81ce-419f-bcd4-6178148a0e56" alt=".!."/>
 <img width="320" src="https://github.com/user-attachments/assets/e161327c-f554-4642-8cea-95da666df3de" alt=".!."/>
-
 <img width="320" src="https://github.com/user-attachments/assets/22ea362e-30ea-4723-b947-de339feda69b" alt=".!."/>
-<img width="320" src="https://github.com/user-attachments/assets/a259750d-dab0-45b6-8bc8-17a6a7296084" alt=".!."/>
+<img width="320" src="https://github.com/user-attachments/assets/a2beb03b-93e6-48dc-a905-115080c33ca3" alt=".!."/>
+<img width="320" src="https://github.com/user-attachments/assets/4e3ad9d8-3cfc-4a57-b173-308d9a6c4a02" alt=".!."/>
 
 # ESP-IDF
 
