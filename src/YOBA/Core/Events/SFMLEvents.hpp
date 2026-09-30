@@ -12,7 +12,7 @@
 namespace YOBA {
 	class SFMLEvents {
 		public:
-			static void handleMouse(
+			static void translate(
 				const std::optional<sf::Event>& event,
 				Application* application,
 				const float renderingScale = 1.0f

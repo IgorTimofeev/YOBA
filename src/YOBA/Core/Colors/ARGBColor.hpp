@@ -34,6 +34,16 @@ namespace YOBA {
 
 			}
 
+			constexpr ARGBColor(const uint8_t r, const uint8_t g, const uint8_t b) :
+				Color(ColorModel::ARGB),
+				_a(0xFF),
+				_r(r),
+				_g(g),
+				_b(b)
+			{
+
+			}
+
 			constexpr ARGBColor() : ARGBColor(0xFF, 0x00, 0x00, 0x00) {
 
 			}

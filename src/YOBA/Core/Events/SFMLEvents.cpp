@@ -6,7 +6,7 @@
 #include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
-	void SFMLEvents::handleMouse(
+	void SFMLEvents::translate(
 		const std::optional<sf::Event>& event,
 		Application* application,
 		const float renderingScale
