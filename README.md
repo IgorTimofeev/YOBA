@@ -1,6 +1,8 @@
 
 # YOBA | Your Breathtaking Application
 
+A hardcore UI framework written on modern C++ for embedded devices
+
 - Classic OOP-based approach without bullshit
 - Tons of components like buttons, sliders, switches, spinners, text fields & scroll views
 - Fully automatic layouts
