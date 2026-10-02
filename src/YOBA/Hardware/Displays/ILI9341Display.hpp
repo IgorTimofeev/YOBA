@@ -15,12 +15,7 @@ namespace YOBA {
 	class ILI9341Display : public SPIDisplay, public InvertibleDisplay {
 		public:
 			void setup(
-				uint8_t MOSIPin,
-				uint8_t SCKPin,
-				int8_t SSPin,
-				int8_t DCPin,
-				int8_t RSTPin,
-				uint32_t SPIFrequencyHz = 60'000'000,
+				SPIDisplayInterface* displayInterface,
 
 				const Size& size = Size(240, 320),
 				Rotation rotation = Rotation::none,

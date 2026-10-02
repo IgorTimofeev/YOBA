@@ -9,24 +9,14 @@
 
 namespace YOBA {
 	void GC9A01Display::setup(
-		const uint8_t MOSIPin,
-		const uint8_t SCKPin,
-		const int8_t SSPin,
-		const int8_t DCPin,
-		const int8_t RSTPin,
-		const uint32_t SPIFrequency,
+		SPIDisplayInterface* displayInterface,
 
 		const Size& size,
 		const Rotation rotation,
 		const ColorModel colorModel
 	) {
 		SPIDisplay::setup(
-			MOSIPin,
-			SCKPin,
-			SSPin,
-			DCPin,
-			RSTPin,
-			SPIFrequency,
+			displayInterface,
 
 			size,
 			rotation,
@@ -34,62 +24,66 @@ namespace YOBA {
 			colorModel
 		);
 
+		// GPIO reset
+		if (_interface->getRSTPin() >= 0) {
+			_interface->toggleRSTPin(150, 150);
+		}
 		// Software reset
-		if (_RSTPin < 0) {
-			_SPIDevice.writeCommand(SWRESET);
+		else {
+			_interface->writeCommand(SWRESET);
 			system::delayMs(150);
 		}
 
-	    _SPIDevice.writeCommand(0xEF);
+	    _interface->writeCommand(0xEF);
 
-	    _SPIDevice.writeCommand(0xEB);
-	    _SPIDevice.write(0x14);
+	    _interface->writeCommand(0xEB);
+	    _interface->write(0x14);
 
-	    _SPIDevice.writeCommand(0xFE);
-	    _SPIDevice.writeCommand(0xEF);
+	    _interface->writeCommand(0xFE);
+	    _interface->writeCommand(0xEF);
 
-	    _SPIDevice.writeCommand(0xEB);
-	    _SPIDevice.write(0x14);
+	    _interface->writeCommand(0xEB);
+	    _interface->write(0x14);
 
-	    _SPIDevice.writeCommand(0x84);
-	    _SPIDevice.write(0x40);
+	    _interface->writeCommand(0x84);
+	    _interface->write(0x40);
 
-	    _SPIDevice.writeCommand(0x85);
-	    _SPIDevice.write(0xFF);
+	    _interface->writeCommand(0x85);
+	    _interface->write(0xFF);
 
-	    _SPIDevice.writeCommand(0x86);
-	    _SPIDevice.write(0xFF);
+	    _interface->writeCommand(0x86);
+	    _interface->write(0xFF);
 
-	    _SPIDevice.writeCommand(0x87);
-	    _SPIDevice.write(0xFF);
+	    _interface->writeCommand(0x87);
+	    _interface->write(0xFF);
 
-	    _SPIDevice.writeCommand(0x88);
-	    _SPIDevice.write(0x0A);
+	    _interface->writeCommand(0x88);
+	    _interface->write(0x0A);
 
-	    _SPIDevice.writeCommand(0x89);
-	    _SPIDevice.write(0x21);
+	    _interface->writeCommand(0x89);
+	    _interface->write(0x21);
 
-	    _SPIDevice.writeCommand(0x8A);
-	    _SPIDevice.write(0x00);
+	    _interface->writeCommand(0x8A);
+	    _interface->write(0x00);
 
-	    _SPIDevice.writeCommand(0x8B);
-	    _SPIDevice.write(0x80);
+	    _interface->writeCommand(0x8B);
+	    _interface->write(0x80);
 
-	    _SPIDevice.writeCommand(0x8C);
-	    _SPIDevice.write(0x01);
+	    _interface->writeCommand(0x8C);
+	    _interface->write(0x01);
 
-	    _SPIDevice.writeCommand(0x8D);
-	    _SPIDevice.write(0x01);
+	    _interface->writeCommand(0x8D);
+	    _interface->write(0x01);
 
-	    _SPIDevice.writeCommand(0x8E);
-	    _SPIDevice.write(0xFF);
+	    _interface->writeCommand(0x8E);
+	    _interface->write(0xFF);
 
-	    _SPIDevice.writeCommand(0x8F);
-	    _SPIDevice.write(0xFF);
+	    _interface->writeCommand(0x8F);
+	    _interface->write(0xFF);
 
-	    _SPIDevice.writeCommand(0xB6);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x00);
+	    _interface->writeCommand(0xB6);
+	    _interface->write(0x00);
+	    _interface->write(0x00);
 
 		writeMADCTLCommand();
 
@@ -105,212 +99,212 @@ namespace YOBA {
 	//     _SPIDevice.write(0x88);
 	// #endif
 
-	    _SPIDevice.writeCommand(COLOR_MODE);
-	    _SPIDevice.write(getColorModel() == ColorModel::RGB565 ? COLOR_MODE__16_BIT : COLOR_MODE__18_BIT);
+	    _interface->writeCommand(COLOR_MODE);
+	    _interface->write(getColorModel() == ColorModel::RGB565 ? COLOR_MODE__16_BIT : COLOR_MODE__18_BIT);
 
-	    _SPIDevice.writeCommand(0x90);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x08);
+	    _interface->writeCommand(0x90);
+	    _interface->write(0x08);
+	    _interface->write(0x08);
+	    _interface->write(0x08);
+	    _interface->write(0x08);
 
-	    _SPIDevice.writeCommand(0xBD);
-	    _SPIDevice.write(0x06);
+	    _interface->writeCommand(0xBD);
+	    _interface->write(0x06);
 
-	    _SPIDevice.writeCommand(0xBC);
-	    _SPIDevice.write(0x00);
+	    _interface->writeCommand(0xBC);
+	    _interface->write(0x00);
 
-	    _SPIDevice.writeCommand(0xFF);
-	    _SPIDevice.write(0x60);
-	    _SPIDevice.write(0x01);
-	    _SPIDevice.write(0x04);
+	    _interface->writeCommand(0xFF);
+	    _interface->write(0x60);
+	    _interface->write(0x01);
+	    _interface->write(0x04);
 
-	    _SPIDevice.writeCommand(0xC3);
-	    _SPIDevice.write(0x13);
-	    _SPIDevice.writeCommand(0xC4);
-	    _SPIDevice.write(0x13);
+	    _interface->writeCommand(0xC3);
+	    _interface->write(0x13);
+	    _interface->writeCommand(0xC4);
+	    _interface->write(0x13);
 
-	    _SPIDevice.writeCommand(0xC9);
-	    _SPIDevice.write(0x22);
+	    _interface->writeCommand(0xC9);
+	    _interface->write(0x22);
 
-	    _SPIDevice.writeCommand(0xBE);
-	    _SPIDevice.write(0x11);
+	    _interface->writeCommand(0xBE);
+	    _interface->write(0x11);
 
-	    _SPIDevice.writeCommand(0xE1);
-	    _SPIDevice.write(0x10);
-	    _SPIDevice.write(0x0E);
+	    _interface->writeCommand(0xE1);
+	    _interface->write(0x10);
+	    _interface->write(0x0E);
 
-	    _SPIDevice.writeCommand(0xDF);
-	    _SPIDevice.write(0x21);
-	    _SPIDevice.write(0x0c);
-	    _SPIDevice.write(0x02);
+	    _interface->writeCommand(0xDF);
+	    _interface->write(0x21);
+	    _interface->write(0x0c);
+	    _interface->write(0x02);
 
-	    _SPIDevice.writeCommand(0xF0);
-	    _SPIDevice.write(0x45);
-	    _SPIDevice.write(0x09);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x26);
-	    _SPIDevice.write(0x2A);
+	    _interface->writeCommand(0xF0);
+	    _interface->write(0x45);
+	    _interface->write(0x09);
+	    _interface->write(0x08);
+	    _interface->write(0x08);
+	    _interface->write(0x26);
+	    _interface->write(0x2A);
 
-	    _SPIDevice.writeCommand(0xF1);
-	    _SPIDevice.write(0x43);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x72);
-	    _SPIDevice.write(0x36);
-	    _SPIDevice.write(0x37);
-	    _SPIDevice.write(0x6F);
+	    _interface->writeCommand(0xF1);
+	    _interface->write(0x43);
+	    _interface->write(0x70);
+	    _interface->write(0x72);
+	    _interface->write(0x36);
+	    _interface->write(0x37);
+	    _interface->write(0x6F);
 
-	    _SPIDevice.writeCommand(0xF2);
-	    _SPIDevice.write(0x45);
-	    _SPIDevice.write(0x09);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x26);
-	    _SPIDevice.write(0x2A);
+	    _interface->writeCommand(0xF2);
+	    _interface->write(0x45);
+	    _interface->write(0x09);
+	    _interface->write(0x08);
+	    _interface->write(0x08);
+	    _interface->write(0x26);
+	    _interface->write(0x2A);
 
-	    _SPIDevice.writeCommand(0xF3);
-	    _SPIDevice.write(0x43);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x72);
-	    _SPIDevice.write(0x36);
-	    _SPIDevice.write(0x37);
-	    _SPIDevice.write(0x6F);
+	    _interface->writeCommand(0xF3);
+	    _interface->write(0x43);
+	    _interface->write(0x70);
+	    _interface->write(0x72);
+	    _interface->write(0x36);
+	    _interface->write(0x37);
+	    _interface->write(0x6F);
 
-	    _SPIDevice.writeCommand(0xED);
-	    _SPIDevice.write(0x1B);
-	    _SPIDevice.write(0x0B);
+	    _interface->writeCommand(0xED);
+	    _interface->write(0x1B);
+	    _interface->write(0x0B);
 
-	    _SPIDevice.writeCommand(0xAE);
-	    _SPIDevice.write(0x77);
+	    _interface->writeCommand(0xAE);
+	    _interface->write(0x77);
 
-	    _SPIDevice.writeCommand(0xCD);
-	    _SPIDevice.write(0x63);
+	    _interface->writeCommand(0xCD);
+	    _interface->write(0x63);
 
-	    _SPIDevice.writeCommand(0x70);
-	    _SPIDevice.write(0x07);
-	    _SPIDevice.write(0x07);
-	    _SPIDevice.write(0x04);
-	    _SPIDevice.write(0x0E);
-	    _SPIDevice.write(0x0F);
-	    _SPIDevice.write(0x09);
-	    _SPIDevice.write(0x07);
-	    _SPIDevice.write(0x08);
-	    _SPIDevice.write(0x03);
+	    _interface->writeCommand(0x70);
+	    _interface->write(0x07);
+	    _interface->write(0x07);
+	    _interface->write(0x04);
+	    _interface->write(0x0E);
+	    _interface->write(0x0F);
+	    _interface->write(0x09);
+	    _interface->write(0x07);
+	    _interface->write(0x08);
+	    _interface->write(0x03);
 
-	    _SPIDevice.writeCommand(0xE8);
-	    _SPIDevice.write(0x34);
+	    _interface->writeCommand(0xE8);
+	    _interface->write(0x34);
 
-	    _SPIDevice.writeCommand(0x62);
-	    _SPIDevice.write(0x18);
-	    _SPIDevice.write(0x0D);
-	    _SPIDevice.write(0x71);
-	    _SPIDevice.write(0xED);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x18);
-	    _SPIDevice.write(0x0F);
-	    _SPIDevice.write(0x71);
-	    _SPIDevice.write(0xEF);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x70);
+	    _interface->writeCommand(0x62);
+	    _interface->write(0x18);
+	    _interface->write(0x0D);
+	    _interface->write(0x71);
+	    _interface->write(0xED);
+	    _interface->write(0x70);
+	    _interface->write(0x70);
+	    _interface->write(0x18);
+	    _interface->write(0x0F);
+	    _interface->write(0x71);
+	    _interface->write(0xEF);
+	    _interface->write(0x70);
+	    _interface->write(0x70);
 
-	    _SPIDevice.writeCommand(0x63);
-	    _SPIDevice.write(0x18);
-	    _SPIDevice.write(0x11);
-	    _SPIDevice.write(0x71);
-	    _SPIDevice.write(0xF1);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x18);
-	    _SPIDevice.write(0x13);
-	    _SPIDevice.write(0x71);
-	    _SPIDevice.write(0xF3);
-	    _SPIDevice.write(0x70);
-	    _SPIDevice.write(0x70);
+	    _interface->writeCommand(0x63);
+	    _interface->write(0x18);
+	    _interface->write(0x11);
+	    _interface->write(0x71);
+	    _interface->write(0xF1);
+	    _interface->write(0x70);
+	    _interface->write(0x70);
+	    _interface->write(0x18);
+	    _interface->write(0x13);
+	    _interface->write(0x71);
+	    _interface->write(0xF3);
+	    _interface->write(0x70);
+	    _interface->write(0x70);
 
-	    _SPIDevice.writeCommand(0x64);
-	    _SPIDevice.write(0x28);
-	    _SPIDevice.write(0x29);
-	    _SPIDevice.write(0xF1);
-	    _SPIDevice.write(0x01);
-	    _SPIDevice.write(0xF1);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x07);
+	    _interface->writeCommand(0x64);
+	    _interface->write(0x28);
+	    _interface->write(0x29);
+	    _interface->write(0xF1);
+	    _interface->write(0x01);
+	    _interface->write(0xF1);
+	    _interface->write(0x00);
+	    _interface->write(0x07);
 
-	    _SPIDevice.writeCommand(0x66);
-	    _SPIDevice.write(0x3C);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0xCD);
-	    _SPIDevice.write(0x67);
-	    _SPIDevice.write(0x45);
-	    _SPIDevice.write(0x45);
-	    _SPIDevice.write(0x10);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x00);
+	    _interface->writeCommand(0x66);
+	    _interface->write(0x3C);
+	    _interface->write(0x00);
+	    _interface->write(0xCD);
+	    _interface->write(0x67);
+	    _interface->write(0x45);
+	    _interface->write(0x45);
+	    _interface->write(0x10);
+	    _interface->write(0x00);
+	    _interface->write(0x00);
+	    _interface->write(0x00);
 
-	    _SPIDevice.writeCommand(0x67);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x3C);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x01);
-	    _SPIDevice.write(0x54);
-	    _SPIDevice.write(0x10);
-	    _SPIDevice.write(0x32);
-	    _SPIDevice.write(0x98);
+	    _interface->writeCommand(0x67);
+	    _interface->write(0x00);
+	    _interface->write(0x3C);
+	    _interface->write(0x00);
+	    _interface->write(0x00);
+	    _interface->write(0x00);
+	    _interface->write(0x01);
+	    _interface->write(0x54);
+	    _interface->write(0x10);
+	    _interface->write(0x32);
+	    _interface->write(0x98);
 
-	    _SPIDevice.writeCommand(0x74);
-	    _SPIDevice.write(0x10);
-	    _SPIDevice.write(0x85);
-	    _SPIDevice.write(0x80);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x00);
-	    _SPIDevice.write(0x4E);
-	    _SPIDevice.write(0x00);
+	    _interface->writeCommand(0x74);
+	    _interface->write(0x10);
+	    _interface->write(0x85);
+	    _interface->write(0x80);
+	    _interface->write(0x00);
+	    _interface->write(0x00);
+	    _interface->write(0x4E);
+	    _interface->write(0x00);
 
-	    _SPIDevice.writeCommand(0x98);
-	    _SPIDevice.write(0x3e);
-	    _SPIDevice.write(0x07);
+	    _interface->writeCommand(0x98);
+	    _interface->write(0x3e);
+	    _interface->write(0x07);
 
-	    _SPIDevice.writeCommand(0x35);
-	    _SPIDevice.writeCommand(0x21);
+	    _interface->writeCommand(0x35);
+	    _interface->writeCommand(0x21);
 
-		_SPIDevice.writeCommand(GAMMA1);
-		_SPIDevice.write(0x45);
-		_SPIDevice.write(0x09);
-		_SPIDevice.write(0x08);
-		_SPIDevice.write(0x08);
-		_SPIDevice.write(0x26);
-		_SPIDevice.write(0x2a);
+		_interface->writeCommand(GAMMA1);
+		_interface->write(0x45);
+		_interface->write(0x09);
+		_interface->write(0x08);
+		_interface->write(0x08);
+		_interface->write(0x26);
+		_interface->write(0x2a);
 
-		_SPIDevice.writeCommand(GAMMA2);
-		_SPIDevice.write(0x43);
-		_SPIDevice.write(0x70);
-		_SPIDevice.write(0x72);
-		_SPIDevice.write(0x36);
-		_SPIDevice.write(0x37);
-		_SPIDevice.write(0x6f);
+		_interface->writeCommand(GAMMA2);
+		_interface->write(0x43);
+		_interface->write(0x70);
+		_interface->write(0x72);
+		_interface->write(0x36);
+		_interface->write(0x37);
+		_interface->write(0x6f);
 
-		_SPIDevice.writeCommand(GAMMA3);
-		_SPIDevice.write(0x45);
-		_SPIDevice.write(0x09);
-		_SPIDevice.write(0x08);
-		_SPIDevice.write(0x08);
-		_SPIDevice.write(0x26);
-		_SPIDevice.write(0x2a);
+		_interface->writeCommand(GAMMA3);
+		_interface->write(0x45);
+		_interface->write(0x09);
+		_interface->write(0x08);
+		_interface->write(0x08);
+		_interface->write(0x26);
+		_interface->write(0x2a);
 
-		_SPIDevice.writeCommand(GAMMA4);
-		_SPIDevice.write(0x43);
-		_SPIDevice.write(0x70);
-		_SPIDevice.write(0x72);
-		_SPIDevice.write(0x36);
-		_SPIDevice.write(0x37);
-		_SPIDevice.write(0x6f);
+		_interface->writeCommand(GAMMA4);
+		_interface->write(0x43);
+		_interface->write(0x70);
+		_interface->write(0x72);
+		_interface->write(0x36);
+		_interface->write(0x37);
+		_interface->write(0x6f);
 
-	    _SPIDevice.writeCommand(SLPOUT);
+	    _interface->writeCommand(SLPOUT);
 	    system::delayMs(120);
 	}
 
@@ -332,39 +326,39 @@ namespace YOBA {
 				break;
 		}
 
-		_SPIDevice.writeCommand(MADCTL);
-		_SPIDevice.write(data);
+		_interface->writeCommand(MADCTL);
+		_interface->write(data);
 	}
 
 	void GC9A01Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
 		uint8_t data[4];
 
-		_SPIDevice.writeCommand(COL_ADDR_SET);
+		_interface->writeCommand(COL_ADDR_SET);
 		data[0] = (bounds.getX() >> 8) & 0xFF;
 		data[1] = bounds.getX() & 0xFF;
 		data[2] = (bounds.getX2() >> 8) & 0xFF;
 		data[3] = bounds.getX2() & 0xFF;
-		_SPIDevice.write({ data, 4 });
+		_interface->write({ data, 4 });
 
-		_SPIDevice.writeCommand(ROW_ADDR_SET);
+		_interface->writeCommand(ROW_ADDR_SET);
 		data[0] = (bounds.getY() >> 8) & 0xFF;
 		data[1] = bounds.getY() & 0xFF;
 		data[2] = (bounds.getY2() >> 8) & 0xFF;
 		data[3] = bounds.getY2() & 0xFF;
-		_SPIDevice.write({ data, 4 });
+		_interface->write({ data, 4 });
 
 		// Memory write
-		_SPIDevice.writeCommand(MEM_WR);
-		_SPIDevice.write(pixelBuffer);
+		_interface->writeCommand(MEM_WR);
+		_interface->write(pixelBuffer);
 	}
 
 	void GC9A01Display::turnOn() {
-		_SPIDevice.writeCommand(DISPON);
+		_interface->writeCommand(DISPON);
 		system::delayMs(20);
 	}
 
 	void GC9A01Display::turnOff() {
-		_SPIDevice.writeCommand(DISPOFF);
+		_interface->writeCommand(DISPOFF);
 	}
 }
 

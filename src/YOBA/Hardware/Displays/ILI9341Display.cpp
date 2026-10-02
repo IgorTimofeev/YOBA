@@ -9,24 +9,14 @@
 
 namespace YOBA {
 	void ILI9341Display::setup(
-		const uint8_t MOSIPin,
-		const uint8_t SCKPin,
-		const int8_t SSPin,
-		const int8_t DCPin,
-		const int8_t RSTPin,
-		const uint32_t SPIFrequencyHz,
+		SPIDisplayInterface* displayInterface,
 
 		const Size& size,
 		const Rotation rotation,
 		const ColorModel colorModel
 	) {
 		SPIDisplay::setup(
-			MOSIPin,
-			SCKPin,
-			SSPin,
-			DCPin,
-			RSTPin,
-			SPIFrequencyHz,
+			displayInterface,
 
 			size,
 			rotation,
@@ -34,14 +24,18 @@ namespace YOBA {
 			colorModel
 		);
 
+		// Reset pin
+		if (_interface->getRSTPin() >= 0)
+			_interface->toggleRSTPin(100, 100);
+
 		uint8_t b[16];
 
 		// Power control B, power control = 0, DC_ENA = 1
 		b[0] = 0x00;
 		b[1] = 0x83;
 		b[2] = 0x30;
-		_SPIDevice.writeCommand(0xCF);
-		_SPIDevice.write({ b, 3 });
+		_interface->writeCommand(0xCF);
+		_interface->write({ b, 3 });
 
 		// Power on sequence control,
 		// cp1 keeps 1 frame, 1st frame enable
@@ -51,8 +45,8 @@ namespace YOBA {
 		b[1] = 0x03;
 		b[2] = 0x12;
 		b[3] = 0x81;
-		_SPIDevice.writeCommand(0xED);
-		_SPIDevice.write({ b, 4 });
+		_interface->writeCommand(0xED);
+		_interface->write({ b, 4 });
 
 		// Driver timing control A,
 		// non-overlap=default +1
@@ -61,8 +55,8 @@ namespace YOBA {
 		b[0] = 0x85;
 		b[1] = 0x01;
 		b[2] = 0x79;
-		_SPIDevice.writeCommand(0xE8);
-		_SPIDevice.write({ b, 3 });
+		_interface->writeCommand(0xE8);
+		_interface->write({ b, 3 });
 
 		// Power control A, Vcore=1.6V, DDVDH=5.6V
 		b[0] = 0x39;
@@ -70,36 +64,36 @@ namespace YOBA {
 		b[2] = 0x00;
 		b[3] = 0x34;
 		b[4] = 0x02;
-		_SPIDevice.writeCommand(0xCB);
-		_SPIDevice.write({ b, 5 });
+		_interface->writeCommand(0xCB);
+		_interface->write({ b, 5 });
 
 		// Pump ratio control, DDVDH=2xVCl
-		_SPIDevice.writeCommand(0xF7);
-		_SPIDevice.write(0x20);
+		_interface->writeCommand(0xF7);
+		_interface->write(0x20);
 
 		// Driver timing control, all=0 unit
 		b[0] = 0x00;
 		b[1] = 0x00;
-		_SPIDevice.writeCommand(0xEA);
-		_SPIDevice.write({ b, 2 });
+		_interface->writeCommand(0xEA);
+		_interface->write({ b, 2 });
 
 		// Power control 1, GVDD=4.75V
-		_SPIDevice.writeCommand(0xC0);
-		_SPIDevice.write(0x26);
+		_interface->writeCommand(0xC0);
+		_interface->write(0x26);
 
 		// Power control 2, DDVDH=VCl*2, VGH=VCl*7, VGL=-VCl*3
-		_SPIDevice.writeCommand(0xC1);
-		_SPIDevice.write(0x11);
+		_interface->writeCommand(0xC1);
+		_interface->write(0x11);
 
 		// VCOM control 1, VCOMH=4.025V, VCOML=-0.950V
 		b[0] = 0x35;
 		b[1] = 0x3E;
-		_SPIDevice.writeCommand(0xC5);
-		_SPIDevice.write({ b, 2 });
+		_interface->writeCommand(0xC5);
+		_interface->write({ b, 2 });
 
 		// VCOM control 2, VCOMH=VMH-2, VCOML=VML-2
-		_SPIDevice.writeCommand(0xC7);
-		_SPIDevice.write(0xBE);
+		_interface->writeCommand(0xC7);
+		_interface->write(0xBE);
 
 		// Memory access control
 		writeMADCTLCommand();
@@ -110,22 +104,22 @@ namespace YOBA {
 		// Color model
 		// 101 - 16 bits per pixel
 		// 110 - 18 bits per pixel
-		_SPIDevice.writeCommand(COLMOD);
-		_SPIDevice.write(getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
+		_interface->writeCommand(COLMOD);
+		_interface->write(getColorModel() == ColorModel::RGB666 ? 0b01100110 : 0b01010101);
 
 		// Frame rate control, f=fosc, 70Hz fps
 		b[0] = 0x00;
 		b[1] = 0x1B;
-		_SPIDevice.writeCommand(0xB1);
-		_SPIDevice.write({ b, 2 });
+		_interface->writeCommand(0xB1);
+		_interface->write({ b, 2 });
 
 		// Enable 3G, disabled
-		_SPIDevice.writeCommand(0xF2);
-		_SPIDevice.write(0x08);
+		_interface->writeCommand(0xF2);
+		_interface->write(0x08);
 
 		// Gamma set, curve 1
-		_SPIDevice.writeCommand(0x26);
-		_SPIDevice.write(0x01);
+		_interface->writeCommand(0x26);
+		_interface->write(0x01);
 
 		// Positive gamma correction
 		b[0] = 0x0F;
@@ -143,8 +137,8 @@ namespace YOBA {
 		b[12] = 0x00;
 		b[13] = 0x00;
 		b[15] = 0x00;
-		_SPIDevice.writeCommand(0xE0);
-		_SPIDevice.write({ b, 16 });
+		_interface->writeCommand(0xE0);
+		_interface->write({ b, 16 });
 
 		// Negative gamma correction
 		b[0] = 0x00;
@@ -162,43 +156,43 @@ namespace YOBA {
 		b[12] = 0x3F;
 		b[13] = 0x3F;
 		b[15] = 0x0F;
-		_SPIDevice.writeCommand(0xE1);
-		_SPIDevice.write({ b, 16 });
+		_interface->writeCommand(0xE1);
+		_interface->write({ b, 16 });
 
 		// Column address set, SC=0, EC=0xEF
 		b[0] = 0x00;
 		b[1] = 0x00;
 		b[2] = 0x00;
 		b[3] = 0xEF;
-		_SPIDevice.writeCommand(0x2A);
-		_SPIDevice.write({ b, 4 });
+		_interface->writeCommand(0x2A);
+		_interface->write({ b, 4 });
 
 		// Page address set, SP=0, EP=0x013F
 		b[0] = 0x00;
 		b[1] = 0x00;
 		b[2] = 0x01;
 		b[3] = 0x3f;
-		_SPIDevice.writeCommand(0x2B);
-		_SPIDevice.write({ b, 4 });
+		_interface->writeCommand(0x2B);
+		_interface->write({ b, 4 });
 
 		// Memory write
-		_SPIDevice.writeCommand(0x2C);
+		_interface->writeCommand(0x2C);
 
 		// Entry mode set, Low vol detect disabled, normal display
-		_SPIDevice.writeCommand(0xB7);
-		_SPIDevice.write(0x07);
+		_interface->writeCommand(0xB7);
+		_interface->write(0x07);
 
 		// Display function control
 		b[0] = 0x0A;
 		b[1] = 0x82;
 		b[2] = 0x27;
 		b[3] = 0x00;
-		_SPIDevice.writeCommand(0xB6);
-		_SPIDevice.write({ b, 4 });
+		_interface->writeCommand(0xB6);
+		_interface->write({ b, 4 });
 
 		// Sleep out
-		_SPIDevice.writeCommand(0x11);
-		_SPIDevice.write(0x00);
+		_interface->writeCommand(0x11);
+		_interface->write(0x00);
 
 		system::delayMs(5);
 	}
@@ -210,7 +204,7 @@ namespace YOBA {
 	}
 
 	void ILI9341Display::setInverted(const bool value) {
-		_SPIDevice.writeCommand(value ? 0x21 : 0x20);
+		_interface->writeCommand(value ? 0x21 : 0x20);
 	}
 
 	void ILI9341Display::writeMADCTLCommand() {
@@ -240,8 +234,8 @@ namespace YOBA {
 				break;
 		}
 
-		_SPIDevice.writeCommand(MADCTL);
-		_SPIDevice.write(data);
+		_interface->writeCommand(MADCTL);
+		_interface->write(data);
 	}
 
 	void ILI9341Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
@@ -254,28 +248,28 @@ namespace YOBA {
 		data[1] = bounds.getX() & 0xff; // Start col low
 		data[2] = bounds.getX2() >> 8; // End col high
 		data[3] = bounds.getX2() & 0xff; // End col low
-		_SPIDevice.writeCommand(0x2A);
-		_SPIDevice.write({ data, 4 });
+		_interface->writeCommand(0x2A);
+		_interface->write({ data, 4 });
 
 		// Page address set
 		data[0] = bounds.getY() >> 8; // Start page high
 		data[1] = bounds.getY() & 0xff; // Start page low
 		data[2] = bounds.getY2() >> 8; // End page high
 		data[3] = bounds.getY2() & 0xff; // End page low
-		_SPIDevice.writeCommand(0x2B);
-		_SPIDevice.write({ data, 4 });
+		_interface->writeCommand(0x2B);
+		_interface->write({ data, 4 });
 
 		// Memory write
-		_SPIDevice.writeCommand(0x2C);
-		_SPIDevice.write(pixelBuffer);
+		_interface->writeCommand(0x2C);
+		_interface->write(pixelBuffer);
 	}
 
 	void ILI9341Display::turnOff() {
-		_SPIDevice.writeCommand(0x28);
+		_interface->writeCommand(0x28);
 	}
 
 	void ILI9341Display::turnOn() {
-		_SPIDevice.writeCommand(0x29);
+		_interface->writeCommand(0x29);
 	}
 }
 

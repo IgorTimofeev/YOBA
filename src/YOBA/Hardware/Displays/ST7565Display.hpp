@@ -16,15 +16,7 @@
 namespace YOBA {
 	class ST7565Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
 		public:
-			void setup(
-				uint8_t MOSIPin,
-				uint8_t SCKPin,
-				int8_t SSPin,
-				int8_t DCPin,
-				int8_t RSTPin,
-				uint32_t SPIFrequency
-			);
-
+			void setup(SPIDisplayInterface* displayInterface);
 			void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 			void setContrast(uint8_t value) override;
 			void setInverted(bool value) override;

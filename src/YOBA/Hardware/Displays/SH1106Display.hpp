@@ -16,14 +16,7 @@
 namespace YOBA {
 	class SH1106Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
 		public:
-			void setup(
-				const uint8_t MOSIPin,
-				const uint8_t SCKPin,
-				const int8_t SSPin,
-				const int8_t DCPin,
-				const int8_t RSTPin,
-				const uint32_t SPIFrequencyHz
-			);
+			void setup(SPIDisplayInterface* displayInterface);
 
 			void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 			void setContrast(uint8_t value) override;

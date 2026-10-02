@@ -15,12 +15,7 @@ namespace YOBA {
 	class GC9A01Display : public SPIDisplay {
 		public:
 			void setup(
-				uint8_t MOSIPin,
-				uint8_t SCKPin,
-				int8_t SSPin,
-				int8_t DCPin,
-				int8_t RSTPin,
-				uint32_t SPIFrequency,
+				SPIDisplayInterface* displayInterface,
 
 				const Size& size = Size(240, 240),
 				Rotation rotation = Rotation::none,

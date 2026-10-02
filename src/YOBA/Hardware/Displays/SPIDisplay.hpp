@@ -8,6 +8,8 @@
 #include <span>
 
 #include <YOBA/Hardware/Displays/Display.hpp>
+#include <YOBA/Hardware/Displays/DisplayInterface.hpp>
+
 #include <YOBA/System.hpp>
 
 namespace YOBA {
@@ -16,12 +18,7 @@ namespace YOBA {
 			~SPIDisplay() override = default;
 
 			void setup(
-				const uint8_t MOSIPin,
-				const uint8_t SCKPin,
-				const int8_t SSPin,
-				const int8_t DCPin,
-				const int8_t RSTPin,
-				const uint32_t SPIFrequencyHz,
+				SPIDisplayInterface* displayInterface,
 
 				const Size& size,
 				const Rotation rotation,
@@ -30,11 +27,7 @@ namespace YOBA {
 			);
 
 		protected:
-			system::SPIDevice _SPIDevice {};
-			int8_t _RSTPin = 0;
-
-			void setResetPin(bool value) const;
-			virtual void toggleResetPin();
+			SPIDisplayInterface* _interface = nullptr;
 
 		private:
 			// No one should call this anymore

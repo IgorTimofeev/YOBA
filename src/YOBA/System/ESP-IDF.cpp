@@ -75,65 +75,45 @@ namespace YOBA::system {
 	// -------------------------------- SPI --------------------------------
 
 	void SPIDevice::setup(
+		const uint8_t busIndex,
+		const uint8_t mode,
+
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
-		const int8_t DCPin,
 
 		const uint32_t frequencyHz
 	) {
 		_MOSIPin = MOSIPin;
 		_SCKPin = SCKPin;
 		_SSPin = SSPin;
-		_DCPin = DCPin;
 		_frequencyHz = frequencyHz;
-
-		// GPIO
-		GPIO::setMode(_SSPin, GPIO::PinMode::output);
-		GPIO::write(_SSPin, true);
 
 		// Bus
 		spi_bus_config_t busConfig {};
-		busConfig.mosi_io_num = _MOSIPin;
+		busConfig.mosi_io_num = static_cast<int>(_MOSIPin);
 		busConfig.miso_io_num = -1;
-		busConfig.sclk_io_num = _SCKPin;
+		busConfig.sclk_io_num = static_cast<int>(_SCKPin);
 		busConfig.quadwp_io_num = -1;
 		busConfig.quadhd_io_num = -1;
 		busConfig.max_transfer_sz = 0xFFFF;
 
 		// May be already initialized
-		const auto result = spi_bus_initialize(SPI2_HOST, &busConfig, SPI_DMA_CH_AUTO);
-		assert(result == ESP_OK || result == ESP_ERR_INVALID_STATE);
+		const auto result = spi_bus_initialize(static_cast<spi_host_device_t>(busIndex), &busConfig, SPI_DMA_CH_AUTO);
+		if (result != ESP_OK && result != ESP_ERR_INVALID_STATE) {
+			ESP_ERROR_CHECK(result);
+			return;
+		}
 
 		// Interface
 		spi_device_interface_config_t interfaceConfig {};
-		interfaceConfig.mode = 0;
+		interfaceConfig.mode = mode;
 		interfaceConfig.clock_speed_hz = static_cast<int>(_frequencyHz);
 		interfaceConfig.spics_io_num = static_cast<int>(_SSPin);
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
 
-		// Data / command pin behavior
-		if (_DCPin != GPIO_NUM_NC) {
-			GPIO::setMode(_DCPin, GPIO::PinMode::output);
-			GPIO::write(_DCPin, true);
-
-			interfaceConfig.pre_cb = [](spi_transaction_t* transaction) {
-				const auto device = static_cast<SPIDevice*>(transaction->user);
-
-				if (device->_commandMode)
-					GPIO::write(device->_DCPin, false);
-			};
-
-			interfaceConfig.post_cb = [](spi_transaction_t* transaction) {
-				const auto device = static_cast<SPIDevice*>(transaction->user);
-
-				if (device->_commandMode)
-					GPIO::write(device->_DCPin, true);
-			};
-		}
-
-		ESP_ERROR_CHECK(spi_bus_add_device(SPI2_HOST, &interfaceConfig, &_deviceHandle));
+		ESP_ERROR_CHECK(spi_bus_add_device(static_cast<spi_host_device_t>(busIndex), &interfaceConfig, &_deviceHandle));
 	}
 
 	bool SPIDevice::write(const uint8_t data) {
@@ -153,14 +133,6 @@ namespace YOBA::system {
 		transaction.user = this;
 
 		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
-	}
-
-	bool SPIDevice::writeCommand(const uint8_t command) {
-		_commandMode = true;
-		const auto result = write(command);
-		_commandMode = false;
-
-		return result;
 	}
 
 	// -------------------------------- I2C --------------------------------

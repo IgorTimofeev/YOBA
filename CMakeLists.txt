@@ -19,10 +19,11 @@ set(YOBA_SOURCES
   src/YOBA/Core/Text.cpp
   src/YOBA/Core/UTF-8.cpp
   src/YOBA/Hardware/Displays/Display.cpp
+  src/YOBA/Hardware/Displays/DisplayInterface.cpp
+  src/YOBA/Hardware/Displays/SPIDisplay.cpp
   src/YOBA/Hardware/Displays/GC9A01Display.cpp
   src/YOBA/Hardware/Displays/ILI9341Display.cpp
   src/YOBA/Hardware/Displays/SH1106Display.cpp
-  src/YOBA/Hardware/Displays/SPIDisplay.cpp
   src/YOBA/Hardware/Displays/ST7565Display.cpp
   src/YOBA/Hardware/Displays/ST7789Display.cpp
   src/YOBA/Hardware/TouchPanels/FT6336UTouchPanel.cpp

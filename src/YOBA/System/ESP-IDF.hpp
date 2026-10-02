@@ -39,27 +39,29 @@ namespace YOBA::system {
 
 	class SPIDevice {
 		public:
+			virtual ~SPIDevice() = default;
+
 			void setup(
+				const uint8_t busIndex,
+				const uint8_t mode,
+
 				const uint8_t MOSIPin,
 				const uint8_t SCKPin,
 				const int8_t SSPin,
-				const int8_t DCPin,
+
 				const uint32_t frequencyHz
 			);
 
-			bool write(const uint8_t data);
-			bool write(const std::span<const uint8_t> data);
-			bool writeCommand(const uint8_t command);
+			virtual bool write(const uint8_t data);
+			virtual bool write(const std::span<const uint8_t> data);
 
 		private:
 			uint8_t _MOSIPin {};
 			uint8_t _SCKPin {};
 			int8_t _SSPin {};
-			int8_t _DCPin {};
 			uint32_t _frequencyHz {};
 
 			spi_device_handle_t _deviceHandle {};
-			bool _commandMode = false;
 	};
 
 	class I2CDevice {

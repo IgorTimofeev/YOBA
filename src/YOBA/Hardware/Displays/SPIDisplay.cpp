@@ -7,54 +7,21 @@
 
 namespace YOBA {
 	void SPIDisplay::setup(
-		const uint8_t MOSIPin,
-		const uint8_t SCKPin,
-		const int8_t SSPin,
-		const int8_t DCPin,
-		const int8_t RSTPin,
-		const uint32_t SPIFrequencyHz,
+		SPIDisplayInterface* displayInterface,
 
 		const Size& size,
 		const Rotation rotation,
 		const PixelOrder pixelOrder,
 		const ColorModel colorModel
 	) {
+		_interface = displayInterface;
+
 		RenderingTarget::setup(
 			size,
 			rotation,
 			pixelOrder,
 			colorModel
 		);
-
-		// SPI
-		_SPIDevice.setup(
-			MOSIPin,
-			SCKPin,
-			SSPin,
-			DCPin,
-			SPIFrequencyHz
-		);
-
-		// Reset pin
-		_RSTPin = RSTPin;
-
-		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
-
-			toggleResetPin();
-		}
-	}
-
-	void SPIDisplay::setResetPin(const bool value) const {
-		system::GPIO::write(_RSTPin, value);
-	}
-
-	void SPIDisplay::toggleResetPin() {
-		setResetPin(false);
-		system::delayMs(100);
-
-		setResetPin(true);
-		system::delayMs(100);
 	}
 }
 
