@@ -1,4 +1,8 @@
-#include <YOBA/Hardware/Displays/DisplayInterface.hpp>
+#include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_SPI
+
+#include <YOBA/Hardware/Displays/SPIDisplayInterface.hpp>
 
 namespace YOBA {
 	void SPIDisplayInterface::setup(
@@ -13,6 +17,9 @@ namespace YOBA {
 		const int8_t DCPin,
 		const int8_t RSTPin
 	) {
+		_DCPin = DCPin;
+		_RSTPin = RSTPin;
+
 		_SPIDevice.setup(
 			busIndex,
 			mode,
@@ -24,16 +31,15 @@ namespace YOBA {
 			frequencyHz
 		);
 
-		_DCPin = DCPin;
-		_RSTPin = RSTPin;
-
 		// D/C pin
 		system::GPIO::setMode(_DCPin, system::GPIO::PinMode::output);
 		system::GPIO::write(_DCPin, true);
 
 		// RST pin
-		system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
-		system::GPIO::write(_RSTPin, true);
+		if (_RSTPin >= 0) {
+			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
+			system::GPIO::write(_RSTPin, true);
+		}
 	}
 
 	system::SPIDevice& SPIDisplayInterface::getSPIDevice() {
@@ -75,6 +81,10 @@ namespace YOBA {
 	void SPIDisplayInterface::toggleRSTPin(const uint32_t delayAfterLowMs, const uint32_t delayAfterHighMs) const {
 		setRSTPinState(false);
 		system::delayMs(delayAfterLowMs);
+
 		setRSTPinState(true);
+		system::delayMs(delayAfterHighMs);
 	}
 }
+
+#endif

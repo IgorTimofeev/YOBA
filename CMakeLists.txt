@@ -19,7 +19,7 @@ set(YOBA_SOURCES
   src/YOBA/Core/Text.cpp
   src/YOBA/Core/UTF-8.cpp
   src/YOBA/Hardware/Displays/Display.cpp
-  src/YOBA/Hardware/Displays/DisplayInterface.cpp
+  src/YOBA/Hardware/Displays/SPIDisplayInterface.cpp
   src/YOBA/Hardware/Displays/SPIDisplay.cpp
   src/YOBA/Hardware/Displays/GC9A01Display.cpp
   src/YOBA/Hardware/Displays/ILI9341Display.cpp

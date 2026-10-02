@@ -5,6 +5,8 @@
 
 // Displays
 #include <YOBA/Hardware/Displays/Display.hpp>
+#include <YOBA/Hardware/Displays/DisplayInterface.hpp>
+#include <YOBA/Hardware/Displays/SPIDisplayInterface.hpp>
 #include <YOBA/Hardware/Displays/ContrastDisplay.hpp>
 #include <YOBA/Hardware/Displays/InvertibleDisplay.hpp>
 #include <YOBA/Hardware/Displays/SPIDisplay.hpp>

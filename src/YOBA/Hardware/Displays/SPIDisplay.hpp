@@ -4,13 +4,10 @@
 
 #ifdef YOBA_SYSTEM_SPI
 
-#include <cstdint>
-#include <span>
-
+#include <YOBA/Core.hpp>
 #include <YOBA/Hardware/Displays/Display.hpp>
 #include <YOBA/Hardware/Displays/DisplayInterface.hpp>
-
-#include <YOBA/System.hpp>
+#include <YOBA/Hardware/Displays/SPIDisplayInterface.hpp>
 
 namespace YOBA {
 	class SPIDisplay : public virtual Display {
