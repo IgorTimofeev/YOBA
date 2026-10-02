@@ -1,9 +1,7 @@
 
 # YOBA | Your Breathtaking Application
 
-An independent and hardcore UI framework written on modern C++ for embedded devices
-
-# Features
+A hardcore UI framework written on modern C++ for embedded devices
 
 - Classic OOP-based approach without bullshit
 - Tons of components like buttons, sliders, switches, spinners, text fields & scroll views
@@ -30,7 +28,7 @@ all of which can be used separately
 
 # ESP-IDF
 
-## Installation
+### Installation
 
 Clone the library into your project's `components` directory:
 
@@ -47,7 +45,7 @@ idf_component_register(
 )
 ```
 
-## Examples
+### Examples
 
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/e7c46649-bc23-43fa-9c38-e751a7b3c4d5" />
 
@@ -60,7 +58,7 @@ A demonstration of displaying formatted time without using OOP. Suitable for sim
 Since `YOBA` is hardware-independent, I thought it would be fun to add support for running it on Windows and Linux.
 And [SFML](https://github.com/sfml/sfml) is perfect for such shit!
 
-## Installation
+### Installation
 
 Clone the library into any directory of your project like `lib` or whatever:
 
@@ -76,7 +74,7 @@ add_subdirectory(lib/YOBA)
 target_link_libraries(${PROJECT_NAME} PRIVATE YOBA)
 ```
 
-## Examples
+### Examples
 
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/dc882fd1-bc89-48b7-a6d3-7e8b2f1e1085" />
 
