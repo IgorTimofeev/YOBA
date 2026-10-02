@@ -10,7 +10,7 @@ namespace YOBA {
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
-		const uint8_t DCPin,
+		const int8_t DCPin,
 		const int8_t RSTPin,
 		const uint32_t SPIFrequencyHz,
 
@@ -26,15 +26,6 @@ namespace YOBA {
 			colorModel
 		);
 
-		// Reset pin
-		_RSTPin = RSTPin;
-
-		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
-
-			toggleResetPin();
-		}
-
 		// SPI
 		_SPIDevice.setup(
 			MOSIPin,
@@ -43,6 +34,15 @@ namespace YOBA {
 			DCPin,
 			SPIFrequencyHz
 		);
+
+		// Reset pin
+		_RSTPin = RSTPin;
+
+		if (_RSTPin >= 0) {
+			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
+
+			toggleResetPin();
+		}
 	}
 
 	void SPIDisplay::writeCommand(const uint8_t command) {

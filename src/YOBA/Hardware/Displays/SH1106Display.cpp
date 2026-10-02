@@ -12,7 +12,7 @@ namespace YOBA {
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
-		const uint8_t DCPin,
+		const int8_t DCPin,
 		const int8_t RSTPin,
 		const uint32_t SPIFrequencyHz
 	) {
