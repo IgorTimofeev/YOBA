@@ -49,8 +49,7 @@ namespace YOBA::system {
 
 			bool write(const uint8_t data);
 			bool write(const std::span<const uint8_t> data);
-
-			void setCommandMode(const bool value);
+			bool writeCommand(const uint8_t command);
 
 		private:
 			uint8_t _MOSIPin {};
@@ -60,7 +59,6 @@ namespace YOBA::system {
 			uint32_t _frequencyHz {};
 
 			spi_device_handle_t _deviceHandle {};
-
 			bool _commandMode = false;
 	};
 

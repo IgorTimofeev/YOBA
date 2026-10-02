@@ -36,10 +36,10 @@ namespace YOBA {
 
 		uint8_t data[14];
 
-		this->writeCommand(ST7789_SLPOUT);   // Sleep out
+		_SPIDevice.writeCommand(ST7789_SLPOUT);   // Sleep out
 		system::delayMs(120);
 
-		this->writeCommand(ST7789_NORON);    // Normal display mode on
+		_SPIDevice.writeCommand(ST7789_NORON);    // Normal display mode on
 
 		//------------------------------display and color format setting--------------------------------//
 
@@ -48,16 +48,16 @@ namespace YOBA {
 		// JLX240 display datasheet
 		data[0] = 0x0A;
 		data[1] = 0x82;
-		this->writeCommand(0xB6);
-		this->writeData({ data, 2 });
+		_SPIDevice.writeCommand(0xB6);
+		_SPIDevice.write({ data, 2 });
 
 		data[0] = 0x00;
 		data[1] = 0xE0; // 5 to 6-bit conversion: r0 = r5, b0 = b5
-		this->writeCommand(ST7789_RAMCTRL);
-		this->writeData({ data, 2 });
+		_SPIDevice.writeCommand(ST7789_RAMCTRL);
+		_SPIDevice.write({ data, 2 });
 
-		this->writeCommand(ST7789_COLMOD);
-		this->writeData(0x55);
+		_SPIDevice.writeCommand(ST7789_COLMOD);
+		_SPIDevice.write(0x55);
 
 		system::delayMs(10);
 
@@ -68,41 +68,41 @@ namespace YOBA {
 		data[2] = 0x00;
 		data[3] = 0x33;
 		data[4] = 0x33;
-		this->writeCommand(ST7789_PORCTRL);
-		this->writeData({ data, 5 });
+		_SPIDevice.writeCommand(ST7789_PORCTRL);
+		_SPIDevice.write({ data, 5 });
 
 		// Voltages: VGH / VGL
-		this->writeCommand(ST7789_GCTRL);
-		this->writeData(0x35);
+		_SPIDevice.writeCommand(ST7789_GCTRL);
+		_SPIDevice.write(0x35);
 
 		//---------------------------------ST7789V Power setting--------------------------------------//
 
 		// JLX240 display datasheet
-		this->writeCommand(ST7789_VCOMS);
-		this->writeData(0x28);
+		_SPIDevice.writeCommand(ST7789_VCOMS);
+		_SPIDevice.write(0x28);
 
-		this->writeCommand(ST7789_LCMCTRL);
-		this->writeData(0x0C);
+		_SPIDevice.writeCommand(ST7789_LCMCTRL);
+		_SPIDevice.write(0x0C);
 
 		data[0] = 0x01;
 		data[1] = 0xFF;
-		this->writeCommand(ST7789_VDVVRHEN);
-		this->writeData({ data, 2 });
+		_SPIDevice.writeCommand(ST7789_VDVVRHEN);
+		_SPIDevice.write({ data, 2 });
 
 		// voltage VRHS
-		this->writeCommand(ST7789_VRHS);
-		this->writeData(0x10);
+		_SPIDevice.writeCommand(ST7789_VRHS);
+		_SPIDevice.write(0x10);
 
-		this->writeCommand(ST7789_VDVSET);
-		this->writeData(0x20);
+		_SPIDevice.writeCommand(ST7789_VDVSET);
+		_SPIDevice.write(0x20);
 
-		this->writeCommand(ST7789_FRCTR2);
-		this->writeData(0x0f);
+		_SPIDevice.writeCommand(ST7789_FRCTR2);
+		_SPIDevice.write(0x0f);
 
 		data[0] = 0xa4;
 		data[1] = 0xa1;
-		this->writeCommand(ST7789_PWCTRL1);
-		this->writeData({ data, 2 });
+		_SPIDevice.writeCommand(ST7789_PWCTRL1);
+		_SPIDevice.write({ data, 2 });
 
 		//--------------------------------ST7789V gamma setting---------------------------------------//
 
@@ -120,8 +120,8 @@ namespace YOBA {
 		data[11] = 0x12;
 		data[12] = 0x14;
 		data[13] = 0x17;
-		this->writeCommand(ST7789_PVGAMCTRL);
-		this->writeData({ data, 14 });
+		_SPIDevice.writeCommand(ST7789_PVGAMCTRL);
+		_SPIDevice.write({ data, 14 });
 
 		data[0] = 0xd0;
 		data[1] = 0x00;
@@ -137,24 +137,24 @@ namespace YOBA {
 		data[11] = 0x17;
 		data[12] = 0x1b;
 		data[13] = 0x1e;
-		this->writeCommand(ST7789_NVGAMCTRL);
-		this->writeData({ data, 14 });
+		_SPIDevice.writeCommand(ST7789_NVGAMCTRL);
+		_SPIDevice.write({ data, 14 });
 
-		this->writeCommand(ST7789_INVOFF);
+		_SPIDevice.writeCommand(ST7789_INVOFF);
 
 		data[0] = 0x00;
 		data[1] = 0x00;
 		data[2] = 0x00;
 		data[3] = 0xEF;
-		this->writeCommand(ST7789_CASET);
-		this->writeData({ data, 4 });
+		_SPIDevice.writeCommand(ST7789_CASET);
+		_SPIDevice.write({ data, 4 });
 
 		data[0] = 0x00;
 		data[1] = 0x00;
 		data[2] = 0x01;
 		data[3] = 0x3F;
-		this->writeCommand(ST7789_RASET);
-		this->writeData({ data, 4 });
+		_SPIDevice.writeCommand(ST7789_RASET);
+		_SPIDevice.write({ data, 4 });
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -190,8 +190,8 @@ namespace YOBA {
 				break;
 		}
 
-		this->writeCommand(MADCTL);
-		this->writeData(data);
+		_SPIDevice.writeCommand(MADCTL);
+		_SPIDevice.write(data);
 	}
 
 	void ST7789Display::flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) {
@@ -202,29 +202,29 @@ namespace YOBA {
 		data[1] = bounds.getX() & 0xff; //Start Col Low
 		data[2] = bounds.getX2() >> 8; //End Col High
 		data[3] = bounds.getX2() & 0xff; //End Col Low
-		this->writeCommand(0x2A);
-		this->writeData({ data, 4});
+		_SPIDevice.writeCommand(0x2A);
+		_SPIDevice.write({ data, 4});
 
 		//Page address set
 		data[0] = bounds.getY() >> 8; //Start page high
 		data[1] = bounds.getY() & 0xff; // Start page low
 		data[2] = bounds.getY2() >> 8; // End page high
 		data[3] = bounds.getY2() & 0xff; // End page low
-		this->writeCommand(0x2B);
-		this->writeData({ data, 4});
+		_SPIDevice.writeCommand(0x2B);
+		_SPIDevice.write({ data, 4});
 
 		// Memory write
-		this->writeCommand(0x2C);
-		this->writeData(pixelBuffer);
+		_SPIDevice.writeCommand(0x2C);
+		_SPIDevice.write(pixelBuffer);
 	}
 
 	void ST7789Display::turnOff() {
-		this->writeCommand(ST7789_DISPOFF);
+		_SPIDevice.writeCommand(ST7789_DISPOFF);
 		system::delayMs(120);
 	}
 
 	void ST7789Display::turnOn() {
-		this->writeCommand(ST7789_DISPON);
+		_SPIDevice.writeCommand(ST7789_DISPON);
 		system::delayMs(120);
 	}
 }

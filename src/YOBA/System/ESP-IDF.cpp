@@ -4,16 +4,18 @@
 
 #include <cstdio>
 #include <cstring>
-#include <esp_timer.h>
 #include <limits>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <driver/gpio.h>
-#include <sdkconfig.h>
+
+#include <esp_heap_caps.h>
+#include <esp_timer.h>
+#include <esp_log.h>
+
 #include <driver/spi_master.h>
 #include <driver/i2c_master.h>
-#include <esp_heap_caps.h>
 
 namespace YOBA::system {
 	// -------------------------------- System --------------------------------
@@ -153,8 +155,12 @@ namespace YOBA::system {
 		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
 	}
 
-	void SPIDevice::setCommandMode(const bool value) {
-		_commandMode = value;
+	bool SPIDevice::writeCommand(const uint8_t command) {
+		_commandMode = true;
+		const auto result = write(command);
+		_commandMode = false;
+
+		return result;
 	}
 
 	// -------------------------------- I2C --------------------------------

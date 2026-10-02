@@ -45,20 +45,6 @@ namespace YOBA {
 		}
 	}
 
-	void SPIDisplay::writeCommand(const uint8_t command) {
-		_SPIDevice.setCommandMode(true);
-		_SPIDevice.write(command);
-		_SPIDevice.setCommandMode(false);
-	}
-
-	void SPIDisplay::writeData(const uint8_t data) {
-		_SPIDevice.write(data);
-	}
-
-	void SPIDisplay::writeData(const std::span<uint8_t> data) {
-		_SPIDevice.write(data);
-	}
-
 	void SPIDisplay::setResetPin(const bool value) const {
 		system::GPIO::write(_RSTPin, value);
 	}

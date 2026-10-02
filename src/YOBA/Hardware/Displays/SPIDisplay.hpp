@@ -34,11 +34,6 @@ namespace YOBA {
 			int8_t _RSTPin = 0;
 
 			void setResetPin(bool value) const;
-
-			void writeCommand(uint8_t command);
-			void writeData(uint8_t data);
-			void writeData(const std::span<uint8_t> data);
-
 			virtual void toggleResetPin();
 
 		private:
