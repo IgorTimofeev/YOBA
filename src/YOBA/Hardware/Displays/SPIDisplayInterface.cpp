@@ -6,16 +6,15 @@
 
 namespace YOBA {
 	void SPIDisplayInterface::setup(
-		const uint8_t busIndex,
-		const uint8_t mode,
-
 		const uint8_t MOSIPin,
 		const uint8_t SCKPin,
 		const int8_t SSPin,
-		const uint32_t frequencyHz,
-
 		const int8_t DCPin,
-		const int8_t RSTPin
+		const int8_t RSTPin,
+
+		const uint8_t bus,
+		const uint8_t mode,
+		const uint32_t frequencyHz
 	) {
 		_DCPin = DCPin;
 
@@ -24,13 +23,12 @@ namespace YOBA {
 		);
 
 		_SPIDevice.setup(
-			busIndex,
-			mode,
-
 			MOSIPin,
 			SCKPin,
 			SSPin,
 
+			bus,
+			mode,
 			frequencyHz
 		);
 
