@@ -1,5 +1,9 @@
 #pragma once
 
+#include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_MCU
+
 #include <cstdint>
 #include <span>
 
@@ -23,3 +27,5 @@ namespace YOBA {
 
 	};
 }
+
+#endif

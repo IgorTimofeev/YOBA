@@ -1,3 +1,7 @@
+#include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_MCU
+
 #include <YOBA/Hardware/Displays/Display.hpp>
 
 namespace YOBA {
@@ -19,3 +23,5 @@ namespace YOBA {
 		);
 	}
 }
+
+#endif

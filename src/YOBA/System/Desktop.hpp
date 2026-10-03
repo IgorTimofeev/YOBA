@@ -5,13 +5,20 @@
 #ifdef YOBA_SYSTEM_DESKTOP
 
 #include <cstdint>
+#include <chrono>
 
-namespace YOBA::system {
-	void delayMs(uint32_t duration);
+namespace YOBA {
+	class Timer {
+		public:
+			static void delayMs(uint32_t duration);
 
-	uint64_t getTimeUs();
+			static uint64_t getTimeUs();
+	};
 
-	void reallocate(uint8_t*& buffer, const size_t length);
+	class Memory {
+		public:
+			static void reallocate(uint8_t*& buffer, const size_t length);
+	};
 }
 
 #endif

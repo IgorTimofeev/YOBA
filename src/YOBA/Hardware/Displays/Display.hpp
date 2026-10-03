@@ -1,5 +1,9 @@
 #pragma once
 
+#include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_MCU
+
 #include <YOBA/Rendering/Targets/RenderingTarget.hpp>
 #include <YOBA/Hardware/Displays/DisplayInterface.hpp>
 
@@ -23,3 +27,5 @@ namespace YOBA {
 			using RenderingTarget::setup;
 	};
 }
+
+#endif

@@ -1,5 +1,8 @@
-#include <YOBA/Hardware/Displays/DisplayInterface.hpp>
 #include <YOBA/System.hpp>
+
+#ifdef YOBA_SYSTEM_MCU
+
+#include <YOBA/Hardware/Displays/DisplayInterface.hpp>
 
 namespace YOBA {
 	void DisplayInterface::setup(const int8_t RSTPin) {
@@ -28,3 +31,5 @@ namespace YOBA {
 		Timer::delayMs(delayAfterHighMs);
 	}
 }
+
+#endif
