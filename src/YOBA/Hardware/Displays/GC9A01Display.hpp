@@ -2,20 +2,20 @@
 
 #include <YOBA/System.hpp>
 
-#ifdef YOBA_SYSTEM_SPI
+#ifdef YOBA_SYSTEM_MCU
 
 #include <cstdint>
 #include <span>
 
-#include <YOBA/Hardware/Displays/SPIDisplay.hpp>
+#include <YOBA/Hardware/Displays/Display.hpp>
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
-	class GC9A01Display : public SPIDisplay {
+	class GC9A01Display : public Display {
 		public:
 			void setup(
-				SPIDisplayInterface* displayInterface,
+				DisplayInterface* displayInterface,
 
 				const Size& size = Size(240, 240),
 				Rotation rotation = Rotation::none,

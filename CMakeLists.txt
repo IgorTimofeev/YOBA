@@ -19,8 +19,8 @@ set(YOBA_SOURCES
   src/YOBA/Core/Text.cpp
   src/YOBA/Core/UTF-8.cpp
   src/YOBA/Hardware/Displays/Display.cpp
+  src/YOBA/Hardware/Displays/DisplayInterface.cpp
   src/YOBA/Hardware/Displays/SPIDisplayInterface.cpp
-  src/YOBA/Hardware/Displays/SPIDisplay.cpp
   src/YOBA/Hardware/Displays/GC9A01Display.cpp
   src/YOBA/Hardware/Displays/ILI9341Display.cpp
   src/YOBA/Hardware/Displays/SH1106Display.cpp
@@ -109,6 +109,7 @@ if(ESP_PLATFORM)
 	  esp_driver_spi
 	  esp_driver_gpio
 	  esp_driver_i2c
+	  esp_mm
   )
 
   component_compile_options("-frtti")

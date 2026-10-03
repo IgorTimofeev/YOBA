@@ -2,21 +2,21 @@
 
 #include <YOBA/System.hpp>
 
-#ifdef YOBA_SYSTEM_SPI
+#ifdef YOBA_SYSTEM_MCU
 
 #include <cstdint>
 #include <span>
 
-#include <YOBA/Hardware/Displays/SPIDisplay.hpp>
+#include <YOBA/Hardware/Displays/Display.hpp>
 #include <YOBA/Hardware/Displays/ContrastDisplay.hpp>
 #include <YOBA/Hardware/Displays/InvertibleDisplay.hpp>
 #include <YOBA/Core/Size.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
-	class SH1106Display : public SPIDisplay, public ContrastDisplay, public InvertibleDisplay {
+	class SH1106Display : public Display, public ContrastDisplay, public InvertibleDisplay {
 		public:
-			void setup(SPIDisplayInterface* displayInterface);
+			void setup(DisplayInterface* displayInterface);
 
 			void flush(const Rectangle& bounds, const std::span<uint8_t> pixelBuffer) override;
 			void setContrast(uint8_t value) override;

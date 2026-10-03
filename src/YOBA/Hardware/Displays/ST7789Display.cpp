@@ -9,13 +9,13 @@
 
 namespace YOBA {
 	void ST7789Display::setup(
-		SPIDisplayInterface* displayInterface,
+		DisplayInterface* displayInterface,
 
 		const Size& size,
 		const Rotation rotation,
 		const ColorModel colorModel
 	) {
-		SPIDisplay::setup(
+		Display::setup(
 			displayInterface,
 
 			size,

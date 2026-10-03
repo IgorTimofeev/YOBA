@@ -8,8 +8,8 @@
 #include <YOBA/System.hpp>
 
 namespace YOBA {
-	void SH1106Display::setup(SPIDisplayInterface* displayInterface) {
-		SPIDisplay::setup(
+	void SH1106Display::setup(DisplayInterface* displayInterface) {
+		Display::setup(
 			displayInterface,
 
 			Size(128, 64),

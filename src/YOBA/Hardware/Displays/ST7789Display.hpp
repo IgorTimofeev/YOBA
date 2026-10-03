@@ -1,21 +1,19 @@
 #pragma once
 
-#include <YOBA/System.hpp>
-
-#ifdef YOBA_SYSTEM_SPI
+#ifdef YOBA_SYSTEM_MCU
 
 #include <cstdint>
 #include <span>
 
-#include <YOBA/Hardware/Displays/SPIDisplay.hpp>
+#include <YOBA/Hardware/Displays/Display.hpp>
 #include <YOBA/Hardware/Displays/InvertibleDisplay.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
-	class ST7789Display : public SPIDisplay {
+	class ST7789Display : public Display {
 		public:
 			void setup(
-				SPIDisplayInterface* displayInterface,
+				DisplayInterface* displayInterface,
 
 				const Size& size = Size(240, 320),
 				Rotation rotation = Rotation::none,

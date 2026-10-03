@@ -18,7 +18,10 @@ namespace YOBA {
 		const int8_t RSTPin
 	) {
 		_DCPin = DCPin;
-		_RSTPin = RSTPin;
+
+		DisplayInterface::setup(
+			RSTPin
+		);
 
 		_SPIDevice.setup(
 			busIndex,
@@ -32,13 +35,9 @@ namespace YOBA {
 		);
 
 		// D/C pin
-		system::GPIO::setMode(_DCPin, system::GPIO::PinMode::output);
-		system::GPIO::write(_DCPin, true);
-
-		// RST pin
-		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
-			system::GPIO::write(_RSTPin, true);
+		if (_DCPin >= 0) {
+			system::GPIO::setMode(_DCPin, system::GPIO::PinMode::output);
+			system::GPIO::write(_DCPin, false);
 		}
 	}
 
@@ -48,10 +47,6 @@ namespace YOBA {
 
 	int8_t SPIDisplayInterface::getDCPin() const {
 		return _DCPin;
-	}
-
-	int8_t SPIDisplayInterface::getRSTPin() const {
-		return _RSTPin;
 	}
 
 	bool SPIDisplayInterface::write(const uint8_t data) {
@@ -72,18 +67,6 @@ namespace YOBA {
 
 	void SPIDisplayInterface::setDCPinState(const bool state) const {
 		system::GPIO::write(_DCPin, state);
-	}
-
-	void SPIDisplayInterface::setRSTPinState(const bool state) const {
-		system::GPIO::write(_RSTPin, state);
-	}
-
-	void SPIDisplayInterface::toggleRSTPin(const uint32_t delayAfterLowMs, const uint32_t delayAfterHighMs) const {
-		setRSTPinState(false);
-		system::delayMs(delayAfterLowMs);
-
-		setRSTPinState(true);
-		system::delayMs(delayAfterHighMs);
 	}
 }
 

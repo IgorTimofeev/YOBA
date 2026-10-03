@@ -32,16 +32,17 @@ namespace YOBA::system {
 		if (buffer)
 			heap_caps_free(buffer);
 
-		size_t alignment = 0;
+		// #if CONFIG_SPIRAM
+		// 	// Should give us safe maximum
+			// buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_SPIRAM | MALLOC_CAP_CACHE_ALIGNED));
+		//
+		// #else
+		// 	buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED));
+		//
+		// #endif
 
-		#if CONFIG_SPIRAM
-			// Should give us safe maximum
-			alignment = CONFIG_MMU_PAGE_SIZE;
-		#else
-			alignment = 4;
-		#endif
+		buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED));
 
-		buffer = static_cast<uint8_t*>(heap_caps_aligned_alloc(alignment, length, MALLOC_CAP_DMA));
 		assert(buffer != nullptr && "Failed to allocate memory");
 	}
 
@@ -123,16 +124,25 @@ namespace YOBA::system {
 		transaction.length = 8;
 		transaction.user = this;
 
-		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
+		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_polling_transmit(_deviceHandle, &transaction)) == ESP_OK;
 	}
 
 	bool SPIDevice::write(const std::span<const uint8_t> data) {
 		spi_transaction_t transaction {};
-		transaction.length = data.size() * 8;
-		transaction.tx_buffer = data.data();
 		transaction.user = this;
+		transaction.length = data.size() * 8;
 
-		return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
+		if (data.size() > 4) {
+			transaction.tx_buffer = data.data();
+
+			return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_transmit(_deviceHandle, &transaction)) == ESP_OK;
+		}
+		else {
+			std::memcpy(transaction.tx_data, data.data(), data.size());
+			transaction.flags = SPI_TRANS_USE_TXDATA;
+
+			return ESP_ERROR_CHECK_WITHOUT_ABORT(spi_device_polling_transmit(_deviceHandle, &transaction)) == ESP_OK;
+		}
 	}
 
 	// -------------------------------- I2C --------------------------------

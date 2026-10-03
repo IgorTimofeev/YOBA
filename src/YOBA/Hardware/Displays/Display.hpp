@@ -1,11 +1,25 @@
 #pragma once
 
 #include <YOBA/Rendering/Targets/RenderingTarget.hpp>
+#include <YOBA/Hardware/Displays/DisplayInterface.hpp>
 
 namespace YOBA {
-	// Maybe will be used in future
 	class Display : public virtual RenderingTarget {
 		public:
-			~Display() override = 0;
+			void setup(
+				DisplayInterface* displayInterface,
+
+				const Size& size,
+				const Rotation rotation,
+				const PixelOrder pixelOrder,
+				const ColorModel colorModel
+			);
+
+		protected:
+			DisplayInterface* _interface = nullptr;
+
+		private:
+			// No one should call this anymore
+			using RenderingTarget::setup;
 	};
 }

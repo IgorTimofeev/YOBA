@@ -24,21 +24,19 @@ namespace YOBA {
 
 			system::SPIDevice& getSPIDevice();
 			int8_t getDCPin() const;
-			int8_t getRSTPin() const;
 
 			bool write(const uint8_t data) override;
 			bool write(const std::span<const uint8_t> data) override;
-			bool writeCommand(const uint8_t command);
+			bool writeCommand(const uint8_t command) override;
 
 			void setDCPinState(const bool state) const;
-			void setRSTPinState(const bool state) const;
-			void toggleRSTPin(uint32_t delayAfterLowMs, uint32_t delayAfterHighMs) const;
 
 		private:
 			system::SPIDevice _SPIDevice {};
 
 			int8_t _DCPin = -1;
-			int8_t _RSTPin = -1;
+
+			using DisplayInterface::setup;
 	};
 }
 

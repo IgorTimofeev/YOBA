@@ -15,7 +15,7 @@ namespace YOBA {
 
 		for (uint16_t y = 0; y < size.getHeight(); y += _flushingChunkHeight) {
 			_target->flush(
-				Rectangle(0, y, size.getWidth(), getFlushingChunkHeight()),
+				Rectangle(0, y, size.getWidth(), _flushingChunkHeight),
 				{ transactionBufferPtr, transactionBufferLength }
 			);
 

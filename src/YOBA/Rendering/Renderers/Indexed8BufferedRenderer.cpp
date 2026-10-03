@@ -9,7 +9,7 @@ namespace YOBA {
 	size_t Indexed8BufferedRenderer::computePixelBufferLength() const {
 		return
 			getTarget()->getSize().getWidth()
-			* getFlushingChunkHeight()
+			* _flushingChunkHeight
 			* Color::getBytesPerModel(getTarget()->getColorModel());
 	}
 
@@ -54,7 +54,7 @@ namespace YOBA {
 
 				const uint8_t* paletteIndicesBufferPtr = _paletteIndicesBuffer;
 
-				for (uint16_t y = 0; y < size.getHeight(); y += getFlushingChunkHeight()) {
+				for (uint16_t y = 0; y < size.getHeight(); y += _flushingChunkHeight) {
 					auto pixelBufferPtr = _pixelBuffer;
 
 					// Taking indices from palette, converting them to color & copying to pixel buffer
@@ -66,7 +66,7 @@ namespace YOBA {
 
 					// Writing pixel buffer on target
 					getTarget()->flush(
-						Rectangle(0, y, size.getWidth(), getFlushingChunkHeight()),
+						Rectangle(0, y, size.getWidth(), _flushingChunkHeight),
 						{ _pixelBuffer, _pixelBufferLength }
 					);
 				}

@@ -9,7 +9,6 @@
 #include <YOBA/Hardware/Displays/SPIDisplayInterface.hpp>
 #include <YOBA/Hardware/Displays/ContrastDisplay.hpp>
 #include <YOBA/Hardware/Displays/InvertibleDisplay.hpp>
-#include <YOBA/Hardware/Displays/SPIDisplay.hpp>
 #include <YOBA/Hardware/Displays/GC9A01Display.hpp>
 #include <YOBA/Hardware/Displays/ILI9341Display.hpp>
 #include <YOBA/Hardware/Displays/SH1106Display.hpp>
