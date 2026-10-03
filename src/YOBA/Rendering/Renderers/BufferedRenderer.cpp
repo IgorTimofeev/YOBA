@@ -7,6 +7,8 @@ namespace YOBA {
 			const bool usePSRAM
 		#endif
 	) {
+		Renderer::setup();
+
 		#ifdef YOBA_SYSTEM_PSRAM
 			_usePSRAM = usePSRAM;
 		#endif

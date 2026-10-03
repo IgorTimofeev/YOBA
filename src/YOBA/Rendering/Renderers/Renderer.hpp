@@ -16,6 +16,9 @@ namespace YOBA {
 		public:
 			virtual ~Renderer() = default;
 
+			// Does nothing for now, reserved for future implementation
+			virtual void setup();
+
 			RenderingTarget* getTarget() const;
 			void setTarget(RenderingTarget* value);
 

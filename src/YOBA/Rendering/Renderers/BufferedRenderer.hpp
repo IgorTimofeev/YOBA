@@ -13,7 +13,11 @@ namespace YOBA {
 				#ifdef YOBA_SYSTEM_PSRAM
 					const bool usePSRAM
 				#endif
-			);
+			)
+			#ifndef YOBA_SYSTEM_PSRAM
+				override
+			#endif
+			;
 
 			uint8_t* getPixelBuffer() const;
 			size_t getPixelBufferLength() const;
@@ -37,5 +41,8 @@ namespace YOBA {
 			void reallocatePixelBuffer();
 
 			virtual uint16_t computeFlushingChunkHeight() const;
+
+		private:
+			using Renderer::setup;
 	};
 }

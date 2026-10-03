@@ -7,8 +7,8 @@
 // Renderers
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Rendering/Renderers/BufferedRenderer.hpp>
-#include <YOBA/Rendering/Renderers/IndexedBufferedRenderer.hpp>
-#include <YOBA/Rendering/Renderers/Indexed8BufferedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/IndexedRenderer.hpp>
+#include <YOBA/Rendering/Renderers/Indexed8Renderer.hpp>
 #include <YOBA/Rendering/Renderers/RGB565BufferedRenderer.hpp>
 #include <YOBA/Rendering/Renderers/MonochromeBufferedRenderer.hpp>
 #include <YOBA/Rendering/Renderers/ARGBBufferedRenderer.hpp>

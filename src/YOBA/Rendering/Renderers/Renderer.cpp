@@ -5,6 +5,10 @@
 #include <YOBA/Core/UTF-8.hpp>
 
 namespace YOBA {
+	void Renderer::setup() {
+
+	}
+
 	RenderingTarget* Renderer::getTarget() const {
 		return _target;
 	}

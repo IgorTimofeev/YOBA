@@ -19,6 +19,7 @@ namespace YOBA {
 	class SFMLRenderingTarget : public RenderingTarget {
 		public:
 			void setup(const Size& size);
+
 			sf::RenderTexture& getRenderTexture();
 			sf::Sprite& getSprite();
 
