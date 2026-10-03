@@ -88,7 +88,7 @@ namespace YOBA {
 		const uint8_t SCKPin,
 		const int8_t SSPin,
 
-		const uint8_t busIndex,
+		const uint8_t busNumber,
 		const uint8_t mode,
 		const uint32_t frequencyHz
 	) {
@@ -107,7 +107,7 @@ namespace YOBA {
 		busConfig.max_transfer_sz = 0xFFFF;
 
 		// May be already initialized
-		const auto result = spi_bus_initialize(static_cast<spi_host_device_t>(busIndex), &busConfig, SPI_DMA_CH_AUTO);
+		const auto result = spi_bus_initialize(static_cast<spi_host_device_t>(busNumber), &busConfig, SPI_DMA_CH_AUTO);
 		if (result != ESP_OK && result != ESP_ERR_INVALID_STATE) {
 			ESP_ERROR_CHECK(result);
 			return;
@@ -121,7 +121,7 @@ namespace YOBA {
 		interfaceConfig.flags = SPI_DEVICE_NO_DUMMY;
 		interfaceConfig.queue_size = 1;
 
-		ESP_ERROR_CHECK(spi_bus_add_device(static_cast<spi_host_device_t>(busIndex), &interfaceConfig, &_deviceHandle));
+		ESP_ERROR_CHECK(spi_bus_add_device(static_cast<spi_host_device_t>(busNumber), &interfaceConfig, &_deviceHandle));
 	}
 
 	bool SPIDevice::write(const uint8_t data) {

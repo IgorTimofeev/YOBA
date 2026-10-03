@@ -16,9 +16,9 @@ namespace YOBA {
 				const int8_t DCPin,
 				const int8_t RSTPin,
 
-				const uint8_t bus,
-				const uint8_t mode,
-				const uint32_t frequencyHz
+				const uint8_t SPIBusNumber,
+				const uint8_t SPIMode,
+				const uint32_t SPIFrequencyHz
 			);
 
 			SPIDevice& getSPIDevice();

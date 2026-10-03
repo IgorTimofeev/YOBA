@@ -59,7 +59,7 @@ namespace YOBA {
 				const uint8_t SCKPin,
 				const int8_t SSPin,
 
-				const uint8_t busIndex,
+				const uint8_t busNumber,
 				const uint8_t mode,
 				const uint32_t frequencyHz
 			);
