@@ -28,20 +28,28 @@ namespace YOBA::system {
 		return static_cast<uint64_t>(esp_timer_get_time());
 	}
 
-	void reallocate(uint8_t*& buffer, const size_t length) {
+	void reallocate(
+		uint8_t*& buffer,
+		const size_t length
+
+		#ifdef YOBA_SYSTEM_PSRAM
+			, const bool usePSRAM
+		#endif
+	) {
 		if (buffer)
 			heap_caps_free(buffer);
 
-		// #if CONFIG_SPIRAM
-		// 	// Should give us safe maximum
-			// buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_SPIRAM | MALLOC_CAP_CACHE_ALIGNED));
-		//
-		// #else
-		// 	buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED));
-		//
-		// #endif
+		#ifdef YOBA_SYSTEM_PSRAM
+			buffer = static_cast<uint8_t*>(heap_caps_malloc(
+				length,
+				usePSRAM
+					? (MALLOC_CAP_SPIRAM | MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED)
+					: (MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED)
+			));
 
-		buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED));
+		#else
+			buffer = static_cast<uint8_t*>(heap_caps_malloc(length, MALLOC_CAP_DMA | MALLOC_CAP_CACHE_ALIGNED));
+		#endif
 
 		assert(buffer != nullptr && "Failed to allocate memory");
 	}

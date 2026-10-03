@@ -2,10 +2,27 @@
 #include <YOBA/System.hpp>
 
 namespace YOBA {
+	void BufferedRenderer::setup(
+		#ifdef YOBA_SYSTEM_PSRAM
+			const bool usePSRAM
+		#endif
+	) {
+		#ifdef YOBA_SYSTEM_PSRAM
+			_usePSRAM = usePSRAM;
+		#endif
+	}
+
 	void BufferedRenderer::reallocatePixelBuffer() {
 		_pixelBufferLength = computePixelBufferLength();
 
-		system::reallocate(_pixelBuffer, _pixelBufferLength);
+		system::reallocate(
+			_pixelBuffer,
+			_pixelBufferLength
+
+			#ifdef YOBA_SYSTEM_PSRAM
+				, _usePSRAM
+			#endif
+		);
 	}
 
 	void BufferedRenderer::updateFromTarget() {

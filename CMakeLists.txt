@@ -109,7 +109,6 @@ if(ESP_PLATFORM)
 	  esp_driver_spi
 	  esp_driver_gpio
 	  esp_driver_i2c
-	  esp_mm
   )
 
   component_compile_options("-frtti")

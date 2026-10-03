@@ -61,7 +61,15 @@ namespace YOBA {
 			return;
 
 		_paletteIndicesBufferLength = computePaletteIndicesBufferLength();
-		system::reallocate(_paletteIndicesBuffer, _paletteIndicesBufferLength);
+
+		system::reallocate(
+			_paletteIndicesBuffer,
+			_paletteIndicesBufferLength
+
+			#ifdef YOBA_SYSTEM_PSRAM
+				, _usePSRAM
+			#endif
+		);
 	}
 
 	template<typename TIndex, typename TValue>
@@ -70,7 +78,15 @@ namespace YOBA {
 			return;
 
 		const size_t paletteBufferLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
-		system::reallocate(_paletteBuffer, paletteBufferLength);
+
+		system::reallocate(
+			_paletteBuffer,
+			paletteBufferLength
+
+			#ifdef YOBA_SYSTEM_PSRAM
+				, _usePSRAM
+			#endif
+		);
 	}
 
 	template<typename TIndex, typename TValue>

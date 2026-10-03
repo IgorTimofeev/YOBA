@@ -2,12 +2,19 @@
 
 #include <functional>
 
+#include <YOBA/System.hpp>
 #include <YOBA/Rendering/Renderers/Renderer.hpp>
 #include <YOBA/Core/Rectangle.hpp>
 
 namespace YOBA {
 	class BufferedRenderer : public virtual Renderer {
 		public:
+			void setup(
+				#ifdef YOBA_SYSTEM_PSRAM
+					const bool usePSRAM
+				#endif
+			);
+
 			uint8_t* getPixelBuffer() const;
 			size_t getPixelBufferLength() const;
 
@@ -17,6 +24,10 @@ namespace YOBA {
 			uint16_t getFlushingChunkHeight() const;
 
 		protected:
+			#ifdef YOBA_SYSTEM_PSRAM
+				bool _usePSRAM = false;
+			#endif
+
 			uint8_t* _pixelBuffer = nullptr;
 			size_t _pixelBufferLength = 0;
 			uint16_t _flushingChunkHeight = 0;

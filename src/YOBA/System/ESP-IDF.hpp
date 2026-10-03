@@ -22,7 +22,14 @@ namespace YOBA::system {
 	void delayMs(uint32_t duration);
 	uint64_t getTimeUs();
 
-	void reallocate(uint8_t*& buffer, const size_t length);
+	void reallocate(
+		uint8_t*& buffer,
+		const size_t length
+
+		#ifdef YOBA_SYSTEM_PSRAM
+			, const bool usePSRAM
+		#endif
+	);
 
 	class GPIO {
 		public:
