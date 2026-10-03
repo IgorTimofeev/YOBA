@@ -36,12 +36,12 @@ namespace YOBA {
 
 		// D/C pin
 		if (_DCPin >= 0) {
-			system::GPIO::setMode(_DCPin, system::GPIO::PinMode::output);
-			system::GPIO::write(_DCPin, false);
+			GPIO::setMode(_DCPin, GPIO::PinMode::output);
+			GPIO::write(_DCPin, false);
 		}
 	}
 
-	system::SPIDevice& SPIDisplayInterface::getSPIDevice() {
+	SPIDevice& SPIDisplayInterface::getSPIDevice() {
 		return _SPIDevice;
 	}
 
@@ -58,15 +58,15 @@ namespace YOBA {
 	}
 
 	bool SPIDisplayInterface::writeCommand(const uint8_t command) {
-		system::GPIO::write(_DCPin, false);
+		GPIO::write(_DCPin, false);
 		const auto result = _SPIDevice.write(command);
-		system::GPIO::write(_DCPin, true);
+		GPIO::write(_DCPin, true);
 
 		return result;
 	}
 
 	void SPIDisplayInterface::setDCPinState(const bool state) const {
-		system::GPIO::write(_DCPin, state);
+		GPIO::write(_DCPin, state);
 	}
 }
 

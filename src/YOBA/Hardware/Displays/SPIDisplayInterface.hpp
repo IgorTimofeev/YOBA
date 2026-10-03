@@ -22,7 +22,7 @@ namespace YOBA {
 				const int8_t RSTPin
 			);
 
-			system::SPIDevice& getSPIDevice();
+			SPIDevice& getSPIDevice();
 			int8_t getDCPin() const;
 
 			bool write(const uint8_t data) override;
@@ -32,7 +32,7 @@ namespace YOBA {
 			void setDCPinState(const bool state) const;
 
 		private:
-			system::SPIDevice _SPIDevice {};
+			SPIDevice _SPIDevice {};
 
 			int8_t _DCPin = -1;
 

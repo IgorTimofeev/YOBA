@@ -37,21 +37,21 @@ namespace YOBA {
 		// Interrupt
 		_INTPin = INTPin;
 
-		system::GPIO::setMode(_INTPin, system::GPIO::PinMode::input);
-		system::GPIO::addInterruptHandler(_INTPin, interruptHandler, this);
+		GPIO::setMode(_INTPin, GPIO::PinMode::input);
+		GPIO::addInterruptHandler(_INTPin, interruptHandler, this);
 
 		// Reset
 		_RSTPin = RSTPin;
 
 		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
-			system::GPIO::write(_RSTPin, false);
-			system::delayMs(10);
-			system::GPIO::write(_RSTPin, true);
+			GPIO::setMode(_RSTPin, GPIO::PinMode::output);
+			GPIO::write(_RSTPin, false);
+			Timer::delayMs(10);
+			GPIO::write(_RSTPin, true);
 		}
 
 		// Do we need some delay? Hmmm
-		// system::sleep(500);
+		// sleep(500);
 	}
 
 	FT6336UDeviceMode FT6336UTouchPanel::readDeviceMode() const {

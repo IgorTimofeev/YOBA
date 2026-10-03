@@ -16,7 +16,7 @@ namespace YOBA {
 	}
 
 	uint32_t Animation::getElapsedTime() const {
-		return system::getTimeUs() - _startTimeUs;
+		return Timer::getTimeUs() - _startTimeUs;
 	}
 
 	float Animation::getProgress() const {
@@ -47,13 +47,13 @@ namespace YOBA {
 
 			application->addAnimation(this);
 
-			_startTimeUs = system::getTimeUs();
+			_startTimeUs = Timer::getTimeUs();
 
 			setState(AnimationState::started);
 		}
 		// Instantaneous
 		else {
-			_startTimeUs = system::getTimeUs();
+			_startTimeUs = Timer::getTimeUs();
 
 			setState(AnimationState::started);
 			onTick();

@@ -31,7 +31,7 @@ namespace YOBA {
 		// Software reset
 		else {
 			_interface->writeCommand(SWRESET);
-			system::delayMs(150);
+			Timer::delayMs(150);
 		}
 
 	    _interface->writeCommand(0xEF);
@@ -305,7 +305,7 @@ namespace YOBA {
 		_interface->write(0x6f);
 
 	    _interface->writeCommand(SLPOUT);
-	    system::delayMs(120);
+	    Timer::delayMs(120);
 	}
 
 	void GC9A01Display::writeMADCTLCommand() {
@@ -354,7 +354,7 @@ namespace YOBA {
 
 	void GC9A01Display::turnOn() {
 		_interface->writeCommand(DISPON);
-		system::delayMs(20);
+		Timer::delayMs(20);
 	}
 
 	void GC9A01Display::turnOff() {

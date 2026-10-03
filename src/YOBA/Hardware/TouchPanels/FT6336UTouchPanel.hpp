@@ -106,7 +106,7 @@ namespace YOBA {
 			uint8_t readState() const;
 
 		private:
-			system::I2CDevice _I2CDevice {};
+			I2CDevice _I2CDevice {};
 			int8_t _RSTPin = 0;
 			uint8_t _INTPin = 0;
 

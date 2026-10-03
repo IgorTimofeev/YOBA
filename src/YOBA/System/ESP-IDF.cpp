@@ -17,18 +17,18 @@
 #include <driver/spi_master.h>
 #include <driver/i2c_master.h>
 
-namespace YOBA::system {
+namespace YOBA {
 	// -------------------------------- System --------------------------------
 
-	void delayMs(const uint32_t duration) {
+	void Timer::delayMs(const uint32_t duration) {
 		vTaskDelay(pdMS_TO_TICKS(duration));
 	}
 
-	uint64_t getTimeUs() {
+	uint64_t Timer::getTimeUs() {
 		return static_cast<uint64_t>(esp_timer_get_time());
 	}
 
-	void reallocate(
+	void Memory::reallocate(
 		uint8_t*& buffer,
 		const size_t length
 

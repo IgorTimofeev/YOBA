@@ -31,7 +31,7 @@ namespace YOBA {
 		uint8_t data[14];
 
 		_interface->writeCommand(ST7789_SLPOUT);   // Sleep out
-		system::delayMs(120);
+		Timer::delayMs(120);
 
 		_interface->writeCommand(ST7789_NORON);    // Normal display mode on
 
@@ -53,7 +53,7 @@ namespace YOBA {
 		_interface->writeCommand(ST7789_COLMOD);
 		_interface->write(0x55);
 
-		system::delayMs(10);
+		Timer::delayMs(10);
 
 		//--------------------------------ST7789V Frame rate setting----------------------------------//
 
@@ -152,7 +152,7 @@ namespace YOBA {
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		system::delayMs(120);
+		Timer::delayMs(120);
 	}
 
 	void ST7789Display::onRotationChanged() {
@@ -214,12 +214,12 @@ namespace YOBA {
 
 	void ST7789Display::turnOff() {
 		_interface->writeCommand(ST7789_DISPOFF);
-		system::delayMs(120);
+		Timer::delayMs(120);
 	}
 
 	void ST7789Display::turnOn() {
 		_interface->writeCommand(ST7789_DISPON);
-		system::delayMs(120);
+		Timer::delayMs(120);
 	}
 }
 

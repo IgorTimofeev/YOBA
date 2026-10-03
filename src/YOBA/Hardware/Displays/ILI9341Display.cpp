@@ -194,7 +194,7 @@ namespace YOBA {
 		_interface->writeCommand(0x11);
 		_interface->write(0x00);
 
-		system::delayMs(5);
+		Timer::delayMs(5);
 	}
 
 	void ILI9341Display::onRotationChanged() {

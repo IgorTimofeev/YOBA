@@ -62,7 +62,7 @@ namespace YOBA {
 
 		_paletteIndicesBufferLength = computePaletteIndicesBufferLength();
 
-		system::reallocate(
+		Memory::reallocate(
 			_paletteIndicesBuffer,
 			_paletteIndicesBufferLength
 
@@ -79,7 +79,7 @@ namespace YOBA {
 
 		const size_t paletteBufferLength = _paletteColorCount * Color::getBytesPerModel(getTarget()->getColorModel());
 
-		system::reallocate(
+		Memory::reallocate(
 			_paletteBuffer,
 			paletteBufferLength
 

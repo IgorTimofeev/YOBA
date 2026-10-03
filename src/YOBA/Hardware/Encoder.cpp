@@ -29,11 +29,11 @@ namespace YOBA {
 	}
 
 	void Encoder::setup() {
-		system::GPIO::setMode(_aPin, system::GPIO::PinMode::input);
-		system::GPIO::setMode(_bPin, system::GPIO::PinMode::input);
+		GPIO::setMode(_aPin, GPIO::PinMode::input);
+		GPIO::setMode(_bPin, GPIO::PinMode::input);
 
-		system::GPIO::addInterruptHandler(_aPin, ABInterruptHandler, this);
-		system::GPIO::addInterruptHandler(_bPin, ABInterruptHandler, this);
+		GPIO::addInterruptHandler(_aPin, ABInterruptHandler, this);
+		GPIO::addInterruptHandler(_bPin, ABInterruptHandler, this);
 	}
 
 	void Encoder::tick() {
@@ -42,7 +42,7 @@ namespace YOBA {
 
 		const auto application = Application::getCurrent();
 
-		const auto time = system::getTimeUs();
+		const auto time = Timer::getTimeUs();
 		const auto deltaTime = static_cast<int32_t>(time - _oldValueTime);
 		_oldValueTime = time;
 
@@ -67,7 +67,7 @@ namespace YOBA {
 	}
 
 	void Encoder::readAB() {
-		const auto AB = system::GPIO::read(_aPin) << 1 | system::GPIO::read(_bPin);
+		const auto AB = GPIO::read(_aPin) << 1 | GPIO::read(_bPin);
 
 		switch (_oldAB | AB << 2) {
 			// Clockwise
@@ -119,8 +119,8 @@ namespace YOBA {
 	void PushButtonEncoder::setup() {
 		Encoder::setup();
 
-		system::GPIO::setMode(_swPin, system::GPIO::PinMode::input);
-		system::GPIO::addInterruptHandler(_swPin, swInterruptHandler, this);
+		GPIO::setMode(_swPin, GPIO::PinMode::input);
+		GPIO::addInterruptHandler(_swPin, swInterruptHandler, this);
 		readPressed();
 	}
 
@@ -149,7 +149,7 @@ namespace YOBA {
 	}
 
 	void PushButtonEncoder::readPressed() {
-		_pressed = !system::GPIO::read(_swPin);
+		_pressed = !GPIO::read(_swPin);
 	}
 
 	bool PushButtonEncoder::isPressed() const {

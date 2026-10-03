@@ -18,18 +18,24 @@
 #include <driver/spi_master.h>
 #include <driver/i2c_master.h>
 
-namespace YOBA::system {
-	void delayMs(uint32_t duration);
-	uint64_t getTimeUs();
+namespace YOBA {
+	class Timer {
+		public:
+			static void delayMs(uint32_t duration);
+			static uint64_t getTimeUs();
+	};
 
-	void reallocate(
-		uint8_t*& buffer,
-		const size_t length
+	class Memory {
+		public:
+			static void reallocate(
+				uint8_t*& buffer,
+				const size_t length
 
-		#ifdef YOBA_SYSTEM_PSRAM
-			, const bool usePSRAM
-		#endif
-	);
+				#ifdef YOBA_SYSTEM_PSRAM
+					, const bool usePSRAM
+				#endif
+			);
+	};
 
 	class GPIO {
 		public:
@@ -38,7 +44,7 @@ namespace YOBA::system {
 				output
 			};
 
-			static void setMode(uint8_t pin, PinMode mode);
+			static void setMode(uint8_t pin, GPIO::PinMode mode);
 			static bool read(uint8_t pin);
 			static void write(uint8_t pin, bool value);
 			static void addInterruptHandler(uint8_t pin, void(*callback)(void* arg), void* args);

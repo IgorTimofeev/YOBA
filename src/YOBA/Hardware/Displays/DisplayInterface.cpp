@@ -7,8 +7,8 @@ namespace YOBA {
 
 		// RST pin
 		if (_RSTPin >= 0) {
-			system::GPIO::setMode(_RSTPin, system::GPIO::PinMode::output);
-			system::GPIO::write(_RSTPin, true);
+			GPIO::setMode(_RSTPin, GPIO::PinMode::output);
+			GPIO::write(_RSTPin, true);
 		}
 	}
 
@@ -17,14 +17,14 @@ namespace YOBA {
 	}
 
 	void DisplayInterface::setRSTPinState(const bool state) const {
-		system::GPIO::write(_RSTPin, state);
+		GPIO::write(_RSTPin, state);
 	}
 
 	void DisplayInterface::toggleRSTPin(const uint32_t delayAfterLowMs, const uint32_t delayAfterHighMs) const {
 		setRSTPinState(false);
-		system::delayMs(delayAfterLowMs);
+		Timer::delayMs(delayAfterLowMs);
 
 		setRSTPinState(true);
-		system::delayMs(delayAfterHighMs);
+		Timer::delayMs(delayAfterHighMs);
 	}
 }

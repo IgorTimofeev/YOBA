@@ -11,12 +11,12 @@ namespace YOBA {
 	void TextField::onTick() {
 		if (isFocused()) {
 			if (isCaptured()) {
-				if (system::getTimeUs() >= _continuousScrollTime) {
+				if (Timer::getTimeUs() >= _continuousScrollTime) {
 					applyContinuousScroll();
 				}
 			}
 			else {
-				if (system::getTimeUs() >= _cursorBlinkTime) {
+				if (Timer::getTimeUs() >= _cursorBlinkTime) {
 					setCursorBlinkStateAndTime(!_cursorBlinkState);
 					invalidateRender();
 				}
@@ -298,7 +298,7 @@ namespace YOBA {
 			setCursorPosition(cursorPosition);
 		}
 
-		_continuousScrollTime = system::getTimeUs() + _continuousScrollInterval;
+		_continuousScrollTime = Timer::getTimeUs() + _continuousScrollInterval;
 	}
 
 	void TextField::insert(const std::string_view value) {
@@ -456,7 +456,7 @@ namespace YOBA {
 
 	void TextField::setCursorBlinkStateAndTime(const bool value) {
 		_cursorBlinkState = value;
-		_cursorBlinkTime = system::getTimeUs() + _cursorBlinkInterval;
+		_cursorBlinkTime = Timer::getTimeUs() + _cursorBlinkInterval;
 	}
 
 	const uint16_t& TextField::getTextMargin() const {

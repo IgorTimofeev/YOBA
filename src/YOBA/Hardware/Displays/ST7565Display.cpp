@@ -34,17 +34,17 @@ namespace YOBA {
 		// turn on voltage converter (VC=1, VR=0, VF=0)
 		_interface->writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x4);
 		// wait for 50% rising
-		system::delayMs(50);
+		Timer::delayMs(50);
 
 		// turn on voltage regulator (VC=1, VR=1, VF=0)
 		_interface->writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x6);
 		// wait >=50ms
-		system::delayMs(50);
+		Timer::delayMs(50);
 
 		// turn on voltage follower (VC=1, VR=1, VF=1)
 		_interface->writeCommand(static_cast<uint8_t>(Command::SET_POWER_CONTROL) | 0x7);
 		// wait
-		system::delayMs(10);
+		Timer::delayMs(10);
 
 		// set lcd operating voltage (regulator resistor, ref voltage resistor)
 		_interface->writeCommand(static_cast<uint8_t>(Command::SET_RESISTOR_RATIO) | 0x6);

@@ -15,7 +15,7 @@ namespace YOBA {
 	void BufferedRenderer::reallocatePixelBuffer() {
 		_pixelBufferLength = computePixelBufferLength();
 
-		system::reallocate(
+		Memory::reallocate(
 			_pixelBuffer,
 			_pixelBufferLength
 

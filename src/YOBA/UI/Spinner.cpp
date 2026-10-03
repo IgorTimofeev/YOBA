@@ -60,11 +60,11 @@ namespace YOBA {
 	void IndeterminateSpinner::onTick() {
 		// speedRad = 1S
 		// xRad - deltaS
-		_fromAngleRad = _fromAngleRad + static_cast<float>(system::getTimeUs() - _tickTime) * _rotationSpeedRadPerSecond / 1'000'000.f;
+		_fromAngleRad = _fromAngleRad + static_cast<float>(Timer::getTimeUs() - _tickTime) * _rotationSpeedRadPerSecond / 1'000'000.f;
 
 		invalidateRender();
 
-		_tickTime = system::getTimeUs();
+		_tickTime = Timer::getTimeUs();
 	}
 
 	void IndeterminateSpinner::onRender(Renderer* renderer, const Rectangle& bounds) {
