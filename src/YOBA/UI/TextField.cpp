@@ -2,7 +2,7 @@
 #include <YOBA/UI/Application.hpp>
 #include <YOBA/Core/Events/KeyEvent.hpp>
 #include <YOBA/Core/Events/ScrollIntoViewEvent.hpp>
-#include <YOBA/UI/Keyboard/Controller.hpp>
+#include <YOBA/UI/Keyboard/Overlay.hpp>
 #include <YOBA/Core/Events/PointerEvent.hpp>
 #include <YOBA/Core/Events/PinchEvent.hpp>
 #include <YOBA/Core/UTF-8.hpp>

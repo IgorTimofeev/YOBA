@@ -1,6 +1,5 @@
 #include <YOBA/UI/Keyboard/Button.hpp>
 #include <YOBA/UI/Keyboard/Keyboard.hpp>
-#include <YOBA/UI/Keyboard/Controller.hpp>
 
 #include <YOBA/Core/Events/KeyEvent.hpp>
 #include <YOBA/UI/Application.hpp>
@@ -325,12 +324,15 @@ namespace YOBA {
 			return;
 
 		Application::getCurrent()->invokeLater([this] {
-			getKeyboard()->setLayout(getKeyboard()->getCharactersLayoutBuilder()());
+			const auto getter = getKeyboard()->getCharactersLayoutGetter();
+
+			if (getter)
+				getKeyboard()->setLayout(getter());
 		});
 	}
 
 	bool CharactersLayoutKeyboardButton::canBeAdded() {
-		return !!getKeyboard()->getCharactersLayoutBuilder();
+		return !!getKeyboard()->getCharactersLayoutGetter();
 	}
 
 	// ----------------------------- DefaultLayoutKeyboardButton -----------------------------
@@ -378,7 +380,7 @@ namespace YOBA {
 	}
 
 	bool CyclicLayoutKeyboardButton::canBeAdded() {
-		return getKeyboard()->getCyclicLayoutBuilders().size() > 1;
+		return getKeyboard()->getCyclicLayoutsGetter().size() > 1;
 	}
 
 }

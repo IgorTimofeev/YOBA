@@ -77,7 +77,7 @@
 #include <YOBA/UI/Keyboard/Button.hpp>
 #include <YOBA/UI/Keyboard/Layout.hpp>
 #include <YOBA/UI/Keyboard/Keyboard.hpp>
-#include <YOBA/UI/Keyboard/Controller.hpp>
+#include <YOBA/UI/Keyboard/Overlay.hpp>
 
 // Dialogs
 #include <YOBA/UI/Dialogs/Dialog.hpp>

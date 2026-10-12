@@ -9,16 +9,7 @@ namespace YOBA {
 	}
 
 	Keyboard::~Keyboard() {
-		deleteLayoutAndUIElements();
-	}
-
-	void Keyboard::deleteLayoutAndUIElements() {
-		if (!_layout)
-			return;
-
-		this->removeChild(_layout);
-
-		delete _layout;
+		setLayout(nullptr);
 	}
 
 	const Color* Keyboard::getBackgroundColor() const {
@@ -82,16 +73,23 @@ namespace YOBA {
 	}
 
 	void Keyboard::setLayout(KeyboardLayout* value) {
-		deleteLayoutAndUIElements();
+		// Removing old layout
+		const auto oldLayout = _layout;
 
+		this->removeChild(_layout);
+
+		// Setting new layout
 		_case = KeyboardCase::lower;
 		_layout = value;
 
-		if (!_layout)
-			return;
+		if (_layout) {
+			*this += _layout;
+			_layout->setKeyboard(this);
+		}
 
-		*this += _layout;
-		_layout->assignKeyboard(this);
+		// Handling change
+		if (_onLayoutChanged)
+			_onLayoutChanged(oldLayout, _layout);
 	}
 
 	uint8_t Keyboard::getTextParsingOptions() const {
@@ -105,7 +103,7 @@ namespace YOBA {
 	void Keyboard::setLayoutFromCyclicIndex(const uint8_t cyclicLayoutIndex) {
 		_cyclicLayoutIndex = cyclicLayoutIndex;
 
-		setLayout(_cyclicLayoutBuilders[_cyclicLayoutIndex]());
+		setLayout(_cyclicLayoutsGetter[_cyclicLayoutIndex]());
 	}
 
 	uint8_t Keyboard::getHorizontalKeyGap() const {
@@ -143,7 +141,7 @@ namespace YOBA {
 			return;
 
 		for (size_t rowIndex = 0; rowIndex < _layout->getButtons().size(); rowIndex++) {
-			const auto& layoutRow =  _layout->getButtons()[rowIndex];
+			const auto& layoutRow = _layout->getButtons()[rowIndex];
 
 			for (size_t columnIndex = 0; columnIndex < layoutRow.size(); columnIndex++) {
 				const auto button = layoutRow[columnIndex];
@@ -170,7 +168,7 @@ namespace YOBA {
 	}
 
 	uint8_t Keyboard::getCyclicLayoutsCount() const {
-		return _cyclicLayoutBuilders.size();
+		return _cyclicLayoutsGetter.size();
 	}
 
 	void Keyboard::setNextCyclicLayoutIndex() {
@@ -193,8 +191,8 @@ namespace YOBA {
 			setLayoutFromCyclicIndex(_cyclicLayoutIndex);
 		}
 		else if (_textParsingOptions & TextParsingOptions::number) {
-			if (_numericLayoutBuilder) {
-				setLayout(_numericLayoutBuilder());
+			if (_numericLayoutGetter) {
+				setLayout(_numericLayoutGetter());
 			}
 			else {
 				setLayoutFromCyclicIndex(_cyclicLayoutIndex);
@@ -202,28 +200,32 @@ namespace YOBA {
 		}
 	}
 
-	std::vector<std::function<KeyboardLayout*()>>& Keyboard::getCyclicLayoutBuilders() {
-		return _cyclicLayoutBuilders;
+	std::span<std::function<KeyboardLayout*()>> Keyboard::getCyclicLayoutsGetter() const {
+		return _cyclicLayoutsGetter;
 	}
 
-	void Keyboard::setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& builder) {
-		_cyclicLayoutBuilders = builder;
+	void Keyboard::setCyclicLayoutsGetter(const std::span<std::function<KeyboardLayout*()>> value) {
+		_cyclicLayoutsGetter = value;
 	}
 
-	const std::function<KeyboardLayout*()>& Keyboard::getCharactersLayoutBuilder() const {
-		return _charactersLayoutBuilder;
+	const std::function<KeyboardLayout*()>& Keyboard::getCharactersLayoutGetter() const {
+		return _charactersLayoutGetter;
 	}
 
-	void Keyboard::setCharactersLayoutBuilder(const std::function<KeyboardLayout*()>& builder) {
-		_charactersLayoutBuilder = builder;
+	void Keyboard::setCharactersLayoutGetter(const std::function<KeyboardLayout*()>& value) {
+		_charactersLayoutGetter = value;
 	}
 	
-	const std::function<KeyboardLayout*()>& Keyboard::getNumericLayoutBuilder() const {
-		return _numericLayoutBuilder;
+	const std::function<KeyboardLayout*()>& Keyboard::getNumericLayoutGetter() const {
+		return _numericLayoutGetter;
 	}
 
-	void Keyboard::setNumericLayoutBuilder(const std::function<KeyboardLayout*()>& builder) {
-		_numericLayoutBuilder = builder;
+	void Keyboard::setNumericLayoutGetter(const std::function<KeyboardLayout*()>& value) {
+		_numericLayoutGetter = value;
+	}
+
+	void Keyboard::setOnLayoutChanged(const std::function<void(KeyboardLayout*, KeyboardLayout*)>& callback) {
+		_onLayoutChanged = callback;
 	}
 
 	uint8_t Keyboard::getKeyCornerRadius() const {

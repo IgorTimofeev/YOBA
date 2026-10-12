@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include <YOBA/UI/Keyboard/Controller.hpp>
+#include <YOBA/UI/Keyboard/Overlay.hpp>
 #include <YOBA/UI/Application.hpp>
 
 namespace YOBA {

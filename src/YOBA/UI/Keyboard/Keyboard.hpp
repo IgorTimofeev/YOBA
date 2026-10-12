@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <span>
 #include <functional>
 
 #include <YOBA/UI/Keyboard/Generic.hpp>
@@ -69,14 +70,16 @@ namespace YOBA {
 			KeyboardCase getCase() const;
 			void setCase(KeyboardCase value);
 
-			std::vector<std::function<KeyboardLayout*()>>& getCyclicLayoutBuilders();
-			void setCyclicLayoutBuilders(const std::vector<std::function<KeyboardLayout*()>>& builder);
+			std::span<std::function<KeyboardLayout*()>> getCyclicLayoutsGetter() const;
+			void setCyclicLayoutsGetter(const std::span<std::function<KeyboardLayout*()>> value);
 
-			const std::function<KeyboardLayout*()>& getCharactersLayoutBuilder() const;
-			void setCharactersLayoutBuilder(const std::function<KeyboardLayout*()>& builder);
+			const std::function<KeyboardLayout*()>& getCharactersLayoutGetter() const;
+			void setCharactersLayoutGetter(const std::function<KeyboardLayout*()>& value);
 
-			const std::function<KeyboardLayout*()>& getNumericLayoutBuilder() const;
-			void setNumericLayoutBuilder(const std::function<KeyboardLayout*()>& builder);
+			const std::function<KeyboardLayout*()>& getNumericLayoutGetter() const;
+			void setNumericLayoutGetter(const std::function<KeyboardLayout*()>& value);
+
+			void setOnLayoutChanged(const std::function<void(KeyboardLayout*, KeyboardLayout*)>& callback);
 
 			uint16_t getContinuousTypingDelay() const;
 			void setContinuousTypingDelay(uint16_t value);
@@ -105,16 +108,15 @@ namespace YOBA {
 
 			uint8_t _cyclicLayoutIndex = 0;
 			KeyboardLayout* _layout = nullptr;
-			std::vector<std::function<KeyboardLayout*()>> _cyclicLayoutBuilders;
-			std::function<KeyboardLayout*()> _charactersLayoutBuilder = nullptr;
-			std::function<KeyboardLayout*()> _numericLayoutBuilder = nullptr;
+			std::span<std::function<KeyboardLayout*()>> _cyclicLayoutsGetter;
+			std::function<KeyboardLayout*()> _charactersLayoutGetter = nullptr;
+			std::function<KeyboardLayout*()> _numericLayoutGetter = nullptr;
+			std::function<void(KeyboardLayout*, KeyboardLayout*)> _onLayoutChanged = nullptr;
 
 			RectangularShape _backgroundPanel {};
 
 			uint8_t _horizontalKeyGap = 1;
 			uint8_t _verticalKeyGap = 1;
 			uint16_t _keyHeight = 25;
-
-			void deleteLayoutAndUIElements();
 	};
 }

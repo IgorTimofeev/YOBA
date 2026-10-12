@@ -14,7 +14,7 @@ namespace YOBA {
 		public:
 			explicit KeyboardLayout(const std::vector<std::vector<KeyboardButton*>>& keys);
 
-			void assignKeyboard(Keyboard* keyboard);
+			void setKeyboard(Keyboard* keyboard);
 			const std::vector<std::vector<KeyboardButton*>>& getButtons() const;
 
 		protected:

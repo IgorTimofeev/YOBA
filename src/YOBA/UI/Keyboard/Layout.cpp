@@ -14,7 +14,7 @@ namespace YOBA {
 		return _buttons;
 	}
 
-	void KeyboardLayout::assignKeyboard(Keyboard* keyboard) {
+	void KeyboardLayout::setKeyboard(Keyboard* keyboard) {
 		_keyboard = keyboard;
 
 		removeChildren();

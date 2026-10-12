@@ -47,7 +47,7 @@ set(YOBA_SOURCES
   src/YOBA/UI/Animations/SizeAnimation.cpp
   src/YOBA/UI/Animations/TargetAnimation.cpp
   src/YOBA/UI/Keyboard/Button.cpp
-  src/YOBA/UI/Keyboard/Controller.cpp
+  src/YOBA/UI/Keyboard/Overlay.cpp
   src/YOBA/UI/Keyboard/Keyboard.cpp
   src/YOBA/UI/Keyboard/Layout.cpp
   src/YOBA/UI/Spatial/Line.cpp
