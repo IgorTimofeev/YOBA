@@ -4,6 +4,7 @@
 #include <vector>
 #include <span>
 #include <functional>
+#include <optional>
 
 #include <YOBA/UI/Keyboard/Generic.hpp>
 #include <YOBA/UI/Layout.hpp>
@@ -11,10 +12,25 @@
 #include <YOBA/UI/Shapes/RectangularShape.hpp>
 #include <YOBA/Core/Text.hpp>
 
+#include "Layout.hpp"
+
 namespace YOBA {
 	class Keyboard;
 	class KeyboardLayout;
 	class KeyboardButton;
+
+	class KeyboardLayoutController {
+		public:
+			virtual ~KeyboardLayoutController() = default;
+
+			virtual size_t getCyclicLayoutCount();
+			virtual KeyboardLayout* getCyclicLayout(size_t index);
+
+			virtual std::optional<KeyboardLayout*> getCharactersLayout();
+			virtual std::optional<KeyboardLayout*> getNumericLayout();
+
+			virtual void onLayoutChanged(KeyboardLayout* fromLayout, KeyboardLayout* toLayout);
+	};
 
 	class Keyboard : public Layout, public FontElement {
 		public:
@@ -28,7 +44,6 @@ namespace YOBA {
 			uint8_t getTextParsingOptions() const;
 			void setLayoutFromTextParsingOptions(const uint8_t options = TextParsingOptions::none);
 
-			uint8_t getCyclicLayoutsCount() const;
 			uint8_t getCyclicLayoutIndex() const;
 			void setLayoutFromCyclicIndex(uint8_t cyclicLayoutIndex);
 			void setNextCyclicLayoutIndex();
@@ -70,16 +85,8 @@ namespace YOBA {
 			KeyboardCase getCase() const;
 			void setCase(KeyboardCase value);
 
-			std::span<std::function<KeyboardLayout*()>> getCyclicLayoutsGetter() const;
-			void setCyclicLayoutsGetter(const std::span<std::function<KeyboardLayout*()>> value);
-
-			const std::function<KeyboardLayout*()>& getCharactersLayoutGetter() const;
-			void setCharactersLayoutGetter(const std::function<KeyboardLayout*()>& value);
-
-			const std::function<KeyboardLayout*()>& getNumericLayoutGetter() const;
-			void setNumericLayoutGetter(const std::function<KeyboardLayout*()>& value);
-
-			void setOnLayoutChanged(const std::function<void(KeyboardLayout*, KeyboardLayout*)>& callback);
+			KeyboardLayoutController* getLayoutController() const;
+			void setLayoutController(KeyboardLayoutController* layoutController);
 
 			uint16_t getContinuousTypingDelay() const;
 			void setContinuousTypingDelay(uint16_t value);
@@ -108,10 +115,8 @@ namespace YOBA {
 
 			uint8_t _cyclicLayoutIndex = 0;
 			KeyboardLayout* _layout = nullptr;
-			std::span<std::function<KeyboardLayout*()>> _cyclicLayoutsGetter;
-			std::function<KeyboardLayout*()> _charactersLayoutGetter = nullptr;
-			std::function<KeyboardLayout*()> _numericLayoutGetter = nullptr;
-			std::function<void(KeyboardLayout*, KeyboardLayout*)> _onLayoutChanged = nullptr;
+
+			KeyboardLayoutController* _layoutController = nullptr;
 
 			RectangularShape _backgroundPanel {};
 

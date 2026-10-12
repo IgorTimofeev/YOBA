@@ -2,7 +2,31 @@
 #include <YOBA/UI/Keyboard/Layout.hpp>
 
 namespace YOBA {
+	// -------------------------------- KeyboardLayoutController --------------------------------
+
+	size_t KeyboardLayoutController::getCyclicLayoutCount() {
+		return 1;
+	}
+
+	KeyboardLayout* KeyboardLayoutController::getCyclicLayout(size_t index) {
+		return new EnglishKeyboardLayout();
+	}
+
+	std::optional<KeyboardLayout*> KeyboardLayoutController::getCharactersLayout() {
+		return new CharactersKeyboardLayout();
+	}
+
+	std::optional<KeyboardLayout*> KeyboardLayoutController::getNumericLayout() {
+		return new NumericKeyboardLayout();
+	}
+
+	void KeyboardLayoutController::onLayoutChanged(KeyboardLayout* fromLayout, KeyboardLayout* toLayout) {
+		if (fromLayout)
+			delete fromLayout;
+	}
+
 	// -------------------------------- Keyboard --------------------------------
+
 
 	Keyboard::Keyboard() {
 		*this += &_backgroundPanel;
@@ -88,8 +112,7 @@ namespace YOBA {
 		}
 
 		// Handling change
-		if (_onLayoutChanged)
-			_onLayoutChanged(oldLayout, _layout);
+		_layoutController->onLayoutChanged(oldLayout, _layout);
 	}
 
 	uint8_t Keyboard::getTextParsingOptions() const {
@@ -103,7 +126,7 @@ namespace YOBA {
 	void Keyboard::setLayoutFromCyclicIndex(const uint8_t cyclicLayoutIndex) {
 		_cyclicLayoutIndex = cyclicLayoutIndex;
 
-		setLayout(_cyclicLayoutsGetter[_cyclicLayoutIndex]());
+		setLayout(_layoutController->getCyclicLayout(_cyclicLayoutIndex));
 	}
 
 	uint8_t Keyboard::getHorizontalKeyGap() const {
@@ -151,6 +174,14 @@ namespace YOBA {
 		}
 	}
 
+	KeyboardLayoutController* Keyboard::getLayoutController() const {
+		return _layoutController;
+	}
+
+	void Keyboard::setLayoutController(KeyboardLayoutController* layoutController) {
+		_layoutController = layoutController;
+	}
+
 	uint16_t Keyboard::getContinuousTypingDelay() const {
 		return _continuousTypingDelay;
 	}
@@ -167,14 +198,11 @@ namespace YOBA {
 		_continuousTypingInterval = value;
 	}
 
-	uint8_t Keyboard::getCyclicLayoutsCount() const {
-		return _cyclicLayoutsGetter.size();
-	}
 
 	void Keyboard::setNextCyclicLayoutIndex() {
 		auto index = _cyclicLayoutIndex + 1;
 
-		if (index >= getCyclicLayoutsCount())
+		if (index >= _layoutController->getCyclicLayoutCount())
 			index = 0;
 
 		setLayoutFromCyclicIndex(index);
@@ -191,41 +219,13 @@ namespace YOBA {
 			setLayoutFromCyclicIndex(_cyclicLayoutIndex);
 		}
 		else if (_textParsingOptions & TextParsingOptions::number) {
-			if (_numericLayoutGetter) {
-				setLayout(_numericLayoutGetter());
+			if (_layoutController->getNumericLayout().has_value()) {
+				setLayout(_layoutController->getNumericLayout().value());
 			}
 			else {
 				setLayoutFromCyclicIndex(_cyclicLayoutIndex);
 			}
 		}
-	}
-
-	std::span<std::function<KeyboardLayout*()>> Keyboard::getCyclicLayoutsGetter() const {
-		return _cyclicLayoutsGetter;
-	}
-
-	void Keyboard::setCyclicLayoutsGetter(const std::span<std::function<KeyboardLayout*()>> value) {
-		_cyclicLayoutsGetter = value;
-	}
-
-	const std::function<KeyboardLayout*()>& Keyboard::getCharactersLayoutGetter() const {
-		return _charactersLayoutGetter;
-	}
-
-	void Keyboard::setCharactersLayoutGetter(const std::function<KeyboardLayout*()>& value) {
-		_charactersLayoutGetter = value;
-	}
-	
-	const std::function<KeyboardLayout*()>& Keyboard::getNumericLayoutGetter() const {
-		return _numericLayoutGetter;
-	}
-
-	void Keyboard::setNumericLayoutGetter(const std::function<KeyboardLayout*()>& value) {
-		_numericLayoutGetter = value;
-	}
-
-	void Keyboard::setOnLayoutChanged(const std::function<void(KeyboardLayout*, KeyboardLayout*)>& callback) {
-		_onLayoutChanged = callback;
 	}
 
 	uint8_t Keyboard::getKeyCornerRadius() const {

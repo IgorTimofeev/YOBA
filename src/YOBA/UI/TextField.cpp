@@ -205,9 +205,8 @@ namespace YOBA {
 				default: {
 					const auto text = keyUpEvent->getText();
 
-					if (text.has_value()) {
-						insert(text.value());
-					}
+					if (!text.empty())
+						insert(text);
 
 					break;
 				}

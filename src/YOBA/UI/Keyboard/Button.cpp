@@ -108,8 +108,8 @@ namespace YOBA {
 		return getName();
 	}
 
-	std::optional<std::string_view> KeyboardButton::getTextFromCase() const {
-		return std::nullopt;
+	std::string_view KeyboardButton::getTextFromCase() const {
+		return std::string_view {};
 	}
 
 	bool KeyboardButton::canBeAdded() {
@@ -184,7 +184,7 @@ namespace YOBA {
 		return getKeyboard()->getCase() == KeyboardCase::lower ? getName() : getUppercaseName();
 	}
 
-	std::optional<std::string_view> TextKeyboardButton::getTextFromCase() const {
+	std::string_view TextKeyboardButton::getTextFromCase() const {
 		return getNameFromCase();
 	}
 
@@ -324,15 +324,15 @@ namespace YOBA {
 			return;
 
 		Application::getCurrent()->invokeLater([this] {
-			const auto getter = getKeyboard()->getCharactersLayoutGetter();
+			const auto charactersLayout = getKeyboard()->getLayoutController()->getCharactersLayout();
 
-			if (getter)
-				getKeyboard()->setLayout(getter());
+			if (charactersLayout.has_value())
+				getKeyboard()->setLayout(charactersLayout.value());
 		});
 	}
 
 	bool CharactersLayoutKeyboardButton::canBeAdded() {
-		return !!getKeyboard()->getCharactersLayoutGetter();
+		return getKeyboard()->getLayoutController()->getCharactersLayout().has_value();
 	}
 
 	// ----------------------------- DefaultLayoutKeyboardButton -----------------------------
@@ -380,7 +380,7 @@ namespace YOBA {
 	}
 
 	bool CyclicLayoutKeyboardButton::canBeAdded() {
-		return getKeyboard()->getCyclicLayoutsGetter().size() > 1;
+		return getKeyboard()->getLayoutController()->getCyclicLayoutCount() > 1;
 	}
 
 }

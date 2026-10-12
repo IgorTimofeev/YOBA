@@ -85,8 +85,8 @@ namespace YOBA {
 			TextKeyboardButton _keyQuote { Key::quote, "\'", Key::registered, "®", 0.1f };
 			TextKeyboardButton _keyColon { Key::colon, ":", Key::trademark, "™", 0.1f };
 			TextKeyboardButton _keySemicolon { Key::semicolon, ";", Key::check, "✓", 0.1f };
-			TextKeyboardButton _keyExclamationMark { Key::exclamationMark, "!", Key::openBracket, "[", 0.1f };
-			TextKeyboardButton _keyQuestionMark { Key::questionMark, "?", Key::closeBracket, "]", 0.1f };
+			TextKeyboardButton _keyExclamationMark { Key::exclamationMark, "!", Key::leftBracket, "[", 0.1f };
+			TextKeyboardButton _keyQuestionMark { Key::questionMark, "?", Key::rightBracket, "]", 0.1f };
 			BackspaceKeyboardButton _keyBackspace { "<", 0.15f };
 
 			CurrentCyclicLayoutKeyboardButton _keyCyclicLayout { "Abc", 0.1f };
@@ -155,7 +155,7 @@ namespace YOBA {
 			TextKeyboardButton _keyI { Key::i, "ш", Key::i, "Ш", 1.f / 11.f };
 			TextKeyboardButton _keyO { Key::o, "щ", Key::o, "Щ", 1.f / 11.f };
 			TextKeyboardButton _keyP { Key::p, "з", Key::p, "З", 1.f / 11.f };
-			TextKeyboardButton _keyBracket { Key::openBracket, "х", Key::openBracket, "Х", 1.f / 11.f };
+			TextKeyboardButton _keyBracket { Key::leftBracket, "х", Key::leftBracket, "Х", 1.f / 11.f };
 
 			TextKeyboardButton _keyA { Key::a, "ф", Key::a, "Ф", 1.f / 11.f };
 			TextKeyboardButton _keyS { Key::s, "ы", Key::s, "Ы", 1.f / 11.f };

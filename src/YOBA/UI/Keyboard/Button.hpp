@@ -24,7 +24,7 @@ namespace YOBA {
 
 			virtual Key getKeyFromCase() const;
 			virtual std::string_view getNameFromCase() const;
-			virtual std::optional<std::string_view> getTextFromCase() const;
+			virtual std::string_view getTextFromCase() const;
 			virtual bool canBeAdded();
 			virtual bool canBeEnabled();
 
@@ -75,7 +75,7 @@ namespace YOBA {
 			Key getKeyFromCase() const override;
 
 			std::string_view getNameFromCase() const override;
-			std::optional<std::string_view> getTextFromCase() const override;
+			std::string_view getTextFromCase() const override;
 
 		protected:
 			void onIsActiveChanged() override;
