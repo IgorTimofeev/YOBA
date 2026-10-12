@@ -193,6 +193,9 @@ namespace YOBA {
 				case Key::enter: {
 					setFocused(false);
 
+					if (_onInputStateChanged)
+						_onInputStateChanged();
+
 					break;
 				}
 				case Key::backspace: {
@@ -358,6 +361,10 @@ namespace YOBA {
 		}
 
 		setCursorPosition(_cursorPosition - 1);
+	}
+
+	bool TextField::getInputState() const {
+		return isFocused();
 	}
 
 	void TextField::setOnInput(const std::function<void(Key, std::optional<std::string_view>)>& callback) {

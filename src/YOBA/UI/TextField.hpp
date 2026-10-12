@@ -74,6 +74,7 @@ namespace YOBA {
 			void insert(std::string_view value);
 			void backspace();
 
+			bool getInputState() const;
 			void setOnInputStateChanged(const std::function<void()>& callback);
 			void setOnInput(const std::function<void(Key, std::optional<std::string_view>)>& callback);
 

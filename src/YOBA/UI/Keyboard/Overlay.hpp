@@ -26,9 +26,6 @@ namespace YOBA {
 			void show();
 			void hide();
 
-		protected:
-			void onEventBeforeChildren(Event* event) override;
-
 		private:
 			bool _isShown = false;
 			Layout* _targetLayout = nullptr;

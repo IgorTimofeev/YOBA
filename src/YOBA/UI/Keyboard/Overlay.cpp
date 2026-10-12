@@ -68,14 +68,4 @@ namespace YOBA {
 	void KeyboardOverlay::setOnIsShownChanged(const std::function<void()>& callback) {
 		_onStateChanged = callback;
 	}
-
-	void KeyboardOverlay::onEventBeforeChildren(Event* event) {
-		RelativeStackLayout::onEventBeforeChildren(event);
-
-		if (const auto keyEvent = event->as<KeyDownEvent>()) {
-			if (keyEvent->getKey() == Key::enter) {
-				hide();
-			}
-		}
-	}
 }
