@@ -105,10 +105,7 @@ namespace YOBA {
 
 	class EnterKeyboardButton : public KeyboardButton {
 		public:
-			explicit EnterKeyboardButton(float width);
-
-		protected:
-			void onIsActiveChanged() override;
+			EnterKeyboardButton(float width);
 	};
 
 	class SpaceKeyboardButton : public TextKeyboardButton {

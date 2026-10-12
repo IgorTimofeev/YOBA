@@ -21,7 +21,7 @@ namespace YOBA {
 
 		// Text fields
 		const auto addHSBTextField = [this](Titler& titler, TextField& textField) {
-			textField.setKeyboardLayoutOptions(KeyboardLayoutOptions::numeric);
+			textField.setTextParsingOptions(TextParsingOptions::number);
 
 			textField.setOnInput([this](const auto key, const auto text) {
 				fromHSBTextFields();
@@ -36,7 +36,7 @@ namespace YOBA {
 		addHSBTextField(brightnessTitler, brightnessTextField);
 
 		// HEX
-		hexTextField.setKeyboardLayoutOptions(KeyboardLayoutOptions::text);
+		hexTextField.setTextParsingOptions(TextParsingOptions::none);
 
 		hexTextField.setOnInput([this](const auto key, const auto text) {
 			const auto uintColor = Text::tryParseHexOr(hexTextField.getText(), 0);

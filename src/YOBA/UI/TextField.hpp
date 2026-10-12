@@ -12,6 +12,7 @@
 #include <YOBA/UI/Traits/FontScaleElement.hpp>
 #include <YOBA/UI/Control.hpp>
 #include <YOBA/UI/Keyboard/Generic.hpp>
+#include <YOBA/Core/Text.hpp>
 
 namespace YOBA {
 	class TextField :
@@ -22,8 +23,8 @@ namespace YOBA {
 		public FontScaleElement
 	{
 		public:
-			uint8_t getKeyboardLayoutOptions() const;
-			void setKeyboardLayoutOptions(const uint8_t keyboardLayoutOptions);
+			uint8_t getTextParsingOptions() const;
+			void setTextParsingOptions(const uint8_t options);
 
 			char getMask() const;
 			void setMask(char mask);
@@ -73,6 +74,7 @@ namespace YOBA {
 			void insert(std::string_view value);
 			void backspace();
 
+			void setOnInputStateChanged(const std::function<void()>& callback);
 			void setOnInput(const std::function<void(Key, std::optional<std::string_view>)>& callback);
 
 		protected:
@@ -110,8 +112,9 @@ namespace YOBA {
 
 			std::string _placeholder = std::string();
 			char _mask = 0;
-			uint8_t _keyboardLayoutOptions = KeyboardLayoutOptions::text;
+			uint8_t _textParsingOptions = TextParsingOptions::none;
 
+			std::function<void()> _onInputStateChanged = nullptr;
 			std::function<void(Key, std::optional<std::string_view>)> _onInput = nullptr;
 
 			void setCursorBlinkStateAndTime(bool value);

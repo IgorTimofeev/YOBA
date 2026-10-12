@@ -364,6 +364,10 @@ namespace YOBA {
 		_onInput = callback;
 	}
 
+	void TextField::setOnInputStateChanged(const std::function<void()>& callback) {
+		_onInputStateChanged = callback;
+	}
+
 	size_t TextField::getCursorPosition() const {
 		return _cursorPosition;
 	}
@@ -444,14 +448,13 @@ namespace YOBA {
 		Control::onFocusChanged();
 
 		setCursorBlinkStateAndTime(isFocused());
+		invalidateRender();
 
 		if (isFocused()) {
-			KeyboardController::show(_keyboardLayoutOptions);
-
-			scrollIntoView();
+			if (_onInputStateChanged) {
+				_onInputStateChanged();
+			}
 		}
-
-		invalidateRender();
 	}
 
 	void TextField::setCursorBlinkStateAndTime(const bool value) {
@@ -505,12 +508,12 @@ namespace YOBA {
 		_placeholderColor = value;
 	}
 
-	uint8_t TextField::getKeyboardLayoutOptions() const {
-		return _keyboardLayoutOptions;
+	uint8_t TextField::getTextParsingOptions() const {
+		return _textParsingOptions;
 	}
 
-	void TextField::setKeyboardLayoutOptions(const uint8_t keyboardLayoutOptions) {
-		_keyboardLayoutOptions = keyboardLayoutOptions;
+	void TextField::setTextParsingOptions(const uint8_t options) {
+		_textParsingOptions = options;
 	}
 
 	char TextField::getMask() const {

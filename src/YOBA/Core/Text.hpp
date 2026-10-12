@@ -6,6 +6,16 @@
 #include <YOBA/Core/Font.hpp>
 
 namespace YOBA {
+	// I love C++
+	namespace TextParsingOptions {
+		enum : uint8_t {
+			none =         0b00000000,
+			number =       0b00000001,
+			sign =         0b00000010,
+			decimalPoint = 0b00000100
+		};
+	}
+
 	class Text {
 		public:
 			static void wrap(

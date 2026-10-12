@@ -260,25 +260,15 @@ namespace YOBA {
 	// ----------------------------- EnterKeyboardButton -----------------------------
 
 	EnterKeyboardButton::EnterKeyboardButton(const float width) :
-		KeyboardButton(KeyboardKeyType::action, Key::enter, "<-", width)
+		KeyboardButton(KeyboardKeyType::action, Key::enter, "->", width)
 	{
 
 	}
 
-	void EnterKeyboardButton::onIsActiveChanged() {
-		KeyboardButton::onIsActiveChanged();
-
-		if (isActive())
-			return;
-
-		Application::getCurrent()->invokeLater([] {
-			KeyboardController::hide();
-		});
-	}
-
 	// ----------------------------- SpaceKeyboardButton -----------------------------
 
-	SpaceKeyboardButton::SpaceKeyboardButton() :TextKeyboardButton(Key::space, " ", Key::space, " ", stretched)
+	SpaceKeyboardButton::SpaceKeyboardButton() :
+		TextKeyboardButton(Key::space, " ", Key::space, " ", stretched)
 	{
 
 	}
@@ -290,9 +280,9 @@ namespace YOBA {
 	}
 
 	bool PeriodKeyboardButton::canBeEnabled() {
-		const auto options = getKeyboard()->getLayoutOptions();
+		const auto options = getKeyboard()->getTextParsingOptions();
 
-		return !(options & KeyboardLayoutOptions::numeric) || options & KeyboardLayoutOptions::allowFractional;
+		return !(options & TextParsingOptions::number) || options & TextParsingOptions::decimalPoint;
 	}
 
 	// ----------------------------- NumericSignMinusKeyboardButton -----------------------------
@@ -302,9 +292,9 @@ namespace YOBA {
 	}
 
 	bool NumericSignMinusKeyboardKey::canBeEnabled() {
-		const auto options = getKeyboard()->getLayoutOptions();
+		const auto options = getKeyboard()->getTextParsingOptions();
 
-		return !(options & KeyboardLayoutOptions::numeric) || options & KeyboardLayoutOptions::allowSigned;
+		return !(options & TextParsingOptions::number) || options & TextParsingOptions::sign;
 	}
 
 	// ----------------------------- NumericSignMinusKeyboardButton -----------------------------
@@ -361,7 +351,7 @@ namespace YOBA {
 			return;
 
 		Application::getCurrent()->invokeLater([this] {
-			getKeyboard()->setCyclicLayoutIndex(getKeyboard()->getCyclicLayoutIndex());
+			getKeyboard()->setLayoutFromCyclicIndex(getKeyboard()->getCyclicLayoutIndex());
 		});
 	}
 

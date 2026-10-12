@@ -21,8 +21,6 @@ namespace YOBA {
 
 	void Application::invalidateRender() {
 		_renderInvalidated = true;
-
-//		esp_backtrace_print(10);
 	}
 
 	void Application::invalidate() {

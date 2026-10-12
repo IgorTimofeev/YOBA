@@ -94,16 +94,16 @@ namespace YOBA {
 		_layout->assignKeyboard(this);
 	}
 
-	uint8_t Keyboard::getLayoutOptions() const {
-		return _layoutOptions;
+	uint8_t Keyboard::getTextParsingOptions() const {
+		return _textParsingOptions;
 	}
 
 	uint8_t Keyboard::getCyclicLayoutIndex() const {
 		return _cyclicLayoutIndex;
 	}
 
-	void Keyboard::setCyclicLayoutIndex(const uint8_t value) {
-		_cyclicLayoutIndex = value;
+	void Keyboard::setLayoutFromCyclicIndex(const uint8_t cyclicLayoutIndex) {
+		_cyclicLayoutIndex = cyclicLayoutIndex;
 
 		setLayout(_cyclicLayoutBuilders[_cyclicLayoutIndex]());
 	}
@@ -179,24 +179,25 @@ namespace YOBA {
 		if (index >= getCyclicLayoutsCount())
 			index = 0;
 
-		setCyclicLayoutIndex(index);
+		setLayoutFromCyclicIndex(index);
 	}
 
-	void Keyboard::setLayout(const uint8_t options) {
-		if (options == _layoutOptions)
+	void Keyboard::setLayoutFromTextParsingOptions(const uint8_t options) {
+		if (options == _textParsingOptions && _textParsingOptionsSet)
 			return;
 
-		_layoutOptions = options;
+		_textParsingOptions = options;
+		_textParsingOptionsSet = true;
 
-		if (_layoutOptions & KeyboardLayoutOptions::text) {
-			setCyclicLayoutIndex(getCyclicLayoutIndex());
+		if (_textParsingOptions == TextParsingOptions::none) {
+			setLayoutFromCyclicIndex(_cyclicLayoutIndex);
 		}
-		else if (_layoutOptions & KeyboardLayoutOptions::numeric) {
-			if (getNumericLayoutBuilder()) {
-				setLayout(getNumericLayoutBuilder()());
+		else if (_textParsingOptions & TextParsingOptions::number) {
+			if (_numericLayoutBuilder) {
+				setLayout(_numericLayoutBuilder());
 			}
 			else {
-				setCyclicLayoutIndex(getCyclicLayoutIndex());
+				setLayoutFromCyclicIndex(_cyclicLayoutIndex);
 			}
 		}
 	}

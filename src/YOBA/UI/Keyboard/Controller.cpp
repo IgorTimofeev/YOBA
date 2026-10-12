@@ -4,72 +4,78 @@
 #include <YOBA/UI/Application.hpp>
 
 namespace YOBA {
-	KeyboardControllerLayout::KeyboardControllerLayout() {
-		*this += &temporaryLayout;
+	KeyboardOverlay::KeyboardOverlay() {
+		*this += &_contentLayout;
 
-		*this += &keyboard;
-		setAutoSize(&keyboard);
+		*this += &_keyboard;
+		setAutoSize(&_keyboard);
 	}
 
-	KeyboardControllerLayout* KeyboardController::_controllerLayout = nullptr;
-	Layout* KeyboardController::_targetLayout = nullptr;
-	std::function<void(Keyboard*)> KeyboardController::_onKeyboardShow = nullptr;
-
-	void KeyboardController::show(const uint8_t layoutOptions) {
-		if (!_controllerLayout) {
-			_controllerLayout = new KeyboardControllerLayout();
-
-			const auto targetLayout = getTargetLayoutOrApplication();
-
-			_controllerLayout->setSize(targetLayout->getLayoutBounds().getSize());
-
-			// Moving children from target to temporary layout
-			targetLayout->moveChildrenTo(&_controllerLayout->temporaryLayout);
-
-			// Configuring keyboard
-			if (_onKeyboardShow)
-				_onKeyboardShow(&_controllerLayout->keyboard);
-
-			*targetLayout += _controllerLayout;
-		}
-
-		_controllerLayout->keyboard.setLayout(layoutOptions);
+	Keyboard* KeyboardOverlay::getKeyboard() {
+		return &_keyboard;
 	}
 
-	void KeyboardController::hide() {
-		if (!_controllerLayout)
+	Layout* KeyboardOverlay::getTargetLayout() const {
+		return _targetLayout;
+	}
+
+	void KeyboardOverlay::setTargetLayout(Layout* value) {
+		_targetLayout = value;
+	}
+
+	Layout* KeyboardOverlay::getTargetLayoutOrApplication() const {
+		return _targetLayout ? _targetLayout : Application::getCurrent();
+	}
+
+	bool KeyboardOverlay::isShown() const {
+		return _isShown;
+	}
+
+	void KeyboardOverlay::show() {
+		if (_isShown)
 			return;
+
+		_isShown = true;
+
+		const auto targetLayout = getTargetLayoutOrApplication();
+
+		setSize(targetLayout->getLayoutBounds().getSize());
+
+		// Moving children from target to temporary layout
+		targetLayout->moveChildrenTo(&_contentLayout);
+
+		*targetLayout += this;
+
+		if (_onStateChanged)
+			_onStateChanged();
+	}
+
+	void KeyboardOverlay::hide() {
+		if (!_isShown)
+			return;
+
+		_isShown = false;
 
 		const auto targetLayout = getTargetLayoutOrApplication();
 
 		targetLayout->removeChildren();
-		_controllerLayout->temporaryLayout.moveChildrenTo(targetLayout);
+		_contentLayout.moveChildrenTo(targetLayout);
 
-		delete _controllerLayout;
-		_controllerLayout = nullptr;
+		if (_onStateChanged)
+			_onStateChanged();
 	}
 
-	bool KeyboardController::isVisible() {
-		return _controllerLayout != nullptr;
+	void KeyboardOverlay::setOnIsShownChanged(const std::function<void()>& callback) {
+		_onStateChanged = callback;
 	}
 
-	void KeyboardController::setOnShow(const std::function<void(Keyboard*)>& value) {
-		_onKeyboardShow = value;
-	}
+	void KeyboardOverlay::onEventBeforeChildren(Event* event) {
+		RelativeStackLayout::onEventBeforeChildren(event);
 
-	Keyboard* KeyboardController::getKeyboard() {
-		return _controllerLayout ? &_controllerLayout->keyboard : nullptr;
-	}
-
-	Layout* KeyboardController::getTargetLayout() {
-		return _targetLayout;
-	}
-
-	void KeyboardController::setTargetLayout(Layout* value) {
-		_targetLayout = value;
-	}
-
-	Layout* KeyboardController::getTargetLayoutOrApplication() {
-		return _targetLayout ? _targetLayout : Application::getCurrent();
+		if (const auto keyEvent = event->as<KeyDownEvent>()) {
+			if (keyEvent->getKey() == Key::enter) {
+				hide();
+			}
+		}
 	}
 }

@@ -1,38 +1,41 @@
 #pragma once
 
 #include <optional>
+#include <functional>
 
 #include <YOBA/UI/Keyboard/Keyboard.hpp>
 
 #include <YOBA/UI/Layout.hpp>
 #include <YOBA/UI/RelativeStackLayout.hpp>
+#include "YOBA/Core/Events/KeyEvent.hpp"
 
 namespace YOBA {
-	class KeyboardControllerLayout : public RelativeStackLayout {
+	class KeyboardOverlay : public RelativeStackLayout {
 		public:
-			KeyboardControllerLayout();
+			KeyboardOverlay();
 
-			Keyboard keyboard {};
-			Layout temporaryLayout {};
-	};
+			Keyboard* getKeyboard();
 
-	class KeyboardController {
-		public:
-			static void show(const uint8_t layoutOptions);
-			static void hide();
-			static bool isVisible();
+			Layout* getTargetLayout() const;
+			void setTargetLayout(Layout* value);
+			Layout* getTargetLayoutOrApplication() const;
 
-			static void setOnShow(const std::function<void(Keyboard*)>& value);
-			static Keyboard* getKeyboard();
+			bool isShown() const;
+			void setOnIsShownChanged(const std::function<void()>& callback);
 
-			static Layout* getTargetLayout();
-			static void setTargetLayout(Layout* value);
+			void show();
+			void hide();
+
+		protected:
+			void onEventBeforeChildren(Event* event) override;
 
 		private:
-			static std::function<void(Keyboard*)> _onKeyboardShow;
-			static KeyboardControllerLayout* _controllerLayout;
-			static Layout* _targetLayout;
+			bool _isShown = false;
+			Layout* _targetLayout = nullptr;
 
-			static Layout* getTargetLayoutOrApplication();
+			Layout _contentLayout {};
+			Keyboard _keyboard {};
+
+			std::function<void()> _onStateChanged = nullptr;
 	};
 }

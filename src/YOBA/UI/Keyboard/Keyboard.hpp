@@ -8,6 +8,7 @@
 #include <YOBA/UI/Layout.hpp>
 #include <YOBA/UI/Traits/FontElement.hpp>
 #include <YOBA/UI/Shapes/RectangularShape.hpp>
+#include <YOBA/Core/Text.hpp>
 
 namespace YOBA {
 	class Keyboard;
@@ -23,12 +24,12 @@ namespace YOBA {
 			KeyboardLayout* getLayout() const;
 			void setLayout(KeyboardLayout* value);
 
-			uint8_t getLayoutOptions() const;
-			void setLayout(const uint8_t options = KeyboardLayoutOptions::text);
+			uint8_t getTextParsingOptions() const;
+			void setLayoutFromTextParsingOptions(const uint8_t options = TextParsingOptions::none);
 
 			uint8_t getCyclicLayoutsCount() const;
 			uint8_t getCyclicLayoutIndex() const;
-			void setCyclicLayoutIndex(uint8_t value);
+			void setLayoutFromCyclicIndex(uint8_t cyclicLayoutIndex);
 			void setNextCyclicLayoutIndex();
 
 			const Color* getBackgroundColor() const;
@@ -93,7 +94,9 @@ namespace YOBA {
 			const Color* _disabledKeyBackgroundColor = nullptr;
 			const Color* _disabledKeyTextColor = nullptr;
 
-			uint8_t _layoutOptions = 0;
+			uint8_t _textParsingOptions = TextParsingOptions::none;
+			bool _textParsingOptionsSet = false;
+
 			KeyboardCase _case = KeyboardCase::lower;
 
 			uint8_t _keyCornerRadius = 0;
