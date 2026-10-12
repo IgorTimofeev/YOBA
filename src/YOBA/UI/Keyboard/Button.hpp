@@ -38,6 +38,7 @@ namespace YOBA {
 			void updateFromCase();
 
 		protected:
+			void onTick() override;
 			void onIsActiveChanged() override;
 
 		private:
@@ -49,6 +50,7 @@ namespace YOBA {
 			Keyboard* _keyboard = nullptr;
 			uint8_t _row = 0;
 			uint8_t _column = 0;
+			int64_t _continuousTypingTime = 0;
 
 			void updateTextFromCase();
 	};

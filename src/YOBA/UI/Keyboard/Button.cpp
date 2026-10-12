@@ -3,6 +3,7 @@
 
 #include <YOBA/Core/Events/KeyEvent.hpp>
 #include <YOBA/UI/Application.hpp>
+#include <YOBA/System.hpp>
 
 namespace YOBA {
 	// ----------------------------- KeyboardButton -----------------------------
@@ -71,6 +72,12 @@ namespace YOBA {
 		auto active = isActive();
 		auto text = getTextFromCase();
 
+		// Setting up continuous time
+		_continuousTypingTime =
+			active
+			? Timer::getTimeUs() + getKeyboard()->getContinuousTypingDelay()
+			: 0;
+
 		// Copying values here, because invokeLater() will reset it
 		Application::getCurrent()->invokeLater([key, text, active] {
 			if (active) {
@@ -126,6 +133,27 @@ namespace YOBA {
 
 	void KeyboardButton::updateFromCase() {
 		updateTextFromCase();
+	}
+
+	void KeyboardButton::onTick() {
+		TextButton::onTick();
+
+		if (_continuousTypingTime == 0 || Timer::getTimeUs() < _continuousTypingTime)
+			return;
+
+		const auto key = getKeyFromCase();
+
+		if (key == Key::none)
+			return;
+
+		auto text = getTextFromCase();
+
+		Application::getCurrent()->invokeLater([key, text] {
+			KeyUpEvent event { key, text };
+			Application::getCurrent()->pushEvent(&event);
+		});
+
+		_continuousTypingTime = Timer::getTimeUs() + getKeyboard()->getContinuousTypingInterval();
 	}
 
 	Keyboard* KeyboardButton::getKeyboard() const {

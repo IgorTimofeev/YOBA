@@ -95,8 +95,7 @@ namespace YOBA {
 		const auto setCase = [&set](const Key key, const std::string_view upper, const std::string_view lower) {
 			set(
 				key,
-				sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)
-				|| sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift)
+				sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift)
 					? upper
 					: lower
 			);
@@ -158,6 +157,10 @@ namespace YOBA {
 
 			case sf::Keyboard::Key::Backspace: set(Key::backspace, std::string_view {}); break;
 			case sf::Keyboard::Key::Enter: set(Key::enter, std::string_view {}); break;
+			case sf::Keyboard::Key::Left: set(Key::left, std::string_view {}); break;
+			case sf::Keyboard::Key::Right: set(Key::right, std::string_view {}); break;
+			case sf::Keyboard::Key::Up: set(Key::up, std::string_view {}); break;
+			case sf::Keyboard::Key::Down: set(Key::down, std::string_view {}); break;
 
 			default: return false;
 		}

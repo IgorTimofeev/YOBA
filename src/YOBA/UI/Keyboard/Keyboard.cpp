@@ -182,22 +182,21 @@ namespace YOBA {
 		_layoutController = layoutController;
 	}
 
-	uint16_t Keyboard::getContinuousTypingDelay() const {
+	uint32_t Keyboard::getContinuousTypingDelay() const {
 		return _continuousTypingDelay;
 	}
 
-	void Keyboard::setContinuousTypingDelay(const uint16_t value) {
+	void Keyboard::setContinuousTypingDelay(const uint32_t value) {
 		_continuousTypingDelay = value;
 	}
 
-	uint16_t Keyboard::getContinuousTypingInterval() const {
+	uint32_t Keyboard::getContinuousTypingInterval() const {
 		return _continuousTypingInterval;
 	}
 
-	void Keyboard::setContinuousTypingInterval(const uint16_t value) {
+	void Keyboard::setContinuousTypingInterval(const uint32_t value) {
 		_continuousTypingInterval = value;
 	}
-
 
 	void Keyboard::setNextCyclicLayoutIndex() {
 		auto index = _cyclicLayoutIndex + 1;

@@ -88,11 +88,11 @@ namespace YOBA {
 			KeyboardLayoutController* getLayoutController() const;
 			void setLayoutController(KeyboardLayoutController* layoutController);
 
-			uint16_t getContinuousTypingDelay() const;
-			void setContinuousTypingDelay(uint16_t value);
+			uint32_t getContinuousTypingDelay() const;
+			void setContinuousTypingDelay(uint32_t value);
 
-			uint16_t getContinuousTypingInterval() const;
-			void setContinuousTypingInterval(uint16_t value);
+			uint32_t getContinuousTypingInterval() const;
+			void setContinuousTypingInterval(uint32_t value);
 
 		private:
 			const Color* _defaultKeyBackgroundColor = nullptr;
